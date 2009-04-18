@@ -1,0 +1,15 @@
+$Id: credits.txt,v 1.2 2003/10/31 00:02:29 rgasch Exp $
+========================================================================
+Credits
+========================================================================
+	
+	Version 3.0
+		Mahmood Al-Yousif
+		Roger Raymond (iansym)
+	
+	Version 2.0
+		Craig Hamlin
+		HotBird
+
+	
+	Originally Based on Rob Sutton's Events Calendar

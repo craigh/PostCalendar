@@ -1,0 +1,373 @@
+<!--[ *Render* ]-->
+<!--[ pc_calendar_init ]-->
+<!-- main navigation -->
+
+<!--[ *Main Navigation* ]-->
+<!--[ include file="default/navigation_small.html" ]-->
+<!-- V4B Start -->
+
+<!--[* THIS PART LOOKS BAD IN FF/ hence commented out -CAH *]-->
+<!--[*pnpageaddvar name="stylesheet" value="javascript/tabnavigation/winxp.css"*]-->
+<!--[*pnpageaddvar name="javascript" value="javascript/tabnavigation/listener.js"*]-->
+<!--[*pnpageaddvar name="javascript" value="javascript/tabnavigation/tabs.js"*]-->
+<!--[*pnpageaddvar name="javascript" value="javascript/tabnavigation/winxp.css"*]-->
+
+<script type="text/javascript">
+var err_no_start = "Please enter a Start Time.";
+var err_no_end = "Please enter an End Time.";
+var err_end_before = "* temp_err_no_before * ";
+var err_no_person = "Please select who to move.";
+var err_no_participant = "You didn't choose any participants.\n\nCheck 'I will participate', and/or select participants.";
+var err_thema_long = "Subject text is too long.\nReduce length to be 100 characters or less.";
+var err_external_long = "External text is too long.\nReduce length to be 200 characters or less.";
+
+
+function MoveOption (MoveFrom, MoveTo) {
+    //tested on:
+    // - Win2k: MSIE5.5, MSIE6, NN6.2.1, NN6.2.2
+    // - Mac: NN4.7/MacOS9.0.4 and MSIE5/MacOS9.0.4
+    // - others: Mozilla0.9.8/FreeBSD4.5, Mozilla snapshot 2002040410 on Linux 2.4.18 
+    var name;
+    var ID;
+    var i;
+    var SelectFrom = eval('window.document.nd.elements[\"'+MoveFrom+'[]\"]');
+    var SelectTo = eval('window.document.nd.elements[\"'+MoveTo+'[]\"]');
+    var SelectedIndex = SelectFrom.options.selectedIndex;
+
+    if (SelectedIndex == -1) {
+	alert(err_no_person);
+    }
+    else {
+	for (i=0; i<SelectFrom.options.length; i++) {
+	    if(SelectFrom.options[i].selected) {
+		name = SelectFrom.options[i].text;
+		ID = SelectFrom.options[i].value;
+		SelectFrom.options[i] = null;
+		SelectTo.options[SelectTo.options.length]=new Option (name,ID);
+		i--;
+	    }
+	}
+
+	//begin of sorting stuff, it could be very slooow
+	//needs JS1.1 and higher
+	var sorting = new Array();		
+	for (i=0; i<SelectTo.options.length; i++) {
+	    sorting[i] = SelectTo.options[i].text+"###"+SelectTo.options[i].value;
+	}
+	sorted = sorting.sort();
+	for (i=0; i<SelectTo.options.length; i++) {
+	    var tmp = sorted[i].split("###");
+	    name = tmp[0];
+	    ID = tmp[1];
+	    SelectTo.options[i]=new Option (name,ID);
+	}
+	// end of sorting stuff
+    }
+    return;
+}
+
+function selectItems() {
+    var to_form = eval('document.nd.elements[\"participants[]\"]');
+    for(i=0; i < to_form.length; i++) {
+	to_form.options[i].selected = true;
+    }
+    if(i==0 && document.nd.i_will.checked == false) {
+	alert(err_no_participant);
+	return false;
+    }
+    return true;
+}
+
+function check_form() {
+    if (document.nd.day.checked == false) {
+	if (document.nd.appointment_start.value == 0) {
+	    alert (err_no_start);
+	    document.nd.appointment_start.focus();
+	    return false;
+	} else if (document.nd.appointment_end.value == 0) {
+	    alert (err_no_end);
+	    document.nd.appointment_end.focus();
+	    return false;
+	} else if (!document.nd.appointment_attribute[0].checked && (document.nd.appointment_end.value < document.nd.appointment_start.value)) {
+	    alert (err_end_before);
+	    document.nd.appointment_end.focus();
+	    return false;
+	}
+    }
+
+    if (document.nd.external.value.length > 200) {
+		alert (err_external_long);
+		return false;
+    }
+
+    return selectItems();
+    }
+    
+function postcalendarFindContact()
+{
+  window.open("index.php?module=PostCalendar&func=findContact", "", "width=500,height=340,resizable");
+}    
+</script>
+<!--[ pnmodgetvar module="PostCalendar" name="pcAddressbook"|pnvarprepfordisplay assign="pcAddressbook" ]-->
+<!--[ if ($pcAddressbook) ]-->
+    <!--[ pnmodavailable modname="v4bAddressBook" assign="addressAvailable" ]-->
+<!--[ /if ]-->
+<!-- V4B end -->
+<!--[pnsecauthaction realm="0" comp="PostCalendar::" inst=".*" level="ACCESS_ADMIN" assign="auth"]-->
+<!--[ if $auth ]-->
+<form name="nd" action="<!--[ pc_url action="submit-admin" ]-->" method="post" enctype="application/x-www-form-urlencoded">
+<!--[ else ]-->
+<form name="nd" action="<!--[ pc_url action="submit" ]-->" method="post" enctype="application/x-www-form-urlencoded">
+<!--[ /if ]-->
+<!--
+<table border="0" cellpadding="1" cellspacing="0" bgcolor="White" width="100%">
+    <tr><td align="left" valign="middle" width="100%">
+-->
+<div class="tabsystem" style="padding-top:16px;">
+<div class="tabpage tdefault" style="background:white;">
+<h2><!--[ $NewEventHeader ]--></h2>
+    <table width="100%" border="0" cellpadding="2" cellspacing="0" bgcolor="white">
+    <!-- EVENT INFO ROWS -->            
+        <tr>
+            <td bgcolor="white" align="left" valign="top" width="50%">
+                <!--[ $EventTitle ]-->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!--[ $Required ]--><br />
+                <input type="text" name="<!--[ $InputEventTitle ]-->" value="<!--[ $ValueEventTitle ]-->" /><br />
+		        <!-- V4B Start -->
+		        For User&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!--[ $Required ]--><br />
+		        <!--[ $UserSelector ]--><br /><br />
+		        <!-- V4B End -->
+		
+		        <!--[ $DateTimeTitle ]-->&nbsp;&nbsp;&nbsp;
+		        <!--[ pc_calendar_build_input_box htmlName="meetingdate_start" dateFormat="%d-%m-%Y" defaultString=$startvalue defaultDate=$startdate ]-->
+		        <br/ ><br />
+                <table border="0" cellpadding="0" cellspacing="1">
+                    <tr>
+                        <td valign="top" align="left"><input type="radio" name="<!--[ $InputAllday ]-->" value="<!--[ $ValueAllday ]-->" <!--[ $SelectedAllday ]--> /></td>
+                        <td valign="top" align="left"><!--[ $AlldayEventTitle ]--></td>
+                    </tr>
+                    <tr>
+                        <td valign="top" align="left"><input type="radio" name="<!--[ $InputTimed ]-->" value="<!--[ $ValueTimed ]-->" <!--[ $SelectedTimed ]--> /></td>
+                        <td valign="top" align="left"><!--[ $TimedEventTitle ]--></td>
+                        <td valign="top" align="left"><!--[ $SelectTimedHours ]--> <!--[ $SelectTimedMinutes ]--> <!--[ $SelectTimedAMPM ]--></td>
+                    </tr>
+                    <tr>
+                        <td valign="top" align="left">&nbsp;</td>
+                        <td valign="top" align="left"><!--[ $TimedDurationTitle ]--></td>
+                        <td valign="top" align="left">
+                        <!--[ strip ]-->
+                            <select name="<!--[ $InputTimedDurationHours ]-->">
+                            <!--[ foreach item=time from=$TimedDurationHours ]-->
+                                <option value="<!--[ $time.value ]-->" <!--[ $time.selected ]-->><!--[ $time.name ]--></option>
+                            <!--[ /foreach ]-->
+                            </select>
+                        <!--[ /strip ]--> 
+                        <!--[ $TimedDurationHoursTitle ]-->
+                    
+                        <!--[ strip ]-->
+                        <select name="<!--[ $InputTimedDurationMinutes ]-->">
+                            <!--[ foreach item=time from=$TimedDurationMinutes ]-->
+                                <option value="<!--[ $time.value ]-->" <!--[ $time.selected ]-->><!--[ $time.name ]--></option>
+                            <!--[ /foreach ]-->
+                        </select>
+                        <!--[ /strip ]-->
+                        <!--[ $TimedDurationMinutesTitle ]-->
+                        </td>
+                    </tr>
+                </table>
+		        <br/ >
+                <!--[ $EventDescTitle ]--><br />
+		        <textarea name="<!--[ $InputEventDesc ]-->" wrap="virtual" rows="5" cols="40"><!--[ $ValueEventDesc ]--></textarea>
+    			<!-- V4B SB 2nd Submitarea START -->
+	    		<table width=70% border=0 align=middle><tr><td>
+				<!--[ $FormSubmit ]-->
+		    	</td></tr></table>
+			    <!-- V4B SB END -->
+        		</td>
+                
+                <td bgcolor="white" align="left" valign="top" width="50%">
+                <!--[ if $displayTopics eq 1 ]-->
+                    <!--[ $EventTopicTitle ]--><br />
+                    <!--[ strip ]-->
+                    <select name="<!--[ $InputEventTopic ]-->">
+                    <!--[ foreach item=topic from=$topics ]-->
+                        <option value="<!--[ $topic.value ]-->" <!--[ $topic.selected ]-->><!--[ $topic.name ]--></option>
+                    <!--[ /foreach ]-->
+                    </select>
+                    <!--[ /strip ]-->
+                    <br />
+                <!--[ /if ]-->
+                <!--[ $EventSharingTitle ]--><br />
+                <!--[ strip ]-->
+                <select name="<!--[ $InputEventSharing ]-->">
+                <!--[ foreach item=share from=$sharing ]-->
+                    <option value="<!--[ $share.value ]-->" <!--[ $share.selected ]-->><!--[ $share.name ]--></option>
+                <!--[ /foreach ]-->
+                </select>
+                <!--[ /strip ]-->
+                <br />
+                <!--[ $EventCategoriesTitle ]--><br />
+                <!--[ strip ]-->
+                <select name="<!--[ $InputEventCategory ]-->">
+                <!--[ foreach item=category from=$categories ]-->
+                    <option value="<!--[ $category.value ]-->" <!--[ $category.selected ]-->><!--[ $category.name ]--></option>
+                <!--[ /foreach ]-->
+                </select>
+                <!--[ /strip ]-->
+                <br />
+                <table border="0" cellpadding="0" cellspacing="2">
+                <tr>
+                    <td colspan="3" valign="middle">
+                        <!--[ $EventLocationTitle ]--><br />
+                        <table border="0" align="left" cellpadding="0" cellspacing="0">
+                            <tr>
+                                <td><input size="40" type="text" name="<!--[ $InputLocation ]-->"  value="<!--[ $ValueLocation ]-->" /></td>
+				<td>&nbsp;&nbsp;<!--[ if ($pcAddressbook && $addressAvailable) ]--><a href="javascript:postcalendarFindContact();"><img src="modules/PostCalendar/pnimages/addressbook.gif" border="0" /></a><!--[ /if ]--></td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3">
+                        <!--[ $EventStreetTitle ]--><br />
+                        <input size="40" type="text" name="<!--[ $InputStreet1 ]-->"  value="<!--[ $ValueStreet1 ]-->" /><br />
+                        <input size="40" type="text" name="<!--[ $InputStreet2 ]-->"  value="<!--[ $ValueStreet2 ]-->" />
+                    </td>
+                </tr>
+                <tr>
+                    <td><!--[ $EventCityTitle ]--></td><td><!--[ $EventStateTitle ]--></td><td><!--[ $EventPostalTitle ]--></td>
+                </tr>
+                <tr>
+                    <td><input size="10" type="text" name="<!--[ $InputCity ]-->"  value="<!--[ $ValueCity ]-->" /></td>
+                    <td><input size="10" type="text" name="<!--[ $InputState ]-->"  value="<!--[ $ValueState ]-->" /></td>
+                    <td><input size="10" type="text" name="<!--[ $InputPostal ]-->"  value="<!--[ $ValuePostal ]-->" /></td>
+                </tr>
+                </table>
+                <br />
+                <!--[ $EventContactTitle ]--><br />
+                <input type="text" name="<!--[ $InputContact ]-->"   value="<!--[ $ValueContact ]-->" /><br />
+                <!--[ $EventPhoneTitle ]--><br />
+                <input type="text" name="<!--[ $InputPhone ]-->"     value="<!--[ $ValuePhone ]-->" /><br />
+                <!--[ $EventEmailTitle ]--><br />
+                <input type="text" name="<!--[ $InputEmail ]-->"     value="<!--[ $ValueEmail ]-->" /><br />
+                <!--[ $EventWebsiteTitle ]--><br />
+                <input type="text" name="<!--[ $InputWebsite ]-->"   value="<!--[ $ValueWebsite ]-->" /><br />
+                <!--[ $EventFeeTitle ]--><br />
+                <input type="text" name="<!--[ $InputFee ]-->"       value="<!--[ $ValueFee ]-->" /><br />
+            </td>
+        </tr>
+    </table>
+</div>
+<!-- EVENT INFO ROWS -->
+
+<!-- REPEATING ROWS -->         
+<!--[pnmodgetvar module="PostCalendar" name="pcRepeating"|pnvarprepfordisplay assign="pcDisplayRepeating"]-->
+<!--[ if $pcDisplayRepeating ]-->
+<div class="tabpage" style="background:white;">
+<h2><!--[ $RepeatingHeader ]--></h2>
+    <table width="100%" border="0" cellpadding="2" cellspacing="0" bgcolor="white">   
+        <tr>
+            <td bgcolor="whtie" colspan="2" align="left" valign="middle" width="100%">
+                <input type="radio" name="<!--[ $InputNoRepeat ]-->" value="<!--[ $ValueNoRepeat ]-->" <!--[ $SelectedNoRepeat ]--> />
+                <!--[ $NoRepeatTitle ]--><br />
+                
+                <input type="radio" name="<!--[ $InputRepeat ]-->" value="<!--[ $ValueRepeat ]-->" <!--[ $SelectedRepeat ]--> /> 
+                <!--[ $RepeatTitle ]-->
+                <input type="text" name="<!--[ $InputRepeatFreq ]-->" value="<!--[ $InputRepeatFreqVal ]-->" size="4" />
+				<!--
+				<select name="<!--[ $InputRepeatFreq ]-->">
+                <!--[ foreach item=repeat from=$repeat_freq ]-->
+                    <option value="<!--[ $repeat.value ]-->" <!--[ $repeat.selected ]-->><!--[ $repeat.name ]--></option>
+                <!--[ /foreach ]-->
+                </select>
+                -->
+                <select name="<!--[ $InputRepeatFreqType ]-->">
+                <!--[ foreach item=repeat from=$repeat_freq_type ]-->
+                    <option value="<!--[ $repeat.value ]-->" <!--[ $repeat.selected ]-->><!--[ $repeat.name ]--></option>
+                <!--[ /foreach ]-->
+                </select>
+                <br />
+                
+                <input type="radio" name="<!--[ $InputRepeatOn ]-->" value="<!--[ $ValueRepeatOn ]-->" <!--[ $SelectedRepeatOn ]--> /> 
+                <!--[ $RepeatOnTitle ]-->
+                <select name="<!--[ $InputRepeatOnNum ]-->">
+                <!--[ foreach item=repeat from=$repeat_on_num ]-->
+                    <option value="<!--[ $repeat.value ]-->" <!--[ $repeat.selected ]-->><!--[ $repeat.name ]--></option>
+                <!--[ /foreach ]-->
+                </select>
+                <select name="<!--[ $InputRepeatOnDay ]-->">
+                <!--[ foreach item=repeat from=$repeat_on_day ]-->
+                    <option value="<!--[ $repeat.value ]-->" <!--[ $repeat.selected ]-->><!--[ $repeat.name ]--></option>
+                <!--[ /foreach ]-->
+                </select>&nbsp;
+                <!--[ $OfTheMonthTitle ]-->&nbsp;
+				<input type="text" name="<!--[ $InputRepeatOnFreq ]-->" value="<!--[ $InputRepeatOnFreqVal ]-->" size="4" />
+				<!--[ $MonthsTitle ]-->.
+				<!--
+                <select name="<!--[ $InputRepeatOnFreq ]-->">
+                <!--[ foreach item=repeat from=$repeat_on_freq ]-->
+                    <option value="<!--[ $repeat.value ]-->" <!--[ $repeat.selected ]-->><!--[ $repeat.name ]--></option>
+                <!--[ /foreach ]-->
+                </select>
+				-->
+                <br /><br />
+                
+                <!--[ $EndDateTitle ]--><br />
+                <input type="radio" name="<!--[ $InputEndOn ]-->" value="<!--[ $ValueEndOn ]-->" <!--[ $SelectedEndOn ]--> />&nbsp;
+		<!--[ if $startdate > $endDate ]-->
+                	<!--[ pc_calendar_build_input_box htmlName="meetingdate_end" dateFormat="%d-%m-%Y" defaultString=$startvalue defaultDate=$startdate ]--><br />
+                <!--[ else ]-->
+                	<!--[ pc_calendar_build_input_box htmlName="meetingdate_end" dateFormat="%d-%m-%Y" defaultString=$endvalue defaultDate=$endDate ]--><br />
+                <!--[ /if ]-->
+                <input type="radio" name="<!--[ $InputNoEnd ]-->" value="<!--[ $ValueNoEnd ]-->" <!--[ $SelectedNoEnd ]--> />&nbsp;
+                <!--[ $NoEndDateTitle ]-->
+            </td>
+        </tr>
+    </table>
+</div>
+<!--[ else ]-->
+    <input type="hidden" name="<!--[ $InputNoRepeat ]-->" value="1">
+    <input type="hidden" name="<!--[ $InputRepeat ]-->" value="">
+    <input type="hidden" name="<!--[ $InputRepeatFreq ]-->" value="<!--[ $InputRepeatFreqVal ]-->">
+    <input type="hidden" name="<!--[ $InputRepeatFreqType ]-->" value="1">
+    <input type="hidden" name="<!--[ $InputRepeatOnNum ]-->" value="1">
+    <input type="hidden" name="<!--[ $InputRepeatOnDay ]-->" value="1">
+    <input type="hidden" name="<!--[ $InputEndOn ]-->" value="<!--[ $ValueEndOn ]-->">
+    <input type="hidden" name="meetingdate_end" value="<!--[ $endDate ]-->" >
+    <input type="hidden" name="<!--[ $InputNoEnd ]-->" value="0">
+<!--[ /if ]-->
+<!-- REPEATING ROWS -->
+
+<!-- V4B Start -->
+<!--[pnmodgetvar module="PostCalendar" name="pcMeeting"|pnvarprepfordisplay assign="pcDisplayMeeting"]-->
+<!--[ if $pcDisplayMeeting ]-->
+<div class="tabpage" style="background:white;">
+<h2>Participant</h2>
+    <table width="100%" border="0" cellpadding="2" cellspacing="0" bgcolor="white">   
+        <tr>
+		    <td colspan="2" valign="top" width="270">
+	            <table>
+		            <tr>
+    		            <td>
+	                		 Pariticipant Available<br>
+		                     <!--[ $UserListSelector ]--><br>
+                             <input class="submit" onclick="MoveOption('tn','participants');" type="button" value="Add >>" name="Add">
+                        </td>
+		                <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                        <td valign="top">
+                            pariticipant Selected<br>
+                            <select class="select" multiple size="5"  name="participants[]"></select><br>
+                            <input class="submit" onclick="MoveOption('participants','tn');" type="button" value="<< Remove" name="Remove">
+                        </td>
+	                </tr>
+	            </table>
+            </td>
+        </tr>
+    </table>
+</div>
+</div>
+<!--[ /if ]-->
+<!-- V4B End -->
+<!--[ $EventHTMLorText ]-->
+<!--[ $FormHidden ]-->
+<!--[ $FormSubmit ]-->
+</form>

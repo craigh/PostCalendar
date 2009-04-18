@@ -1,0 +1,22 @@
+------------------------------------------------------
+value4business Changelog
+------------------------------------------------------
+
+16-01-2004 : TS : iCal 0.1 added, customized, translated
+                  
+iCal Files added:   - ical.php
+                    - images/bell.gif
+                    - modules/PostCalendar/docs/README.ical.txt
+                    - modules/PostCalendar/plugins/function.pc_week_start.php
+                    - modules/PostCalendar/plugins/function.pc_week_end.php
+                    - modules/PostCalendar/plugins/function.pc_get_category.php
+                    - modules/PostCalendar/pntemplates/icalenabled/*.*
+
+ical Files changed: - modules/PostCalendar/pntemplates/icalenabled/config/lang.deu
+                    - modules/PostCalendar/pntemplates/icalenabled/views/day/default.html
+                    - modules/PostCalendar/pntemplates/icalenabled/views/month/default.html
+                    - modules/PostCalendar/pntemplates/icalenabled/views/month/list.html
+                    - modules/PostCalendar/pntemplates/icalenabled/views/week/default.html
+                    - modules/PostCalendar/pntemplates/icalenabled/views/year/default.html
+
+Summer-2003 : RNG : meeting code added 

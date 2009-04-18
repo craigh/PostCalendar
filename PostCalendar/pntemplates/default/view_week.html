@@ -1,0 +1,96 @@
+<!--[pnpageaddvar name="stylesheet" value="modules/PostCalendar/pntemplates/default/style/style.css"]-->
+
+
+<!--[ if $PRINT_VIEW != 1 ]-->
+<!--[ include file="default/navigation.html" ]-->
+<!--[ /if ]-->
+
+<table width="100%" border="0" cellpadding="5" cellspacing="0" class="weekheader">
+    <tr>
+        <td nowrap="nowrap" width="100%" align="center" valign="middle" class="weekheader">
+			<a href="<!--[ $PREV_WEEK_URL ]-->">&lt;&lt;</a>
+        	<!--[ pc_week_range date=$DATE sep=" - " format='%B %d %Y' ]-->
+			<a href="<!--[ $NEXT_WEEK_URL ]-->">&gt;&gt;</a>
+		</td>
+	</tr>
+</table>
+
+<table width="100%" border="0" cellpadding="0" cellspacing="0" class="calcontainer"><tr><td>
+	<!--[ * Loop through the EventsByDate array : This array contains data for each day in the view. * ]-->
+	<!--[ pc_sort_events var="S_EVENTS" sort="time" order="asc" value=$A_EVENTS ]-->
+	<!--[ foreach name=dates item=events key=cdate from=$S_EVENTS ]-->
+    	<!--[ assign var="dayname" value=$cdate|date_format:"%w" ]-->
+    	<!--[ assign var="day" value=$cdate|date_format:"%d"|string_format:"%1d" ]-->
+    	<!--[ assign var="month" value=$cdate|date_format:"%m"|string_format:"%1d" ]-->
+		<!--[ assign var="month" value=$month-1 ]-->
+    	<!--[ assign var="year" value=$cdate|date_format:"%Y"|string_format:"%4d" ]-->
+		<table width="100%" border="0" cellpadding="5" cellspacing="0" class="dayheader">
+        	<tr>
+        		<td width="100%">
+            		<a href="<!--[ pc_url action=day date=$cdate ]-->">
+					<!--[ if $USE_INT_DATES eq true ]-->
+						<!--[ pc_date_format date=$cdate format='%A, %d %B %Y']-->
+					<!--[ else ]-->	
+						<!--[ pc_date_format date=$cdate format='%A, %B %d %Y']-->
+					<!--[ /if ]-->
+					</a>
+            	</td>
+        	</tr>
+    	</table>
+		<!--[ * Loop through the events for this day and display the event data * ]-->
+		<!--[ assign var="oldCat" value="" ]-->
+		<table width="100%" border="0" cellpadding="0" cellspacing="0" class="eventslist">
+        	<tr>
+         		<td class="eventslist" width="100%">
+				<!--[ foreach name=eventloop key=id item=event from=$S_EVENTS.$cdate ]-->
+    				<!--[ assign var="cCat" value=$event.catname ]-->
+						<!--[ if $24HOUR_TIME ]-->
+							<!--[ assign var="timestamp" value=$event.startTime|date_format:'%H:%M']-->
+						<!--[ else ]-->
+							<!--[ assign var="timestamp" value=$event.startTime|date_format:'%I:%M %p']-->
+						<!--[ /if ]-->
+						<!--[ if $oldCat != $cCat ]-->
+							<!--[ if $smarty.foreach.eventloop.first != true ]-->
+								</div>
+							<!--[ /if ]-->
+							<div style="padding: 2px; background-color: <!--[ $event.catcolor ]-->;">
+								<!--[ if $event.meeting_id ]--><img src="<!--[ $TPL_IMAGE_PATH ]-->/meeting.gif" alt="Meeting" title="Meeting" border="0" style="float: left;" /><!--[ /if ]--><!--[ $event.catname ]-->
+							</div>
+							<div style="padding: 2px; border:solid 1px <!--[ $event.catcolor ]-->;">
+						<!--[ /if ]-->
+						<!--[ if $event.alldayevent != true ]-->
+							<!--[ $timestamp ]-->
+						<!--[ /if ]-->
+						<!--[ $event.uname ]--> <!-- // V4B SB Inseted Username to get a better overview -->
+						<a href="<!--[ pc_url action=detail eid=$event.eid date=$date ]-->" 
+								 <!--[ pc_popup delay="500" 
+						            		bgcolor=$event.catcolor 
+								    		caption=$event.title 
+								    		text=$event.hometext ]-->><!--[ $event.title|strip_tags|pnvarprephtmldisplay ]--></a>
+						<!--[ if $event.alldayevent != true ]-->
+							(<!--[ $event.duration_hours ]-->:<!--[ $event.duration_minutes ]-->)
+						<!--[ /if ]-->
+						<br />
+						<!--[ assign var="oldCat" value=$event.catname ]-->
+						<!--[ if $smarty.foreach.eventloop.last ]-->
+							<!--[ * we need to close out the <div> tag * ]-->
+							</div>
+						<!--[ /if ]-->
+				<!--[ foreachelse ]-->
+					&nbsp;
+        		<!--[ /foreach ]-->
+				</td>
+        	</tr>
+    	</table>
+	<!--[ /foreach ]-->
+</td></tr></table>
+<!--[ if $PRINT_VIEW != 1 ]-->
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+    <tr>
+        <td align="right">
+            <a href="<!--[ pc_url action="week" print="true" ]-->">Print</a>
+        </td>
+    </tr>
+</table>
+<!--[ /if ]-->
+<!--[ include file="default/footer.html" ]-->

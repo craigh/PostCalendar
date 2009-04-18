@@ -1,0 +1,155 @@
+td.blockmonthon
+{
+	background-color: white;
+	border: 1px solid white;
+}
+td.blockmonthoff
+{
+	background-color: white;
+	border: 1px solid white;
+}
+td.blockmonthtoday
+{
+	background-color: yellow;
+	border: 1px solid white;
+}
+td.blockmonthheader
+{
+	background-color: white;
+	font-size: 8pt;
+	font-weight: bold;
+}
+table.blockmonthheader
+{
+	background-color: white;
+	border: 1px solid #000000;
+}
+.blockmonthheader a:link
+{
+	font-size: 8pt;
+	font-weight: bold;
+	padding-left: 1px;
+	padding-right: 1px;
+	text-decoration: none;
+}
+.blockmonthheader a:hover
+{
+	font-size: 8pt;
+	font-weight: bold;
+	padding-left: 1px;
+	padding-right: 1px;
+	text-decoration: none;
+}
+.blockmonthheader a:active
+{
+	font-size: 8pt;
+	font-weight: bold;
+	padding-left: 1px;
+	padding-right: 1px;
+	text-decoration: none;
+}
+.blockmonthheader a:visited
+{
+	font-size: 8pt;
+	font-weight: bold;
+	padding-left: 1px;
+	padding-right: 1px;
+	text-decoration: none;
+}
+td.blockdaynames
+{
+	background-color: white;
+	border: 1px solid white;
+	font-size: 8pt;
+	font-weight: normal;
+	text-decoration: none;
+}
+
+table.blockcalcontainer,
+td.blockcalcontainer
+{
+	border: 1px solid #000000;
+}
+td.blockweeklink
+{
+	background-color: white;
+	border: 1px solid white;
+}
+.blockweeklink a:link,
+.blockweeklink a:hover,
+.blockweeklink a:visited,
+.blockweeklink a:active
+{
+	color: black;
+	font-size: 7pt;
+	font-weight: normal;
+	text-decoration: none;
+}
+a.blockevent-none:link,
+a.blockevent-none:hover,
+a.blockevent-none:visited,
+a.blockevent-none:active
+{
+	color: black;
+	font-size: 10px;
+	font-weight: normal;
+	text-decoration: none;
+}
+a.blockevent-one:link,
+a.blockevent-one:hover,
+a.blockevent-one:visited,
+a.blockevent-one:active
+{
+	color: #006600;
+	font-size: 10px;
+	font-weight: normal;
+	text-decoration: none;
+}
+a.blockevent-two:link,
+a.blockevent-two:hover,
+a.blockevent-two:visited,
+a.blockevent-two:active
+{
+	color: #006666;
+	font-size: 10px;
+	font-weight: normal;
+	text-decoration: none;
+}
+a.blockevent-three:link,
+a.blockevent-three:hover,
+a.blockevent-three:visited,
+a.blockevent-three:active
+{
+	color: #0066cc;
+	font-size: 10px;
+	font-weight: normal;
+	text-decoration: none;
+}
+li.eventlink,
+.eventlink a:link,
+.eventlink a:hover,
+.eventlink a:visited,
+.eventlink a:active
+{
+	font-size: 10px;
+	font-weight: normal;
+	padding: 2px;
+	text-decoration: none;
+}
+li.pc_blockdate
+{
+	font-weight: bold;
+	font-size: 1.1em;
+}
+li.pc_blockevent
+{
+	margin-left:2em;
+	border:none;
+	padding:0;
+}
+div.pc_centerblocksubmitlinks
+{
+	text-align: center;
+	padding: 1em 0 0 0;
+	
+}

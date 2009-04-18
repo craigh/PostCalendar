@@ -1,0 +1,54 @@
+<!--[pnpageaddvar name="stylesheet" value="modules/PostCalendar/pntemplates/default/style/calendarblock.css"]-->
+
+<!--[ if $SHOW_TITLE eq 1 ]-->
+<h2><!--[ $UPCOMING_EVENTS_TITLE ]--></h2>
+<!--[ /if ]-->
+
+<!--[ counter start=0 assign=eventcount ]-->
+<!--[ pc_sort_events var="S_EVENTS" sort="time" order="asc" value=$A_EVENTS ]-->
+<!--[ foreach name=dates item=events key=date from=$S_EVENTS ]-->
+	<!--[ if $date > $TODAY_DATE ]-->
+    	<!--[ foreach name=eventloop key=id item=event from=$events ]-->
+    		<!--[ if $eventcount < $DISPLAY_LIMIT ]-->
+    			<!--[ if $event.alldayevent != true ]-->
+					<!--[ if $24HOUR_TIME  ]-->
+						<!--[ assign var="timestamp" value=$event.startTime|date_format:'%H:%M' ]-->
+					<!--[ else ]-->
+						<!--[ assign var="timestamp" value=$event.startTime|date_format:'%l:%M %p' ]-->
+					<!--[ /if ]-->
+				<!--[ else ]-->
+					<!--[ assign var="timestamp" value="" ]-->
+				<!--[ /if ]-->				
+				<ul>
+        			<!--[ if $smarty.foreach.eventloop.iteration eq 1 ]-->
+        				<li class="pc_blockdate">
+			 					<!--[ if $USE_INT_DATES eq true ]-->
+				    			    <!--[ assign var="format" value='%A, %d %B %Y' ]-->
+							    <!--[ else ]-->    
+				    			    <!--[ assign var="format" value='%A, %B %d %Y' ]-->
+							    <!--[ /if ]-->
+								<!--[ $date|pc_date_format:$format ]-->
+        				</li>
+        			<!--[ /if ]-->
+        			<li class="pc_blockevent">
+						<a class="eventlink" href="<!--[ pc_url action=detail eid=$event.eid date=$date ]-->" 
+								 <!--[ pc_popup delay="500" 
+											timeout="3600"
+											bgcolor=$event.catcolor 
+											caption=$event.title 
+											text=$event.hometext|truncate:255:"..." ]-->><!--[ $timestamp ]--> <!--[ $event.title|strip_tags ]-->
+						<!--[ if $event.alldayevent != true ]-->
+							(<!--[ $event.duration_hours ]-->:<!--[ $event.duration_minutes ]--> long)
+						<!--[ /if ]-->
+						</a>
+        			</li>
+				</ul>
+			<!--[ /if ]-->
+		<!--[ counter ]-->
+		<!--[ /foreach ]-->
+    <!--[ /if ]-->
+<!--[ /foreach ]-->
+
+<!--[ if $eventcount == 0 ]-->
+	No Events Today
+<!--[ /if ]-->

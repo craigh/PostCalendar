@@ -1,0 +1,76 @@
+<!--[ *Render* ]-->
+
+<!--[ assign var="icaldate" value=$DATE|date_format:"%Y-%m-%d" ]-->
+
+<!--[pnpageaddvar name="stylesheet" value="modules/PostCalendar/pntemplates/default/style/style.css"]-->
+
+
+<!--[ pc_form_nav_open ]-->
+<!-- main navigation -->
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+	<tr>
+		<td nowrap="nowrap" valign="bottom" align="left">
+		 	<!--[ pc_filter label=Filter 
+						 class="" type="user,category,topic"
+						 order="user,category,topic,jump" ]--><br />
+			<!--[ pc_date_select day="on" month="on" 
+							 year="on" view="on" 
+							 label=Jump 
+							 order="month,day,year,view,jump" ]-->
+		</td>
+		<td width="100%" valign="bottom" align="right">
+            <table id="bnav" border="0" cellpadding="3" cellspacing="0">
+                <tr>
+		            <!--[ if $VIEW_TYPE eq "day" ]--> 
+                    <td align="right" valign="middle">
+			    <a href="index.php?module=PostCalendar&amp;func=exportdate=<!--[ $icaldate ]-->&amp;format=attach&amp;category=<!--[ pc_get_category ]-->"><img src="<!--[ $TPL_IMAGE_PATH ]-->/vip2file.gif" alt="<!--[ #_VIP_TO_FILE# ]-->" title="<!--[ #_VIP_TO_FILE# ]-->" border="0" /></a>
+                    </td>
+		            <!--[ /if ]-->
+		    
+		            <!--[ if $VIEW_TYPE eq "week" ]--> 
+                    <td align="right" valign="middle">
+			    <a href="index.php?module=PostCalendar&amp;func=export&amp;start=<!--[ pc_week_start date=$DATE format='%B %d %Y' ]-->&amp;end=<!--[ pc_week_end date=$DATE format='%B %d %Y' ]-->&amp;category=<!--[ pc_get_category ]-->&amp;format=attach"><img src="<!--[ $TPL_IMAGE_PATH ]-->/vip2file.gif" alt="<!--[ #_VIP_TO_FILE# ]-->" title="<!--[ #_VIP_TO_FILE# ]-->" border="0" /></a>
+                    </td>
+		            <!--[ /if ]-->
+		    
+		            <!--[ if $VIEW_TYPE eq "month" ]--> 
+                    <td align="right" valign="middle">
+                        <a href="index.php?module=PostCalendar&amp;func=export&amp;start=<!--[ $MONTH_START_DATE ]-->&amp;end=<!--[ $MONTH_END_DATE ]-->&amp;category=<!--[ pc_get_category ]-->&amp;format=attach"><img src="<!--[ $TPL_IMAGE_PATH ]-->/vip2file.gif" alt="<!--[ #_VIP_TO_FILE# ]-->" title="<!--[ #_VIP_TO_FILE# ]-->" border="0" /></a>
+                    </td>	
+		            <!--[ /if ]-->
+		    
+		            <!--[ if $VIEW_TYPE eq "year" ]--> 
+                    <td align="right" valign="middle">
+                        <a href="index.php?module=PostCalendar&amp;func=export&amp;start=<!--[ $DATE|date_format:'%Y']-->-01-01&amp;end=<!--[ $DATE|date_format:'%Y' ]-->-12-31&amp;category=<!--[ pc_get_category ]-->&amp;format=attach"><img src="<!--[ $TPL_IMAGE_PATH ]-->/vip2file.gif" alt="<!--[ #_VIP_TO_FILE# ]-->" title="<!--[ #_VIP_TO_FILE# ]-->" border="0" /></a>
+                    </td>	
+		            <!--[ /if ]-->
+                    <td align="right" valign="middle">
+                        <a href="index.php?module=PostCalendar&amp;type=user&amp;func=upload"><img src="<!--[ $TPL_IMAGE_PATH ]-->/file2vip.gif" alt="<!--[ #_FILE_TO_VIP# ]-->" title="<!--[ #_FILE_TO_VIP# ]-->" border="0" /></a>
+                    </td>			
+                    <td align="right" valign="middle">
+                        <a href="<!--[ pc_url action="day" ]-->"><img <!--[ if $VIEW_TYPE eq "day" ]-->src="<!--[ $TPL_IMAGE_PATH ]-->/day_on.gif"<!--[ else ]-->src="<!--[ $TPL_IMAGE_PATH ]-->/day.gif"<!--[ /if ]--> alt="Day" title="Day" border="0" /></a>
+                    </td>
+                    <td align="right" valign="middle">
+                        <a href="<!--[ pc_url action="week" ]-->"><img <!--[ if $VIEW_TYPE eq "week" ]-->src="<!--[ $TPL_IMAGE_PATH ]-->/week_on.gif"<!--[ else ]-->src="<!--[ $TPL_IMAGE_PATH ]-->/week.gif"<!--[ /if ]--> alt="Week" title="Week" border="0" /></a>
+                    </td>
+                    <td align="right" valign="middle">
+                        <a href="<!--[ pc_url action="month" ]-->"><img <!--[ if $VIEW_TYPE eq "month" ]-->src="<!--[ $TPL_IMAGE_PATH ]-->/month_on.gif"<!--[ else ]-->src="<!--[ $TPL_IMAGE_PATH ]-->/month.gif"<!--[ /if ]--> alt="Month" title="Month" border="0" /></a>
+                    </td>
+                    <td align="right" valign="middle">
+                        <a href="<!--[ pc_url action="year" ]-->"><img <!--[ if $VIEW_TYPE eq "year" ]-->src="<!--[ $TPL_IMAGE_PATH ]-->/year_on.gif"<!--[ else ]-->src="<!--[ $TPL_IMAGE_PATH ]-->/year.gif"<!--[ /if ]--> alt="Year" title="Year" border="0" /></a>
+                    </td>
+					<!--[ if $ACCESS_ADD eq true ]-->
+                    <td align="right" valign="middle">
+                        <a href="<!--[ pc_url action="submit" ]-->"><img <!--[ if $FUNCTION eq "submit" ]-->src="<!--[ $TPL_IMAGE_PATH ]-->/add_on.gif"<!--[ else ]-->src="<!--[ $TPL_IMAGE_PATH ]-->/add.gif"<!--[ /if ]--> alt="Add" title="Add" border="0" /></a>
+                    </td>
+					<!--[ /if ]-->
+                    <td align="right" valign="middle">
+                        <a href="<!--[ pc_url action="search" ]-->"><img <!--[ if $FUNCTION eq "search" ]-->src="<!--[ $TPL_IMAGE_PATH ]-->/search_on.gif"<!--[ else ]-->src="<!--[ $TPL_IMAGE_PATH ]-->/search.gif"<!--[ /if ]--> alt="Search" title="Search" border="0" /></a>
+                    </td>
+				</tr>
+           </table>
+        </td>
+	</tr>
+</table>
+<!--[ pc_form_nav_close ]-->
+<!-- end main navigation -->

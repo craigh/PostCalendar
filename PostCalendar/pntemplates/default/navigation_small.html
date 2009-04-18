@@ -1,0 +1,46 @@
+<!--[ *Render* ]-->
+<!--[pnpageaddvar name="stylesheet" value="modules/PostCalendar/pntemplates/default/style/style.css"]-->
+
+
+<!-- main navigation -->
+<!--[ pc_form_nav_open ]-->
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+     <tr>
+         <td nowrap="nowrap" valign="bottom" class="pn-normal">
+             <!--[ pc_date_select day="on" 
+			 				  month="on" 
+							  year="on" 
+							  view="on" 
+							  label="Jump" 
+							  class=""
+							  order="month,day,year,view,jump" ]-->
+         </td>
+		 <td valign="bottom" align="right">
+            <table id="bnav" border="0" cellpadding="3" cellspacing="0">
+                <tr>
+                     <td align="right" valign="middle">
+                        <a href="<!--[ pc_url action="day" ]-->"><img <!--[ if $VIEW_TYPE eq "day" ]-->src="<!--[ $TPL_IMAGE_PATH ]-->/day_on.gif"<!--[ else ]-->src="<!--[ $TPL_IMAGE_PATH ]-->/day.gif"<!--[ /if ]--> alt="Day" title="Day" border="0" /></a>
+                    </td>
+                    <td align="right" valign="middle">
+                        <a href="<!--[ pc_url action="week" ]-->"><img <!--[ if $VIEW_TYPE eq "week" ]-->src="<!--[ $TPL_IMAGE_PATH ]-->/week_on.gif"<!--[ else ]-->src="<!--[ $TPL_IMAGE_PATH ]-->/week.gif"<!--[ /if ]--> alt="Week" title="Week" border="0" /></a>
+                    </td>
+                    <td align="right" valign="middle">
+                        <a href="<!--[ pc_url action="month" ]-->"><img <!--[ if $VIEW_TYPE eq "month" ]-->src="<!--[ $TPL_IMAGE_PATH ]-->/month_on.gif"<!--[ else ]-->src="<!--[ $TPL_IMAGE_PATH ]-->/month.gif"<!--[ /if ]--> alt="Month" title="Month" border="0" /></a>
+                    </td>
+                    <td align="right" valign="middle">
+                        <a href="<!--[ pc_url action="year" ]-->"><img <!--[ if $VIEW_TYPE eq "year" ]-->src="<!--[ $TPL_IMAGE_PATH ]-->/year_on.gif"<!--[ else ]-->src="<!--[ $TPL_IMAGE_PATH ]-->/year.gif"<!--[ /if ]--> alt="Year" title="Year" border="0" /></a>
+                    </td>
+                    <!--[ if $ACCESS_ADD eq true ]-->
+                 	<td align="right" valign="middle">
+                        <a href="<!--[ pc_url action="submit" ]-->"><img <!--[ if $FUNCTION eq "submit" ]-->src="<!--[ $TPL_IMAGE_PATH ]-->/add_on.gif"<!--[ else ]-->src="<!--[ $TPL_IMAGE_PATH ]-->/add.gif"<!--[ /if ]--> alt="Add" title="Add" border="0" /></a>
+                    </td>
+					<!--[ /if ]-->
+                    <td align="right" valign="middle">
+                        <a href="<!--[ pc_url action="search" ]-->"><img <!--[ if $FUNCTION eq "search" ]-->src="<!--[ $TPL_IMAGE_PATH ]-->/search_on.gif"<!--[ else ]-->src="<!--[ $TPL_IMAGE_PATH ]-->/search.gif"<!--[ /if ]--> alt="Search" title="Search" border="0" /></a>
+                    </td>
+                </tr>
+            </table>
+         </td>
+     </tr>
+ </table>
+<!--[ pc_form_nav_close ]-->

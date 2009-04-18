@@ -1,0 +1,54 @@
+<!--[pnpageaddvar name="stylesheet" value="modules/PostCalendar/pntemplates/default/style/calendarblock.css"]-->
+
+<!--[ if $SHOW_TITLE eq 1 ]-->
+	<h2><!--[ $TODAYS_EVENTS_TITLE ]--></h2>
+<!--[ /if ]-->
+<!--[ pc_sort_events var="S_EVENTS" sort="time" order="asc" value=$A_EVENTS ]-->
+<!--[ foreach name=dates item=events key=date from=$S_EVENTS ]-->
+	<!--[ if $date eq $TODAY_DATE ]-->
+		<ul>
+		<li class="pc_blockdate">
+				<!--[ if $USE_INT_DATES eq true ]-->
+					<!--[ assign var="format" value='%A, %d %B %Y' ]-->
+				<!--[ else ]-->    
+					<!--[ assign var="format" value='%A, %B %d %Y' ]-->
+				<!--[ /if ]-->
+				<!--[ $TODAY_DATE|pc_date_format:$format ]-->
+		</li>
+		<!--[ foreach name=eventloop key=id item=event from=$events ]-->
+			<!--[ assign var="eventtotal" value=$eventtotal+1 ]-->
+			<!--[ if $eventcount < $DISPLAY_LIMIT ]-->
+				<!--[ assign var="eventcount" value=$eventcount+1 ]--> 
+				<!--[ if $event.alldayevent != true ]-->
+					<!--[ if $24HOUR_TIME  ]-->
+						<!--[ assign var="timestamp" value=$event.startTime|date_format:'%H:%M' ]-->
+					<!--[ else ]-->
+						<!--[ assign var="timestamp" value=$event.startTime|date_format:'%l:%M %p' ]-->
+					<!--[ /if ]-->
+				<!--[ else ]-->
+					<!--[ assign var="timestamp" value="" ]-->
+				<!--[ /if ]-->
+				<li class="pc_blockevent">
+					<a class="eventlink" href="<!--[ pc_url action=detail eid=$event.eid date=$date ]-->" 
+					<!--[ pc_popup delay="500" 
+						timeout="3600"
+						bgcolor=$event.catcolor
+						caption=$event.title 
+						text=$event.hometext|truncate:255:"..." ]-->><!--[ $timestamp ]--> <!--[ $event.title|strip_tags ]-->
+							<!--[ if $event.alldayevent != true ]-->
+								(<!--[ $event.duration_hours ]-->:<!--[ $event.duration_minutes ]--> long)
+							<!--[ /if ]-->
+							</a>
+        			</li>
+    		<!--[ /if ]-->
+		<!--[ foreachelse ]-->
+				<!--[ assign var="eventtotal" value="0" ]-->
+            		<li class="pc_blockevent">No Events Today</li>
+		<!--[ /foreach ]-->
+		</ul>
+    <!--[ /if ]-->
+<!--[ /foreach ]-->
+
+<!--[ if ($eventtotal > $DISPLAY_LIMIT) ]-->
+  <a href="<!--[ pc_url action=day eid=$event.eid date=$TODAY_DATE ]-->"><!--[ $eventtotal ]-->&nbsp<!--[ $EVENTS_TOTAL_LINK ]--></a>
+<!--[ /if ]-->

@@ -1,0 +1,225 @@
+/* done: day, week, month, year, search, nav, details
+*/
+
+/********** HEADERS & CONTAINERS ***************/
+
+td.dayheader,
+td.weekheader,
+td.monthheader,
+td.yearheader
+{
+	background: transparent url(../images/grain_dark.gif) repeat scroll 0 0;
+	font-size: 14pt;
+	font-weight: bold;
+	color: #554433;
+}
+table.calcontainer,
+table.dayheader,
+table.weekheader,
+table.monthheader,
+table.yearheader
+{
+	margin-top:1em;
+	border: 1px solid #000000;
+}
+.dayheader a:link,
+.dayheader a:active,
+.dayheader a:hover,
+.dayheader a:visited,
+.weekheader a:link,
+.weekheader a:active,
+.weekheader a:hover,
+.weekheader a:visited,
+.monthheader a:link,
+.monthheader a:active,
+.monthheader a:hover,
+.monthheader a:visited,
+.yearheader a:link,
+.yearheader a:active,
+.yearheader a:hover,
+.yearheader a:visited
+{
+	font-size: 14pt;
+	font-weight: bold;
+	text-decoration: none;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+td.calcontainer
+{
+	border: 1px solid #000000;
+}
+
+
+/********** DAY & SEARCH ***************/
+
+table.eventslist,
+td.eventslist
+{
+	background-color: transparent;
+	padding: 10px;
+}
+
+.pc_searchtable
+{
+	border: 1px solid black;
+}
+
+/*********** MONTH **************/
+
+td.monthon {
+	background-color: transparent;
+	border: 1px solid #958573;
+}
+td.monthoff {
+	background: transparent url(../images/grain_dark.gif) repeat scroll 0 0;
+	border: 1px solid white;
+}
+td.monthtoday {
+	background-color: white;
+	border: 2px dashed orange;
+}
+td.daynames {
+	background-color: white;
+	border: 1px solid #958573;
+	font-size: 10pt;
+	font-weight: normal;
+	text-decoration: none;
+}
+
+/*********** YEAR **************/
+
+td.weeklink
+{
+	background-color: transparent;
+	border: 1px solid white;
+}
+.weeklink a:link,
+.weeklink a:active,
+.weeklink a:hover,
+.weeklink a:visited
+{
+	font-size: 7pt;
+	font-weight: normal;
+	text-decoration: none;
+}
+a.event-none:link,
+a.event-none:hover,
+a.event-none:visited,
+a.event-none:active
+{
+	color: #000000;
+	font-size: 10px;
+	font-weight: normal;
+	text-decoration: none;
+}
+a.event-one:link,
+a.event-one:hover,
+a.event-one:visited,
+a.event-one:active
+{
+	color: #006600;
+	font-size: 10px;
+	font-weight: normal;
+	text-decoration: none;
+}
+a.event-two:link,
+a.event-two:hover,
+a.event-two:visited,
+a.event-two:active
+{
+	color: #006666;
+	font-size: 10px;
+	font-weight: normal;
+	text-decoration: none;
+}
+a.event-three:link,
+a.event-three:hover,
+a.event-three:visited,
+a.event-three:active
+{
+	color: #0066cc;
+	font-size: 10px;
+	font-weight: normal;
+	text-decoration: none;
+}
+
+/*********** WEEK **************/
+/*
+.dayheader a:link,
+.dayheader a:active,
+.dayheader a:hover,
+.dayheader a:visited
+{
+	font-size: 12pt;
+	font-weight: bold;
+	text-decoration: none;
+}
+*/
+
+/*********** NAV **************/
+
+
+.bnav {
+	border: 1px solid #000000;
+}
+td.nav,
+td.nav:hover {
+	border-right: 1px outset white;
+	background-color:white;
+}
+td.rnav,
+td.rnav:hover {
+	background-color:white;
+}
+td.snav {
+	border-right: 1px outset white;
+	background-color:white;
+	font-weight : bold;
+}
+td.rsnav {
+	background-color:white;
+	font-weight : bold;
+}
+a.nav:link,
+a.nav:active,
+a.nav:hover,
+a.nav:visited {
+	padding-right: 3px;
+	padding-left: 3px;
+	color: black;
+	text-decoration: none;
+}
+SELECT.nav,
+OPTION.nav,
+INPUT.nav {
+	color: black;
+	background-color:white;
+}
+
+/*********** details **************/
+
+td.eventtitle
+{
+	background-color: white;
+	font-size: 14pt;
+	font-weight: bold;
+}
+table.eventtitle,
+table.eventtime
+{
+	background-color: white;
+	border: 1px solid #000000;
+}
+td.eventtime
+{
+	background-color: white;
+	font-size: 10pt;
+	font-weight: bold;
+}
+table.eventslist,
+td.eventslist
+{
+	background-color: white;
+	padding: 10px;
+}
