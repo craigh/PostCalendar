@@ -51,7 +51,7 @@ td.blockcalcontainer
 }
 td.blockweeklink
 {
-	background-color: white;
+	background-color: #cccccc; /* Pale gray */
 	border: 1px solid Black;
 }
 .blockweeklink a:link,
