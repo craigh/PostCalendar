@@ -1,53 +1,32 @@
 td.blockmonthon
 {
 	background-color: white;
-	border: 1px solid white;
+	border: 1px solid Black;
 }
 td.blockmonthoff
 {
-	background-color: white;
-	border: 1px solid white;
+	background-color: #cccccc; /* Pale gray */
+	border: 1px solid Black;
 }
 td.blockmonthtoday
 {
 	background-color: yellow;
-	border: 1px solid white;
+	border: 1px solid Black;
 }
 td.blockmonthheader
 {
-	background-color: white;
+	background-color: #cccccc; /* Pale gray */
 	font-size: 8pt;
 	font-weight: bold;
 }
 table.blockmonthheader
 {
-	background-color: white;
-	border: 1px solid #000000;
+	background-color: #cccccc; /* Pale gray */
+	border: 1px solid Black;
 }
-.blockmonthheader a:link
-{
-	font-size: 8pt;
-	font-weight: bold;
-	padding-left: 1px;
-	padding-right: 1px;
-	text-decoration: none;
-}
-.blockmonthheader a:hover
-{
-	font-size: 8pt;
-	font-weight: bold;
-	padding-left: 1px;
-	padding-right: 1px;
-	text-decoration: none;
-}
-.blockmonthheader a:active
-{
-	font-size: 8pt;
-	font-weight: bold;
-	padding-left: 1px;
-	padding-right: 1px;
-	text-decoration: none;
-}
+.blockmonthheader a:link,
+.blockmonthheader a:hover,
+.blockmonthheader a:active,
 .blockmonthheader a:visited
 {
 	font-size: 8pt;
@@ -58,8 +37,8 @@ table.blockmonthheader
 }
 td.blockdaynames
 {
-	background-color: white;
-	border: 1px solid white;
+	background-color: #cccccc; /* Pale gray */
+	border: 1px solid Black;
 	font-size: 8pt;
 	font-weight: normal;
 	text-decoration: none;
@@ -68,12 +47,12 @@ td.blockdaynames
 table.blockcalcontainer,
 td.blockcalcontainer
 {
-	border: 1px solid #000000;
+	border: 1px solid Black;
 }
 td.blockweeklink
 {
 	background-color: white;
-	border: 1px solid white;
+	border: 1px solid Black;
 }
 .blockweeklink a:link,
 .blockweeklink a:hover,
@@ -100,7 +79,7 @@ a.blockevent-one:hover,
 a.blockevent-one:visited,
 a.blockevent-one:active
 {
-	color: #006600;
+	color: #006600; /* Obscure Dull Green */
 	font-size: 10px;
 	font-weight: normal;
 	text-decoration: none;
@@ -110,7 +89,7 @@ a.blockevent-two:hover,
 a.blockevent-two:visited,
 a.blockevent-two:active
 {
-	color: #006666;
+	color: #006666; /* Obscure Dull Cyan */
 	font-size: 10px;
 	font-weight: normal;
 	text-decoration: none;
@@ -120,7 +99,7 @@ a.blockevent-three:hover,
 a.blockevent-three:visited,
 a.blockevent-three:active
 {
-	color: #0066cc;
+	color: #0066cc; /* Hard Dark Azure */
 	font-size: 10px;
 	font-weight: normal;
 	text-decoration: none;
