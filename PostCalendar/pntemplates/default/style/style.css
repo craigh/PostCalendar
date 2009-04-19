@@ -1,5 +1,4 @@
-/* done: day, week, month, year, search, nav, details
-*/
+/* PostCalendar Stylesheet */
 
 /********** HEADERS & CONTAINERS ***************/
 
@@ -70,14 +69,17 @@ td.eventslist
 td.monthon {
 	background-color: transparent;
 	border: 1px solid #958573;
+	vertical-align: top;
 }
 td.monthoff {
 	background: transparent url(../images/grain_dark.gif) repeat scroll 0 0;
 	border: 1px solid white;
+	vertical-align: top;
 }
 td.monthtoday {
 	background-color: white;
 	border: 2px dashed orange;
+	vertical-align: top;
 }
 td.daynames {
 	background-color: white;
@@ -144,18 +146,6 @@ a.event-three:active
 	text-decoration: none;
 }
 
-/*********** WEEK **************/
-/*
-.dayheader a:link,
-.dayheader a:active,
-.dayheader a:hover,
-.dayheader a:visited
-{
-	font-size: 12pt;
-	font-weight: bold;
-	text-decoration: none;
-}
-*/
 
 /*********** NAV **************/
 
