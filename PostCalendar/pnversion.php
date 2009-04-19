@@ -33,7 +33,7 @@ $modversion['help']		= 'docs/help.txt';
 $modversion['changelog']	= 'docs/changelog.txt';
 $modversion['license']		= 'docs/license.txt';
 $modversion['official']		= 0;
-$modversion['author']		= '';
+$modversion['author']		= 'Craig Heydenburg';
 $modversion['contact']          = '';
 $modversion['admin']            = 1;
 $modversion['securityschema']   = array('PostCalendar::Event' 	 => 'Event Title::Event ID',
