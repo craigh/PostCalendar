@@ -7,10 +7,9 @@ td.weekheader,
 td.monthheader,
 td.yearheader
 {
-	background: transparent url(../images/grain_dark.gif) repeat scroll 0 0;
+	background: transparent;
 	font-size: 14pt;
 	font-weight: bold;
-	color: #554433;
 }
 table.calcontainer,
 table.dayheader,
@@ -19,7 +18,7 @@ table.monthheader,
 table.yearheader
 {
 	margin-top:1em;
-	border: 1px solid #000000;
+	border: 1px solid Black;
 }
 .dayheader a:link,
 .dayheader a:active,
@@ -46,7 +45,7 @@ table.yearheader
 }
 td.calcontainer
 {
-	border: 1px solid #000000;
+	border: 1px solid Black;
 }
 
 
@@ -61,19 +60,19 @@ td.eventslist
 
 .pc_searchtable
 {
-	border: 1px solid black;
+	border: 1px solid Black;
 }
 
 /*********** MONTH **************/
 
 td.monthon {
 	background-color: transparent;
-	border: 1px solid #958573;
+	border: 1px solid Black;
 	vertical-align: top;
 }
 td.monthoff {
-	background: transparent url(../images/grain_dark.gif) repeat scroll 0 0;
-	border: 1px solid white;
+	background: #cccccc; /* Pale Grey */
+	border: 1px solid Black;
 	vertical-align: top;
 }
 td.monthtoday {
@@ -82,8 +81,8 @@ td.monthtoday {
 	vertical-align: top;
 }
 td.daynames {
-	background-color: white;
-	border: 1px solid #958573;
+	background-color: #cccccc; /* Pale Grey */
+	border: 1px solid Black;
 	font-size: 10pt;
 	font-weight: normal;
 	text-decoration: none;
@@ -93,8 +92,8 @@ td.daynames {
 
 td.weeklink
 {
-	background-color: transparent;
-	border: 1px solid white;
+	background-color: #cccccc; /* Pale Grey */
+	border: 1px solid Black;
 }
 .weeklink a:link,
 .weeklink a:active,
@@ -110,7 +109,7 @@ a.event-none:hover,
 a.event-none:visited,
 a.event-none:active
 {
-	color: #000000;
+	color: Black;
 	font-size: 10px;
 	font-weight: normal;
 	text-decoration: none;
@@ -120,7 +119,7 @@ a.event-one:hover,
 a.event-one:visited,
 a.event-one:active
 {
-	color: #006600;
+	color: #006600; /* Obscure Dull Green */
 	font-size: 10px;
 	font-weight: normal;
 	text-decoration: none;
@@ -130,7 +129,7 @@ a.event-two:hover,
 a.event-two:visited,
 a.event-two:active
 {
-	color: #006666;
+	color: #006666; /* Obscure Dull Cyan */
 	font-size: 10px;
 	font-weight: normal;
 	text-decoration: none;
@@ -140,7 +139,7 @@ a.event-three:hover,
 a.event-three:visited,
 a.event-three:active
 {
-	color: #0066cc;
+	color: #0066cc; /* Hard Dark Azure */
 	font-size: 10px;
 	font-weight: normal;
 	text-decoration: none;
@@ -151,25 +150,25 @@ a.event-three:active
 
 
 .bnav {
-	border: 1px solid #000000;
+	border: 1px solid Black;
 }
 td.nav,
 td.nav:hover {
-	border-right: 1px outset white;
+	border-right: 1px outset White;
 	background-color:white;
 }
 td.rnav,
 td.rnav:hover {
-	background-color:white;
+	background-color: White;
 }
 td.snav {
-	border-right: 1px outset white;
-	background-color:white;
-	font-weight : bold;
+	border-right: 1px outset White;
+	background-color: White;
+	font-weight: bold;
 }
 td.rsnav {
-	background-color:white;
-	font-weight : bold;
+	background-color: White;
+	font-weight: bold;
 }
 a.nav:link,
 a.nav:active,
@@ -177,39 +176,39 @@ a.nav:hover,
 a.nav:visited {
 	padding-right: 3px;
 	padding-left: 3px;
-	color: black;
+	color: Black;
 	text-decoration: none;
 }
 SELECT.nav,
 OPTION.nav,
 INPUT.nav {
-	color: black;
-	background-color:white;
+	color: Black;
+	background-color: White;
 }
 
 /*********** details **************/
 
 td.eventtitle
 {
-	background-color: white;
+	background-color: White;
 	font-size: 14pt;
 	font-weight: bold;
 }
 table.eventtitle,
 table.eventtime
 {
-	background-color: white;
-	border: 1px solid #000000;
+	background-color: White;
+	border: 1px solid Black;
 }
 td.eventtime
 {
-	background-color: white;
+	background-color: White;
 	font-size: 10pt;
 	font-weight: bold;
 }
 table.eventslist,
 td.eventslist
 {
-	background-color: white;
+	background-color: White;
 	padding: 10px;
 }
