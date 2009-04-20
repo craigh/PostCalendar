@@ -1,11 +1,19 @@
 <?php
 @define('__POSTCALENDAR__','PostCalendar');
 /**
- *  $Id: calendar.php,v 1.7 2004/08/02 12:28:27 rgasch Exp $
+ *  SVN: $Id$
  *
+ *  @package         PostCalendar 
+ *  @lastmodified    $Date$ 
+ *  @modifiedby      $LastChangedBy$ 
+ *  @version         $Revision$ 
+ *  
  *  PostCalendar::PostNuke Events Calendar Module
  *  Copyright (C) 2002  The PostCalendar Team
  *  http://postcalendar.tv
+ *  Copyright (C) 2009  Sound Web Development
+ *  Craig Heydenburg
+ *  http://code.zikula.org/soundwebdevelopment/
  *  
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by

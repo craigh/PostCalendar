@@ -1,10 +1,18 @@
 <?php
 /**
- *  $Id: pnversion.php,v 1.2 2003/10/31 00:02:29 rgasch Exp $
+ *  SVN: $Id$
  *
+ *  @package         PostCalendar 
+ *  @lastmodified    $Date$ 
+ *  @modifiedby      $LastChangedBy$ 
+ *  @version         $Revision$ 
+ *  
  *  PostCalendar::PostNuke Events Calendar Module
  *  Copyright (C) 2002  The PostCalendar Team
  *  http://postcalendar.tv
+ *  Copyright (C) 2009  Sound Web Development
+ *  Craig Heydenburg
+ *  http://code.zikula.org/soundwebdevelopment/
  *  
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -26,7 +34,7 @@
  */
 $modversion['name']		= 'PostCalendar';
 $modversion['id']		= '44';
-$modversion['version']		= '5.0.1';
+$modversion['version']		= '5.1.0';
 $modversion['description']	= 'Zikula Calendar Module';
 $modversion['credits']		= 'docs/credits.txt';
 $modversion['help']		= 'docs/help.txt';
@@ -34,7 +42,7 @@ $modversion['changelog']	= 'docs/changelog.txt';
 $modversion['license']		= 'docs/license.txt';
 $modversion['official']		= 0;
 $modversion['author']		= 'Craig Heydenburg';
-$modversion['contact']          = '';
+$modversion['contact']          = 'http://code.zikula.org/soundwebdevelopment/';
 $modversion['admin']            = 1;
 $modversion['securityschema']   = array('PostCalendar::Event' 	 => 'Event Title::Event ID',
 					'PostCalendar::Category' => 'Category Name::Category ID',
