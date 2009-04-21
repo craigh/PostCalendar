@@ -16,7 +16,7 @@
 // | Authors: Sebastian Bergmann <sb@sebastian-bergmann.de>               |
 // +----------------------------------------------------------------------+
 //
-// $Id: Timer.php,v 1.2 2003/10/31 00:02:29 rgasch Exp $
+// $Id$
 //
 
 /**

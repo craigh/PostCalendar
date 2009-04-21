@@ -1,9 +1,9 @@
 <?php
 /**
- *  SVN: $Id: common.api.php 45 2009-04-21 20:34:32Z craigh $
+ *  SVN: $Id$
  *
  *  @package         PostCalendar 
- *  @lastmodified    $Date$ 
+ *  @lastmodified    $Date: 2009-04-21 16:45:01 -0400 (Tue, 21 Apr 2009) $ 
  *  @modifiedby      $LastChangedBy: craigh $ 
  *  @version         $Revision: 45 $ 
  *  

@@ -1,6 +1,6 @@
 <?php
 /**
- *  $Id: modifier.pc_date_format.php,v 1.6 2004/08/02 12:28:27 rgasch Exp $
+ *  $Id$
  *
  *  PostCalendar::PostNuke Events Calendar Module
  *  Copyright (C) 2002  The PostCalendar Team

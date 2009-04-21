@@ -1,6 +1,6 @@
 <?php
 /**
- *  $Id: function.pc_week_range.php,v 1.2 2003/10/31 00:02:29 rgasch Exp $
+ *  $Id$
  *
  *  PostCalendar::PostNuke Events Calendar Module
  *  Copyright (C) 2002  The PostCalendar Team

@@ -1,5 +1,5 @@
 <?php 
-// File: $Id: pntitle.php,v 1.1 2003/11/04 16:50:36 tsmiatek Exp $
+// File: $Id$
 // ----------------------------------------------------------------------
 // LICENSE
 //
@@ -21,7 +21,7 @@
  * Show individual titles at your PostNuke pages. 
  *
  * @package      TitleHack
- * @version      $Id: pntitle.php,v 1.1 2003/11/04 16:50:36 tsmiatek Exp $
+ * @version      $Id$
  * @author       Joerg Napp <jnapp@users.sourceforge.net>
  * @link         http://lottasophie.sourceforge.net Official Support Site
  * @copyright    Copyright (C) 2003 Joerg Napp

@@ -25,7 +25,7 @@
  * v4b_calendar_build_input_box: generate the html to display a calendar input box
  *
  * @author	Robert Gasch
- * @version     $Id: function.v4b_calendar_build_input_box.php,v 1.3 2005/01/14 22:50:48 rgasch Exp $
+ * @version     $Id$
  * @param	assign		The smarty variable to assign the resulting menu HTML to	
  * @param	dateFormat	The JS Calendar date format to use
  * @param	defaultString   The default string to show for a date which hasn't been entered yet

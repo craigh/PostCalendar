@@ -1,6 +1,6 @@
 <?php 
 /**
- *  $Id: init.php,v 1.1 2004/02/11 17:45:53 larsneo Exp $
+ *  $Id$
  *
  *  PostCalendar::PostNuke Events Calendar Module
  *  Copyright (C) 2002  The PostCalendar Team

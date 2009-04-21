@@ -1,6 +1,6 @@
 <?php
 /**
- *  $Id: function.pc_get_category.php,v 1.1 2004/01/16 14:26:51 tsmiatek Exp $
+ *  $Id$
  *
  *  PostCalendar::PostNuke Events Calendar Module
  *  Copyright (C) 2002  The PostCalendar Team

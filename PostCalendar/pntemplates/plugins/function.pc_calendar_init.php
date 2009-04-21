@@ -25,7 +25,7 @@
  * v4b_calendar_init: include the required files so the calendar can be used
  *
  * @author	Robert Gasch
- * @version     $Id: function.v4b_calendar_init.php,v 1.2 2004/12/28 23:08:31 rgasch Exp $
+ * @version     $Id$
  * @param	assign		The smarty variable to assign the resulting menu HTML to	
  *
  */
