@@ -624,6 +624,7 @@ function postcalendar_upgrade($oldversion)
         case '4.0.0':
         case '4.0.1':
         case '4.0.2':
+        case '4.0.3': // Also support upgrades from PostCalendar 4.03a (http://www.krapohl.info)
             // v4b TS start
             pnModSetVar(__POSTCALENDAR__, 'pcRepeating',         		'0');
             pnModSetVar(__POSTCALENDAR__, 'pcMeeting',          		'0');

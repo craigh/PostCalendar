@@ -291,7 +291,6 @@ define('_PC_VIEW_QUEUED', 'Queued');
 define('_PC_WEEK', 'week');
 define('_POSTCALENDAR', 'Calendar');
 define('_POSTCALENDARNOAUTH', 'Not authorised to access PostCalendar module');
-define('_POSTCALENDAR', 'PostCalendar Administration');
 define('_USER_BUSY_MESSAGE', 'I am busy during this time.');
 define('_USER_BUSY_TITLE', 'Busy');
 define('_PC_PARTICIPANT', 'Participants');
