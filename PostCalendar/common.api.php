@@ -1,11 +1,11 @@
 <?php
 /**
- *  SVN: $Id$
+ *  SVN: $Id: common.api.php 45 2009-04-21 20:34:32Z craigh $
  *
  *  @package         PostCalendar 
  *  @lastmodified    $Date$ 
- *  @modifiedby      $LastChangedBy$ 
- *  @version         $Revision$ 
+ *  @modifiedby      $LastChangedBy: craigh $ 
+ *  @version         $Revision: 45 $ 
  *  
  *  PostCalendar::PostNuke Events Calendar Module
  *  Copyright (C) 2002  The PostCalendar Team
