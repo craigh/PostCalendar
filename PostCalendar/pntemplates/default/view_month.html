@@ -36,7 +36,7 @@
 			onclick="javascript:location.href='<!--[ pc_url action=day date=$date ]-->';">
 			<table width="100%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
-					<td align="left" valign="top"><a 
+					<td align="left" valign="top"><a
 						href="<!--[ pc_url action=day date=$date ]-->"><!--[ $date|date_format:"%d" ]--></a>
 					<!--[ if $smarty.foreach.days.iteration == 1 ]-->
 					<a href="<!--[ pc_url action=week date=$date ]-->">[week]</a>
@@ -44,7 +44,7 @@
 					</td>
 					<td align="right" valign="top">
 						<!--[ if $ACCESS_ADD eq true ]-->
-						<a href="<!--[ pc_url action=submit date=$date ]-->"><img 
+						<a href="<!--[ pc_url action=submit date=$date ]-->"><img
                  		src="<!--[ $TPL_IMAGE_PATH ]-->/new.gif" width="10" height="10" border="0" /></a>
 						<!--[ /if ]-->
 					</td>
@@ -66,8 +66,8 @@
 							</div>
 							<div style="padding: 2px; border:solid 1px <!--[ $event.catcolor ]-->;">
 						<!--[ /if ]-->
-						
-						<!--[ * Here we determine if the event is an 
+
+						<!--[ * Here we determine if the event is an
 							all day event or a timed event
 							and determine how to display the time * ]-->
 						<!--[ if $event.alldayevent != true ]-->
@@ -83,11 +83,17 @@
 							<!--[ *assign var="title" value=$event.title|truncate:30:"...":true* ]-->
 							<!--[ assign var="title" value=$event.title|strip_tags ]-->
 						<!--[ /if ]-->
-						
+
 						<!--[ $event.uname ]--> <!-- // V4B SB Inseted Username to get a better overview -->
 						<!--[ assign var="desc" value=$event.hometext|truncate:255:"..." ]-->
 						<!--[ * Here we start the actual display of the event * ]-->
-						<a style="font-size: 7pt; text-decoration: none;" href="<!--[ pc_url action=detail eid=$event.eid date=$date ]-->" <!--[ pc_popup delay="500" bgcolor="$event[catcolor]" timeout="3600" caption="$timestamp $event[title]" text="$desc" ]-->> <!--[ $timestamp ]--> <!--[ $title|pnvarprephtmldisplay ]--></a><br />
+						<a style="font-size: 7pt; text-decoration: none;" href="<!--[ pc_url action=detail eid=$event.eid date=$date ]-->"
+						  <!--[ pc_popup delay="500"
+						             bgcolor=$event.catcolor
+						             timeout="3600"
+						             caption="`$timestamp` `$event.title`"
+						             text=$desc ]-->>
+						  <!--[ $timestamp ]--> <!--[ $title|pnvarprephtmldisplay ]--></a><br />
 						<!--[ assign var="oldCat" value=$event.catname ]-->
 						<!--[ if $smarty.foreach.events.last ]-->
 							<!--[ * we need to close out the <div> tag * ]-->
@@ -97,7 +103,7 @@
 					<!--[ /if ]-->
 					</td>
 				</tr>
-			</table>			
+			</table>
 		</td>
 		<!--[ /foreach ]-->
 	</tr>
