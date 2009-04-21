@@ -1,4 +1,13 @@
 <?php
+/*
+ *  SVN: $Id$
+ *
+ *  @package         PostCalendar 
+ *  @lastmodified    $Date$ 
+ *  @modifiedby      $Author$ 
+ *  @HeadURL	       $HeadURL$ 
+ *  @version         $Revision$ 
+*/
 //=================================================================
 //  define constants used to make the code more readable
 //=================================================================

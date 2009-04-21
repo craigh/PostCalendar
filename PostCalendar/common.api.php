@@ -3,9 +3,10 @@
  *  SVN: $Id$
  *
  *  @package         PostCalendar 
- *  @lastmodified    $Date: 2009-04-21 16:45:01 -0400 (Tue, 21 Apr 2009) $ 
- *  @modifiedby      $LastChangedBy: craigh $ 
- *  @version         $Revision: 45 $ 
+ *  @lastmodified    $Date$ 
+ *  @modifiedby      $Author$ 
+ *  @HeadURL	       $HeadURL$ 
+ *  @version         $Revision$ 
  *  
  *  PostCalendar::PostNuke Events Calendar Module
  *  Copyright (C) 2002  The PostCalendar Team

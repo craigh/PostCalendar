@@ -4,8 +4,9 @@
  *
  *  @package         PostCalendar 
  *  @lastmodified    $Date$ 
- *  @modifiedby      $LastChangedBy$ 
- *  @version         $Revision$ 
+ *  @modifiedby      $Author$ 
+ *  @HeadURL	       $HeadURL$ 
+ *  @version         $Revision$  
  *  
  *  PostCalendar::PostNuke Events Calendar Module
  *  Copyright (C) 2002  The PostCalendar Team

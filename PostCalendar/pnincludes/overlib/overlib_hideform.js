@@ -9,7 +9,7 @@
 //\  Copyright Erik Bosrup 1998-2004. All rights reserved.
 //\  Contributors are listed on the homepage.
 //\  See http://www.bosrup.com/web/overlib/ for details.
-//   $Revision: 1.20 $                $Date: 2004/11/25 21:27:19 $
+//   $Revision$                $Date$
 //\/////
 //\mini
 if (typeof olInfo == 'undefined' || typeof olInfo.meets == 'undefined' || !olInfo.meets(4.10)) alert('overLIB 4.10 or later is required for the HideForm Plugin.');

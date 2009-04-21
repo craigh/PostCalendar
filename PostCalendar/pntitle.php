@@ -35,7 +35,7 @@
  * This function returns the meaningful title for the current page
  * 
  * @author       bones
- * @version      $Revision: 1.1 $
+ * @version      $Revision$
  * @return       string   The title for the current page
  */
 function PostCalendar_title()

@@ -1,10 +1,19 @@
 <?php
 /**
- *  $Id$
+ *  SVN: $Id$
  *
+ *  @package         PostCalendar 
+ *  @lastmodified    $Date$ 
+ *  @modifiedby      $Author$ 
+ *  @HeadURL	       $HeadURL$ 
+ *  @version         $Revision$ 
+ *  
  *  PostCalendar::PostNuke Events Calendar Module
  *  Copyright (C) 2002  The PostCalendar Team
  *  http://postcalendar.tv
+ *  Copyright (C) 2009  Sound Web Development
+ *  Craig Heydenburg
+ *  http://code.zikula.org/soundwebdevelopment/
  *  
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by

@@ -37,7 +37,7 @@
  *     $profiling = $timer->getProfiling();
  * 
  * @author   Sebastian Bergmann <sb@sebastian-bergmann.de>
- * @version  $Revision: 1.2 $
+ * @version  $Revision$
  * @access   public
  */
 

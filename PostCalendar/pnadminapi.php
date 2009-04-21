@@ -5,7 +5,8 @@
  *
  *  @package         PostCalendar 
  *  @lastmodified    $Date$ 
- *  @modifiedby      $LastChangedBy$ 
+ *  @modifiedby      $Author$ 
+ *  @HeadURL	       $HeadURL$ 
  *  @version         $Revision$ 
  *  
  *  PostCalendar::PostNuke Events Calendar Module
