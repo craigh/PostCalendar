@@ -314,7 +314,7 @@ function postcalendar_userapi_buildTimeSelect($args)
 {   
 	$inc = _SETTING_TIME_INCREMENT;
 	extract($args); unset($args);
-	$output = array('h'=>array(),'m'=>array());
+	$output = array('h'=>array(),'m'=>array(),'ap'=>1);
 
 	if((bool)_SETTING_TIME_24HOUR) 
 	{
@@ -325,7 +325,12 @@ function postcalendar_userapi_buildTimeSelect($args)
 	{ 
 		$start=1; 
 		$end=12;
-		$hselected = $hselected > 12 ? $hselected-=12 : $hselected; 
+		// $hselected = $hselected > 12 ? $hselected-=12 : $hselected; 
+		if ($hselected > 12)
+		{
+			$hselected = $hselected - 12;
+			$output['ap'] = 2; //PM
+		}
 	}
     
 	for($c=0,$h=$start; $h<=$end; $h++,$c++) 
@@ -919,10 +924,10 @@ function postcalendar_userapi_buildSubmitForm($args,$admin=false)
 	{
 		$ampm = array();
 		$ampm[0]['id']          = pnVarPrepForStore(_AM_VAL);
-		$ampm[0]['selected']    = $event_startampm == _AM_VAL;
+		$ampm[0]['selected']    = $stimes['ap'] == _AM_VAL;
 		$ampm[0]['name']        = pnVarPrepForDisplay(_PC_AM);
 		$ampm[1]['id']          = pnVarPrepForStore(_PM_VAL);
-		$ampm[1]['selected']    = $event_startampm == _PM_VAL;
+		$ampm[1]['selected']    = $stimes['ap'] == _PM_VAL;
 		$ampm[1]['name']        = pnVarPrepForDisplay(_PC_PM);
 		$timed_ampm = $output->FormSelectMultiple('event_startampm', $ampm);
 	} 
