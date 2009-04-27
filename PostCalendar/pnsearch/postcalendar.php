@@ -9,7 +9,7 @@
  *  @HeadURL	       $HeadURL$ 
  *  @version         $Revision$ 
  *  
- *  PostCalendar::PostNuke Events Calendar Module
+ *  PostCalendar::Zikula Events Calendar Module
  *  Copyright (C) 2002  The PostCalendar Team
  *  http://postcalendar.tv
  *  Copyright (C) 2009  Sound Web Development
@@ -163,11 +163,14 @@ function search_postcalendar()
     $tpl->assign_by_ref('A_EVENTS',$eventsByDate);
     $tpl->caching = false;
     $pageSetup = pnModAPIFunc(__POSTCALENDAR__,'user','pageSetup');
+/*
     $pcTheme = pnModGetVar(__POSTCALENDAR__,'pcTemplate');
 
     if(!$pcTheme)
         $pcTheme='default';
 
     return $pageSetup . $tpl->fetch($pcTheme.'/search_plugin.html');
+*/
+    return $pageSetup . $tpl->fetch('/search_plugin.html');
 }
 ?>

@@ -8,7 +8,7 @@
  *  @HeadURL	       $HeadURL$ 
  *  @version         $Revision$ 
  *  
- *  PostCalendar::PostNuke Events Calendar Module
+ *  PostCalendar::Zikula Events Calendar Module
  *  Copyright (C) 2002  The PostCalendar Team
  *  http://postcalendar.tv
  *  Copyright (C) 2009  Sound Web Development
@@ -48,6 +48,11 @@ function smarty_function_pc_get_category ($args, &$smarty)
 	  $name = $c['catname'];
 	}
     }
-    echo urlencode ($name);
+    //echo urlencode ($name);
+    if (isset($assign)) {
+        $smarty->assign($assign, urlencode($name));
+    } else {
+        return urlencode($name);
+    }
 }
 ?>

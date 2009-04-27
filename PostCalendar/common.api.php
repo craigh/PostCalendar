@@ -8,7 +8,7 @@
  *  @HeadURL	       $HeadURL$ 
  *  @version         $Revision$ 
  *  
- *  PostCalendar::PostNuke Events Calendar Module
+ *  PostCalendar::Zikula Events Calendar Module
  *  Copyright (C) 2002  The PostCalendar Team
  *  http://postcalendar.tv
  *  Copyright (C) 2009  Sound Web Development
@@ -147,124 +147,6 @@ function postcalendar_userapi_pageSetup()
 		$output .= postcalendar_userapi_jsPopup(); 
 
 	return $output;
-}
-
-/**
- * postcalendar_userapi_jsPopup
- * Creates the necessary javascript code for a popup window
- */
-function postcalendar_userapi_jsPopup() 
-{   
-	if(defined('_POSTCALENDAR_JSPOPUPS_LOADED')) 
-        // only put the script on the page once
-        	return false;
-
-	define('_POSTCALENDAR_JSPOPUPS_LOADED',true);
-    
-	// build the correct link
-	$js_link = "'index.php?module=".__POSTCALENDAR__."&type=user&func=view&viewtype=details&eid='+eid+'&Date='+date+'&popup=1'";
-	$js_window_options = 'toolbar=no,'
-                       . 'location=no,'
-                       . 'directories=no,'
-                       . 'status=no,'
-                       . 'menubar=no,'
-                       . 'scrollbars=yes,'
-                       . 'resizable=no,'
-                       . 'width=600,'
-                       . 'height=300';
-    
-$output = <<<EOF
-
-<script language="javascript">
-<!--
-function opencal(eid,date) { 
-	window.name='csCalendar'; 
-	w = window.open($js_link,'PostCalendarEvents','$js_window_options');
-}
-// -->
-</script>
-
-EOF;
-    return $output;
-}
-
-/**
- * postcalendar_userapi_loadPopups
- * Creates the necessary javascript code for mouseover dHTML popups
- */
-function postcalendar_userapi_loadPopups()
-{   
-	if(defined('_POSTCALENDAR_LOADPOPUPS_LOADED')) 
-        	return false;
-
-	define('_POSTCALENDAR_LOADPOPUPS_LOADED',true);
-    
-	// get the theme globals :: is there a better way to do this?
-	global $bgcolor1, $bgcolor2, $bgcolor3, $bgcolor4, $bgcolor5;
-	global $textcolor1, $textcolor2;
-    
-	// lets get the module's information
-	$modinfo = pnModGetInfo(pnModGetIDFromName(__POSTCALENDAR__));
-	$pcDir = pnVarPrepForOS($modinfo['directory']);
-	unset($modinfo);
-	$capicon = '';
-	$close = _PC_OL_CLOSE;
-	
-$output = <<<EOF
-
-<script language="JavaScript">
-<!-- overLIB configuration -->
-ol_fgcolor = "$bgcolor1"; 
-ol_bgcolor = "$bgcolor2"; 
-ol_textcolor = "$textcolor2"; 
-ol_capcolor = "$textcolor2";
-ol_closecolor = "$textcolor2"; 
-ol_textfont = "Verdana,Arial,Helvetica"; 
-ol_captionfont = "Verdana,Arial,Helvetica";
-ol_captionsize = 2; 
-ol_textsize = 2; 
-ol_border = 2; 
-ol_width = 350; 
-ol_offsetx = 10; 
-ol_offsety = 10;
-ol_sticky = 0; 
-ol_close = "$close"; 
-ol_closeclick = 0; 
-ol_autostatus = 2; 
-ol_snapx = 0; 
-ol_snapy = 0;
-ol_fixx = -1; 
-ol_fixy = -1; 
-ol_background = ""; 
-ol_fgbackground = ""; 
-ol_bgbackground = "";
-ol_padxl = 1; 
-ol_padxr = 1; 
-ol_padyt = 1; 
-ol_padyb = 1; 
-ol_capicon = "$capicon"; 
-ol_hauto = 1; 
-ol_vauto = 1;
-</script>
-
-EOF;
-
-// v4b TS start
-$output .= <<<EOF
-
-<script type="text/javascript">
-<!--
-    if (!document.getElementById('overDiv')) { 
-      document.write("<div id=\"overDiv\" style=\"position:absolute; visibility:hidden; z-index:1000;\"><\/div>"); 
-      document.write("<script type=\"text/javascript\" src=\"modules/PostCalendar/pnincludes/overlib/overlib.js\"><\/script>"); 
-    }
-// -->
-</script>
-
-EOF;
-// v4b TS end
-
-    return $output;
 }
 
 /**
@@ -709,10 +591,10 @@ function postcalendar_userapi_buildSubmitForm($args,$admin=false)
 	$tpl = new pcRender();
 	$tpl->caching = false;
 
-	$pcTheme = pnModGetVar(__POSTCALENDAR__,'pcTemplate');
+	/* $pcTheme = pnModGetVar(__POSTCALENDAR__,'pcTemplate');
 	if(!$pcTheme) 
         	$pcTheme = 'default';
-
+	*/
 	// V4B RNG start
 	//================================================================
 	//        build the username filter pulldown
@@ -843,12 +725,12 @@ function postcalendar_userapi_buildSubmitForm($args,$admin=false)
 	$modname = $modinfo['displayname'];
 	$all_categories = pnModAPIFunc(__POSTCALENDAR__,'user','getCategories');
 	unset($modinfo);
-	$tpl->config_dir = "modules/$modir/pntemplates/$pcTheme/config/";
+	//$tpl->config_dir = "modules/$modir/pntemplates/$pcTheme/config/";
 
 	//=================================================================
 	//  PARSE MAIN
 	//=================================================================
-	$tpl->assign('TPL_NAME',$pcTheme);
+	//$tpl->assign('TPL_NAME',$pcTheme);
 	$tpl->assign('VIEW_TYPE',''); // E_ALL Fix
 	$tpl->assign('FUNCTION',FormUtil::getPassedValue('func'));
 	$tpl->assign('ModuleName', $modname);
@@ -1236,10 +1118,13 @@ function postcalendar_userapi_buildSubmitForm($args,$admin=false)
 	$tpl->assign('FormSubmit',$form_submit);
 
 	// do not cache this page
+	/*
 	$pcTheme = pnModGetVar(__POSTCALENDAR__,'pcTemplate');
 	if(!$pcTheme)
 	    $pcTheme='default';
 	$output->Text($tpl->fetch("$pcTheme/form_submit.html"));
+	*/
+	$output->Text($tpl->fetch("form_submit.html"));
 	$output->Text(postcalendar_footer());
 	return $output->GetOutput();
 }
@@ -1354,21 +1239,23 @@ function postcalendar_userapi_eventDetail($args,$admin=false)
 		$nopop = false;
 
 	$uid = pnUserGetVar('uid');
-    
+    /*
     $pcTheme = pnModGetVar(__POSTCALENDAR__,'pcTemplate');
 	if(!$pcTheme)
 	    $pcTheme='default';
-    
+    */
 	$tpl = new pcRender();
     
     if($admin) {
-		$template = "$pcTheme/admin_view_event_details.html";
+//		$template = "$pcTheme/admin_view_event_details.html";
+		$template = "admin_view_event_details.html";
 		$args['cacheid'] = '';
 		$print=0;
 		$Date = postcalendar_getDate();
 		$tpl->caching = false;
 	} else {
-		$template = "$pcTheme/view_event_details.html";
+		// $template = "$pcTheme/view_event_details.html";
+		$template = "view_event_details.html";
 	}
 	
 	if(!$tpl->is_cached($template,$cacheid)) 
@@ -1503,11 +1390,11 @@ function postcalendar_userapi_eventDetail($args,$admin=false)
 		$tpl->assign_by_ref('USER_DELETE',$user_delete_url);
 		$tpl->assign_by_ref('USER_CAN_EDIT',$can_edit);
 	}
-
+/*
 	$pcTheme = pnModGetVar(__POSTCALENDAR__,'pcTemplate');
 	if(!$pcTheme)
 	    $pcTheme='default';
-    	
+*/    	
     if($popup != 1 && $print != 1) {    
         $output .= $tpl->fetch($template, $cacheid);
         
@@ -1526,7 +1413,8 @@ function postcalendar_userapi_eventDetail($args,$admin=false)
     	echo "@import url(\"themes/$theme/style/style.css\"); ";
     	echo "</style>\n";
     	echo "</head><body>\n";
-    	$tpl->display("$pcTheme/view_event_details.html",$cacheid);
+//    	$tpl->display("$pcTheme/view_event_details.html",$cacheid);
+    	$tpl->display("view_event_details.html",$cacheid);
 		echo postcalendar_footer();
 		// V4B TS start ***  Hook code for displaying stuff for events in popup
         if ($_GET["type"] != "admin") {
@@ -1718,5 +1606,123 @@ function pc_clean($s)
 	// correct interpretation of special characters
 	$tmp = explode(' ',$s);
 	return join("'+' ",$tmp);
+}
+
+/**
+ * postcalendar_userapi_jsPopup
+ * Creates the necessary javascript code for a popup window
+ */
+function postcalendar_userapi_jsPopup() 
+{   
+	if(defined('_POSTCALENDAR_JSPOPUPS_LOADED')) 
+        // only put the script on the page once
+        	return false;
+
+	define('_POSTCALENDAR_JSPOPUPS_LOADED',true);
+    
+	// build the correct link
+	$js_link = "'index.php?module=".__POSTCALENDAR__."&type=user&func=view&viewtype=details&eid='+eid+'&Date='+date+'&popup=1'";
+	$js_window_options = 'toolbar=no,'
+                       . 'location=no,'
+                       . 'directories=no,'
+                       . 'status=no,'
+                       . 'menubar=no,'
+                       . 'scrollbars=yes,'
+                       . 'resizable=no,'
+                       . 'width=600,'
+                       . 'height=300';
+    
+$output = <<<EOF
+
+<script language="javascript">
+<!--
+function opencal(eid,date) { 
+	window.name='csCalendar'; 
+	w = window.open($js_link,'PostCalendarEvents','$js_window_options');
+}
+// -->
+</script>
+
+EOF;
+    return $output;
+}
+
+/**
+ * postcalendar_userapi_loadPopups
+ * Creates the necessary javascript code for mouseover dHTML popups
+ */
+function postcalendar_userapi_loadPopups()
+{   
+	if(defined('_POSTCALENDAR_LOADPOPUPS_LOADED')) 
+        	return false;
+
+	define('_POSTCALENDAR_LOADPOPUPS_LOADED',true);
+    
+	// get the theme globals :: is there a better way to do this?
+	global $bgcolor1, $bgcolor2, $bgcolor3, $bgcolor4, $bgcolor5;
+	global $textcolor1, $textcolor2;
+    
+	// lets get the module's information
+	$modinfo = pnModGetInfo(pnModGetIDFromName(__POSTCALENDAR__));
+	$pcDir = pnVarPrepForOS($modinfo['directory']);
+	unset($modinfo);
+	$capicon = '';
+	$close = _PC_OL_CLOSE;
+	
+$output = <<<EOF
+
+<script language="JavaScript">
+<!-- overLIB configuration -->
+ol_fgcolor = "$bgcolor1"; 
+ol_bgcolor = "$bgcolor2"; 
+ol_textcolor = "$textcolor2"; 
+ol_capcolor = "$textcolor2";
+ol_closecolor = "$textcolor2"; 
+ol_textfont = "Verdana,Arial,Helvetica"; 
+ol_captionfont = "Verdana,Arial,Helvetica";
+ol_captionsize = 2; 
+ol_textsize = 2; 
+ol_border = 2; 
+ol_width = 350; 
+ol_offsetx = 10; 
+ol_offsety = 10;
+ol_sticky = 0; 
+ol_close = "$close"; 
+ol_closeclick = 0; 
+ol_autostatus = 2; 
+ol_snapx = 0; 
+ol_snapy = 0;
+ol_fixx = -1; 
+ol_fixy = -1; 
+ol_background = ""; 
+ol_fgbackground = ""; 
+ol_bgbackground = "";
+ol_padxl = 1; 
+ol_padxr = 1; 
+ol_padyt = 1; 
+ol_padyb = 1; 
+ol_capicon = "$capicon"; 
+ol_hauto = 1; 
+ol_vauto = 1;
+</script>
+
+EOF;
+
+// v4b TS start
+$output .= <<<EOF
+
+<script type="text/javascript">
+<!--
+    if (!document.getElementById('overDiv')) { 
+      document.write("<div id=\"overDiv\" style=\"position:absolute; visibility:hidden; z-index:1000;\"><\/div>"); 
+      document.write("<script type=\"text/javascript\" src=\"modules/PostCalendar/pnincludes/overlib/overlib.js\"><\/script>"); 
+    }
+// -->
+</script>
+
+EOF;
+// v4b TS end
+
+    return $output;
 }
 ?>

@@ -16,9 +16,9 @@
 // To read the license please visit http://www.gnu.org/copyleft/gpl.html
 // ----------------------------------------------------------------------
 /**
- * PostNuke Title Hack
+ * Zikula Title Hack
  * 
- * Show individual titles at your PostNuke pages. 
+ * Show individual titles at your Zikula pages. 
  *
  * @package      TitleHack
  * @version      $Id$

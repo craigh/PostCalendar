@@ -1,9 +1,3 @@
-<!--[pnpageaddvar name="stylesheet" value="modules/PostCalendar/pntemplates/default/style/style.css"]-->
-
-
-<!--[ if $PRINT_VIEW != 1 ]-->
-<!--[ include file="default/navigation_details.html" ]-->
-<!--[ /if ]-->
 <table width="100%" border="0" cellpadding="5" cellspacing="0" class="calcontainer">
 	<tr>
 		<td class="eventtitle" width="100%" nowrap="nowrap">
@@ -22,9 +16,9 @@
 			<!--[ /if ]-->
 
 			<!--[ if $USE_INT_DATES eq true ]-->
-				<!--[ pc_date_format date=$A_EVENT.eventDate format="%A, %d %B %Y" ]-->
+				<!--[ pc_date_format date=$A_EVENT.date format="%A, %d %B %Y" ]-->
 			<!--[ else ]-->	
-				<!--[ pc_date_format date=$A_EVENT.eventDate format="%A, %B %d %Y" ]-->
+				<!--[ pc_date_format date=$A_EVENT.date format="%A, %B %d %Y" ]-->
 			<!--[ /if ]-->
 
 			<!--[ if $A_EVENT.alldayevent ]-->
@@ -32,10 +26,6 @@
 			<!--[ else ]-->
 				Duration: <!--[ $A_EVENT.duration_hours ]-->:<!--[ $A_EVENT.duration_minutes ]-->
 			<!--[ /if ]-->
-			
-			<a href='<!--[pnmodurl modname="PostCalendar" type="user" func="export" eid=$A_EVENT.eid date=$A_EVENT.eventDate ]-->'>
-			<img src="<!--[ $TPL_IMAGE_PATH ]-->/bell.gif" alt="Add this event to my calendar" border='0'>
-			</a>
 		</td>
 	</tr>
 </table>
@@ -89,21 +79,3 @@
 		</td>
 	</tr>
 </table>
-<!--[ if $PRINT_VIEW != 1 ]-->
-<table width="100%" border="0" cellpadding="0" cellspacing="0">
-    <tr>
-        <td align="right">
-            <a href="<!--[ pc_url action="detail" print="true" eid=$A_EVENT.eid ]-->">Print</a>
-        </td>
-    </tr>
-</table>
-    <!--[ if $ACCESS_ADMIN ]-->
-	<a href="<!--[ $ADMIN_EDIT ]-->" <!--[ $ADMIN_TARGET ]-->>Edit</a> |
-	<a href="<!--[ $ADMIN_COPY ]-->" <!--[ $ADMIN_TARGET ]-->>Copy</a> |
-    <a href="<!--[ $ADMIN_DELETE ]-->" <!--[ $ADMIN_TARGET ]-->>Delete</a>
-    <!--[ elseif $USER_CAN_EDIT ]-->
-	<a href="<!--[ $USER_EDIT ]-->" <!--[ $USER_TARGET ]-->>Edit</a> |
-    <a href="<!--[ $USER_COPY ]-->" <!--[ $USER_TARGET ]-->><Copy</a> |
-	<a href="<!--[ $USER_DELETE ]-->" <!--[ $USER_TARGET ]-->><Delete</a>
-    <!--[ /if ]-->
-<!--[ /if ]-->

@@ -1,5 +1,9 @@
 $Id$
 
+Please see http://code.zikula.org/soundwebdevelopment/wiki/PostCalendar 
+for for any chages after 4.0.2
+
+
 [PostCalendar 4.0.0]
 
 20030130

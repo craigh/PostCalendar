@@ -8,7 +8,7 @@
  *  @HeadURL	       $HeadURL$ 
  *  @version         $Revision$ 
  *  
- *  PostCalendar::PostNuke Events Calendar Module
+ *  PostCalendar::Zikula Events Calendar Module
  *  Copyright (C) 2002  The PostCalendar Team
  *  http://postcalendar.tv
  *  Copyright (C) 2009  Sound Web Development
@@ -70,11 +70,11 @@ class pcRender extends pnRender
 	$template_view = FormUtil::getPassedValue('tplview');
 	if (!$template_view) 
 	    $template_view = 'month'; 
-
+/*
 	$pcTheme = pnModGetVar(__POSTCALENDAR__,'pcTemplate');
 	if (!$pcTheme) 
 	    $pcTheme='default';
-
+*/
 	// assign theme globals
 	$this->assign('BGCOLOR1', $bgcolor1);
 	$this->assign('BGCOLOR2', $bgcolor2);
@@ -105,15 +105,15 @@ class pcRender extends pnRender
 	$this->assign('ACCESS_ADD', PC_ACCESS_ADD);
 	$this->assign('ACCESS_DELETE', PC_ACCESS_DELETE);
 	$this->assign('ACCESS_ADMIN', PC_ACCESS_ADMIN);
-	$this->assign('TPL_NAME', $pcTheme);
+	//$this->assign('TPL_NAME', $pcTheme);
 	$this->assign('TPL_VIEW', $template_view);
 	
 	/* NOTE: CAH 4/5/09 - Not sure if image/style and config directories need closing slash '/' */
-	$this->assign('TPL_IMAGE_PATH', "modules/PostCalendar/pntemplates/$pcTheme/images");
-	$this->assign('TPL_STYLE_PATH', "modules/PostCalendar/pntemplates/$pcTheme/style");
-	$this->assign('THEME_PATH', "themes/$osTheme");
+	//$this->assign('TPL_IMAGE_PATH', "modules/PostCalendar/pntemplates/$pcTheme/images");
+	//$this->assign('TPL_STYLE_PATH', "modules/PostCalendar/pntemplates/$pcTheme/style");
+	//$this->assign('THEME_PATH', "themes/$osTheme");
 
-	$this->config_dir = "modules/PostCalendar/pntemplates/$pcTheme/config";
+	//$this->config_dir = "modules/PostCalendar/pntemplates/$pcTheme/config";
 	
 	return true;
 	}

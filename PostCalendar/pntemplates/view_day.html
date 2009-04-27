@@ -1,8 +1,5 @@
-<!--[pnpageaddvar name="stylesheet" value="modules/PostCalendar/pntemplates/default/style/style.css"]-->
-
-
 <!--[ if $PRINT_VIEW != 1 ]-->
-<!--[ include file="default/navigation.html" ]-->
+<!--[ include file="navigation.html" ]-->
 <!--[ /if ]-->
 
 <!--[ assign var="dayname" value=$DATE|date_format:"%w" ]-->
@@ -45,7 +42,7 @@
 					</div>
 				<!--[ /if ]-->
 				<div style="padding: 2px; background-color: <!--[ $event.catcolor ]-->;">
-					<!--[ if $event.meeting_id ]--><img src="<!--[ $TPL_IMAGE_PATH ]-->/meeting.gif" alt="Meeting" title="Meeting" border="0" style="float: left;" /><!--[ /if ]--><!--[ $event.catname ]-->
+					<!--[ if $event.meeting_id ]--><!--[ pnimg src='meeting.gif'  alt='Meeting' title='Meeting' style='float: left;']--><!--[ /if ]--><!--[ $event.catname ]-->
 				</div>
 				<div style="padding: 2px; border:solid 1px <!--[ $event.catcolor ]-->;">
 			<!--[ /if ]-->
@@ -67,7 +64,7 @@
 			<!--[ if $event.alldayevent != true ]-->
 				(<!--[ $event.duration_hours ]-->:<!--[ $event.duration_minutes ]-->)
 			<!--[ /if ]-->
-			<A HREF="index.php?module=PostCalendar&func=export&?eid=<!--[ $event.eid ]-->&date=<!--[ $date ]-->"><IMG SRC=images/bell.gif BORDER=0 HEIGHT=15 WIDTH=15 ALT="Add this event to my calendar"></A>
+			<a href="index.php?module=PostCalendar&func=export&?eid=<!--[ $event.eid ]-->&date=<!--[ $date ]-->"><!--[ pnimg src='bell.gif' alt="Add this event to my calendar" ]--></a>
 			<br />
 			<!--[ assign var="oldCat" value=$event.catname ]-->
 			<!--[ if $smarty.foreach.events.last ]-->
@@ -90,4 +87,4 @@
     </tr>
 </table>
 <!--[ /if ]-->
-<!--[ include file="default/footer.html" ]-->
+<!--[ include file="footer.html" ]-->

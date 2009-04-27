@@ -1,7 +1,5 @@
-<!--[pnpageaddvar name="stylesheet" value="modules/PostCalendar/pntemplates/default/style/style.css"]-->
-
 <!--[ if $PRINT_VIEW != 1 ]-->
-<!--[ include file="default/navigation.html" ]-->
+<!--[ include file="navigation.html" ]-->
 <!--[ /if ]-->
 <table width="100%" border="0" cellpadding="5" cellspacing="0" class="monthheader">
 	<tr align="center">
@@ -44,8 +42,7 @@
 					</td>
 					<td align="right" valign="top">
 						<!--[ if $ACCESS_ADD eq true ]-->
-						<a href="<!--[ pc_url action=submit date=$date ]-->"><img
-                 		src="<!--[ $TPL_IMAGE_PATH ]-->/new.gif" width="10" height="10" border="0" /></a>
+						<a href="<!--[ pc_url action=submit date=$date ]-->"><!--[ pnimg src='new.gif' ]--></a>
 						<!--[ /if ]-->
 					</td>
 				</tr>
@@ -62,7 +59,7 @@
 								</div>
 							<!--[ /if ]-->
 							<div style="padding: 1px; background-color: <!--[ $event.catcolor ]-->;">
-								<!--[ if $event.meeting_id ]--><img src="<!--[ $TPL_IMAGE_PATH ]-->/meeting.gif" alt="Meeting" align="absmiddle" title="Meeting" border="0"" /><!--[ /if ]--><!--[ $event.catname ]-->
+								<!--[ if $event.meeting_id ]--><img src="../pnimages/meeting.gif" alt="Meeting" align="absmiddle" title="Meeting" border="0"" /><!--[ /if ]--><!--[ $event.catname ]-->
 							</div>
 							<div style="padding: 2px; border:solid 1px <!--[ $event.catcolor ]-->;">
 						<!--[ /if ]-->
@@ -119,4 +116,4 @@
     </tr>
 </table>
 <!--[ /if ]-->
-<!--[ include file="default/footer.html" ]-->
+<!--[ include file="footer.html" ]-->

@@ -71,17 +71,18 @@ function postcalendar_calendarblock_display($blockinfo)
         return 'Unable to load module [PostCalendar]';
     
     // find out what view we're using
+/*
     $template_view = FormUtil::getPassedValue ('tplview');
     if(!isset($template_view)) {
         $template_view ='default';
     }
-    
+
     // find out what template we're using
     $template_name = _SETTING_TEMPLATE;
     if(!isset($template_name) || empty($template_name)) {
         $template_name ='default';
     }
-    
+*/    
     // What is today's correct date
     $Date = postcalendar_getDate();
     
@@ -277,14 +278,15 @@ function postcalendar_calendarblock_display($blockinfo)
         $tpl->assign('UPCOMING_EVENTS_TITLE',_PC_UPCOMING_EVENTS);
         $tpl->assign('NO_EVENTS',_PC_BLOCK_NO_EVENTS);   
     }
-
+/*
     $pcTheme = pnModGetVar(__POSTCALENDAR__,'pcTemplate');
     if(!$pcTheme)
         $pcTheme='default';
-    
+ */   
     if($showcalendar) {
         // we need to create a unique ID for caching purposes
-        $output .= $tpl->fetch("$pcTheme/block_view_month.html",$cacheid1);
+//        $output .= $tpl->fetch("$pcTheme/block_view_month.html",$cacheid1);
+        $output .= $tpl->fetch("block_view_month.html",$cacheid1);
     }
     
     if($showevents) {
@@ -294,7 +296,8 @@ function postcalendar_calendarblock_display($blockinfo)
             $tpl->assign('SHOW_TITLE',0);
         }
         // we need to create a unique ID for caching purposes
-        $output .= $tpl->fetch("$pcTheme/block_view_day.html",$cacheid2);
+//        $output .= $tpl->fetch("$pcTheme/block_view_day.html",$cacheid2);
+        $output .= $tpl->fetch("block_view_day.html",$cacheid2);
     }   
     
     if($nextevents) {
@@ -304,7 +307,8 @@ function postcalendar_calendarblock_display($blockinfo)
             $tpl->assign('SHOW_TITLE',0);
         }
         // we need to create a unique ID for caching purposes
-        $output .= $tpl->fetch("$pcTheme/block_view_upcoming.html",$cacheid3);
+//        $output .= $tpl->fetch("$pcTheme/block_view_upcoming.html",$cacheid3);
+        $output .= $tpl->fetch("block_view_upcoming.html",$cacheid3);
     }   
 
     if($pcbshowsslinks) {

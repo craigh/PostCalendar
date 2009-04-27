@@ -9,7 +9,7 @@
  *  @HeadURL	       $HeadURL$ 
  *  @version         $Revision$ 
  *  
- *  PostCalendar::PostNuke Events Calendar Module
+ *  PostCalendar::Zikula Events Calendar Module
  *  Copyright (C) 2002  The PostCalendar Team
  *  http://postcalendar.tv
  *  Copyright (C) 2009  Sound Web Development
@@ -97,9 +97,10 @@ function postcalendar_userapi_buildView($args)
 	//=================================================================
     //  Find out what Template we're using
     //=================================================================
+/*
     $template_name = _SETTING_TEMPLATE;
     if(!isset($template_name)) { $template_name = 'default'; }
-
+*/
     $template = pnVarPrepForOS('view_' . $viewtype . '.html');
     // V4B RNG
 	//=================================================================
@@ -373,11 +374,11 @@ function postcalendar_userapi_buildView($args)
 		$tpl->assign_by_ref('TODAY_DATE',$today_date);
 		$tpl->assign_by_ref('DATE',$Date);
 	}
-
+/*
 	$pcTheme = pnModGetVar(__POSTCALENDAR__,'pcTemplate');
 	if(!$pcTheme)
 	    $pcTheme='default';
-
+*/
 	if ($print || $popup)
 	{
 		$theme = pnUserGetTheme();
@@ -387,7 +388,8 @@ function postcalendar_userapi_buildView($args)
 		echo "@import url(\"themes/$theme/style/style.css\"); ";
 		echo "</style>\n";
 		echo "</head><body>\n";
-    	        $tpl->display("$pcTheme/$template");
+    	        //$tpl->display("$pcTheme/$template");
+    	        $tpl->display("$template");
 		echo postcalendar_footer();
 		// V4B TS start ***  Hook code for displaying stuff for events in popup
 		if ($_GET["type"] != "admin") {
@@ -400,7 +402,8 @@ function postcalendar_userapi_buildView($args)
 	}
 	else
 	{
-    	    $output .= $tpl->fetch("$pcTheme/$template", $cacheid);    // cache id
+    	    //$output .= $tpl->fetch("$pcTheme/$template", $cacheid);    // cache id
+    	    $output .= $tpl->fetch("$template", $cacheid);    // cache id
             return $output;    
 	}
 }
@@ -500,11 +503,13 @@ function postcalendar_userapi_eventPreview($args)
 	//=================================================================
     //  Find out what Template we're using    
 	//=================================================================
+/*
     $template_name = _SETTING_TEMPLATE;
     if(!isset($template_name)) {
     	$template_name = 'default';
     }
-	//=================================================================
+*/
+  	//=================================================================
     //  populate the template
     //=================================================================
 	if(!empty($event['location']) || !empty($event['street1']) ||
@@ -527,10 +532,13 @@ function postcalendar_userapi_eventPreview($args)
     //=================================================================
 	$output  = "\n\n<!-- POSTCALENDAR HTTP://WWW.BAHRAINI.TV -->\n\n";
     $output .= "\n\n<!-- POSTCALENDAR TEMPLATE START -->\n\n";
+/*
 	$pcTheme = pnModGetVar(__POSTCALENDAR__,'pcTemplate');
 	if(!$pcTheme)
 	    $pcTheme='default';
     $output .= $tpl->fetch("$pcTheme/view_event_preview.html");
+*/
+    $output .= $tpl->fetch("view_event_preview.html");
     $output .= "\n\n<!-- POSTCALENDAR TEMPLATE END -->\n\n";
 	
 	return $output;

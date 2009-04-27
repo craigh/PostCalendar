@@ -1,10 +1,7 @@
-<!--[pnpageaddvar name="stylesheet" value="modules/PostCalendar/pntemplates/default/style/style.css"]-->
-
-
 <table width="100%" border="0" cellpadding="5" cellspacing="0" class="calcontainer">
 	<tr>
 		<td class="eventtitle" width="100%" nowrap="nowrap">
-			<b><!--[ $A_EVENT.title|pnvarprephtmldisplay ]--></b>
+			<b><!--[ $A_EVENT.title ]--></b>
 		</td>
 	</tr>
 	<tr>
@@ -17,13 +14,13 @@
 				<!--[ /if ]-->
 				<!--[ $timestamp ]-->
 			<!--[ /if ]-->
-
+			
 			<!--[ if $USE_INT_DATES eq true ]-->
-				<!--[ pc_date_format date=$A_EVENT.date format="%A, %d %B %Y" ]-->
+				<!--[ pc_date_format date=$A_EVENT.eventDate format="%A, %d %B %Y" ]-->
 			<!--[ else ]-->	
-				<!--[ pc_date_format date=$A_EVENT.date format="%A, %B %d %Y" ]-->
+				<!--[ pc_date_format date=$A_EVENT.eventDate format="%A, %B %d %Y" ]-->
 			<!--[ /if ]-->
-
+			
 			<!--[ if $A_EVENT.alldayevent ]-->
 				All Day
 			<!--[ else ]-->
@@ -82,3 +79,10 @@
 		</td>
 	</tr>
 </table>
+<!--[ if $ACCESS_EDIT ]-->
+	<a href="<!--[ $ADMIN_EDIT ]-->" <!--[ $ADMIN_TARGET ]-->>EDIT</a> |
+    <a href="<!--[ $ADMIN_COPY ]-->" <!--[ $ADMIN_TARGET ]-->>COPY</a> |
+<!--[ /if ]-->
+<!--[ if $ACCESS_DELETE ]-->
+	<a href="<!--[ $ADMIN_DELETE ]-->" <!--[ $ADMIN_TARGET ]-->>DELETE</a>
+<!--[ /if ]-->

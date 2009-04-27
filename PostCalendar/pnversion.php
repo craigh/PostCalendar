@@ -8,7 +8,7 @@
  *  @HeadURL	       $HeadURL$ 
  *  @version         $Revision$ 
  *  
- *  PostCalendar::PostNuke Events Calendar Module
+ *  PostCalendar::Zikula Events Calendar Module
  *  Copyright (C) 2002  The PostCalendar Team
  *  http://postcalendar.tv
  *  Copyright (C) 2009  Sound Web Development
@@ -34,7 +34,7 @@
  *
  */
 $modversion['name']		= 'PostCalendar';
-$modversion['id']		= '44';
+$modversion['id']		= '$Revision$'; // svn revision #
 $modversion['version']		= '5.1.0';
 $modversion['description']	= 'Zikula Calendar Module';
 $modversion['credits']		= 'docs/credits.txt';
@@ -50,4 +50,9 @@ $modversion['securityschema']   = array('PostCalendar::Event' 	 => 'Event Title:
 					'PostCalendar::Topic' 	 => 'Topic Name::Topic ID',
                                         'PostCalendar::User' 	 => 'User Name::User ID',
                                         'PostCalendar::'         => '::');
+$modversion['dependencies'] = array(array('modname'    => 'Topics',
+                                              'minversion' => '1.0',
+                                              'maxversion' => '',
+                                              'status'     => PNMODULE_DEPENDENCY_REQUIRED
+                                              ));
 ?>

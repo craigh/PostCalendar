@@ -9,7 +9,7 @@
  *  @HeadURL	       $HeadURL$ 
  *  @version         $Revision$ 
  *  
- *  PostCalendar::PostNuke Events Calendar Module
+ *  PostCalendar::Zikula Events Calendar Module
  *  Copyright (C) 2002  The PostCalendar Team
  *  http://postcalendar.tv
  *  Copyright (C) 2009  Sound Web Development
@@ -631,166 +631,6 @@ function postcalendar_admin_submit($args)
 	return $output;
 }
 
-function postcalendar_admin_modifyconfig($msg='',$showMenu=true)
-{   
-    if(!PC_ACCESS_ADMIN) { return _POSTCALENDARNOAUTH; }
-	
-	$output = new pnHTML();
-	$pcModInfo = pnModGetInfo(pnModGetIDFromName(__POSTCALENDAR__));
-    $pcDir = pnVarPrepForOS($pcModInfo['directory']);
-
-	$defaultsURL  = pnModURL(__POSTCALENDAR__,'admin','resetDefaults');
-	$defaultsText = _EDIT_PC_CONFIG_DEFAULT;
-	
-$jsColorPicker = <<<EOF
-    <script LANGUAGE="Javascript" SRC="modules/$pcDir/pnincludes/AnchorPosition.js"></SCRIPT>
-    <script LANGUAGE="Javascript" SRC="modules/$pcDir/pnincludes/PopupWindow.js"></SCRIPT>
-    <script LANGUAGE="Javascript" SRC="modules/$pcDir/pnincludes/ColorPicker2.js"></SCRIPT>
-    <script LANGUAGE="JavaScript">
-    var cp = new ColorPicker('window');
-    // Runs when a color is clicked
-    function pickColor(color) {
-	    field.value = color;
-	}
-
-    var field;
-    function pick(anchorname) {
-	    field = document.forms.pcConfig.pcDayHighlightColor;
-	    cp.show(anchorname);
-	}
-    </SCRIPT>
-EOF;
-
-    $output->SetInputMode(_PNH_VERBATIMINPUT);
-    $output->Text($jsColorPicker);
-	if($showMenu) {
-    	$output->Text(postcalendar_adminmenu());
-	}
-    
-	if(!empty($msg)) {
-		$output->Text('<center><div style="padding:5px; border:1px solid green; background-color: lightgreen;">');		
-		$output->Text("<b>$msg</b>");		
-		$output->Text('</div></center><br />');		
-		
-	}
-	
-    $formURL = pnModUrl(__POSTCALENDAR__,'admin','updateconfig');
-    $output->Text("<form action=\"$formURL\" method=\"post\" enctype=\"application/x-www-form-urlencoded\" name=\"pcConfig\" id=\"pcConfig\">");
-    $output->Text('<table border="1" cellpadding="5" cellspacing="1">');
-    $output->Text('<tr><td align="left"><b>'._PC_ADMIN_GLOBAL_SETTINGS,'</b></td>');
-	$output->Text("<td nowrap='nowrap'><a href=\"$defaultsURL\">$defaultsText</a></td></tr>");
-	
-    $settings = array();
-    $output->SetOutputMode(_PNH_RETURNOUTPUT);
-    $i=0;
-    
-	// global PostCalendar config options
-    $settings[$i][] = $output->Text(_PC_NOTIFY_ADMIN);
-    $settings[$i++][] = $output->FormCheckBox('pcNotifyAdmin', pnModGetVar(__POSTCALENDAR__,'pcNotifyAdmin'));
-    $settings[$i][] = $output->Text(_PC_NOTIFY_EMAIL);
-	$settings[$i++][] = $output->FormText('pcNotifyEmail', pnModGetVar(__POSTCALENDAR__,'pcNotifyEmail'));
-    
-	$settings[$i][] = $output->Text(_PC_ALLOW_DIRECT_SUBMIT);
-    $settings[$i++][] = $output->FormCheckBox('pcAllowDirectSubmit', pnModGetVar(__POSTCALENDAR__,'pcAllowDirectSubmit'));
-    $settings[$i][] = $output->Text(_PC_ALLOW_USER_CALENDAR);
-    $settings[$i++][] = $output->FormCheckBox('pcAllowUserCalendar', pnModGetVar(__POSTCALENDAR__,'pcAllowUserCalendar'));
-	$settings[$i][] = $output->Text(_PC_ALLOW_SITEWIDE_SUBMIT);
-    $settings[$i++][] = $output->FormCheckBox('pcAllowSiteWide', pnModGetVar(__POSTCALENDAR__,'pcAllowSiteWide'));
-    $settings[$i][] = $output->Text(_PC_LIST_HOW_MANY);
-    $settings[$i++][] = $output->FormText('pcListHowManyEvents', pnModGetVar(__POSTCALENDAR__,'pcListHowManyEvents'),5);
-    $settings[$i][] = $output->Text(_PC_TIME24HOURS);
-    $settings[$i++][] = $output->FormCheckBox('pcTime24Hours', pnModGetVar(__POSTCALENDAR__,'pcTime24Hours'));
-	$settings[$i][] = $output->Text(_PC_TIME_INCREMENT);
-    $settings[$i++][] = $output->FormText('pcTimeIncrement', pnModGetVar(__POSTCALENDAR__,'pcTimeIncrement'),5);
-    $settings[$i][] = $output->Text(_PC_EVENTS_IN_NEW_WINDOW);
-    $settings[$i++][] = $output->FormCheckBox('pcEventsOpenInNewWindow', pnModGetVar(__POSTCALENDAR__,'pcEventsOpenInNewWindow'));
-    $settings[$i][] = $output->Text(_PC_INTERNATIONAL_DATES);
-    $settings[$i++][] = $output->FormCheckBox('pcUseInternationalDates', pnModGetVar(__POSTCALENDAR__,'pcUseInternationalDates'));
-    $settings[$i][] = $output->Text(_PC_EVENT_DATE_FORMAT);
-    $settings[$i++][] = $output->FormText('pcEventDateFormat', pnModGetVar(__POSTCALENDAR__,'pcEventDateFormat'));
-    $settings[$i][] = $output->Text(_PC_DISPLAY_TOPICS);
-    $settings[$i++][] = $output->FormCheckBox('pcDisplayTopics', pnModGetVar(__POSTCALENDAR__,'pcDisplayTopics'));
-    $settings[$i][] = $output->Text(_PC_FIRST_DAY_OF_WEEK);
-        $options = array();
-        $selected = pnModGetVar(__POSTCALENDAR__,'pcFirstDayOfWeek');
-        $options[0]['id']       = '0';
-        $options[0]['selected'] = ($selected == 0);
-        $options[0]['name']     = _PC_SUNDAY;
-        $options[1]['id']       = '1';
-        $options[1]['selected'] = ($selected == 1);
-        $options[1]['name']     = _PC_MONDAY;
-        $options[2]['id']       = '6';
-        $options[2]['selected'] = ($selected == 6);
-        $options[2]['name']     = _PC_SATURDAY;
-	$settings[$i++][] = $output->FormSelectMultiple('pcFirstDayOfWeek', $options);
-	$settings[$i][] = $output->Text(_PC_DEFAULT_VIEW);
-        $options = array();
-        $selected = pnModGetVar(__POSTCALENDAR__,'pcDefaultView');
-        $options[0]['id']       = 'day';
-        $options[0]['selected'] = ($selected == 'day');
-        $options[0]['name']     = _CAL_DAYVIEW;
-        $options[1]['id']       = 'week';
-        $options[1]['selected'] = ($selected == 'week');
-        $options[1]['name']     = _CAL_WEEKVIEW;
-        $options[2]['id']       = 'month';
-        $options[2]['selected'] = ($selected == 'month');
-        $options[2]['name']     = _CAL_MONTHVIEW;
-		$options[3]['id']       = 'year';
-        $options[3]['selected'] = ($selected == 'year');
-        $options[3]['name']     = _CAL_YEARVIEW;
-    $settings[$i++][] = $output->FormSelectMultiple('pcDefaultView', $options);
-    $settings[$i][] = $output->Text(_PC_DAY_HIGHLIGHT_COLOR . ' [<a HREF="#" onClick="pick(\'pick\');return false;" NAME="pick" ID="pick">pick</a>]');
-    $settings[$i++][] = $output->FormText('pcDayHighlightColor', pnModGetVar(__POSTCALENDAR__,'pcDayHighlightColor'));
-    $settings[$i][] = $output->Text(_PC_USE_JS_POPUPS);
-    $settings[$i++][] = $output->FormCheckBox('pcUsePopups', pnModGetVar(__POSTCALENDAR__,'pcUsePopups'));
-	$settings[$i][] = $output->Text(_PC_USE_CACHE);
-    $settings[$i++][] = $output->FormCheckBox('pcUseCache', pnModGetVar(__POSTCALENDAR__,'pcUseCache'));
-	$settings[$i][] = $output->Text(_PC_CACHE_LIFETIME);
-    $settings[$i++][] = $output->FormText('pcCacheLifetime', pnModGetVar(__POSTCALENDAR__,'pcCacheLifetime'));
-
-    $templatelist = array();
-    $handle = opendir('modules/'.$pcDir.'/pntemplates');
-	$hide_list = array('.','..','.svn','config','plugins','CVS','compiled','cache');
-	while($f=readdir($handle))
-    {   if(!in_array($f,$hide_list) && is_dir("modules/$pcDir/pntemplates/$f") && is_readable("modules/$pcDir/pntemplates/$f")) {
-            $templatelist[] = $f;
-        }
-    }
-    closedir($handle); unset($hide_list);
-    sort($templatelist);
-    $tcount = count($templatelist);
-    $settings[$i][] = $output->Text(_PC_DEFAULT_TEMPLATE);
-        $options = array();
-        $selected = pnModGetVar(__POSTCALENDAR__,'pcTemplate');
-        for($t=0;$t<$tcount;$t++) {
-            $options[$t]['id']       = $templatelist[$t];
-            $options[$t]['selected'] = ($selected == $templatelist[$t]);
-            $options[$t]['name']     = $templatelist[$t];
-        }
-    $settings[$i++][] = $output->FormSelectMultiple('pcTemplate', $options);
-    // v4b TS start
-    $settings[$i][] = $output->Text(_PC_DISPLAY_REPEATING);
-    $settings[$i++][] = $output->FormCheckBox('pcRepeating', pnModGetVar(__POSTCALENDAR__,'pcRepeating'));
-    $settings[$i][] = $output->Text(_PC_DISPLAY_MEETING);
-    $settings[$i++][] = $output->FormCheckBox('pcMeeting', pnModGetVar(__POSTCALENDAR__,'pcMeeting'));
-    $settings[$i][] = $output->Text(_PC_USE_ADDRESSBOOK);
-    $settings[$i++][] = $output->FormCheckBox('pcAddressbook', pnModGetVar(__POSTCALENDAR__,'pcAddressbook'));
-    // v4b TS end
-    
-    $output->SetOutputMode(_PNH_KEEPOUTPUT);
-    
-    // Add row
-    for($i = 0 ; $i < count($settings) ; $i++) {
-        $output->TableAddRow($settings[$i], 'left');
-    }
-    
-    $output->Text('</table>');
-    $output->FormSubmit(_PC_ADMIN_SUBMIT);
-    $output->FormEnd();
-    
-    return $output->GetOutput();
-}
-
 function postcalendar_admin_resetDefaults()
 {
 	if(!PC_ACCESS_ADMIN) { return _POSTCALENDARNOAUTH; }
@@ -835,7 +675,7 @@ function postcalendar_admin_resetDefaults()
 	pnModSetVar(__POSTCALENDAR__, 'pcAllowSiteWide',        	'0');
 	pnModSetVar(__POSTCALENDAR__, 'pcAllowUserCalendar',        '1');
 	pnModSetVar(__POSTCALENDAR__, 'pcEventDateFormat',        	'%Y-%m-%d');
-    pnModSetVar(__POSTCALENDAR__, 'pcTemplate',         		'default');
+ //   pnModSetVar(__POSTCALENDAR__, 'pcTemplate',         		'default');
 	// v4b TS start
 	pnModSetVar(__POSTCALENDAR__, 'pcRepeating',         		'0');
     pnModSetVar(__POSTCALENDAR__, 'pcMeeting',          		'0');
@@ -881,7 +721,7 @@ function postcalendar_admin_updateconfig()
     $pcListHowManyEvents     = FormUtil::getPassedValue ('pcListHowManyEvents', 15);
     $pcDisplayTopics         = FormUtil::getPassedValue ('pcDisplayTopics', 0);
     $pcEventDateFormat       = FormUtil::getPassedValue ('pcEventDateFormat', '%Y-%m-%d');
-    $pcTemplate              = FormUtil::getPassedValue ('pcTemplate', 'default');
+//    $pcTemplate              = FormUtil::getPassedValue ('pcTemplate', 'default');
     $pcRepeating             = FormUtil::getPassedValue ('pcRepeating', 0);
     $pcMeeting               = FormUtil::getPassedValue ('pcMeeting', 0);
     $pcAddressbook           = FormUtil::getPassedValue ('pcAddressbook', 0);
@@ -896,7 +736,7 @@ function postcalendar_admin_updateconfig()
     // v4b TS end
                                                        
     // make sure we enter something into the DB                                               
-    // delete the old vars - we're doing this because PostNuke variable 
+    // delete the old vars - we're doing this because Zikula variable 
     // handling sometimes has old values in the $GLOBALS we need to clear
     pnModDelVar(__POSTCALENDAR__, 'pcTime24Hours');
     pnModDelVar(__POSTCALENDAR__, 'pcEventsOpenInNewWindow');
@@ -951,100 +791,6 @@ function postcalendar_admin_updateconfig()
     return postcalendar_admin_modifyconfig('<center>'._PC_UPDATED.'</center>');
 }
 
-function postcalendar_admin_categories($msg='',$e='')
-{
-    if(!PC_ACCESS_ADMIN) { return _POSTCALENDARNOAUTH; }
-	
-	$output = new pnHTML();
-    $output->SetInputMode(_PNH_VERBATIMINPUT);
-    
-	$pcModInfo = pnModGetInfo(pnModGetIDFromName(__POSTCALENDAR__));
-    $pcDir = pnVarPrepForOS($pcModInfo['directory']);
-$jsColorPicker = <<<EOF
-    <script LANGUAGE="Javascript" SRC="modules/$pcDir/pnincludes/AnchorPosition.js"></SCRIPT>
-    <script LANGUAGE="Javascript" SRC="modules/$pcDir/pnincludes/PopupWindow.js"></SCRIPT>
-    <script LANGUAGE="Javascript" SRC="modules/$pcDir/pnincludes/ColorPicker2.js"></SCRIPT>
-    <script LANGUAGE="JavaScript">
-    var cp = new ColorPicker('window');
-    // Runs when a color is clicked
-    function pickColor(color) {
-	    field.value = color;
-	}
-
-    var field;
-    function pick(anchorname,target) {
-	    field = this.document.forms.cats.elements[target];
-	    cp.show(anchorname);
-	}
-    </SCRIPT>
-EOF;
-	
-	$output->Text($jsColorPicker);
-    $output->Text(postcalendar_adminmenu());
-	
-	if(!empty($e)) { 
-		$output->Text('<div style="padding:5px; border:1px solid red; background-color: pink;">');
-		$output->Text('<center><b>'.$e.'</b></center>');
-		$output->Text('</div><br />');
-	}
-    
-	if(!empty($msg)) { 
-		$output->Text('<div style="padding:5px; border:1px solid green; background-color: lightgreen;">');
-		$output->Text('<center><b>'.$msg.'</b></center>');
-		$output->Text('</div><br />');
-	}
-	
-    $cats = pnModAPIFunc(__POSTCALENDAR__,'admin','getCategories');
-    // V4B RNG: unneeded
-    //if(!is_array($cats)) {
-    //    $output->Text($cats);
-    //    return $output->GetOutput();
-    //}
-    
-    $output->Text('<form name="cats" method="post" action="'.pnModURL(__POSTCALENDAR__,'admin','categoriesConfirm').'">');
-    $output->Text('<table border="1" cellpadding="5" cellspacing="0">');
-    $output->Text('<tr><th>'._PC_CAT_DELETE.'</th><th>'._PC_CAT_NAME.'</th><th>'._PC_CAT_DESC.'</th><th>'._PC_CAT_COLOR.'</th></tr>');
-    $i = 0;
-	foreach($cats as $cat) {
-        $output->Text('<tr>');
-            $output->Text('<td valign="top" align="left">');
-                $output->FormHidden('id[]',$cat['catid']);
-                $output->FormCheckbox('del[]',false,$cat['catid']);
-            $output->Text('</td>');
-            $output->Text('<td valign="top" align="left">');
-                $output->FormText('name[]',$cat['catname'],20);
-            $output->Text('</td>');
-            $output->Text('<td valign="top" align="left">');
-                $output->FormTextarea('desc[]',$cat['catdesc'],3,20);
-            $output->Text('</td>');
-            $output->Text('<td valign="top" align="left">');
-                $output->FormText('color[]',$cat['catcolor'],10);
-				$output->Text('[<a href="javascript:void(0);" onClick="pick(\'pick\',\''.($i+4).'\'); return false;" NAME="pick" ID="pick">pick</a>]');
-            $output->Text('</td>');
-        $output->Text('</tr>');
-		$i+=5;
-    }
-        $output->Text('<tr>');
-            $output->Text('<td valign="top" align="left">');
-                $output->Text(_PC_CAT_NEW);
-            $output->Text('</td>');
-            $output->Text('<td valign="top" align="left">');
-                $output->FormText('newname','',20);
-            $output->Text('</td>');
-            $output->Text('<td valign="top" align="left">');
-                $output->FormTextarea('newdesc','',3,20);
-            $output->Text('</td>');
-            $output->Text('<td valign="top" align="left">');
-                $output->FormText('newcolor','',10);
-				$output->Text('[<a href="javascript:void(0);" onClick="pick(\'pick\',\'newcolor\');return false;" NAME="pick" ID="pick">pick</a>]');
-            $output->Text('</td>');
-        $output->Text('</tr>');
-    $output->Text('</table>');
-    $output->FormSubmit(_PC_ADMIN_SUBMIT);
-    $output->FormEnd();
-    
-    return $output->GetOutput();
-}
 function postcalendar_admin_categoriesConfirm()
 {   
     if(!PC_ACCESS_ADMIN) { return _POSTCALENDARNOAUTH; }
@@ -1282,7 +1028,7 @@ function pc_isNewVersion()
 	return $upgrade;
 }
 
-// UPGRADE WORKAROUND SCRIPT - POSTNUKE BUG
+// UPGRADE WORKAROUND SCRIPT - Zikula BUG
 function postcalendar_admin_upgrade()
 {
 	/*
@@ -1479,5 +1225,262 @@ function postcalendar_admin_removeUserEntries()
     }
 	
     return postcalendar_admin_modifyconfig('<center>'.$count.' '._PC_ENTRIES_REMOVED.'</center>');
+}
+
+function postcalendar_admin_modifyconfig($msg='',$showMenu=true)
+{   
+    if(!PC_ACCESS_ADMIN) { return _POSTCALENDARNOAUTH; }
+	
+	$output = new pnHTML();
+	$pcModInfo = pnModGetInfo(pnModGetIDFromName(__POSTCALENDAR__));
+    $pcDir = pnVarPrepForOS($pcModInfo['directory']);
+
+	$defaultsURL  = pnModURL(__POSTCALENDAR__,'admin','resetDefaults');
+	$defaultsText = _EDIT_PC_CONFIG_DEFAULT;
+	
+$jsColorPicker = <<<EOF
+    <script LANGUAGE="Javascript" SRC="modules/$pcDir/pnincludes/AnchorPosition.js"></SCRIPT>
+    <script LANGUAGE="Javascript" SRC="modules/$pcDir/pnincludes/PopupWindow.js"></SCRIPT>
+    <script LANGUAGE="Javascript" SRC="modules/$pcDir/pnincludes/ColorPicker2.js"></SCRIPT>
+    <script LANGUAGE="JavaScript">
+    var cp = new ColorPicker('window');
+    // Runs when a color is clicked
+    function pickColor(color) {
+	    field.value = color;
+	}
+
+    var field;
+    function pick(anchorname) {
+	    field = document.forms.pcConfig.pcDayHighlightColor;
+	    cp.show(anchorname);
+	}
+    </SCRIPT>
+EOF;
+
+    $output->SetInputMode(_PNH_VERBATIMINPUT);
+    $output->Text($jsColorPicker);
+	if($showMenu) {
+    	$output->Text(postcalendar_adminmenu());
+	}
+    
+	if(!empty($msg)) {
+		$output->Text('<center><div style="padding:5px; border:1px solid green; background-color: lightgreen;">');		
+		$output->Text("<b>$msg</b>");		
+		$output->Text('</div></center><br />');		
+		
+	}
+	
+    $formURL = pnModUrl(__POSTCALENDAR__,'admin','updateconfig');
+    $output->Text("<form action=\"$formURL\" method=\"post\" enctype=\"application/x-www-form-urlencoded\" name=\"pcConfig\" id=\"pcConfig\">");
+    $output->Text('<table border="1" cellpadding="5" cellspacing="1">');
+    $output->Text('<tr><td align="left"><b>'._PC_ADMIN_GLOBAL_SETTINGS,'</b></td>');
+	$output->Text("<td nowrap='nowrap'><a href=\"$defaultsURL\">$defaultsText</a></td></tr>");
+	
+    $settings = array();
+    $output->SetOutputMode(_PNH_RETURNOUTPUT);
+    $i=0;
+    
+	// global PostCalendar config options
+    $settings[$i][] = $output->Text(_PC_NOTIFY_ADMIN);
+    $settings[$i++][] = $output->FormCheckBox('pcNotifyAdmin', pnModGetVar(__POSTCALENDAR__,'pcNotifyAdmin'));
+    $settings[$i][] = $output->Text(_PC_NOTIFY_EMAIL);
+	$settings[$i++][] = $output->FormText('pcNotifyEmail', pnModGetVar(__POSTCALENDAR__,'pcNotifyEmail'));
+    
+	$settings[$i][] = $output->Text(_PC_ALLOW_DIRECT_SUBMIT);
+    $settings[$i++][] = $output->FormCheckBox('pcAllowDirectSubmit', pnModGetVar(__POSTCALENDAR__,'pcAllowDirectSubmit'));
+    $settings[$i][] = $output->Text(_PC_ALLOW_USER_CALENDAR);
+    $settings[$i++][] = $output->FormCheckBox('pcAllowUserCalendar', pnModGetVar(__POSTCALENDAR__,'pcAllowUserCalendar'));
+	$settings[$i][] = $output->Text(_PC_ALLOW_SITEWIDE_SUBMIT);
+    $settings[$i++][] = $output->FormCheckBox('pcAllowSiteWide', pnModGetVar(__POSTCALENDAR__,'pcAllowSiteWide'));
+    $settings[$i][] = $output->Text(_PC_LIST_HOW_MANY);
+    $settings[$i++][] = $output->FormText('pcListHowManyEvents', pnModGetVar(__POSTCALENDAR__,'pcListHowManyEvents'),5);
+    $settings[$i][] = $output->Text(_PC_TIME24HOURS);
+    $settings[$i++][] = $output->FormCheckBox('pcTime24Hours', pnModGetVar(__POSTCALENDAR__,'pcTime24Hours'));
+	$settings[$i][] = $output->Text(_PC_TIME_INCREMENT);
+    $settings[$i++][] = $output->FormText('pcTimeIncrement', pnModGetVar(__POSTCALENDAR__,'pcTimeIncrement'),5);
+    $settings[$i][] = $output->Text(_PC_EVENTS_IN_NEW_WINDOW);
+    $settings[$i++][] = $output->FormCheckBox('pcEventsOpenInNewWindow', pnModGetVar(__POSTCALENDAR__,'pcEventsOpenInNewWindow'));
+    $settings[$i][] = $output->Text(_PC_INTERNATIONAL_DATES);
+    $settings[$i++][] = $output->FormCheckBox('pcUseInternationalDates', pnModGetVar(__POSTCALENDAR__,'pcUseInternationalDates'));
+    $settings[$i][] = $output->Text(_PC_EVENT_DATE_FORMAT);
+    $settings[$i++][] = $output->FormText('pcEventDateFormat', pnModGetVar(__POSTCALENDAR__,'pcEventDateFormat'));
+    $settings[$i][] = $output->Text(_PC_DISPLAY_TOPICS);
+    $settings[$i++][] = $output->FormCheckBox('pcDisplayTopics', pnModGetVar(__POSTCALENDAR__,'pcDisplayTopics'));
+    $settings[$i][] = $output->Text(_PC_FIRST_DAY_OF_WEEK);
+        $options = array();
+        $selected = pnModGetVar(__POSTCALENDAR__,'pcFirstDayOfWeek');
+        $options[0]['id']       = '0';
+        $options[0]['selected'] = ($selected == 0);
+        $options[0]['name']     = _PC_SUNDAY;
+        $options[1]['id']       = '1';
+        $options[1]['selected'] = ($selected == 1);
+        $options[1]['name']     = _PC_MONDAY;
+        $options[2]['id']       = '6';
+        $options[2]['selected'] = ($selected == 6);
+        $options[2]['name']     = _PC_SATURDAY;
+	$settings[$i++][] = $output->FormSelectMultiple('pcFirstDayOfWeek', $options);
+	$settings[$i][] = $output->Text(_PC_DEFAULT_VIEW);
+        $options = array();
+        $selected = pnModGetVar(__POSTCALENDAR__,'pcDefaultView');
+        $options[0]['id']       = 'day';
+        $options[0]['selected'] = ($selected == 'day');
+        $options[0]['name']     = _CAL_DAYVIEW;
+        $options[1]['id']       = 'week';
+        $options[1]['selected'] = ($selected == 'week');
+        $options[1]['name']     = _CAL_WEEKVIEW;
+        $options[2]['id']       = 'month';
+        $options[2]['selected'] = ($selected == 'month');
+        $options[2]['name']     = _CAL_MONTHVIEW;
+		$options[3]['id']       = 'year';
+        $options[3]['selected'] = ($selected == 'year');
+        $options[3]['name']     = _CAL_YEARVIEW;
+    $settings[$i++][] = $output->FormSelectMultiple('pcDefaultView', $options);
+    $settings[$i][] = $output->Text(_PC_DAY_HIGHLIGHT_COLOR . ' [<a HREF="#" onClick="pick(\'pick\');return false;" NAME="pick" ID="pick">pick</a>]');
+    $settings[$i++][] = $output->FormText('pcDayHighlightColor', pnModGetVar(__POSTCALENDAR__,'pcDayHighlightColor'));
+    $settings[$i][] = $output->Text(_PC_USE_JS_POPUPS);
+    $settings[$i++][] = $output->FormCheckBox('pcUsePopups', pnModGetVar(__POSTCALENDAR__,'pcUsePopups'));
+	$settings[$i][] = $output->Text(_PC_USE_CACHE);
+    $settings[$i++][] = $output->FormCheckBox('pcUseCache', pnModGetVar(__POSTCALENDAR__,'pcUseCache'));
+	$settings[$i][] = $output->Text(_PC_CACHE_LIFETIME);
+    $settings[$i++][] = $output->FormText('pcCacheLifetime', pnModGetVar(__POSTCALENDAR__,'pcCacheLifetime'));
+
+    $templatelist = array();
+    $handle = opendir('modules/'.$pcDir.'/pntemplates');
+	$hide_list = array('.','..','.svn','config','plugins','CVS','compiled','cache');
+	/*
+while($f=readdir($handle))
+    {   if(!in_array($f,$hide_list) && is_dir("modules/$pcDir/pntemplates/$f") && is_readable("modules/$pcDir/pntemplates/$f")) {
+            $templatelist[] = $f;
+        }
+    }
+    closedir($handle); unset($hide_list);
+    sort($templatelist);
+    $tcount = count($templatelist);
+    $settings[$i][] = $output->Text(_PC_DEFAULT_TEMPLATE);
+        $options = array();
+        $selected = pnModGetVar(__POSTCALENDAR__,'pcTemplate');
+        for($t=0;$t<$tcount;$t++) {
+            $options[$t]['id']       = $templatelist[$t];
+            $options[$t]['selected'] = ($selected == $templatelist[$t]);
+            $options[$t]['name']     = $templatelist[$t];
+        }
+    $settings[$i++][] = $output->FormSelectMultiple('pcTemplate', $options);
+*/
+    // v4b TS start
+    $settings[$i][] = $output->Text(_PC_DISPLAY_REPEATING);
+    $settings[$i++][] = $output->FormCheckBox('pcRepeating', pnModGetVar(__POSTCALENDAR__,'pcRepeating'));
+    $settings[$i][] = $output->Text(_PC_DISPLAY_MEETING);
+    $settings[$i++][] = $output->FormCheckBox('pcMeeting', pnModGetVar(__POSTCALENDAR__,'pcMeeting'));
+    $settings[$i][] = $output->Text(_PC_USE_ADDRESSBOOK);
+    $settings[$i++][] = $output->FormCheckBox('pcAddressbook', pnModGetVar(__POSTCALENDAR__,'pcAddressbook'));
+    // v4b TS end
+    
+    $output->SetOutputMode(_PNH_KEEPOUTPUT);
+    
+    // Add row
+    for($i = 0 ; $i < count($settings) ; $i++) {
+        $output->TableAddRow($settings[$i], 'left');
+    }
+    
+    $output->Text('</table>');
+    $output->FormSubmit(_PC_ADMIN_SUBMIT);
+    $output->FormEnd();
+    
+    return $output->GetOutput();
+}
+
+function postcalendar_admin_categories($msg='',$e='')
+{
+    if(!PC_ACCESS_ADMIN) { return _POSTCALENDARNOAUTH; }
+	
+	$output = new pnHTML();
+    $output->SetInputMode(_PNH_VERBATIMINPUT);
+    
+	$pcModInfo = pnModGetInfo(pnModGetIDFromName(__POSTCALENDAR__));
+    $pcDir = pnVarPrepForOS($pcModInfo['directory']);
+$jsColorPicker = <<<EOF
+    <script LANGUAGE="Javascript" SRC="modules/$pcDir/pnincludes/AnchorPosition.js"></SCRIPT>
+    <script LANGUAGE="Javascript" SRC="modules/$pcDir/pnincludes/PopupWindow.js"></SCRIPT>
+    <script LANGUAGE="Javascript" SRC="modules/$pcDir/pnincludes/ColorPicker2.js"></SCRIPT>
+    <script LANGUAGE="JavaScript">
+    var cp = new ColorPicker('window');
+    // Runs when a color is clicked
+    function pickColor(color) {
+	    field.value = color;
+	}
+
+    var field;
+    function pick(anchorname,target) {
+	    field = this.document.forms.cats.elements[target];
+	    cp.show(anchorname);
+	}
+    </SCRIPT>
+EOF;
+	
+	$output->Text($jsColorPicker);
+    $output->Text(postcalendar_adminmenu());
+	
+	if(!empty($e)) { 
+		$output->Text('<div style="padding:5px; border:1px solid red; background-color: pink;">');
+		$output->Text('<center><b>'.$e.'</b></center>');
+		$output->Text('</div><br />');
+	}
+    
+	if(!empty($msg)) { 
+		$output->Text('<div style="padding:5px; border:1px solid green; background-color: lightgreen;">');
+		$output->Text('<center><b>'.$msg.'</b></center>');
+		$output->Text('</div><br />');
+	}
+	
+    $cats = pnModAPIFunc(__POSTCALENDAR__,'admin','getCategories');
+    // V4B RNG: unneeded
+    //if(!is_array($cats)) {
+    //    $output->Text($cats);
+    //    return $output->GetOutput();
+    //}
+    
+    $output->Text('<form name="cats" method="post" action="'.pnModURL(__POSTCALENDAR__,'admin','categoriesConfirm').'">');
+    $output->Text('<table border="1" cellpadding="5" cellspacing="0">');
+    $output->Text('<tr><th>'._PC_CAT_DELETE.'</th><th>'._PC_CAT_NAME.'</th><th>'._PC_CAT_DESC.'</th><th>'._PC_CAT_COLOR.'</th></tr>');
+    $i = 0;
+	foreach($cats as $cat) {
+        $output->Text('<tr>');
+            $output->Text('<td valign="top" align="left">');
+                $output->FormHidden('id[]',$cat['catid']);
+                $output->FormCheckbox('del[]',false,$cat['catid']);
+            $output->Text('</td>');
+            $output->Text('<td valign="top" align="left">');
+                $output->FormText('name[]',$cat['catname'],20);
+            $output->Text('</td>');
+            $output->Text('<td valign="top" align="left">');
+                $output->FormTextarea('desc[]',$cat['catdesc'],3,20);
+            $output->Text('</td>');
+            $output->Text('<td valign="top" align="left">');
+                $output->FormText('color[]',$cat['catcolor'],10);
+				$output->Text('[<a href="javascript:void(0);" onClick="pick(\'pick\',\''.($i+4).'\'); return false;" NAME="pick" ID="pick">pick</a>]');
+            $output->Text('</td>');
+        $output->Text('</tr>');
+		$i+=5;
+    }
+        $output->Text('<tr>');
+            $output->Text('<td valign="top" align="left">');
+                $output->Text(_PC_CAT_NEW);
+            $output->Text('</td>');
+            $output->Text('<td valign="top" align="left">');
+                $output->FormText('newname','',20);
+            $output->Text('</td>');
+            $output->Text('<td valign="top" align="left">');
+                $output->FormTextarea('newdesc','',3,20);
+            $output->Text('</td>');
+            $output->Text('<td valign="top" align="left">');
+                $output->FormText('newcolor','',10);
+				$output->Text('[<a href="javascript:void(0);" onClick="pick(\'pick\',\'newcolor\');return false;" NAME="pick" ID="pick">pick</a>]');
+            $output->Text('</td>');
+        $output->Text('</tr>');
+    $output->Text('</table>');
+    $output->FormSubmit(_PC_ADMIN_SUBMIT);
+    $output->FormEnd();
+    
+    return $output->GetOutput();
 }
 ?>

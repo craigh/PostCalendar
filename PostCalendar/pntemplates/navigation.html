@@ -1,0 +1,87 @@
+<!-- main navigation -->
+<!--[ pc_form_nav_open ]-->
+
+<!--[* configure display variables *]-->
+<!--[ assign var='day_src' value='day.gif' ]-->
+<!--[ assign var='week_src' value='week.gif' ]-->
+<!--[ assign var='month_src' value='month.gif' ]-->
+<!--[ assign var='year_src' value='year.gif' ]-->
+<!--[ assign var='add_src' value='add.gif' ]-->
+<!--[ assign var='search_src' value='search.gif' ]-->
+<!--[ pc_get_category assign='category' ]-->
+<!--[ assign var="icaldate" value=$DATE|date_format:"%Y-%m-%d" ]-->
+
+<!--[ if $VIEW_TYPE eq "day" ]-->
+	<!--[ assign var='day_src' value='day_on.gif' ]-->
+	<!--[ pnmodurl modname="PostCalendar" type="user" func="export" date=$icaldate format="attach" category=$category assign='viplink']-->
+<!--[ elseif $VIEW_TYPE eq "week" ]-->
+	<!--[ assign var='week_src' value='week_on.gif' ]-->
+	<!--[ pc_week_start date=$DATE format='%B %d %Y' assign='weekstart' ]-->
+	<!--[ pc_week_end date=$DATE format='%B %d %Y' assign='weekend' ]-->
+	<!--[ pnmodurl modname="PostCalendar" type="user" func="export" start=$weekstart end=$weekend format="attach" category=$category assign='viplink']-->
+<!--[ elseif $VIEW_TYPE eq "month" ]-->
+	<!--[ assign var='month_src' value='month_on.gif' ]-->
+	<!--[ pnmodurl modname="PostCalendar" type="user" func="export" start=$MONTH_START_DATE end=$MONTH_END_DATE format="attach" category=$category assign='viplink']-->
+<!--[ elseif $VIEW_TYPE eq "year" ]-->
+	<!--[ assign var='year_src' value='year_on.gif' ]-->
+	<!--[ pnmodurl modname="PostCalendar" type="user" func="export" start=$DATE|date_format:'%Y-01-01' end=$DATE|date_format:'%Y-12-31' format="attach" category=$category assign='viplink']-->
+<!--[/if]-->
+
+<!--[ if $FUNCTION eq "submit" ]-->
+	<!--[ assign var='add_src' value='add_on.gif' ]-->
+<!--[ elseif $FUNCTION eq "search" ]-->
+	<!--[ assign var='search_src' value='search_on.gif' ]-->
+<!--[/if]-->
+<!--[* finished configuring display variables *]-->
+
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+	<tr>
+		<td nowrap="nowrap" valign="bottom" align="left">
+		 	<!--[ pc_filter label=Filter 
+						 class="" type="user,category,topic"
+						 order="user,category,topic,jump" ]--><br />
+			<!--[ pc_date_select day="on" month="on" 
+							 year="on" view="on" 
+							 label=Jump 
+							 order="month,day,year,view,jump" ]-->
+		</td>
+		<td width="100%" valign="bottom" align="right">
+            <table id="bnav" border="0" cellpadding="3" cellspacing="0">
+                <tr>
+                    <td align="right" valign="middle">
+                    	<a href='<!--[$viplink]-->'><!--[pnimg src="vip2file.gif" alt=#_VIP_TO_FILE# title=#_VIP_TO_FILE# ]--></a>
+			    	</td>
+                    <td align="right" valign="middle">
+                        <a href="<!--[ pnmodurl modname='PostCalendar' type='user' func='upload' ]-->"><!--[pnimg src="file2vip.gif" alt=#_FILE_TO_VIP# title=#_FILE_TO_VIP# ]--></a>
+                    </td>			
+                    <td align="right" valign="middle">
+                        <a href="<!--[ pc_url action='day' ]-->">
+                        <!--[pnimg src=$day_src alt="Day" title="Day" ]--></a>
+                    </td>
+                    <td align="right" valign="middle">
+                        <a href="<!--[ pc_url action='week' ]-->">
+                        <!--[pnimg src=$week_src alt="Week" title="Week" ]--></a>
+                    </td>
+                    <td align="right" valign="middle">
+                        <a href="<!--[ pc_url action='month' ]-->">
+                        <!--[pnimg src=$month_src alt="Month" title="Month" ]--></a>
+                    </td>
+                    <td align="right" valign="middle">
+                        <a href="<!--[ pc_url action='year' ]-->"><!--[pnimg src=$year_src alt="Year" title="Year" ]--></a>
+                    </td>
+					<!--[ if $ACCESS_ADD eq true ]-->
+                    <td align="right" valign="middle">
+                        <a href="<!--[ pc_url action='submit' ]-->"><!--[pnimg src=$add_src alt="Add" title="Add" ]--></a>
+                    </td>
+					<!--[ /if ]-->
+                    <td align="right" valign="middle">
+                        <a href="<!--[ pc_url action='search' ]-->"><!--[pnimg src=$search_src alt="Search" title="Search" ]--></a>
+                    </td>
+				</tr>
+           </table>
+        </td>
+	</tr>
+</table>
+<!--[ pc_form_nav_close ]-->
+<!-- end main navigation -->

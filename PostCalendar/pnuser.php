@@ -9,7 +9,7 @@
  *  @HeadURL	       $HeadURL$ 
  *  @version         $Revision$ 
  *  
- *  PostCalendar::PostNuke Events Calendar Module
+ *  PostCalendar::Zikula Events Calendar Module
  *  Copyright (C) 2002  The PostCalendar Team
  *  http://postcalendar.tv
  *  Copyright (C) 2009  Sound Web Development
@@ -869,10 +869,12 @@ function postcalendar_user_search()
 	//=================================================================
     //  Find out what Template we're using    
 	//=================================================================
+/*
     $template_name = _SETTING_TEMPLATE;
     if(!isset($template_name)) {
     	$template_name = 'default';
     }
+*/
 	//=================================================================
     //  Output the search form
 	//=================================================================
@@ -914,10 +916,13 @@ function postcalendar_user_search()
 	}
 	$tpl->caching = false;
 	$pageSetup = pnModAPIFunc(__POSTCALENDAR__,'user','pageSetup');
+	/*
 	$pcTheme = pnModGetVar(__POSTCALENDAR__,'pcTemplate');
 	if(!$pcTheme)
 	    $pcTheme='default';
 	return $pageSetup . $tpl->fetch("$pcTheme/search.html");
+	*/
+	return $pageSetup . $tpl->fetch("search.html");
 }
 
 
@@ -934,7 +939,7 @@ function postcalendar_user_search()
 ##      Contact:        ekgermann at cctec.com
 ##
 ##      ical.php is an icalendar export library for PostCalendar.  Put it
-##      in the root of your PostNuke site.  The parameters are as follows:
+##      in the root of your Zikula site.  The parameters are as follows:
 ##
 ##      date            one day export formatted as MM/DD/YYYY (i.e. 01/04/2004)
 ##      start           beginning day export formatted as above
@@ -1334,10 +1339,12 @@ function postcalendar_user_findContact ()
     $tpl_contact->assign('contact_phone',$contact_phone);
     $tpl_contact->assign('contact_mail',$contact_mail);
     $tpl_contact->assign('contact_www',$contact_www);
-
+/*
     $pcTheme = pnModGetVar(__POSTCALENDAR__,'pcTemplate');
     if(!$pcTheme) $pcTheme='default';
     $output = $tpl_contact->fetch("$pcTheme/findContact.html");
+*/
+    $output = $tpl_contact->fetch("findContact.html");
     echo $output;
 
     return true;

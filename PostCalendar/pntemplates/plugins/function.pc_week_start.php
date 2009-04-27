@@ -8,7 +8,7 @@
  *  @HeadURL	       $HeadURL$ 
  *  @version         $Revision$ 
  *  
- *  PostCalendar::PostNuke Events Calendar Module
+ *  PostCalendar::Zikula Events Calendar Module
  *  Copyright (C) 2002  The PostCalendar Team
  *  http://postcalendar.tv
  *  Copyright (C) 2009  Sound Web Development
@@ -33,13 +33,15 @@
  *  http://www.gnu.org/copyleft/gpl.html
  *
  */
-function smarty_function_pc_week_start($args) 
+function smarty_function_pc_week_start($args, &$smarty) 
 {
     // $args['date'] date to use for range building
     // $args['sep'] seperate the dates by this string
     // $args['format'] format all dates like this
     // $args['format1'] format date 1 like this
     // $args['format2'] format date 1 like this
+    extract($args);
+    
     setlocale(LC_TIME, _PC_LOCALE);
     if(!isset($args['date'])) 
         $args['date'] = postcalendar_getDate();
@@ -85,6 +87,13 @@ function smarty_function_pc_week_start($args)
     }
 
     // return the formated range
-    echo $firstDay;
+    //echo $firstDay;
+    
+    if (isset($assign)) {
+        $smarty->assign($assign, $firstDay);
+    } else {
+        return $firstDay;
+    }
+    
 }
 ?>

@@ -1,3 +1,10 @@
+$id$
+PLEASE NOTE:
+The ical functionality of PostCalendar has not been testing in its recent development.
+If you have suggestions/bug fixes. please record them at 
+http://code.zikula.org/soundwebdevelopment/wiki/PostCalendar
+
+
 ical.php	- Add on module to extract PostCalendar 4.0.x data
 		  and render it as iCalendar (RFC 2445) data streams.
 
@@ -10,9 +17,9 @@ ical.php	- Add on module to extract PostCalendar 4.0.x data
 
 
 
-ical.php is an addon module for the PostNuke CMS system and specifically, 
+ical.php is an addon module for the Zikula CMS system and specifically, 
 the PostCalendar Event Calendar module.  The script is self contained 
-and requires no modifications to any of the PostNuke or PostCalendar
+and requires no modifications to any of the Zikula or PostCalendar
 files.  It is written in PHP, but support export of the data to other
 programming languages via the iCalendar specification and also via
 an 'extended info' field in the COMMENT field of a VEVENT record.  This
@@ -26,7 +33,7 @@ Examples of consumers of this extended info include:
   Perl:	via PHP::Serialization
 
 To use this module, unpack it in your main HTML directory where 
-Postnuke is located.  It will add ical.php to this directory, and
+Zikula is located.  It will add ical.php to this directory, and
 also create a new template for PostCalendar called 'icalenabled'.
 The template is not required, but can be used to show you how 
 you can link events, weeks, days, months and years to PostCalendar
@@ -49,7 +56,7 @@ end=YYYY-MM-DD		filter to a specific end date
 
 To get a specific category:
 
-category=name		name is URL encoded Postnuke category name
+category=name		name is URL encoded Zikula category name
 
 To get extended information:
 
@@ -89,7 +96,7 @@ In the ical.php file, two variables at the top control behavior:
 
 Parameters can be stacked to do cool things.
 
-Show me all events for PostNuke catagory "My Sport" for this year.
+Show me all events for Zikula catagory "My Sport" for this year.
 
   http://localhost/ical.php?start=2004-01-01&end=2004-01-31&category=My+Sport&type=attach
 

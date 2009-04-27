@@ -1,0 +1,72 @@
+<!-- main navigation -->
+<!--[ pc_form_nav_open ]-->
+
+<!--[* configure display variables *]-->
+<!--[ assign var='day_src' value='day.gif' ]-->
+<!--[ assign var='week_src' value='week.gif' ]-->
+<!--[ assign var='month_src' value='month.gif' ]-->
+<!--[ assign var='year_src' value='year.gif' ]-->
+<!--[ assign var='add_src' value='add.gif' ]-->
+<!--[ assign var='search_src' value='search.gif' ]-->
+<!--[ pc_get_category assign='category' ]-->
+
+<!--[ if $VIEW_TYPE eq "day" ]-->
+	<!--[ assign var='day_src' value='day_on.gif' ]-->
+<!--[ elseif $VIEW_TYPE eq "week" ]-->
+	<!--[ assign var='week_src' value='week_on.gif' ]-->
+<!--[ elseif $VIEW_TYPE eq "month" ]-->
+	<!--[ assign var='month_src' value='month_on.gif' ]-->
+<!--[ elseif $VIEW_TYPE eq "year" ]-->
+	<!--[ assign var='year_src' value='year_on.gif' ]-->
+<!--[/if]-->
+
+<!--[ if $FUNCTION eq "submit" ]-->
+	<!--[ assign var='add_src' value='add_on.gif' ]-->
+<!--[ elseif $FUNCTION eq "search" ]-->
+	<!--[ assign var='search_src' value='search_on.gif' ]-->
+<!--[/if]-->
+<!--[* finished configuring display variables *]-->
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+     <tr>
+         <td nowrap="nowrap" valign="bottom" class="pn-normal">
+             <!--[ pc_date_select day="on" 
+			 				  month="on" 
+							  year="on" 
+							  view="on" 
+							  label="Jump" 
+							  class=""
+							  order="month,day,year,view,jump" ]-->
+         </td>
+		 <td valign="bottom" align="right">
+            <table id="bnav" border="0" cellpadding="3" cellspacing="0">
+                <tr>
+                     <td align="right" valign="middle">
+                        <a href="<!--[ pc_url action='day' ]-->">
+                        <!--[pnimg src=$day_src alt="Day" title="Day" ]--></a>
+                    </td>
+                    <td align="right" valign="middle">
+                        <a href="<!--[ pc_url action='week' ]-->">
+                        <!--[pnimg src=$week_src alt="Week" title="Week" ]--></a>
+                    </td>
+                    <td align="right" valign="middle">
+                        <a href="<!--[ pc_url action='month' ]-->">
+                        <!--[pnimg src=$month_src alt="Month" title="Month" ]--></a>
+                    </td>
+                    <td align="right" valign="middle">
+                        <a href="<!--[ pc_url action='year' ]-->"><!--[pnimg src=$year_src alt="Year" title="Year" ]--></a>
+                    </td>
+					<!--[ if $ACCESS_ADD eq true ]-->
+                    <td align="right" valign="middle">
+                        <a href="<!--[ pc_url action='submit' ]-->"><!--[pnimg src=$add_src alt="Add" title="Add" ]--></a>
+                    </td>
+					<!--[ /if ]-->
+                    <td align="right" valign="middle">
+                        <a href="<!--[ pc_url action='search' ]-->"><!--[pnimg src=$search_src alt="Search" title="Search" ]--></a>
+                    </td>
+                </tr>
+            </table>
+         </td>
+     </tr>
+ </table>
+<!--[ pc_form_nav_close ]-->

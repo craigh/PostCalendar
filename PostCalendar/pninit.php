@@ -9,7 +9,7 @@
  *  @HeadURL	       $HeadURL$ 
  *  @version         $Revision$ 
  *
- *  PostCalendar::PostNuke Events Calendar Module
+ *  PostCalendar::Zikula Events Calendar Module
  *  Copyright (C) 2002  The PostCalendar Team
  *  http://postcalendar.tv
  *  Copyright (C) 2009  Sound Web Development
@@ -39,7 +39,7 @@
  *	Initializes a new install of PostCalendar
  *
  *	This function will initialize a new installation of PostCalendar.
- *	It is accessed via the PostNuke Admin interface and should
+ *	It is accessed via the Zikula Admin interface and should
  *	not be called directly. 
  *
  *	@return  boolean	true/false
@@ -136,7 +136,7 @@ function postcalendar_init()
 	pnModSetVar(__POSTCALENDAR__, 'pcAllowSiteWide',        	'0');
 	pnModSetVar(__POSTCALENDAR__, 'pcAllowUserCalendar',        '1');
 	pnModSetVar(__POSTCALENDAR__, 'pcEventDateFormat',        	'%Y-%m-%d');
-	pnModSetVar(__POSTCALENDAR__, 'pcTemplate',         		'default');
+//	pnModSetVar(__POSTCALENDAR__, 'pcTemplate',         		'default');
 	pnModSetVar(__POSTCALENDAR__, 'pcUseCache',         		'1');
 	pnModSetVar(__POSTCALENDAR__, 'pcCacheLifetime',         	'3600');
 	pnModSetVar(__POSTCALENDAR__, 'pcDefaultView',         		'month');
@@ -154,7 +154,7 @@ function postcalendar_init()
  *	Upgrades an old install of PostCalendar
  *
  *	This function is used to upgrade an old version
- *	of PostCalendar.  It is accessed via the PostNuke
+ *	of PostCalendar.  It is accessed via the Zikula
  *	Admin interface and should not be called directly.
  *
  *	@return boolean	true/false
@@ -167,7 +167,7 @@ function postcalendar_upgrade($oldversion)
 {
 	// note: the comment below is no longer tru - CAH  13 Apr 2009
     /**
-	 *	Until PostNuke fixes the bugs
+	 *	Until Zikula fixes the bugs
 	 *	with the module upgrade we are
 	 *	going to have to do it ourselves.
 	 *
@@ -209,7 +209,7 @@ function postcalendar_upgrade($oldversion)
 			pnModSetVar(__POSTCALENDAR__, 'pcAllowSiteWide', '0');
 			pnModSetVar(__POSTCALENDAR__, 'pcAllowUserCalendar', '1');
 			pnModSetVar(__POSTCALENDAR__, 'pcEventDateFormat', '%Y-%m-%d');
-			pnModSetVar(__POSTCALENDAR__, 'pcTemplate', 'default');
+//			pnModSetVar(__POSTCALENDAR__, 'pcTemplate', 'default');
             pnModSetVar(__POSTCALENDAR__, 'pcUseCache','1');
 			pnModSetVar(__POSTCALENDAR__, 'pcCacheLifetime','3600');
 			pnModSetVar(__POSTCALENDAR__, 'pcDefaultView','month');
@@ -643,6 +643,9 @@ function postcalendar_upgrade($oldversion)
 		case '5.0.0':
 			pnModSetVar(__POSTCALENDAR__, 'pcTemplate', 'default');
 			break;
+		case '5.0.1':
+      pnModDelVar(__POSTCALENDAR__,'pcTemplate');
+			break;
 	}
 	
 	// if we get this far - load the userapi and clear the cache
@@ -661,8 +664,8 @@ function postcalendar_upgrade($oldversion)
  *	Deletes an install of PostCalendar
  *
  *	This function removes PostCalendar from you
- *	PostNuke install and should be accessed via
- *	the PostNuke Admin interface
+ *	Zikula install and should be accessed via
+ *	the Zikula Admin interface
  *
  *	@return  boolean	true/false
  *	@access  public
