@@ -38,15 +38,9 @@ class pcRender extends pnRender
 {
     function pcRender()
     {
-	$theme = pnVarPrepForOS(pnUserGetTheme());
-	pnThemeLoad($theme);
-	$osTheme = pnVarPrepForOS($theme);
-
-	global $bgcolor1,$bgcolor2,$bgcolor3,$bgcolor4,$bgcolor5,$bgcolor6,$textcolor1,$textcolor2;
-        
-	$pcModInfo     = pnModGetInfo(pnModGetIDFromName(__POSTCALENDAR__));
-	$pcDir         = pnVarPrepForOS($pcModInfo['directory']);
-	$pcDisplayName = $pcModInfo['displayname'];
+			$pcModInfo     = pnModGetInfo(pnModGetIDFromName(__POSTCALENDAR__));
+			$pcDir         = pnVarPrepForOS($pcModInfo['directory']);
+			$pcDisplayName = $pcModInfo['displayname'];
 		
 	// setup up pcRender configs
 	$this->pnRender ('PostCalendar');
@@ -75,15 +69,6 @@ class pcRender extends pnRender
 	if (!$pcTheme) 
 	    $pcTheme='default';
 */
-	// assign theme globals
-	$this->assign('BGCOLOR1', $bgcolor1);
-	$this->assign('BGCOLOR2', $bgcolor2);
-	$this->assign('BGCOLOR3', $bgcolor3);
-	$this->assign('BGCOLOR4', $bgcolor4);
-	$this->assign('BGCOLOR5', $bgcolor5);
-	$this->assign('BGCOLOR6', $bgcolor6);
-	$this->assign('TEXTCOLOR1', $textcolor1);
-	$this->assign('TEXTCOLOR2', $textcolor2);
 	$this->assign('USER_LANG', $lang);
 	$this->assign('FUNCTION', $func);
 	$this->assign('PRINT_VIEW', $print);

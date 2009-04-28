@@ -102,28 +102,24 @@ function postcalendar_adminapi_buildAdminList($args)
 	extract($args);
 	$output = new pnHTML();
 	$output->SetInputMode(_PNH_VERBATIMINPUT);
-	pnThemeLoad(pnUserGetTheme());
-    // get the theme globals :: is there a better way to do this?
-    global $bgcolor1, $bgcolor2, $bgcolor3, $bgcolor4, $bgcolor5;
-    global $textcolor1, $textcolor2;
-	
+
 	$formUrl = pnModUrl(__POSTCALENDAR__,'admin','adminevents');
     $output->FormStart($formUrl);
-    $output->Text('<table border="0" cellpadding="1" cellspacing="0" width="100%" bgcolor="'.$bgcolor2.'"><tr><td>');
-    $output->Text('<table border="0" cellpadding="5" cellspacing="0" width="100%" bgcolor="'.$bgcolor1.'"><tr><td>');
+    $output->Text('<table border="0" cellpadding="1" cellspacing="0" width="100%" bgcolor="white"><tr><td>');
+    $output->Text('<table border="0" cellpadding="5" cellspacing="0" width="100%" bgcolor="white"><tr><td>');
         $output->Text('<center><font size="4"><b>'.$title.'</b></font></center>');
     $output->Text('</td></tr></table>');    
     $output->Text('</td></tr></table>');
     
     $output->Linebreak();
     
-    $output->Text('<table border="0" cellpadding="1" cellspacing="0" width="100%" bgcolor="'.$bgcolor2.'"><tr><td>');
-    $output->Text('<table border="0" cellpadding="5" cellspacing="0" width="100%" bgcolor="'.$bgcolor1.'">');
+    $output->Text('<table border="0" cellpadding="1" cellspacing="0" width="100%" bgcolor="white"><tr><td>');
+    $output->Text('<table border="0" cellpadding="5" cellspacing="0" width="100%" bgcolor="white">');
         if(!$events) {
-            $output->Text('<tr><td width="100%" bgcolor="'.$bgcolor1.'" align="center"><b>'._PC_NO_EVENTS.'</b></td></tr>');
+            $output->Text('<tr><td width="100%" bgcolor="white" align="center"><b>'._PC_NO_EVENTS.'</b></td></tr>');
         } else {
-            $output->Text('<tr><td bgcolor="'.$bgcolor1.'" align="center"><b>'._PC_EVENTS.'</b></td></tr>');
-            $output->Text('<table border="0" cellpadding="2" cellspacing="0" width="100%" bgcolor="'.$bgcolor1.'">');
+            $output->Text('<tr><td bgcolor="white" align="center"><b>'._PC_EVENTS.'</b></td></tr>');
+            $output->Text('<table border="0" cellpadding="2" cellspacing="0" width="100%" bgcolor="white">');
             
 			// build sorting urls
             if(!isset($sdir)) { $sdir = 1; } 
@@ -157,8 +153,8 @@ function postcalendar_adminapi_buildAdminList($args)
     $output->Linebreak();
     
     // action to take?
-    $output->Text('<table border="0" cellpadding="1" cellspacing="0" width="100%" bgcolor="'.$bgcolor2.'"><tr><td>');
-    $output->Text('<table border="0" cellpadding="5" cellspacing="0" width="100%" bgcolor="'.$bgcolor1.'"><tr>');
+    $output->Text('<table border="0" cellpadding="1" cellspacing="0" width="100%" bgcolor="white"><tr><td>');
+    $output->Text('<table border="0" cellpadding="5" cellspacing="0" width="100%" bgcolor="white"><tr>');
         $output->Text('<td align="left" valign="middle">');
             
             $seldata[0]['id'] = _ADMIN_ACTION_VIEW;
@@ -186,8 +182,8 @@ function postcalendar_adminapi_buildAdminList($args)
     $output->Linebreak();
     
     // start previous next links
-    $output->Text('<table border="0" cellpadding="1" cellspacing="0" width="100%" bgcolor="'.$bgcolor2.'"><tr><td>');
-    $output->Text('<table border="0" cellpadding="5" cellspacing="0" width="100%" bgcolor="'.$bgcolor1.'"><tr>');
+    $output->Text('<table border="0" cellpadding="1" cellspacing="0" width="100%" bgcolor="white"><tr><td>');
+    $output->Text('<table border="0" cellpadding="5" cellspacing="0" width="100%" bgcolor="white"><tr>');
     if($offset > 1) {
         $output->Text('<td align="left">');
         $next_link = pnModUrl(__POSTCALENDAR__,'admin',$function,array('offset'=>$offset-$offset_increment,'sort'=>$sort,'sdir'=>$sdir));

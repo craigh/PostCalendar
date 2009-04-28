@@ -467,9 +467,6 @@ function postcalendar_user_submit($args)
 	$output = new pnHTML();
     $output->SetInputMode(_PNH_VERBATIMINPUT);
     
-	// get the theme globals :: is there a better way to do this?
-    pnThemeLoad(pnUserGetTheme());
-    global $bgcolor1, $bgcolor2, $bgcolor3, $bgcolor4, $bgcolor5, $textcolor1, $textcolor2;
 	extract($args);
 
 	$Date = postcalendar_getDate();

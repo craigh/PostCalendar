@@ -1221,10 +1221,6 @@ function postcalendar_userapi_eventDetail($args,$admin=false)
 	if(!(bool)PC_ACCESS_READ) 
 		return _POSTCALENDARNOAUTH; 
 
-	// get the theme globals :: is there a better way to do this?
-	pnThemeLoad(pnUserGetTheme());
-	global $bgcolor1, $bgcolor2, $bgcolor3, $bgcolor4, $bgcolor5;
-	global $textcolor1, $textcolor2;
 	$popup = FormUtil::getPassedValue('popup');
 	extract($args); 
 	unset($args);
@@ -1658,10 +1654,6 @@ function postcalendar_userapi_loadPopups()
 
 	define('_POSTCALENDAR_LOADPOPUPS_LOADED',true);
     
-	// get the theme globals :: is there a better way to do this?
-	global $bgcolor1, $bgcolor2, $bgcolor3, $bgcolor4, $bgcolor5;
-	global $textcolor1, $textcolor2;
-    
 	// lets get the module's information
 	$modinfo = pnModGetInfo(pnModGetIDFromName(__POSTCALENDAR__));
 	$pcDir = pnVarPrepForOS($modinfo['directory']);
@@ -1673,11 +1665,12 @@ $output = <<<EOF
 
 <script language="JavaScript">
 <!-- overLIB configuration -->
-ol_fgcolor = "$bgcolor1"; 
-ol_bgcolor = "$bgcolor2"; 
-ol_textcolor = "$textcolor2"; 
-ol_capcolor = "$textcolor2";
-ol_closecolor = "$textcolor2"; 
+<!-- colors set to reasonable defaults -->
+ol_fgcolor = "black"; 
+ol_bgcolor = "white"; 
+ol_textcolor = "black"; 
+ol_capcolor = "black";
+ol_closecolor = "black"; 
 ol_textfont = "Verdana,Arial,Helvetica"; 
 ol_captionfont = "Verdana,Arial,Helvetica";
 ol_captionsize = 2; 

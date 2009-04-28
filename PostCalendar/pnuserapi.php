@@ -102,12 +102,7 @@ function postcalendar_userapi_buildView($args)
     if(!isset($template_name)) { $template_name = 'default'; }
 */
     $template = pnVarPrepForOS('view_' . $viewtype . '.html');
-    // V4B RNG
-	//=================================================================
-    //  Grab the current theme information
-    //=================================================================
-    pnThemeLoad(pnUserGetTheme());
-    global $bgcolor1, $bgcolor2, $bgcolor3, $bgcolor4, $bgcolor5, $bgcolor6, $textcolor1, $textcolor2;
+
 	//=================================================================
     //  Insert necessary JavaScript into the page
     //=================================================================
@@ -418,10 +413,6 @@ function postcalendar_userapi_buildView($args)
  */
 function postcalendar_userapi_eventPreview($args)
 {
-    // get the theme globals :: is there a better way to do this?
-    pnThemeLoad(pnUserGetTheme());
-    global $bgcolor1, $bgcolor2, $bgcolor3, $bgcolor4, $bgcolor5;
-    global $textcolor1, $textcolor2;
 
 	extract($args); unset($args);
 	//echo "eventpreview::pnusergetvar";

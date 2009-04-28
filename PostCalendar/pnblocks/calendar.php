@@ -104,9 +104,9 @@ function postcalendar_calendarblock_display($blockinfo)
     $cacheid1 = $cacheid2 = $cacheid3 = '';
     $theme = pnUserGetTheme();
     
-    pnThemeLoad($theme);
-    global $bgcolor1, $bgcolor2, $bgcolor3, $bgcolor4, $bgcolor5;
-    global $textcolor1, $textcolor2;
+    //pnThemeLoad($theme);
+    //global $bgcolor1, $bgcolor2, $bgcolor3, $bgcolor4, $bgcolor5;
+    //global $textcolor1, $textcolor2;
     
     // 20021125 - rraymond :: we have to do this to make it work with envolution
     $pcModInfo = pnModGetInfo(pnModGetIDFromName(__POSTCALENDAR__));

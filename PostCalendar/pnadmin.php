@@ -77,11 +77,6 @@ function postcalendar_admin_showlist($e='',$type,$function,$title,$msg='')
 	$offset_increment = _SETTING_HOW_MANY_EVENTS;
     if(empty($offset_increment)) $offset_increment = 15;
     
-	pnThemeLoad(pnUserGetTheme());
-    // get the theme globals :: is there a better way to do this?
-    global $bgcolor1, $bgcolor2, $bgcolor3, $bgcolor4, $bgcolor5;
-    global $textcolor1, $textcolor2;
-    
     $offset = FormUtil::getPassedValue('offset');
     $sort = FormUtil::getPassedValue('sort');
     $sdir = FormUtil::getPassedValue('sdir');
@@ -298,10 +293,6 @@ function postcalendar_admin_submit($args)
 	pnModAPILoad(__POSTCALENDAR__,'user');
 	$output = postcalendar_adminmenu();
 	
-	// get the theme globals :: is there a better way to do this?
-    pnThemeLoad(pnUserGetTheme());
-    global $bgcolor1, $bgcolor2, $bgcolor3, $bgcolor4, $bgcolor5, $textcolor1, $textcolor2;
-    
 	extract($args);
 	
 	$Date = postcalendar_getDate();
@@ -929,11 +920,6 @@ function postcalendar_admin_categoriesUpdate()
 function postcalendar_adminmenu($upgraded=false)
 {
     if(!PC_ACCESS_ADMIN) { return _POSTCALENDARNOAUTH; }
-	
-	pnThemeLoad(pnUserGetTheme());
-    // get the theme globals :: is there a better way to do this?
-    global $bgcolor1, $bgcolor2, $bgcolor3, $bgcolor4, $bgcolor5, $bgcolor6;
-    global $textcolor1, $textcolor2;
     
 	$pcModInfo = pnModGetInfo(pnModGetIDFromName(__POSTCALENDAR__));
 	$pcDir = pnVarPrepForOS($pcModInfo['directory']);
@@ -976,9 +962,6 @@ function postcalendar_adminmenu($upgraded=false)
 
 require_once("system/Admin/pntemplates/plugins/function.admincategorymenu.php");	
 $catmenu = smarty_function_admincategorymenu();
-pnThemeLoad(pnUserGetTheme());
-$bgcolor1 = pnThemeGetVar('bgcolor1');
-$bgcolor2 = pnThemeGetVar('bgcolor2');
 
 $output = <<<EOF
 $catmenu
@@ -1093,8 +1076,6 @@ function postcalendar_admin_upgrade()
 
 function postcalendar_admin_testSystem()
 {
-    global $bgcolor1,$bgcolor2;
-	
 	if(!PC_ACCESS_ADMIN) { return _POSTCALENDARNOAUTH; }
    
     $modinfo = pnModGetInfo(pnModGetIDFromName(__POSTCALENDAR__));
