@@ -1,5 +1,4 @@
-<!--[pnpageaddvar name="stylesheet" value="modules/PostCalendar/pnstyle/calendarblock.css"]-->
-
+<div class="postcalendar_block_view_day">
 <!--[ if $SHOW_TITLE eq 1 ]-->
 	<h2><!--[ $TODAYS_EVENTS_TITLE ]--></h2>
 <!--[ /if ]-->
@@ -52,3 +51,4 @@
 <!--[ if ($eventtotal > $DISPLAY_LIMIT) ]-->
   <a href="<!--[ pc_url action=day eid=$event.eid date=$TODAY_DATE ]-->"><!--[ $eventtotal ]-->&nbsp<!--[ $EVENTS_TOTAL_LINK ]--></a>
 <!--[ /if ]-->
+</div>

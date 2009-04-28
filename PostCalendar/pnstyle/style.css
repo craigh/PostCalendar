@@ -20,22 +20,10 @@ table.yearheader
 	margin-top:1em;
 	border: 1px solid Black;
 }
-.dayheader a:link,
-.dayheader a:active,
-.dayheader a:hover,
-.dayheader a:visited,
-.weekheader a:link,
-.weekheader a:active,
-.weekheader a:hover,
-.weekheader a:visited,
-.monthheader a:link,
-.monthheader a:active,
-.monthheader a:hover,
-.monthheader a:visited,
-.yearheader a:link,
-.yearheader a:active,
-.yearheader a:hover,
-.yearheader a:visited
+.dayheader a,
+.weekheader a,
+.monthheader a,
+.yearheader a
 {
 	font-size: 14pt;
 	font-weight: bold;
@@ -95,49 +83,34 @@ td.weeklink
 	background-color: #cccccc; /* Pale Grey */
 	border: 1px solid Black;
 }
-.weeklink a:link,
-.weeklink a:active,
-.weeklink a:hover,
-.weeklink a:visited
+.weeklink a
 {
 	font-size: 7pt;
 	font-weight: normal;
 	text-decoration: none;
 }
-a.event-none:link,
-a.event-none:hover,
-a.event-none:visited,
-a.event-none:active
+a.event-none
 {
 	color: Black;
 	font-size: 10px;
 	font-weight: normal;
 	text-decoration: none;
 }
-a.event-one:link,
-a.event-one:hover,
-a.event-one:visited,
-a.event-one:active
+a.event-one
 {
 	color: #006600; /* Obscure Dull Green */
 	font-size: 10px;
 	font-weight: normal;
 	text-decoration: none;
 }
-a.event-two:link,
-a.event-two:hover,
-a.event-two:visited,
-a.event-two:active
+a.event-two
 {
 	color: #006666; /* Obscure Dull Cyan */
 	font-size: 10px;
 	font-weight: normal;
 	text-decoration: none;
 }
-a.event-three:link,
-a.event-three:hover,
-a.event-three:visited,
-a.event-three:active
+a.event-three
 {
 	color: #0066cc; /* Hard Dark Azure */
 	font-size: 10px;
@@ -211,4 +184,119 @@ td.eventslist
 {
 	background-color: White;
 	padding: 10px;
+}
+
+/*********** BLOCK STYLES **************/
+td.blockmonthon
+{
+	background-color: white;
+	border: 1px solid Black;
+}
+td.blockmonthoff
+{
+	background-color: #cccccc; /* Pale gray */
+	border: 1px solid Black;
+}
+td.blockmonthtoday
+{
+	background-color: yellow;
+	border: 1px solid Black;
+}
+td.blockmonthheader
+{
+	background-color: #cccccc; /* Pale gray */
+	font-size: 8pt;
+	font-weight: bold;
+}
+table.blockmonthheader
+{
+	background-color: #cccccc; /* Pale gray */
+	border: 1px solid Black;
+}
+.blockmonthheader a
+{
+	font-size: 8pt;
+	font-weight: bold;
+	padding-left: 1px;
+	padding-right: 1px;
+	text-decoration: none;
+}
+td.blockdaynames
+{
+	background-color: #cccccc; /* Pale gray */
+	border: 1px solid Black;
+	font-size: 8pt;
+	font-weight: normal;
+	text-decoration: none;
+}
+
+table.blockcalcontainer,
+td.blockcalcontainer
+{
+	border: 1px solid Black;
+}
+td.blockweeklink
+{
+	background-color: #cccccc; /* Pale gray */
+	border: 1px solid Black;
+}
+.blockweeklink a
+{
+	color: black;
+	font-size: 7pt;
+	font-weight: normal;
+	text-decoration: none;
+}
+a.blockevent-none
+{
+	color: black;
+	font-size: 10px;
+	font-weight: normal;
+	text-decoration: none;
+}
+a.blockevent-one
+{
+	color: #006600; /* Obscure Dull Green */
+	font-size: 10px;
+	font-weight: normal;
+	text-decoration: none;
+}
+a.blockevent-two
+{
+	color: #006666; /* Obscure Dull Cyan */
+	font-size: 10px;
+	font-weight: normal;
+	text-decoration: none;
+}
+a.blockevent-three
+{
+	color: #0066cc; /* Hard Dark Azure */
+	font-size: 10px;
+	font-weight: normal;
+	text-decoration: none;
+}
+li.eventlink,
+.eventlink a
+{
+	font-size: 10px;
+	font-weight: normal;
+	padding: 2px;
+	text-decoration: none;
+}
+li.pc_blockdate
+{
+	font-weight: bold;
+	font-size: 1.1em;
+}
+li.pc_blockevent
+{
+	margin-left:2em;
+	border:none;
+	padding:0;
+}
+div.pc_centerblocksubmitlinks
+{
+	text-align: center;
+	padding: 1em 0 0 0;
+	
 }
