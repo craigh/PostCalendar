@@ -83,12 +83,8 @@
 	<!--[ /foreach ]-->
 </td></tr></table>
 <!--[ if $PRINT_VIEW != 1 ]-->
-<table width="100%" border="0" cellpadding="0" cellspacing="0">
-    <tr>
-        <td align="right">
-            <a href="<!--[ pc_url action="week" print="true" ]-->">Print</a>
-        </td>
-    </tr>
-</table>
+<div style='text-align:right;'>
+	<a href="<!--[pngetcurrenturl]-->&amp;theme=Printer">Print</a>
+</div>
 <!--[ /if ]-->
 <!--[ include file="footer.html" ]-->
