@@ -11,8 +11,12 @@ td.yearheader
 	font-size: 14pt;
 	font-weight: bold;
 }
-table.calcontainer,
-table.dayheader,
+table.calcontainer table
+{
+	border:0;
+	border-collapse: collapse;
+}
+table.dayheader
 table.weekheader,
 table.monthheader,
 table.yearheader
@@ -233,7 +237,8 @@ td.blockdaynames
 table.blockcalcontainer,
 td.blockcalcontainer
 {
-	border: 1px solid Black;
+	border: 0;
+	border-collapse: collapse;
 }
 td.blockweeklink
 {
@@ -287,12 +292,14 @@ li.pc_blockdate
 {
 	font-weight: bold;
 	font-size: 1.1em;
+	list-style: none;
 }
 li.pc_blockevent
 {
 	margin-left:2em;
 	border:none;
 	padding:0;
+	list-style: none;
 }
 div.pc_centerblocksubmitlinks
 {
