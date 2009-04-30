@@ -1,3 +1,8 @@
+<!--[ if $smarty.get.theme eq "Printer" ]-->
+	<!--[* page presented in printer theme *]-->
+	<!--[ assign var="ACCESS_ADD" value=0 ]-->
+	<!--[ assign var="PRINT_VIEW" value=1 ]-->
+<!--[/if]-->
 <!--[ if $PRINT_VIEW != 1 ]-->
 <!--[ include file="navigation_details.html" ]-->
 <!--[ /if ]-->

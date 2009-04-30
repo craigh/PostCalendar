@@ -11,18 +11,29 @@ td.yearheader
 	font-size: 14pt;
 	font-weight: bold;
 }
-table.calcontainer table
+table.postcalendar_month
 {
 	border:0;
 	border-collapse: collapse;
 }
-table.dayheader
+table.calcontainer,
+table.dayheader,
 table.weekheader,
 table.monthheader,
 table.yearheader
 {
 	margin-top:1em;
 	border: 1px solid Black;
+}
+div.postcalendar_header
+{
+	text-align: center;
+	background: transparent;
+	font-size: 14pt;
+	font-weight: bold;
+	margin-top:1em;
+	border: 1px solid Black;
+	padding: .5em;
 }
 .dayheader a,
 .weekheader a,

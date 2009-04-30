@@ -59,11 +59,10 @@ class pcRender extends pnRender
 			
 		//$lang  = pnUserGetLang();
 		$func  = FormUtil::getPassedValue('func');
-		$print = FormUtil::getPassedValue('print');
+		//$print = FormUtil::getPassedValue('print');
 	
 		$template_view = FormUtil::getPassedValue('tplview');
-		if (!$template_view) 
-			$template_view = 'month'; 
+		if (!$template_view) $template_view = 'month'; 
 		/*
 		$pcTheme = pnModGetVar(__POSTCALENDAR__,'pcTemplate');
 		if (!$pcTheme) 
@@ -71,7 +70,7 @@ class pcRender extends pnRender
 		*/
 		//$this->assign('USER_LANG', $lang);
 		$this->assign('FUNCTION', $func);
-		$this->assign('PRINT_VIEW', $print);
+		//$this->assign('PRINT_VIEW', $print);
 		$this->assign('USE_POPUPS', _SETTING_USE_POPUPS);
 		$this->assign('USE_TOPICS', _SETTING_DISPLAY_TOPICS);
 		$this->assign('USE_INT_DATES', _SETTING_USE_INT_DATES);

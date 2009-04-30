@@ -314,7 +314,7 @@ function postcalendar_user_view()
     
     // get the vars that were passed in
     $Date      = FormUtil::getPassedValue ('Date');
-    $print     = FormUtil::getPassedValue ('print');
+    //$print     = FormUtil::getPassedValue ('print');
     $viewtype  = FormUtil::getPassedValue ('viewtype');
     $jumpday   = FormUtil::getPassedValue ('jumpday');
     $jumpmonth = FormUtil::getPassedValue ('jumpmonth');
@@ -322,7 +322,8 @@ function postcalendar_user_view()
     
     $Date = postcalendar_getDate();
     if(!isset($viewtype))   $viewtype = _SETTING_DEFAULT_VIEW;
-    return postcalendar_user_display(array('viewtype'=>$viewtype,'Date'=>$Date,'print'=>$print)) . postcalendar_footer();
+    //return postcalendar_user_display(array('viewtype'=>$viewtype,'Date'=>$Date,'print'=>$print)) . postcalendar_footer();
+    return postcalendar_user_display(array('viewtype'=>$viewtype,'Date'=>$Date)) . postcalendar_footer();
 }
 
 /**
@@ -334,7 +335,7 @@ function postcalendar_user_display($args)
 {
     $eid         = FormUtil::getPassedValue ('eid');
     $Date        = FormUtil::getPassedValue ('Date');
-    $print       = FormUtil::getPassedValue ('print');
+    //$print       = FormUtil::getPassedValue ('print');
     $pc_category = FormUtil::getPassedValue ('pc_category');
     $pc_topic    = FormUtil::getPassedValue ('pc_topic');
     $pc_username = FormUtil::getPassedValue ('pc_username');
@@ -346,7 +347,8 @@ function postcalendar_user_display($args)
 
     $uid = pnUserGetVar('uid');
     $theme = pnUserGetTheme();
-    $cacheid = md5($Date.$viewtype._SETTING_TEMPLATE.$eid.$print.$uid.'u'.$pc_username.$theme.'c'.$category.'t'.$topic);
+    //$cacheid = md5($Date.$viewtype._SETTING_TEMPLATE.$eid.$print.$uid.'u'.$pc_username.$theme.'c'.$category.'t'.$topic);
+    $cacheid = md5($Date.$viewtype._SETTING_TEMPLATE.$eid.$uid.'u'.$pc_username.$theme.'c'.$category.'t'.$topic);
 	
     switch ($viewtype) 
     {
@@ -355,7 +357,7 @@ function postcalendar_user_display($args)
                 return _POSTCALENDARNOAUTH;
             }
             $event = pnModAPIFunc('PostCalendar','user','eventDetail', 
-                                  array('eid'=>$eid, 'Date'=>$Date, 'print'=>$print, 'cacheid'=>$cacheid));
+                                  array('eid'=>$eid, 'Date'=>$Date, 'cacheid'=>$cacheid));
 
             if($event === false) { 
                 pnRedirect(pnModURL(__POSTCALENDAR__,'user'));
@@ -406,7 +408,7 @@ function postcalendar_user_delete()
     $output->Linebreak(2);
     // V4B RNG Start: Form is closed in the following block
     // Form is closed in the following block
-    $output->Text(pnModAPIFunc(__POSTCALENDAR__,'user','eventDetail',array('eid'=>$pc_event_id,'cacheid'=>'','print'=>0,'Date'=>'')));
+    $output->Text(pnModAPIFunc(__POSTCALENDAR__,'user','eventDetail',array('eid'=>$pc_event_id,'cacheid'=>'','Date'=>'')));
     $output->Linebreak(2);
     // Re-open form here ...
     $output->FormStart(pnModUrl(__POSTCALENDAR__,'user','deleteevents'));

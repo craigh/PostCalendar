@@ -1246,7 +1246,6 @@ function postcalendar_userapi_eventDetail($args,$admin=false)
 //		$template = "$pcTheme/admin_view_event_details.html";
 		$template = "admin_view_event_details.html";
 		$args['cacheid'] = '';
-		$print=0;
 		$Date = postcalendar_getDate();
 		$tpl->caching = false;
 	} else {
@@ -1391,7 +1390,7 @@ function postcalendar_userapi_eventDetail($args,$admin=false)
 	if(!$pcTheme)
 	    $pcTheme='default';
 */    	
-    if($popup != 1 && $print != 1) {    
+    if($popup != 1) {    
         $output .= $tpl->fetch($template, $cacheid);
         
         // V4B TS start ***  Hook code for displaying stuff for events

@@ -1,15 +1,16 @@
+<!--[ if $smarty.get.theme eq "Printer" ]-->
+	<!--[* page presented in printer theme *]-->
+	<!--[ assign var="ACCESS_ADD" value=0 ]-->
+	<!--[ assign var="PRINT_VIEW" value=1 ]-->
+<!--[/if]-->
 <!--[ if $PRINT_VIEW != 1 ]-->
 <!--[ include file="navigation.html" ]-->
 <!--[ /if ]-->
-<table width="100%" border="0" cellpadding="5" cellspacing="0" class="yearheader">
-    <tr align="center">
-        <td class="yearheader" width="100%" align="center" valign="middle">
-        	<a href="<!--[ $PREV_YEAR_URL ]-->">&lt;&lt;</a>
-        	<!--[ $DATE|date_format:'%Y']-->
-        	<a href="<!--[ $NEXT_YEAR_URL ]-->">&gt;&gt;</a>
-        </td>
-    </tr>
-</table>
+<div class="postcalendar_header">
+			<!--[ if $PRINT_VIEW eq false ]--><a href="<!--[ $PREV_YEAR_URL ]-->">&lt;&lt;</a><!--[/if]-->
+    		<!--[ $DATE|date_format:'%Y']-->
+			<!--[ if $PRINT_VIEW eq false ]--><a href="<!--[ $NEXT_YEAR_URL ]-->">&gt;&gt;</a><!--[/if]-->
+</div>
 
 <!--[ strip ]-->
 <table width="100%" border="0" cellpadding="0" cellspacing="0" class="calcontainer"><tr><td>
@@ -79,10 +80,13 @@
 	</table>
 </td></tr></table>
 <!--[ /strip ]-->
-<!--[ if $PRINT_VIEW != 1 ]-->
 <div style='text-align:right;'>
-	<a href="<!--[pngetcurrenturl]-->&amp;theme=Printer">Print</a>
+	<!--[ if $PRINT_VIEW eq true ]-->
+		<!--[ assign var="viewtype" value=$smarty.get.viewtype ]-->
+		<!--[if ((empty($smarty.get.viewtype)) or (!isset($smarty.get.viewtype)))]-->
+			<!--[pnmodgetvar module="PostCalendar" name="pcDefaultView" assign="viewtype" ]-->
+		<!--[/if]-->
+		<a href="<!--[pnmodurl modname="PostCalendar" func="view" viewtype=$viewtype Date=$smarty.get.Date ]-->">Return</a>
+	<!--[/if]-->
 </div>
-<!--[ /if ]-->
-<!--[ *footer* ]-->
 <!--[ include file="footer.html" ]-->

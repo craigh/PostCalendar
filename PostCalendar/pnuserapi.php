@@ -68,7 +68,7 @@ function postcalendar_userapi_getLongDayName($args)
 function postcalendar_userapi_buildView($args)
 {   
 	extract($args); unset($args);
-        $print = FormUtil::getPassedValue('print');
+        //$print = FormUtil::getPassedValue('print');
 	//=================================================================
 	//  get the module's information
 	//=================================================================
@@ -113,7 +113,7 @@ function postcalendar_userapi_buildView($args)
     //$tpl = new pcRender();
 	$tpl = pcRender::getInstance('PostCalendar');
         // V4B RNG
-	if(!$tpl->is_cached($template,$cacheid) || $print || $popup) {
+	if(!$tpl->is_cached($template,$cacheid) || $popup) {
     	//=================================================================
     	//  Let's just finish setting things up
     	//=================================================================
@@ -374,7 +374,7 @@ function postcalendar_userapi_buildView($args)
 	if(!$pcTheme)
 	    $pcTheme='default';
 */
-	if ($print || $popup)
+	if ($popup)
 	{
 		$theme = pnUserGetTheme();
 		echo "<html><head>";
