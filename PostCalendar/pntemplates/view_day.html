@@ -12,7 +12,7 @@
 <!--[ assign var="month" value=$DATE|date_format:"%m"|string_format:"%1d" ]-->
 <!--[ assign var="year" value=$DATE|date_format:"%Y"|string_format:"%4d" ]-->
 <!--[ assign var="icaldate" value=$DATE|date_format:"%Y-%m-%d" ]-->
-<div class="postcalendar_header">
+<h2 class="postcalendar_header">
 			<!--[ if $PRINT_VIEW eq false ]--><a href="<!--[ $PREV_DAY_URL ]-->">&lt;&lt;</a><!--[/if]-->
     	<!--[ if $USE_INT_DATES eq true ]-->
 				<!--[ pc_date_format date=$DATE format='%A, %d %B %Y']-->
@@ -20,10 +20,11 @@
 				<!--[ pc_date_format date=$DATE format='%A, %B %d %Y']-->
 			<!--[ /if ]-->
 			<!--[ if $PRINT_VIEW eq false ]--><a href="<!--[ $NEXT_DAY_URL ]-->">&gt;&gt;</a><!--[/if]-->
-</div>
+</h2>
 
-<table width="100%" border="0" cellpadding="0" cellspacing="1" class="calcontainer"><tr><td>
-	<table width="100%" border="0" cellpadding="0" cellspacing="1"><tr><td class="eventslist">
+<div class="calcontainer">
+	<ul class="eventslist">
+		<li class="eventslistitems">
         <!--[ pc_sort_events var="S_EVENTS" sort="time" order="asc" value=$A_EVENTS ]-->
 	<!--[ foreach name=dates item=events key=date from=$S_EVENTS ]-->
 
@@ -72,12 +73,13 @@
 				</div>
 			<!--[ /if ]-->
 		<!--[ foreachelse ]-->
-			<center><b>No Events</b></center>
+			<b>No Events</b>
 		<!--[ /foreach ]-->
 		<!--[ /if ]-->
 	<!--[ /foreach ]-->
-	</td></tr></table>
-</td></tr></table>
+	</li>
+	</ul>
+</div><!-- end calcontainer -->
 <div style='text-align:right;'>
 	<!--[ if $PRINT_VIEW eq true ]-->
 		<!--[ assign var="viewtype" value=$smarty.get.viewtype ]-->

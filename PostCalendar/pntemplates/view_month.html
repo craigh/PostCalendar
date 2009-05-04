@@ -6,13 +6,13 @@
 <!--[ if $PRINT_VIEW eq false ]-->
 <!--[ include file="navigation.html" ]-->
 <!--[ /if ]-->
-<div class="postcalendar_header">
+<h2 class="postcalendar_header">
 			<!--[ if $PRINT_VIEW eq false ]--><a href="<!--[ $PREV_MONTH_URL ]-->">&lt;&lt;</a><!--[/if]-->
     		<!--[ $DATE|pc_date_format:'%B %Y']-->
 			<!--[ if $PRINT_VIEW eq false ]--><a href="<!--[ $NEXT_MONTH_URL ]-->">&gt;&gt;</a><!--[/if]-->
-</div>
+</h2>
 
-<table width="100%" border="0" cellpadding="1" cellspacing="0" class="calcontainer"><tr><td>
+<div class="calcontainer">
 <table width="100%" border="0" cellpadding="0" cellspacing="0" class="postcalendar_month">
     <tr>
         <!--[ foreach from=$S_LONG_DAY_NAMES item=day ]-->
@@ -113,7 +113,7 @@
 	</tr>
 	<!--[ /foreach ]-->
 </table>
-</td></tr></table>
+</div><!-- end calcontainer -->
 <div style='text-align:right;'>
 	<!--[ if $PRINT_VIEW eq true ]-->
 		<!--[ assign var="viewtype" value=$smarty.get.viewtype ]-->

@@ -1,19 +1,14 @@
 <div class="postcalendar_block_view_month">
-<table width="100%" border="0" cellpadding="5" cellspacing="0" class="blockmonthheader">
-    <tr align="center">
-        <td nowrap class="blockmonthheader" width="100%" align="center" valign="middle">
-			<a class="blockmonthheader" href="<!--[ $PREV_MONTH_URL ]-->">&lt;&lt;</a>
-        	<a href="<!--[ pc_url action="month" date=$DATE ]-->" 
-			class="blockmonthheader"><!--[ $DATE|pc_date_format:'%B %Y']--></a>
-			<a class="blockmonthheader" href="<!--[ $NEXT_MONTH_URL ]-->">&gt;&gt;</a>
-		</td>
-    </tr>
-</table>
+<h3 class="blockmonthheader">
+			<a href="<!--[ $PREV_MONTH_URL|pnvarprepfordisplay ]-->">&lt;&lt;&nbsp;</a>
+        	<a href="<!--[ pc_url action="month" date=$DATE ]-->"><!--[ $DATE|pc_date_format:'%B %Y']--></a>
+			<a href="<!--[ $NEXT_MONTH_URL|pnvarprepfordisplay ]-->">&nbsp;&gt;&gt;</a>
+</h3>
 <table width="100%" border="0" cellpadding="0" cellspacing="0" class="blockcalcontainer">
 	<tr>
-		<td class="blockweeklink">&nbsp;</td>
+		<td width="8" class="blockweeklink">&nbsp;</td>
 		<!--[ foreach name=daynames item=day from=$S_SHORT_DAY_NAMES ]-->
-		<td width="14%" valign="top" align="center" class="blockdaynames"><!--[ $day ]--></td>
+		<td valign="top" align="center" class="blockdaynames"><!--[ $day ]--></td>
 		<!--[ /foreach ]-->
 	</tr>
 	<!--[ foreach name=weeks item=days from=$CAL_FORMAT ]-->
@@ -29,7 +24,7 @@
 		<!--[ else ]-->
 			<!--[ assign var="stylesheet" value="blockmonthon" ]-->
 		<!--[ /if ]-->
-		<td width="14%" class="<!--[ $stylesheet ]-->" align="center" valign="middle"
+		<td class="<!--[ $stylesheet ]-->" align="center" valign="middle"
 	    	onmouseover="this.style.backgroundColor='Yellow';"
 			onmouseout="this.style.backgroundColor='';"
 			onclick="javascript:location.href='<!--[ pc_url action=day date=$date ]-->';">

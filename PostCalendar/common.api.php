@@ -1629,7 +1629,7 @@ function postcalendar_userapi_jsPopup()
     
 $output = <<<EOF
 
-<script language="javascript">
+<script type="text/javascript">
 <!--
 function opencal(eid,date) { 
 	window.name='csCalendar'; 
@@ -1662,7 +1662,7 @@ function postcalendar_userapi_loadPopups()
 	
 $output = <<<EOF
 
-<script language="JavaScript">
+<script type="text/javascript">
 <!-- overLIB configuration -->
 <!-- colors set to reasonable defaults -->
 ol_fgcolor = "black"; 

@@ -2,30 +2,16 @@
 
 /********** HEADERS & CONTAINERS ***************/
 
-td.dayheader,
-td.weekheader,
-td.monthheader,
-td.yearheader
-{
-	background: transparent;
-	font-size: 14pt;
-	font-weight: bold;
-}
 table.postcalendar_month
 {
 	border:0;
 	border-collapse: collapse;
 }
-table.calcontainer,
-table.dayheader,
-table.weekheader,
-table.monthheader,
-table.yearheader
+div.calcontainer
 {
 	margin-top:1em;
-	border: 1px solid Black;
 }
-div.postcalendar_header
+h2.postcalendar_header
 {
 	text-align: center;
 	background: transparent;
@@ -35,10 +21,7 @@ div.postcalendar_header
 	border: 1px solid Black;
 	padding: .5em;
 }
-.dayheader a,
-.weekheader a,
-.monthheader a,
-.yearheader a
+h2.postcalendar_header a
 {
 	font-size: 14pt;
 	font-weight: bold;
@@ -46,19 +29,20 @@ div.postcalendar_header
 	padding-left: 10px;
 	padding-right: 10px;
 }
-td.calcontainer
-{
-	border: 1px solid Black;
-}
-
 
 /********** DAY & SEARCH ***************/
 
-table.eventslist,
-td.eventslist
+h3.dayheader,
+h3.dayheader a {
+	fontsize: 1.2 em;
+	font-weight: bold;
+	text-decoration: none;
+}
+ul.eventslist,
+li.eventslistitems
 {
-	background-color: transparent;
-	padding: 10px;
+	padding-left: 10px;
+	list-style: none;
 }
 
 .pc_searchtable
@@ -79,7 +63,7 @@ td.monthoff {
 	vertical-align: top;
 }
 td.monthtoday {
-	background-color: white;
+	background-color: yellow;
 	border: 2px dashed orange;
 	vertical-align: top;
 }
@@ -217,23 +201,17 @@ td.blockmonthtoday
 	background-color: yellow;
 	border: 1px solid Black;
 }
-td.blockmonthheader
+h3.blockmonthheader
 {
 	background-color: #cccccc; /* Pale gray */
 	font-size: 8pt;
 	font-weight: bold;
-}
-table.blockmonthheader
-{
-	background-color: #cccccc; /* Pale gray */
 	border: 1px solid Black;
+	text-align: center;
+	padding: 2px;
 }
-.blockmonthheader a
+h3.blockmonthheader a
 {
-	font-size: 8pt;
-	font-weight: bold;
-	padding-left: 1px;
-	padding-right: 1px;
 	text-decoration: none;
 }
 td.blockdaynames

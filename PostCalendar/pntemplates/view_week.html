@@ -7,13 +7,13 @@
 <!--[ include file="navigation.html" ]-->
 <!--[ /if ]-->
 
-<div class="postcalendar_header">
+<h2 class="postcalendar_header">
 			<!--[ if $PRINT_VIEW eq false ]--><a href="<!--[ $PREV_WEEK_URL ]-->">&lt;&lt;</a><!--[/if]-->
     		<!--[ pc_week_range date=$DATE sep=" - " format='%B %d %Y' ]-->
 			<!--[ if $PRINT_VIEW eq false ]--><a href="<!--[ $NEXT_WEEK_URL ]-->">&gt;&gt;</a><!--[/if]-->
-</div>
+</h2>
 
-<table width="100%" border="0" cellpadding="0" cellspacing="0" class="calcontainer"><tr><td>
+<div class="calcontainer">
 	<!--[ * Loop through the EventsByDate array : This array contains data for each day in the view. * ]-->
 	<!--[ pc_sort_events var="S_EVENTS" sort="time" order="asc" value=$A_EVENTS ]-->
 	<!--[ foreach name=dates item=events key=cdate from=$S_EVENTS ]-->
@@ -22,24 +22,19 @@
     	<!--[ assign var="month" value=$cdate|date_format:"%m"|string_format:"%1d" ]-->
 		<!--[ assign var="month" value=$month-1 ]-->
     	<!--[ assign var="year" value=$cdate|date_format:"%Y"|string_format:"%4d" ]-->
-		<table width="100%" border="0" cellpadding="5" cellspacing="0" class="dayheader">
-        	<tr>
-        		<td width="100%">
-            		<a href="<!--[ pc_url action=day date=$cdate ]-->">
+		<h3 class="dayheader">
+	 		<a href="<!--[ pc_url action=day date=$cdate ]-->">
 					<!--[ if $USE_INT_DATES eq true ]-->
 						<!--[ pc_date_format date=$cdate format='%A, %d %B %Y']-->
 					<!--[ else ]-->	
 						<!--[ pc_date_format date=$cdate format='%A, %B %d %Y']-->
 					<!--[ /if ]-->
-					</a>
-            	</td>
-        	</tr>
-    	</table>
+			</a>
+    </h3>
 		<!--[ * Loop through the events for this day and display the event data * ]-->
 		<!--[ assign var="oldCat" value="" ]-->
-		<table width="100%" border="0" cellpadding="0" cellspacing="0" class="eventslist">
-        	<tr>
-         		<td class="eventslist" width="100%">
+		<ul class="eventslist">
+   		<li class="eventslistitems">
 				<!--[ foreach name=eventloop key=id item=event from=$S_EVENTS.$cdate ]-->
     				<!--[ assign var="cCat" value=$event.catname ]-->
 						<!--[ if $24HOUR_TIME ]-->
@@ -78,11 +73,10 @@
 				<!--[ foreachelse ]-->
 					&nbsp;
         		<!--[ /foreach ]-->
-				</td>
-        	</tr>
-    	</table>
+			</li>
+    </ul>
 	<!--[ /foreach ]-->
-</td></tr></table>
+</div><!-- end calcontainer -->
 <div style='text-align:right;'>
 	<!--[ if $PRINT_VIEW eq true ]-->
 		<!--[ assign var="viewtype" value=$smarty.get.viewtype ]-->

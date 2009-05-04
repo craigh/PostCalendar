@@ -6,15 +6,15 @@
 <!--[ if $PRINT_VIEW != 1 ]-->
 <!--[ include file="navigation.html" ]-->
 <!--[ /if ]-->
-<div class="postcalendar_header">
+<h2 class="postcalendar_header">
 			<!--[ if $PRINT_VIEW eq false ]--><a href="<!--[ $PREV_YEAR_URL ]-->">&lt;&lt;</a><!--[/if]-->
     		<!--[ $DATE|date_format:'%Y']-->
 			<!--[ if $PRINT_VIEW eq false ]--><a href="<!--[ $NEXT_YEAR_URL ]-->">&gt;&gt;</a><!--[/if]-->
-</div>
+</h2>
 
 <!--[ strip ]-->
-<table width="100%" border="0" cellpadding="0" cellspacing="0" class="calcontainer"><tr><td>
-	<table width="100%" border="0" cellpadding="5" cellspacing="0">  
+<div class="calcontainer">
+	<table width="100%" border="0" cellpadding="5" cellspacing="10">  
 		<!--[ * Loop through each month of the year * ]-->
 		<!--[ foreach name=months item=month key=monthnum from=$CAL_FORMAT ]-->
 		<!--[ * check to see if we're starting a new row * ]-->
@@ -29,9 +29,9 @@
 		<!--[ * make sure we have a preceeding 0 on the month number * ]-->
 		<!--[ assign var="m" value=$m|string_format:"%02d" ]-->
 		<!--[ * create our link to the month * ]-->
-		<table width="100%" border="0" cellpadding="0" cellspacing="0" class="calcontainer">
+		<table width="100%" border="0" cellpadding="0" cellspacing="0" class="blockcalcontainer">
 			<tr>
-				<td width="100%" class="monthheader" colspan="8" valign="top" align="center">
+				<td width="100%" class="blockmonthheader" colspan="8" valign="top" align="center">
 					<a href="<!--[ pc_url action="month" date="$y-$m-01" ]-->"><!--[ $A_MONTH_NAMES.$monthnum ]--></a>
 				</td>
 			</tr>
@@ -78,7 +78,7 @@
 		</tr>
 		<!--[ /if ]-->
 	</table>
-</td></tr></table>
+</div><!-- end calcontainer -->
 <!--[ /strip ]-->
 <div style='text-align:right;'>
 	<!--[ if $PRINT_VIEW eq true ]-->
