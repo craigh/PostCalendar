@@ -588,7 +588,8 @@ function postcalendar_userapi_buildSubmitForm($args,$admin=false)
 	$output = new pnHTML();
 	$output->SetInputMode(_PNH_VERBATIMINPUT);
 
-	$tpl = new pcRender();
+	//$tpl = new pcRender();
+	$tpl = pcRender::getInstance('PostCalendar');
 	$tpl->caching = false;
 
 	/* $pcTheme = pnModGetVar(__POSTCALENDAR__,'pcTemplate');
@@ -1240,8 +1241,9 @@ function postcalendar_userapi_eventDetail($args,$admin=false)
 	if(!$pcTheme)
 	    $pcTheme='default';
     */
-	$tpl = new pcRender();
-    
+	//$tpl = new pcRender();
+ 	$tpl = pcRender::getInstance('PostCalendar');
+   
     if($admin) {
 //		$template = "$pcTheme/admin_view_event_details.html";
 		$template = "admin_view_event_details.html";

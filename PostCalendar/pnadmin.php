@@ -210,7 +210,8 @@ function postcalendar_admin_approveevents()
 	}
     
 	// clear the template cache
-	$tpl = new pcRender();
+	//$tpl = new pcRender();
+	$tpl = pcRender::getInstance('PostCalendar');
 	$tpl->clear_all_cache();
     return postcalendar_admin_showlist('',_EVENT_APPROVED,'listapproved',_PC_APPROVED_ADMIN,$msg);
 }
@@ -244,7 +245,8 @@ function postcalendar_admin_hideevents()
     }
     
 	// clear the template cache
-	$tpl = new pcRender();
+	//$tpl = new pcRender();
+	$tpl = pcRender::getInstance('PostCalendar');
 	$tpl->clear_all_cache();
     return postcalendar_admin_showlist('',_EVENT_APPROVED,'listapproved',_PC_APPROVED_ADMIN,$msg);
 }
@@ -280,7 +282,8 @@ function postcalendar_admin_deleteevents()
     }
     
 	// clear the template cache
-	$tpl = new pcRender();
+	//$tpl = new pcRender();
+	$tpl = pcRender::getInstance('PostCalendar');
 	$tpl->clear_all_cache();
     return postcalendar_admin_showlist('',_EVENT_APPROVED,'listapproved',_PC_APPROVED_ADMIN,$msg);
 }
@@ -578,7 +581,8 @@ function postcalendar_admin_submit($args)
 				$output .= '<br />';
         	} else {
         		// clear the Render cache
-				$tpl = new pcRender();
+				//$tpl = new pcRender();
+				$tpl = pcRender::getInstance('PostCalendar');
 				$tpl->clear_all_cache();
 				$output .= '<center><div style="padding:5px; border:1px solid green; background-color: lightgreen;">';		
 				if($is_update) {
@@ -678,7 +682,8 @@ function postcalendar_admin_resetDefaults()
 	pnModSetVar(__POSTCALENDAR__, 'pcNotifyAdmin',         		'0');
 	pnModSetVar(__POSTCALENDAR__, 'pcNotifyEmail',         		pnConfigGetVar('adminmail'));
 	
-	$tpl = new pcRender();
+	//$tpl = new pcRender();
+	$tpl = pcRender::getInstance('PostCalendar');
 	$tpl->clear_all_cache();
 	
     return postcalendar_admin_modifyconfig('<center>'._PC_UPDATED_DEFAULTS.'</center>');
@@ -776,7 +781,8 @@ function postcalendar_admin_updateconfig()
     pnModSetVar(__POSTCALENDAR__, 'pcNotifyAdmin',           $pcNotifyAdmin);
     pnModSetVar(__POSTCALENDAR__, 'pcNotifyEmail',           $pcNotifyEmail);
 	 
-    $tpl = new pcRender();
+    //$tpl = new pcRender();
+		$tpl = pcRender::getInstance('PostCalendar');
     $tpl->clear_all_cache();
 	
     return postcalendar_admin_modifyconfig('<center>'._PC_UPDATED.'</center>');
@@ -987,7 +993,8 @@ function postcalendar_admin_clearCache()
 {
 	if(!PC_ACCESS_ADMIN) { return _POSTCALENDARNOAUTH; }
 	
-	$tpl = new pcRender();
+//	$tpl = new pcRender();
+	$tpl = pcRender::getInstance('PostCalendar');
 	$tpl->clear_all_cache();
 	$tpl->clear_compiled_tpl();
 	
@@ -1083,7 +1090,8 @@ function postcalendar_admin_testSystem()
 	$version = $modinfo['version'];
 	unset($modinfo);
 	
-	$tpl = new pcRender();
+//	$tpl = new pcRender();
+	$tpl = pcRender::getInstance('PostCalendar');
     $infos = array();
 	
 	if(phpversion() >= '4.1.0') {

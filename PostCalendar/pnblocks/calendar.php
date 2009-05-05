@@ -115,7 +115,8 @@ function postcalendar_calendarblock_display($blockinfo)
     
     // set up pn/pcRender
     require_once 'modules/PostCalendar/pcRender.class.php';
-    $tpl = new pcRender ();
+    //$tpl = new pcRender ();
+	$tpl = pcRender::getInstance('PostCalendar');
     
     // setup the pnRender cache id
     $templates_cached = true;
@@ -395,8 +396,9 @@ function postcalendar_calendarblock_update($blockinfo)
 
     require_once 'modules/PostCalendar/pcRender.class.php';
 
-    $tpl = new pcRender ();
-    $tpl->clear_all_cache();
+    //$tpl = new pcRender ();
+ 	$tpl = pcRender::getInstance('PostCalendar');
+   $tpl->clear_all_cache();
     $blockinfo['content'] = serialize($vars);
     return $blockinfo;
 }
