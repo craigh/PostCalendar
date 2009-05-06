@@ -110,8 +110,10 @@ function postcalendar_userapi_buildView($args)
 	//=================================================================
     //  Setup Render Template Engine
     //=================================================================
-    //$tpl = new pcRender();
-	$tpl = pcRender::getInstance('PostCalendar');
+    //$tpl = new pnRender();
+	$tpl = pnRender::getInstance('PostCalendar');
+	PostCalendarSmartySetup($tpl);
+
         // V4B RNG
 	if(!$tpl->is_cached($template,$cacheid) || $popup) {
     	//=================================================================
@@ -355,6 +357,13 @@ function postcalendar_userapi_buildView($args)
 		if(isset($calendarView)) {
     		$tpl->assign_by_ref('CAL_FORMAT',$calendarView);
 		}
+		/* Trim as needed */
+			$func  = FormUtil::getPassedValue('func');
+			$template_view = FormUtil::getPassedValue('tplview');
+			if (!$template_view) $template_view = 'month'; 
+			$tpl->assign('FUNCTION', $func);
+			$tpl->assign('TPL_VIEW', $template_view);
+		/* end */
 		$tpl->assign_by_ref('VIEW_TYPE',$viewtype);
 		$tpl->assign_by_ref('A_MONTH_NAMES',$pc_month_names);
 		$tpl->assign_by_ref('A_LONG_DAY_NAMES',$pc_long_day_names);
@@ -378,7 +387,6 @@ function postcalendar_userapi_buildView($args)
 	{
 		$theme = pnUserGetTheme();
 		echo "<html><head>";
-		echo "<LINK REL=\"StyleSheet\" HREF=\"themes/$theme/style/styleNN.css\" TYPE=\"text/css\">\n\n\n";
 		echo "<style type=\"text/css\">\n";
 		echo "@import url(\"themes/$theme/style/style.css\"); ";
 		echo "</style>\n";
@@ -420,9 +428,17 @@ function postcalendar_userapi_eventPreview($args)
     //=================================================================
     //  Setup Render Template Engine
     //=================================================================
-//    $tpl = new pcRender();
-	$tpl = pcRender::getInstance('PostCalendar');
+//    $tpl = new pnRender();
+	$tpl = pnRender::getInstance('PostCalendar');
+	PostCalendarSmartySetup($tpl);
 	$tpl->caching = false;
+		/* Trim as needed */
+			$func  = FormUtil::getPassedValue('func');
+			$template_view = FormUtil::getPassedValue('tplview');
+			if (!$template_view) $template_view = 'month'; 
+			$tpl->assign('FUNCTION', $func);
+			$tpl->assign('TPL_VIEW', $template_view);
+		/* end */
 
 	// add preceding zeros
     $event_starttimeh   = sprintf('%02d',$event_starttimeh);    
@@ -521,8 +537,7 @@ function postcalendar_userapi_eventPreview($args)
 	//=================================================================
     //  Parse the template
     //=================================================================
-	$output  = "\n\n<!-- POSTCALENDAR HTTP://WWW.BAHRAINI.TV -->\n\n";
-    $output .= "\n\n<!-- POSTCALENDAR TEMPLATE START -->\n\n";
+    $output = "\n\n<!-- POSTCALENDAR TEMPLATE START -->\n\n";
 /*
 	$pcTheme = pnModGetVar(__POSTCALENDAR__,'pcTemplate');
 	if(!$pcTheme)

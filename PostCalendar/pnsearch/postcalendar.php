@@ -44,7 +44,7 @@ $search_modules[] = array(
 
 function search_postcalendar_opt() 
 {
-    global $bgcolor2, $textcolor1;
+    //global $bgcolor2, $textcolor1;
     if (!pnModAvailable(__POSTCALENDAR__) || !pnModAPILoad(__POSTCALENDAR__, 'user')) {
        return '';
     }
@@ -75,7 +75,7 @@ function search_postcalendar_opt()
         $_SRCHALLCATEGORIES=_SRCHALLCATEGORIES;
         $output = <<<EOF
 <table border="0" width="100%">
-    <tr bgcolor="$bgcolor2">
+    <tr>
         <td>
             <input type="checkbox" name="active_postcalendar" id="active_postcalendar" value="1" checked>
             <label for="active_postcalendar">$title</label>
@@ -109,7 +109,16 @@ function search_postcalendar()
     if (!(bool)PC_ACCESS_OVERVIEW) 
         return ''; 
 	
-    $tpl = new pcRender();
+    //$tpl = new pnRender();
+    $tpl = pnRender::getInstance('PostCalendar');
+		PostCalendarSmartySetup($tpl);
+		/* Trim as needed */
+			$func  = FormUtil::getPassedValue('func');
+			$template_view = FormUtil::getPassedValue('tplview');
+			if (!$template_view) $template_view = 'month'; 
+			$tpl->assign('FUNCTION', $func);
+			$tpl->assign('TPL_VIEW', $template_view);
+		/* end */
 	
     $k = pnVarCleanFromInput('q');
     $k_andor = pnVarCleanFromInput('bool');
@@ -119,10 +128,10 @@ function search_postcalendar()
     //=================================================================
     //  Find out what Template we're using    
     //=================================================================
-    $template_name = _SETTING_TEMPLATE;
+    /* $template_name = _SETTING_TEMPLATE;
     if(!isset($template_name)) 
     	$template_name = 'default';
-
+		*/
     //=================================================================
     //  Perform the search if we have data
     //=================================================================

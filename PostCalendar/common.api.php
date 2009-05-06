@@ -39,6 +39,26 @@ require_once ('modules/PostCalendar/global.php');
 //=========================================================================
 //  utility functions for postcalendar
 //=========================================================================
+function PostCalendarSmartySetup (&$smarty)
+{
+	$smarty->assign('USE_POPUPS', _SETTING_USE_POPUPS);
+	$smarty->assign('USE_TOPICS', _SETTING_DISPLAY_TOPICS);
+	$smarty->assign('USE_INT_DATES', _SETTING_USE_INT_DATES);
+	$smarty->assign('OPEN_NEW_WINDOW', _SETTING_OPEN_NEW_WINDOW);
+	$smarty->assign('EVENT_DATE_FORMAT', _SETTING_DATE_FORMAT);
+	$smarty->assign('HIGHLIGHT_COLOR', _SETTING_DAY_HICOLOR);
+	$smarty->assign('24HOUR_TIME', _SETTING_TIME_24HOUR);
+	$smarty->assign('ACCESS_NONE', PC_ACCESS_NONE);
+	$smarty->assign('ACCESS_OVERVIEW', PC_ACCESS_OVERVIEW);
+	$smarty->assign('ACCESS_READ', PC_ACCESS_READ);
+	$smarty->assign('ACCESS_COMMENT', PC_ACCESS_COMMENT);
+	$smarty->assign('ACCESS_MODERATE', PC_ACCESS_MODERATE);
+	$smarty->assign('ACCESS_EDIT', PC_ACCESS_EDIT);
+	$smarty->assign('ACCESS_ADD', PC_ACCESS_ADD);
+	$smarty->assign('ACCESS_DELETE', PC_ACCESS_DELETE);
+	$smarty->assign('ACCESS_ADMIN', PC_ACCESS_ADMIN);
+	return true;
+}
 function pcDebugVar($in)
 {
 	echo '<pre>';
@@ -87,7 +107,8 @@ function postcalendar_getDate($format='%Y%m%d%H%M%S')
 	$jumpmonth = FormUtil::getPassedValue('jumpmonth');
 	$jumpyear  = FormUtil::getPassedValue('jumpyear');
 
-	if(!isset($Date)) 
+//	if(!isset($Date)) 
+	if(empty($Date)) 
 	{
 		// if we still don't have a date then calculate it
 		$time = time();
@@ -588,9 +609,10 @@ function postcalendar_userapi_buildSubmitForm($args,$admin=false)
 	$output = new pnHTML();
 	$output->SetInputMode(_PNH_VERBATIMINPUT);
 
-	//$tpl = new pcRender();
-	$tpl = pcRender::getInstance('PostCalendar');
+	//$tpl = new pnRender();
+	$tpl = pnRender::getInstance('PostCalendar');
 	$tpl->caching = false;
+	PostCalendarSmartySetup($tpl);
 
 	/* $pcTheme = pnModGetVar(__POSTCALENDAR__,'pcTemplate');
 	if(!$pcTheme) 
@@ -1241,9 +1263,17 @@ function postcalendar_userapi_eventDetail($args,$admin=false)
 	if(!$pcTheme)
 	    $pcTheme='default';
     */
-	//$tpl = new pcRender();
- 	$tpl = pcRender::getInstance('PostCalendar');
-   
+	//$tpl = new pnRender();
+ 	$tpl = pnRender::getInstance('PostCalendar');
+ 		PostCalendarSmartySetup($tpl);
+		/* Trim as needed */
+			$func  = FormUtil::getPassedValue('func');
+			$template_view = FormUtil::getPassedValue('tplview');
+			if (!$template_view) $template_view = 'month'; 
+			$tpl->assign('FUNCTION', $func);
+			$tpl->assign('TPL_VIEW', $template_view);
+		/* end */
+  
     if($admin) {
 //		$template = "$pcTheme/admin_view_event_details.html";
 		$template = "admin_view_event_details.html";
@@ -1405,7 +1435,6 @@ function postcalendar_userapi_eventDetail($args,$admin=false)
     } else {
 		$theme = pnUserGetTheme();
 		echo "<html><head>";
-    	echo "<LINK REL=\"StyleSheet\" HREF=\"themes/$theme/style/styleNN.css\" TYPE=\"text/css\">\n\n\n";
     	echo "<style type=\"text/css\">\n";
     	echo "@import url(\"themes/$theme/style/style.css\"); ";
     	echo "</style>\n";

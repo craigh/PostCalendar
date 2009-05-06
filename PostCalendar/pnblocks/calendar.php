@@ -114,10 +114,11 @@ function postcalendar_calendarblock_display($blockinfo)
     unset($pcModInfo);
     
     // set up pn/pcRender
-    require_once 'modules/PostCalendar/pcRender.class.php';
+    require_once 'includes/pnRender.class.php';
     //$tpl = new pcRender ();
-	$tpl = pcRender::getInstance('PostCalendar');
-    
+    $tpl = pnRender::getInstance('PostCalendar');
+		PostCalendarSmartySetup($tpl);   
+ 
     // setup the pnRender cache id
     $templates_cached = true;
     if($showcalendar) {
@@ -394,10 +395,10 @@ function postcalendar_calendarblock_update($blockinfo)
     $vars['pcbeventsrange']   = FormUtil::getPassedValue ('pcbeventsrange', 6);
     $vars['pcbshowsslinks']   = FormUtil::getPassedValue ('pcbshowsslinks', 0);
 
-    require_once 'modules/PostCalendar/pcRender.class.php';
+    require_once 'includes/pnRender.class.php';
 
     //$tpl = new pcRender ();
- 	$tpl = pcRender::getInstance('PostCalendar');
+ 	$tpl = pnRender::getInstance('PostCalendar'); // PostCalendarSmartySetup not needed
    $tpl->clear_all_cache();
     $blockinfo['content'] = serialize($vars);
     return $blockinfo;

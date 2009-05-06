@@ -296,8 +296,9 @@ function postcalendar_user_viewupload()
 		}
 	}
 
-	$tpl = pcRender::getInstance('PostCalendar');        $tpl->clear_all_cache();
-        $tpl->clear_compiled_tpl();
+	$tpl = pnRender::getInstance('PostCalendar'); //smartysetup not needed
+	$tpl->clear_all_cache();
+  $tpl->clear_compiled_tpl();
 	
 	return postcalendar_user_main();
 }
@@ -450,9 +451,11 @@ function postcalendar_user_deleteevents()
         $output->Text(_PC_ADMIN_EVENTS_DELETED);
     }
     
-	// clear the template cache
-	$tpl = pcRender::getInstance('PostCalendar');	$tpl->clear_all_cache();
-    return $output->GetOutput(); 
+	$tpl = pnRender::getInstance('PostCalendar'); //smartysetup not needed
+	$tpl->clear_all_cache();	// clear the template cache
+
+
+	return $output->GetOutput(); 
 }
 
 /**
@@ -784,7 +787,7 @@ function postcalendar_user_submit($args)
         		$output->Text($dbconn->ErrorMsg());
     		} else {
         		// clear the Render cache
-				$tpl = pcRender::getInstance('PostCalendar');
+				$tpl = pnRender::getInstance('PostCalendar'); //smartysetup not needed
 				$tpl->clear_all_cache();
 				$output->Text('<center><div style="padding:5px; border:1px solid green; background-color: lightgreen;">');		
 				if($is_update) {
@@ -842,19 +845,27 @@ function postcalendar_user_search()
         return _POSTCALENDARNOAUTH;
     }
 	
-    $tpl = pcRender::getInstance('PostCalendar');
+    $tpl = pnRender::getInstance('PostCalendar');
+		PostCalendarSmartySetup($tpl);
+		/* Trim as needed */
+			$func  = FormUtil::getPassedValue('func');
+			$template_view = FormUtil::getPassedValue('tplview');
+			if (!$template_view) $template_view = 'month'; 
+			$tpl->assign('FUNCTION', $func);
+			$tpl->assign('TPL_VIEW', $template_view);
+		/* end */
 
     $k = FormUtil::getPassedValue('pc_keywords');
     $k_andor = FormUtil::getPassedValue('pc_keywords_andor');
-	$pc_category = FormUtil::getPassedValue('pc_category');
-	$pc_topic = FormUtil::getPassedValue('pc_topic');
-	$submit = FormUtil::getPassedValue('submit');
+		$pc_category = FormUtil::getPassedValue('pc_category');
+		$pc_topic = FormUtil::getPassedValue('pc_topic');
+		$submit = FormUtil::getPassedValue('submit');
 	
-	$categories = pnModAPIFunc(__POSTCALENDAR__, 'user', 'getCategories');
-	$cat_options = '';
-	foreach($categories as $category) {
-		$cat_options .= "<option value='".$category[catid]."'>".$category[catname]."</option>";
-	}
+		$categories = pnModAPIFunc(__POSTCALENDAR__, 'user', 'getCategories');
+		$cat_options = '';
+		foreach($categories as $category) {
+			$cat_options .= "<option value='".$category[catid]."'>".$category[catname]."</option>";
+		}
 	$tpl->assign('CATEGORY_OPTIONS',$cat_options);
 	
 	if(_SETTING_DISPLAY_TOPICS) {
@@ -1300,8 +1311,16 @@ function eventdatecmp ($a, $b)
 function postcalendar_user_findContact ()
 {
 
-    //$tpl_contact = new pcRender();
-	$tpl_contact = pcRender::getInstance('PostCalendar');
+    //$tpl_contact = new pnRender();
+	$tpl_contact = pnRender::getInstance('PostCalendar');
+	PostCalendarSmartySetup($tpl_contact);
+		/* Trim as needed */
+			$func  = FormUtil::getPassedValue('func');
+			$template_view = FormUtil::getPassedValue('tplview');
+			if (!$template_view) $template_view = 'month'; 
+			$tpl_contact->assign('FUNCTION', $func);
+			$tpl_contact->assign('TPL_VIEW', $template_view);
+		/* end */
 
     $tpl_contact->caching = false;
 
