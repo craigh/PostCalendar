@@ -54,32 +54,38 @@
 			    	</td>
                     <td align="right" valign="middle">
                         <a href="<!--[ pnmodurl modname='PostCalendar' type='user' func='upload' ]-->"><!--[pnimg src="file2vip.gif" alt=#_FILE_TO_VIP# title=#_FILE_TO_VIP# ]--></a>
-                    </td>			
+                    </td>
+										<!--[ if $DATE|truncate:8:"" ne $TODAY_DATE|replace:'-':'' ]-->
+										<td align="right" valign="middle">
+                        <a href="<!--[ pc_url action='today' ]-->">
+                        <!--[pnimg src='today.gif' alt="Today" title="Jump to Today" ]--></a>
+                    </td>
+										<!--[/if]-->
                     <td align="right" valign="middle">
                         <a href="<!--[ pc_url action='day' ]-->">
-                        <!--[pnimg src=$day_src alt="Day" title="Day" ]--></a>
+                        <!--[pnimg src=$day_src alt="Day" title="Day View" ]--></a>
                     </td>
                     <td align="right" valign="middle">
                         <a href="<!--[ pc_url action='week' ]-->">
-                        <!--[pnimg src=$week_src alt="Week" title="Week" ]--></a>
+                        <!--[pnimg src=$week_src alt="Week" title="Week View" ]--></a>
                     </td>
                     <td align="right" valign="middle">
                         <a href="<!--[ pc_url action='month' ]-->">
-                        <!--[pnimg src=$month_src alt="Month" title="Month" ]--></a>
+                        <!--[pnimg src=$month_src alt="Month" title="Month View" ]--></a>
                     </td>
                     <td align="right" valign="middle">
-                        <a href="<!--[ pc_url action='year' ]-->"><!--[pnimg src=$year_src alt="Year" title="Year" ]--></a>
+                        <a href="<!--[ pc_url action='year' ]-->"><!--[pnimg src=$year_src alt="Year" title="Year View" ]--></a>
                     </td>
 					<!--[ if $ACCESS_ADD eq true ]-->
                     <td align="right" valign="middle">
-                        <a href="<!--[ pc_url action='submit' ]-->"><!--[pnimg src=$add_src alt="Add" title="Add" ]--></a>
+                        <a href="<!--[ pc_url action='submit' ]-->"><!--[pnimg src=$add_src alt="Add" title="Add Event" ]--></a>
                     </td>
 					<!--[ /if ]-->
                     <td align="right" valign="middle">
-                        <a href="<!--[ pc_url action='search' ]-->"><!--[pnimg src=$search_src alt="Search" title="Search" ]--></a>
+                        <a href="<!--[ pc_url action='search' ]-->"><!--[pnimg src=$search_src alt="Search" title="Search Events" ]--></a>
                     </td>
                     <td align="right" valign="middle">
-												<a href="<!--[pngetcurrenturl]-->&amp;theme=Printer"><img src="images/icons/small/printer1.gif" alt="print" title="print" /></a>
+												<a href="<!--[pngetcurrenturl]-->&amp;theme=Printer"><img src="images/icons/small/printer1.gif" alt="print" title="Print View" /></a>
 										</td>
 				</tr>
            </table>

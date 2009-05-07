@@ -50,8 +50,9 @@ function smarty_function_pc_url($args)
     $category = pnVarCleanFromInput('pc_category');
     $topic = pnVarCleanFromInput('pc_topic');
     $popup = pnVarCleanFromInput('popup');
+		$today = DateUtil::getDatetime('','%Y%m%d000000');
 
-    if(!isset($date)) 
+    if(empty($date)) 
         $Date = postcalendar_getDate();
     else 
         $Date = $date;
@@ -74,16 +75,22 @@ function smarty_function_pc_url($args)
         
         case 'search' :
             $link = pnModURL(__POSTCALENDAR__,'user','search');
-            break;        
-        
+            break;
+				case 'today' :
+						$link = pnModURL(__POSTCALENDAR__,'user','view',array('tplview'    => $template_view,
+                                                                  'viewtype'   => $viewtype,
+                                                                  'Date'       => $today,
+                                                                  'pc_username'=> $pc_username,
+                                                                  'pc_category'=> $category,
+                                                                  'pc_topic'   => $topic));
+						break;
         case 'day' :
             $link = pnModURL(__POSTCALENDAR__,'user','view',array('tplview'    => $template_view,
                                                                   'viewtype'   => 'day',
                                                                   'Date'       => $Date,
                                                                   'pc_username'=> $pc_username,
                                                                   'pc_category'=> $category,
-                                                                  'pc_topic'   => $topic,
-                                                                  'print'      => $print));
+                                                                  'pc_topic'   => $topic));
             break;
         
         case 'week' :
@@ -92,8 +99,7 @@ function smarty_function_pc_url($args)
                                                                   'Date'       => $Date,
                                                                   'pc_username'=> $pc_username,
                                                                   'pc_category'=> $category,
-                                                                  'pc_topic'   => $topic,
-                                                                  'print'      => $print));
+                                                                  'pc_topic'   => $topic));
             break;
         
         case 'month' :
@@ -102,8 +108,7 @@ function smarty_function_pc_url($args)
                                                                   'Date'       => $Date,
                                                                   'pc_username'=> $pc_username,
                                                                   'pc_category'=> $category,
-                                                                  'pc_topic'   => $topic,
-                                                                  'print'      => $print));
+                                                                  'pc_topic'   => $topic));
             break;
         
         case 'year' :
@@ -112,8 +117,7 @@ function smarty_function_pc_url($args)
                                                                   'Date'       => $Date,
                                                                   'pc_username'=> $pc_username,
                                                                   'pc_category'=> $category,
-                                                                  'pc_topic'   => $topic,
-                                                                  'print'      => $print));
+                                                                  'pc_topic'   => $topic));
             break;
         
         case 'detail' :
@@ -128,8 +132,7 @@ function smarty_function_pc_url($args)
                     $link = pnModURL(__POSTCALENDAR__,'user','view',array('Date'    => $Date,
                                                                           'tplview' => $template_view,
                                                                           'viewtype'=> 'details',
-                                                                          'eid'     => $eid,
-                                                                          'print'   => $print));
+                                                                          'eid'     => $eid));
                 }
             } 
 	    else 
