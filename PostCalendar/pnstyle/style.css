@@ -34,7 +34,7 @@ h2.postcalendar_header a
 
 h3.dayheader,
 h3.dayheader a {
-	fontsize: 1.2 em;
+	font-size: 1.2em;
 	font-weight: bold;
 	text-decoration: none;
 }

@@ -6,6 +6,17 @@
 <!--[ if $PRINT_VIEW eq false ]-->
 <!--[ include file="navigation.html" ]-->
 <!--[ /if ]-->
+
+<!--[* add JS to page if needed *]-->
+<!--[ pnmodgetvar module="PostCalendar" name="pcUsePopups" assign="pcUsePopups" ]-->
+<!--[ if $pcUsePopups eq true ]-->
+	<!--[pnpageaddvar name="javascript" value="modules/PostCalendar/pnjavascript/postcalendar_overlibconfig.js"]-->
+<!--[ /if ]-->
+<!--[ pnmodgetvar module="PostCalendar" name="pcEventsOpenInNewWindow" assign="pcEventsOpenInNewWindow" ]-->
+<!--[ if pcEventsOpenInNewWindow eq true ]-->
+	<!--[pnpageaddvar name="javascript" value="modules/PostCalendar/pnjavascript/postcalendar_jspopup.js"]-->
+<!--[ /if ]-->
+
 <h2 class="postcalendar_header">
 			<!--[ if $PRINT_VIEW eq false ]--><a href="<!--[ $PREV_MONTH_URL ]-->">&lt;&lt;</a><!--[/if]-->
     		<!--[ $DATE|pc_date_format:'%B %Y']-->
@@ -93,10 +104,10 @@
 						<!--[ * Here we start the actual display of the event * ]-->
 						<a style="font-size: 7pt; text-decoration: none;" href="<!--[ pc_url action=detail eid=$event.eid date=$date ]-->"
 						  <!--[ pc_popup delay="500"
-						             bgcolor=$event.catcolor
+						             bgcolor=`$event.catcolor`
 						             timeout="3600"
 						             caption="`$timestamp` `$event.title`"
-						             text=$desc ]-->>
+						             text=`$desc` ]-->>
 						  <!--[ $timestamp ]--> <!--[ $title|pnvarprephtmldisplay ]--></a><br />
 						<!--[ assign var="oldCat" value=$event.catname ]-->
 						<!--[ if $smarty.foreach.events.last ]-->

@@ -1,3 +1,12 @@
+<!--[* add JS to page if needed *]-->
+<!--[ pnmodgetvar module="PostCalendar" name="pcUsePopups" assign="pcUsePopups" ]-->
+<!--[ if $pcUsePopups eq true ]-->
+	<!--[pnpageaddvar name="javascript" value="modules/PostCalendar/pnjavascript/postcalendar_overlibconfig.js"]-->
+<!--[ /if ]-->
+<!--[ pnmodgetvar module="PostCalendar" name="pcEventsOpenInNewWindow" assign="pcEventsOpenInNewWindow" ]-->
+<!--[ if pcEventsOpenInNewWindow eq true ]-->
+	<!--[pnpageaddvar name="javascript" value="modules/PostCalendar/pnjavascript/postcalendar_jspopup.js"]-->
+<!--[ /if ]-->
 <div class="postcalendar_block_view_upcoming">
 <!--[ if $SHOW_TITLE eq 1 ]-->
 <h2><!--[ $UPCOMING_EVENTS_TITLE ]--></h2>

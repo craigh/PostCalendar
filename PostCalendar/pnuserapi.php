@@ -68,22 +68,18 @@ function postcalendar_userapi_getLongDayName($args)
 function postcalendar_userapi_buildView($args)
 {   
 	extract($args); unset($args);
-        //$print = FormUtil::getPassedValue('print');
 	//=================================================================
 	//  get the module's information
-	//=================================================================
 	$modinfo = pnModGetInfo(pnModGetIDFromName(__POSTCALENDAR__));
 	$pcDir = $modinfo['directory'];
 	unset($modinfo);
 	//=================================================================
 	//  grab the for post variable
-	//=================================================================
     $pc_username = FormUtil::getPassedValue('pc_username');
 	$category = FormUtil::getPassedValue('pc_category');
 	$topic    = FormUtil::getPassedValue('pc_topic');
 	//=================================================================
 	//  set the correct date
-	//=================================================================
 	if (!$Date) // if no explicit arg, get from input
 	    $Date = postcalendar_getDate();
         else
@@ -91,102 +87,84 @@ function postcalendar_userapi_buildView($args)
 	    $Date .= '000000';
 
     //=================================================================
-	//  get the current view
-	//=================================================================
+		//  get the current view
     if(!isset($viewtype)) { $viewtype = 'month'; }
-	//=================================================================
+		//=================================================================
     //  Find out what Template we're using
-    //=================================================================
-/*
-    $template_name = _SETTING_TEMPLATE;
-    if(!isset($template_name)) { $template_name = 'default'; }
-*/
-    $template = pnVarPrepForOS('view_' . $viewtype . '.html');
 
-	//=================================================================
+    $function_out['template'] = pnVarPrepForOS('view_' . $viewtype . '.html');
+
+		//=================================================================
     //  Insert necessary JavaScript into the page
-    //=================================================================
-    $output = pnModAPIFunc(__POSTCALENDAR__,'user','pageSetup');
-	//=================================================================
-    //  Setup Render Template Engine
-    //=================================================================
-    //$tpl = new pnRender();
-	$tpl = pnRender::getInstance('PostCalendar');
-	PostCalendarSmartySetup($tpl);
-
-        // V4B RNG
-	if(!$tpl->is_cached($template,$cacheid) || $popup) {
-    	//=================================================================
-    	//  Let's just finish setting things up
-    	//=================================================================
-    	$the_year   = substr($Date,0,4);
-    	$the_month  = substr($Date,4,2);
-    	$the_day    = substr($Date,6,2);
+    //$function_out['output'] = pnModAPIFunc(__POSTCALENDAR__,'user','pageSetup');
+		//=================================================================
+    //  Let's just finish setting things up
+    $the_year   = substr($Date,0,4);
+   	$the_month  = substr($Date,4,2);
+   	$the_day    = substr($Date,6,2);
 		$last_day = Date_Calc::daysInMonth($the_month,$the_year);
 		//=================================================================
-    	//  populate the template object with information for
-    	//  Month Names, Long Day Names and Short Day Names
-    	//  as translated in the language files
-    	//  (may be adding more here soon - based on need)
-    	//=================================================================
-    	$pc_month_names = array(_CALJAN,_CALFEB,_CALMAR,_CALAPR,_CALMAY,_CALJUN,
-                            	_CALJUL,_CALAUG,_CALSEP,_CALOCT,_CALNOV,_CALDEC);
-
-    	$pc_short_day_names = array(_CALSUNDAYSHORT, _CALMONDAYSHORT, 
-                                	_CALTUESDAYSHORT, _CALWEDNESDAYSHORT,
-                                	_CALTHURSDAYSHORT, _CALFRIDAYSHORT, 
-                                	_CALSATURDAYSHORT);
-
-    	$pc_long_day_names = array(_CALSUNDAY, _CALMONDAY, 
-                            	   _CALTUESDAY, _CALWEDNESDAY,
-                            	   _CALTHURSDAY, _CALFRIDAY, 
-                            	   _CALSATURDAY);
+    //  populate the template object with information for
+    //  Month Names, Long Day Names and Short Day Names
+    //  as translated in the language files
+    //  (may be adding more here soon - based on need)
+    //=================================================================
+    $pc_month_names = array(_CALJAN,_CALFEB,_CALMAR,_CALAPR,_CALMAY,_CALJUN,
+                           	_CALJUL,_CALAUG,_CALSEP,_CALOCT,_CALNOV,_CALDEC);
+   	$pc_short_day_names = array(_CALSUNDAYSHORT, _CALMONDAYSHORT, 
+                               	_CALTUESDAYSHORT, _CALWEDNESDAYSHORT,
+                               	_CALTHURSDAYSHORT, _CALFRIDAYSHORT, 
+                               	_CALSATURDAYSHORT);
+   	$pc_long_day_names = array(_CALSUNDAY, _CALMONDAY, 
+                           	   _CALTUESDAY, _CALWEDNESDAY,
+                           	   _CALTHURSDAY, _CALFRIDAY, 
+                           	   _CALSATURDAY);
 		//=================================================================
-    	//  here we need to set up some information for later
-    	//  variable creation.  This helps us establish the correct
-    	//  date ranges for each view.  There may be a better way
-    	//  to handle all this, but my brain hurts, so your comments
-    	//  are very appreciated and welcomed.
-    	//=================================================================
-    	switch (_SETTING_FIRST_DAY_WEEK) 
-    	{
-        	case _IS_MONDAY:
-            	$pc_array_pos = 1;
-            	$first_day  = date('w',mktime(0,0,0,$the_month,0,$the_year));
-            	$week_day   = date('w',mktime(0,0,0,$the_month,$the_day-1,$the_year));
-            	$end_dow    = date('w',mktime(0,0,0,$the_month,$last_day,$the_year));
-            	if($end_dow != 0) {
-                	$the_last_day = $last_day+(7-$end_dow);
-            	} else {
-                	$the_last_day = $last_day;
-            	}
-            	break;
-        	case _IS_SATURDAY:
-            	$pc_array_pos = 6;
-            	$first_day  = date('w',mktime(0,0,0,$the_month,2,$the_year));
-            	$week_day   = date('w',mktime(0,0,0,$the_month,$the_day+1,$the_year));
-            	$end_dow    = date('w',mktime(0,0,0,$the_month,$last_day,$the_year));
-            	if($end_dow == 6) {
-                	$the_last_day = $last_day+6;
-            	} elseif($end_dow != 5) {
-                	$the_last_day = $last_day+(5-$end_dow);
-            	} else {
-                	$the_last_day = $last_day;
-            	}
-            	break;
-        	case _IS_SUNDAY:
-        	default:
-            	$pc_array_pos = 0;
-            	$first_day  = date('w',mktime(0,0,0,$the_month,1,$the_year));
-            	$week_day   = date('w',mktime(0,0,0,$the_month,$the_day,$the_year));
-            	$end_dow    = date('w',mktime(0,0,0,$the_month,$last_day,$the_year));
-            	if($end_dow != 6) {
-                	$the_last_day = $last_day+(6-$end_dow);
-            	} else {
-                	$the_last_day = $last_day;
-            	}
-            	break;
-    	}
+   	//  here we need to set up some information for later
+   	//  variable creation.  This helps us establish the correct
+   	//  date ranges for each view.  There may be a better way
+   	//  to handle all this, but my brain hurts, so your comments
+   	//  are very appreciated and welcomed.
+   	//=================================================================
+   	switch (_SETTING_FIRST_DAY_WEEK) 
+   	{
+     	case _IS_MONDAY:
+	     	$pc_array_pos = 1;
+       	$first_day  = date('w',mktime(0,0,0,$the_month,0,$the_year));
+       	$week_day   = date('w',mktime(0,0,0,$the_month,$the_day-1,$the_year));
+       	$end_dow    = date('w',mktime(0,0,0,$the_month,$last_day,$the_year));
+       	if($end_dow != 0) {
+         	$the_last_day = $last_day+(7-$end_dow);
+       	} else {
+         	$the_last_day = $last_day;
+       	}
+       	break;
+     	case _IS_SATURDAY:
+       	$pc_array_pos = 6;
+       	$first_day  = date('w',mktime(0,0,0,$the_month,2,$the_year));
+       	$week_day   = date('w',mktime(0,0,0,$the_month,$the_day+1,$the_year));
+       	$end_dow    = date('w',mktime(0,0,0,$the_month,$last_day,$the_year));
+       	if($end_dow == 6) {
+         	$the_last_day = $last_day+6;
+       	} elseif($end_dow != 5) {
+         	$the_last_day = $last_day+(5-$end_dow);
+       	} else {
+         	$the_last_day = $last_day;
+       	}
+       	break;
+     	case _IS_SUNDAY:
+     	default:
+       	$pc_array_pos = 0;
+       	$first_day  = date('w',mktime(0,0,0,$the_month,1,$the_year));
+       	$week_day   = date('w',mktime(0,0,0,$the_month,$the_day,$the_year));
+       	$end_dow    = date('w',mktime(0,0,0,$the_month,$last_day,$the_year));
+       	if($end_dow != 6) {
+         	$the_last_day = $last_day+(6-$end_dow);
+       	} else {
+         	$the_last_day = $last_day;
+       	}
+       	break;
+ 			}
     	//=================================================================
     	//  Week View is a bit of a pain in the ass, so we need to
     	//  do some extra setup for that view.  This section will
@@ -210,69 +188,64 @@ function postcalendar_userapi_buildView($args)
     	//=================================================================
     	$month_view_start = date('Y-m-d',mktime(0,0,0,$the_month,1,$the_year));
     	$month_view_end   = date('Y-m-t',mktime(0,0,0,$the_month,1,$the_year));
-		$today_date = postcalendar_today('%Y-%m-%d');
-		//=================================================================
+			$today_date = postcalendar_today('%Y-%m-%d');
+			//=================================================================
     	//  Setup the starting and ending date ranges for pcGetEvents()
     	//=================================================================
     	switch($viewtype) {
-        	case 'day' :
-            	$starting_date = date('m/d/Y',mktime(0,0,0,$the_month,$the_day,$the_year));
-            	$ending_date   = date('m/d/Y',mktime(0,0,0,$the_month,$the_day,$the_year));
-            	break;
-        	case 'week' :
-            	$starting_date = "$week_first_day_month/$week_first_day_date/$week_first_day_year";
-            	$ending_date   = "$week_last_day_month/$week_last_day_date/$week_last_day_year";
-				$calendarView  = Date_Calc::getCalendarWeek($week_first_day_date,
-			                                            	$week_first_day_month,
-															$week_first_day_year,
-															'%Y-%m-%d');
-            	break;
-        	case 'month' :
-            	$starting_date = date('m/d/Y',mktime(0,0,0,$the_month,1-$first_day,$the_year));
-            	$ending_date   = date('m/d/Y',mktime(0,0,0,$the_month,$the_last_day,$the_year));
-				$calendarView  = Date_Calc::getCalendarMonth($the_month, $the_year, '%Y-%m-%d');
-            	break;
-        	case 'year' :
-            	$starting_date = date('m/d/Y',mktime(0,0,0,1,1,$the_year));
-            	$ending_date   = date('m/d/Y',mktime(0,0,0,1,1,$the_year+1));
-				$calendarView  = Date_Calc::getCalendarYear($the_year, '%Y-%m-%d');
-            	break;
+        case 'day' :
+         	$starting_date = date('m/d/Y',mktime(0,0,0,$the_month,$the_day,$the_year));
+         	$ending_date   = date('m/d/Y',mktime(0,0,0,$the_month,$the_day,$the_year));
+         	break;
+       	case 'week' :
+         	$starting_date = "$week_first_day_month/$week_first_day_date/$week_first_day_year";
+         	$ending_date   = "$week_last_day_month/$week_last_day_date/$week_last_day_year";
+					$calendarView  = Date_Calc::getCalendarWeek($week_first_day_date,
+			                                            		$week_first_day_month,
+																											$week_first_day_year,
+																											'%Y-%m-%d');
+           break;
+        case 'month' :
+         	$starting_date = date('m/d/Y',mktime(0,0,0,$the_month,1-$first_day,$the_year));
+         	$ending_date   = date('m/d/Y',mktime(0,0,0,$the_month,$the_last_day,$the_year));
+					$calendarView  = Date_Calc::getCalendarMonth($the_month, $the_year, '%Y-%m-%d');
+          break;
+        case 'year' :
+         	$starting_date = date('m/d/Y',mktime(0,0,0,1,1,$the_year));
+         	$ending_date   = date('m/d/Y',mktime(0,0,0,1,1,$the_year+1));
+					$calendarView  = Date_Calc::getCalendarYear($the_year, '%Y-%m-%d');
+         	break;
     	}
-		//=================================================================
+			//=================================================================
     	//  Load the events
     	//=================================================================
-//		if($viewtype != 'year') {
-
 			$eventsByDate =& postcalendar_userapi_pcGetEvents(array('start'=>$starting_date,'end'=>$ending_date));
-//		} else {
 
-//			$eventsByDate = array();
-
-//		}
-
-		//=================================================================
+			//=================================================================
     	//  Create and array with the day names in the correct order
     	//=================================================================
     	$daynames = array();
     	$numDays = count($pc_long_day_names);
     	for($i=0; $i < $numDays; $i++)
-    	{   if($pc_array_pos >= $numDays) {
-            	$pc_array_pos = 0;
-        	}
-        	array_push($daynames,$pc_long_day_names[$pc_array_pos]);
-        	$pc_array_pos++;
+    	{   
+				if($pc_array_pos >= $numDays) {
+         	$pc_array_pos = 0;
+        }
+        array_push($daynames,$pc_long_day_names[$pc_array_pos]);
+        $pc_array_pos++;
     	}
-		unset($numDays);
-		$sdaynames = array();
+			unset($numDays);
+			$sdaynames = array();
     	$numDays = count($pc_short_day_names);
     	for($i=0; $i < $numDays; $i++)
-    	{   if($pc_array_pos >= $numDays) {
-            	$pc_array_pos = 0;
-        	}
-        	array_push($sdaynames,$pc_short_day_names[$pc_array_pos]);
-        	$pc_array_pos++;
+    	{
+				if($pc_array_pos >= $numDays) {
+        	$pc_array_pos = 0;
+        }
+        array_push($sdaynames,$pc_short_day_names[$pc_array_pos]);
+        $pc_array_pos++;
     	}
-		unset($numDays);
+			unset($numDays);
     	//=================================================================
     	//  Prepare some values for the template
     	//=================================================================
@@ -324,7 +297,7 @@ function postcalendar_userapi_buildView($args)
 								  	   'pc_category'=>$category,
 								  	   'pc_topic'=>$topic));
     	
-		$prev_year = date('Ymd',mktime(0,0,0,1,1,$the_year-1));
+			$prev_year = date('Ymd',mktime(0,0,0,1,1,$the_year-1));
     	$next_year = date('Ymd',mktime(0,0,0,1,1,$the_year+1));
     	$pc_prev_year = pnModURL(__POSTCALENDAR__,'user','view',
                             	 array('viewtype'=>'year',
@@ -339,76 +312,72 @@ function postcalendar_userapi_buildView($args)
 								  	   'pc_category'=>$category,
 								  	   'pc_topic'=>$topic));
     	
-		//=================================================================
+			//=================================================================
     	//  Populate the template
     	//=================================================================
-		$all_categories = pnModAPIFunc(__POSTCALENDAR__,'user','getCategories');
-		$categories = array();
-		foreach($all_categories as $category)
-		{
-			// FIXME !!!!!
-			$categories[] = array('value'    => $category['catid'],
+			$all_categories = pnModAPIFunc(__POSTCALENDAR__,'user','getCategories');
+			$categories = array();
+			foreach($all_categories as $category)
+			{
+				// FIXME !!!!!
+				$categories[] = array('value'    => $category['catid'],
 								  'selected' => ($category['catid']==$event_category ? 'selected' : ''),
 								  'name'     => $category['catname'],
 								  'color'    => $category['catcolor'],
 								  'desc'     => $category['catdesc']);
-		}
+			}
 
-		if(isset($calendarView)) {
-    		$tpl->assign_by_ref('CAL_FORMAT',$calendarView);
-		}
-		/* Trim as needed */
+			if(isset($calendarView)) {
+	    		$function_out['CAL_FORMAT'] = $calendarView;
+			}
 			$func  = FormUtil::getPassedValue('func');
 			$template_view = FormUtil::getPassedValue('tplview');
 			if (!$template_view) $template_view = 'month'; 
-			$tpl->assign('FUNCTION', $func);
-			$tpl->assign('TPL_VIEW', $template_view);
-		/* end */
-		$tpl->assign_by_ref('VIEW_TYPE',$viewtype);
-		$tpl->assign_by_ref('A_MONTH_NAMES',$pc_month_names);
-		$tpl->assign_by_ref('A_LONG_DAY_NAMES',$pc_long_day_names);
-		$tpl->assign_by_ref('A_SHORT_DAY_NAMES',$pc_short_day_names);
-		$tpl->assign_by_ref('S_LONG_DAY_NAMES',$daynames);
-		$tpl->assign_by_ref('S_SHORT_DAY_NAMES',$sdaynames);
-		$tpl->assign_by_ref('A_EVENTS',$eventsByDate);
-		$tpl->assign_by_ref('A_CATEGORY',$categories);
-		$tpl->assign_by_ref('PREV_MONTH_URL',DataUtil::formatForDisplay($pc_prev));		$tpl->assign_by_ref('NEXT_MONTH_URL',DataUtil::formatForDisplay($pc_next));		$tpl->assign_by_ref('PREV_DAY_URL',DataUtil::formatForDisplay($pc_prev_day));		$tpl->assign_by_ref('NEXT_DAY_URL',DataUtil::formatForDisplay($pc_next_day));		$tpl->assign_by_ref('PREV_WEEK_URL',DataUtil::formatForDisplay($pc_prev_week));		$tpl->assign_by_ref('NEXT_WEEK_URL',DataUtil::formatForDisplay($pc_next_week));		$tpl->assign_by_ref('PREV_YEAR_URL',DataUtil::formatForDisplay($pc_prev_year));		$tpl->assign_by_ref('NEXT_YEAR_URL',DataUtil::formatForDisplay($pc_next_year));
-		$tpl->assign_by_ref('MONTH_START_DATE',$month_view_start);
-		$tpl->assign_by_ref('MONTH_END_DATE',$month_view_end);
-		$tpl->assign_by_ref('TODAY_DATE',$today_date);
-		$tpl->assign_by_ref('DATE',$Date);
-	}
-/*
-	$pcTheme = pnModGetVar(__POSTCALENDAR__,'pcTemplate');
-	if(!$pcTheme)
-	    $pcTheme='default';
-*/
-	if ($popup)
-	{
-		$theme = pnUserGetTheme();
-		echo "<html><head>";
-		echo "<style type=\"text/css\">\n";
-		echo "@import url(\"themes/$theme/style/style.css\"); ";
-		echo "</style>\n";
-		echo "</head><body>\n";
-    	        //$tpl->display("$pcTheme/$template");
-    	        $tpl->display("$template");
-		echo postcalendar_footer();
-		// V4B TS start ***  Hook code for displaying stuff for events in popup
-		if ($_GET["type"] != "admin") {
-			$hooks = pnModCallHooks('item', 'display', $eid, "index.php?module=PostCalendar&type=user&func=view&viewtype=details&eid=$eid&popup=1");
-			echo $hooks;
-		}
-		echo "\n</body></html>";
-		session_write_close();
-		exit;
-	}
-	else
-	{
-    	    //$output .= $tpl->fetch("$pcTheme/$template", $cacheid);    // cache id
-    	    $output .= $tpl->fetch("$template", $cacheid);    // cache id
-            return $output;    
-	}
+			$function_out['FUNCTION'] = $func;
+			$function_out['TPL_VIEW'] = $template_view;
+			$function_out['VIEW_TYPE'] = $viewtype;
+			$function_out['A_MONTH_NAMES'] = $pc_month_names;
+			$function_out['A_LONG_DAY_NAMES'] = $pc_long_day_names;
+			$function_out['A_SHORT_DAY_NAMES'] = $pc_short_day_names;
+			$function_out['S_LONG_DAY_NAMES'] = $daynames;
+			$function_out['S_SHORT_DAY_NAMES'] = $sdaynames;
+			$function_out['A_EVENTS'] = $eventsByDate;
+			$function_out['A_CATEGORY'] = $categories;
+			$function_out['PREV_MONTH_URL'] = DataUtil::formatForDisplay($pc_prev);
+			$function_out['NEXT_MONTH_URL'] = DataUtil::formatForDisplay($pc_next);
+			$function_out['PREV_DAY_URL'] = DataUtil::formatForDisplay($pc_prev_day);
+			$function_out['NEXT_DAY_URL'] = DataUtil::formatForDisplay($pc_next_day);
+			$function_out['PREV_WEEK_URL'] = DataUtil::formatForDisplay($pc_prev_week);
+			$function_out['NEXT_WEEK_URL'] = DataUtil::formatForDisplay($pc_next_week);
+			$function_out['PREV_YEAR_URL'] = DataUtil::formatForDisplay($pc_prev_year);
+			$function_out['NEXT_YEAR_URL'] = DataUtil::formatForDisplay($pc_next_year);
+			$function_out['MONTH_START_DATE'] = $month_view_start;
+			$function_out['MONTH_END_DATE'] = $month_view_end;
+			$function_out['TODAY_DATE'] = $today_date;
+			$function_out['DATE'] = $Date;
+
+			if ($popup)
+			{
+				$theme = pnUserGetTheme();
+				echo "<html><head>";
+				echo "<style type=\"text/css\">\n";
+				echo "@import url(\"themes/$theme/style/style.css\"); ";
+				echo "</style>\n";
+				echo "</head><body>\n";
+		    	        //$tpl->display("$pcTheme/$template");
+		    	        $tpl->display("$template");
+				echo postcalendar_footer();
+				// V4B TS start ***  Hook code for displaying stuff for events in popup
+				if ($_GET["type"] != "admin") {
+					$hooks = pnModCallHooks('item', 'display', $eid, "index.php?module=PostCalendar&amp;type=user&amp;func=view&amp;viewtype=details&amp;eid=$eid&amp;popup=1");
+					echo $hooks;
+				}
+				echo "\n</body></html>";
+				session_write_close();
+				exit;
+			}	else {
+				return $function_out;
+			}
 }
 
 /**

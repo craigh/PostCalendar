@@ -1738,7 +1738,7 @@ $output .= <<<EOF
 <!--
     if (!document.getElementById('overDiv')) { 
       document.write("<div id=\"overDiv\" style=\"position:absolute; visibility:hidden; z-index:1000;\"><\/div>"); 
-      document.write("<script type=\"text/javascript\" src=\"modules/PostCalendar/pnincludes/overlib/overlib.js\"><\/script>"); 
+      document.write("<script type=\"text/javascript\" src=\"modules/PostCalendar/pnjavascript/overlib/overlib.js\"><\/script>"); 
     }
 // -->
 </script>
