@@ -358,23 +358,21 @@ function postcalendar_userapi_buildView($args)
 
 			if ($popup)
 			{
+				// this concept needs to be changed to simply use a different template if using a popup. CAH 5/9/09
 				$theme = pnUserGetTheme();
-				echo "<html><head>";
-				echo "<style type=\"text/css\">\n";
-				echo "@import url(\"themes/$theme/style/style.css\"); ";
-				echo "</style>\n";
-				echo "</head><body>\n";
-		    	        //$tpl->display("$pcTheme/$template");
-		    	        $tpl->display("$template");
-				echo postcalendar_footer();
+				$function_out['raw1'] = "<html><head></head><body>\n";
+        //$tpl->display("$template");
+				$function_out['raw2'] .= postcalendar_footer();
 				// V4B TS start ***  Hook code for displaying stuff for events in popup
 				if ($_GET["type"] != "admin") {
 					$hooks = pnModCallHooks('item', 'display', $eid, "index.php?module=PostCalendar&amp;type=user&amp;func=view&amp;viewtype=details&amp;eid=$eid&amp;popup=1");
-					echo $hooks;
+					$function_out['raw2'] .=  $hooks;
 				}
-				echo "\n</body></html>";
-				session_write_close();
-				exit;
+				$function_out['raw2'] .=  "\n</body></html>";
+				//session_write_close();
+				//exit;
+				$function_out['displayaspopup'] = true;
+				return $function_out;
 			}	else {
 				return $function_out;
 			}

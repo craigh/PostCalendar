@@ -1264,29 +1264,23 @@ function postcalendar_userapi_eventDetail($args,$admin=false)
 	    $pcTheme='default';
     */
 	//$tpl = new pnRender();
- 	$tpl = pnRender::getInstance('PostCalendar');
- 		PostCalendarSmartySetup($tpl);
+ 	//$tpl = pnRender::getInstance('PostCalendar');
+ 		//PostCalendarSmartySetup($tpl);
 		/* Trim as needed */
 			$func  = FormUtil::getPassedValue('func');
 			$template_view = FormUtil::getPassedValue('tplview');
 			if (!$template_view) $template_view = 'month'; 
-			$tpl->assign('FUNCTION', $func);
-			$tpl->assign('TPL_VIEW', $template_view);
+			$function_out['FUNCTION'] = $func;
+			$function_out['TPL_VIEW'] = $template_view;
 		/* end */
   
-    if($admin) {
-//		$template = "$pcTheme/admin_view_event_details.html";
-		$template = "admin_view_event_details.html";
-		$args['cacheid'] = '';
-		$Date = postcalendar_getDate();
-		$tpl->caching = false;
+	if($admin) {
+		$function_out['template'] = "admin_view_event_details.html";
+		$function_out['Date'] = postcalendar_getDate();
 	} else {
-		// $template = "$pcTheme/view_event_details.html";
-		$template = "view_event_details.html";
+		$function_out['template'] = "view_event_details.html";
 	}
 	
-	if(!$tpl->is_cached($template,$cacheid)) 
-	{
 		// let's get the DB information
 		$event = postcalendar_userapi_pcGetEventDetails($eid);
 		// if the above is false, it's a private event for another user
@@ -1307,18 +1301,15 @@ function postcalendar_userapi_eventDetail($args,$admin=false)
 
 		// populate the template
 		$display_type = substr($event['hometext'],0,6);
-		if($display_type == ':text:') 
-		{
+		if($display_type == ':text:') {
 			$prepFunction = 'pcVarPrepForDisplay';
 			$event['hometext'] = substr($event['hometext'],6);
-		} 
-		elseif($display_type == ':html:') 
-		{
+		} elseif($display_type == ':html:') {
 			$prepFunction = 'pcVarPrepHTMLDisplay';
 			$event['hometext'] = substr($event['hometext'],6);
-		} 
-		else 
+		} else {
 			$prepFunction = 'pcVarPrepHTMLDisplay';
+		}
 		
 		unset($display_type);
 		// prep the vars for output
@@ -1336,20 +1327,20 @@ function postcalendar_userapi_eventDetail($args,$admin=false)
 		$event['city']      = $prepFunction($event['event_city']);
 		$event['state']     = $prepFunction($event['event_state']);
 		$event['postal']    = $prepFunction($event['event_postal']);
-		$tpl->assign_by_ref('A_EVENT',$event);
+		$function_out['A_EVENT'] = $event;
 
 		if(!empty($event['location']) || !empty($event['street1']) ||
 		   !empty($event['street2']) || !empty($event['city']) ||
 		   !empty($event['state']) || !empty($event['postal'])) 
-			$tpl->assign('LOCATION_INFO',true);
+			$function_out['LOCATION_INFO'] = true;
 		else 
-			$tpl->assign('LOCATION_INFO',false);
+			$function_out['LOCATION_INFO'] = false;
 
 		if(!empty($event['contname']) || !empty($event['contemail']) ||
 		   !empty($event['conttel']) || !empty($event['website'])) 
-			$tpl->assign('CONTACT_INFO',true);
+			$function_out['CONTACT_INFO'] = true;
 		else 
-			$tpl->assign('CONTACT_INFO',false);
+			$function_out['CONTACT_INFO'] = false;
 
 		// determine meeting participants
 		$participants = array();
@@ -1369,7 +1360,7 @@ function postcalendar_userapi_eventDetail($args,$admin=false)
 
                     sort ($participants);
 		}
-		$tpl->assign('participants',$participants);
+		$function_out['participants'] = $participants;
 
 
 		//=================================================================
@@ -1405,54 +1396,40 @@ function postcalendar_userapi_eventDetail($args,$admin=false)
 			$can_edit = true;
 		}
 
-		$tpl->assign_by_ref('ADMIN_TARGET',$target);
-		$tpl->assign_by_ref('ADMIN_EDIT',$admin_edit_url);
-		$tpl->assign_by_ref('ADMIN_DELETE',$admin_delete_url);
+		$function_out['ADMIN_TARGET'] = $target;
+		$function_out['ADMIN_EDIT'] = $admin_edit_url;
+		$function_out['ADMIN_DELETE'] = $admin_delete_url;
         // v4b TS start 2 lines
-        $tpl->assign_by_ref('ADMIN_COPY',$admin_copy_url);
-        $tpl->assign_by_ref('USER_COPY',$user_copy_url);
+		$function_out['ADMIN_COPY'] = $admin_copy_url;
+		$function_out['USER_COPY'] = $user_copy_url;
         
-		$tpl->assign_by_ref('USER_TARGET',$target);
-		$tpl->assign_by_ref('USER_EDIT',$user_edit_url);
-		$tpl->assign_by_ref('USER_DELETE',$user_delete_url);
-		$tpl->assign_by_ref('USER_CAN_EDIT',$can_edit);
-	}
-/*
-	$pcTheme = pnModGetVar(__POSTCALENDAR__,'pcTemplate');
-	if(!$pcTheme)
-	    $pcTheme='default';
-*/    	
+		$function_out['USER_TARGET'] = $target;
+		$function_out['USER_EDIT'] = $user_edit_url;
+		$function_out['USER_DELETE'] = $user_delete_url;
+		$function_out['USER_CAN_EDIT'] = $can_edit;
+   	
     if($popup != 1) {    
-        $output .= $tpl->fetch($template, $cacheid);
-        
-        // V4B TS start ***  Hook code for displaying stuff for events
-        if ($_GET["type"] != "admin") {
-            $hooks = pnModCallHooks('item', 'display', $eid, "index.php?module=PostCalendar&func=view&viewtype=details&eid=$eid");
-            $output .= $hooks;
-        } 
-        // V4B TS end ***  End of Hook code
+			return $function_out;
 
     } else {
-		$theme = pnUserGetTheme();
-		echo "<html><head>";
-    	echo "<style type=\"text/css\">\n";
-    	echo "@import url(\"themes/$theme/style/style.css\"); ";
-    	echo "</style>\n";
-    	echo "</head><body>\n";
-//    	$tpl->display("$pcTheme/view_event_details.html",$cacheid);
-    	$tpl->display("view_event_details.html",$cacheid);
-		echo postcalendar_footer();
-		// V4B TS start ***  Hook code for displaying stuff for events in popup
-        if ($_GET["type"] != "admin") {
-            $hooks = pnModCallHooks('item', 'display', $eid, "index.php?module=PostCalendar&type=user&func=view&viewtype=details&eid=$eid&popup=1");
-            echo $hooks;
-        } 
-        // V4B TS end ***  End of Hook code
-        echo "\n</body></html>";
-    	session_write_close();
-		exit;
-	}
-	return $output;
+			// this concept needs to be changed to simply use a different template if using a popup. CAH 5/9/09
+			$theme = pnUserGetTheme();
+			$function_out['raw1'] = "<html><head></head><body>\n";
+    	//$tpl->display("view_event_details.html",$cacheid);
+			
+			$function_out['raw2'] .= postcalendar_footer();
+			// V4B TS start ***  Hook code for displaying stuff for events in popup
+			if ($_GET["type"] != "admin") {
+				$hooks = pnModCallHooks('item', 'display', $eid, "index.php?module=PostCalendar&type=user&func=view&viewtype=details&eid=$eid&popup=1");
+        $function_out['raw2'] .= $hooks;
+			} 
+      // V4B TS end ***  End of Hook code
+      $function_out['raw2'] .= "\n</body></html>";
+    	//session_write_close();
+			//exit;
+			$function_out['displayaspopup'] = true;
+			return function_out;
+		}
 }
 
 function postcalendar_footer()

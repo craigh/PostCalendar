@@ -4,14 +4,15 @@
 	<!--[ assign var="PRINT_VIEW" value=1 ]-->
 <!--[/if]-->
 <!--[ if $PRINT_VIEW != 1 ]-->
-<!--[ include file="navigation_details.html" ]-->
+<!--[ include file="navigation_small.html" ]-->
 <!--[ /if ]-->
-<table width="100%" border="0" cellpadding="5" cellspacing="0" class="calcontainer">
-	<tr>
-		<td class="eventtitle" width="100%" nowrap="nowrap">
-			<b><!--[ $A_EVENT.title|pnvarprephtmldisplay ]--></b>
-		</td>
-	</tr>
+
+<h2 class="postcalendar_header">
+			<!--[ $A_EVENT.title|pnvarprephtmldisplay ]-->
+</h2>
+
+<div class="calcontainer">
+<table width="100%" border="0" cellpadding="5" cellspacing="0">
 	<tr>
 		<td class="eventtime" width="100%" nowrap="nowrap">
 			<!--[ if $A_EVENT.alldayevent != true ]-->
@@ -35,13 +36,15 @@
 				Duration: <!--[ $A_EVENT.duration_hours ]-->:<!--[ $A_EVENT.duration_minutes ]-->
 			<!--[ /if ]-->
 			
-			<a href='<!--[pnmodurl modname="PostCalendar" type="user" func="export" eid=$A_EVENT.eid date=$A_EVENT.eventDate ]-->'>
-			<!--[ pnimg src='bell.gif' alt="Add this event to my calendar" ]-->
-			</a>
+			<!--[ if $PRINT_VIEW eq false ]-->
+				<a href='<!--[pnmodurl modname="PostCalendar" type="user" func="export" eid=$A_EVENT.eid date=$A_EVENT.eventDate ]-->'>
+				<!--[ pnimg src='bell.gif' alt="Add this event to my calendar" ]-->
+				</a>
+			<!--[/if]-->
 		</td>
 	</tr>
 </table>
-<table width="100%" border="0" cellpadding="5" cellspacing="0" class="calcontainer">
+<table width="100%" border="0" cellpadding="5" cellspacing="0">
 	<tr>
 		<td valign="top" align="left" width="100%">
 			<!--[ $A_EVENT.hometext ]-->
@@ -91,21 +94,25 @@
 		</td>
 	</tr>
 </table>
+</div>
+<!--[ pnmodcallhooks hookobject=item hookaction=display hookid=$A_EVENT.eid returnurl="index.php?module=PostCalendar&func=view&viewtype=details&eid=$eid" ]-->
 <!--[ if $PRINT_VIEW != 1 ]-->
-<table width="100%" border="0" cellpadding="0" cellspacing="0">
-    <tr>
-        <td align="right">
-            <a href="<!--[ pc_url action="detail" print="true" eid=$A_EVENT.eid ]-->">Print</a>
-        </td>
-    </tr>
-</table>
-    <!--[ if $ACCESS_ADMIN ]-->
-	<a href="<!--[ $ADMIN_EDIT ]-->" <!--[ $ADMIN_TARGET ]-->>Edit</a> |
-	<a href="<!--[ $ADMIN_COPY ]-->" <!--[ $ADMIN_TARGET ]-->>Copy</a> |
-    <a href="<!--[ $ADMIN_DELETE ]-->" <!--[ $ADMIN_TARGET ]-->>Delete</a>
-    <!--[ elseif $USER_CAN_EDIT ]-->
-	<a href="<!--[ $USER_EDIT ]-->" <!--[ $USER_TARGET ]-->>Edit</a> |
-    <a href="<!--[ $USER_COPY ]-->" <!--[ $USER_TARGET ]-->><Copy</a> |
-	<a href="<!--[ $USER_DELETE ]-->" <!--[ $USER_TARGET ]-->><Delete</a>
-    <!--[ /if ]-->
+	<!--[ if $ACCESS_ADMIN ]-->
+		<a href="<!--[ $ADMIN_EDIT ]-->" <!--[ $ADMIN_TARGET ]-->>Edit</a> |
+		<a href="<!--[ $ADMIN_COPY ]-->" <!--[ $ADMIN_TARGET ]-->>Copy</a> |
+		<a href="<!--[ $ADMIN_DELETE ]-->" <!--[ $ADMIN_TARGET ]-->>Delete</a>
+	<!--[ elseif $USER_CAN_EDIT ]-->
+		<a href="<!--[ $USER_EDIT ]-->" <!--[ $USER_TARGET ]-->>Edit</a> |
+    <a href="<!--[ $USER_COPY ]-->" <!--[ $USER_TARGET ]-->>Copy</a> |
+		<a href="<!--[ $USER_DELETE ]-->" <!--[ $USER_TARGET ]-->>Delete</a>
+	<!--[ /if ]-->
 <!--[ /if ]-->
+<div style='text-align:right;'>
+	<!--[ if $PRINT_VIEW eq true ]-->
+		<!--[ assign var="viewtype" value=$smarty.get.viewtype ]-->
+		<!--[if ((empty($smarty.get.viewtype)) or (!isset($smarty.get.viewtype)))]-->
+			<!--[pnmodgetvar module="PostCalendar" name="pcDefaultView" assign="viewtype" ]-->
+		<!--[/if]-->
+		<a href="<!--[pnmodurl modname="PostCalendar" func="view" viewtype=$viewtype Date=$smarty.get.Date eid=$A_EVENT.eid ]-->">Return</a>
+	<!--[/if]-->
+</div>
