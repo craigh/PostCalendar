@@ -38,34 +38,55 @@ Database tables (using a tool like phpMyAdmin) and also backup your
 current PostCalendar installation.  This will be useful in the event
 an upgrade does not work for you.
 
+Next, remove the existing PostCalendar files completely (if they are there).
+This is important because there are many extra files in the old installation
+that should be removed.
+
 Next, unzip/untar the PostCalendar distribution inside your Zikula
 modules directory.  This will create the modules/PostCalendar directory
 and place all the necessary files there.
 
 Using the standard Zikula Module upgrade method, upgrade your module.
 
+Notes for version 5.1.0
+	1. There are no database changes from previous version
+	2. The old method of PostCalendar 'themes' has been removed
+			- you can accomplish the same concept using template-overrides in zikula
+				see http://community.zikula.org/index.php?module=Wiki&tag=TemplateOverridng
+	3. All colors are defined in the stylesheet now except category colors
+			- you can override this with stylesheet overrides (same link as above)
+	3. Known issues outstanding are listed in the ticket list:
+			- http://code.zikula.org/soundwebdevelopment/report/1
+
 ========================================================================
 Menu Configuration
 ========================================================================
 You can link to PostCalendar by entering {PostCalendar} in a menu block.
-
-Using [PostCalendar] will also work, but this is for old style modules. 
-Using the method above will produce much better results.
 
 Goto your Block administration and edit/create the Menu block to hold 
 your link to PostCalendar.
 
 The Menu Block editing screen should look something like this:
  
-+--------------+----------------+-------------+--------+--------+-------+ 
-| Title        | URL            | Description | Delete | Insert | Blank |
-+--------------+----------------+-------------+--------+--------+-------+ 
-| PostCalendar | {PostCalendar} | My Calendar |        |        |       |
-+--------------+----------------+-------------+--------+--------+-------+        
++--------------+----------------+-------------+
+| Name         | URL            | Title       |
++--------------+----------------+-------------+
+| PostCalendar | {PostCalendar} | My Calendar |
++--------------+----------------+-------------+
 
 ========================================================================
 Admin Settings
 ========================================================================
+You can add PostCalendar to the Pending Content Module by adding an
+entry that says the following:
+
+Name: PostCalendar
+URL:  index.php?module=Calendar&type=admin&func=listqueued
+SQL:	SELECT COUNT(*) FROM zk_postcalendar_events WHERE pc_eventstatus=0
+
+**please note that the table name prefix ('zk_' above) may need to be
+adjusted for your installation. check your phpMyAdmin to get the table
+name if you don't know it.
 
 ========================================================================
 Blocks Configuration

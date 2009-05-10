@@ -1198,6 +1198,7 @@ function postcalendar_admin_testSystem()
 // This function cleans out entries made by past users
 function postcalendar_admin_removeUserEntries()
 {
+/*
     if(!PC_ACCESS_ADMIN) { return _POSTCALENDARNOAUTH; }
 	
     $users = DBUtil::selectFieldArray ('users','uid');
@@ -1214,6 +1215,10 @@ function postcalendar_admin_removeUserEntries()
     }
 	
     return postcalendar_admin_modifyconfig('<center>'.$count.' '._PC_ENTRIES_REMOVED.'</center>');
+*/
+	// this is disabled for now because it is totally destructive and you can't recover
+	// it basically deletes all events! CAH 9 May 2009
+	return postcalendar_admin_modifyconfig('<center>This function currently disabled.</center>');
 }
 
 function postcalendar_admin_modifyconfig($msg='',$showMenu=true)
@@ -1226,7 +1231,7 @@ function postcalendar_admin_modifyconfig($msg='',$showMenu=true)
 
 	$defaultsURL  = pnModURL(__POSTCALENDAR__,'admin','resetDefaults');
 	$defaultsText = _EDIT_PC_CONFIG_DEFAULT;
-	
+	/*
 $jsColorPicker = <<<EOF
     <script LANGUAGE="Javascript" SRC="modules/$pcDir/pnincludes/AnchorPosition.js"></SCRIPT>
     <script LANGUAGE="Javascript" SRC="modules/$pcDir/pnincludes/PopupWindow.js"></SCRIPT>
@@ -1246,8 +1251,9 @@ $jsColorPicker = <<<EOF
     </SCRIPT>
 EOF;
 
-    $output->SetInputMode(_PNH_VERBATIMINPUT);
     $output->Text($jsColorPicker);
+*/
+	$output->SetInputMode(_PNH_VERBATIMINPUT);
 	if($showMenu) {
     	$output->Text(postcalendar_adminmenu());
 	}
@@ -1324,8 +1330,8 @@ EOF;
         $options[3]['selected'] = ($selected == 'year');
         $options[3]['name']     = _CAL_YEARVIEW;
     $settings[$i++][] = $output->FormSelectMultiple('pcDefaultView', $options);
-    $settings[$i][] = $output->Text(_PC_DAY_HIGHLIGHT_COLOR . ' [<a HREF="#" onClick="pick(\'pick\');return false;" NAME="pick" ID="pick">pick</a>]');
-    $settings[$i++][] = $output->FormText('pcDayHighlightColor', pnModGetVar(__POSTCALENDAR__,'pcDayHighlightColor'));
+    //$settings[$i][] = $output->Text(_PC_DAY_HIGHLIGHT_COLOR . ' [<a HREF="#" onClick="pick(\'pick\');return false;" NAME="pick" ID="pick">pick</a>]');
+    //$settings[$i++][] = $output->FormText('pcDayHighlightColor', pnModGetVar(__POSTCALENDAR__,'pcDayHighlightColor'));
     $settings[$i][] = $output->Text(_PC_USE_JS_POPUPS);
     $settings[$i++][] = $output->FormCheckBox('pcUsePopups', pnModGetVar(__POSTCALENDAR__,'pcUsePopups'));
 	$settings[$i][] = $output->Text(_PC_USE_CACHE);

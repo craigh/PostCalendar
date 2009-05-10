@@ -1,18 +1,23 @@
 /* PostCalendar Stylesheet */
+/*
+ *  SVN: $Id$
+ *
+ *  @package         PostCalendar 
+ *  @lastmodified    $Date$ 
+ *  @modifiedby      $Author$ 
+ *  @HeadURL	       $HeadURL$ 
+ *  @version         $Revision$ 
+*/
 
-/********** HEADERS & CONTAINERS ***************/
-
-table.postcalendar_month
-{
+/********** HEADERS & CONTAINERS ***********/
+table.postcalendar_month {
 	border:0;
 	border-collapse: collapse;
 }
-div.calcontainer
-{
+div.calcontainer {
 	margin-top:1em;
 }
-h2.postcalendar_header
-{
+h2.postcalendar_header {
 	text-align: center;
 	background: transparent;
 	font-size: 14pt;
@@ -21,8 +26,7 @@ h2.postcalendar_header
 	border: 1px solid Black;
 	padding: .5em;
 }
-h2.postcalendar_header a
-{
+h2.postcalendar_header a {
 	font-size: 14pt;
 	font-weight: bold;
 	text-decoration: none;
@@ -31,7 +35,6 @@ h2.postcalendar_header a
 }
 
 /********** DAY & SEARCH ***************/
-
 h3.dayheader,
 h3.dayheader a {
 	font-size: 1.2em;
@@ -39,19 +42,16 @@ h3.dayheader a {
 	text-decoration: none;
 }
 ul.eventslist,
-li.eventslistitems
-{
+li.eventslistitems {
 	padding-left: 10px;
 	list-style: none;
 }
 
-.pc_searchtable
-{
+.pc_searchtable {
 	border: 1px solid Black;
 }
 
 /*********** MONTH **************/
-
 td.monthon {
 	background-color: transparent;
 	border: 1px solid Black;
@@ -62,7 +62,7 @@ td.monthoff {
 	border: 1px solid Black;
 	vertical-align: top;
 }
-td.monthtoday {
+td.monthtoday { /* color assignments for TODAY */
 	background-color: yellow;
 	border: 2px dashed orange;
 	vertical-align: top;
@@ -76,51 +76,41 @@ td.daynames {
 }
 
 /*********** YEAR **************/
-
-td.weeklink
-{
+td.weeklink {
 	background-color: #cccccc; /* Pale Grey */
 	border: 1px solid Black;
 }
-.weeklink a
-{
+.weeklink a {
 	font-size: 7pt;
 	font-weight: normal;
 	text-decoration: none;
 }
-a.event-none
-{
+a.event-none {
 	color: Black;
 	font-size: 10px;
 	font-weight: normal;
 	text-decoration: none;
 }
-a.event-one
-{
+a.event-one {
 	color: #006600; /* Obscure Dull Green */
 	font-size: 10px;
 	font-weight: normal;
 	text-decoration: none;
 }
-a.event-two
-{
+a.event-two {
 	color: #006666; /* Obscure Dull Cyan */
 	font-size: 10px;
 	font-weight: normal;
 	text-decoration: none;
 }
-a.event-three
-{
+a.event-three {
 	color: #0066cc; /* Hard Dark Azure */
 	font-size: 10px;
 	font-weight: normal;
 	text-decoration: none;
 }
 
-
 /*********** NAV **************/
-
-
 .bnav {
 	border: 1px solid Black;
 }
@@ -142,10 +132,7 @@ td.rsnav {
 	background-color: White;
 	font-weight: bold;
 }
-a.nav:link,
-a.nav:active,
-a.nav:hover,
-a.nav:visited {
+a.nav {
 	padding-right: 3px;
 	padding-left: 3px;
 	color: Black;
@@ -158,51 +145,49 @@ INPUT.nav {
 	background-color: White;
 }
 
-/*********** details **************/
-
-td.eventtitle
-{
+/********** details **************/
+td.eventtitle {
 	background-color: White;
 	font-size: 14pt;
 	font-weight: bold;
 }
 table.eventtitle,
-table.eventtime
-{
+table.eventtime {
 	background-color: White;
 	border: 1px solid Black;
 }
-td.eventtime
-{
+td.eventtime {
 	background-color: White;
 	font-size: 10pt;
 	font-weight: bold;
 }
 table.eventslist,
-td.eventslist
-{
+td.eventslist {
 	background-color: White;
 	padding: 10px;
 }
 
 /*********** BLOCK STYLES **************/
-td.blockmonthon
-{
+.postcalendar_block_innertitle {
+	font-size: 1.4em;
+	font-weight: bold;
+	border-bottom: 1px solid #cccccc;
+	margin: 4px 0;
+	padding: 2px 0;
+}
+td.blockmonthon {
 	background-color: white;
 	border: 1px solid Black;
 }
-td.blockmonthoff
-{
+td.blockmonthoff {
 	background-color: #cccccc; /* Pale gray */
 	border: 1px solid Black;
 }
-td.blockmonthtoday
-{
+td.blockmonthtoday { /* color assignments for TODAY */
 	background-color: yellow;
 	border: 1px solid Black;
 }
-h3.blockmonthheader
-{
+h3.blockmonthheader {
 	background-color: #cccccc; /* Pale gray */
 	font-size: 8pt;
 	font-weight: bold;
@@ -210,12 +195,10 @@ h3.blockmonthheader
 	text-align: center;
 	padding: 2px;
 }
-h3.blockmonthheader a
-{
+h3.blockmonthheader a {
 	text-decoration: none;
 }
-td.blockdaynames
-{
+td.blockdaynames {
 	background-color: #cccccc; /* Pale gray */
 	border: 1px solid Black;
 	font-size: 8pt;
@@ -224,74 +207,63 @@ td.blockdaynames
 }
 
 table.blockcalcontainer,
-td.blockcalcontainer
-{
+td.blockcalcontainer {
 	border: 0;
 	border-collapse: collapse;
 }
-td.blockweeklink
-{
+td.blockweeklink {
 	background-color: #cccccc; /* Pale gray */
 	border: 1px solid Black;
 }
-.blockweeklink a
-{
+.blockweeklink a {
 	color: black;
 	font-size: 7pt;
 	font-weight: normal;
 	text-decoration: none;
 }
-a.blockevent-none
-{
+a.blockevent-none {
 	color: black;
 	font-size: 10px;
 	font-weight: normal;
 	text-decoration: none;
 }
-a.blockevent-one
-{
+a.blockevent-one {
 	color: #006600; /* Obscure Dull Green */
 	font-size: 10px;
 	font-weight: normal;
 	text-decoration: none;
 }
-a.blockevent-two
-{
+a.blockevent-two {
 	color: #006666; /* Obscure Dull Cyan */
 	font-size: 10px;
 	font-weight: normal;
 	text-decoration: none;
 }
-a.blockevent-three
-{
+a.blockevent-three {
 	color: #0066cc; /* Hard Dark Azure */
 	font-size: 10px;
 	font-weight: normal;
 	text-decoration: none;
 }
 li.eventlink,
-.eventlink a
-{
+.eventlink a {
 	font-size: 10px;
 	font-weight: normal;
 	padding: 2px;
 	text-decoration: none;
 }
-li.pc_blockdate
-{
+li.pc_blockdate {
 	font-weight: bold;
 	font-size: 1.1em;
 	list-style: none;
 }
-li.pc_blockevent
-{
+li.pc_blockevent {
 	margin-left:2em;
 	border:none;
 	padding:0;
 	list-style: none;
 }
-div.pc_centerblocksubmitlinks
-{
+div.pc_centerblocksubmitlinks {
 	text-align: center;
 	padding: 1em 0 0 0;
 	
