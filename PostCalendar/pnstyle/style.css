@@ -64,7 +64,7 @@ td.monthoff {
 }
 td.monthtoday { /* color assignments for TODAY */
 	background-color: yellow;
-	border: 2px dashed orange;
+	border: 2px dashed #FF6600; /*orangish */
 	vertical-align: top;
 }
 td.daynames {

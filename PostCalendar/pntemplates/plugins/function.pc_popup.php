@@ -45,7 +45,7 @@ function smarty_function_pc_popup($args)
         $text = "overlib: attribute 'text' or 'inarray' or 'function' required";
 
     if (empty($trigger)) 
-        $trigger = "onMouseOver"; 
+        $trigger = " onMouseOver"; 
 
     echo $trigger.'="return overlib(\''.pc_clean($text).'\'';
     if ($sticky) 		{ echo ",STICKY"; }

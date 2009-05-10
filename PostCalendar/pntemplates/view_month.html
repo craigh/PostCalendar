@@ -102,13 +102,11 @@
 						<!--[ $event.uname ]--> <!-- // V4B SB Inseted Username to get a better overview -->
 						<!--[ assign var="desc" value=$event.hometext|truncate:255:"..." ]-->
 						<!--[ * Here we start the actual display of the event * ]-->
-						<a style="font-size: 7pt; text-decoration: none;" href="<!--[ pc_url action=detail eid=$event.eid date=$date ]-->"
-						  <!--[ pc_popup delay="500"
+						<a style="font-size: 7pt; text-decoration: none;" href="<!--[ pc_url action=detail eid=$event.eid date=$date ]-->"<!--[ pc_popup delay="500"
 						             bgcolor=`$event.catcolor`
 						             timeout="3600"
 						             caption="`$timestamp` `$event.title`"
-						             text=`$desc` ]-->>
-						  <!--[ $timestamp ]--> <!--[ $title|pnvarprephtmldisplay ]--></a><br />
+						             text=`$desc` ]-->><!--[ $timestamp ]--> <!--[ $title|pnvarprephtmldisplay ]--></a><br />
 						<!--[ assign var="oldCat" value=$event.catname ]-->
 						<!--[ if $smarty.foreach.events.last ]-->
 							<!--[ * we need to close out the <div> tag * ]-->
