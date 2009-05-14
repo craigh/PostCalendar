@@ -97,7 +97,7 @@
 		<!--[if ((empty($smarty.get.viewtype)) or (!isset($smarty.get.viewtype)))]-->
 			<!--[pnmodgetvar module="PostCalendar" name="pcDefaultView" assign="viewtype" ]-->
 		<!--[/if]-->
-		<a href="<!--[pnmodurl modname="PostCalendar" func="view" viewtype=$viewtype Date=$smarty.get.Date ]-->">Return</a>
+		<a href="<!--[pnmodurl modname="PostCalendar" func="view" viewtype=$viewtype Date=$smarty.get.Date ]-->"><!--[pnml name="_PC_RETURN']--></a>
 	<!--[/if]-->
 </div>
 <!--[ include file="footer.html" ]-->

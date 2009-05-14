@@ -33,7 +33,7 @@ early as possible.
 ========================================================================
 Upgrading
 ========================================================================
-To upgrade PostCalendar you should first make a backup of you current
+To upgrade PostCalendar you should first make a backup of your current
 Database tables (using a tool like phpMyAdmin) and also backup your
 current PostCalendar installation.  This will be useful in the event
 an upgrade does not work for you.
@@ -55,7 +55,7 @@ Notes for version 5.1.0
 				see http://community.zikula.org/index.php?module=Wiki&tag=TemplateOverridng
 	3. All colors are defined in the stylesheet now except category colors
 			- you can override this with stylesheet overrides (same link as above)
-	3. Known issues outstanding are listed in the ticket list:
+	4. Known issues outstanding are listed in the ticket list:
 			- http://code.zikula.org/soundwebdevelopment/report/1
 
 ========================================================================

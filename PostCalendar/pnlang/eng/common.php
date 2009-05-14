@@ -298,4 +298,6 @@ define('_PC_PARTICIPANTAVAILABLE', 'Available Participants');
 define('_PC_PARTICIPANTSELECTED', 'Selected Participants');
 define('_PC_ENTRIES_REMOVED', 'records made by past users were deleted!');
 define('_PC_REMOVE_USERENTRIES', 'Clear past user entries');
+// added version 5.5.0
+define('_PC_RETURN', 'Return');
 ?>

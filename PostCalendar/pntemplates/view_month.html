@@ -51,7 +51,7 @@
 					<td align="left" valign="top"><a
 						href="<!--[ pc_url action=day date=$date ]-->"><!--[ $date|date_format:"%d" ]--></a>
 					<!--[ if $smarty.foreach.days.iteration == 1 ]-->
-					<a href="<!--[ pc_url action=week date=$date ]-->">[week]</a>
+					<a href="<!--[ pc_url action=week date=$date ]-->">[<!--[pnml name="_PC_WEEK"]-->]</a>
 					<!--[ /if ]-->
 					</td>
 					<td align="right" valign="top">
@@ -77,7 +77,7 @@
 								</div>
 							<!--[ /if ]-->
 							<div style="padding: 1px; background-color: <!--[ $event.catcolor ]-->;">
-								<!--[ if $event.meeting_id ]--><img src="../pnimages/meeting.gif" alt="Meeting" align="absmiddle" title="Meeting" border="0"" /><!--[ /if ]--><!--[ $event.catname ]-->
+								<!--[ if $event.meeting_id ]--><img src="../pnimages/meeting.gif" alt="<!--[pnml name='_PC_THEME_MEETING']-->" align="absmiddle" title="<!--[pnml name='_PC_THEME_MEETING']-->" border="0"" /><!--[ /if ]--><!--[ $event.catname ]-->
 							</div>
 							<div style="padding: 2px; border:solid 1px <!--[ $event.catcolor ]-->;">
 						<!--[ /if ]-->
@@ -129,7 +129,7 @@
 		<!--[if ((empty($smarty.get.viewtype)) or (!isset($smarty.get.viewtype)))]-->
 			<!--[pnmodgetvar module="PostCalendar" name="pcDefaultView" assign="viewtype" ]-->
 		<!--[/if]-->
-		<a href="<!--[pnmodurl modname="PostCalendar" func="view" viewtype=$viewtype Date=$smarty.get.Date ]-->">Return</a>
+		<a href="<!--[pnmodurl modname="PostCalendar" func="view" viewtype=$viewtype Date=$smarty.get.Date ]-->"><!--[pnml name="_PC_RETURN']--></a>
 	<!--[/if]-->
 </div>
 <!--[ include file="footer.html" ]-->
