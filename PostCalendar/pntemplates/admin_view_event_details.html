@@ -22,9 +22,9 @@
 			<!--[ /if ]-->
 			
 			<!--[ if $A_EVENT.alldayevent ]-->
-				All Day
+				<!--[pnml name='_PC_ALL_DAY']-->
 			<!--[ else ]-->
-				Duration: <!--[ $A_EVENT.duration_hours ]-->:<!--[ $A_EVENT.duration_minutes ]-->
+				<!--[pnml name='_PC_DURATION']-->: <!--[ $A_EVENT.duration_hours ]-->:<!--[ $A_EVENT.duration_minutes ]-->
 			<!--[ /if ]-->
 		</td>
 	</tr>
@@ -36,7 +36,7 @@
 		</td>
 		<td valign="top" align="left" nowrap="nowrap">
 			<!--[ if $LOCATION_INFO ]-->
-				<p><b>Location:</b><br />
+				<p><b><!--[pnml name='_CALLOCATION']-->:</b><br />
 				<!--[ if $A_EVENT.location != '' ]-->
 					<!--[ $A_EVENT.location ]--><br />
 				<!--[ /if ]-->
@@ -58,7 +58,7 @@
 				</p>
 			<!--[ /if ]-->
 			<!--[ if $CONTACT_INFO ]-->
-				<p><b>Contact Information:</b><br />
+				<p><b><!--[pnml name='_PC_CONTACT']-->:</b><br />
 				<!--[ if $A_EVENT.contname ]-->
 					<!--[ $A_EVENT.contname ]--><br />
 				<!--[ /if ]-->
@@ -74,15 +74,15 @@
 				</p>
 			<!--[ /if ]-->
 			<!--[ if $A_EVENT.fee != '' ]-->
-				<br />Fee: <!--[ $A_EVENT.fee ]-->
+				<br /><!--[pnml name='_FEE']-->: <!--[ $A_EVENT.fee ]-->
 			<!--[ /if ]-->
 		</td>
 	</tr>
 </table>
 <!--[ if $ACCESS_EDIT ]-->
-	<a href="<!--[ $ADMIN_EDIT ]-->" <!--[ $ADMIN_TARGET ]-->>EDIT</a> |
-    <a href="<!--[ $ADMIN_COPY ]-->" <!--[ $ADMIN_TARGET ]-->>COPY</a> |
+	<a href="<!--[ $ADMIN_EDIT ]-->" <!--[ $ADMIN_TARGET ]-->><!--[pnml name='_PC_ADMIN_ACTION_EDIT']--></a> |
+    <a href="<!--[ $ADMIN_COPY ]-->" <!--[ $ADMIN_TARGET ]-->><!--[pnml name='_PC_ADMIN_ACTION_COPY']--></a> |
 <!--[ /if ]-->
 <!--[ if $ACCESS_DELETE ]-->
-	<a href="<!--[ $ADMIN_DELETE ]-->" <!--[ $ADMIN_TARGET ]-->>DELETE</a>
+	<a href="<!--[ $ADMIN_DELETE ]-->" <!--[ $ADMIN_TARGET ]-->><!--[pnml name='_PC_ADMIN_ACTION_DELETE']--></a>
 <!--[ /if ]-->

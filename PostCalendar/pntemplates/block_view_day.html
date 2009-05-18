@@ -44,14 +44,14 @@
 						caption=$event.title 
 						text=$event.hometext|truncate:255:"..." ]-->><!--[ $timestamp ]--> <!--[ $event.title|strip_tags ]-->
 							<!--[ if $event.alldayevent != true ]-->
-								(<!--[ $event.duration_hours ]-->:<!--[ $event.duration_minutes ]--> long)
+								(<!--[ $event.duration_hours ]-->:<!--[ $event.duration_minutes ]--> <!--[pnml name='_PC_BLOCK_LONG']-->)
 							<!--[ /if ]-->
 							</a>
         			</li>
     		<!--[ /if ]-->
 		<!--[ foreachelse ]-->
 				<!--[ assign var="eventtotal" value="0" ]-->
-            		<li class="pc_blockevent">No Events Today</li>
+            		<li class="pc_blockevent"><!--[[nml name='_PC_BLOCK_NO_EVENTS']--></li>
 		<!--[ /foreach ]-->
 		</ul>
     <!--[ /if ]-->

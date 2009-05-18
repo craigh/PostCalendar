@@ -341,20 +341,20 @@ function postcalendarFindContact()
 <!--[pnmodgetvar module="PostCalendar" name="pcMeeting"|pnvarprepfordisplay assign="pcDisplayMeeting"]-->
 <!--[ if $pcDisplayMeeting ]-->
 <div class="tabpage" style="background:white;">
-<h2>Participant</h2>
+<h2><!--[pnml name='_PC_PARTICIPANT']--></h2>
     <table width="100%" border="0" cellpadding="2" cellspacing="0" bgcolor="white">   
         <tr>
 		    <td colspan="2" valign="top" width="270">
 	            <table>
 		            <tr>
     		            <td>
-	                		 Pariticipant Available<br>
+	                		 <!--[pnml name='_PC_PARTICIPANTAVAILABLE']--><br>
 		                     <!--[ $UserListSelector ]--><br>
                              <input class="submit" onclick="MoveOption('tn','participants');" type="button" value="Add >>" name="Add">
                         </td>
 		                <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
                         <td valign="top">
-                            pariticipant Selected<br>
+                            <!--[pnml name='_PC_PARTICIPANTSELECTED']--><br>
                             <select class="select" multiple size="5"  name="participants[]"></select><br>
                             <input class="submit" onclick="MoveOption('participants','tn');" type="button" value="<< Remove" name="Remove">
                         </td>

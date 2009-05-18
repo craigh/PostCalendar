@@ -46,7 +46,7 @@
 											caption=$event.title 
 											text=$event.hometext|truncate:255:"..." ]-->><!--[ $timestamp ]--> <!--[ $event.title|strip_tags ]-->
 						<!--[ if $event.alldayevent != true ]-->
-							(<!--[ $event.duration_hours ]-->:<!--[ $event.duration_minutes ]--> long)
+							(<!--[ $event.duration_hours ]-->:<!--[ $event.duration_minutes ]--> <!--[pnml name='_PC_BLOCK_LONG']-->)
 						<!--[ /if ]-->
 						</a>
         			</li>
@@ -58,6 +58,6 @@
 <!--[ /foreach ]-->
 
 <!--[ if $eventcount == 0 ]-->
-	No Events Today
+	<!--[pnml name='_PC_BLOCK_NO_EVENTS']-->
 <!--[ /if ]-->
 </div>

@@ -111,8 +111,20 @@ a.event-three {
 }
 
 /*********** NAV **************/
-.bnav {
-	border: 1px solid Black;
+#bnav {
+	border: none;
+	margin: 0;
+	padding: 0;
+}
+#bnav ul { /* navigation icons list */
+	padding: 0;
+	margin: 0;
+}
+#bnav ul li { /* navigation icons list items */
+	list-style: none;
+	display: inline;
+	padding: 0;
+	margin: 0;
 }
 td.nav,
 td.nav:hover {

@@ -182,39 +182,7 @@ define('_PC_SUBMIT_ERROR6',             'Your repeating frequency must be an int
 define('_PC_ADMIN_EVENT_ERROR', 		'There was an error while processing your request.');
 define('_PC_ADMIN_EVENTS_DELETED', 		'Your event has been deleted.');
 @define('_NO_DIRECT_ACCESS',            'You can not access this function directly.');
-// from default theme
-define('_PC_THEME_DAY','Day');
-define('_PC_THEME_WEEK','Week');
-define('_PC_THEME_MONTH','Month');
-define('_PC_THEME_YEAR','Year');
-define('_PC_THEME_SUBMIT','Add');
-define('_PC_THEME_SEARCH','Search');
-define('_PC_THEME_PRINT','Print');
-define('_PC_JUMP_MENU_LABEL','Jump');
-define('_PC_FILTER_LABEL','Filter');
-define('_PC_TPL_VIEW_LABEL','Change');
-define('_PC_ALL_DAY','All Day');
-define('_PC_DURATION','Duration');
-define('_PC_ADMIN_EDIT','Edit');
-define('_PC_ADMIN_DELETE','Delete');
-
-define('_PC_MV_WEEK','week');
-define('_PC_NO_EVENTS','No Events');
-
-define('_PC_SEARCH_RESULTS','Search Results');
-define('_PC_SUBMIT','Submit');
-
-define('_PC_SEARCH_KEYWORDS','Keywords');
-define('_PC_SEARCH_AND','AND');
-define('_PC_SEARCH_OR','OR');
-define('_PC_SEARCH_IN','IN');
-define('_PC_SEARCH_NO_RESULTS','No Results');
-define('_PC_SEARCH_ANY_CATEGORY','Any Category');
-define('_PC_SEARCH_ANY_TOPIC','Any Topic');
-
-define('_PC_LOCATION','Location');
-define('_PC_CONTACT','Contact Information');
-
+// from default theme - moved  in v5.0.1
 define('_PC_TIME_FORMAT_24','%H:%M');
 define('_PC_TIME_FORMAT_12','%I:%M %p');
 define('_PC_DATE_FORMAT_MDY','%B %d %Y');
@@ -224,15 +192,4 @@ define('_PC_DATE_FORMAT_INT','%A, %d %B %Y');
 define('_PC_DATE_FORMAT_STD','%A, %B %d %Y');
 define('_PC_DATE_FORMAT_BLOCK_INT','%a, %d %B %Y');
 define('_PC_DATE_FORMAT_BLOCK_STD','%a, %B %d %Y');
-
-define('_PC_ICAL_ADD','Add this event to my calendar');
-define('_PC_ICAL_DL_MONTH','Download this months events for import (for this category)');
-define('_PC_ICAL_DL_MONTHLIST','Download this months events for import (for this topic)');
-define('_PC_ICAL_DL_DAY','Download this days events for import (for this topic)');
-define('_PC_ICAL_DL_WEEK','Download this weeks calendar for import (for this topic)');
-define('_PC_ICAL_DL_YEAR','Download all events for this year for import (for this topic)');
-
-define('_VIP_TO_FILE','VIP->File');
-define('_FILE_TO_VIP','File->VIP');
-define('_PC_THEME_MEETING','Meeting');
 ?>

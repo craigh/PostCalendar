@@ -1,6 +1,3 @@
-<!-- main navigation -->
-<!--[ pc_form_nav_open ]-->
-
 <!--[* configure display variables *]-->
 <!--[ assign var='day_src' value='day.gif' ]-->
 <!--[ assign var='week_src' value='week.gif' ]-->
@@ -27,49 +24,39 @@
 <!--[/if]-->
 <!--[* finished configuring display variables *]-->
 
+<!--[ pc_form_nav_open ]-->
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
-     <tr>
-         <td nowrap="nowrap" valign="bottom" class="pn-normal">
-             <!--[ pc_date_select day="on" 
+	<tr>
+		<td nowrap="nowrap" valign="bottom" class="pn-normal">
+			<!--[ pc_date_select day="on" 
 			 				  month="on" 
 							  year="on" 
 							  view="on" 
 							  label="Jump" 
 							  class=""
 							  order="month,day,year,view,jump" ]-->
-         </td>
-		 <td valign="bottom" align="right">
-            <table id="bnav" border="0" cellpadding="3" cellspacing="0">
-                <tr>
-                     <td align="right" valign="middle">
-                        <a href="<!--[ pc_url action='day' ]-->">
-                        <!--[pnimg src=$day_src alt="Day" title="Day" ]--></a>
-                    </td>
-                    <td align="right" valign="middle">
-                        <a href="<!--[ pc_url action='week' ]-->">
-                        <!--[pnimg src=$week_src alt="Week" title="Week" ]--></a>
-                    </td>
-                    <td align="right" valign="middle">
-                        <a href="<!--[ pc_url action='month' ]-->">
-                        <!--[pnimg src=$month_src alt="Month" title="Month" ]--></a>
-                    </td>
-                    <td align="right" valign="middle">
-                        <a href="<!--[ pc_url action='year' ]-->"><!--[pnimg src=$year_src alt="Year" title="Year" ]--></a>
-                    </td>
+		</td>
+		<td valign="bottom" align="right">
+			<div id="bnav">
+				<ul>
+					<li><a href="<!--[ pc_url action='day' ]-->">
+						<!--[pnimg src=$day_src altml=true titleml=true alt="_CAL_DAYVIEW" title="_CAL_DAYVIEW" ]--></a></li>
+					<li><a href="<!--[ pc_url action='week' ]-->">
+						<!--[pnimg src=$week_src altml=true titleml=true alt="_CAL_WEEKVIEW" title="_CAL_WEEKVIEW" ]--></a></li>
+					<li><a href="<!--[ pc_url action='month' ]-->">
+						<!--[pnimg src=$month_src altml=true titleml=true alt="_CAL_MONTHVIEW" title="_CAL_MONTHVIEW" ]--></a></li>
+					<li><a href="<!--[ pc_url action='year' ]-->">
+						<!--[pnimg src=$year_src altml=true titleml=true alt="_CAL_YEARVIEW" title="_CAL_YEARVIEW" ]--></a></li>
 					<!--[ if $ACCESS_ADD eq true ]-->
-                    <td align="right" valign="middle">
-                        <a href="<!--[ pc_url action='submit' ]-->"><!--[pnimg src=$add_src alt="Add" title="Add" ]--></a>
-                    </td>
+						<li><a href="<!--[ pc_url action='submit' ]-->">
+							<!--[pnimg src=$add_src altml=true titleml=true alt="_PC_CREATE_EVENT" title="_PC_CREATE_EVENT" ]--></a></li>
 					<!--[ /if ]-->
-                    <td align="right" valign="middle">
-                        <a href="<!--[ pc_url action='search' ]-->"><!--[pnimg src=$search_src alt="Search" title="Search" ]--></a>
-                    </td>
-                    <td align="right" valign="middle">
-												<a href="<!--[pngetcurrenturl]-->&amp;theme=Printer"><img src="images/icons/small/printer1.gif" alt="print" title="Print View" /></a>
-										</td>
-                </tr>
-            </table>
-         </td>
-     </tr>
- </table>
+					<li><a href="<!--[ pc_url action='search' ]-->">
+						<!--[pnimg src=$search_src altml=true titleml=true alt="_CALSEARCHEVENT" title="_CALSEARCHEVENT" ]--></a></li>
+					<li><a href="<!--[pngetcurrenturl]-->&amp;theme=Printer"><img src="images/icons/small/printer1.gif" alt="print" title="Print View" /></a></li>
+				</ul>
+			</div>
+		</td>
+	</tr>
+</table>
 <!--[ pc_form_nav_close ]-->
