@@ -146,25 +146,12 @@ INPUT.nav {
 }
 
 /********** details **************/
-td.eventtitle {
-	background-color: White;
-	font-size: 14pt;
-	font-weight: bold;
-}
-table.eventtitle,
-table.eventtime {
-	background-color: White;
-	border: 1px solid Black;
-}
-td.eventtime {
-	background-color: White;
+div.eventtime {
 	font-size: 10pt;
 	font-weight: bold;
 }
-table.eventslist,
-td.eventslist {
-	background-color: White;
-	padding: 10px;
+div.eventdetails {
+	padding: .3em 2em;
 }
 
 /*********** BLOCK STYLES **************/

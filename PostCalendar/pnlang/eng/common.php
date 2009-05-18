@@ -300,4 +300,6 @@ define('_PC_ENTRIES_REMOVED', 'records made by past users were deleted!');
 define('_PC_REMOVE_USERENTRIES', 'Clear past user entries');
 // added version 5.5.0
 define('_PC_RETURN', 'Return');
+define('_PC_ADDTHISEVENT', 'Add this event to my calendar');
+define('_PC_ADMIN_ACTION_COPY', 'Copy');
 ?>

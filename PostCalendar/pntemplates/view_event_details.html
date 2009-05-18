@@ -3,23 +3,21 @@
 	<!--[ assign var="ACCESS_ADD" value=0 ]-->
 	<!--[ assign var="PRINT_VIEW" value=1 ]-->
 <!--[/if]-->
-<!--[ if $PRINT_VIEW != 1 ]-->
-<!--[ include file="navigation_small.html" ]-->
+<!--[ if $PRINT_VIEW eq false ]-->
+	<!--[ include file="navigation_small.html" ]-->
 <!--[ /if ]-->
 
 <h2 class="postcalendar_header">
-			<!--[ $A_EVENT.title|pnvarprephtmldisplay ]-->
+	<!--[ $A_EVENT.title|pnvarprephtmldisplay ]-->
 </h2>
 
 <div class="calcontainer">
-<table width="100%" border="0" cellpadding="5" cellspacing="0">
-	<tr>
-		<td class="eventtime" width="100%" nowrap="nowrap">
+<div class="eventtime">
 			<!--[ if $A_EVENT.alldayevent != true ]-->
 				<!--[ if $24HOUR_TIME ]-->
 					<!--[ assign var="timestamp" value=$A_EVENT.startTime|date_format:"%H:%M" ]-->
 				<!--[ else ]-->
-					<!--[ assign var="timestamp" value=$A_EVENT.startTime|date_format:"%I:%M %p" ]-->
+					<!--[ assign var="timestamp" value=$A_EVENT.startTime|date_format:"%l:%M %p" ]-->
 				<!--[ /if ]-->
 				<!--[ $timestamp ]-->
 			<!--[ /if ]-->
@@ -30,28 +28,27 @@
 				<!--[ pc_date_format date=$A_EVENT.eventDate format="%A, %B %d %Y" ]-->
 			<!--[ /if ]-->
 
+			<br />
+
 			<!--[ if $A_EVENT.alldayevent ]-->
-				All Day
+				<!--[pnml name='_CALALLDAY']-->
 			<!--[ else ]-->
-				Duration: <!--[ $A_EVENT.duration_hours ]-->:<!--[ $A_EVENT.duration_minutes ]-->
+				<!--[pnml name='_CALENDDATEPREVIEW']-->: <!--[ $A_EVENT.duration_hours ]-->:<!--[ $A_EVENT.duration_minutes ]-->
 			<!--[ /if ]-->
 			
 			<!--[ if $PRINT_VIEW eq false ]-->
 				<a href='<!--[pnmodurl modname="PostCalendar" type="user" func="export" eid=$A_EVENT.eid date=$A_EVENT.eventDate ]-->'>
-				<!--[ pnimg src='bell.gif' alt="Add this event to my calendar" ]-->
+				<!--[ pnimg src='bell.gif' altml=true alt="_PC_ADDTHISEVENT" titleml=true title="_PC_ADDTHISEVENT" ]-->
 				</a>
 			<!--[/if]-->
-		</td>
-	</tr>
-</table>
-<table width="100%" border="0" cellpadding="5" cellspacing="0">
-	<tr>
-		<td valign="top" align="left" width="100%">
+</div>
+<div class="eventdetails">
+		<div>
 			<!--[ $A_EVENT.hometext ]-->
-		</td>
-		<td valign="top" align="left" nowrap="nowrap">
+		</div>
+		<div>
 			<!--[ if $LOCATION_INFO ]-->
-				<p><b>Location:</b><br />
+				<p><b><!--[pnml name='_CALLOCATION']-->:</b><br />
 				<!--[ if $A_EVENT.location != '' ]-->
 					<!--[ $A_EVENT.location ]--><br />
 				<!--[ /if ]-->
@@ -73,7 +70,7 @@
 				</p>
 			<!--[ /if ]-->
 			<!--[ if $CONTACT_INFO ]-->
-				<p><b>Contact Information:</b><br />
+				<p><b><!--[pnml name='_PC_EVENT_CONTACT']-->:</b><br />
 				<!--[ if $A_EVENT.contname ]-->
 					<!--[ $A_EVENT.contname ]--><br />
 				<!--[ /if ]-->
@@ -89,23 +86,24 @@
 				</p>
 			<!--[ /if ]-->
 			<!--[ if $A_EVENT.fee != '' ]-->
-				<br />Fee: <!--[ $A_EVENT.fee ]-->
+				<br /><!--[pnml name='_PC_EVENT_FEE']-->: <!--[ $A_EVENT.fee ]-->
 			<!--[ /if ]-->
-		</td>
-	</tr>
-</table>
+		</div>
+</div>
 </div>
 <!--[ pnmodcallhooks hookobject=item hookaction=display hookid=$A_EVENT.eid returnurl="index.php?module=PostCalendar&func=view&viewtype=details&eid=$eid" ]-->
 <!--[ if $PRINT_VIEW != 1 ]-->
+<div>
 	<!--[ if $ACCESS_ADMIN ]-->
-		<a href="<!--[ $ADMIN_EDIT ]-->" <!--[ $ADMIN_TARGET ]-->>Edit</a> |
-		<a href="<!--[ $ADMIN_COPY ]-->" <!--[ $ADMIN_TARGET ]-->>Copy</a> |
-		<a href="<!--[ $ADMIN_DELETE ]-->" <!--[ $ADMIN_TARGET ]-->>Delete</a>
+		<a href="<!--[ $ADMIN_EDIT ]-->" <!--[ $ADMIN_TARGET ]-->><!--[pnml name='_PC_ADMIN_ACTION_EDIT']--></a> |
+		<a href="<!--[ $ADMIN_COPY ]-->" <!--[ $ADMIN_TARGET ]-->><!--[pnml name='_PC_ADMIN_ACTION_COPY']--></a> |
+		<a href="<!--[ $ADMIN_DELETE ]-->" <!--[ $ADMIN_TARGET ]-->><!--[pnml name='_PC_ADMIN_ACTION_DELETE']--></a>
 	<!--[ elseif $USER_CAN_EDIT ]-->
-		<a href="<!--[ $USER_EDIT ]-->" <!--[ $USER_TARGET ]-->>Edit</a> |
-    <a href="<!--[ $USER_COPY ]-->" <!--[ $USER_TARGET ]-->>Copy</a> |
-		<a href="<!--[ $USER_DELETE ]-->" <!--[ $USER_TARGET ]-->>Delete</a>
+		<a href="<!--[ $USER_EDIT ]-->" <!--[ $USER_TARGET ]-->><!--[pnml name='_PC_ADMIN_ACTION_EDIT']--></a> |
+    <a href="<!--[ $USER_COPY ]-->" <!--[ $USER_TARGET ]-->><!--[pnml name='_PC_ADMIN_ACTION_COPY']--></a> |
+		<a href="<!--[ $USER_DELETE ]-->" <!--[ $USER_TARGET ]-->><!--[pnml name='_PC_ADMIN_ACTION_DELETE']--></a>
 	<!--[ /if ]-->
+</div>
 <!--[ /if ]-->
 <div style='text-align:right;'>
 	<!--[ if $PRINT_VIEW eq true ]-->
