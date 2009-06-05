@@ -140,7 +140,7 @@ function postcalendar_adminapi_buildAdminList($args)
 						 			 pnVarPrepHTMLDisplay(postcalendar_removeScriptTags($event['title'])));
                     $output->Text('</td>');
                     $output->Text('<td  align="left" valign="top" nowrap="nowrap">');
-                        $output->Text($event['timestamp']);
+                        $output->Text($event['time']);
                     $output->Text('</td>');
                 $output->Text('</tr>');
                 
@@ -205,6 +205,9 @@ function postcalendar_adminapi_buildAdminList($args)
     $output->Text('</td></tr></table>');
     // end previous next links
     $output->FormEnd();
+
+		//debugging the old fashioned way...
+		//echo "<pre>"; print_r($events); echo "</pre>";
 	
 	return $output->GetOutput();
 }
