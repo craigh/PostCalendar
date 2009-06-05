@@ -1160,7 +1160,8 @@ function postcalendar_userapi_pcFixEventDetails($event)
 	// ---
 	
 	$suid = pnUserGetVar('uid');
-	$euid = DBUtil::selectFieldByID ('users', 'uid', $event['uname'], 'uname');
+//	$euid = DBUtil::selectFieldByID ('users', 'uid', $event['uname'], 'uname');
+	$euid = $event['aid'];
 	
 	// is this a public event to be shown as busy?
 	if($event['sharing'] == SHARING_PRIVATE && $euid != $suid) 

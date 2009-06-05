@@ -529,92 +529,62 @@ function postcalendar_userapi_pcQueryEvents($args)
 {   
 	//echo "pcQuerydebug<br>";
 	//pcDebugVar ($args);
-    $end = '0000-00-00';
-    extract($args);
+	$end = '0000-00-00';
+	extract($args);
 
-    $pc_username = FormUtil::getPassedValue('pc_username');
-    $topic       = FormUtil::getPassedValue('pc_topic');
-    $category    = FormUtil::getPassedValue('pc_category');
-    $userid      = pnUserGetVar('uid');
+	$pc_username = FormUtil::getPassedValue('pc_username');
+	$topic       = FormUtil::getPassedValue('pc_topic');
+	$category    = FormUtil::getPassedValue('pc_category');
+	$userid      = pnUserGetVar('uid');
 
-	//echo "userid::".$userid."<br>";
-    //echo "pnuserapi::pcQueryEvents::pnusergetall::line555::";
-    //if (pnUserLoggedIn()) {
-    //	echo "user is logged in!<br>";
-    //	$users = pnUserGetAll();
-    //	pcDebugVar($users);
-    //}
-	//echo "pnUserGetALL::<br>";
-    //echo "now done with pnUserGetAll<br>";
-    //if (is_array($users)) {
-	//	$nuke_users = array();
-	//	foreach($users as $user) {
-	//		$nuke_users[strtolower($user['uname'])] = $user['uid'];
-	//	}
-	//	unset($users);
-	//}
-	
-    if(!empty($pc_username) && (strtolower($pc_username) != 'anonymous')) 
-    {
-        if($pc_username=='__PC_ALL__') 
-            $ruserid = -1;
-        else 
-            //$ruserid = $nuke_users[strtolower($pc_username)];
-            // CAH mod 4/12/09
-            $ruserid = pnUserGetIDFromName(strtolower($pc_username));
+	if(!empty($pc_username) && (strtolower($pc_username) != 'anonymous')) {
+		if($pc_username=='__PC_ALL__') {
+			$ruserid = -1;
+		} else {
+			$ruserid = pnUserGetIDFromName(strtolower($pc_username));
+    	}
     }
 
-    if(!isset($eventstatus) || ((int)$eventstatus < -1 || (int)$eventstatus > 1))
-        $eventstatus = 1;
+	if(!isset($eventstatus) || ((int)$eventstatus < -1 || (int)$eventstatus > 1)) $eventstatus = 1;
 
-    if(!isset($start)) 
-        $start = Date_Calc::dateNow('%Y-%m-%d'); 
-    list($sy,$sm,$sd) = explode('-',$start);
-   
-    $where = "WHERE pc_eventstatus=$eventstatus 
-                AND (pc_endDate>='$start' OR (pc_endDate='0000-00-00' AND pc_recurrtype<>'0') OR pc_eventDate>='$start')
-                AND pc_eventDate<='$end' ";
-    
-    if(isset($ruserid)) 
-    {
-        // get all events for the specified username
-        if($ruserid == -1) 
-        {
-            $where .= "AND (pc_sharing = '" . SHARING_BUSY . "' ";
-            $where .= "OR pc_sharing = '" . SHARING_PUBLIC . "') ";
-        } 
-	else 
-	{
-            // v4b TS start - always see the records of the logged in user too | disabled on 2004-10-18
-            $where .= "AND pc_aid = $ruserid ";
-            //$where .= "AND (pc_aid = $ruserid OR pc_aid = $userid) ";
-        }
-    } 
-    else
-    if (!pnUserLoggedIn()) 
-    {
-        // get all events for anonymous users
-        $where .= "AND (pc_sharing = '" . SHARING_GLOBAL . "' ";
-        $where .= "OR pc_sharing = '" . SHARING_HIDEDESC . "') ";
-    } 
-    else 
-    {
-        // get all events for logged in user plus global events
-        $where .= "AND (pc_aid = $userid OR pc_sharing = '" . SHARING_GLOBAL . "' OR pc_sharing = '" . SHARING_HIDEDESC . "') ";
-    }
+	if(!isset($start)) $start = Date_Calc::dateNow('%Y-%m-%d'); 
+	list($sy,$sm,$sd) = explode('-',$start);
+
+	$where = "WHERE pc_eventstatus=$eventstatus 
+						AND (pc_endDate>='$start' OR (pc_endDate='0000-00-00' AND pc_recurrtype<>'0') OR pc_eventDate>='$start')
+						AND pc_eventDate<='$end' ";
+
+	if(isset($ruserid)) {
+		// get all events for the specified username
+		if($ruserid == -1) {
+			$where .= "AND (pc_sharing = '" . SHARING_BUSY . "' ";
+			$where .= "OR pc_sharing = '" . SHARING_PUBLIC . "') ";
+		} else {
+			// v4b TS start - always see the records of the logged in user too | disabled on 2004-10-18
+			$where .= "AND pc_aid = $ruserid ";
+			//$where .= "AND (pc_aid = $ruserid OR pc_aid = $userid) ";
+		}
+	} else if (!pnUserLoggedIn()) {
+		// get all events for anonymous users
+		$where .= "AND (pc_sharing = '" . SHARING_GLOBAL . "' ";
+		$where .= "OR pc_sharing = '" . SHARING_HIDEDESC . "') ";
+	} else {
+		// get all events for logged in user plus global events
+		$where .= "AND (pc_aid = $userid OR pc_sharing = '" . SHARING_GLOBAL . "' OR pc_sharing = '" . SHARING_HIDEDESC . "') ";
+	}
 
 
-    // Start Search functionality 
-    if(!empty($s_keywords)) $where .= "AND ($s_keywords) ";
-    if(!empty($s_category)) $where .= "AND ($s_category) ";
-    if(!empty($s_topic))    $where .= "AND ($s_topic) ";
-    if(!empty($category))   $where .= "AND (tbl.pc_catid = '".pnVarPrepForStore($category)."') ";
-    if(!empty($topic))	    $where .= "AND (tbl.pc_topic = '".pnVarPrepForStore($topic)."') ";
-    // End Search functionality 
+	// Start Search functionality 
+	if(!empty($s_keywords)) $where .= "AND ($s_keywords) ";
+	if(!empty($s_category)) $where .= "AND ($s_category) ";
+	if(!empty($s_topic))    $where .= "AND ($s_topic) ";
+	if(!empty($category))   $where .= "AND (tbl.pc_catid = '".pnVarPrepForStore($category)."') ";
+	if(!empty($topic))	    $where .= "AND (tbl.pc_topic = '".pnVarPrepForStore($topic)."') ";
+	// End Search functionality 
 
-    $sort .= "ORDER BY pc_meeting_id";
+	$sort .= "ORDER BY pc_meeting_id";
 
-        // FIXME !!!
+		// FIXME !!!
 	$joinInfo = array ();
 	$joinInfo[] = array (   'join_table'          =>  'postcalendar_categories',
 				'join_field'          =>  'catname',
@@ -631,29 +601,22 @@ function postcalendar_userapi_pcQueryEvents($args)
 				'object_field_name'   =>  'catcolor',
 				'compare_field_table' =>  'catid',
 				'compare_field_join'  =>  'catid');
-    $events = DBUtil::selectExpandedObjectArray ('postcalendar_events', $joinInfo, $where, $sort);
-    $topicNames = DBUtil::selectFieldArray ('topics', 'topicname', '', '', false, 'topicid');
+
+	$events = DBUtil::selectExpandedObjectArray ('postcalendar_events', $joinInfo, $where, $sort);
+	$topicNames = DBUtil::selectFieldArray ('topics', 'topicname', '', '', false, 'topicid');
     
-    // added temp_meeting_id
-    $old_m_id = "NULL";
-    $ak = array_keys ($events);
-    foreach ($ak as $key)
-    {
-        $new_m_id = $tmp['meeting_id'];
-        if ( ($old_m_id) && ($old_m_id != "NULL") && ($new_m_id > 0) && ($old_m_id == $new_m_id) ) {
-            $old_m_id = $new_m_id;
-            unset ($events[$key]);
-        }
-
-        //$events[$key]['uid'] = $nuke_users[strtolower($tmp['uname'])];
-        // CAH mod 4/12/09
-        $events[$key]['uid'] = pnUserGetIDFromName(strtolower($tmp['uname']));
+	// added temp_meeting_id
+	$old_m_id = "NULL";
+	$ak = array_keys ($events);
+	foreach ($ak as $key) {
+		$new_m_id = $key['meeting_id'];
+		if ( ($old_m_id) && ($old_m_id != "NULL") && ($new_m_id > 0) && ($old_m_id == $new_m_id) ) {
+			$old_m_id = $new_m_id;
+			unset ($events[$key]);
+		}
 		$events[$key] = postcalendar_userapi_pcFixEventDetails ($events[$key]);
-    }
-
-    return $events;
-
-
+	}
+	return $events;
 }
 
 function postcalendar_userapi_pcGetEvents($args)
