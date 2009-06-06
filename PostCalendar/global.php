@@ -100,6 +100,7 @@ define('_SETTING_NOTIFY_EMAIL',	   pnModGetVar(__POSTCALENDAR__,'pcNotifyEmail')
 //=================================================================
 //  Make checking basic permissions easier
 //=================================================================
+/* shouldn't be needed any longer June 6, 2009
 define('PC_ACCESS_ADMIN', 	 pnSecAuthAction(0, 'PostCalendar::', 'null::null', ACCESS_ADMIN));
 define('PC_ACCESS_DELETE', 	 pnSecAuthAction(0, 'PostCalendar::', 'null::null', ACCESS_DELETE));
 define('PC_ACCESS_ADD', 	 pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADD));
@@ -109,7 +110,7 @@ define('PC_ACCESS_COMMENT',      pnSecAuthAction(0, 'PostCalendar::', 'null::nul
 define('PC_ACCESS_READ', 	 pnSecAuthAction(0, 'PostCalendar::', 'null::null', ACCESS_READ));
 define('PC_ACCESS_OVERVIEW',     pnSecAuthAction(0, 'PostCalendar::', 'null::null', ACCESS_OVERVIEW));
 define('PC_ACCESS_NONE', 	 pnSecAuthAction(0, 'PostCalendar::', 'null::null', ACCESS_NONE));
-
+*/
 
 //  Require and Setup utility classes and functions
 define('DATE_CALC_BEGIN_WEEKDAY', _SETTING_FIRST_DAY_WEEK);

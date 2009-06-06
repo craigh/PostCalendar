@@ -1,0 +1,28 @@
+<!--[*  $Id$  *]-->
+<!--[include file="admin/postcalendar_admin_menu.htm"]-->
+<div class="pn-admincontainer">
+<div class="pn-adminpageicon"><!--[pnimg modname=PostCalendar src=admin.gif altml=true]--></div>
+<h2><!--[pnml name="_PC_CATEGORIESCONFIRM"]--></h2>
+<form class="pn-adminform" action="<!--[pnmodurl modname="PostCalendar" type="admin" func="categoriesUpdate"]-->" method="post" enctype="application/x-www-form-urlencoded">
+	<input type="hidden" name="authid" value="<!--[pnsecgenauthkey module="PostCalendar"]-->">
+	<!--[pnml name="_PC_ARE_YOU_SURE"]-->
+	<br /><br />
+	<!--[if !empty($delText) ]-->
+		<input type="hidden" name="dels" value="$dels">
+		<!--[$delText]--><br />
+	<!--[/if]-->
+	<!--[if !empty($newname) ]-->
+		<input type="hidden" name="newname" value="$newname">
+		<input type="hidden" name="newdesc" value="$newdesc">
+		<input type="hidden" name="newcolor" value="$newcolor">
+		<!--[pnml name="_PC_ADD_CAT"]--><!--[$newname]-->.<br />
+	<!--[/if]-->
+	<!--[pnml name="_PC_MODIFY_CATS"]--><br />
+	<input type="hidden" name="id" value="$id">
+	<input type="hidden" name="del" value="$del">
+	<input type="hidden" name="name" value="$name">
+	<input type="hidden" name="desc" value="$desc">
+	<input type="hidden" name="color" value="$color">
+	<input type="submit" value="<!--[pnml name="_PC_CATS_CONFIRM"]-->"/>
+</form>
+</div><!-- /pn-admincontainer -->

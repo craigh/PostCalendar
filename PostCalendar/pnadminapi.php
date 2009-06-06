@@ -43,6 +43,63 @@ $pcDir = pnVarPrepForOS($pcModInfo['directory']);
 require_once("modules/$pcDir/common.api.php");
 unset($pcModInfo,$pcDir);
 
+/**
+ * Get available admin panel links
+ *
+ * @return array array of admin links
+ */
+function postcalendar_adminapi_getlinks()
+{
+	// Define an empty array to hold the list of admin links
+	$links = array();
+	
+	// Load the admin language file
+	// This allows this API to be called outside of the module
+	pnModLangLoad('PostCalendar', 'admin');
+	
+	/**********************************************************************************/
+	@define('_AM_VAL',   1);
+	@define('_PM_VAL',   2);
+	
+	@define('_EVENT_APPROVED',1);
+	@define('_EVENT_QUEUED', 0);
+	@define('_EVENT_HIDDEN',-1);
+	/**********************************************************************************/
+	
+	// Check the users permissions to each avaiable action within the admin panel
+	// and populate the links array if the user has permission
+	if (pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
+		$links[] = array('url' => pnModURL('PostCalendar', 'admin', 'modifyconfig'), 'text' => _EDIT_PC_CONFIG_GLOBAL);
+	}
+	if (pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
+		$links[] = array('url' => pnModURL('PostCalendar', 'admin', 'categories'), 'text' => _EDIT_PC_CONFIG_CATEGORIES);
+	}
+	if (pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADD)) {
+		$links[] = array('url' => pnModURL('PostCalendar', 'admin', 'submit'), 'text' => _PC_CREATE_EVENT);
+	}
+	if (pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
+		$links[] = array('url' => pnModURL('PostCalendar', 'admin', 'listapproved'), 'text' => _PC_VIEW_APPROVED);
+	}
+	if (pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
+		$links[] = array('url' => pnModURL('PostCalendar', 'admin', 'listhidden'), 'text' => _PC_VIEW_HIDDEN);
+	}
+	if (pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
+		$links[] = array('url' => pnModURL('PostCalendar', 'admin', 'listqueued'), 'text' => _PC_VIEW_QUEUED);
+	}
+	if (pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
+		$links[] = array('url' => pnModURL('PostCalendar', 'admin', 'clearCache'), 'text' => _PC_CLEAR_CACHE);
+	}
+	if (pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
+		$links[] = array('url' => pnModURL('PostCalendar', 'admin', 'testSystem'), 'text' => _PC_TEST_SYSTEM);
+	}
+	if (pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
+		$links[] = array('url' => pnModURL('PostCalendar', 'admin', 'removeUserEntries'), 'text' => _PC_REMOVE_USERENTRIES);
+	}
+	
+	// Return the links array back to the calling function
+	return $links;
+}
+
 function postcalendar_adminapi_buildHourSelect($args) 
 {
     extract($args);

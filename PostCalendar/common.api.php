@@ -48,15 +48,6 @@ function PostCalendarSmartySetup (&$smarty)
 	$smarty->assign('EVENT_DATE_FORMAT', _SETTING_DATE_FORMAT);
 	$smarty->assign('HIGHLIGHT_COLOR', _SETTING_DAY_HICOLOR);
 	$smarty->assign('24HOUR_TIME', _SETTING_TIME_24HOUR);
-	$smarty->assign('ACCESS_NONE', PC_ACCESS_NONE);
-	$smarty->assign('ACCESS_OVERVIEW', PC_ACCESS_OVERVIEW);
-	$smarty->assign('ACCESS_READ', PC_ACCESS_READ);
-	$smarty->assign('ACCESS_COMMENT', PC_ACCESS_COMMENT);
-	$smarty->assign('ACCESS_MODERATE', PC_ACCESS_MODERATE);
-	$smarty->assign('ACCESS_EDIT', PC_ACCESS_EDIT);
-	$smarty->assign('ACCESS_ADD', PC_ACCESS_ADD);
-	$smarty->assign('ACCESS_DELETE', PC_ACCESS_DELETE);
-	$smarty->assign('ACCESS_ADMIN', PC_ACCESS_ADMIN);
 	return true;
 }
 function pcDebugVar($in)
@@ -361,6 +352,8 @@ function postcalendar_userapi_submitEvent($args)
 	extract($args); unset($args);
     list($dbconn) = pnDBGetConn();
 	$pntable = pnDBGetTables();
+
+	define('PC_ACCESS_ADMIN', pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_OVERVIEW));
     
 	// determine if the event is to be published immediately or not
 	if( (bool) _SETTING_DIRECT_SUBMIT || (bool) PC_ACCESS_ADMIN || ($event_sharing != SHARING_GLOBAL) ) 
@@ -600,8 +593,9 @@ function pc_notify($eid,$is_update)
 function postcalendar_adminapi_buildSubmitForm($args) { return postcalendar_userapi_buildSubmitForm($args,true); }
 function postcalendar_userapi_buildSubmitForm($args,$admin=false)
 {
-	if(!PC_ACCESS_ADD) 
-		return _POSTCALENDARNOAUTH; 
+	if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADD)) {
+		return LogUtil::registerPermissionError();
+	}
 
 	extract($args); 
 	unset($args);
@@ -1242,8 +1236,9 @@ function postcalendar_userapi_pcGetEventDetails($eid)
 function postcalendar_adminapi_eventDetail($args) { return postcalendar_userapi_eventDetail($args,true); }
 function postcalendar_userapi_eventDetail($args,$admin=false)
 {
-	if(!(bool)PC_ACCESS_READ) 
-		return _POSTCALENDARNOAUTH; 
+	if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_READ)) {
+		return LogUtil::registerPermissionError();
+	}
 
 	$popup = FormUtil::getPassedValue('popup');
 	extract($args); 

@@ -42,8 +42,9 @@ require_once ('includes/HtmlUtil.class.php');
 function postcalendar_user_main()
 {
 	// check the authorization
-	if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_OVERVIEW)) 
-		return _POSTCALENDARNOAUTH;
+	if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_OVERVIEW)) {
+		return LogUtil::registerPermissionError();
+	}
 
 	// get the date and go to the view function
 	return postcalendar_user_view(array('Date'=>postcalendar_getDate()));
@@ -311,7 +312,9 @@ function postcalendar_user_viewupload()
  */
 function postcalendar_user_view()
 {
-    if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_OVERVIEW)) { return _POSTCALENDARNOAUTH; }
+	if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_OVERVIEW)) {
+		return LogUtil::registerPermissionError();
+	}
     
     // get the vars that were passed in
     $Date      = FormUtil::getPassedValue ('Date');
@@ -352,8 +355,8 @@ function postcalendar_user_display($args)
 	switch ($viewtype) 
 	{
 		case 'details':
-     	if (!(bool)PC_ACCESS_READ) {
-       	return _POSTCALENDARNOAUTH;
+			if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_READ)) {
+				return LogUtil::registerPermissionError();
 			}
       $out = pnModAPIFunc('PostCalendar','user','eventDetail', 
                              array('eid'=>$eid, 'Date'=>$Date, 'cacheid'=>$cacheid));
@@ -376,8 +379,8 @@ function postcalendar_user_display($args)
 			break;
 
  		default :
-			if (!(bool)PC_ACCESS_OVERVIEW) {
-				return _POSTCALENDARNOAUTH;
+			if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_OVERVIEW)) {
+				return LogUtil::registerPermissionError();
 			}
 			//now function just returns an array of information to pass to template 5/9/09 CAH
 			$out = pnModAPIFunc('PostCalendar','user','buildView', 
@@ -400,9 +403,9 @@ function postcalendar_user_display($args)
 
 function postcalendar_user_delete()
 {
-    if(!(bool)PC_ACCESS_ADD) {
-        return _POSTCALENDARNOAUTH;
-    }
+	if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADD)) {
+		return LogUtil::registerPermissionError();
+	}
 	
 	$output = new pnHTML();
     $output->SetInputMode(_PNH_VERBATIMINPUT);
@@ -439,9 +442,9 @@ function postcalendar_user_delete()
 }
 function postcalendar_user_deleteevents()
 {
-    if(!(bool)PC_ACCESS_ADD) {
-        return _POSTCALENDARNOAUTH;
-    }
+	if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADD)) {
+		return LogUtil::registerPermissionError();
+	}
 
 	$uname = pnUserGetVar('uname');
 	$pc_eid = FormUtil::getPassedValue('pc_eid');
@@ -481,9 +484,9 @@ function postcalendar_user_edit($args) {return postcalendar_user_submit($args); 
 function postcalendar_user_submit($args)
 {   
     // We need at least ADD permission to submit an event
-    if (!(bool)PC_ACCESS_ADD) {
-        return _POSTCALENDARNOAUTH;
-    }
+	if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADD)) {
+		return LogUtil::registerPermissionError();
+	}
 	
 	$output = new pnHTML();
     $output->SetInputMode(_PNH_VERBATIMINPUT);
@@ -857,9 +860,9 @@ function postcalendar_user_submit($args)
 function postcalendar_user_search()
 {   
     // We need at least ADD permission to submit an event
-    if (!(bool)PC_ACCESS_OVERVIEW) {
-        return _POSTCALENDARNOAUTH;
-    }
+	if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_OVERVIEW)) {
+		return LogUtil::registerPermissionError();
+	}
 	
     $tpl = pnRender::getInstance('PostCalendar');
 		PostCalendarSmartySetup($tpl);
