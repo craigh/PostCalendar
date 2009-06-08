@@ -948,86 +948,6 @@ function postcalendar_admin_clearCache()
 	return postcalendar_admin_modifyconfig(_PC_CACHE_CLEARED);
 }
 
-function pc_isNewVersion()
-{
-	$pcModInfo = pnModGetInfo(pnModGetIDFromName(__POSTCALENDAR__));
-	$pcDir = pnVarPrepForOS($pcModInfo['directory']);
-	@include("modules/$pcDir/pnversion.php");
-	
-	if($pcModInfo['version'] <> $modversion['version']) {
-		$upgradeURL   = pnModURL(__POSTCALENDAR__,'admin','upgrade');
-		$upgradeText  = "Upgrade PostCalendar $pcModInfo[version] to $modversion[version]";
-		$upgrade = "<br /><br />[ <a href=\"$upgradeURL\">$upgradeText</a> ]";
-	} else {
-		$upgrade = '';
-	}
-	
-	return $upgrade;
-}
-
-// UPGRADE WORKAROUND SCRIPT - Zikula BUG
-function postcalendar_admin_upgrade()
-{
-	/*
-    if(!PC_ACCESS_ADMIN) { return _POSTCALENDARNOAUTH; }
-	
-	$pcModInfo = pnModGetInfo(pnModGetIDFromName(__POSTCALENDAR__));
-	$pcDir = pnVarPrepForOS($pcModInfo['directory']);
-	@include("modules/$pcDir/pnversion.php");
-	@include("modules/$pcDir/pninit.php");
-	
-	$result = postcalendar_upgrade($pcModInfo['version']);
-    
-	if($result === false) {
-		$output  = postcalendar_adminmenu(false);
-		$output .= '<div style="padding:5px; border:1px solid red; background-color: pink;">';
-		$output .= '<center><b>SORRY :: MODULE UPGRADE FAILED</b></center>';
-		$output .= '</div><br />';
-		return $output;
-	}
-	
-	// if we've gotten this far, then it's time to increment the version in the db
-	list($dbconn) = pnDBGetConn();
-	$pntable = pnDBGetTables();
-	$modulestable = $pntable['modules'];
-    $modulescolumn = &$pntable['modules_column'];
-	
-	// Get module ID
-    $modulestable = $pntable['modules'];
-    $modulescolumn = &$pntable['modules_column'];
-    $query = "SELECT $modulescolumn[id]
-              FROM $modulestable
-              WHERE $modulescolumn[name] = '". pnVarPrepForStore(__POSTCALENDAR__)."'";
-    $result = $dbconn->Execute($query);
-
-    if ($result->EOF) { die("Failed to get module ID"); }
-
-    list($mid) = $result->fields;
-    $result->Close();
-	
-	$sql = "UPDATE $modulestable
-            SET $modulescolumn[version] = '".pnVarPrepForStore($modversion['version'])."',
-				$modulescolumn[state] = '".pnVarPrepForStore(_PNMODULE_STATE_ACTIVE)."'
-            WHERE $modulescolumn[id] = '".pnVarPrepForStore($mid)."'";
-    
-	// upgrade did not succeed
-	if($dbconn->Execute($sql) === false) { 
-		$output  = postcalendar_adminmenu(false);
-		$output .= '<div style="padding:5px; border:1px solid red; background-color: pink;">';
-		$output .= '<center><b>SORRY :: MODULE UPGRADE FAILED</b><br />';
-		$output .= $dbconn->ErrorMsg();
-		$output .= '</center>';
-		$output .= '</div><br />';
-	}
-    $output  = postcalendar_adminmenu(true);
-	$output .= '<div style="padding:5px; border:1px solid green; background-color: lightgreen;">';
-	$output .= '<center><b>CONGRATULATIONS :: MODULE UPGRADE SUCCEEDED</b></center>';
-	$output .= '</div><br />';
-	return $output;
-	*/
-	return "upgrade using standard module upgrade method.";
-}
-
 function postcalendar_admin_testSystem()
 {
 	if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
@@ -1127,20 +1047,7 @@ function postcalendar_admin_testSystem()
 	 	$info .= "<br /><div style=\"color: red;\">$error</div>";
 	}
 	array_push($infos, array('smarty cache dir',  $info));
-/*
-	$output  = "";
-	$output .= '<table border="1" cellpadding="3" cellspacing="1">';
-	$output .= '  <tr><th align="left">Name</th><th align="left">Value</th>';
-	$output .= '</tr>';
-	foreach ($infos as $info) {
-		$output.= '<tr><td ><b>' . pnVarPrepHTMLDisplay($info[0]) . '</b></td>';
-  	$output.= '<td>' . pnVarPrepHTMLDisplay($info[1]) . '</td></tr>';
-	}
-	$output .= '</table>';
-	$output .= '<br /><br />';
-	$output .= postcalendar_admin_modifyconfig('',false);
-	return $output;
-*/
+
 	$tpl->assign('infos', $infos);
 	return $tpl->fetch('admin/postcalendar_admin_systeminfo.htm');
 }
