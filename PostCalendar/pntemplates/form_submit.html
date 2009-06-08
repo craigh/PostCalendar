@@ -1,10 +1,4 @@
-<!--[ *Render* ]-->
 <!--[ pc_calendar_init ]-->
-<!-- main navigation -->
-
-<!--[ *Main Navigation* ]-->
-<!--[ include file="navigation_small.html" ]-->
-<!-- V4B Start -->
 
 <!--[* THIS PART LOOKS BAD IN FF/ hence commented out -CAH *]-->
 <!--[*pnpageaddvar name="stylesheet" value="javascript/tabnavigation/winxp.css"*]-->
@@ -12,102 +6,8 @@
 <!--[*pnpageaddvar name="javascript" value="javascript/tabnavigation/tabs.js"*]-->
 <!--[*pnpageaddvar name="javascript" value="javascript/tabnavigation/winxp.css"*]-->
 
-<script type="text/javascript">
-var err_no_start = "Please enter a Start Time.";
-var err_no_end = "Please enter an End Time.";
-var err_end_before = "* temp_err_no_before * ";
-var err_no_person = "Please select who to move.";
-var err_no_participant = "You didn't choose any participants.\n\nCheck 'I will participate', and/or select participants.";
-var err_thema_long = "Subject text is too long.\nReduce length to be 100 characters or less.";
-var err_external_long = "External text is too long.\nReduce length to be 200 characters or less.";
+<!--[pnpageaddvar name="javascript" value="modules/PostCalendar/pnjavascript/postcalendar_submit_validate.js"]-->
 
-
-function MoveOption (MoveFrom, MoveTo) {
-    //tested on:
-    // - Win2k: MSIE5.5, MSIE6, NN6.2.1, NN6.2.2
-    // - Mac: NN4.7/MacOS9.0.4 and MSIE5/MacOS9.0.4
-    // - others: Mozilla0.9.8/FreeBSD4.5, Mozilla snapshot 2002040410 on Linux 2.4.18 
-    var name;
-    var ID;
-    var i;
-    var SelectFrom = eval('window.document.nd.elements[\"'+MoveFrom+'[]\"]');
-    var SelectTo = eval('window.document.nd.elements[\"'+MoveTo+'[]\"]');
-    var SelectedIndex = SelectFrom.options.selectedIndex;
-
-    if (SelectedIndex == -1) {
-	alert(err_no_person);
-    }
-    else {
-	for (i=0; i<SelectFrom.options.length; i++) {
-	    if(SelectFrom.options[i].selected) {
-		name = SelectFrom.options[i].text;
-		ID = SelectFrom.options[i].value;
-		SelectFrom.options[i] = null;
-		SelectTo.options[SelectTo.options.length]=new Option (name,ID);
-		i--;
-	    }
-	}
-
-	//begin of sorting stuff, it could be very slooow
-	//needs JS1.1 and higher
-	var sorting = new Array();		
-	for (i=0; i<SelectTo.options.length; i++) {
-	    sorting[i] = SelectTo.options[i].text+"###"+SelectTo.options[i].value;
-	}
-	sorted = sorting.sort();
-	for (i=0; i<SelectTo.options.length; i++) {
-	    var tmp = sorted[i].split("###");
-	    name = tmp[0];
-	    ID = tmp[1];
-	    SelectTo.options[i]=new Option (name,ID);
-	}
-	// end of sorting stuff
-    }
-    return;
-}
-
-function selectItems() {
-    var to_form = eval('document.nd.elements[\"participants[]\"]');
-    for(i=0; i < to_form.length; i++) {
-	to_form.options[i].selected = true;
-    }
-    if(i==0 && document.nd.i_will.checked == false) {
-	alert(err_no_participant);
-	return false;
-    }
-    return true;
-}
-
-function check_form() {
-    if (document.nd.day.checked == false) {
-	if (document.nd.appointment_start.value == 0) {
-	    alert (err_no_start);
-	    document.nd.appointment_start.focus();
-	    return false;
-	} else if (document.nd.appointment_end.value == 0) {
-	    alert (err_no_end);
-	    document.nd.appointment_end.focus();
-	    return false;
-	} else if (!document.nd.appointment_attribute[0].checked && (document.nd.appointment_end.value < document.nd.appointment_start.value)) {
-	    alert (err_end_before);
-	    document.nd.appointment_end.focus();
-	    return false;
-	}
-    }
-
-    if (document.nd.external.value.length > 200) {
-		alert (err_external_long);
-		return false;
-    }
-
-    return selectItems();
-    }
-    
-function postcalendarFindContact()
-{
-  window.open("index.php?module=PostCalendar&func=findContact", "", "width=500,height=340,resizable");
-}    
-</script>
 <!--[ pnmodgetvar module="PostCalendar" name="pcAddressbook"|pnvarprepfordisplay assign="pcAddressbook" ]-->
 <!--[ if ($pcAddressbook) ]-->
     <!--[ pnmodavailable modname="v4bAddressBook" assign="addressAvailable" ]-->
@@ -115,21 +15,21 @@ function postcalendarFindContact()
 <!-- V4B end -->
 <!--[pnsecauthaction realm="0" comp="PostCalendar::" inst=".*" level="ACCESS_ADMIN" assign="auth"]-->
 <!--[ if $auth ]-->
+<!--[include file="admin/postcalendar_admin_menu.htm"]-->
 <form name="nd" action="<!--[ pc_url action="submit-admin" ]-->" method="post" enctype="application/x-www-form-urlencoded">
 <!--[ else ]-->
 <form name="nd" action="<!--[ pc_url action="submit" ]-->" method="post" enctype="application/x-www-form-urlencoded">
 <!--[ /if ]-->
-<!--
-<table border="0" cellpadding="1" cellspacing="0" bgcolor="White" width="100%">
-    <tr><td align="left" valign="middle" width="100%">
--->
+<div class="pn-admincontainer">
+<div class="pn-adminpageicon"><!--[pnimg modname=PostCalendar src=admin.gif altml=true]--></div>
+<h2>_PC_ADDCALENDAREVENT</h2>
 <div class="tabsystem" style="padding-top:16px;">
-<div class="tabpage tdefault" style="background:white;">
+<div class="tabpage tdefault">
 <h2><!--[ $NewEventHeader ]--></h2>
-    <table width="100%" border="0" cellpadding="2" cellspacing="0" bgcolor="white">
+    <table width="100%" border="0" cellpadding="2" cellspacing="0">
     <!-- EVENT INFO ROWS -->            
         <tr>
-            <td bgcolor="white" align="left" valign="top" width="50%">
+            <td align="left" valign="top" width="50%">
                 <!--[ $EventTitle ]-->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!--[ $Required ]--><br />
                 <input type="text" name="<!--[ $InputEventTitle ]-->" value="<!--[ $ValueEventTitle ]-->" /><br />
 		        <!-- V4B Start -->
@@ -184,7 +84,7 @@ function postcalendarFindContact()
 			    <!-- V4B SB END -->
         		</td>
                 
-                <td bgcolor="white" align="left" valign="top" width="50%">
+                <td align="left" valign="top" width="50%">
                 <!--[ if $displayTopics eq 1 ]-->
                     <!--[ $EventTopicTitle ]--><br />
                     <!--[ strip ]-->
@@ -262,9 +162,9 @@ function postcalendarFindContact()
 <!-- REPEATING ROWS -->         
 <!--[pnmodgetvar module="PostCalendar" name="pcRepeating"|pnvarprepfordisplay assign="pcDisplayRepeating"]-->
 <!--[ if $pcDisplayRepeating ]-->
-<div class="tabpage" style="background:white;">
+<div class="tabpage">
 <h2><!--[ $RepeatingHeader ]--></h2>
-    <table width="100%" border="0" cellpadding="2" cellspacing="0" bgcolor="white">   
+    <table width="100%" border="0" cellpadding="2" cellspacing="0">   
         <tr>
             <td bgcolor="whtie" colspan="2" align="left" valign="middle" width="100%">
                 <input type="radio" name="<!--[ $InputNoRepeat ]-->" value="<!--[ $ValueNoRepeat ]-->" <!--[ $SelectedNoRepeat ]--> />
@@ -340,9 +240,9 @@ function postcalendarFindContact()
 <!-- V4B Start -->
 <!--[pnmodgetvar module="PostCalendar" name="pcMeeting"|pnvarprepfordisplay assign="pcDisplayMeeting"]-->
 <!--[ if $pcDisplayMeeting ]-->
-<div class="tabpage" style="background:white;">
+<div class="tabpage">
 <h2><!--[pnml name='_PC_PARTICIPANT']--></h2>
-    <table width="100%" border="0" cellpadding="2" cellspacing="0" bgcolor="white">   
+    <table width="100%" border="0" cellpadding="2" cellspacing="0">   
         <tr>
 		    <td colspan="2" valign="top" width="270">
 	            <table>
@@ -371,3 +271,4 @@ function postcalendarFindContact()
 <!--[ $FormHidden ]-->
 <!--[ $FormSubmit ]-->
 </form>
+</div> <!-- /pn-admincontainer or /pn-container-->

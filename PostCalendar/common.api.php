@@ -542,7 +542,7 @@ function postcalendar_userapi_submitEvent($args)
 				eval ($mailtext);
 
 				// mail the users
-				$extraHeader = "From: noreply@v4b-kalender"; 
+				$extraHeader = "From: noreply"; 
 				$email    = pnUserGetVar('email', $pc_mail_users[$i]);
 				$subject  = _PC_MEETING_MAIL_TITLE . ": $event_subject";
 
