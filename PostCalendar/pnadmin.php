@@ -204,7 +204,6 @@ function postcalendar_admin_adminevents()
 		$output .= '</form>';
 	}
 
-	//return $output;
 	$pnRender->assign('output',$output);
 	return $pnRender->fetch("admin/postcalendar_admin_eventrevue.htm");
 }
@@ -215,8 +214,6 @@ function postcalendar_admin_approveevents()
 		return LogUtil::registerPermissionError();
 	}
 
-    //print_r ($_POST);
-	
 	$pc_eid = FormUtil::getPassedValue('pc_eid');
     $approve_list = '';
     foreach($pc_eid as $eid) {
@@ -240,11 +237,8 @@ function postcalendar_admin_approveevents()
 		$msg = _PC_ADMIN_EVENTS_APPROVED; 
 	}
     
-	// clear the template cache
-	//$tpl = new pnRender();
-	$tpl = pnRender::getInstance('PostCalendar');
-	$tpl->clear_all_cache(); //	PostCalendarSmartySetup not needed
-    return postcalendar_admin_showlist('',_EVENT_APPROVED,'listapproved',_PC_APPROVED_ADMIN,$msg);
+	postcalendar_admin_clearCache();
+	return postcalendar_admin_showlist('',_EVENT_APPROVED,'listapproved',_PC_APPROVED_ADMIN,$msg);
 }
 
 function postcalendar_admin_hideevents()
@@ -277,11 +271,9 @@ function postcalendar_admin_hideevents()
         $msg = _PC_ADMIN_EVENTS_HIDDEN;
     }
     
-	// clear the template cache
-	//$tpl = new pnRender();
-	$tpl = pnRender::getInstance('PostCalendar'); //	PostCalendarSmartySetup not needed
-	$tpl->clear_all_cache();
-    return postcalendar_admin_showlist('',_EVENT_APPROVED,'listapproved',_PC_APPROVED_ADMIN,$msg);
+	postcalendar_admin_clearCache();
+
+	return postcalendar_admin_showlist('',_EVENT_APPROVED,'listapproved',_PC_APPROVED_ADMIN,$msg);
 }
 
 function postcalendar_admin_deleteevents()
@@ -289,8 +281,6 @@ function postcalendar_admin_deleteevents()
 	if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
 		return LogUtil::registerPermissionError();
 	}
-
-    //print_r ($_POST);
 
 	$pc_eid = FormUtil::getPassedValue('pc_eid');
     $output = "";
@@ -316,10 +306,8 @@ function postcalendar_admin_deleteevents()
         $msg = _PC_ADMIN_EVENTS_DELETED;
     }
     
-	// clear the template cache
-	//$tpl = new pnRender();
-	$tpl = pnRender::getInstance('PostCalendar'); //	PostCalendarSmartySetup not needed
-	$tpl->clear_all_cache();
+	postcalendar_admin_clearCache();
+
 	return postcalendar_admin_showlist('',_EVENT_APPROVED,'listapproved',_PC_APPROVED_ADMIN,$msg);
 }
 // V4B SB INCOMING VALUES FROM THE SUBMIT FORM
@@ -617,10 +605,8 @@ function postcalendar_admin_submit($args)
 				$output .= '</div></center><br />';	
 				$output .= '<br />';
         	} else {
-        		// clear the Render cache
-				//$tpl = new pnRender();
-				$tpl = pnRender::getInstance('PostCalendar'); //	PostCalendarSmartySetup not needed
-				$tpl->clear_all_cache();
+						postcalendar_admin_clearCache();
+
 				$output .= '<center><div style="padding:5px; border:1px solid green; background-color: lightgreen;">';		
 				if($is_update) {
 					$output .= "<b>"._PC_EVENT_EDIT_SUCCESS."</b>";		
@@ -716,8 +702,7 @@ function postcalendar_admin_resetDefaults()
 	pnModSetVar(__POSTCALENDAR__, 'pcNotifyAdmin', '0');
 	pnModSetVar(__POSTCALENDAR__, 'pcNotifyEmail', pnConfigGetVar('adminmail'));
 	
-	$tpl = pnRender::getInstance('PostCalendar'); //PostCalendarSmartySetup not needed
-	$tpl->clear_all_cache();
+	postcalendar_admin_clearCache();
 		
 	return postcalendar_admin_modifyconfig(_PC_UPDATED_DEFAULTS);
 }
@@ -801,8 +786,7 @@ function postcalendar_admin_updateconfig()
 	pnModSetVar(__POSTCALENDAR__, 'pcNotifyAdmin',   $pcNotifyAdmin);
 	pnModSetVar(__POSTCALENDAR__, 'pcNotifyEmail',   $pcNotifyEmail);
 
-	$tpl = pnRender::getInstance('PostCalendar'); // 	PostCalendarSmartySetup not needed
-	$tpl->clear_all_cache();
+	postcalendar_admin_clearCache();
 
 	return postcalendar_admin_modifyconfig(_PC_UPDATED);
 }
@@ -935,17 +919,21 @@ function postcalendar_admin_categoriesUpdate()
 	return postcalendar_admin_categories($msg,$e);
 }
 
-function postcalendar_admin_clearCache()
-{
+function postcalendar_admin_manualClearCache() {
 	if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
 		return LogUtil::registerPermissionError();
 	}
-	
-	$tpl = pnRender::getInstance('PostCalendar'); //	PostCalendarSmartySetup not needed
-	$tpl->clear_all_cache();
-	$tpl->clear_compiled_tpl();
+	$clear = postcalendar_admin_clearCache();
+	if ($clear) return postcalendar_admin_modifyconfig(_PC_CACHE_CLEARED);
+	return postcalendar_admin_modifyconfig(_PC_CACHE_NOTCLEARED);
+}
 
-	return postcalendar_admin_modifyconfig(_PC_CACHE_CLEARED);
+function postcalendar_admin_clearCache()
+{
+	$pnRender = pnRender::getInstance('PostCalendar'); //	PostCalendarSmartySetup not needed
+	$res = $pnRender->clear_all_cache();
+
+	return $res;
 }
 
 function postcalendar_admin_testSystem()
@@ -1050,32 +1038,5 @@ function postcalendar_admin_testSystem()
 
 	$tpl->assign('infos', $infos);
 	return $tpl->fetch('admin/postcalendar_admin_systeminfo.htm');
-}
-
-
-// This function cleans out entries made by past users
-function postcalendar_admin_removeUserEntries()
-{
-/*
-    if(!PC_ACCESS_ADMIN) { return _POSTCALENDARNOAUTH; }
-	
-    $users = DBUtil::selectFieldArray ('users','uid');
-    $pc_users = DBUtil::selectFieldArray ('postcalendar_events','aid','','',true);
-    
-    $count = 0;
-    for($i=0;$i<count($pc_users);$i++)
-    {
-        if (!in_array($pc_users[$i], $users)) {
-            $where = "pc_aid = $pc_users[$i]";
-            $entry = DBUtil::deleteWhere ('postcalendar_events',$where);
-            $count++;
-        }
-    }
-	
-    return postcalendar_admin_modifyconfig('<center>'.$count.' '._PC_ENTRIES_REMOVED.'</center>');
-*/
-	// this is disabled for now because it is totally destructive and you can't recover
-	// it basically deletes all events! CAH 9 May 2009
-	return postcalendar_admin_modifyconfig('This function currently disabled.');
 }
 ?>

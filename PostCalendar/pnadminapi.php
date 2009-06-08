@@ -87,13 +87,10 @@ function postcalendar_adminapi_getlinks()
 		$links[] = array('url' => pnModURL('PostCalendar', 'admin', 'listqueued'), 'text' => _PC_VIEW_QUEUED);
 	}
 	if (pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
-		$links[] = array('url' => pnModURL('PostCalendar', 'admin', 'clearCache'), 'text' => _PC_CLEAR_CACHE);
+		$links[] = array('url' => pnModURL('PostCalendar', 'admin', 'manualClearCache'), 'text' => _PC_CLEAR_CACHE);
 	}
 	if (pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
 		$links[] = array('url' => pnModURL('PostCalendar', 'admin', 'testSystem'), 'text' => _PC_TEST_SYSTEM);
-	}
-	if (pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
-		$links[] = array('url' => pnModURL('PostCalendar', 'admin', 'removeUserEntries'), 'text' => _PC_REMOVE_USERENTRIES);
 	}
 	
 	// Return the links array back to the calling function
