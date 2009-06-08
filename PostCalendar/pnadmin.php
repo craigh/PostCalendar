@@ -112,6 +112,7 @@ function postcalendar_admin_showlist($e='',$type,$function,$title,$msg='')
 
 
 	$pnRender->assign('output', $output);
+	$pnRender->assign('title', $title);
 
 	return $pnRender->fetch('admin/postcalendar_admin_showlist.htm');
 }

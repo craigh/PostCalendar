@@ -1,3 +1,4 @@
+<!--[pnsecauthaction comp="::" inst=".*" level="ACCESS_ADD" assign="ACCESS_ADD"]-->
 <!--[ if $smarty.get.theme eq "Printer" ]-->
 	<!--[* page presented in printer theme *]-->
 	<!--[ assign var="ACCESS_ADD" value=0 ]-->
@@ -94,6 +95,7 @@
 <!--[ pnmodcallhooks hookobject=item hookaction=display hookid=$A_EVENT.eid returnurl="index.php?module=PostCalendar&func=view&viewtype=details&eid=$eid" ]-->
 <!--[ if $PRINT_VIEW != 1 ]-->
 <div>
+<!--[pnsecauthaction comp="::" inst=".*" level="ACCESS_ADMIN" assign="ACCESS_ADMIN"]-->
 	<!--[ if $ACCESS_ADMIN ]-->
 		<a href="<!--[ $ADMIN_EDIT ]-->" <!--[ $ADMIN_TARGET ]-->><!--[pnml name='_PC_ADMIN_ACTION_EDIT']--></a> |
 		<a href="<!--[ $ADMIN_COPY ]-->" <!--[ $ADMIN_TARGET ]-->><!--[pnml name='_PC_ADMIN_ACTION_COPY']--></a> |
