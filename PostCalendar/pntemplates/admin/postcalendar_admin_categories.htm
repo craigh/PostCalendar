@@ -23,10 +23,10 @@
 		<!--[section name=cats loop=$cats]-->  
 			<tr class="<!--[cycle values="pn-odd,pn-even"]-->">
 				<td><input type="hidden" name="id[]" value="<!--[$cats[cats].catid]-->">
-					<input id="del[]" type="checkbox" value="1" name="del[]"/></td>
-				<td><input type="text" size="20" value="<!--[$cats[cats].catname]-->" id="name[]" name="name[]"/></td>
-				<td><textarea id="desc[]" cols="20" rows="3" name="desc[]"><!--[$cats[cats].catdesc]--></textarea></td>
-				<td><input id="color[]" type="text" maxlength="64" size="10" value="<!--[$cats[cats].catcolor]-->" name="color[]"/>
+					<input id="del[]" type="checkbox" value="<!--[$cats[cats].catid]-->" name="del[]"/></td>
+				<td><input type="text" size="20" value="<!--[$cats[cats].catname|pnvarprepfordisplay]-->" id="name[]" name="name[]"/></td>
+				<td><textarea id="desc[]" cols="20" rows="3" name="desc[]"><!--[$cats[cats].catdesc|pnvarprepfordisplay]--></textarea></td>
+				<td><input id="color[]" type="text" maxlength="64" size="10" value="<!--[$cats[cats].catcolor|pnvarprepfordisplay]-->" name="color[]"/>
 					[<a href="javascript:void(0);" onClick="pick('pick','<!--[$i+4]-->'); return false;" name="pick" id="pick">pick</a>]</td>
 			</tr>
 			<!--[assign var="i" value="`$i+5`"]-->

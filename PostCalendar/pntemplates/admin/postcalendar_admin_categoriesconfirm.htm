@@ -8,21 +8,21 @@
 	<!--[pnml name="_PC_ARE_YOU_SURE"]-->
 	<br /><br />
 	<!--[if !empty($delText) ]-->
-		<input type="hidden" name="dels" value="$dels">
+		<input type="hidden" name="dels" value="<!--[$dels|pnvarprepfordisplay]-->">
 		<!--[$delText]--><br />
 	<!--[/if]-->
 	<!--[if !empty($newname) ]-->
-		<input type="hidden" name="newname" value="$newname">
-		<input type="hidden" name="newdesc" value="$newdesc">
-		<input type="hidden" name="newcolor" value="$newcolor">
+		<input type="hidden" name="newname" value="<!--[$newname|pnvarprepfordisplay]-->">
+		<input type="hidden" name="newdesc" value="<!--[$newdesc|pnvarprepfordisplay]-->">
+		<input type="hidden" name="newcolor" value="<!--[$newcolor|pnvarprepfordisplay]-->">
 		<!--[pnml name="_PC_ADD_CAT"]--><!--[$newname]-->.<br />
 	<!--[/if]-->
 	<!--[pnml name="_PC_MODIFY_CATS"]--><br />
-	<input type="hidden" name="id" value="$id">
-	<input type="hidden" name="del" value="$del">
-	<input type="hidden" name="name" value="$name">
-	<input type="hidden" name="desc" value="$desc">
-	<input type="hidden" name="color" value="$color">
+	<input type="hidden" name="id" value="<!--[$id|pnvarprepfordisplay]-->">
+	<input type="hidden" name="del" value="<!--[$del|pnvarprepfordisplay]-->">
+	<input type="hidden" name="name" value="<!--[$name|pnvarprepfordisplay]-->">
+	<input type="hidden" name="desc" value="<!--[$desc|pnvarprepfordisplay]-->">
+	<input type="hidden" name="color" value="<!--[$color|pnvarprepfordisplay]-->">
 	<input type="submit" value="<!--[pnml name="_PC_CATS_CONFIRM"]-->"/>
 </form>
 </div><!-- /pn-admincontainer -->

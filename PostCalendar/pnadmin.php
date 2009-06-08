@@ -809,7 +809,7 @@ function postcalendar_admin_categories($msg='',$e='')
 	$pnRender->assign('e', $e);
 	$pnRender->assign('msg', $msg);
 
-    $cats = pnModAPIFunc(__POSTCALENDAR__,'admin','getCategories');
+	$cats = pnModAPIFunc(__POSTCALENDAR__,'admin','getCategories');
 	$pnRender->assign('cats', $cats);
 
 	return $pnRender->fetch('admin/postcalendar_admin_categories.htm');
@@ -835,105 +835,99 @@ function postcalendar_admin_categoriesConfirm()
 	if(is_array($del)) {                                                
 		$dels = implode(',',$del);
 		$delText = _PC_DELETE_CATS . $dels .'.';
+		$pnRender->assign('delText', $delText);
+		$pnRender->assign('dels', $dels);
 	}
-	$pnRender->assign('delText', $delText);
-	$pnRender->assign('dels', $dels);
-	$pnRender->assign('newname', $newname);
-	$pnRender->assign('newdesc', $newdesc);
-	$pnRender->assign('newcolor', $newcolor);
 	$pnRender->assign('id', serialize($id));
-	$pnRender->assign('del', serialize($del));
+	if (!empty($del)) $pnRender->assign('del', serialize($del));
 	$pnRender->assign('name', serialize($name));
 	$pnRender->assign('desc', serialize($desc));
 	$pnRender->assign('color', serialize($color));
+	$pnRender->assign('newname', $newname);
+	$pnRender->assign('newdesc', $newdesc);
+	$pnRender->assign('newcolor', $newcolor);
         
 	return $pnRender->fetch('admin/postcalendar_admin_categoriesconfirm.htm');
 }
 
 function postcalendar_admin_categoriesUpdate()
-{   
+{
 	if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
 		return LogUtil::registerPermissionError();
 	}
+
+	$id				= FormUtil::getPassedValue ('id');
+	$del			= FormUtil::getPassedValue ('del');
+	$dels			= FormUtil::getPassedValue ('dels');
+	$name			= FormUtil::getPassedValue ('name');
+	$desc			= FormUtil::getPassedValue ('desc');
+	$color		= FormUtil::getPassedValue ('color');
+	$newname	= FormUtil::getPassedValue ('newname');
+	$newdesc	= FormUtil::getPassedValue ('newdesc');
+	$newcolor	= FormUtil::getPassedValue ('newcolor');
+	   
+	$id			= unserialize($id);
+	$del		= unserialize($del);
+	$name		= unserialize($name);
+	$desc		= unserialize($desc);
+	$color	= unserialize($color);
+
+	$modID = $modName = $modDesc = $modColor = array();
 	
-	$output = new pnHTML();
-    $output->SetInputMode(_PNH_VERBATIMINPUT);
-    
-	list($dbconn) = pnDBGetConn();
-    $pntable = pnDBGetTables();
-    
-    $id       = FormUtil::getPassedValue ('id');
-    $del      = FormUtil::getPassedValue ('del');
-    $dels     = FormUtil::getPassedValue ('dels');
-    $name     = FormUtil::getPassedValue ('name');
-    $desc     = FormUtil::getPassedValue ('desc');
-    $color    = FormUtil::getPassedValue ('color');
-    $newname  = FormUtil::getPassedValue ('newname');
-    $newdesc  = FormUtil::getPassedValue ('newdesc');
-    $newcolor = FormUtil::getPassedValue ('newcolor');
-   
-    $id = unserialize($id);
-    $del = unserialize($del);
-    $dels = unserialize($dels); //just added june 6 2009
-    $name = unserialize($name);
-    $desc = unserialize($desc);
-    $color = unserialize($color);
-    
-    $modID = $modName = $modDesc = $modColor = array();
-    
-    if(isset($id)) {
+	if(isset($id)) {
 		foreach($id as $k=>$i) {
-        	$found = false;
-        	if(count($del)) {
-            	foreach($del as $d) {
-                	if($i == $d) {
-                    	$found = true;
-                    	break;
-                	}
-            	}  
-        	} 
-        	if(!$found) {
-            	array_push($modID,$i);
-            	array_push($modName,$name[$k]);
-            	array_push($modDesc,$desc[$k]);
-            	array_push($modColor,$color[$k]);
-        	}
-    	}
+			$found = false;
+			if(count($del)) {
+				foreach($del as $d) {
+					if($i == $d) {
+						$found = true;
+						break;
+					}
+				}  
+			} 
+			if(!$found) {
+				array_push($modID,$i);
+				array_push($modName,$name[$k]);
+				array_push($modDesc,$desc[$k]);
+				array_push($modColor,$color[$k]);
+			}
+		}
 	}
 
-    
-    $e =  $msg = '';
-    $obj = array();
-    foreach($modID as $k=>$id) {
-        $obj['catid']    = $id;
-        $obj['catname']  = $modName[$k];
-        $obj['catdesc']  = $modDesc[$k];
-        $obj['catcolor'] = $modColor[$k];
-        $res = DBUtil::updateObject ($obj, 'postcalendar_categories', '', false, 'catid');
-        if (!$res)
-            $e .= 'UPDATE FAILED';
-    }
+	$e =  $msg = '';
+	$obj = array();
+	foreach($modID as $k=>$id) {
+		$obj['catid']= $id;
+		$obj['catname']  = $modName[$k];
+		$obj['catdesc']  = $modDesc[$k];
+		$obj['catcolor'] = $modColor[$k];
+		//$res = DBUtil::updateObject ($obj, 'postcalendar_categories', '', false, 'catid');
+		$res = DBUtil::updateObject ($obj, 'postcalendar_categories', '', 'catid');
+		if (!$res)
+		$e .= 'UPDATE FAILED';
+	}
+	
+	$pntable = pnDBGetTables();
+	
+	if (isset($dels) && $dels) {
+		$delete = "DELETE FROM $pntable[postcalendar_categories] WHERE pc_catid IN ($dels)";
+		$res = DBUtil::executeSQL ($delete, false, false);
+		if (!$res)
+		$e .= 'DELETE FAILED';
+	}
 
-    if (isset($dels) && $dels) {
-        $delete = "DELETE FROM $pntable[postcalendar_categories] WHERE pc_catid IN ($dels)";
-        $res = DBUtil::executeSQL ($delete, false, false);
-        if (!$res)
-            $e .= 'DELETE FAILED';
-    }
+	if(isset($newname)) {
+		$obj['catid']= '';
+		$obj['catname']  = $newname;
+		$obj['catdesc']  = $newdesc;
+		$obj['catcolor'] = $newcolor;
+		$res = DBUtil::insertObject ($obj, 'postcalendar_categories', false, 'catid');
+		if (!$res)
+		$e .= 'INSERT FAILED';
+	}
 
-    if(isset($newname)) {
-        $obj['catid']    = '';
-        $obj['catname']  = $newname;
-        $obj['catdesc']  = $newdesc;
-        $obj['catcolor'] = $newcolor;
-        $res = DBUtil::insertObject ($obj, 'postcalendar_categories', false, 'catid');
-        if (!$res)
-            $e .= 'INSERT FAILED';
-    }
-
-    if(empty($e)) { $msg = 'DONE'; }
-    $output->Text(postcalendar_admin_categories($msg,$e));
-    return $output->GetOutput();
+	if (empty($e)) $msg = 'DONE';
+	return postcalendar_admin_categories($msg,$e);
 }
 
 function postcalendar_admin_clearCache()
