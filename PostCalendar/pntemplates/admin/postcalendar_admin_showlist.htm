@@ -1,0 +1,44 @@
+<!--[*  $Id$  *]-->
+<!--[include file="admin/postcalendar_admin_menu.htm"]-->
+<!--[pnpageaddvar name="javascript" value="modules/PostCalendar/pnjavascript/AnchorPosition.js"]-->
+<!--[pnpageaddvar name="javascript" value="modules/PostCalendar/pnjavascript/PopupWindow.js"]-->
+<!--[pnpageaddvar name="javascript" value="modules/PostCalendar/pnjavascript/ColorPicker2.js"]-->
+<!--[pnpageaddvar name="javascript" value="modules/PostCalendar/pnjavascript/postcalendar_colorpicker_setup.js"]-->
+<div class="pn-admincontainer">
+<div class="pn-adminpageicon"><!--[pnimg modname=PostCalendar src=admin.gif altml=true]--></div>
+<h2><!--[pnml name="_PC_EDITCATEGORIES"]--></h2>
+<!--[if !empty($e)]--><div style="padding:5px; border:1px solid red; background-color: pink;font-weight:bold;text-align:center;"><!--[$e]--></div><!--[/if]-->
+<!--[if !empty($msg)]--><div style="padding:5px; border:1px solid green; background-color: lightgreen;font-weight:bold;text-align:center;"><!--[$msg]--></div><!--[/if]-->
+
+<form class="pn-adminform" name="cats" action="<!--[pnmodurl modname="PostCalendar" type="admin" func="categoriesConfirm"]-->" method="post" enctype="application/x-www-form-urlencoded">
+	<input type="hidden" name="authid" value="<!--[pnsecgenauthkey module="PostCalendar"]-->">
+	<table class="pn-admintable">
+		<tr>
+			<th><!--[pnml name='_PC_CAT_DELETE']--></th>
+			<th><!--[pnml name='_PC_CAT_NAME']--></th>
+			<th><!--[pnml name='_PC_CAT_DESC']--></th>
+			<th><!--[pnml name='_PC_CAT_COLOR']--></th>
+		</tr>
+		<!--[assign var="i" value=1]-->
+		<!--[section name=cats loop=$cats]-->  
+			<tr class="<!--[cycle values="pn-odd,pn-even"]-->">
+				<td><input type="hidden" name="id[]" value="<!--[$cats[cats].catid]-->">
+					<input id="del[]" type="checkbox" value="<!--[$cats[cats].catid]-->" name="del[]"/></td>
+				<td><input type="text" size="20" value="<!--[$cats[cats].catname|pnvarprepfordisplay]-->" id="name[]" name="name[]"/></td>
+				<td><textarea id="desc[]" cols="20" rows="3" name="desc[]"><!--[$cats[cats].catdesc|pnvarprepfordisplay]--></textarea></td>
+				<td><input id="color[]" type="text" maxlength="64" size="10" value="<!--[$cats[cats].catcolor|pnvarprepfordisplay]-->" name="color[]"/>
+					[<a href="javascript:void(0);" onClick="pick('pick','<!--[$i+4]-->'); return false;" name="pick" id="pick">pick</a>]</td>
+			</tr>
+			<!--[assign var="i" value="`$i+5`"]-->
+		<!--[/section]-->
+			<tr>
+				<td><!--[pnml name='_PC_CAT_NEW']--></td>
+				<td><input type="text" size="20" value="" id="newname" name="newname"/></td>
+				<td><textarea id="newdesc" cols="20" rows="3" name="newdesc"></textarea></td>
+				<td><input id="newcolor" type="text" maxlength="64" size="10" value="" name="newcolor"/>
+					[<a href="javascript:void(0);" onClick="pick('pick','newcolor'); return false;" name="pick" id="pick">pick</a>]</td>
+			</tr>
+	</table>
+	<input type="submit" value="<!--[pnml name="_PC_ADMIN_SUBMIT"]-->"/>
+</form>
+</div><!-- /pn-admincontainer -->

@@ -78,39 +78,29 @@ function postcalendar_admin_showlist($e='',$type,$function,$title,$msg='')
 	if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
 		return LogUtil::registerPermissionError();
 	}
-	
-	$output = "";
-    
-	if(!empty($e)) { 
-		$output .= '<div style="padding:5px; border:1px solid red; background-color: pink;">';
-		$output .= '<center><b>'.$e.'</b></center>';
-		$output .= '</div><br />';
-	}
-    
-	if(!empty($msg)) { 
-		$output .= '<div style="padding:5px; border:1px solid green; background-color: lightgreen;">';
-		$output .= '<center><b>'.$msg.'</b></center>';
-		$output .= '</div><br />';
-	}
+
+	$pnRender = pnRender::getInstance('PostCalendar');
+	$pnRender->assign('e', $e);
+	$pnRender->assign('msg', $msg);
 	
 	$offset_increment = _SETTING_HOW_MANY_EVENTS;
-    if(empty($offset_increment)) $offset_increment = 15;
-    
-    $offset = FormUtil::getPassedValue('offset');
-    $sort = FormUtil::getPassedValue('sort');
-    $sdir = FormUtil::getPassedValue('sdir');
-    if(!isset($sort)) $sort = 'time';
-    if(!isset($sdir)) $sdir = 1;
-    if(!isset($offset))  $offset = 0;
-    
-    $events = pnModAPIFunc(__POSTCALENDAR__,'admin','getAdminListEvents',
+	if(empty($offset_increment)) $offset_increment = 15;
+
+	$offset = FormUtil::getPassedValue('offset');
+	$sort = FormUtil::getPassedValue('sort');
+	$sdir = FormUtil::getPassedValue('sdir');
+	if(!isset($sort)) $sort = 'time';
+	if(!isset($sdir)) $sdir = 1;
+	if(!isset($offset))  $offset = 0;
+
+	$events = pnModAPIFunc('PostCalendar','admin','getAdminListEvents',
                            array ('type'             => $type,
                                   'sdir'             => $sdir,
                                   'sort'             => $sort,
                                   'offset'           => $offset,
                                   'offset_increment' => $offset_increment));
-	
-    $output .= pnModAPIFunc(__POSTCALENDAR__,'admin','buildAdminList',
+
+	$output = pnModAPIFunc('PostCalendar','admin','buildAdminList',
                             array('type'             => $type,
                                   'title'            => $title,
                                   'sdir'             => $sdir,
@@ -119,8 +109,11 @@ function postcalendar_admin_showlist($e='',$type,$function,$title,$msg='')
                                   'offset_increment' => $offset_increment,
                                   'function'         => $function,
                                   'events'           => $events));
-    
-    return $output;
+
+
+	$pnRender->assign('output', $output);
+
+	return $pnRender->fetch('admin/postcalendar_admin_showlist.htm');
 }
 
 function postcalendar_admin_adminevents()
@@ -180,25 +173,39 @@ function postcalendar_admin_adminevents()
 		$output .= '<br /><br />';
 	}
 
-	//print "xx $pc_event_id xx";
-    if(is_array($pc_event_id)) {
+	$pnRender = pnRender::getInstance('PostCalendar');
+	PostCalendarSmartySetup($pnRender);
+
+	if(is_array($pc_event_id)) {
 		foreach($pc_event_id as $eid) {
-        	$output .= pnModAPIFunc(__POSTCALENDAR__,'admin','eventDetail',array('eid'=>$eid,'nopop'=>true));
-        	$output .= '<br /><br />';
-        	$output .= '<input type="hidden" name="pc_eid[]" value="'.$eid.'" />';
-    	}
+			// get event info
+			$eventitems = pnModAPIFunc(__POSTCALENDAR__,'admin','eventDetail',array('eid'=>$eid,'nopop'=>true));
+			// build template and fetch:
+			foreach ($eventitems as $var=>$val) {
+				$pnRender->assign($var,$val);
+			}
+			$output .= $pnRender->fetch($eventitems['template']);
+			$output .= '<input type="hidden" name="pc_eid[]" value="'.$eid.'" />';
+		}
 	} else {
-		$output .= pnModAPIFunc(__POSTCALENDAR__,'admin','eventDetail',array('eid'=>$pc_event_id,'nopop'=>true));
-        $output .= '<br /><br />';
-        $output .= '<input type="hidden" name="pc_eid[0]" value="'.$pc_event_id.'" />';
+		// get event info
+		$eventitems = pnModAPIFunc(__POSTCALENDAR__,'admin','eventDetail',array('eid'=>$pc_event_id,'nopop'=>true));
+		// build template and fetch:
+		foreach ($eventitems as $var=>$val) {
+			$pnRender->assign($var,$val);
+		}
+		$output .= $pnRender->fetch($eventitems['template']);
+		$output .= '<input type="hidden" name="pc_eid[0]" value="'.$pc_event_id.'" />';
 	}
 	if(!empty($function)) {
-    	$output .= $are_you_sure_text.' ';
-    	$output .= '<input type="submit" name="submit" value="'._PC_ADMIN_YES.'" />';
-    	$output .= '</form>';
+		$output .= $are_you_sure_text.' ';
+		$output .= '<input type="submit" name="submit" value="'._PC_ADMIN_YES.'" />';
+		$output .= '</form>';
 	}
-    
-	return $output;
+
+	//return $output;
+	$pnRender->assign('output',$output);
+	return $pnRender->fetch("admin/postcalendar_admin_eventrevue.htm");
 }
 
 function postcalendar_admin_approveevents()

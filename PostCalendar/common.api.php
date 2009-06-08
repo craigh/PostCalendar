@@ -1244,24 +1244,13 @@ function postcalendar_userapi_eventDetail($args,$admin=false)
 	extract($args); 
 	unset($args);
 
-	if(!isset($cacheid)) 
-		$cacheid = null;
-
-	if(!isset($eid)) 
-		return false;
-
-	if(!isset($nopop)) 
-		$nopop = false;
-
+	if(!isset($cacheid)) $cacheid = null;
+	if(!isset($eid)) return false;
+	if(!isset($nopop)) $nopop = false;
 	$uid = pnUserGetVar('uid');
-    /*
-    $pcTheme = pnModGetVar(__POSTCALENDAR__,'pcTemplate');
-	if(!$pcTheme)
-	    $pcTheme='default';
-    */
-	//$tpl = new pnRender();
- 	//$tpl = pnRender::getInstance('PostCalendar');
- 		//PostCalendarSmartySetup($tpl);
+
+	//$tpl = pnRender::getInstance('PostCalendar');
+	//PostCalendarSmartySetup($tpl);
 		/* Trim as needed */
 			$func  = FormUtil::getPassedValue('func');
 			$template_view = FormUtil::getPassedValue('tplview');
@@ -1271,161 +1260,160 @@ function postcalendar_userapi_eventDetail($args,$admin=false)
 		/* end */
   
 	if($admin) {
-		$function_out['template'] = "admin_view_event_details.html";
+		$function_out['template'] = "admin/postcalendar_admin_view_event_details.htm";
 		$function_out['Date'] = postcalendar_getDate();
 	} else {
 		$function_out['template'] = "view_event_details.html";
 	}
 	
-		// let's get the DB information
-		$event = postcalendar_userapi_pcGetEventDetails($eid);
-		// if the above is false, it's a private event for another user
-		// we should not diplay this - so we just exit gracefully
-		if($event === false) 
-			return false; 
+	// let's get the DB information
+	$event = postcalendar_userapi_pcGetEventDetails($eid);
+	// if the above is false, it's a private event for another user
+	// we should not diplay this - so we just exit gracefully
+	if($event === false) 
+		return false; 
+	
+	// since recurrevents are dynamically calculcated, we need to change the date 
+	// to ensure that the correct/current date is being displayed (rather than the 
+	// date on which the recurring booking was executed).	
+	if ($event['recurrtype'])
+	{
+		$y = substr ($Date, 0, 4);
+		$m = substr ($Date, 4, 2);
+		$d = substr ($Date, 6, 2);
+		$event['eventDate'] = "$y-$m-$d";
+	}
+	
+	// populate the template
+	$display_type = substr($event['hometext'],0,6);
+	if($display_type == ':text:') {
+		$prepFunction = 'pcVarPrepForDisplay';
+		$event['hometext'] = substr($event['hometext'],6);
+	} elseif($display_type == ':html:') {
+		$prepFunction = 'pcVarPrepHTMLDisplay';
+		$event['hometext'] = substr($event['hometext'],6);
+	} else {
+		$prepFunction = 'pcVarPrepHTMLDisplay';
+	}
+	
+	unset($display_type);
+	// prep the vars for output
+	$event['title']     = $prepFunction($event['title']); 
+	$event['hometext']  = $prepFunction($event['hometext']);
+	$event['desc']      = $event['hometext'];
+	$event['conttel']   = $prepFunction($event['conttel']);
+	$event['contname']  = $prepFunction($event['contname']);
+	$event['contemail'] = $prepFunction($event['contemail']);
+	$event['website']   = $prepFunction(postcalendar_makeValidURL($event['website']));
+	$event['fee']       = $prepFunction($event['fee']);
+	$event['location']  = $prepFunction($event['event_location']);
+	$event['street1']   = $prepFunction($event['event_street1']);
+	$event['street2']   = $prepFunction($event['event_street2']);
+	$event['city']      = $prepFunction($event['event_city']);
+	$event['state']     = $prepFunction($event['event_state']);
+	$event['postal']    = $prepFunction($event['event_postal']);
+	$function_out['A_EVENT'] = $event;
+	
+	if(!empty($event['location']) || !empty($event['street1']) ||
+		!empty($event['street2']) || !empty($event['city']) ||
+		!empty($event['state']) || !empty($event['postal'])) 
+		$function_out['LOCATION_INFO'] = true;
+	else 
+		$function_out['LOCATION_INFO'] = false;
+	
+	if(!empty($event['contname']) || !empty($event['contemail']) ||
+		!empty($event['conttel']) || !empty($event['website'])) 
+		$function_out['CONTACT_INFO'] = true;
+	else 
+		$function_out['CONTACT_INFO'] = false;
+	
+	// determine meeting participants
+	$participants = array();
+	if ($event['meeting_id'])
+	{
+		$where     = 'WHERE pc_meeting_id=' . pnVarPrepForStore ($event['meeting_id']);
+		$attendees = DBUtil::selectFieldArray ('postcalendar_events', 'aid', $where);
+	
+		// FIXME: do we need this here? Just to do a lookup? 
+		$ca = array();
+		$ca['uid'] = 'uid';
+		$ca['uname'] = 'uname';
+		$users = DBUtil::selectObjectArray ('users', '', '', -1, -1, 'uid', null, $ca);
 
-		// since recurrevents are dynamically calculcated, we need to change the date 
-	        // to ensure that the correct/current date is being displayed (rather than the 
-		// date on which the recurring booking was executed).	
-		if ($event['recurrtype'])
-		{
-			$y = substr ($Date, 0, 4);
-			$m = substr ($Date, 4, 2);
-			$d = substr ($Date, 6, 2);
-			$event['eventDate'] = "$y-$m-$d";
-		}
+		foreach ($attendees as $uid)
+			$participants[] = $users[$uid]['uname'];
 
-		// populate the template
-		$display_type = substr($event['hometext'],0,6);
-		if($display_type == ':text:') {
-			$prepFunction = 'pcVarPrepForDisplay';
-			$event['hometext'] = substr($event['hometext'],6);
-		} elseif($display_type == ':html:') {
-			$prepFunction = 'pcVarPrepHTMLDisplay';
-			$event['hometext'] = substr($event['hometext'],6);
-		} else {
-			$prepFunction = 'pcVarPrepHTMLDisplay';
-		}
+		sort ($participants);
+	}
+	$function_out['participants'] = $participants;
+
+
+	//=================================================================
+	//  populate the template $ADMIN_OPTIONS
+	//=================================================================
+	$target='';
+	if(_SETTING_OPEN_NEW_WINDOW) 
+		$target = 'target="csCalendar"';
+
+	$admin_edit_url = $admin_delete_url = '';
+	if (pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) 
+	{
+		$admin_edit_url     = pnModURL(__POSTCALENDAR__,'admin','submit',array('pc_event_id'=>$eid));
+		$admin_delete_url   = pnModURL(__POSTCALENDAR__,'admin','adminevents',array('action'=>_ACTION_DELETE,'pc_event_id'=>$eid));
+		// v4b TS start 1 line
+		$admin_copy_url     = pnModURL(__POSTCALENDAR__,'admin','submit',array('pc_event_id'=>$eid,'form_action'=>'copy'));
+	}
+	$user_edit_url = $user_delete_url = '';
+	
+	if(pnUserLoggedIn()) 
+		$logged_in_uid = pnUserGetVar('uid');
+	else 
+		$logged_in_uid = 1;
+	
+	$can_edit = false;
+	if ((pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADD) && $logged_in_uid == $event['aid']) || 
+	     pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN))
+	{
+		$user_edit_url     = pnModURL(__POSTCALENDAR__,'user','submit',array('pc_event_id'=>$eid));
+		$user_delete_url   = pnModURL(__POSTCALENDAR__,'user','delete',array('pc_event_id'=>$eid));
+		// v4b TS start 1 line
+		$user_copy_url     = pnModURL(__POSTCALENDAR__,'user','submit',array('pc_event_id'=>$eid,'form_action'=>'copy'));
+		$can_edit = true;
+	}
+
+	$function_out['ADMIN_TARGET'] = $target;
+	$function_out['ADMIN_EDIT'] = $admin_edit_url;
+	$function_out['ADMIN_DELETE'] = $admin_delete_url;
+	// v4b TS start 2 lines
+	$function_out['ADMIN_COPY'] = $admin_copy_url;
+	$function_out['USER_COPY'] = $user_copy_url;
+
+	$function_out['USER_TARGET'] = $target;
+	$function_out['USER_EDIT'] = $user_edit_url;
+	$function_out['USER_DELETE'] = $user_delete_url;
+	$function_out['USER_CAN_EDIT'] = $can_edit;
+
+	if($popup != 1) {    
+		return $function_out;	
+	} else {
+		// this concept needs to be changed to simply use a different template if using a popup. CAH 5/9/09
+		$theme = pnUserGetTheme();
+		$function_out['raw1'] = "<html><head></head><body>\n";
+	  //$tpl->display("view_event_details.html",$cacheid);
 		
-		unset($display_type);
-		// prep the vars for output
-		$event['title']     = $prepFunction($event['title']); 
-		$event['hometext']  = $prepFunction($event['hometext']);
-		$event['desc']      = $event['hometext'];
-		$event['conttel']   = $prepFunction($event['conttel']);
-		$event['contname']  = $prepFunction($event['contname']);
-		$event['contemail'] = $prepFunction($event['contemail']);
-		$event['website']   = $prepFunction(postcalendar_makeValidURL($event['website']));
-		$event['fee']       = $prepFunction($event['fee']);
-		$event['location']  = $prepFunction($event['event_location']);
-		$event['street1']   = $prepFunction($event['event_street1']);
-		$event['street2']   = $prepFunction($event['event_street2']);
-		$event['city']      = $prepFunction($event['event_city']);
-		$event['state']     = $prepFunction($event['event_state']);
-		$event['postal']    = $prepFunction($event['event_postal']);
-		$function_out['A_EVENT'] = $event;
-
-		if(!empty($event['location']) || !empty($event['street1']) ||
-		   !empty($event['street2']) || !empty($event['city']) ||
-		   !empty($event['state']) || !empty($event['postal'])) 
-			$function_out['LOCATION_INFO'] = true;
-		else 
-			$function_out['LOCATION_INFO'] = false;
-
-		if(!empty($event['contname']) || !empty($event['contemail']) ||
-		   !empty($event['conttel']) || !empty($event['website'])) 
-			$function_out['CONTACT_INFO'] = true;
-		else 
-			$function_out['CONTACT_INFO'] = false;
-
-		// determine meeting participants
-		$participants = array();
-		if ($event['meeting_id'])
-		{
-	            $where     = 'WHERE pc_meeting_id=' . pnVarPrepForStore ($event['meeting_id']);
-	            $attendees = DBUtil::selectFieldArray ('postcalendar_events', 'aid', $where);
-
-		    // FIXME: do we need this here? Just to do a lookup? 
-		    $ca = array();
-		    $ca['uid'] = 'uid';
-		    $ca['uname'] = 'uname';
-	            $users = DBUtil::selectObjectArray ('users', '', '', -1, -1, 'uid', null, $ca);
-
-		    foreach ($attendees as $uid)
-		         $participants[] = $users[$uid]['uname'];
-
-                    sort ($participants);
-		}
-		$function_out['participants'] = $participants;
-
-
-		//=================================================================
-		//  populate the template $ADMIN_OPTIONS
-		//=================================================================
-		$target='';
-    		if(_SETTING_OPEN_NEW_WINDOW) 
-        		$target = 'target="csCalendar"';
-		
-		$admin_edit_url = $admin_delete_url = '';
-		if (pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) 
-		{
-			$admin_edit_url     = pnModURL(__POSTCALENDAR__,'admin','submit',array('pc_event_id'=>$eid));
-			$admin_delete_url   = pnModURL(__POSTCALENDAR__,'admin','adminevents',array('action'=>_ACTION_DELETE,'pc_event_id'=>$eid));
-            // v4b TS start 1 line
-            $admin_copy_url     = pnModURL(__POSTCALENDAR__,'admin','submit',array('pc_event_id'=>$eid,'form_action'=>'copy'));
-		}
-		$user_edit_url = $user_delete_url = '';
-
-		if(pnUserLoggedIn()) 
-			$logged_in_uid = pnUserGetVar('uid');
-		else 
-			$logged_in_uid = 1;
-
-		$can_edit = false;
-		if ((pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADD) && $logged_in_uid == $event['aid']) || 
-		     pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN))
-		{
-			$user_edit_url     = pnModURL(__POSTCALENDAR__,'user','submit',array('pc_event_id'=>$eid));
-			$user_delete_url   = pnModURL(__POSTCALENDAR__,'user','delete',array('pc_event_id'=>$eid));
-                        // v4b TS start 1 line
-                        $user_copy_url     = pnModURL(__POSTCALENDAR__,'user','submit',array('pc_event_id'=>$eid,'form_action'=>'copy'));
-			$can_edit = true;
-		}
-
-		$function_out['ADMIN_TARGET'] = $target;
-		$function_out['ADMIN_EDIT'] = $admin_edit_url;
-		$function_out['ADMIN_DELETE'] = $admin_delete_url;
-        // v4b TS start 2 lines
-		$function_out['ADMIN_COPY'] = $admin_copy_url;
-		$function_out['USER_COPY'] = $user_copy_url;
-        
-		$function_out['USER_TARGET'] = $target;
-		$function_out['USER_EDIT'] = $user_edit_url;
-		$function_out['USER_DELETE'] = $user_delete_url;
-		$function_out['USER_CAN_EDIT'] = $can_edit;
-   	
-    if($popup != 1) {    
-			return $function_out;
-
-    } else {
-			// this concept needs to be changed to simply use a different template if using a popup. CAH 5/9/09
-			$theme = pnUserGetTheme();
-			$function_out['raw1'] = "<html><head></head><body>\n";
-    	//$tpl->display("view_event_details.html",$cacheid);
-			
-			$function_out['raw2'] .= postcalendar_footer();
-			// V4B TS start ***  Hook code for displaying stuff for events in popup
-			if ($_GET["type"] != "admin") {
-				$hooks = pnModCallHooks('item', 'display', $eid, "index.php?module=PostCalendar&type=user&func=view&viewtype=details&eid=$eid&popup=1");
-        $function_out['raw2'] .= $hooks;
-			} 
-      // V4B TS end ***  End of Hook code
-      $function_out['raw2'] .= "\n</body></html>";
-    	//session_write_close();
-			//exit;
-			$function_out['displayaspopup'] = true;
-			return function_out;
-		}
+		$function_out['raw2'] .= postcalendar_footer();
+		// V4B TS start ***  Hook code for displaying stuff for events in popup
+		if ($_GET["type"] != "admin") {
+			$hooks = pnModCallHooks('item', 'display', $eid, "index.php?module=PostCalendar&type=user&func=view&viewtype=details&eid=$eid&popup=1");
+			$function_out['raw2'] .= $hooks;
+		} 
+		// V4B TS end ***  End of Hook code
+		$function_out['raw2'] .= "\n</body></html>";
+		//session_write_close();
+		//exit;
+		$function_out['displayaspopup'] = true;
+		return function_out;
+	}
 }
 
 function postcalendar_footer()
