@@ -881,7 +881,8 @@ function postcalendar_admin_categoriesUpdate()
 	$color	= unserialize($color);
 
 	$modID = $modName = $modDesc = $modColor = array();
-	
+
+	//determine categories to update (not the ones to delete)
 	if(isset($id)) {
 		foreach($id as $k=>$i) {
 			$found = false;
@@ -902,6 +903,7 @@ function postcalendar_admin_categoriesUpdate()
 		}
 	}
 
+	//update categories
 	$e =  $msg = '';
 	$obj = array();
 	foreach($modID as $k=>$id) {
@@ -909,29 +911,24 @@ function postcalendar_admin_categoriesUpdate()
 		$obj['catname']  = $modName[$k];
 		$obj['catdesc']  = $modDesc[$k];
 		$obj['catcolor'] = $modColor[$k];
-		//$res = DBUtil::updateObject ($obj, 'postcalendar_categories', '', false, 'catid');
 		$res = DBUtil::updateObject ($obj, 'postcalendar_categories', '', 'catid');
-		if (!$res)
-		$e .= 'UPDATE FAILED';
-	}
-	
-	$pntable = pnDBGetTables();
-	
-	if (isset($dels) && $dels) {
-		$delete = "DELETE FROM $pntable[postcalendar_categories] WHERE pc_catid IN ($dels)";
-		$res = DBUtil::executeSQL ($delete, false, false);
-		if (!$res)
-		$e .= 'DELETE FAILED';
+		if (!$res) $e .= 'UPDATE FAILED';
 	}
 
+	// delete categories
+	if (isset($dels) && $dels) {
+		$res = DBUtil::deleteObjectsFromKeyArray (array_flip($del), 'postcalendar_categories', 'catid');
+		if (!$res) $e .= 'DELETE FAILED';
+	}
+
+	// add category
 	if(isset($newname)) {
 		$obj['catid']= '';
 		$obj['catname']  = $newname;
 		$obj['catdesc']  = $newdesc;
 		$obj['catcolor'] = $newcolor;
 		$res = DBUtil::insertObject ($obj, 'postcalendar_categories', false, 'catid');
-		if (!$res)
-		$e .= 'INSERT FAILED';
+		if (!$res) $e .= 'INSERT FAILED';
 	}
 
 	if (empty($e)) $msg = 'DONE';
