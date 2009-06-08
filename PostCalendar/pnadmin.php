@@ -320,7 +320,7 @@ function postcalendar_admin_deleteevents()
 	//$tpl = new pnRender();
 	$tpl = pnRender::getInstance('PostCalendar'); //	PostCalendarSmartySetup not needed
 	$tpl->clear_all_cache();
-    return postcalendar_admin_showlist('',_EVENT_APPROVED,'listapproved',_PC_APPROVED_ADMIN,$msg);
+	return postcalendar_admin_showlist('',_EVENT_APPROVED,'listapproved',_PC_APPROVED_ADMIN,$msg);
 }
 // V4B SB INCOMING VALUES FROM THE SUBMIT FORM
 function postcalendar_admin_edit($args) { return postcalendar_admin_submit($args); }
@@ -1033,15 +1033,14 @@ function postcalendar_admin_testSystem()
 	if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
 		return LogUtil::registerPermissionError();
 	}
-   
-    $modinfo = pnModGetInfo(pnModGetIDFromName(__POSTCALENDAR__));
-    $pcDir = pnVarPrepForOS($modinfo['directory']);
+
+	$modinfo = pnModGetInfo(pnModGetIDFromName(__POSTCALENDAR__));
+	$pcDir = pnVarPrepForOS($modinfo['directory']);
 	$version = $modinfo['version'];
 	unset($modinfo);
 	
-//	$tpl = new pnRender();
 	$tpl = pnRender::getInstance('PostCalendar'); //	PostCalendarSmartySetup not needed
-    $infos = array();
+	$infos = array();
 	
 	if(phpversion() >= '4.1.0') {
 		$__SERVER = $_SERVER;
@@ -1057,22 +1056,22 @@ function postcalendar_admin_testSystem()
 		$pnVersion = pnConfigGetVar('Version_Num');
 	}
 	
-    array_push($infos, array('CMS Version', $pnVersion));
+	array_push($infos, array('CMS Version', $pnVersion));
 	array_push($infos, array('Sitename', pnConfigGetVar('sitename')));
-    array_push($infos, array('url', pnGetBaseURL()));
-    array_push($infos, array('PHP Version', phpversion()));
-    if ((bool) ini_get('safe_mode')) {
-      	$safe_mode = "On";
-    } else {
-      	$safe_mode = "Off";
-    }
-    array_push($infos, array('PHP safe_mode', $safe_mode));
+	array_push($infos, array('url', pnGetBaseURL()));
+	array_push($infos, array('PHP Version', phpversion()));
+	if ((bool) ini_get('safe_mode')) {
+	 	$safe_mode = "On";
+	} else {
+	 	$safe_mode = "Off";
+	}
+	array_push($infos, array('PHP safe_mode', $safe_mode));
 	if ((bool) ini_get('safe_mode_gid')) {
-      	$safe_mode_gid = "On";
-    } else {
-      	$safe_mode_gid = "Off";
-    }
-    array_push($infos, array('PHP safe_mode_gid', $safe_mode_gid));
+	 	$safe_mode_gid = "On";
+	} else {
+	 	$safe_mode_gid = "Off";
+	}
+	array_push($infos, array('PHP safe_mode_gid', $safe_mode_gid));
 	$base_dir = ini_get('open_basedir');
 	if(!empty($base_dir)) {
 		$open_basedir = "$base_dir";
@@ -1080,67 +1079,70 @@ function postcalendar_admin_testSystem()
 		$open_basedir = "NULL";
 	}
 	array_push($infos, array('PHP open_basedir', $open_basedir));
-    array_push($infos, array('SAPI', php_sapi_name()));
-    array_push($infos, array('OS', php_uname()));
+	array_push($infos, array('SAPI', php_sapi_name()));
+	array_push($infos, array('OS', php_uname()));
 	array_push($infos, array('WebServer', $__SERVER['SERVER_SOFTWARE']));
 	array_push($infos, array('Module dir', "modules/$pcDir"));
 
 	$modversion = array();
-    include  "modules/$pcDir/pnversion.php";
-    
+	include  "modules/$pcDir/pnversion.php";
+
 	$error = '';
 	if ($modversion['version'] != $version) {
-      	$error  = '<br /><div style=\"color: red;\">';
-      	$error .= "new version $modversion[version] installed but not updated!";
-      	$error .= '</div>';
-    }
-    array_push($infos, array('Module version', $version . " $error"));
+  	$error  = '<br /><div style=\"color: red;\">';
+		$error .= "new version $modversion[version] installed but not updated!";
+		$error .= '</div>';
+	}
+	array_push($infos, array('Module version', $version . " $error"));
 	array_push($infos, array('smarty version', $tpl->_version));
-    array_push($infos, array('smarty location',  SMARTY_DIR));
-    array_push($infos, array('smarty template dir', $tpl->template_dir));
+	array_push($infos, array('smarty location',  SMARTY_DIR));
+	array_push($infos, array('smarty template dir', $tpl->template_dir));
 
-    $info = $tpl->compile_dir;
-    $error = '';
-    if (!file_exists($tpl->compile_dir)) {
-      	$error .= " compile dir doesn't exist! [$tpl->compile_dir]<br />";
-    } else {
-      	// dir exists -> check if it's writeable
-      	if (!is_writeable($tpl->compile_dir)) {
-         	$error .= " compile dir not writeable! [$tpl->compile_dir]<br />";
-      	}
-    }
+	$info = $tpl->compile_dir;
+	$error = '';
+	if (!file_exists($tpl->compile_dir)) {
+	  	$error .= " compile dir doesn't exist! [$tpl->compile_dir]<br />";
+	} else {
+	  	// dir exists -> check if it's writeable
+		if (!is_writeable($tpl->compile_dir)) {
+	 		$error .= " compile dir not writeable! [$tpl->compile_dir]<br />";
+	  }
+	}
 	if (strlen($error) > 0) {
-      	$info .= "<br /><div style=\"color: red;\">$error</div>";
-    }
+	  $info .= "<br /><div style=\"color: red;\">$error</div>";
+	}
 	array_push($infos, array('smarty compile dir',  $info));
-    
-	$info = $tpl->cache_dir;
-    $error = "";
-    if (!file_exists($tpl->cache_dir)) {
-      	$error .= " cache dir doesn't exist! [$tpl->cache_dir]<br />";
-    } else {
-      	// dir exists -> check if it's writeable
-      	if (!is_writeable($tpl->cache_dir)) {
-         	$error .= " cache dir not writeable! [$tpl->cache_dir]<br />";
-      	}
-    }
-	if (strlen($error) > 0) {
-      	$info .= "<br /><div style=\"color: red;\">$error</div>";
-    }
-	array_push($infos, array('smarty cache dir',  $info));
 
+	$info = $tpl->cache_dir;
+	$error = "";
+	if (!file_exists($tpl->cache_dir)) {
+	  $error .= " cache dir doesn't exist! [$tpl->cache_dir]<br />";
+	} else {
+	  // dir exists -> check if it's writeable
+	  if (!is_writeable($tpl->cache_dir)) {
+	 		$error .= " cache dir not writeable! [$tpl->cache_dir]<br />";
+	  }
+	}
+	if (strlen($error) > 0) {
+	 	$info .= "<br /><div style=\"color: red;\">$error</div>";
+	}
+	array_push($infos, array('smarty cache dir',  $info));
+/*
 	$output  = "";
 	$output .= '<table border="1" cellpadding="3" cellspacing="1">';
-    $output .= '  <tr><th align="left">Name</th><th align="left">Value</th>';
-    $output .= '</tr>';
-    foreach ($infos as $info) {
+	$output .= '  <tr><th align="left">Name</th><th align="left">Value</th>';
+	$output .= '</tr>';
+	foreach ($infos as $info) {
 		$output.= '<tr><td ><b>' . pnVarPrepHTMLDisplay($info[0]) . '</b></td>';
-      	$output.= '<td>' . pnVarPrepHTMLDisplay($info[1]) . '</td></tr>';
-    }
-    $output .= '</table>';
-    $output .= '<br /><br />';
+  	$output.= '<td>' . pnVarPrepHTMLDisplay($info[1]) . '</td></tr>';
+	}
+	$output .= '</table>';
+	$output .= '<br /><br />';
 	$output .= postcalendar_admin_modifyconfig('',false);
-    return $output;
+	return $output;
+*/
+	$tpl->assign('infos', $infos);
+	return $tpl->fetch('admin/postcalendar_admin_systeminfo.htm');
 }
 
 
