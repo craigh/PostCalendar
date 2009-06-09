@@ -316,5 +316,12 @@ function postcalendar_adminapi_waiting($args)
     $output = "waiting<br />";
     return $output->GetOutput();
 }
+function postcalendar_adminapi_clearCache()
+{
+	$pnRender = pnRender::getInstance('PostCalendar'); //	PostCalendarSmartySetup not needed
+	$res = $pnRender->clear_all_cache();
+
+	return $res;
+}
 
 ?>

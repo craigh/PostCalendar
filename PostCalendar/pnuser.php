@@ -35,7 +35,8 @@
  *
  */
 
-
+Loader::requireOnce('includes/pnForm.php');
+//don't think I'll need the next two lines anymore...
 pnModAPILoad(__POSTCALENDAR__,'user');
 require_once ('includes/HtmlUtil.class.php');
 
@@ -50,20 +51,65 @@ function postcalendar_user_main()
 	return postcalendar_user_view(array('Date'=>postcalendar_getDate()));
 }
 
+/******************************************/
+
+class postcalendar_user_fileuploadHandler extends pnFormHandler
+{
+	function initialize(&$render)
+	{
+		if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADD))
+			return $render->pnFormSetErrorMsg(_NOTAUTHORIZED);
+
+		return true;
+	}
+
+    // The handleCommand() function is called by the framework to notify your handler that the
+    // user did something that caused a command to be sent to your handler. You should check
+    // which command it was and then react upon it.
+    // Remember the "&"-ampersand in &$render otherwise your code wont work!
+    function handleCommand(&$render, $args)
+    {
+				echo "got to the handleCommand";
+        if ($args['commandName'] == 'submit')
+        {
+            // Do forms validation. This call forces the framework to check all validators on the page
+            // to validate their input. If anyone fails then pnFormIsValid() returns false, and so
+            // should your command event also do.
+         //   if (!$render->pnFormIsValid())
+         //       return false;
+						echo "YOU ARE HERE";
+
+            $data = $render->pnFormGetValues();
+						pcDebugVar($data);
+
+            $result = pnModAPIFunc('PostCalendar', 'user', 'processupload',
+                                   array('icsupload' => $data['icsupload']));
+            if ($result === false)
+                return $render->pnFormSetErrorMsg(_PC_COULDNOTPROCESSFILEUPLOAD);
+
+            $url = pnModUrl('PostCalendar', 'user', 'view', array('viewtype' => pnModGetVar('PostCalendar','pcDefaultView')));
+
+            return $render->pnFormRedirect($url);
+        }
+        else if ($args['commandName'] == 'cancel')
+        {
+            $redir = pnModUrl('PostCalendar', 'user', 'view', array('viewtype' => pnModGetVar('PostCalendar','pcDefaultView')));
+            return $render->pnFormRedirect($redir);
+        }
+				echo "no command found";
+        $data = $render->pnFormGetValues();
+				pcDebugVar($data);
+        return true;
+    }
+}
+
+/******************************************/
+
 
 function postcalendar_user_upload()
 {
-	$output = new pnHTML();
-	$action = pnModURL(PostCalendar, "user", "viewupload");
-	$output->Text($action);
-	$output->LineBreak(2);
-	$output->UploadMode();
-	$output->FormStart($action);
-	$output->SetInputMode(_PNH_VERBATIMINPUT);
-	$output->FormFile('icsupload', $size=35);
-	$output->FormSubmit();
-	$output->FormEnd();
-	return $output->getOutput();
+	$render = & FormUtil::newpnForm('PostCalendar');
+	return $render->pnFormExecute('user/postcalendar_user_fileupload.htm', new postcalendar_user_fileuploadHandler());
 }
 
 
@@ -87,223 +133,6 @@ function postcalendar_user_splittime($args)
 	$splittime['second'] = substr($args, 4, 2);
 	return $splittime;
 }
-
-
-function postcalendar_user_viewupload()
-{
-	$dbname = pnConfigGetVar('dbname');
-	list($dbconn) = pnDBGetConn();
-	$pntable = pnDBGetTables();
-	$cat_table = $pntable['postcalendar_categories'];
-	$event_table = $pntable['postcalendar_events'];
-	require_once('includes/debug.php');
-
-	$vevent  = array();
-	$vevent_save_data  = array();
-	$counter = 0;
-	
-	$fp = fopen($_FILES['icsupload']['tmp_name'], "r");
-	while(!feof($fp))
-	{
-		if(preg_match('(BEGIN:VCALENDAR)', $fileline, $result))
-	        {
-			$write = 1;
-		}
-
-		if((preg_match('(BEGIN:VEVENT)', $fileline, $result))&&($write==1))
-		{
-			$write=2;
-		}
-		
-		$fileline = fgets($fp);
-		if((preg_match('(SUMMARY:)', $fileline, $result))&&($write == 2))
-		{
-			$start					=  strpos($fileline, ":")+1;
-			$vevent[$counter]['title']  		=  substr($fileline, $start);
-		}
-		if((preg_match('(DESCRIPTION:)', $fileline, $result))&&($write == 2))
-		{
-			$start					=  strpos($fileline, ":")+1;
-			$vevent[$counter]['description']	=  trim(substr($fileline, $start, -5));
-		}
-		if((preg_match('(\s+Contact:)', $fileline, $result))&&($write == 2))
-		{
-			$start					=  strpos($fileline, ":")+2;
-			$vevent[$counter]['contact']   		=  substr($fileline, $start, -3);
-		}
-		if((preg_match('(\s+Phone:)', $fileline, $result))&&($write == 2))
-		{
-			$start					=  strpos($fileline, ":")+2;
-			$vevent[$counter]['phone']   		=  substr($fileline, $start, -3);
-		}
-		if((preg_match('(\s+Email:)', $fileline, $result))&&($write == 2))
-		{
-			$start					=  strpos($fileline, ":")+2;
-			$vevent[$counter]['email']   		=  substr($fileline, $start, -3);
-		}
-		if((preg_match('(\s+URL:)', $fileline, $result))&&($write == 2))
-		{
-			$start					=  strpos($fileline, ":")+9;
-			$vevent[$counter]['url']   		=  substr($fileline, $start, -3);
-		}
-		if((preg_match('(ALLDAY:)', $fileline, $result))&&($write == 2))
-		{
-			$start					=  strpos($fileline, ":")+1;
-			$vevent[$counter]['allday']  		=  substr($fileline, $start);
-		}
-		if((preg_match('(TOPIC:)', $fileline, $result))&&($write == 2))
-		{
-			$start					=  strpos($fileline, ":")+1;
-			$vevent[$counter]['topic']  		=  substr($fileline, $start);
-		}
-		if((preg_match('(FEE:)', $fileline, $result))&&($write == 2))
-		{
-			$start					=  strpos($fileline, ":")+1;
-			$vevent[$counter]['fee']  		=  substr($fileline, $start);
-		}
-		if((preg_match('(\s+Location:)', $fileline, $result))&&($write == 2))
-		{
-			$start					=  strpos($fileline, ":")+2;
-			$vevent[$counter]['location']  		=  substr($fileline, $start, -3);
-		}
-		if((preg_match('(\s+City,\s+ST\s+ZIP:)', $fileline, $result))&&($write == 2))
-		{
-			$start					=  strpos($fileline, ":")+2;
-			$help			 		=  substr($fileline, $start, -3);
-			$citystop				=  strpos($help, ",");
-			$vevent[$counter]['city']  		=  substr($help, 0, $citystop);
-			$statezip				=  trim(substr($help, $citystop+1));
-			$statestop				=  strpos($statezip, " ");
-			$vevent[$counter]['state']		=  substr($statezip, 0, $statestop); 
-			$vevent[$counter]['zip']		=  substr($statezip, $statestop+1);
-		}
-		if((preg_match('(CATEGORIES:)', $fileline, $result))&&($write == 2))
-		{
-			$start					=  strpos($fileline, ":")+1;
-			$category		  		=  trim(substr($fileline, $start));
-			$cat_id = DBUtil::selectFieldByID ('postcalendar_categories', 'catid', $category, 'catname');
-			if(!$cat_id)
-				$cat_id = 1;
-			$vevent[$counter]['cat_id'] = $cat_id;
-		}
-		if(preg_match('(DTSTAMP:)', $fileline, $result))
-	        {
-			$stampstart			= strpos($fileline, ":")+1;
-			$vevent[$counter]['stdate']	= postcalendar_user_splitdate(substr($fileline, $stampstart, 8));
-			$vevent[$counter]['sttime']	= postcalendar_user_splittime(substr($fileline, $stampstart+9, 6));
-		}
-		if(preg_match('(DTSTART:)', $fileline, $result))
-	        {
-			$datestart			  = strpos($fileline, ":")+1;
-			$vevent[$counter]['startdate'] = postcalendar_user_splitdate(substr($fileline, $datestart, 8));
-			$vevent[$counter]['starttime'] = postcalendar_user_splittime(substr($fileline, $datestart+9, 6));
-
-		}
-		if(preg_match('(DTEND:)', $fileline, $result))
-	        {
-			$dateend			= strpos($fileline, ":")+1;
-			$vevent[$counter]['enddate']	= postcalendar_user_splitdate(substr($fileline, $dateend, 8));
-			$vevent[$counter]['endtime']	= postcalendar_user_splittime(substr($fileline, $dateend+9, 6));
-		}
-
-		$event_repeat_data = array();
-		$event_repeat_data['event_reqeat_freq'] 	= "1";
-		$event_repeat_data['event_reqeat_freq_type'] 	= "0";
-		$event_repeat_data['event_reqeat_on_num'] 	= "1";
-		$event_repeat_data['event_reqeat_on_day'] 	= "0";
-		$event_repeat_data['event_reqeat_on_freq'] 	= "1";
-		
-		$event_location_data = array();
-		$event_location_data['event_location']  = $vevent[$counter]['location'];
-		$event_location_data['event_street1']   = $vevent[$counter]['street1'];
-		$event_location_data['event_street2']   = $vevent[$counter]['street2'];
-		$event_location_data['event_city']	= $vevent[$counter]['city'];
-		$event_location_data['event_state']	= $vevent[$counter]['state'];
-		$event_location_data['event_postal']	= $vevent[$counter]['zip'];
-		
-		if(preg_match('(END:VEVENT)', $fileline, $result))
-	        {
-			$vevent[$counter]['pc_recurrspec']	= serialize($event_repeat_data);
-			$vevent[$counter]['pc_location']	= serialize($event_location_data);
-			$write = 1;
-			$counter++;
-		}
-		if(preg_match('(END:VCALENDAR)', $fileline, $result))
-	        {
-			$write = 0;
-		}
-	}
-	foreach($vevent as $ve)
-	{
-		$duration = NULL;
-		$ve['endtime']['second'] < $ve['starttime']['second'] ? $ve['endtime']['minute']++ : '';
-		$ve['endtime']['minute'] < $ve['starttime']['minute'] ? $ve['endtime']['hour']++ : '';
-		$duration = 3600*($ve['endtime']['hour']-$ve['starttime']['hour'])
-	       		    + 60*($ve['endtime']['minute']-$ve['starttime']['minute'])
-			    +    ($ve['endtime']['second']-$ve['starttime']['second']);
-		$pc_aid = pnSessionGetVar('uid');
-		$pc_informant = pnUserGetVar('name', $pc_aid);
-		
-		$sql  = "SELECT pc_meeting_id FROM $event_table ORDER BY pc_meeting_id DESC LIMIT 1";
-		$res  = DBUtil::executeSQL ($sql, false, false);
-		$emid = $res->fields[0];
-		
-		$pc_endDate   = $ve['enddate']['year']."-".$ve['enddate']['month']."-".$ve['enddate']['day']; 
-		$pc_endTime   = $ve['endtime']['hour'].":".$ve['endtime']['minute'].":".$ve['endtime']['second'];
-		$pc_eventDate = $ve['startdate']['year']."-".$ve['startdate']['month']."-".$ve['startdate']['day']; 
-		$pc_startTime = $ve['starttime']['hour'].":".$ve['starttime']['minute'].":".$ve['starttime']['second'];
-		$pc_timestamp = $ve['stdate']['year']."-".$ve['stdate']['month']."-".$ve['stdate']['day']." ".$ve['sttime']['hour'].":".$ve['sttime']['minute'].":".$ve['sttime']['second'];
-
-
-		
-		$where = " WHERE pc_catid     = $ve[cat_id] 
-			   AND   pc_aid       = '$pc_aid'
-			   AND   pc_title     = '$ve[title]'
-			   AND   pc_hometext  = ':text:$ve[description]'
-			   AND   pc_eventDate = '$pc_eventDate' 
-			   AND   pc_duration  = $duration
-			   AND   pc_startTime = '$pc_startTime'";
-		$event = DBUtil::selectObject ('postcalendar_events', $where);
-		if (!$event)
-		{
-			$obj = array ();
-			$obj['catid']      = $ve['cat_id'];
-			$obj['aid']         = $pc_aid;
-			$obj['title']       = $ve['title'];
-			$obj['time']        = $pc_timestamp;
-			$obj['hometext']    = ":text:$ve[description]";
-			$obj['topic']       = $ve['topic'];
-			$obj['informant']   = $pc_informant;
-			$obj['eventDate']   = $pc_eventDate;
-			$obj['endDate']     = $pc_endDate;
-			$obj['duration']    = $duration;
-			$obj['recurrtype']  = 0;
-			$obj['recurrspec']  = $ve['pc_recurrspec'];
-			$obj['recurrfreq']  = 0;
-			$obj['startTime']   = $pc_eventDate;
-			$obj['endTime']     = $pc_endDate;
-			$obj['alldayevent'] = $ve['allday'];
-			$obj['location']    = $ve['pc_location'];
-			$obj['conttel']     = $ve['phone'];
-			$obj['contname']    = $ve['contact'];
-			$obj['contemail']   = $ve['email'];
-			$obj['website']     = $ve['url'];
-			$obj['fee']         =  $ve['fee'];
-			$obj['eventstatus'] = 1;
-			$obj['sharing']     = 1;
-			$obj['language']    = NULL;
-			$obj['meeting_id']  = $emid;
-			$result = DBUtil::insertObject ($obj, 'postcalendar_events');
-		}
-	}
-
-	$tpl = pnRender::getInstance('PostCalendar'); //smartysetup not needed
-	$tpl->clear_all_cache();
-  $tpl->clear_compiled_tpl();
-	
-	return postcalendar_user_main();
-}
-
 
 /**
  * view items
@@ -400,81 +229,92 @@ function postcalendar_user_display($args)
 			break;
 	} // end switch
 }
+class postcalendar_event_editHandler extends pnFormHandler
+{
+	var $eid;
 
+	function initialize(&$render)
+	{
+		if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADD))
+			return $render->pnFormSetErrorMsg(_NOTAUTHORIZED);
+
+		$this->eid = FormUtil::getPassedValue('eid');
+
+		return true;
+	}
+
+	function handleCommand(&$render, &$args)
+	{
+		$url = null;
+
+		// Fetch event data 
+		$event = postcalendar_userapi_pcGetEventDetails($this->eid);
+		if (count($event) == 0)
+			return $render->pnFormSetErrorMsg(_NOEVENTSFROMID);
+
+		if ($args['commandName'] == 'update')
+		{
+			/*
+			if (!$render->pnFormIsValid())
+				return false;
+
+			$recipeData = $render->pnFormGetValues();
+			$recipeData['id'] = $this->recipeId;
+
+			$result = pnModAPIFunc('howtopnforms', 'recipe', 'update',
+								   array('recipe' => $recipeData));
+			if ($result === false)
+				return $render->pnFormSetErrorMsg(howtopnformsErrorAPIGet());
+
+			$url = pnModUrl('howtopnforms', 'recipe', 'view',
+							array('rid' => $this->recipeId));
+			*/
+		}
+		else if ($args['commandName'] == 'delete')
+		{
+			$uname = pnUserGetVar('uname');
+			if($uname != $event['informant']) {
+				return $render->pnFormSetErrorMsg(_PC_CAN_NOT_DELETE);
+			}
+			$result = pnModAPIFunc('PostCalendar', 'user', 'deleteevents',
+								   array('eid' => $this->eid));
+			if ($result === false)
+				return $render->pnFormSetErrorMsg(_PC_ADMIN_EVENT_ERROR);
+
+			$redir = pnModUrl('PostCalendar', 'user', 'view', array('viewtype' => pnModGetVar('PostCalendar','pcDefaultView')));
+			return $render->pnFormRedirect($redir);
+		}
+		else if ($args['commandName'] == 'cancel')
+		{
+			$url = pnModUrl('PostCalendar', 'user', 'view',
+							array('eid' => $this->eid, 'viewtype' => 'details', 'Date' => $event['Date']));
+		}
+
+		if ($url != null)
+		{
+			/*pnModAPIFunc('PageLock', 'user', 'releaseLock',
+						 array('lockName' => "HowtoPnFormsRecipe{$this->recipeId}")); */
+			return $render->pnFormRedirect($url);
+		}
+
+		return true;
+	}
+}
+
+/*
+	This is a user form 'are you sure' display
+	to delete an event
+*/
 function postcalendar_user_delete()
 {
 	if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADD)) {
 		return LogUtil::registerPermissionError();
 	}
-	
-	$output = new pnHTML();
-    $output->SetInputMode(_PNH_VERBATIMINPUT);
-    
-	$uname = pnUserGetVar('uname');
-    $action = FormUtil::getPassedValue('action');
-    $pc_event_id = FormUtil::getPassedValue('pc_event_id');
-    $event = postcalendar_userapi_pcGetEventDetails($pc_event_id);
-	if($uname != $event['informant']) {
-		return _PC_CAN_NOT_DELETE;
-	}
-	unset($event);
-	
-    $output->FormStart(pnModUrl(__POSTCALENDAR__,'user','deleteevents'));
-    // V4B RNG Start
-    $output->FormHidden('pc_eid',$pc_event_id);
-    // V4B RNG End
-    $output->Text(_PC_DELETE_ARE_YOU_SURE.' ');
-    $output->FormSubmit(_PC_ADMIN_YES);
-    $output->Linebreak(2);
-    // V4B RNG Start: Form is closed in the following block
-    // Form is closed in the following block
-    $output->Text(pnModAPIFunc(__POSTCALENDAR__,'user','eventDetail',array('eid'=>$pc_event_id,'cacheid'=>'','Date'=>'')));
-    $output->Linebreak(2);
-    // Re-open form here ...
-    $output->FormStart(pnModUrl(__POSTCALENDAR__,'user','deleteevents'));
-    // V4B RNG End
-    $output->FormHidden('pc_eid',$pc_event_id);
-	$output->Text(_PC_DELETE_ARE_YOU_SURE.' ');
-    $output->FormSubmit(_PC_ADMIN_YES);
-    $output->FormEnd();
-    
-	return $output->GetOutput();
-}
-function postcalendar_user_deleteevents()
-{
-	if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADD)) {
-		return LogUtil::registerPermissionError();
-	}
-
-	$uname = pnUserGetVar('uname');
-	$pc_eid = FormUtil::getPassedValue('pc_eid');
-	$event = postcalendar_userapi_pcGetEventDetails($pc_eid);
-	if($uname != $event['informant']) {
-		return _PC_CAN_NOT_DELETE;
-	}
-	unset($event);
-	
-    $output = new pnHTML();
-    $output->SetInputMode(_PNH_VERBATIMINPUT);
-    list($dbconn) = pnDBGetConn();
-    $pntable = pnDBGetTables();
-    $events_table = $pntable['postcalendar_events'];
-    $events_column = &$pntable['postcalendar_events_column'];
-    
-    $sql = "DELETE FROM $events_table WHERE $events_column[eid] = '$pc_eid'";
-
-    $dbconn->Execute($sql);
-    if ($dbconn->ErrorNo() != 0) {
-        $output->Text(_PC_ADMIN_EVENT_ERROR);
-    } else {
-        $output->Text(_PC_ADMIN_EVENTS_DELETED);
-    }
-    
-	$tpl = pnRender::getInstance('PostCalendar'); //smartysetup not needed
-	$tpl->clear_all_cache();	// clear the template cache
-
-
-	return $output->GetOutput(); 
+	$eid = FormUtil::getPassedValue('eid');
+	$render = FormUtil::newpnForm('PostCalendar');
+	$eventdetails = pnModAPIFunc('PostCalendar','user','eventDetail',array('eid'=>$eid,'cacheid'=>'','Date'=>''));
+	$render->assign('eventdetails', $eventdetails['A_EVENT']);
+	return $render->pnFormExecute('user/postcalendar_user_deleteeventconfirm.htm', new postcalendar_event_editHandler());
 }
 
 /**
@@ -584,7 +424,8 @@ function postcalendar_user_submit($args)
 	
 	$form_action = FormUtil::getPassedValue('form_action');
 	$pc_html_or_text = FormUtil::getPassedValue('pc_html_or_text');
-    $pc_event_id = FormUtil::getPassedValue('pc_event_id');
+    //$pc_event_id = FormUtil::getPassedValue('pc_event_id');
+    $pc_event_id = FormUtil::getPassedValue('eid');
 	$data_loaded = FormUtil::getPassedValue('data_loaded');
     $is_update   = FormUtil::getPassedValue('is_update');
 	$authid      = FormUtil::getPassedValue('authid');

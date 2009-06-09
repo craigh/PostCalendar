@@ -237,7 +237,7 @@ function postcalendar_admin_approveevents()
 		$msg = _PC_ADMIN_EVENTS_APPROVED; 
 	}
     
-	postcalendar_admin_clearCache();
+	pnModAPIFunc('PostCalendar','admin','clearCache');
 	return postcalendar_admin_showlist('',_EVENT_APPROVED,'listapproved',_PC_APPROVED_ADMIN,$msg);
 }
 
@@ -271,7 +271,7 @@ function postcalendar_admin_hideevents()
         $msg = _PC_ADMIN_EVENTS_HIDDEN;
     }
     
-	postcalendar_admin_clearCache();
+	pnModAPIFunc('PostCalendar','admin','clearCache');
 
 	return postcalendar_admin_showlist('',_EVENT_APPROVED,'listapproved',_PC_APPROVED_ADMIN,$msg);
 }
@@ -306,7 +306,7 @@ function postcalendar_admin_deleteevents()
         $msg = _PC_ADMIN_EVENTS_DELETED;
     }
     
-	postcalendar_admin_clearCache();
+	pnModAPIFunc('PostCalendar','admin','clearCache');
 
 	return postcalendar_admin_showlist('',_EVENT_APPROVED,'listapproved',_PC_APPROVED_ADMIN,$msg);
 }
@@ -605,7 +605,7 @@ function postcalendar_admin_submit($args)
 				$output .= '</div></center><br />';	
 				$output .= '<br />';
         	} else {
-						postcalendar_admin_clearCache();
+						pnModAPIFunc('PostCalendar','admin','clearCache');
 
 				$output .= '<center><div style="padding:5px; border:1px solid green; background-color: lightgreen;">';		
 				if($is_update) {
@@ -702,7 +702,7 @@ function postcalendar_admin_resetDefaults()
 	pnModSetVar(__POSTCALENDAR__, 'pcNotifyAdmin', '0');
 	pnModSetVar(__POSTCALENDAR__, 'pcNotifyEmail', pnConfigGetVar('adminmail'));
 	
-	postcalendar_admin_clearCache();
+	pnModAPIFunc('PostCalendar','admin','clearCache');
 		
 	return postcalendar_admin_modifyconfig(_PC_UPDATED_DEFAULTS);
 }
@@ -786,7 +786,7 @@ function postcalendar_admin_updateconfig()
 	pnModSetVar(__POSTCALENDAR__, 'pcNotifyAdmin',   $pcNotifyAdmin);
 	pnModSetVar(__POSTCALENDAR__, 'pcNotifyEmail',   $pcNotifyEmail);
 
-	postcalendar_admin_clearCache();
+	pnModAPIFunc('PostCalendar','admin','clearCache');
 
 	return postcalendar_admin_modifyconfig(_PC_UPDATED);
 }
@@ -923,17 +923,9 @@ function postcalendar_admin_manualClearCache() {
 	if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
 		return LogUtil::registerPermissionError();
 	}
-	$clear = postcalendar_admin_clearCache();
+	$clear = pnModAPIFunc('PostCalendar','admin','clearCache');
 	if ($clear) return postcalendar_admin_modifyconfig(_PC_CACHE_CLEARED);
 	return postcalendar_admin_modifyconfig(_PC_CACHE_NOTCLEARED);
-}
-
-function postcalendar_admin_clearCache()
-{
-	$pnRender = pnRender::getInstance('PostCalendar'); //	PostCalendarSmartySetup not needed
-	$res = $pnRender->clear_all_cache();
-
-	return $res;
 }
 
 function postcalendar_admin_testSystem()

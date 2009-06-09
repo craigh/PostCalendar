@@ -1358,10 +1358,10 @@ function postcalendar_userapi_eventDetail($args,$admin=false)
 	$admin_edit_url = $admin_delete_url = '';
 	if (pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) 
 	{
-		$admin_edit_url     = pnModURL(__POSTCALENDAR__,'admin','submit',array('pc_event_id'=>$eid));
-		$admin_delete_url   = pnModURL(__POSTCALENDAR__,'admin','adminevents',array('action'=>_ACTION_DELETE,'pc_event_id'=>$eid));
+		$admin_edit_url     = pnModURL(__POSTCALENDAR__,'admin','submit',array('eid'=>$eid));
+		$admin_delete_url   = pnModURL(__POSTCALENDAR__,'admin','adminevents',array('action'=>_ACTION_DELETE,'eid'=>$eid));
 		// v4b TS start 1 line
-		$admin_copy_url     = pnModURL(__POSTCALENDAR__,'admin','submit',array('pc_event_id'=>$eid,'form_action'=>'copy'));
+		$admin_copy_url     = pnModURL(__POSTCALENDAR__,'admin','submit',array('eid'=>$eid,'form_action'=>'copy'));
 	}
 	$user_edit_url = $user_delete_url = '';
 	
@@ -1374,10 +1374,10 @@ function postcalendar_userapi_eventDetail($args,$admin=false)
 	if ((pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADD) && $logged_in_uid == $event['aid']) || 
 	     pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN))
 	{
-		$user_edit_url     = pnModURL(__POSTCALENDAR__,'user','submit',array('pc_event_id'=>$eid));
-		$user_delete_url   = pnModURL(__POSTCALENDAR__,'user','delete',array('pc_event_id'=>$eid));
+		$user_edit_url     = pnModURL(__POSTCALENDAR__,'user','submit',array('eid'=>$eid));
+		$user_delete_url   = pnModURL(__POSTCALENDAR__,'user','delete',array('eid'=>$eid));
 		// v4b TS start 1 line
-		$user_copy_url     = pnModURL(__POSTCALENDAR__,'user','submit',array('pc_event_id'=>$eid,'form_action'=>'copy'));
+		$user_copy_url     = pnModURL(__POSTCALENDAR__,'user','submit',array('eid'=>$eid,'form_action'=>'copy'));
 		$can_edit = true;
 	}
 
@@ -1412,7 +1412,7 @@ function postcalendar_userapi_eventDetail($args,$admin=false)
 		//session_write_close();
 		//exit;
 		$function_out['displayaspopup'] = true;
-		return function_out;
+		return $function_out;
 	}
 }
 
