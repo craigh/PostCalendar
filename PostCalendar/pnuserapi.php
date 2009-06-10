@@ -825,6 +825,8 @@ function postcalendar_userapi_processupload($args)
 	$fp = fopen($_FILES['icsupload']['tmp_name'], "r");
 	while(!feof($fp))
 	{
+		$fileline = fgets($fp);
+
 		if(preg_match('(BEGIN:VCALENDAR)', $fileline, $result))
 	        {
 			$write = 1;
@@ -835,16 +837,15 @@ function postcalendar_userapi_processupload($args)
 			$write=2;
 		}
 		
-		$fileline = fgets($fp);
 		if((preg_match('(SUMMARY:)', $fileline, $result))&&($write == 2))
 		{
 			$start					=  strpos($fileline, ":")+1;
-			$vevent[$counter]['title']  		=  substr($fileline, $start);
+			$vevent[$counter]['title']  		=  trim(substr($fileline, $start));
 		}
 		if((preg_match('(DESCRIPTION:)', $fileline, $result))&&($write == 2))
 		{
 			$start					=  strpos($fileline, ":")+1;
-			$vevent[$counter]['description']	=  trim(substr($fileline, $start, -5));
+			$vevent[$counter]['description']	=  trim(substr($fileline, $start));
 		}
 		if((preg_match('(\s+Contact:)', $fileline, $result))&&($write == 2))
 		{
@@ -974,20 +975,21 @@ function postcalendar_userapi_processupload($args)
 		$pc_startTime = $ve['starttime']['hour'].":".$ve['starttime']['minute'].":".$ve['starttime']['second'];
 		$pc_timestamp = $ve['stdate']['year']."-".$ve['stdate']['month']."-".$ve['stdate']['day']." ".$ve['sttime']['hour'].":".$ve['sttime']['minute'].":".$ve['sttime']['second'];
 
+		$where = array();
+		if (is_numeric($ve['cat_id']))	$where[] = "pc_catid     = {$ve['cat_id']}";
+		if (is_numeric($pc_aid))		$where[] = "pc_aid       = '$pc_aid'";
+		if (isset($ve['title']))		$where[] = "pc_title     = '{$ve['title']}'";
+		if (isset($ve['description']))	$where[] = "pc_hometext  = ':text:{$ve['description']}'";
+		if (strlen($pc_eventDate) > 2)	$where[] = "pc_eventDate = '$pc_eventDate'";
+		if (!is_null($duration))		$where[] = "pc_duration  = $duration";
+		if (strlen($pc_startTime) > 2)	$where[] = "pc_startTime = '$pc_startTime'";
 
-		
-		$where = " WHERE pc_catid     = $ve[cat_id] 
-			   AND   pc_aid       = '$pc_aid'
-			   AND   pc_title     = '$ve[title]'
-			   AND   pc_hometext  = ':text:$ve[description]'
-			   AND   pc_eventDate = '$pc_eventDate' 
-			   AND   pc_duration  = $duration
-			   AND   pc_startTime = '$pc_startTime'";
+		$where = count($where) ? ' WHERE '.implode(' AND ', $where) : '';
 		$event = DBUtil::selectObject ('postcalendar_events', $where);
 		if (!$event)
 		{
 			$obj = array ();
-			$obj['catid']      = $ve['cat_id'];
+			if (is_numeric($ve['cat_id'])) $obj['catid'] = $ve['cat_id'];
 			$obj['aid']         = $pc_aid;
 			$obj['title']       = $ve['title'];
 			$obj['time']        = $pc_timestamp;

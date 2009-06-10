@@ -109,6 +109,7 @@ class postcalendar_user_fileuploadHandler extends pnFormHandler
 function postcalendar_user_upload()
 {
 	$render = & FormUtil::newpnForm('PostCalendar');
+	/* @var $render pnFormRender */
 	return $render->pnFormExecute('user/postcalendar_user_fileupload.htm', new postcalendar_user_fileuploadHandler());
 }
 
