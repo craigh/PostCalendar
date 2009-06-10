@@ -84,7 +84,7 @@ class postcalendar_user_fileuploadHandler extends pnFormHandler
 
             $result = pnModAPIFunc('PostCalendar', 'user', 'processupload',
                                    array('icsupload' => $data['icsupload']));
-            if ($result === false)
+            if ($result <> true)
                 return $render->pnFormSetErrorMsg(_PC_COULDNOTPROCESSFILEUPLOAD);
 
             $url = pnModUrl('PostCalendar', 'user', 'view', array('viewtype' => pnModGetVar('PostCalendar','pcDefaultView')));
@@ -109,7 +109,6 @@ class postcalendar_user_fileuploadHandler extends pnFormHandler
 function postcalendar_user_upload()
 {
 	$render = & FormUtil::newpnForm('PostCalendar');
-	/* @var $render pnFormRender */
 	return $render->pnFormExecute('user/postcalendar_user_fileupload.htm', new postcalendar_user_fileuploadHandler());
 }
 
@@ -795,38 +794,6 @@ function postcalendar_user_search()
 	*/
 	return $pageSetup . $tpl->fetch("search.html");
 }
-
-
-###############################################################################
-###############################################################################
-##
-##      ical.php
-##
-##      icalendar export of PostCalendar data
-##
-##      Author:         Eric Germann
-##      Version:        0.1
-##      Date:           01-03-04
-##      Contact:        ekgermann at cctec.com
-##
-##      ical.php is an icalendar export library for PostCalendar.  Put it
-##      in the root of your Zikula site.  The parameters are as follows:
-##
-##      date            one day export formatted as MM/DD/YYYY (i.e. 01/04/2004)
-##      start           beginning day export formatted as above
-##      end             ending dayexport formatted as above
-##      eid             a specific PostCalendar Event ID (use with date to get a
-##                      specific event on a specific day.
-##      type            inline (default) or attach.  Outlook 2000 can only do one
-##                      event inline.  However, you can save multiple events and
-##                      import the file and it will work.  This will override
-##                      that behavior.
-##      debug           set to 1 to turn on debugging, which shows the ICS file
-##                      as HTML, not an x-vCalendar type.
-##      category        allows you to match a specific PostCalendar Event Category
-##
-###############################################################################
-###############################################################################
 function postcalendar_user_export ()
 {
   # control whether debug and extendedinfo flags are allowed
@@ -882,7 +849,7 @@ function postcalendar_user_export ()
     echo ("<PRE>"); 
   }
 
-  pnModAPILoad ('PostCalendar', 'user');
+  //pnModAPILoad ('PostCalendar', 'user');
   $events = pnModAPIFunc ('PostCalendar', 'user', 'pcGetEvents', array ('start' => $start, 'end' => $end));
 
   # sort the events by start date and time, sevent has the sorted list
@@ -901,154 +868,12 @@ function postcalendar_user_export ()
   if ($debug && $debugallowed) { echo "<P><HR WIDTH=100%><P>Sorted Events are <P>\r\n"; prayer ($sevents); };
 
   if ($etype == 'ical')
-    return postcalendar_user_export_ical ($sevents);
+    //return postcalendar_icalapi_export_ical ($sevents);
+		return pnModAPIFunc ('PostCalendar', 'ical', 'export_ical', ($sevents));
   else
-    return postcalendar_user_export_rss ($sevents, $start, $end);
+    //return postcalendar_user_export_rss ($sevents, $start, $end);
+		return pnModFunc ('PostCalendar', 'user', 'export_rss', array ($sevents, $start, $end));
 }
-
-
-function postcalendar_user_export_ical ($sevents)
-{
-  $eid      = FormUtil::getPassedValue('eid');
-  $category = FormUtil::getPassedValue('category');
-  $sitename = getenv ('SERVER_NAME');
-
-  echo "BEGIN:VCALENDAR\n";
-  echo "VERSION:2.0\n";
-  echo "METHOD:PUBLISH\n";
-  echo "PRODID:-//CCTec/PostCalendar 4.0.0 iCal export//EN\n";
-
-  foreach ($sevents as $cdate => $event)
-  {
-      # $cdate has the events actual date
-      # $event has the event array for $cdate day
-      foreach ($event as $item)
-      {
-          # Allow a selection by unique eventid and/or category
-          if (($item['eid'] == $eid || $eid == "") &&
-              ($item['catname'] == $category || $category == ""))
-          {
-              # slurp out the fields to make it more convenient
-              $starttime        = $item['startTime'];
-              $duration         = $item['duration'];
-              $title            = $item['title'];
-              $summary          = $item['title'];
-              $description      = html_entity_decode(strip_tags(substr($item['hometext'],6)));
-              $evcategory       = $item['catname'];
-              $location         = $item['event_location'];
-              $uid              = $item['eid'] . "--" .  strtotime ($item['time']) . "@$sitename";
-              $url              = $item['website'];
-              $peid             = $item['eid'];
-              $allday           = $item['alldayevent'];
-              $fee              = $item['fee'];
-              $topic            = $item['topic'];
-       
-              # this block of code cleans up encodings such as &#113; in the
-              # email addresses.  These were escaped on store by postcalendar
-              # and I'm too lazy to figure out a regexp to fix it.
-              # it builds two arrays with search and replace and then calls
-              # str_replace once to translate everything over.
-              $email = $item ['contemail'];
-              for ($i=1; $i<=127; $i++)
-              {
-                  $srch [$i] = sprintf ("&#%03.3d;", $i);
-                  $repl [$i] = chr ($i);
-              }
-              $item ['contemail'] = str_replace ($srch, $repl, $item ['contemail']);
-              $email = str_replace ($srch, $repl, $email);
-              $organizer = $email;
-       
-              # indent the original description so VEVENT doesn't blow up on DESCRIPTION
-              $description = preg_replace ('!^!m', str_repeat (' ', 2), $description);
-
-              # Build the event description text.
-              $evtdesc = $description . "\N\n" .
-                "  For more information:\N\n" .
-                "  Contact: " . $item['contname'] . "\N\n" .
-                "  Phone: " . $item['conttel'] . "\N\n" .
-                "  Email: " . $email . "\N\n" .
-                "  URL: " . $item['website'] . "\N\n";
-              if ($item['event_location'])
-                  $eventdesc .= "  Location: " . $item['event_location'] . "\N\n";
-              if ($item['event_street1'])
-                  $eventdesc .= "  Street Addr 1: " . $item['event_street1'] . "\N\n";
-              if ($item['event_street2'])
-                  $eventdesc .= "  Street Addr 2: " . $item['event_street2'] . "\N\n";
-              if ($item['event_city'])
-                  $eventdesc .= "  City, ST ZIP: " . $item['event_city'] . "," . $item['event_state'] . " " . $item['event_postal'] . "\N\n";
-
-              # Build the ALTREP line as a link to the actual calendar
-              $args = array();
-              $args['Date'] = date ("Ymd", strtotime ($cdate));
-              $args['viewtype'] = 'details';
-              $args['eid'] = $peid;
-              $url = pnModURL ('PostCalendar', 'user', 'view', $args);
-
-              # output the vCard/iCal VEVENT object
-              echo "BEGIN:VEVENT\n";
-              if ($organizer <> "")
-              {
-                  echo "ORGANIZER:MAILTO:$organizer\n";
-                  echo "CONTACT:MAILTO:$organizer\n";
-              }
-              if ($url <> "") 
-              {
-                 echo "URL:$url\n"; 
-              }
-
-              echo "SUMMARY:$summary\n";
-              echo "DESCRIPTION:$evtdesc\n";
-              echo "TZ:-5\r\n";
-              echo "CATEGORIES:$evcategory\n";
-              echo "LOCATION:$location\n";
-              echo "TRANSP:OPAQUE\n";
-              echo "CLASS:CONFIDENTIAL\n";
-              echo "DTSTAMP:" . gmdate ("Ymd") . "T" . gmdate ("His") . "Z\n";
-              echo "ALLDAY:" . $allday."\n";
-              echo "FEE:" . $fee."\n";
-              echo "TOPIC:" . $topic."\n";
-              # format up the date/time into ical format for output
-              # build the normal date/time string ...
-              $evtstr = $cdate . " ". $item['startTime'];
-              # convert it to unix time ...
-              $evttime = strtotime ($evtstr);
-              # add duration to get the end time ...
-              $evtend = $evttime + $duration;
-
-              # format it for output
-              $startdate = gmdate ("Ymd", $evttime) . "T" . gmdate ("His", $evttime) ."Z";
-              echo "DTSTART:$startdate\n";
-
-              $enddate = gmdate ("Ymd", $evtend) . "T" . gmdate ("His", $evtend) . "Z";
-              echo "DTEND:$enddate\n";
-
-              # bury a serialized php structure in the COMMENT field.
-              if (($extendedinfo == 1) && ($extendedinfoallowed == 1))
-              {
-                  $extinfo['url']               = $url;
-                  $extinfo['date']              = gmdate ("Ymd", $evttime);
-                  $extinfo['eid']               = $peid;
-                  $extinfo['eventtime']         = $evttime;
-                  $extinfo['icallink']          = "http://$sitename/modules/PostCalendar/ical.php?eid=$peid&date=" .  date ("Ymd", strtotime ($cdate));
-                  $extinfo['evtstartunixtime']  = $evttime;
-                  $extinfo['evtendunixtime']    = $evtend;
-
-                  foreach ($item as $key => $data)
-                  { 
-                      $extinfo[$key] = $item[$key]; 
-                  }
-
-                  echo "COMMENT:" . serialize ($extinfo) . "\n";
-              }
-
-              echo "END:VEVENT\n";
-          }
-      }
-  }
-  echo "END:VCALENDAR\n";
-  return true;
-}
-
 
 function postcalendar_user_export_rss ($sevents, $start, $end)
 {
