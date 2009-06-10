@@ -35,12 +35,12 @@ function postcalendar_icalapi_processupload($args)
 		if((preg_match('(SUMMARY:)', $fileline, $result))&&($write == 2))
 		{
 			$start					=  strpos($fileline, ":")+1;
-			$vevent[$counter]['title']  		=  substr($fileline, $start);
+			$vevent[$counter]['title']  		=  trim(substr($fileline, $start));
 		}
 		if((preg_match('(DESCRIPTION:)', $fileline, $result))&&($write == 2))
 		{
 			$start					=  strpos($fileline, ":")+1;
-			$vevent[$counter]['description']	=  trim(substr($fileline, $start, -5));
+			$vevent[$counter]['description']	=  trim(substr($fileline, $start));
 		}
 		if((preg_match('(\s+Contact:)', $fileline, $result))&&($write == 2))
 		{
@@ -172,18 +172,21 @@ function postcalendar_icalapi_processupload($args)
 
 
 		
-		$where = " WHERE pc_catid     = $ve[cat_id] 
-			   AND   pc_aid       = '$pc_aid'
-			   AND   pc_title     = '$ve[title]'
-			   AND   pc_hometext  = ':text:$ve[description]'
-			   AND   pc_eventDate = '$pc_eventDate' 
-			   AND   pc_duration  = $duration
-			   AND   pc_startTime = '$pc_startTime'";
+		$where = array();
+		if (is_numeric($ve['cat_id']))	$where[] = "pc_catid     = {$ve['cat_id']}";
+		if (is_numeric($pc_aid))		$where[] = "pc_aid       = '$pc_aid'";
+		if (isset($ve['title']))		$where[] = "pc_title     = '{$ve['title']}'";
+		if (isset($ve['description']))	$where[] = "pc_hometext  = ':text:{$ve['description']}'";
+		if (strlen($pc_eventDate) > 2)	$where[] = "pc_eventDate = '$pc_eventDate'";
+		if (!is_null($duration))		$where[] = "pc_duration  = $duration";
+		if (strlen($pc_startTime) > 2)	$where[] = "pc_startTime = '$pc_startTime'";
+
+		$where = count($where) ? ' WHERE '.implode(' AND ', $where) : '';
 		$event = DBUtil::selectObject ('postcalendar_events', $where);
 		if (!$event)
 		{
 			$obj = array ();
-			$obj['catid']      = $ve['cat_id'];
+			if (is_numeric($ve['cat_id'])) $obj['catid'] = $ve['cat_id'];
 			$obj['aid']         = $pc_aid;
 			$obj['title']       = $ve['title'];
 			$obj['time']        = $pc_timestamp;
