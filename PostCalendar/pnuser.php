@@ -51,8 +51,6 @@ function postcalendar_user_main()
 	return postcalendar_user_view(array('Date'=>postcalendar_getDate()));
 }
 
-/******************************************/
-
 class postcalendar_user_fileuploadHandler extends pnFormHandler
 {
 	function initialize(&$render)
@@ -62,11 +60,6 @@ class postcalendar_user_fileuploadHandler extends pnFormHandler
 
 		return true;
 	}
-
-    // The handleCommand() function is called by the framework to notify your handler that the
-    // user did something that caused a command to be sent to your handler. You should check
-    // which command it was and then react upon it.
-    // Remember the "&"-ampersand in &$render otherwise your code wont work!
     function handleCommand(&$render, $args)
     {
         if ($args['commandName'] == 'submit')
@@ -78,7 +71,6 @@ class postcalendar_user_fileuploadHandler extends pnFormHandler
          //       return false;
 
             $data = $render->pnFormGetValues();
-						//pcDebugVar($data);
 						$delimiter = "/"; // assume filesystem delimiter is '/' - could change this based on server info?
 						$fileparts = parsefilename($delimiter, $data['icsupload']['tmp_name'], -2);
 						$fileparts['delimiter'] = $delimiter;
@@ -104,13 +96,10 @@ class postcalendar_user_fileuploadHandler extends pnFormHandler
     }
 }
 
-/******************************************/
-
-
 function postcalendar_user_upload()
 {
 	$render = & FormUtil::newpnForm('PostCalendar');
-	return $render->pnFormExecute('user/postcalendar_user_fileupload.htm', new postcalendar_user_fileuploadHandler());
+	return $render->pnFormExecute('event/postcalendar_event_fileupload.htm', new postcalendar_user_fileuploadHandler());
 }
 
 
@@ -315,7 +304,7 @@ function postcalendar_user_delete()
 	$render = FormUtil::newpnForm('PostCalendar');
 	$eventdetails = pnModAPIFunc('PostCalendar','user','eventDetail',array('eid'=>$eid,'cacheid'=>'','Date'=>''));
 	$render->assign('eventdetails', $eventdetails['A_EVENT']);
-	return $render->pnFormExecute('user/postcalendar_user_deleteeventconfirm.htm', new postcalendar_event_editHandler());
+	return $render->pnFormExecute('event/postcalendar_event_deleteeventconfirm.htm', new postcalendar_event_editHandler());
 }
 
 /**
@@ -787,12 +776,7 @@ function postcalendar_user_search()
 	}
 	$tpl->caching = false;
 	$pageSetup = pnModAPIFunc(__POSTCALENDAR__,'user','pageSetup');
-	/*
-	$pcTheme = pnModGetVar(__POSTCALENDAR__,'pcTemplate');
-	if(!$pcTheme)
-	    $pcTheme='default';
-	return $pageSetup . $tpl->fetch("$pcTheme/search.html");
-	*/
+
 	return $pageSetup . $tpl->fetch("search.html");
 }
 function postcalendar_user_export ()
@@ -1044,16 +1028,16 @@ function postcalendar_user_findContact ()
     $tpl_contact->assign('contact_phone',$contact_phone);
     $tpl_contact->assign('contact_mail',$contact_mail);
     $tpl_contact->assign('contact_www',$contact_www);
-/*
-    $pcTheme = pnModGetVar(__POSTCALENDAR__,'pcTemplate');
-    if(!$pcTheme) $pcTheme='default';
-    $output = $tpl_contact->fetch("$pcTheme/findContact.html");
-*/
+
     $output = $tpl_contact->fetch("findContact.html");
     echo $output;
 
     return true;
 }
+// parsefilename returns an array
+// ([0]=>pathname, [1]=>filename)
+// could be used to parse many strings
+// is an extension of the explode function
 function parsefilename($delim, $str, $lim = 1)
 {
     if ($lim > -2) return explode($delim, $str, abs($lim));

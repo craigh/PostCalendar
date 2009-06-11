@@ -92,7 +92,8 @@ function postcalendar_userapi_buildView($args)
 		//=================================================================
     //  Find out what Template we're using
 
-    $function_out['template'] = pnVarPrepForOS('view_' . $viewtype . '.html');
+    //$function_out['template'] = pnVarPrepForOS('view_' . $viewtype . '.html');
+    $function_out['template'] = pnVarPrepForOS('user/postcalendar_user_view_' . $viewtype . '.html');
 
 		//=================================================================
     //  Insert necessary JavaScript into the page
@@ -501,20 +502,7 @@ function postcalendar_userapi_eventPreview($args)
 	}
 	$tpl->assign_by_ref('A_EVENT',$event);
 	
-	//=================================================================
-    //  Parse the template
-    //=================================================================
-    $output = "\n\n<!-- POSTCALENDAR TEMPLATE START -->\n\n";
-/*
-	$pcTheme = pnModGetVar(__POSTCALENDAR__,'pcTemplate');
-	if(!$pcTheme)
-	    $pcTheme='default';
-    $output .= $tpl->fetch("$pcTheme/view_event_preview.html");
-*/
-    $output .= $tpl->fetch("view_event_preview.html");
-    $output .= "\n\n<!-- POSTCALENDAR TEMPLATE END -->\n\n";
-	
-	return $output;
+	return $tpl->fetch("user/postcalendar_user_view_event_preview.html");
 }
 
 /**

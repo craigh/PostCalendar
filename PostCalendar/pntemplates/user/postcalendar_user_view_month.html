@@ -5,7 +5,7 @@
 	<!--[ assign var="PRINT_VIEW" value=1 ]-->
 <!--[/if]-->
 <!--[ if $PRINT_VIEW eq false ]-->
-<!--[ include file="navigation.html" ]-->
+<!--[ include file="user/postcalendar_user_navigation.html" ]-->
 <!--[ /if ]-->
 
 <!--[* add JS to page if needed *]-->
@@ -133,4 +133,4 @@
 		<a href="<!--[pnmodurl modname="PostCalendar" func="view" viewtype=$viewtype Date=$smarty.get.Date ]-->"><!--[pnml name="_PC_RETURN']--></a>
 	<!--[/if]-->
 </div>
-<!--[ include file="footer.html" ]-->
+<!--[ include file="user/postcalendar_user_footer.html" ]-->

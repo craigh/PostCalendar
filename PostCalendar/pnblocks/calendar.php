@@ -123,19 +123,19 @@ function postcalendar_calendarblock_display($blockinfo)
     $templates_cached = true;
     if($showcalendar) {
         $cacheid1 = md5($Date.'M'.$template_view.$template_name.$showcalendar.$showevents.$nextevents.$uid.$theme);
-        if(!$tpl->is_cached('block_view_month.html',$cacheid1)) {
+        if(!$tpl->is_cached('blocks/postcalendar_block_view_month.html',$cacheid1)) {
             $templates_cached = false;
         }
     }
     if($showevents) {
         $cacheid2 = md5($Date.'T'.$template_view.$template_name.$showcalendar.$showevents.$nextevents.$uid.$theme);
-        if(!$tpl->is_cached('block_view_day.html',$cacheid2)) {
+        if(!$tpl->is_cached('blocks/postcalendar_block_view_day.html',$cacheid2)) {
             $templates_cached = false;
         }
     }   
     if($nextevents) {
         $cacheid3 = md5($Date.'U'.$template_view.$template_name.$showcalendar.$showevents.$nextevents.$uid.$theme);
-        if(!$tpl->is_cached('block_view_upcoming.html',$cacheid3)) {
+        if(!$tpl->is_cached('blocks/postcalendar_block_view_upcoming.html',$cacheid3)) {
             $templates_cached = false;
         }
     }
@@ -287,8 +287,7 @@ function postcalendar_calendarblock_display($blockinfo)
  */   
     if($showcalendar) {
         // we need to create a unique ID for caching purposes
-//        $output .= $tpl->fetch("$pcTheme/block_view_month.html",$cacheid1);
-        $output .= $tpl->fetch("block_view_month.html",$cacheid1);
+        $output .= $tpl->fetch("blocks/postcalendar_block_view_month.html",$cacheid1);
     }
     
     if($showevents) {
@@ -298,8 +297,7 @@ function postcalendar_calendarblock_display($blockinfo)
             $tpl->assign('SHOW_TITLE',0);
         }
         // we need to create a unique ID for caching purposes
-//        $output .= $tpl->fetch("$pcTheme/block_view_day.html",$cacheid2);
-        $output .= $tpl->fetch("block_view_day.html",$cacheid2);
+        $output .= $tpl->fetch("blocks/postcalendar_block_view_day.html",$cacheid2);
     }   
     
     if($nextevents) {
@@ -309,8 +307,7 @@ function postcalendar_calendarblock_display($blockinfo)
             $tpl->assign('SHOW_TITLE',0);
         }
         // we need to create a unique ID for caching purposes
-//        $output .= $tpl->fetch("$pcTheme/block_view_upcoming.html",$cacheid3);
-        $output .= $tpl->fetch("block_view_upcoming.html",$cacheid3);
+        $output .= $tpl->fetch("blocks/postcalendar_block_view_upcoming.html",$cacheid3);
     }   
 
     if($pcbshowsslinks) {

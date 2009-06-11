@@ -1135,13 +1135,7 @@ function postcalendar_userapi_buildSubmitForm($args,$admin=false)
 	$tpl->assign('FormSubmit',$form_submit);
 
 	// do not cache this page
-	/*
-	$pcTheme = pnModGetVar(__POSTCALENDAR__,'pcTemplate');
-	if(!$pcTheme)
-	    $pcTheme='default';
-	$output->Text($tpl->fetch("$pcTheme/form_submit.html"));
-	*/
-	$output->Text($tpl->fetch("form_submit.html"));
+	$output->Text($tpl->fetch("event/postcalendar_event_submit.html"));
 	$output->Text(postcalendar_footer());
 	return $output->GetOutput();
 }
@@ -1263,7 +1257,7 @@ function postcalendar_userapi_eventDetail($args,$admin=false)
 		$function_out['template'] = "admin/postcalendar_admin_view_event_details.htm";
 		$function_out['Date'] = postcalendar_getDate();
 	} else {
-		$function_out['template'] = "view_event_details.html";
+		$function_out['template'] = "user/postcalendar_user_view_event_details.html";
 	}
 	
 	// let's get the DB information
@@ -1359,7 +1353,8 @@ function postcalendar_userapi_eventDetail($args,$admin=false)
 	if (pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) 
 	{
 		$admin_edit_url     = pnModURL(__POSTCALENDAR__,'admin','submit',array('eid'=>$eid));
-		$admin_delete_url   = pnModURL(__POSTCALENDAR__,'admin','adminevents',array('action'=>_ACTION_DELETE,'eid'=>$eid));
+		//$admin_delete_url   = pnModURL(__POSTCALENDAR__,'admin','adminevents',array('action'=>_ACTION_DELETE,'eid'=>$eid));
+		$admin_delete_url   = pnModURL(__POSTCALENDAR__,'user','delete',array('eid'=>$eid));
 		// v4b TS start 1 line
 		$admin_copy_url     = pnModURL(__POSTCALENDAR__,'admin','submit',array('eid'=>$eid,'form_action'=>'copy'));
 	}
