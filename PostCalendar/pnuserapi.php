@@ -320,6 +320,9 @@ function postcalendar_userapi_buildView($args)
 			$categories = array();
 			foreach($all_categories as $category)
 			{
+				// compensate for empty category - set to first avail cat
+				// this doesn't actually correct the problem in the DB
+//				if (!array_key_exists($event_category, $all_categories)) $event_category = $category['catid'];
 				// FIXME !!!!!
 				$categories[] = array('value'    => $category['catid'],
 								  'selected' => ($category['catid']==$event_category ? 'selected' : ''),

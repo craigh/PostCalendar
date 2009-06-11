@@ -48,6 +48,15 @@
    		<li class="eventslistitems">
 				<!--[ foreach name=eventloop key=id item=event from=$S_EVENTS.$cdate ]-->
     				<!--[ assign var="cCat" value=$event.catname ]-->
+						<!--[ if (empty($cCat)) ]-->
+							<!--[* assign a default catname and catcolor - this is a HACK!*]-->
+							<!--[ assign var="catname" value = $A_CATEGORY.0.name ]-->
+							<!--[ assign var="catcolor" value = $A_CATEGORY.0.color ]-->
+							<!--[ assign var="cCat" value = $catname ]-->
+						<!--[else]-->
+							<!--[ assign var="catname" value = $event.catname ]-->
+							<!--[ assign var="catcolor" value = $event.catcolor ]-->
+						<!--[/if]-->	
 						<!--[ if $24HOUR_TIME ]-->
 							<!--[ assign var="timestamp" value=$event.startTime|date_format:'%H:%M']-->
 						<!--[ else ]-->
@@ -57,11 +66,11 @@
 							<!--[ if $smarty.foreach.eventloop.first != true ]-->
 								</div>
 							<!--[ /if ]-->
-							<div style="padding: 2px; background-color: <!--[ $event.catcolor ]-->;">
+							<div style="padding: 2px; background-color: <!--[ $catcolor ]-->;">
 								<!--[ if $event.meeting_id ]--><!--[ pnimg src='meeting.gif' altml=true alt='_PC_THEME_MEETING' titleml=true title='_PC_THEME_MEETING' style='float: left;']-->
-								<!--[ /if ]--><!--[ $event.catname ]-->
+								<!--[ /if ]--><!--[ $catname ]-->
 							</div>
-							<div style="padding: 2px; border:solid 1px <!--[ $event.catcolor ]-->;">
+							<div style="padding: 2px; border:solid 1px <!--[ $catcolor ]-->;">
 						<!--[ /if ]-->
 						<!--[ if $event.alldayevent != true ]-->
 							<!--[ $timestamp ]-->
@@ -69,14 +78,14 @@
 						<!--[ $event.uname ]--> <!-- // V4B SB Inseted Username to get a better overview -->
 						<a href="<!--[ pc_url action=detail eid=$event.eid date=$date ]-->" 
 								 <!--[ pc_popup delay="500" 
-						            		bgcolor=$event.catcolor 
+						            		bgcolor=$catcolor 
 								    		caption=$event.title 
 								    		text=$event.hometext ]-->><!--[ $event.title|strip_tags|pnvarprephtmldisplay ]--></a>
 						<!--[ if $event.alldayevent != true ]-->
 							(<!--[ $event.duration_hours ]-->:<!--[ $event.duration_minutes ]-->)
 						<!--[ /if ]-->
 						<br />
-						<!--[ assign var="oldCat" value=$event.catname ]-->
+						<!--[ assign var="oldCat" value=$catname ]-->
 						<!--[ if $smarty.foreach.eventloop.last ]-->
 							<!--[ * we need to close out the <div> tag * ]-->
 							</div>
