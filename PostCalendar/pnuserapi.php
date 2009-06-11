@@ -626,54 +626,54 @@ function postcalendar_userapi_pcGetEvents($args)
 	
 	$s_keywords = $s_category = $s_topic = '';
 	extract($args);
-    $date = postcalendar_getDate();
-    $cy = substr($date,0,4);
-    $cm = substr($date,4,2);
-    $cd = substr($date,6,2);
-    
-    if(isset($start) && isset($end)) {
+	$date = postcalendar_getDate();
+	$cy = substr($date,0,4);
+	$cm = substr($date,4,2);
+	$cd = substr($date,6,2);
+
+	if(isset($start) && isset($end)) {
 		// parse start date
-    	list($sm,$sd,$sy) = explode('/',$start);
-    	// parse end date
-    	list($em,$ed,$ey) = explode('/',$end);
-    
-    	$s = (int) "$sy$sm$sd";
-    	if($s > $date) {
-        	$cy = $sy;
-        	$cm = $sm;
-        	$cd = $sd;
-    	}
-    	$start_date = Date_Calc::dateFormat($sd,$sm,$sy,'%Y-%m-%d');
-    	$end_date = Date_Calc::dateFormat($ed,$em,$ey,'%Y-%m-%d');
+		list($sm,$sd,$sy) = explode('/',$start);
+		// parse end date
+		list($em,$ed,$ey) = explode('/',$end);
+	
+		$s = (int) "$sy$sm$sd";
+		if($s > $date) {
+			$cy = $sy;
+			$cm = $sm;
+			$cd = $sd;
+		}
+		$start_date = Date_Calc::dateFormat($sd,$sm,$sy,'%Y-%m-%d');
+		$end_date = Date_Calc::dateFormat($ed,$em,$ey,'%Y-%m-%d');
 	} else {
 		$sm = $em = $cm;
 		$sd = $ed = $cd;
 		$sy = $cy;
 		$ey = $cy+2;
 		$start_date = $sy.'-'.$sm.'-'.$sd;
-    	$end_date = $ey.'-'.$em.'-'.$ed;
+		$end_date = $ey.'-'.$em.'-'.$ed;
 	}
-    if(!isset($events)) {
-        if(!isset($s_keywords)) $s_keywords = '';
+	if(!isset($events)) {
+		if(!isset($s_keywords)) $s_keywords = '';
 		$a = array('start'=>$start_date,'end'=>$end_date,'s_keywords'=>$s_keywords,'s_category'=>$s_category,'s_topic'=>$s_topic);
 		$events = pnModAPIFunc(__POSTCALENDAR__,'user','pcQueryEvents',$a);
 	}
-	
-    //==============================================================
-    //  Here we build an array consisting of the date ranges
-    //  specific to the current view.  This array is then
-    //  used to build the calendar display.
-    //==============================================================
-    $days = array();
-    $sday = Date_Calc::dateToDays($sd,$sm,$sy);
-    $eday = Date_Calc::dateToDays($ed,$em,$ey);
-    for($cday = $sday; $cday <= $eday; $cday++) {
-        $d = Date_Calc::daysToDate($cday,'%d');
-        $m = Date_Calc::daysToDate($cday,'%m');
-        $y = Date_Calc::daysToDate($cday,'%Y');
-        $store_date = Date_Calc::dateFormat($d,$m,$y,'%Y-%m-%d');
-        $days[$store_date] = array();
-    }
+
+	//==============================================================
+	//  Here we build an array consisting of the date ranges
+	//  specific to the current view.  This array is then
+	//  used to build the calendar display.
+	//==============================================================
+	$days = array();
+	$sday = Date_Calc::dateToDays($sd,$sm,$sy);
+	$eday = Date_Calc::dateToDays($ed,$em,$ey);
+	for($cday = $sday; $cday <= $eday; $cday++) {
+		$d = Date_Calc::daysToDate($cday,'%d');
+		$m = Date_Calc::daysToDate($cday,'%m');
+		$y = Date_Calc::daysToDate($cday,'%Y');
+		$store_date = Date_Calc::dateFormat($d,$m,$y,'%Y-%m-%d');
+		$days[$store_date] = array();
+	}
 	
 	//echo "GetEvents Line 729<br>";
     //$users = pnUserGetAll();
@@ -685,103 +685,99 @@ function postcalendar_userapi_pcGetEvents($args)
 	//unset($users);
 	
 	foreach($events as $event) {
-        // get the name of the topic
-        $topicname = pcGetTopicName($event['topic']);
+		// get the name of the topic
+		$topicname = pcGetTopicName($event['topic']);
 		// get the user id of event's author
-        //$cuserid = @$nuke_users[strtolower($event['uname'])];
-        
-        // CAH mod 4/12/09
-        $cuserid = pnUserGetIDFromName(strtolower($event['uname']));
-                
-        
+		//$cuserid = @$nuke_users[strtolower($event['uname'])];
+		// CAH mod 4/12/09
+		$cuserid = pnUserGetIDFromName(strtolower($event['uname']));
+
 		// check the current event's permissions
 		// the user does not have permission to view this event
 		// if any of the following evaluate as false
 		if(!pnSecAuthAction(0, 'PostCalendar::Event', "$event[title]::$event[eid]", ACCESS_OVERVIEW)) {
-            continue;
-        } elseif(!pnSecAuthAction(0, 'PostCalendar::Category', "$event[catname]::$event[catid]", ACCESS_OVERVIEW)) {
-            continue;
-        } elseif(!pnSecAuthAction(0, 'PostCalendar::User', "$event[uname]::$cuserid", ACCESS_OVERVIEW)) {
-            continue;
-        } elseif(!pnSecAuthAction(0, 'PostCalendar::Topic', "$topicname::$event[topic]", ACCESS_OVERVIEW)) {
-            continue;
-        }
+			continue;
+		} elseif(!pnSecAuthAction(0, 'PostCalendar::Category', "$event[catname]::$event[catid]", ACCESS_OVERVIEW)) {
+			continue;
+		} elseif(!pnSecAuthAction(0, 'PostCalendar::User', "$event[uname]::$cuserid", ACCESS_OVERVIEW)) {
+			continue;
+		} elseif(!pnSecAuthAction(0, 'PostCalendar::Topic', "$topicname::$event[topic]", ACCESS_OVERVIEW)) {
+			continue;
+		}
 		// parse the event start date
-        list($esY,$esM,$esD) = explode('-',$event['eventDate']);
-        // grab the recurring specs for the event
-        $event_recurrspec = @unserialize($event['recurrspec']);
-        // determine the stop date for this event
-        if($event['endDate'] == '0000-00-00') {
-            $stop = $end_date;
-        } else {
-            $stop = $event['endDate'];
-        }
-        
-        switch($event['recurrtype']) {
-            //==============================================================
-            //  Events that do not repeat only have a startday
-            //==============================================================
-            case NO_REPEAT :
-                if(isset($days[$event['eventDate']])) {
-                    array_push($days[$event['eventDate']],$event);
-                }
-                break;
-            //==============================================================
-            //  Find events that repeat at a certain frequency
-            //  Every,Every Other,Every Third,Every Fourth
-            //  Day,Week,Month,Year,MWF,TR,M-F,SS
-            //==============================================================   
-            case REPEAT :
-                $rfreq = $event_recurrspec['event_repeat_freq'];
-                $rtype = $event_recurrspec['event_repeat_freq_type'];
-                // we should bring the event up to date to make this a tad bit faster
+		list($esY,$esM,$esD) = explode('-',$event['eventDate']);
+		// grab the recurring specs for the event
+		$event_recurrspec = @unserialize($event['recurrspec']);
+		// determine the stop date for this event
+		if($event['endDate'] == '0000-00-00') {
+			$stop = $end_date; //CAH enddate has no value here (maybe passed as arg?)
+		} else {
+			$stop = $event['endDate'];
+		}
+
+		switch($event['recurrtype']) {
+			//==============================================================
+			//  Events that do not repeat only have a startday
+			//==============================================================
+			case NO_REPEAT :
+				if(isset($days[$event['eventDate']])) {
+					array_push($days[$event['eventDate']],$event); //CAH this line has no meaning. it seems backward and pushes the same value
+				}
+				break;
+			//==============================================================
+			//  Find events that repeat at a certain frequency
+			//  Every,Every Other,Every Third,Every Fourth
+			//  Day,Week,Month,Year,MWF,TR,M-F,SS
+			//==============================================================   
+			case REPEAT :
+				$rfreq = $event_recurrspec['event_repeat_freq'];
+				$rtype = $event_recurrspec['event_repeat_freq_type'];
+				// we should bring the event up to date to make this a tad bit faster
 				// any ideas on how to do that, exactly??? dateToDays probably.
 				$nm = $esM; $ny = $esY; $nd = $esD; 
-                $occurance = Date_Calc::dateFormat($nd,$nm,$ny,'%Y-%m-%d');
+				$occurance = Date_Calc::dateFormat($nd,$nm,$ny,'%Y-%m-%d');
 				while($occurance < $start_date) {
 					$occurance = __increment($nd,$nm,$ny,$rfreq,$rtype);
 					list($ny,$nm,$nd) = explode('-',$occurance);
 				}
 				while($occurance <= $stop) {
-                    if(isset($days[$occurance])) { array_push($days[$occurance],$event); }
-                    $occurance = __increment($nd,$nm,$ny,$rfreq,$rtype);
+					if(isset($days[$occurance])) { array_push($days[$occurance],$event); }
+					$occurance = __increment($nd,$nm,$ny,$rfreq,$rtype);
 					list($ny,$nm,$nd) = explode('-',$occurance);
-                }
+				}
 				break;
-				
-            //==============================================================
-            //  Find events that repeat on certain parameters
-            //  On 1st,2nd,3rd,4th,Last
-            //  Sun,Mon,Tue,Wed,Thu,Fri,Sat
-            //  Every N Months
-            //==============================================================     
-            case REPEAT_ON :
-                $rfreq = $event_recurrspec['event_repeat_on_freq'];
-                $rnum  = $event_recurrspec['event_repeat_on_num'];
-                $rday  = $event_recurrspec['event_repeat_on_day'];
-                //==============================================================
-                //  Populate - Enter data into the event array
-                //==============================================================
-                $nm = $esM; $ny = $esY; $nd = $esD;
-                // make us current
-                while($ny < $cy) {
-                    $occurance = date('Y-m-d',mktime(0,0,0,$nm+$rfreq,$nd,$ny));
+			//==============================================================
+			//  Find events that repeat on certain parameters
+			//  On 1st,2nd,3rd,4th,Last
+			//  Sun,Mon,Tue,Wed,Thu,Fri,Sat
+			//  Every N Months
+			//==============================================================     
+			case REPEAT_ON :
+				$rfreq = $event_recurrspec['event_repeat_on_freq'];
+				$rnum  = $event_recurrspec['event_repeat_on_num'];
+				$rday  = $event_recurrspec['event_repeat_on_day'];
+				//==============================================================
+				//  Populate - Enter data into the event array
+				//==============================================================
+				$nm = $esM; $ny = $esY; $nd = $esD;
+				// make us current
+				while($ny < $cy) {
+					$occurance = date('Y-m-d',mktime(0,0,0,$nm+$rfreq,$nd,$ny));
 					list($ny,$nm,$nd) = explode('-',$occurance);
-                }
-                // populate the event array
-                while($ny <= $cy) {
-                    $dnum = $rnum; // get day event repeats on
-                    do {
-                        $occurance = Date_Calc::NWeekdayOfMonth($dnum--,$rday,$nm,$ny,$format="%Y-%m-%d");
-                    } while($occurance === -1);
-                    if(isset($days[$occurance]) && $occurance <= $stop) { array_push($days[$occurance],$event); }
-                    $occurance = date('Y-m-d',mktime(0,0,0,$nm+$rfreq,$nd,$ny));
+				}
+				// populate the event array
+				while($ny <= $cy) {
+					$dnum = $rnum; // get day event repeats on
+					do {
+						$occurance = Date_Calc::NWeekdayOfMonth($dnum--,$rday,$nm,$ny,$format="%Y-%m-%d");
+					} while($occurance === -1);
+					if(isset($days[$occurance]) && $occurance <= $stop) { array_push($days[$occurance],$event); }
+					$occurance = date('Y-m-d',mktime(0,0,0,$nm+$rfreq,$nd,$ny));
 					list($ny,$nm,$nd) = explode('-',$occurance);
-                }
-                break;
-        } // <- end of switch($event['recurrtype'])
-    } // <- end of foreach($events as $event)
-	
+				}
+				break;
+		} // <- end of switch($event['recurrtype'])
+	} // <- end of foreach($events as $event)
 	return $days;
 }
 

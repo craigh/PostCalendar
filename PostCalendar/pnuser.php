@@ -69,7 +69,6 @@ class postcalendar_user_fileuploadHandler extends pnFormHandler
     // Remember the "&"-ampersand in &$render otherwise your code wont work!
     function handleCommand(&$render, $args)
     {
-				echo "got to the handleCommand";
         if ($args['commandName'] == 'submit')
         {
             // Do forms validation. This call forces the framework to check all validators on the page
@@ -77,13 +76,15 @@ class postcalendar_user_fileuploadHandler extends pnFormHandler
             // should your command event also do.
          //   if (!$render->pnFormIsValid())
          //       return false;
-						echo "YOU ARE HERE";
 
             $data = $render->pnFormGetValues();
-						pcDebugVar($data);
+						//pcDebugVar($data);
+						$delimiter = "/"; // assume filesystem delimiter is '/' - could change this based on server info?
+						$fileparts = parsefilename($delimiter, $data['icsupload']['tmp_name'], -2);
+						$fileparts['delimiter'] = $delimiter;
 
-            $result = pnModAPIFunc('PostCalendar', 'user', 'processupload',
-                                   array('icsupload' => $data['icsupload']));
+            $result = pnModAPIFunc('PostCalendar', 'ical', 'processupload', $fileparts);
+
             if ($result <> true)
                 return $render->pnFormSetErrorMsg(_PC_COULDNOTPROCESSFILEUPLOAD);
 
@@ -1053,5 +1054,16 @@ function postcalendar_user_findContact ()
 
     return true;
 }
+function parsefilename($delim, $str, $lim = 1)
+{
+    if ($lim > -2) return explode($delim, $str, abs($lim));
 
+    $lim = -$lim;
+    $out = explode($delim, $str);
+    if ($lim >= count($out)) return $out;
+
+    $out = array_chunk($out, count($out) - $lim + 1);
+
+    return array_merge(array(implode($delim, $out[0])), $out[1]);
+}
 ?>
