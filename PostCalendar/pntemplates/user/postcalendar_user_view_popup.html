@@ -1,0 +1,84 @@
+<h2 class="postcalendar_header">
+	<!--[ $A_EVENT.title|pnvarprephtmldisplay ]-->
+</h2>
+
+<div class="calcontainer">
+<div class="eventtime">
+			<!--[ if $A_EVENT.alldayevent != true ]-->
+				<!--[ if $24HOUR_TIME ]-->
+					<!--[ assign var="timestamp" value=$A_EVENT.startTime|date_format:"%H:%M" ]-->
+				<!--[ else ]-->
+					<!--[ assign var="timestamp" value=$A_EVENT.startTime|date_format:"%l:%M %p" ]-->
+				<!--[ /if ]-->
+				<!--[ $timestamp ]-->
+			<!--[ /if ]-->
+
+			<!--[ if $USE_INT_DATES eq true ]-->
+				<!--[ pc_date_format date=$A_EVENT.eventDate format="%A, %d %B %Y" ]-->
+			<!--[ else ]-->	
+				<!--[ pc_date_format date=$A_EVENT.eventDate format="%A, %B %d %Y" ]-->
+			<!--[ /if ]-->
+
+			<br />
+
+			<!--[ if $A_EVENT.alldayevent ]-->
+				<!--[pnml name='_CALALLDAY']-->
+			<!--[ else ]-->
+				<!--[pnml name='_CALENDDATEPREVIEW']-->: <!--[ $A_EVENT.duration_hours ]-->:<!--[ $A_EVENT.duration_minutes ]-->
+			<!--[ /if ]-->
+			
+			<!--[ if $PRINT_VIEW eq false ]-->
+				<a href='<!--[pnmodurl modname="PostCalendar" type="user" func="export" eid=$A_EVENT.eid date=$A_EVENT.eventDate ]-->'>
+				<!--[ pnimg src='icaldown.gif' altml=true alt="_PC_ADDTHISEVENT" titleml=true title="_PC_ADDTHISEVENT" ]-->
+				</a>
+			<!--[/if]-->
+</div>
+<div class="eventdetails">
+		<div>
+			<!--[ $A_EVENT.hometext ]-->
+		</div>
+		<div>
+			<!--[ if $LOCATION_INFO ]-->
+				<p><b><!--[pnml name='_CALLOCATION']-->:</b><br />
+				<!--[ if $A_EVENT.location != '' ]-->
+					<!--[ $A_EVENT.location ]--><br />
+				<!--[ /if ]-->
+				<!--[ if $A_EVENT.street1 != '' ]-->
+					<!--[ $A_EVENT.street1 ]--><br />
+				<!--[ /if ]-->
+				<!--[ if $A_EVENT.street2 != '' ]-->
+					<!--[ $A_EVENT.street2 ]--><br />
+				<!--[ /if ]-->
+				<!--[ if $A_EVENT.city != '' ]-->
+					<!--[ $A_EVENT.city ]-->
+				<!--[ /if ]-->
+				<!--[ if $A_EVENT.state != '' ]-->
+					<!--[ $A_EVENT.state ]-->
+				<!--[ /if ]-->
+				<!--[ if $A_EVENT.postal != '' ]-->
+					<!--[ $A_EVENT.postal ]-->
+				<!--[ /if ]-->
+				</p>
+			<!--[ /if ]-->
+			<!--[ if $CONTACT_INFO ]-->
+				<p><b><!--[pnml name='_PC_CONTACT']-->:</b><br />
+				<!--[ if $A_EVENT.contname ]-->
+					<!--[ $A_EVENT.contname ]--><br />
+				<!--[ /if ]-->
+				<!--[ if $A_EVENT.conttel ]-->
+					<!--[ $A_EVENT.conttel ]--><br />
+				<!--[ /if ]-->
+				<!--[ if $A_EVENT.contemail ]-->
+					<a href="mailto:<!--[ $A_EVENT.contemail ]-->"><!--[ $A_EVENT.contemail ]--></a><br />
+				<!--[ /if ]-->
+				<!--[ if $A_EVENT.website ]-->
+					<a href="<!--[ $A_EVENT.website ]-->" target="_blank"><!--[ $A_EVENT.website ]--></a><br />
+				<!--[ /if ]-->
+				</p>
+			<!--[ /if ]-->
+			<!--[ if $A_EVENT.fee != '' ]-->
+				<br /><!--[pnml name='_PC_EVENT_FEE']-->: <!--[ $A_EVENT.fee ]-->
+			<!--[ /if ]-->
+		</div>
+</div>
+</div>

@@ -38,10 +38,7 @@
 //=========================================================================
 //  Require utility classes
 //=========================================================================
-$pcModInfo = pnModGetInfo(pnModGetIDFromName(__POSTCALENDAR__));
-$pcDir = pnVarPrepForOS($pcModInfo['directory']);
-require_once("modules/$pcDir/common.api.php");
-unset($pcModInfo,$pcDir);
+require_once("modules/PostCalendar/common.api.php");
 
 function postcalendar_userapi_getLongDayName($args) 
 {
@@ -60,7 +57,7 @@ function postcalendar_userapi_getLongDayName($args)
 /**
  *  postcalendar_userapi_buildView
  *
- *  Builds the month display
+ *  Builds the calendar display
  *  @param string $Date mm/dd/yyyy format (we should use timestamps)
  *  @return string generated html output 
  *  @access public
@@ -68,11 +65,7 @@ function postcalendar_userapi_getLongDayName($args)
 function postcalendar_userapi_buildView($args)
 {   
 	extract($args); unset($args);
-	//=================================================================
-	//  get the module's information
-	$modinfo = pnModGetInfo(pnModGetIDFromName(__POSTCALENDAR__));
-	$pcDir = $modinfo['directory'];
-	unset($modinfo);
+
 	//=================================================================
 	//  grab the for post variable
     $pc_username = FormUtil::getPassedValue('pc_username');
@@ -88,16 +81,12 @@ function postcalendar_userapi_buildView($args)
 
     //=================================================================
 		//  get the current view
-    if(!isset($viewtype)) { $viewtype = 'month'; }
+    if(!isset($viewtype)) { $viewtype = 'month'; } // default view
 		//=================================================================
     //  Find out what Template we're using
 
-    //$function_out['template'] = pnVarPrepForOS('view_' . $viewtype . '.html');
     $function_out['template'] = pnVarPrepForOS('user/postcalendar_user_view_' . $viewtype . '.html');
 
-		//=================================================================
-    //  Insert necessary JavaScript into the page
-    //$function_out['output'] = pnModAPIFunc(__POSTCALENDAR__,'user','pageSetup');
 		//=================================================================
     //  Let's just finish setting things up
     $the_year   = substr($Date,0,4);
@@ -167,7 +156,7 @@ function postcalendar_userapi_buildView($args)
        	break;
  			}
     	//=================================================================
-    	//  Week View is a bit of a pain in the ass, so we need to
+    	//  Week View is a bit of a pain, so we need to
     	//  do some extra setup for that view.  This section will
     	//  find the correct starting and ending dates for a given
     	//  seven day period, based on the day of the week the
@@ -220,7 +209,8 @@ function postcalendar_userapi_buildView($args)
 			//=================================================================
     	//  Load the events
     	//=================================================================
-			$eventsByDate =& postcalendar_userapi_pcGetEvents(array('start'=>$starting_date,'end'=>$ending_date));
+//			$eventsByDate =& postcalendar_userapi_pcGetEvents(array('start'=>$starting_date,'end'=>$ending_date));
+			$eventsByDate =& pnModAPIFunc('PostCalendar','user','pcGetEvents', array('start'=>$starting_date,'end'=>$ending_date));
 
 			//=================================================================
     	//  Create and array with the day names in the correct order
@@ -509,270 +499,6 @@ function postcalendar_userapi_eventPreview($args)
 }
 
 /**
- *  postcalendar_userapi_pcQueryEvents
- *  Returns an array containing the event's information
- *  @params array(key=>value)
- *  @params string key eventstatus
- *  @params int value -1 == hidden ; 0 == queued ; 1 == approved
- *  @return array $events[][]
- */
-function postcalendar_userapi_pcQueryEvents($args)
-{   
-	//echo "pcQuerydebug<br>";
-	//pcDebugVar ($args);
-	$end = '0000-00-00';
-	extract($args);
-
-	$pc_username = FormUtil::getPassedValue('pc_username');
-	$topic       = FormUtil::getPassedValue('pc_topic');
-	$category    = FormUtil::getPassedValue('pc_category');
-	$userid      = pnUserGetVar('uid');
-
-	if(!empty($pc_username) && (strtolower($pc_username) != 'anonymous')) {
-		if($pc_username=='__PC_ALL__') {
-			$ruserid = -1;
-		} else {
-			$ruserid = pnUserGetIDFromName(strtolower($pc_username));
-    	}
-    }
-
-	if(!isset($eventstatus) || ((int)$eventstatus < -1 || (int)$eventstatus > 1)) $eventstatus = 1;
-
-	if(!isset($start)) $start = Date_Calc::dateNow('%Y-%m-%d'); 
-	list($sy,$sm,$sd) = explode('-',$start);
-
-	$where = "WHERE pc_eventstatus=$eventstatus 
-						AND (pc_endDate>='$start' OR (pc_endDate='0000-00-00' AND pc_recurrtype<>'0') OR pc_eventDate>='$start')
-						AND pc_eventDate<='$end' ";
-
-	if(isset($ruserid)) {
-		// get all events for the specified username
-		if($ruserid == -1) {
-			$where .= "AND (pc_sharing = '" . SHARING_BUSY . "' ";
-			$where .= "OR pc_sharing = '" . SHARING_PUBLIC . "') ";
-		} else {
-			// v4b TS start - always see the records of the logged in user too | disabled on 2004-10-18
-			$where .= "AND pc_aid = $ruserid ";
-			//$where .= "AND (pc_aid = $ruserid OR pc_aid = $userid) ";
-		}
-	} else if (!pnUserLoggedIn()) {
-		// get all events for anonymous users
-		$where .= "AND (pc_sharing = '" . SHARING_GLOBAL . "' ";
-		$where .= "OR pc_sharing = '" . SHARING_HIDEDESC . "') ";
-	} else {
-		// get all events for logged in user plus global events
-		$where .= "AND (pc_aid = $userid OR pc_sharing = '" . SHARING_GLOBAL . "' OR pc_sharing = '" . SHARING_HIDEDESC . "') ";
-	}
-
-
-	// Start Search functionality 
-	if(!empty($s_keywords)) $where .= "AND ($s_keywords) ";
-	if(!empty($s_category)) $where .= "AND ($s_category) ";
-	if(!empty($s_topic))    $where .= "AND ($s_topic) ";
-	if(!empty($category))   $where .= "AND (tbl.pc_catid = '".pnVarPrepForStore($category)."') ";
-	if(!empty($topic))	    $where .= "AND (tbl.pc_topic = '".pnVarPrepForStore($topic)."') ";
-	// End Search functionality 
-
-	$sort .= "ORDER BY pc_meeting_id";
-
-		// FIXME !!!
-	$joinInfo = array ();
-	$joinInfo[] = array (   'join_table'          =>  'postcalendar_categories',
-				'join_field'          =>  'catname',
-				'object_field_name'   =>  'catname',
-				'compare_field_table' =>  'catid',
-				'compare_field_join'  =>  'catid');
-	$joinInfo[] = array (   'join_table'          =>  'postcalendar_categories',
-				'join_field'          =>  'catdesc',
-				'object_field_name'   =>  'catdesc',
-				'compare_field_table' =>  'catid',
-				'compare_field_join'  =>  'catid');
-	$joinInfo[] = array (   'join_table'          =>  'postcalendar_categories',
-				'join_field'          =>  'catcolor',
-				'object_field_name'   =>  'catcolor',
-				'compare_field_table' =>  'catid',
-				'compare_field_join'  =>  'catid');
-
-	$events = DBUtil::selectExpandedObjectArray ('postcalendar_events', $joinInfo, $where, $sort);
-	$topicNames = DBUtil::selectFieldArray ('topics', 'topicname', '', '', false, 'topicid');
-    
-	// added temp_meeting_id
-	$old_m_id = "NULL";
-	$ak = array_keys ($events);
-	foreach ($ak as $key) {
-		$new_m_id = $key['meeting_id'];
-		if ( ($old_m_id) && ($old_m_id != "NULL") && ($new_m_id > 0) && ($old_m_id == $new_m_id) ) {
-			$old_m_id = $new_m_id;
-			unset ($events[$key]);
-		}
-		$events[$key] = postcalendar_userapi_pcFixEventDetails ($events[$key]);
-	}
-	return $events;
-}
-
-function postcalendar_userapi_pcGetEvents($args)
-{   
-	//echo "pcGetdebug<br>";
-	//pcDebugVar($args);
-	
-	$s_keywords = $s_category = $s_topic = '';
-	extract($args);
-	$date = postcalendar_getDate();
-	$cy = substr($date,0,4);
-	$cm = substr($date,4,2);
-	$cd = substr($date,6,2);
-
-	if(isset($start) && isset($end)) {
-		// parse start date
-		list($sm,$sd,$sy) = explode('/',$start);
-		// parse end date
-		list($em,$ed,$ey) = explode('/',$end);
-	
-		$s = (int) "$sy$sm$sd";
-		if($s > $date) {
-			$cy = $sy;
-			$cm = $sm;
-			$cd = $sd;
-		}
-		$start_date = Date_Calc::dateFormat($sd,$sm,$sy,'%Y-%m-%d');
-		$end_date = Date_Calc::dateFormat($ed,$em,$ey,'%Y-%m-%d');
-	} else {
-		$sm = $em = $cm;
-		$sd = $ed = $cd;
-		$sy = $cy;
-		$ey = $cy+2;
-		$start_date = $sy.'-'.$sm.'-'.$sd;
-		$end_date = $ey.'-'.$em.'-'.$ed;
-	}
-	if(!isset($events)) {
-		if(!isset($s_keywords)) $s_keywords = '';
-		$a = array('start'=>$start_date,'end'=>$end_date,'s_keywords'=>$s_keywords,'s_category'=>$s_category,'s_topic'=>$s_topic);
-		$events = pnModAPIFunc(__POSTCALENDAR__,'user','pcQueryEvents',$a);
-	}
-
-	//==============================================================
-	//  Here we build an array consisting of the date ranges
-	//  specific to the current view.  This array is then
-	//  used to build the calendar display.
-	//==============================================================
-	$days = array();
-	$sday = Date_Calc::dateToDays($sd,$sm,$sy);
-	$eday = Date_Calc::dateToDays($ed,$em,$ey);
-	for($cday = $sday; $cday <= $eday; $cday++) {
-		$d = Date_Calc::daysToDate($cday,'%d');
-		$m = Date_Calc::daysToDate($cday,'%m');
-		$y = Date_Calc::daysToDate($cday,'%Y');
-		$store_date = Date_Calc::dateFormat($d,$m,$y,'%Y-%m-%d');
-		$days[$store_date] = array();
-	}
-	
-	//echo "GetEvents Line 729<br>";
-    //$users = pnUserGetAll();
-	//$nuke_users = array();
-	
-	//foreach($users as $user) {
-    //    $nuke_users[strtolower($user['uname'])] = $user['uid'];
-	//}
-	//unset($users);
-	
-	foreach($events as $event) {
-		// get the name of the topic
-		$topicname = pcGetTopicName($event['topic']);
-		// get the user id of event's author
-		//$cuserid = @$nuke_users[strtolower($event['uname'])];
-		// CAH mod 4/12/09
-		$cuserid = pnUserGetIDFromName(strtolower($event['uname']));
-
-		// check the current event's permissions
-		// the user does not have permission to view this event
-		// if any of the following evaluate as false
-		if(!pnSecAuthAction(0, 'PostCalendar::Event', "$event[title]::$event[eid]", ACCESS_OVERVIEW)) {
-			continue;
-		} elseif(!pnSecAuthAction(0, 'PostCalendar::Category', "$event[catname]::$event[catid]", ACCESS_OVERVIEW)) {
-			continue;
-		} elseif(!pnSecAuthAction(0, 'PostCalendar::User', "$event[uname]::$cuserid", ACCESS_OVERVIEW)) {
-			continue;
-		} elseif(!pnSecAuthAction(0, 'PostCalendar::Topic', "$topicname::$event[topic]", ACCESS_OVERVIEW)) {
-			continue;
-		}
-		// parse the event start date
-		list($esY,$esM,$esD) = explode('-',$event['eventDate']);
-		// grab the recurring specs for the event
-		$event_recurrspec = @unserialize($event['recurrspec']);
-		// determine the stop date for this event
-		if($event['endDate'] == '0000-00-00') {
-			$stop = $end_date; //CAH enddate has no value here (maybe passed as arg?)
-		} else {
-			$stop = $event['endDate'];
-		}
-
-		switch($event['recurrtype']) {
-			//==============================================================
-			//  Events that do not repeat only have a startday
-			//==============================================================
-			case NO_REPEAT :
-				if(isset($days[$event['eventDate']])) {
-					array_push($days[$event['eventDate']],$event); //CAH this line has no meaning. it seems backward and pushes the same value
-				}
-				break;
-			//==============================================================
-			//  Find events that repeat at a certain frequency
-			//  Every,Every Other,Every Third,Every Fourth
-			//  Day,Week,Month,Year,MWF,TR,M-F,SS
-			//==============================================================   
-			case REPEAT :
-				$rfreq = $event_recurrspec['event_repeat_freq'];
-				$rtype = $event_recurrspec['event_repeat_freq_type'];
-				// we should bring the event up to date to make this a tad bit faster
-				// any ideas on how to do that, exactly??? dateToDays probably.
-				$nm = $esM; $ny = $esY; $nd = $esD; 
-				$occurance = Date_Calc::dateFormat($nd,$nm,$ny,'%Y-%m-%d');
-				while($occurance < $start_date) {
-					$occurance = __increment($nd,$nm,$ny,$rfreq,$rtype);
-					list($ny,$nm,$nd) = explode('-',$occurance);
-				}
-				while($occurance <= $stop) {
-					if(isset($days[$occurance])) { array_push($days[$occurance],$event); }
-					$occurance = __increment($nd,$nm,$ny,$rfreq,$rtype);
-					list($ny,$nm,$nd) = explode('-',$occurance);
-				}
-				break;
-			//==============================================================
-			//  Find events that repeat on certain parameters
-			//  On 1st,2nd,3rd,4th,Last
-			//  Sun,Mon,Tue,Wed,Thu,Fri,Sat
-			//  Every N Months
-			//==============================================================     
-			case REPEAT_ON :
-				$rfreq = $event_recurrspec['event_repeat_on_freq'];
-				$rnum  = $event_recurrspec['event_repeat_on_num'];
-				$rday  = $event_recurrspec['event_repeat_on_day'];
-				//==============================================================
-				//  Populate - Enter data into the event array
-				//==============================================================
-				$nm = $esM; $ny = $esY; $nd = $esD;
-				// make us current
-				while($ny < $cy) {
-					$occurance = date('Y-m-d',mktime(0,0,0,$nm+$rfreq,$nd,$ny));
-					list($ny,$nm,$nd) = explode('-',$occurance);
-				}
-				// populate the event array
-				while($ny <= $cy) {
-					$dnum = $rnum; // get day event repeats on
-					do {
-						$occurance = Date_Calc::NWeekdayOfMonth($dnum--,$rday,$nm,$ny,$format="%Y-%m-%d");
-					} while($occurance === -1);
-					if(isset($days[$occurance]) && $occurance <= $stop) { array_push($days[$occurance],$event); }
-					$occurance = date('Y-m-d',mktime(0,0,0,$nm+$rfreq,$nd,$ny));
-					list($ny,$nm,$nd) = explode('-',$occurance);
-				}
-				break;
-		} // <- end of switch($event['recurrtype'])
-	} // <- end of foreach($events as $event)
-	return $days;
-}
-
-/**
  *	__increment()
  *	returns the next valid date for an event based on the
  *	current day,month,year,freq and type
@@ -791,11 +517,19 @@ function __increment($d,$m,$y,$f,$t)
 		return date('Y-m-d',mktime(0,0,0,$m,$d,($y+$f)));
 	}
 }
-/*
-	This function deletes one event provided the event ID (eid)
-*/
+/****************************************************
+ * The functions below are moved to eventapi
+ ****************************************************/
+function postcalendar_userapi_pcGetEvents($args)
+{
+	return pnModAPIFunc('PostCalendar','event','getEvents', $args);
+}
+function postcalendar_userapi_pcQueryEvents($args)
+{
+	return pnModAPIFunc('PostCalendar','event','queryEvents', $args);
+}
 function postcalendar_userapi_deleteevents($args)
 {
-	return DBUtil::deleteObjectByID('postcalendar_events', $args['eid'], 'eid');
+	return pnModAPIFunc('PostCalendar','event','deleteevent', $args);
 }
 ?>

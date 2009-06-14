@@ -76,7 +76,7 @@
 			<!--[ if $event.alldayevent != true ]-->
 				(<!--[ $event.duration_hours ]-->:<!--[ $event.duration_minutes ]-->)
 			<!--[ /if ]-->
-			<a href="index.php?module=PostCalendar&func=export&?eid=<!--[ $event.eid ]-->&date=<!--[ $date ]-->"><!--[ pnimg src='bell.gif' alt="Add this event to my calendar" ]--></a>
+			<a href="index.php?module=PostCalendar&func=export&?eid=<!--[ $event.eid ]-->&date=<!--[ $date ]-->"><!--[ pnimg src='icaldown.gif' alt="Add this event to my calendar" ]--></a>
 			<br />
 			<!--[ assign var="oldCat" value=$event.catname ]-->
 			<!--[ if $smarty.foreach.events.last ]-->

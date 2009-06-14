@@ -114,6 +114,6 @@ define('PC_ACCESS_NONE', 	 pnSecAuthAction(0, 'PostCalendar::', 'null::null', AC
 
 //  Require and Setup utility classes and functions
 define('DATE_CALC_BEGIN_WEEKDAY', _SETTING_FIRST_DAY_WEEK);
-require_once("modules/$pcDir/pnincludes/DateCalc.class.php");
+require_once("modules/PostCalendar/pnincludes/DateCalc.class.php");
 
 ?>

@@ -140,9 +140,6 @@ function postcalendar_calendarblock_display($blockinfo)
         }
     }
     
-    // start the output container
-    //$output = pnModAPIFunc(__POSTCALENDAR__,'user','pageSetup');
-    
     // if one of the templates is not cached, we need to run the following
     if(!$templates_cached) {
         // set up the next and previous months to move to

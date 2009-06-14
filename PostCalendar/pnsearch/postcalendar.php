@@ -171,15 +171,7 @@ function search_postcalendar()
     $eventsByDate = postcalendar_userapi_pcGetEvents($searchargs);
     $tpl->assign_by_ref('A_EVENTS',$eventsByDate);
     $tpl->caching = false;
-    $pageSetup = pnModAPIFunc(__POSTCALENDAR__,'user','pageSetup');
-/*
-    $pcTheme = pnModGetVar(__POSTCALENDAR__,'pcTemplate');
 
-    if(!$pcTheme)
-        $pcTheme='default';
-
-    return $pageSetup . $tpl->fetch($pcTheme.'/search_plugin.html');
-*/
-    return $pageSetup . $tpl->fetch('/search_plugin.html');
+    return $tpl->fetch('search/postcalendar_search_plugin.html');
 }
 ?>

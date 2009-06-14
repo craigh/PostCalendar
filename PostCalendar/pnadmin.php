@@ -90,7 +90,11 @@ function postcalendar_admin_showlist($e='',$type,$function,$title,$msg='')
 	$sort = FormUtil::getPassedValue('sort');
 	$sdir = FormUtil::getPassedValue('sdir');
 	if(!isset($sort)) $sort = 'time';
-	if(!isset($sdir)) $sdir = 1;
+	if(!isset($sdir)) { 
+		$sdir = 1; //default true
+	}	else {
+		$sdir = $sdir ? 0 : 1; //if true change to false, if false change to true
+	}
 	if(!isset($offset))  $offset = 0;
 
 	$events = pnModAPIFunc('PostCalendar','admin','getAdminListEvents',
@@ -100,19 +104,30 @@ function postcalendar_admin_showlist($e='',$type,$function,$title,$msg='')
                                   'offset'           => $offset,
                                   'offset_increment' => $offset_increment));
 
-	$output = pnModAPIFunc('PostCalendar','admin','buildAdminList',
-                            array('type'             => $type,
-                                  'title'            => $title,
-                                  'sdir'             => $sdir,
-                                  'sort'             => $sort,
-                                  'offset'           => $offset,
-                                  'offset_increment' => $offset_increment,
-                                  'function'         => $function,
-                                  'events'           => $events));
-
-
-	$pnRender->assign('output', $output);
 	$pnRender->assign('title', $title);
+	$pnRender->assign('function', $function);
+	$pnRender->assign('events', $events);
+	$pnRender->assign('title_sort_url', pnModUrl('PostCalendar','admin',$function, array('offset'=>$offset,'sort'=>'title','sdir'=>$sdir)));
+	$pnRender->assign('time_sort_url', pnModUrl('PostCalendar','admin',$function, array('offset'=>$offset,'sort'=>'time','sdir'=>$sdir)));
+	$pnRender->assign('formactions', array(
+		        _ADMIN_ACTION_VIEW => _PC_ADMIN_ACTION_VIEW,
+            _ADMIN_ACTION_APPROVE => _PC_ADMIN_ACTION_APPROVE,
+            _ADMIN_ACTION_HIDE => _PC_ADMIN_ACTION_HIDE,
+            _ADMIN_ACTION_DELETE => _PC_ADMIN_ACTION_DELETE));
+	$pnRender->assign('actionselected', _ADMIN_ACTION_VIEW);
+	if($offset > 1) {
+		$prevlink = pnModUrl('PostCalendar','admin',$function,array('offset'=>$offset-$offset_increment,'sort'=>$sort,'sdir'=>$sdir));
+	} else {
+		$prevlink = false;
+	}
+	$pnRender->assign('prevlink', $prevlink);
+	if(count($events) >= $offset_increment) {
+		$nextlink = pnModUrl('PostCalendar','admin',$function,array('offset'=>$offset+$offset_increment,'sort'=>$sort,'sdir'=>$sdir));
+	} else {
+		$nextlink = flase;
+	}
+	$pnRender->assign('nextlink', $nextlink);
+	$pnRender->assign('offset_increment', $offset_increment);
 
 	return $pnRender->fetch('admin/postcalendar_admin_showlist.htm');
 }
