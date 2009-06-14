@@ -595,5 +595,22 @@ OLD: postcalendar_userapi_eventDetail
 OLD: postcalendar_adminapi_eventDetail
 NEW: postcalendar_eventapi_eventDetail
 
+FROM ADMIN TO EVENT:
+OLD: postcalendar_admin_approveevents
+OLD: postcalendar_event_approve
+
+OLD: postcalendar_admin_hideevents
+NEW: postcalendar_event_hide
+
+OLD: postcalendar_admin_deleteevents
+NEW: postcalendar_event_delete (also from USER)
+
+OLD: postcalendar_admin_edit
+NEW: postcalendar_event_new (also from USER)
+
+OLD: postcalendar_admin_submit
+NEW: postcalendar_event_new (also from USER)
+
+
 ***************************************/
 ?>

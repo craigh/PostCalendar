@@ -96,6 +96,21 @@ function postcalendar_adminapi_getlinks()
 	// Return the links array back to the calling function
 	return $links;
 }
+function postcalendar_adminapi_getAdminListEvents($args) 
+{
+    extract($args);
+
+    $where = "WHERE pc_eventstatus=$type";
+    if ($sort)
+    {
+        if ($sdir == 0)
+            $sort .= ' DESC';
+        elseif ($sdir == 1)
+            $sort .= ' ASC';
+    }
+
+    return DBUtil::selectObjectArray ('postcalendar_events', $where, $sort, $offset, $offset_increment, false);
+}
 
 function postcalendar_adminapi_buildHourSelect($args) 
 {
@@ -134,21 +149,6 @@ function postcalendar_adminapi_buildHourSelect($args)
     
     $output->FormSelectMultiple('pc_hour',$options);
     return $output->GetOutput();
-}
-function postcalendar_adminapi_getAdminListEvents($args) 
-{
-    extract($args);
-
-    $where = "WHERE pc_eventstatus=$type";
-    if ($sort)
-    {
-        if ($sdir == 0)
-            $sort .= ' DESC';
-        elseif ($sdir == 1)
-            $sort .= ' ASC';
-    }
-
-    return DBUtil::selectObjectArray ('postcalendar_events', $where, $sort, $offset, $offset_increment, false);
 }
 
 function postcalendar_adminapi_buildMinSelect($args) 
