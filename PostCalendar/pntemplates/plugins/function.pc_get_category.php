@@ -38,7 +38,7 @@ function smarty_function_pc_get_category ($args, &$smarty)
     extract($args); unset($args);
 	
     $category = pnVarCleanFromInput('pc_category');
-    $categories = pnModAPIFunc(__POSTCALENDAR__,'user','getCategories');
+    $categories = pnModAPIFunc('PostCalendar','user','getCategories');
     $catoptions  = "<select name=\"pc_category\">";
     $catoptions .= "<option value=\"\">"._PC_FILTER_CATEGORY."</option>";
     $name = '';

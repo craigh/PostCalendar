@@ -1,5 +1,7 @@
 <?php
-@define('__POSTCALENDAR__','PostCalendar');
+require_once ('modules/PostCalendar/global.php');
+require_once ('modules/PostCalendar/common.api.php');
+
 /**
  *  SVN: $Id$
  *
@@ -159,23 +161,23 @@ function postcalendar_admin_adminevents()
     $function = '';
     switch ($action) {
         case _ADMIN_ACTION_APPROVE :
-            $function = 'approveevents';
+            $function = 'approve';
 			$are_you_sure_text = _PC_APPROVE_ARE_YOU_SURE;
 			break;
             
         case _ADMIN_ACTION_HIDE :
-            $function = 'hideevents';
+            $function = 'hide';
 			$are_you_sure_text = _PC_HIDE_ARE_YOU_SURE;
 			break;
             
         case _ADMIN_ACTION_DELETE :
-            $function = 'deleteevents';
+            $function = 'delete';
 			$are_you_sure_text = _PC_DELETE_ARE_YOU_SURE;
 			break;
     }
 	
 	if(!empty($function)) {
-		$output .= '<form action="'.pnModUrl(__POSTCALENDAR__,'event',$function).'" method="post">';
+		$output .= '<form action="'.pnModUrl('PostCalendar','event',$function).'" method="post">';
     	$output .= $are_you_sure_text.' ';
     	$output .= '<input type="submit" name="submit" value="'._PC_ADMIN_YES.'" />';
 		$output .= '<br /><br />';
@@ -187,7 +189,7 @@ function postcalendar_admin_adminevents()
 	if(is_array($pc_event_id)) {
 		foreach($pc_event_id as $eid) {
 			// get event info
-			$eventitems = pnModAPIFunc(__POSTCALENDAR__,'admin','eventDetail',array('eid'=>$eid,'nopop'=>true));
+			$eventitems = pnModAPIFunc('PostCalendar','admin','eventDetail',array('eid'=>$eid,'nopop'=>true));
 			// build template and fetch:
 			foreach ($eventitems as $var=>$val) {
 				$pnRender->assign($var,$val);
@@ -197,7 +199,7 @@ function postcalendar_admin_adminevents()
 		}
 	} else {
 		// get event info
-		$eventitems = pnModAPIFunc(__POSTCALENDAR__,'admin','eventDetail',array('eid'=>$pc_event_id,'nopop'=>true));
+		$eventitems = pnModAPIFunc('PostCalendar','admin','eventDetail',array('eid'=>$pc_event_id,'nopop'=>true));
 		// build template and fetch:
 		foreach ($eventitems as $var=>$val) {
 			$pnRender->assign($var,$val);
@@ -222,51 +224,51 @@ function postcalendar_admin_resetDefaults()
 	}
 	
 	// remove all the PostCalendar variables from the DB
-	pnModDelVar(__POSTCALENDAR__, 'pcTime24Hours');
-	pnModDelVar(__POSTCALENDAR__, 'pcEventsOpenInNewWindow');
-	pnModDelVar(__POSTCALENDAR__, 'pcUseInternationalDates');
-	pnModDelVar(__POSTCALENDAR__, 'pcFirstDayOfWeek');
-	pnModDelVar(__POSTCALENDAR__, 'pcDayHighlightColor');
-	pnModDelVar(__POSTCALENDAR__, 'pcUsePopups');
-	pnModDelVar(__POSTCALENDAR__, 'pcDisplayTopics');
-	pnModDelVar(__POSTCALENDAR__, 'pcAllowDirectSubmit');
-	pnModDelVar(__POSTCALENDAR__, 'pcListHowManyEvents');
-	pnModDelVar(__POSTCALENDAR__, 'pcTimeIncrement');
-	pnModDelVar(__POSTCALENDAR__, 'pcAllowSiteWide');
-	pnModDelVar(__POSTCALENDAR__, 'pcAllowUserCalendar');
-	pnModDelVar(__POSTCALENDAR__, 'pcEventDateFormat');
-	pnModDelVar(__POSTCALENDAR__, 'pcTemplate');
-	pnModDelVar(__POSTCALENDAR__, 'pcRepeating');
-	pnModDelVar(__POSTCALENDAR__, 'pcMeeting');
-	pnModDelVar(__POSTCALENDAR__, 'pcAddressbook');
-	pnModDelVar(__POSTCALENDAR__, 'pcUseCache');
-	pnModDelVar(__POSTCALENDAR__, 'pcCacheLifetime');
-	pnModDelVar(__POSTCALENDAR__, 'pcDefaultView');
-	pnModDelVar(__POSTCALENDAR__, 'pcNotifyAdmin');
-	pnModDelVar(__POSTCALENDAR__, 'pcNotifyEmail');
+	pnModDelVar('PostCalendar', 'pcTime24Hours');
+	pnModDelVar('PostCalendar', 'pcEventsOpenInNewWindow');
+	pnModDelVar('PostCalendar', 'pcUseInternationalDates');
+	pnModDelVar('PostCalendar', 'pcFirstDayOfWeek');
+	pnModDelVar('PostCalendar', 'pcDayHighlightColor');
+	pnModDelVar('PostCalendar', 'pcUsePopups');
+	pnModDelVar('PostCalendar', 'pcDisplayTopics');
+	pnModDelVar('PostCalendar', 'pcAllowDirectSubmit');
+	pnModDelVar('PostCalendar', 'pcListHowManyEvents');
+	pnModDelVar('PostCalendar', 'pcTimeIncrement');
+	pnModDelVar('PostCalendar', 'pcAllowSiteWide');
+	pnModDelVar('PostCalendar', 'pcAllowUserCalendar');
+	pnModDelVar('PostCalendar', 'pcEventDateFormat');
+	pnModDelVar('PostCalendar', 'pcTemplate');
+	pnModDelVar('PostCalendar', 'pcRepeating');
+	pnModDelVar('PostCalendar', 'pcMeeting');
+	pnModDelVar('PostCalendar', 'pcAddressbook');
+	pnModDelVar('PostCalendar', 'pcUseCache');
+	pnModDelVar('PostCalendar', 'pcCacheLifetime');
+	pnModDelVar('PostCalendar', 'pcDefaultView');
+	pnModDelVar('PostCalendar', 'pcNotifyAdmin');
+	pnModDelVar('PostCalendar', 'pcNotifyEmail');
 	
 	// PostCalendar Default Settings
-	pnModSetVar(__POSTCALENDAR__, 'pcTime24Hours',  '0');
-	pnModSetVar(__POSTCALENDAR__, 'pcEventsOpenInNewWindow','0');
-	pnModSetVar(__POSTCALENDAR__, 'pcUseInternationalDates','0');
-	pnModSetVar(__POSTCALENDAR__, 'pcFirstDayOfWeek',   '0');
-	pnModSetVar(__POSTCALENDAR__, 'pcDayHighlightColor','#FF0000');
-	pnModSetVar(__POSTCALENDAR__, 'pcUsePopups','1');
-	pnModSetVar(__POSTCALENDAR__, 'pcDisplayTopics','0');
-	pnModSetVar(__POSTCALENDAR__, 'pcAllowDirectSubmit','0');
-	pnModSetVar(__POSTCALENDAR__, 'pcListHowManyEvents','15');
-	pnModSetVar(__POSTCALENDAR__, 'pcTimeIncrement','15');
-	pnModSetVar(__POSTCALENDAR__, 'pcAllowSiteWide','0');
-	pnModSetVar(__POSTCALENDAR__, 'pcAllowUserCalendar','1');
-	pnModSetVar(__POSTCALENDAR__, 'pcEventDateFormat','%Y-%m-%d');
-	pnModSetVar(__POSTCALENDAR__, 'pcRepeating', '0');
-	pnModSetVar(__POSTCALENDAR__, 'pcMeeting',  '0');
-	pnModSetVar(__POSTCALENDAR__, 'pcAddressbook', '1');
-	pnModSetVar(__POSTCALENDAR__, 'pcUseCache', '1');
-	pnModSetVar(__POSTCALENDAR__, 'pcCacheLifetime', '3600');
-	pnModSetVar(__POSTCALENDAR__, 'pcDefaultView', 'month');
-	pnModSetVar(__POSTCALENDAR__, 'pcNotifyAdmin', '0');
-	pnModSetVar(__POSTCALENDAR__, 'pcNotifyEmail', pnConfigGetVar('adminmail'));
+	pnModSetVar('PostCalendar', 'pcTime24Hours',  '0');
+	pnModSetVar('PostCalendar', 'pcEventsOpenInNewWindow','0');
+	pnModSetVar('PostCalendar', 'pcUseInternationalDates','0');
+	pnModSetVar('PostCalendar', 'pcFirstDayOfWeek',   '0');
+	pnModSetVar('PostCalendar', 'pcDayHighlightColor','#FF0000');
+	pnModSetVar('PostCalendar', 'pcUsePopups','1');
+	pnModSetVar('PostCalendar', 'pcDisplayTopics','0');
+	pnModSetVar('PostCalendar', 'pcAllowDirectSubmit','0');
+	pnModSetVar('PostCalendar', 'pcListHowManyEvents','15');
+	pnModSetVar('PostCalendar', 'pcTimeIncrement','15');
+	pnModSetVar('PostCalendar', 'pcAllowSiteWide','0');
+	pnModSetVar('PostCalendar', 'pcAllowUserCalendar','1');
+	pnModSetVar('PostCalendar', 'pcEventDateFormat','%Y-%m-%d');
+	pnModSetVar('PostCalendar', 'pcRepeating', '0');
+	pnModSetVar('PostCalendar', 'pcMeeting',  '0');
+	pnModSetVar('PostCalendar', 'pcAddressbook', '1');
+	pnModSetVar('PostCalendar', 'pcUseCache', '1');
+	pnModSetVar('PostCalendar', 'pcCacheLifetime', '3600');
+	pnModSetVar('PostCalendar', 'pcDefaultView', 'month');
+	pnModSetVar('PostCalendar', 'pcNotifyAdmin', '0');
+	pnModSetVar('PostCalendar', 'pcNotifyEmail', pnConfigGetVar('adminmail'));
 	
 	pnModAPIFunc('PostCalendar','admin','clearCache');
 		
@@ -305,52 +307,52 @@ function postcalendar_admin_updateconfig()
 	// make sure we enter something into the DB   
 	// delete the old vars - we're doing this because Zikula variable 
 	// handling sometimes has old values in the $GLOBALS we need to clear
-	pnModDelVar(__POSTCALENDAR__, 'pcTime24Hours');
-	pnModDelVar(__POSTCALENDAR__, 'pcEventsOpenInNewWindow');
-	pnModDelVar(__POSTCALENDAR__, 'pcUseInternationalDates');
-	pnModDelVar(__POSTCALENDAR__, 'pcFirstDayOfWeek');
-	pnModDelVar(__POSTCALENDAR__, 'pcDayHighlightColor');
-	pnModDelVar(__POSTCALENDAR__, 'pcUsePopups');
-	pnModDelVar(__POSTCALENDAR__, 'pcAllowDirectSubmit');
-	pnModDelVar(__POSTCALENDAR__, 'pcListHowManyEvents');
-	pnModDelVar(__POSTCALENDAR__, 'pcDisplayTopics');
-	pnModDelVar(__POSTCALENDAR__, 'pcEventDateFormat');
-	pnModDelVar(__POSTCALENDAR__, 'pcTemplate');
-	pnModDelVar(__POSTCALENDAR__, 'pcRepeating');// v4b TS
-	pnModDelVar(__POSTCALENDAR__, 'pcMeeting');  // v4b TS
-	pnModDelVar(__POSTCALENDAR__, 'pcAddressbook');  // v4b TS
-	pnModDelVar(__POSTCALENDAR__, 'pcAllowSiteWide');
-	pnModDelVar(__POSTCALENDAR__, 'pcAllowUserCalendar');
-	pnModDelVar(__POSTCALENDAR__, 'pcTimeIncrement');
-	pnModDelVar(__POSTCALENDAR__, 'pcDefaultView');
-	pnModDelVar(__POSTCALENDAR__, 'pcUseCache');
-	pnModDelVar(__POSTCALENDAR__, 'pcCacheLifetime');
-	pnModDelVar(__POSTCALENDAR__, 'pcNotifyAdmin');
-	pnModDelVar(__POSTCALENDAR__, 'pcNotifyEmail');
+	pnModDelVar('PostCalendar', 'pcTime24Hours');
+	pnModDelVar('PostCalendar', 'pcEventsOpenInNewWindow');
+	pnModDelVar('PostCalendar', 'pcUseInternationalDates');
+	pnModDelVar('PostCalendar', 'pcFirstDayOfWeek');
+	pnModDelVar('PostCalendar', 'pcDayHighlightColor');
+	pnModDelVar('PostCalendar', 'pcUsePopups');
+	pnModDelVar('PostCalendar', 'pcAllowDirectSubmit');
+	pnModDelVar('PostCalendar', 'pcListHowManyEvents');
+	pnModDelVar('PostCalendar', 'pcDisplayTopics');
+	pnModDelVar('PostCalendar', 'pcEventDateFormat');
+	pnModDelVar('PostCalendar', 'pcTemplate');
+	pnModDelVar('PostCalendar', 'pcRepeating');// v4b TS
+	pnModDelVar('PostCalendar', 'pcMeeting');  // v4b TS
+	pnModDelVar('PostCalendar', 'pcAddressbook');  // v4b TS
+	pnModDelVar('PostCalendar', 'pcAllowSiteWide');
+	pnModDelVar('PostCalendar', 'pcAllowUserCalendar');
+	pnModDelVar('PostCalendar', 'pcTimeIncrement');
+	pnModDelVar('PostCalendar', 'pcDefaultView');
+	pnModDelVar('PostCalendar', 'pcUseCache');
+	pnModDelVar('PostCalendar', 'pcCacheLifetime');
+	pnModDelVar('PostCalendar', 'pcNotifyAdmin');
+	pnModDelVar('PostCalendar', 'pcNotifyEmail');
 		
 	// set the new variables
-	pnModSetVar(__POSTCALENDAR__, 'pcTime24Hours',   $pcTime24Hours);
-	pnModSetVar(__POSTCALENDAR__, 'pcEventsOpenInNewWindow', $pcEventsOpenInNewWindow);
-	pnModSetVar(__POSTCALENDAR__, 'pcUseInternationalDates', $pcUseInternationalDates);
-	pnModSetVar(__POSTCALENDAR__, 'pcFirstDayOfWeek',$pcFirstDayOfWeek);
-	pnModSetVar(__POSTCALENDAR__, 'pcDayHighlightColor', $pcDayHighlightColor);
-	pnModSetVar(__POSTCALENDAR__, 'pcUsePopups', $pcUsePopups);
-	pnModSetVar(__POSTCALENDAR__, 'pcAllowDirectSubmit', $pcAllowDirectSubmit);
-	pnModSetVar(__POSTCALENDAR__, 'pcListHowManyEvents', $pcListHowManyEvents);
-	pnModSetVar(__POSTCALENDAR__, 'pcDisplayTopics', $pcDisplayTopics);
-	pnModSetVar(__POSTCALENDAR__, 'pcEventDateFormat',   $pcEventDateFormat);
-	pnModSetVar(__POSTCALENDAR__, 'pcTemplate',  $pcTemplate);
-	pnModSetVar(__POSTCALENDAR__, 'pcRepeating', $pcRepeating);   // v4b TS
-	pnModSetVar(__POSTCALENDAR__, 'pcMeeting',   $pcMeeting); // v4b TS
-	pnModSetVar(__POSTCALENDAR__, 'pcAddressbook',   $pcAddressbook); // v4b TS
-	pnModSetVar(__POSTCALENDAR__, 'pcAllowSiteWide', $pcAllowSiteWide);
-	pnModSetVar(__POSTCALENDAR__, 'pcAllowUserCalendar', $pcAllowUserCalendar);
-	pnModSetVar(__POSTCALENDAR__, 'pcTimeIncrement', $pcTimeIncrement);
-	pnModSetVar(__POSTCALENDAR__, 'pcDefaultView',   $pcDefaultView);
-	pnModSetVar(__POSTCALENDAR__, 'pcUseCache',	 $pcUseCache);
-	pnModSetVar(__POSTCALENDAR__, 'pcCacheLifetime', $pcCacheLifetime);
-	pnModSetVar(__POSTCALENDAR__, 'pcNotifyAdmin',   $pcNotifyAdmin);
-	pnModSetVar(__POSTCALENDAR__, 'pcNotifyEmail',   $pcNotifyEmail);
+	pnModSetVar('PostCalendar', 'pcTime24Hours',   $pcTime24Hours);
+	pnModSetVar('PostCalendar', 'pcEventsOpenInNewWindow', $pcEventsOpenInNewWindow);
+	pnModSetVar('PostCalendar', 'pcUseInternationalDates', $pcUseInternationalDates);
+	pnModSetVar('PostCalendar', 'pcFirstDayOfWeek',$pcFirstDayOfWeek);
+	pnModSetVar('PostCalendar', 'pcDayHighlightColor', $pcDayHighlightColor);
+	pnModSetVar('PostCalendar', 'pcUsePopups', $pcUsePopups);
+	pnModSetVar('PostCalendar', 'pcAllowDirectSubmit', $pcAllowDirectSubmit);
+	pnModSetVar('PostCalendar', 'pcListHowManyEvents', $pcListHowManyEvents);
+	pnModSetVar('PostCalendar', 'pcDisplayTopics', $pcDisplayTopics);
+	pnModSetVar('PostCalendar', 'pcEventDateFormat',   $pcEventDateFormat);
+	pnModSetVar('PostCalendar', 'pcTemplate',  $pcTemplate);
+	pnModSetVar('PostCalendar', 'pcRepeating', $pcRepeating);   // v4b TS
+	pnModSetVar('PostCalendar', 'pcMeeting',   $pcMeeting); // v4b TS
+	pnModSetVar('PostCalendar', 'pcAddressbook',   $pcAddressbook); // v4b TS
+	pnModSetVar('PostCalendar', 'pcAllowSiteWide', $pcAllowSiteWide);
+	pnModSetVar('PostCalendar', 'pcAllowUserCalendar', $pcAllowUserCalendar);
+	pnModSetVar('PostCalendar', 'pcTimeIncrement', $pcTimeIncrement);
+	pnModSetVar('PostCalendar', 'pcDefaultView',   $pcDefaultView);
+	pnModSetVar('PostCalendar', 'pcUseCache',	 $pcUseCache);
+	pnModSetVar('PostCalendar', 'pcCacheLifetime', $pcCacheLifetime);
+	pnModSetVar('PostCalendar', 'pcNotifyAdmin',   $pcNotifyAdmin);
+	pnModSetVar('PostCalendar', 'pcNotifyEmail',   $pcNotifyEmail);
 
 	pnModAPIFunc('PostCalendar','admin','clearCache');
 
@@ -367,7 +369,7 @@ function postcalendar_admin_categories($msg='',$e='')
 	$pnRender->assign('e', $e);
 	$pnRender->assign('msg', $msg);
 
-	$cats = pnModAPIFunc(__POSTCALENDAR__,'admin','getCategories');
+	$cats = pnModAPIFunc('PostCalendar','admin','getCategories');
 	$pnRender->assign('cats', $cats);
 
 	return $pnRender->fetch('admin/postcalendar_admin_categories.htm');
@@ -500,7 +502,7 @@ function postcalendar_admin_testSystem()
 		return LogUtil::registerPermissionError();
 	}
 
-	$modinfo = pnModGetInfo(pnModGetIDFromName(__POSTCALENDAR__));
+	$modinfo = pnModGetInfo(pnModGetIDFromName('PostCalendar'));
 	$pcDir = pnVarPrepForOS($modinfo['directory']);
 	$version = $modinfo['version'];
 	unset($modinfo);

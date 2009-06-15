@@ -74,27 +74,27 @@ define('_ADMIN_ACTION_DELETE',    4);
 //  Get the global PostCalendar config settings
 //	This will save us a lot of time and DB queries later
 //=================================================================
-define('_SETTING_USE_POPUPS',	   pnModGetVar(__POSTCALENDAR__,'pcUsePopups'));
-define('_SETTING_USE_INT_DATES',   pnModGetVar(__POSTCALENDAR__,'pcUseInternationalDates'));
-define('_SETTING_OPEN_NEW_WINDOW', pnModGetVar(__POSTCALENDAR__,'pcEventsOpenInNewWindow'));
-define('_SETTING_DAY_HICOLOR',	   pnModGetVar(__POSTCALENDAR__,'pcDayHighlightColor'));
-define('_SETTING_FIRST_DAY_WEEK',  pnModGetVar(__POSTCALENDAR__,'pcFirstDayOfWeek'));		
-define('_SETTING_DATE_FORMAT',	   pnModGetVar(__POSTCALENDAR__,'pcEventDateFormat'));
-define('_SETTING_TIME_24HOUR',	   pnModGetVar(__POSTCALENDAR__,'pcTime24Hours')); 
-define('_SETTING_DIRECT_SUBMIT',   pnModGetVar(__POSTCALENDAR__,'pcAllowDirectSubmit'));
-define('_SETTING_DISPLAY_TOPICS',  pnModGetVar(__POSTCALENDAR__,'pcDisplayTopics'));
-define('_SETTING_ALLOW_GLOBAL',	   pnModGetVar(__POSTCALENDAR__,'pcAllowSiteWide'));
-define('_SETTING_ALLOW_USER_CAL',  pnModGetVar(__POSTCALENDAR__,'pcAllowUserCalendar'));
-define('_SETTING_TIME_INCREMENT',  pnModGetVar(__POSTCALENDAR__,'pcTimeIncrement'));
-define('_SETTING_HOW_MANY_EVENTS', pnModGetVar(__POSTCALENDAR__,'pcListHowManyEvents'));
-define('_SETTING_TEMPLATE',        pnModGetVar(__POSTCALENDAR__,'pcTemplate'));
-define('_SETTING_EVENTS_IN_YEAR',  pnModGetVar(__POSTCALENDAR__,'pcShowEventsInYear'));
-define('_SETTING_USE_CACHE',	   pnModGetVar(__POSTCALENDAR__,'pcUseCache'));
-define('_SETTING_CACHE_LIFETIME',  pnModGetVar(__POSTCALENDAR__,'pcCacheLifetime'));
-define('_SETTING_DEFAULT_VIEW',	   pnModGetVar(__POSTCALENDAR__,'pcDefaultView'));
-define('_SETTING_SAFE_MODE',	   pnModGetVar(__POSTCALENDAR__,'pcSafeMode'));
-define('_SETTING_NOTIFY_ADMIN',	   pnModGetVar(__POSTCALENDAR__,'pcNotifyAdmin'));
-define('_SETTING_NOTIFY_EMAIL',	   pnModGetVar(__POSTCALENDAR__,'pcNotifyEmail'));
+define('_SETTING_USE_POPUPS',	   pnModGetVar('PostCalendar','pcUsePopups'));
+define('_SETTING_USE_INT_DATES',   pnModGetVar('PostCalendar','pcUseInternationalDates'));
+define('_SETTING_OPEN_NEW_WINDOW', pnModGetVar('PostCalendar','pcEventsOpenInNewWindow'));
+define('_SETTING_DAY_HICOLOR',	   pnModGetVar('PostCalendar','pcDayHighlightColor'));
+define('_SETTING_FIRST_DAY_WEEK',  pnModGetVar('PostCalendar','pcFirstDayOfWeek'));		
+define('_SETTING_DATE_FORMAT',	   pnModGetVar('PostCalendar','pcEventDateFormat'));
+define('_SETTING_TIME_24HOUR',	   pnModGetVar('PostCalendar','pcTime24Hours')); 
+define('_SETTING_DIRECT_SUBMIT',   pnModGetVar('PostCalendar','pcAllowDirectSubmit'));
+define('_SETTING_DISPLAY_TOPICS',  pnModGetVar('PostCalendar','pcDisplayTopics'));
+define('_SETTING_ALLOW_GLOBAL',	   pnModGetVar('PostCalendar','pcAllowSiteWide'));
+define('_SETTING_ALLOW_USER_CAL',  pnModGetVar('PostCalendar','pcAllowUserCalendar'));
+define('_SETTING_TIME_INCREMENT',  pnModGetVar('PostCalendar','pcTimeIncrement'));
+define('_SETTING_HOW_MANY_EVENTS', pnModGetVar('PostCalendar','pcListHowManyEvents'));
+define('_SETTING_TEMPLATE',        pnModGetVar('PostCalendar','pcTemplate'));
+define('_SETTING_EVENTS_IN_YEAR',  pnModGetVar('PostCalendar','pcShowEventsInYear'));
+define('_SETTING_USE_CACHE',	   pnModGetVar('PostCalendar','pcUseCache'));
+define('_SETTING_CACHE_LIFETIME',  pnModGetVar('PostCalendar','pcCacheLifetime'));
+define('_SETTING_DEFAULT_VIEW',	   pnModGetVar('PostCalendar','pcDefaultView'));
+define('_SETTING_SAFE_MODE',	   pnModGetVar('PostCalendar','pcSafeMode'));
+define('_SETTING_NOTIFY_ADMIN',	   pnModGetVar('PostCalendar','pcNotifyAdmin'));
+define('_SETTING_NOTIFY_EMAIL',	   pnModGetVar('PostCalendar','pcNotifyEmail'));
 
 
 //=================================================================
@@ -115,5 +115,4 @@ define('PC_ACCESS_NONE', 	 pnSecAuthAction(0, 'PostCalendar::', 'null::null', AC
 //  Require and Setup utility classes and functions
 define('DATE_CALC_BEGIN_WEEKDAY', _SETTING_FIRST_DAY_WEEK);
 require_once("modules/PostCalendar/pnincludes/DateCalc.class.php");
-
 ?>

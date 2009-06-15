@@ -76,17 +76,17 @@ function smarty_function_pc_date_select($args)
     $output =& new pnHTML();
     $output->SetOutputMode(_PNH_RETURNOUTPUT);
     if($args['day'] === true) {
-        $sel_data = pnModAPIFunc(__POSTCALENDAR__,'user','buildDaySelect',array('pc_day'=>$d));
+        $sel_data = pnModAPIFunc('PostCalendar','user','buildDaySelect',array('pc_day'=>$d));
         $dayselect = $output->FormSelectMultiple('jumpday', $sel_data);
     }
         
     if($args['month'] === true) {
-        $sel_data = pnModAPIFunc(__POSTCALENDAR__,'user','buildMonthSelect',array('pc_month'=>$m));
+        $sel_data = pnModAPIFunc('PostCalendar','user','buildMonthSelect',array('pc_month'=>$m));
         $monthselect = $output->FormSelectMultiple('jumpmonth', $sel_data);
     }
         
     if($args['year'] === true) {
-        $sel_data = pnModAPIFunc(__POSTCALENDAR__,'user','buildYearSelect',array('pc_year'=>$y));
+        $sel_data = pnModAPIFunc('PostCalendar','user','buildYearSelect',array('pc_year'=>$y));
         $yearselect = $output->FormSelectMultiple('jumpyear', $sel_data);
     }
 		

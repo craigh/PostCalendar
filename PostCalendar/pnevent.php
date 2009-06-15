@@ -33,6 +33,9 @@
  *  http://www.gnu.org/copyleft/gpl.html
  *
  */
+Loader::requireOnce('includes/pnForm.php');
+require_once ('modules/PostCalendar/global.php');
+
 
 /**
  * This is the event handler file
@@ -81,7 +84,7 @@ class postcalendar_event_editHandler extends pnFormHandler
 		else if ($args['commandName'] == 'delete')
 		{
 			$uname = pnUserGetVar('uname');
-			if($uname != $event['informant']) {
+			if (($uname != $event['informant']) OR (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN))) {
 				return $render->pnFormSetErrorMsg(_PC_CAN_NOT_DELETE);
 			}
 			$result = pnModAPIFunc('PostCalendar', 'event', 'deleteevent',
@@ -506,7 +509,7 @@ function postcalendar_event_new($args)
 		return LogUtil::registerPermissionError();
 	}
     
-	pnModAPILoad(__POSTCALENDAR__,'user');
+	pnModAPILoad('PostCalendar','user');
 	$output = "";
 	
 	extract($args);
@@ -782,7 +785,7 @@ function postcalendar_event_new($args)
             $output .= '</td></td></table>';
             $output .= '<br /><br />';
         } else {
-            $output .= pnModAPIFunc(__POSTCALENDAR__,'user','eventPreview',$eventdata);
+            $output .= pnModAPIFunc('PostCalendar','user','eventPreview',$eventdata);
 			$output .= '<br />';
         }
     }

@@ -58,7 +58,7 @@ function smarty_function_pc_filter($args, &$smarty)
     $types = explode(',',$type);
     $output = new pnHTML();
     $output->SetOutputMode(_PNH_RETURNOUTPUT);
-    $modinfo = pnModGetInfo(pnModGetIDFromName(__POSTCALENDAR__));
+    $modinfo = pnModGetInfo(pnModGetIDFromName('PostCalendar'));
     $mdir = pnVarPrepForOS($modinfo['directory']);
     unset($modinfo);
 
@@ -94,7 +94,7 @@ function smarty_function_pc_filter($args, &$smarty)
     {
         @define('_PC_FORM_CATEGORY',true);
         $category   = pnVarCleanFromInput('pc_category');
-        $categories = pnModAPIFunc(__POSTCALENDAR__, 'user', 'getCategories');
+        $categories = pnModAPIFunc('PostCalendar', 'user', 'getCategories');
         $catoptions  = "<select name=\"pc_category\" class=\"$class\">";
         $catoptions .= "<option value=\"\" class=\"$class\">"._PC_FILTER_CATEGORY."</option>";
         foreach($categories as $c) 
@@ -112,7 +112,7 @@ function smarty_function_pc_filter($args, &$smarty)
     {
         @define('_PC_FORM_TOPIC',true);
         $topic  = pnVarCleanFromInput('pc_topic');
-        $topics = pnModAPIFunc(__POSTCALENDAR__,'user','getTopics');
+        $topics = pnModAPIFunc('PostCalendar','user','getTopics');
         $topoptions  = "<select name=\"pc_topic\" class=\"$class\">";
         $topoptions .= "<option value=\"\" class=\"$class\">"._PC_FILTER_TOPIC."</option>";
         foreach($topics as $t) 

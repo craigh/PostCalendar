@@ -7,38 +7,32 @@
 <!--[ if pcEventsOpenInNewWindow eq true ]-->
 	<!--[pnpageaddvar name="javascript" value="modules/PostCalendar/pnjavascript/postcalendar_jspopup.js"]-->
 <!--[ /if ]-->
-<!--[ *Main Navigation* ]-->
-<!--[ include file="user/postcaledar_user_navigation_small.html" ]-->
+<!--[ include file="user/postcalendar_user_navigation_small.html" ]-->
 
-<table width="100%" border="0" cellpadding="5" cellspacing="0" class="dayheader">
-    <tr>
-        <td nowrap="nowrap" width="100%" align="center" valign="middle" class="dayheader">
-			<!--[pnml name="_PC_SEARCH_FORM"]-->
-		</td>
-	</tr>
-</table>
-<table class="pc_searchtable" width="100%" border="0" cellpadding="0" cellspacing="0"><tr><td>
+<h2 class="dayheader">
+	<!--[pnml name="_PC_SEARCH_FORM"]-->
+</h2>
 <form name="search" action="<!--[ $FORM_ACTION ]-->" method="post">
-<br />
-<!--[pnml name="_PC_SEARCH_KEYWORDS"]-->: <input type="text" name="pc_keywords" value="" />
-<select name="pc_keywords_andor">
-	<option value="AND">AND</option>
-	<option value="OR">OR</option>
-</select>
-IN:
-<select name="pc_category">
-	<option value=""><!--[pnml name='_PC_ANY_CATEGORY']--></option>
-	<!--[ $CATEGORY_OPTIONS ]-->
-</select>
-<!--[ if $USE_TOPICS ]-->
-<select name="pc_topic">
-	<option value=""><!--[pnml name='_PC_ANY_TOPIC']--></option>
-	<!--[ $TOPIC_OPTIONS ]-->
-</select>
-<!--[ /if ]-->
-<input type="submit" name="submit" value="SUBMIT" />
+	<div class="pc_searchtable">
+		<!--[pnml name="_PC_SEARCH_KEYWORDS"]-->: <input type="text" name="pc_keywords" value="" />
+		<select name="pc_keywords_andor">
+			<option value="AND"><!--[pnml name="_PC_SEARCH_AND" ]--></option>
+			<option value="OR"><!--[pnml name="_PC_SEARCH_OR" ]--></option>
+		</select>
+		<!--[pnml name="_PC_SEARCH_IN" ]-->:
+		<select name="pc_category">
+			<option value=""><!--[pnml name='_PC_ANY_CATEGORY']--></option>
+			<!--[ $CATEGORY_OPTIONS ]-->
+		</select>
+		<!--[ if $USE_TOPICS ]-->
+		<select name="pc_topic">
+			<option value=""><!--[pnml name='_PC_ANY_TOPIC']--></option>
+			<!--[ $TOPIC_OPTIONS ]-->
+		</select>
+		<!--[ /if ]-->
+		<input type="submit" name="submit" value="SUBMIT" />
+	</div>
 </form>
-</td></tr></table>
 
 <!--[ if $SEARCH_PERFORMED ]-->
 <br />
@@ -110,6 +104,6 @@ IN:
 	<!--[ /if ]-->
 <!--[ /foreach ]-->
 <!--[ if $eventCount == 0 ]-->
-NO RESULTS
+<!--[pnml name='_PC_SEARCH_NORESULTS']-->
 <!--[ /if ]-->
 <!--[ /if ]-->

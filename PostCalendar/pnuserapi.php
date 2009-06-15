@@ -1,5 +1,4 @@
 <?php
-@define('__POSTCALENDAR__','PostCalendar');
 /**
  *  SVN: $Id$
  *
@@ -165,11 +164,11 @@ function postcalendar_userapi_buildView($args)
     	$first_day_of_week = sprintf('%02d',$the_day-$week_day);
     	$week_first_day = date('m/d/Y',mktime(0,0,0,$the_month,$first_day_of_week,$the_year));
     	list($week_first_day_month, $week_first_day_date, $week_first_day_year) = explode('/',$week_first_day);
-    	$week_first_day_month_name  = pnModAPIFunc(__POSTCALENDAR__, 'user', 'getmonthname',
+    	$week_first_day_month_name  = pnModAPIFunc('PostCalendar', 'user', 'getmonthname',
                                             	  array('Date'=>mktime(0,0,0,$week_first_day_month,$week_first_day_date,$week_first_day_year)));
     	$week_last_day = date('m/d/Y',mktime(0,0,0,$the_month,$first_day_of_week+6,$the_year));
     	list($week_last_day_month, $week_last_day_date, $week_last_day_year) = explode('/',$week_last_day);
-    	$week_last_day_month_name = pnModAPIFunc(__POSTCALENDAR__, 'user', 'getmonthname',
+    	$week_last_day_month_name = pnModAPIFunc('PostCalendar', 'user', 'getmonthname',
                                             	 array('Date'=>mktime(0,0,0,$week_last_day_month,$week_last_day_date,$week_last_day_year)));
 
     	//=================================================================
@@ -243,14 +242,14 @@ function postcalendar_userapi_buildView($args)
     	$prev_month = Date_Calc::beginOfPrevMonth(1,$the_month,$the_year,'%Y%m%d');
     	$next_month = Date_Calc::beginOfNextMonth(1,$the_month,$the_year,'%Y%m%d');
 
-    	$pc_prev = pnModURL(__POSTCALENDAR__,'user','view',
+    	$pc_prev = pnModURL('PostCalendar','user','view',
                         	array('viewtype'=>'month',
                             	  'Date'=>$prev_month,
                             	  'pc_username'=>$pc_username,
 								  'pc_category'=>$category,
 								  'pc_topic'=>$topic));
 
-    	$pc_next = pnModURL(__POSTCALENDAR__,'user','view',
+    	$pc_next = pnModURL('PostCalendar','user','view',
                         	array('viewtype'=>'month',
                             	  'Date'=>$next_month,
                             	  'pc_username'=>$pc_username,
@@ -259,14 +258,14 @@ function postcalendar_userapi_buildView($args)
 
     	$prev_day = Date_Calc::prevDay($the_day,$the_month,$the_year,'%Y%m%d');
     	$next_day = Date_Calc::nextDay($the_day,$the_month,$the_year,'%Y%m%d');
-    	$pc_prev_day = pnModURL(__POSTCALENDAR__,'user','view',
+    	$pc_prev_day = pnModURL('PostCalendar','user','view',
                             	 array('viewtype'=>'day',
                                 	   'Date'=>$prev_day,
                                 	   'pc_username'=>$pc_username,
 								  	   'pc_category'=>$category,
 								  	   'pc_topic'=>$topic));
 
-    	$pc_next_day = pnModURL(__POSTCALENDAR__,'user','view',
+    	$pc_next_day = pnModURL('PostCalendar','user','view',
                             	array('viewtype'=>'day',
                                 	  'Date'=>$next_day,
                                 	  'pc_username'=>$pc_username,
@@ -275,13 +274,13 @@ function postcalendar_userapi_buildView($args)
 
     	$prev_week = date('Ymd',mktime(0,0,0,$week_first_day_month,$week_first_day_date-7,$week_first_day_year));
     	$next_week = date('Ymd',mktime(0,0,0,$week_last_day_month,$week_last_day_date+1,$week_last_day_year));
-    	$pc_prev_week = pnModURL(__POSTCALENDAR__,'user','view',
+    	$pc_prev_week = pnModURL('PostCalendar','user','view',
                             	 array('viewtype'=>'week',
                                 	   'Date'=>$prev_week,
                                 	   'pc_username'=>$pc_username,
 								  	   'pc_category'=>$category,
 								  	   'pc_topic'=>$topic));
-    	$pc_next_week = pnModURL(__POSTCALENDAR__,'user','view', 
+    	$pc_next_week = pnModURL('PostCalendar','user','view', 
                             	 array('viewtype'=>'week',
                                 	   'Date'=>$next_week,
                                 	   'pc_username'=>$pc_username,
@@ -290,13 +289,13 @@ function postcalendar_userapi_buildView($args)
     	
 			$prev_year = date('Ymd',mktime(0,0,0,1,1,$the_year-1));
     	$next_year = date('Ymd',mktime(0,0,0,1,1,$the_year+1));
-    	$pc_prev_year = pnModURL(__POSTCALENDAR__,'user','view',
+    	$pc_prev_year = pnModURL('PostCalendar','user','view',
                             	 array('viewtype'=>'year',
                                 	   'Date'=>$prev_year,
                                 	   'pc_username'=>$pc_username,
 								  	   'pc_category'=>$category,
 								  	   'pc_topic'=>$topic));
-    	$pc_next_year = pnModURL(__POSTCALENDAR__,'user','view',
+    	$pc_next_year = pnModURL('PostCalendar','user','view',
                             	 array('viewtype'=>'year',
                                 	   'Date'=>$next_year,
                                 	   'pc_username'=>$pc_username,
@@ -306,7 +305,7 @@ function postcalendar_userapi_buildView($args)
 			//=================================================================
     	//  Populate the template
     	//=================================================================
-			$all_categories = pnModAPIFunc(__POSTCALENDAR__,'user','getCategories');
+			$all_categories = pnModAPIFunc('PostCalendar','user','getCategories');
 			$categories = array();
 			foreach($all_categories as $category)
 			{

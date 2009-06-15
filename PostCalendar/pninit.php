@@ -1,5 +1,4 @@
 <?php
-@define('__POSTCALENDAR__','PostCalendar');
 /**
  *  SVN: $Id$
  *
@@ -123,29 +122,29 @@ function postcalendar_init()
     }		
 	
     // PostCalendar Default Settings
-    pnModSetVar(__POSTCALENDAR__, 'pcTime24Hours',              '0');
-    pnModSetVar(__POSTCALENDAR__, 'pcEventsOpenInNewWindow',    '0');
-    pnModSetVar(__POSTCALENDAR__, 'pcUseInternationalDates',    '0');
-    pnModSetVar(__POSTCALENDAR__, 'pcFirstDayOfWeek',           '0');
-    pnModSetVar(__POSTCALENDAR__, 'pcDayHighlightColor',        '#FF0000');
-    pnModSetVar(__POSTCALENDAR__, 'pcUsePopups',                '1');
-	pnModSetVar(__POSTCALENDAR__, 'pcDisplayTopics',            '0');
-    pnModSetVar(__POSTCALENDAR__, 'pcAllowDirectSubmit',        '0');
-    pnModSetVar(__POSTCALENDAR__, 'pcListHowManyEvents',        '15');
-	pnModSetVar(__POSTCALENDAR__, 'pcTimeIncrement',        	'15');
-	pnModSetVar(__POSTCALENDAR__, 'pcAllowSiteWide',        	'0');
-	pnModSetVar(__POSTCALENDAR__, 'pcAllowUserCalendar',        '1');
-	pnModSetVar(__POSTCALENDAR__, 'pcEventDateFormat',        	'%Y-%m-%d');
-//	pnModSetVar(__POSTCALENDAR__, 'pcTemplate',         		'default');
-	pnModSetVar(__POSTCALENDAR__, 'pcUseCache',         		'1');
-	pnModSetVar(__POSTCALENDAR__, 'pcCacheLifetime',         	'3600');
-	pnModSetVar(__POSTCALENDAR__, 'pcDefaultView',         		'month');
-	pnModSetVar(__POSTCALENDAR__, 'pcNotifyAdmin',         		'0');
-	pnModSetVar(__POSTCALENDAR__, 'pcNotifyEmail',         		pnConfigGetVar('adminmail'));
+    pnModSetVar('PostCalendar', 'pcTime24Hours',              '0');
+    pnModSetVar('PostCalendar', 'pcEventsOpenInNewWindow',    '0');
+    pnModSetVar('PostCalendar', 'pcUseInternationalDates',    '0');
+    pnModSetVar('PostCalendar', 'pcFirstDayOfWeek',           '0');
+    pnModSetVar('PostCalendar', 'pcDayHighlightColor',        '#FF0000');
+    pnModSetVar('PostCalendar', 'pcUsePopups',                '1');
+	pnModSetVar('PostCalendar', 'pcDisplayTopics',            '0');
+    pnModSetVar('PostCalendar', 'pcAllowDirectSubmit',        '0');
+    pnModSetVar('PostCalendar', 'pcListHowManyEvents',        '15');
+	pnModSetVar('PostCalendar', 'pcTimeIncrement',        	'15');
+	pnModSetVar('PostCalendar', 'pcAllowSiteWide',        	'0');
+	pnModSetVar('PostCalendar', 'pcAllowUserCalendar',        '1');
+	pnModSetVar('PostCalendar', 'pcEventDateFormat',        	'%Y-%m-%d');
+//	pnModSetVar('PostCalendar', 'pcTemplate',         		'default');
+	pnModSetVar('PostCalendar', 'pcUseCache',         		'1');
+	pnModSetVar('PostCalendar', 'pcCacheLifetime',         	'3600');
+	pnModSetVar('PostCalendar', 'pcDefaultView',         		'month');
+	pnModSetVar('PostCalendar', 'pcNotifyAdmin',         		'0');
+	pnModSetVar('PostCalendar', 'pcNotifyEmail',         		pnConfigGetVar('adminmail'));
     // v4b TS start
-    pnModSetVar(__POSTCALENDAR__, 'pcRepeating',         		'0');
-    pnModSetVar(__POSTCALENDAR__, 'pcMeeting',          		'0');
-    pnModSetVar(__POSTCALENDAR__, 'pcAddressbook',      		'1');
+    pnModSetVar('PostCalendar', 'pcRepeating',         		'0');
+    pnModSetVar('PostCalendar', 'pcMeeting',          		'0');
+    pnModSetVar('PostCalendar', 'pcAddressbook',      		'1');
     // v4b TS end
     return true;
 }
@@ -176,7 +175,7 @@ function postcalendar_upgrade($oldversion)
 	 *	link provided in the PostCalendar
 	 *	Admin section.
 	 */
-	//$pcModInfo = pnModGetInfo(pnModGetIDFromName(__POSTCALENDAR__));
+	//$pcModInfo = pnModGetInfo(pnModGetIDFromName('PostCalendar'));
 	//$pcDir = pnVarPrepForOS($pcModInfo['directory']);
 	
 	list($dbconn) = pnDBGetConn();
@@ -196,28 +195,28 @@ function postcalendar_upgrade($oldversion)
     		require_once("modules/$pcDir/DateCalc.php");
 			
 			// Update PostCalendar Variables
-    		pnModSetVar(__POSTCALENDAR__, 'pcTime24Hours', pnModGetVar(__POSTCALENDAR__,'time24hours'));
-    		pnModSetVar(__POSTCALENDAR__, 'pcEventsOpenInNewWindow', pnModGetVar(__POSTCALENDAR__,'eventsopeninnewwindow'));
-    		pnModSetVar(__POSTCALENDAR__, 'pcUseInternationalDates', pnModGetVar(__POSTCALENDAR__,'useinternationaldates'));
-    		pnModSetVar(__POSTCALENDAR__, 'pcFirstDayOfWeek', pnModGetVar(__POSTCALENDAR__,'firstdayofweek'));
-    		pnModSetVar(__POSTCALENDAR__, 'pcDayHighlightColor', pnModGetVar(__POSTCALENDAR__,'dayhighlightcolor'));
-    		pnModSetVar(__POSTCALENDAR__, 'pcUsePopups', pnModGetVar(__POSTCALENDAR__,'usepopups'));
-			pnModSetVar(__POSTCALENDAR__, 'pcDisplayTopics', pnModGetVar(__POSTCALENDAR__,'displaytopics'));
-    		pnModSetVar(__POSTCALENDAR__, 'pcAllowDirectSubmit', '0');
-    		pnModSetVar(__POSTCALENDAR__, 'pcListHowManyEvents', pnModGetVar(__POSTCALENDAR__,'listhowmanyevents'));
-			pnModSetVar(__POSTCALENDAR__, 'pcTimeIncrement', '15');
-			pnModSetVar(__POSTCALENDAR__, 'pcAllowSiteWide', '0');
-			pnModSetVar(__POSTCALENDAR__, 'pcAllowUserCalendar', '1');
-			pnModSetVar(__POSTCALENDAR__, 'pcEventDateFormat', '%Y-%m-%d');
-//			pnModSetVar(__POSTCALENDAR__, 'pcTemplate', 'default');
-            pnModSetVar(__POSTCALENDAR__, 'pcUseCache','1');
-			pnModSetVar(__POSTCALENDAR__, 'pcCacheLifetime','3600');
-			pnModSetVar(__POSTCALENDAR__, 'pcDefaultView','month');
-			pnModSetVar(__POSTCALENDAR__, 'pcSafeMode','0');
+    		pnModSetVar('PostCalendar', 'pcTime24Hours', pnModGetVar('PostCalendar','time24hours'));
+    		pnModSetVar('PostCalendar', 'pcEventsOpenInNewWindow', pnModGetVar('PostCalendar','eventsopeninnewwindow'));
+    		pnModSetVar('PostCalendar', 'pcUseInternationalDates', pnModGetVar('PostCalendar','useinternationaldates'));
+    		pnModSetVar('PostCalendar', 'pcFirstDayOfWeek', pnModGetVar('PostCalendar','firstdayofweek'));
+    		pnModSetVar('PostCalendar', 'pcDayHighlightColor', pnModGetVar('PostCalendar','dayhighlightcolor'));
+    		pnModSetVar('PostCalendar', 'pcUsePopups', pnModGetVar('PostCalendar','usepopups'));
+			pnModSetVar('PostCalendar', 'pcDisplayTopics', pnModGetVar('PostCalendar','displaytopics'));
+    		pnModSetVar('PostCalendar', 'pcAllowDirectSubmit', '0');
+    		pnModSetVar('PostCalendar', 'pcListHowManyEvents', pnModGetVar('PostCalendar','listhowmanyevents'));
+			pnModSetVar('PostCalendar', 'pcTimeIncrement', '15');
+			pnModSetVar('PostCalendar', 'pcAllowSiteWide', '0');
+			pnModSetVar('PostCalendar', 'pcAllowUserCalendar', '1');
+			pnModSetVar('PostCalendar', 'pcEventDateFormat', '%Y-%m-%d');
+//			pnModSetVar('PostCalendar', 'pcTemplate', 'default');
+            pnModSetVar('PostCalendar', 'pcUseCache','1');
+			pnModSetVar('PostCalendar', 'pcCacheLifetime','3600');
+			pnModSetVar('PostCalendar', 'pcDefaultView','month');
+			pnModSetVar('PostCalendar', 'pcSafeMode','0');
 			// v4b TS start
-            pnModSetVar(__POSTCALENDAR__, 'pcRepeating',         		'0');
-            pnModSetVar(__POSTCALENDAR__, 'pcMeeting',          		'0');
-            pnModSetVar(__POSTCALENDAR__, 'pcAddressbook',          		'1');
+            pnModSetVar('PostCalendar', 'pcRepeating',         		'0');
+            pnModSetVar('PostCalendar', 'pcMeeting',          		'0');
+            pnModSetVar('PostCalendar', 'pcAddressbook',          		'1');
             
             // alter the events table and change some old columns
             $sql = "ALTER TABLE $events_table
@@ -258,11 +257,11 @@ function postcalendar_upgrade($oldversion)
             }
             
 			// insert the current hardcoded categories into the new categories table
-            $category1 = pnVarPrepForStore(pnModGetVar(__POSTCALENDAR__,'category1'));
-            $category2 = pnVarPrepForStore(pnModGetVar(__POSTCALENDAR__,'category2'));
-            $category3 = pnVarPrepForStore(pnModGetVar(__POSTCALENDAR__,'category3'));
-            $category4 = pnVarPrepForStore(pnModGetVar(__POSTCALENDAR__,'category4'));
-            $category5 = pnVarPrepForStore(pnModGetVar(__POSTCALENDAR__,'category5'));
+            $category1 = pnVarPrepForStore(pnModGetVar('PostCalendar','category1'));
+            $category2 = pnVarPrepForStore(pnModGetVar('PostCalendar','category2'));
+            $category3 = pnVarPrepForStore(pnModGetVar('PostCalendar','category3'));
+            $category4 = pnVarPrepForStore(pnModGetVar('PostCalendar','category4'));
+            $category5 = pnVarPrepForStore(pnModGetVar('PostCalendar','category5'));
             
             $inserts = array(
                 "INSERT INTO $cat_table (pc_catid,pc_catname,pc_catcolor) VALUES ('1','$category1','#ff0000')",
@@ -306,21 +305,21 @@ function postcalendar_upgrade($oldversion)
             }
             
 			// remove the old vars as they are no longer needed
-            pnModDelVar(__POSTCALENDAR__,'category1');
-            pnModDelVar(__POSTCALENDAR__,'category2');
-            pnModDelVar(__POSTCALENDAR__,'category3');
-            pnModDelVar(__POSTCALENDAR__,'category4');
-            pnModDelVar(__POSTCALENDAR__,'category5');
-            pnModDelVar(__POSTCALENDAR__,'time24hours');
-			pnModDelVar(__POSTCALENDAR__,'eventsopeninnewwindow');
-			pnModDelVar(__POSTCALENDAR__,'useinternationaldates');
-			pnModDelVar(__POSTCALENDAR__,'firstdayofweek');
-			pnModDelVar(__POSTCALENDAR__,'dayhighlightcolor');
-			pnModDelVar(__POSTCALENDAR__,'displaytopics');
-			pnModDelVar(__POSTCALENDAR__,'usepopups');
-			pnModDelVar(__POSTCALENDAR__,'listhowmanyevents');
-			pnModDelVar(__POSTCALENDAR__,'allowdirectsubmit');
-			pnModDelVar(__POSTCALENDAR__,'showeventsinyear');
+            pnModDelVar('PostCalendar','category1');
+            pnModDelVar('PostCalendar','category2');
+            pnModDelVar('PostCalendar','category3');
+            pnModDelVar('PostCalendar','category4');
+            pnModDelVar('PostCalendar','category5');
+            pnModDelVar('PostCalendar','time24hours');
+			pnModDelVar('PostCalendar','eventsopeninnewwindow');
+			pnModDelVar('PostCalendar','useinternationaldates');
+			pnModDelVar('PostCalendar','firstdayofweek');
+			pnModDelVar('PostCalendar','dayhighlightcolor');
+			pnModDelVar('PostCalendar','displaytopics');
+			pnModDelVar('PostCalendar','usepopups');
+			pnModDelVar('PostCalendar','listhowmanyevents');
+			pnModDelVar('PostCalendar','allowdirectsubmit');
+			pnModDelVar('PostCalendar','showeventsinyear');
             			
             //======================================================
             //  now, ideally, we will convert old events to the new 
@@ -581,7 +580,7 @@ function postcalendar_upgrade($oldversion)
 		case '3.9.1' :
 		case '3.9.2' :
 			// ading pcSafeMode
-			pnModSetVar(__POSTCALENDAR__, 'pcSafeMode','0');
+			pnModSetVar('PostCalendar', 'pcSafeMode','0');
 			return postcalendar_upgrade('3.9.3');
 			break;	
 		
@@ -614,9 +613,9 @@ function postcalendar_upgrade($oldversion)
 			break;
 			
 		case '3.9.8':
-			pnModDelVar(__POSTCALENDAR__, 'pcSafeMode');
-			pnModSetVar(__POSTCALENDAR__, 'pcNotifyAdmin', '0');
-			pnModSetVar(__POSTCALENDAR__, 'pcNotifyEmail', pnConfigGetVar('adminmail'));
+			pnModDelVar('PostCalendar', 'pcSafeMode');
+			pnModSetVar('PostCalendar', 'pcNotifyAdmin', '0');
+			pnModSetVar('PostCalendar', 'pcNotifyEmail', pnConfigGetVar('adminmail'));
             return postcalendar_upgrade('3.9.9');
 			break;
 			
@@ -626,9 +625,9 @@ function postcalendar_upgrade($oldversion)
         case '4.0.2':
         case '4.0.3': // Also support upgrades from PostCalendar 4.03a (http://www.krapohl.info)
             // v4b TS start
-            pnModSetVar(__POSTCALENDAR__, 'pcRepeating',         		'0');
-            pnModSetVar(__POSTCALENDAR__, 'pcMeeting',          		'0');
-            pnModSetVar(__POSTCALENDAR__, 'pcAddressbook',          		'1');
+            pnModSetVar('PostCalendar', 'pcRepeating',         		'0');
+            pnModSetVar('PostCalendar', 'pcMeeting',          		'0');
+            pnModSetVar('PostCalendar', 'pcAddressbook',          		'1');
             $sql = "ALTER TABLE $events_table
                     ADD pc_meeting_id int(11) NULL default 0";
             
@@ -641,16 +640,16 @@ function postcalendar_upgrade($oldversion)
             // v4b TS end
 			break;
 		case '5.0.0':
-			pnModSetVar(__POSTCALENDAR__, 'pcTemplate', 'default');
+			pnModSetVar('PostCalendar', 'pcTemplate', 'default');
 			break;
 		case '5.0.1':
-      pnModDelVar(__POSTCALENDAR__,'pcTemplate');
+      pnModDelVar('PostCalendar','pcTemplate');
 			break;
 	}
 	
 	// if we get this far - load the userapi and clear the cache
 	/*
-	if(!pnModAPILoad(__POSTCALENDAR__,'user')) {
+	if(!pnModAPILoad('PostCalendar','user')) {
 		return false;
 	}
 	$tpl =& new pcRender();
@@ -682,7 +681,7 @@ function postcalendar_delete()
     $blocks_column =& $pntable['blocks_column'];
     
     // get the module id
-    $modid = pnModGetIDFromName(__POSTCALENDAR__);
+    $modid = pnModGetIDFromName('PostCalendar');
     
     // remove the PostCalendar events table
     $sql = "DROP TABLE $events_table";
@@ -701,31 +700,31 @@ function postcalendar_delete()
     }
     
     // remove all the PostCalendar variables from the DB
-    pnModDelVar(__POSTCALENDAR__, 'pcTime24Hours');
-    pnModDelVar(__POSTCALENDAR__, 'pcEventsOpenInNewWindow');
-    pnModDelVar(__POSTCALENDAR__, 'pcUseInternationalDates');
-    pnModDelVar(__POSTCALENDAR__, 'pcFirstDayOfWeek');
-    pnModDelVar(__POSTCALENDAR__, 'pcDayHighlightColor');
-    pnModDelVar(__POSTCALENDAR__, 'pcUsePopups');
-	pnModDelVar(__POSTCALENDAR__, 'pcDisplayTopics');
-    pnModDelVar(__POSTCALENDAR__, 'pcAllowDirectSubmit');
-    pnModDelVar(__POSTCALENDAR__, 'pcListHowManyEvents');
-	pnModDelVar(__POSTCALENDAR__, 'pcTimeIncrement');
-	pnModDelVar(__POSTCALENDAR__, 'pcAllowSiteWide');
-	pnModDelVar(__POSTCALENDAR__, 'pcAllowUserCalendar');
-	pnModDelVar(__POSTCALENDAR__, 'pcEventDateFormat');
-	pnModDelVar(__POSTCALENDAR__, 'pcTemplate');
+    pnModDelVar('PostCalendar', 'pcTime24Hours');
+    pnModDelVar('PostCalendar', 'pcEventsOpenInNewWindow');
+    pnModDelVar('PostCalendar', 'pcUseInternationalDates');
+    pnModDelVar('PostCalendar', 'pcFirstDayOfWeek');
+    pnModDelVar('PostCalendar', 'pcDayHighlightColor');
+    pnModDelVar('PostCalendar', 'pcUsePopups');
+	pnModDelVar('PostCalendar', 'pcDisplayTopics');
+    pnModDelVar('PostCalendar', 'pcAllowDirectSubmit');
+    pnModDelVar('PostCalendar', 'pcListHowManyEvents');
+	pnModDelVar('PostCalendar', 'pcTimeIncrement');
+	pnModDelVar('PostCalendar', 'pcAllowSiteWide');
+	pnModDelVar('PostCalendar', 'pcAllowUserCalendar');
+	pnModDelVar('PostCalendar', 'pcEventDateFormat');
+	pnModDelVar('PostCalendar', 'pcTemplate');
     // v4b TS start
-    pnModDelVar(__POSTCALENDAR__, 'pcRepeating');
-    pnModDelVar(__POSTCALENDAR__, 'pcMeeting');
-    pnModDelVar(__POSTCALENDAR__, 'pcAddressbook');
+    pnModDelVar('PostCalendar', 'pcRepeating');
+    pnModDelVar('PostCalendar', 'pcMeeting');
+    pnModDelVar('PostCalendar', 'pcAddressbook');
     // v4b TS end
-	pnModDelVar(__POSTCALENDAR__, 'pcUseCache');
-	pnModDelVar(__POSTCALENDAR__, 'pcCacheLifetime');
-	pnModDelVar(__POSTCALENDAR__, 'pcDefaultView');
-	pnModDelVar(__POSTCALENDAR__, 'pcSafeMode');
-	pnModDelVar(__POSTCALENDAR__, 'pcNotifyAdmin');
-	pnModDelVar(__POSTCALENDAR__, 'pcNotifyEmail');
+	pnModDelVar('PostCalendar', 'pcUseCache');
+	pnModDelVar('PostCalendar', 'pcCacheLifetime');
+	pnModDelVar('PostCalendar', 'pcDefaultView');
+	pnModDelVar('PostCalendar', 'pcSafeMode');
+	pnModDelVar('PostCalendar', 'pcNotifyAdmin');
+	pnModDelVar('PostCalendar', 'pcNotifyEmail');
     
     // remove any blocks associated with PostCalendar
     // Seems the core does not clean up installed blocks so I will.

@@ -42,7 +42,7 @@ function smarty_function_pc_form_nav_open($args=array())
         $target = 'target="csCalendar"';
     else 
         $target = '';
-	$formaction=pnModURL(__POSTCALENDAR__,'user','view');
+	$formaction=pnModURL('PostCalendar','user','view');
 	$formaction=DataUtil::formatForDisplay($formaction);
     $fstart = '<form action="'.$formaction.'"'
             . ' method="post"'

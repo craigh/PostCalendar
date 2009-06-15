@@ -60,24 +60,24 @@ function smarty_function_pc_url($args)
     // some extra cleanup if necessary
     $Date = str_replace('-','',$Date);
     
-    $pcModInfo = pnModGetInfo(pnModGetIDFromName(__POSTCALENDAR__));
+    $pcModInfo = pnModGetInfo(pnModGetIDFromName('PostCalendar'));
     $pcDir = pnVarPrepForOS($pcModInfo['directory']);
     
     switch($action) 
     {
         case 'submit' :
-            $link = pnModURL(__POSTCALENDAR__,'user','submit',array('tplview'=>$template_view,'Date'=>$Date));
+            $link = pnModURL('PostCalendar','user','submit',array('tplview'=>$template_view,'Date'=>$Date));
             break;
         
         case 'submit-admin' :
-            $link = pnModURL(__POSTCALENDAR__,'admin','submit',array('tplview'=>$template_view,'Date'=>$Date));
+            $link = pnModURL('PostCalendar','admin','submit',array('tplview'=>$template_view,'Date'=>$Date));
             break;
         
         case 'search' :
-            $link = pnModURL(__POSTCALENDAR__,'user','search');
+            $link = pnModURL('PostCalendar','user','search');
             break;
 				case 'today' :
-						$link = pnModURL(__POSTCALENDAR__,'user','view',array('tplview'    => $template_view,
+						$link = pnModURL('PostCalendar','user','view',array('tplview'    => $template_view,
                                                                   'viewtype'   => $viewtype,
                                                                   'Date'       => $today,
                                                                   'pc_username'=> $pc_username,
@@ -85,7 +85,7 @@ function smarty_function_pc_url($args)
                                                                   'pc_topic'   => $topic));
 						break;
         case 'day' :
-            $link = pnModURL(__POSTCALENDAR__,'user','view',array('tplview'    => $template_view,
+            $link = pnModURL('PostCalendar','user','view',array('tplview'    => $template_view,
                                                                   'viewtype'   => 'day',
                                                                   'Date'       => $Date,
                                                                   'pc_username'=> $pc_username,
@@ -94,7 +94,7 @@ function smarty_function_pc_url($args)
             break;
         
         case 'week' :
-            $link = pnModURL(__POSTCALENDAR__,'user','view',array('tplview'    => $template_view,
+            $link = pnModURL('PostCalendar','user','view',array('tplview'    => $template_view,
                                                                   'viewtype'   => 'week',
                                                                   'Date'       => $Date,
                                                                   'pc_username'=> $pc_username,
@@ -103,7 +103,7 @@ function smarty_function_pc_url($args)
             break;
         
         case 'month' :
-            $link = pnModURL(__POSTCALENDAR__,'user','view',array('tplview'    => $template_view,
+            $link = pnModURL('PostCalendar','user','view',array('tplview'    => $template_view,
                                                                   'viewtype'   => 'month',
                                                                   'Date'       => $Date,
                                                                   'pc_username'=> $pc_username,
@@ -112,7 +112,7 @@ function smarty_function_pc_url($args)
             break;
         
         case 'year' :
-            $link = pnModURL(__POSTCALENDAR__,'user','view',array('tplview'    => $template_view,
+            $link = pnModURL('PostCalendar','user','view',array('tplview'    => $template_view,
                                                                   'viewtype'   => 'year',
                                                                   'Date'       => $Date,
                                                                   'pc_username'=> $pc_username,
@@ -129,7 +129,7 @@ function smarty_function_pc_url($args)
                 } 
                 else 
                 {
-                    $link = pnModURL(__POSTCALENDAR__,'user','view',array('Date'    => $Date,
+                    $link = pnModURL('PostCalendar','user','view',array('Date'    => $Date,
                                                                           'tplview' => $template_view,
                                                                           'viewtype'=> 'details',
                                                                           'eid'     => $eid));

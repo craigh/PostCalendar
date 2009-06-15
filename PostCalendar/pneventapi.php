@@ -1,4 +1,6 @@
 <?php
+require_once ('modules/PostCalendar/global.php');
+
 /**
  *  SVN: $Id$
  *

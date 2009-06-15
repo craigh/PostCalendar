@@ -1,5 +1,4 @@
 <?php
-@define('__POSTCALENDAR__','PostCalendar');
 /**
  *  SVN: $Id$
  *
@@ -36,7 +35,7 @@
  */
 
 $search_modules[] = array(
-    'title' => __POSTCALENDAR__,
+    'title' => 'PostCalendar',
     'func_search' => 'search_postcalendar',
     'func_opt' => 'search_postcalendar_opt'
 );
@@ -45,7 +44,7 @@ $search_modules[] = array(
 function search_postcalendar_opt() 
 {
     //global $bgcolor2, $textcolor1;
-    if (!pnModAvailable(__POSTCALENDAR__) || !pnModAPILoad(__POSTCALENDAR__, 'user')) {
+    if (!pnModAvailable('PostCalendar') || !pnModAPILoad('PostCalendar', 'user')) {
        return '';
     }
 
@@ -103,7 +102,7 @@ function search_postcalendar()
     if(!isset($active)) 
         return false; 
 
-    if (!pnModAvailable(__POSTCALENDAR__) || !pnModAPILoad(__POSTCALENDAR__, 'user')) 
+    if (!pnModAvailable('PostCalendar') || !pnModAPILoad('PostCalendar', 'user')) 
         return ''; 
 
     if (!(bool)PC_ACCESS_OVERVIEW) 

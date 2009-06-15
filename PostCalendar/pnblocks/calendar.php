@@ -1,5 +1,4 @@
 <?php
-@define('__POSTCALENDAR__','PostCalendar');
 /**
  *  SVN: $Id$
  *
@@ -48,8 +47,8 @@ function postcalendar_calendarblock_init()
  */
 function postcalendar_calendarblock_info()
 {
-    return array('text_type'      => __POSTCALENDAR__,
-                 'module'         => __POSTCALENDAR__,
+    return array('text_type'      => 'PostCalendar',
+                 'module'         => 'PostCalendar',
                  'text_type_long' => 'Calendar Block',
                  'allow_multiple' => true,
                  'form_content'   => false,
@@ -84,7 +83,7 @@ function postcalendar_calendarblock_display($blockinfo)
     }
 */    
     // What is today's correct date
-    $Date = postcalendar_getDate();
+    $Date = pnModFunc('postcalendar', 'user', 'getDate');
     
     // Get variables from content block
     $vars = unserialize($blockinfo['content']);
@@ -109,7 +108,7 @@ function postcalendar_calendarblock_display($blockinfo)
     //global $textcolor1, $textcolor2;
     
     // 20021125 - rraymond :: we have to do this to make it work with envolution
-    $pcModInfo = pnModGetInfo(pnModGetIDFromName(__POSTCALENDAR__));
+    $pcModInfo = pnModGetInfo(pnModGetIDFromName('PostCalendar'));
     $pcDir = pnVarPrepForOS($pcModInfo['directory']);
     unset($pcModInfo);
     
@@ -146,10 +145,10 @@ function postcalendar_calendarblock_display($blockinfo)
         $prev_month      = Date_Calc::beginOfPrevMonth(1,$the_month,$the_year,'%Y%m%d');
         $next_month      = Date_Calc::beginOfNextMonth(1,$the_month,$the_year,'%Y%m%d');
         $last_day        = Date_Calc::daysInMonth($the_month,$the_year);
-        $pc_prev         = pnModURL(__POSTCALENDAR__,'user','view',array('tplview'=>$template_view,'viewtype'=>'month','Date'=>$prev_month));
-        $pc_next         = pnModURL(__POSTCALENDAR__,'user','view',array('tplview'=>$template_view,'viewtype'=>'month','Date'=>$next_month));
-        $pc_month_name   = pnModAPIFunc(__POSTCALENDAR__, 'user', 'getmonthname', array('Date'=>mktime(0,0,0,$the_month,$the_day,$the_year)));
-        $month_link_url  = pnModURL(__POSTCALENDAR__, 'user', 'view', array('tplview'=>$template_view,'viewtype'=>'month','Date'=>date('Ymd',mktime(0,0,0,$the_month,1,$the_year))));
+        $pc_prev         = pnModURL('PostCalendar','user','view',array('tplview'=>$template_view,'viewtype'=>'month','Date'=>$prev_month));
+        $pc_next         = pnModURL('PostCalendar','user','view',array('tplview'=>$template_view,'viewtype'=>'month','Date'=>$next_month));
+        $pc_month_name   = pnModAPIFunc('PostCalendar', 'user', 'getmonthname', array('Date'=>mktime(0,0,0,$the_month,$the_day,$the_year)));
+        $month_link_url  = pnModURL('PostCalendar', 'user', 'view', array('tplview'=>$template_view,'viewtype'=>'month','Date'=>date('Ymd',mktime(0,0,0,$the_month,1,$the_year))));
         $month_link_text = $pc_month_name.' '.$the_year;
         //*******************************************************************
         //  Here we get the events for the current month view
@@ -210,7 +209,7 @@ function postcalendar_calendarblock_display($blockinfo)
         $starting_date    = date('m/d/Y',mktime(0,0,0,$the_month,1-$first_day,$the_year));
         $ending_date      = date('m/t/Y',mktime(0,0,0,$the_month+$pcbeventsrange,1,$the_year));
 
-        $eventsByDate = pnModAPIFunc(__POSTCALENDAR__,'user','pcGetEvents', array('start'=>$starting_date,'end'=>$ending_date));
+        $eventsByDate = pnModAPIFunc('PostCalendar','user','pcGetEvents', array('start'=>$starting_date,'end'=>$ending_date));
         $calendarView = Date_Calc::getCalendarMonth($the_month, $the_year, '%Y-%m-%d');
 
         $sdaynames = array();
@@ -240,7 +239,7 @@ function postcalendar_calendarblock_display($blockinfo)
             $starting_date = Date_Calc::nextDay($d,$m,$y,'%m/%d/%Y');
         }
 
-        $categories = pnModAPIFunc(__POSTCALENDAR__,'user','getCategories');
+        $categories = pnModAPIFunc('PostCalendar','user','getCategories');
         if(isset($calendarView)) {
             $tpl->assign_by_ref('CAL_FORMAT',$calendarView);
         }
@@ -278,7 +277,7 @@ function postcalendar_calendarblock_display($blockinfo)
         $tpl->assign('NO_EVENTS',_PC_BLOCK_NO_EVENTS);   
     }
 /*
-    $pcTheme = pnModGetVar(__POSTCALENDAR__,'pcTemplate');
+    $pcTheme = pnModGetVar('PostCalendar','pcTemplate');
     if(!$pcTheme)
         $pcTheme='default';
  */   
@@ -308,9 +307,9 @@ function postcalendar_calendarblock_display($blockinfo)
     }   
 
     if($pcbshowsslinks) {
-        $submit_event_url = pnModURL(__POSTCALENDAR__,'user','submit');
+        $submit_event_url = pnModURL('PostCalendar','user','submit');
         	$submit_event_url = DataUtil::formatForDisplay($submit_event_url);
-        $search_event_url = pnModURL(__POSTCALENDAR__,'user','search'); 
+        $search_event_url = pnModURL('PostCalendar','user','search'); 
         	$search_event_url = DataUtil::formatForDisplay($search_event_url);
         $output .= '<div class="pc_centerblocksubmitlinks">';
         if(PC_ACCESS_ADD) {

@@ -91,6 +91,10 @@ function postcalendar_removeScriptTags($in)
 	return preg_replace("/<script.*?>(.*?)<\/script>/","",$in);
 }
 
+function postcalendar_user_getDate($format='%Y%m%d%H%M%S')
+{
+	return postcalendar_getDate($format);
+}
 function postcalendar_getDate($format='%Y%m%d%H%M%S')
 {
 	$Date      = FormUtil::getPassedValue('Date');
@@ -317,11 +321,11 @@ function pc_notify($eid,$is_update)
 	else 
 		$message = _PC_NOTIFY_NEW_MSG;
 	
-	$modinfo = pnModGetInfo(pnModGetIDFromName(__POSTCALENDAR__));
+	$modinfo = pnModGetInfo(pnModGetIDFromName('PostCalendar'));
 	$modversion = pnVarPrepForOS($modinfo['version']);
 	unset($modinfo);
 	
-	$message .= pnModURL(__POSTCALENDAR__,'admin','adminevents',array('pc_event_id'=>$eid,'action'=>_ADMIN_ACTION_VIEW));
+	$message .= pnModURL('PostCalendar','admin','adminevents',array('pc_event_id'=>$eid,'action'=>_ADMIN_ACTION_VIEW));
 	$message .= "\n\n\n\n";
 	$message .= "----\n";
 	$message .= "PostCalendar $modversion\n";
@@ -339,7 +343,7 @@ function pc_notify($eid,$is_update)
 function postcalendar_footer()
 {   
 	// lets get the module's information
-	//$modinfo = pnModGetInfo(pnModGetIDFromName(__POSTCALENDAR__));
+	//$modinfo = pnModGetInfo(pnModGetIDFromName('PostCalendar'));
 	//$footer = "<p align=\"right\"><a href=\"http://www.postcalendar.tv\">PostCalendar v$modinfo[version]</a></p>";
 	//return $footer;
 	return '';

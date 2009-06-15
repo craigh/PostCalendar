@@ -1,5 +1,4 @@
 <?php
-@define('__POSTCALENDAR__','PostCalendar');
 /**
  *  SVN: $Id$
  *
@@ -38,10 +37,7 @@
 //=========================================================================
 //  Require utility classes
 //=========================================================================
-$pcModInfo = pnModGetInfo(pnModGetIDFromName(__POSTCALENDAR__));
-$pcDir = pnVarPrepForOS($pcModInfo['directory']);
-require_once("modules/$pcDir/common.api.php");
-unset($pcModInfo,$pcDir);
+require_once("modules/PostCalendar/common.api.php");
 
 /**
  * Get available admin panel links
@@ -115,7 +111,7 @@ function postcalendar_adminapi_getAdminListEvents($args)
 function postcalendar_adminapi_buildHourSelect($args) 
 {
     extract($args);
-    $time24hours = pnModGetVar(__POSTCALENDAR__,'time24hours');
+    $time24hours = pnModGetVar('PostCalendar','time24hours');
     
     if(!isset($hour)){
         $hour = $time24hours ? date('H') : date('h'); 
@@ -181,7 +177,7 @@ function postcalendar_adminapi_buildAMPMSelect($args)
     $output->SetInputMode(_PNH_VERBATIMINPUT);
     
     $options = array();
-    if(pnModGetVar(__POSTCALENDAR__,'time24hours')) {
+    if(pnModGetVar('PostCalendar','time24hours')) {
         return false;
     } else {
         $options[0]['id']        = 'AM';

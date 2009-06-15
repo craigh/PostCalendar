@@ -1,5 +1,4 @@
 <?php
-@define('__POSTCALENDAR__','PostCalendar');
 /**
  *  SVN: $Id$
  *
@@ -34,10 +33,11 @@
  *  http://www.gnu.org/copyleft/gpl.html
  *
  */
-
 Loader::requireOnce('includes/pnForm.php');
 //don't think I'll need the next two lines anymore...
-pnModAPILoad(__POSTCALENDAR__,'user');
+// UPDATE: in order to not use the APIload below, the functions all have to have standard names
+// and be called with pnModFunc (or API)
+pnModAPILoad('PostCalendar','user');
 require_once ('includes/HtmlUtil.class.php');
 
 function postcalendar_user_main()
@@ -50,7 +50,100 @@ function postcalendar_user_main()
 	// get the date and go to the view function
 	return postcalendar_user_view(array('Date'=>postcalendar_getDate()));
 }
+/**
+ * view items
+ * This is a standard function to provide an overview of all of the items
+ * available from the module.
+ */
+function postcalendar_user_view()
+{
+	if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_OVERVIEW)) {
+		return LogUtil::registerPermissionError();
+	}
+    
+	// get the vars that were passed in
+	$Date      = FormUtil::getPassedValue ('Date');
+	$viewtype  = FormUtil::getPassedValue ('viewtype');
+	$jumpday   = FormUtil::getPassedValue ('jumpday');
+	$jumpmonth = FormUtil::getPassedValue ('jumpmonth');
+	$jumpyear  = FormUtil::getPassedValue ('jumpyear');
 
+	if (empty($Date)) $Date = postcalendar_getDate();
+	if(!isset($viewtype))   $viewtype = _SETTING_DEFAULT_VIEW;
+
+	return postcalendar_user_display(array('viewtype'=>$viewtype,'Date'=>$Date)) . postcalendar_footer();
+}
+
+/**
+ * display item
+ * This is a standard function to provide detailed information on a single item
+ * available from the module.
+ */
+function postcalendar_user_display($args)
+{
+	$eid         = FormUtil::getPassedValue ('eid');
+	$Date        = FormUtil::getPassedValue ('Date');
+	$pc_category = FormUtil::getPassedValue ('pc_category');
+	$pc_topic    = FormUtil::getPassedValue ('pc_topic');
+	$pc_username = FormUtil::getPassedValue ('pc_username');
+
+	extract($args);
+	if(empty($Date) && empty($viewtype)) {
+		return false;
+	}
+
+	$uid = pnUserGetVar('uid');
+	$theme = pnUserGetTheme();
+	$cacheid = md5($Date.$viewtype._SETTING_TEMPLATE.$eid.$uid.'u'.$pc_username.$theme.'c'.$category.'t'.$topic);
+
+	switch ($viewtype) 
+	{
+		case 'details':
+			if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_READ)) {
+				return LogUtil::registerPermissionError();
+			}
+      $out = pnModAPIFunc('PostCalendar','user','eventDetail', 
+                             array('eid'=>$eid, 'Date'=>$Date, 'cacheid'=>$cacheid));
+
+			if($out === false) { 
+       	pnRedirect(pnModURL('PostCalendar','user'));
+			}
+			// build template and fetch:
+			$tpl = pnRender::getInstance('PostCalendar');
+			PostCalendarSmartySetup($tpl);
+			if($tpl->is_cached($out['template'],$cacheid)) {
+				// use cached version
+				return $tpl->fetch($out['template'], $cacheid);
+			} else {
+				foreach ($out as $var=>$val) {
+					$tpl->assign($var,$val);
+				}
+				return $tpl->fetch($out['template']);
+			}
+			break;
+
+ 		default :
+			if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_OVERVIEW)) {
+				return LogUtil::registerPermissionError();
+			}
+			//now function just returns an array of information to pass to template 5/9/09 CAH
+			$out = pnModAPIFunc('PostCalendar','user','buildView', 
+													array('Date'=>$Date, 'viewtype'=>$viewtype, 'cacheid'=>$cacheid));
+			// build template and fetch:
+			$tpl = pnRender::getInstance('PostCalendar');
+			PostCalendarSmartySetup($tpl);
+			if($tpl->is_cached($out['template'],$cacheid)) {
+				// use cached version
+				return $tpl->fetch($out['template'], $cacheid);
+			} else {
+				foreach ($out as $var=>$val) {
+					$tpl->assign($var,$val);
+				}
+				return $tpl->fetch($out['template']);
+    	} // end if/else
+			break;
+	} // end switch
+}
 class postcalendar_user_fileuploadHandler extends pnFormHandler
 {
 	function initialize(&$render)
@@ -125,103 +218,6 @@ function postcalendar_user_splittime($args)
 }
 
 /**
- * view items
- * This is a standard function to provide an overview of all of the items
- * available from the module.
- */
-function postcalendar_user_view()
-{
-	if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_OVERVIEW)) {
-		return LogUtil::registerPermissionError();
-	}
-    
-    // get the vars that were passed in
-    $Date      = FormUtil::getPassedValue ('Date');
-    //$print     = FormUtil::getPassedValue ('print');
-    $viewtype  = FormUtil::getPassedValue ('viewtype');
-    $jumpday   = FormUtil::getPassedValue ('jumpday');
-    $jumpmonth = FormUtil::getPassedValue ('jumpmonth');
-    $jumpyear  = FormUtil::getPassedValue ('jumpyear');
-    
-    $Date = postcalendar_getDate();
-    if(!isset($viewtype))   $viewtype = _SETTING_DEFAULT_VIEW;
-    //return postcalendar_user_display(array('viewtype'=>$viewtype,'Date'=>$Date,'print'=>$print)) . postcalendar_footer();
-    return postcalendar_user_display(array('viewtype'=>$viewtype,'Date'=>$Date)) . postcalendar_footer();
-}
-
-/**
- * display item
- * This is a standard function to provide detailed information on a single item
- * available from the module.
- */
-function postcalendar_user_display($args)
-{
-	$eid         = FormUtil::getPassedValue ('eid');
-	$Date        = FormUtil::getPassedValue ('Date');
-	$pc_category = FormUtil::getPassedValue ('pc_category');
-	$pc_topic    = FormUtil::getPassedValue ('pc_topic');
-	$pc_username = FormUtil::getPassedValue ('pc_username');
-
-	extract($args);
-	if(empty($Date) && empty($viewtype)) {
-		return false;
-	}
-
-	$uid = pnUserGetVar('uid');
-	$theme = pnUserGetTheme();
-	$cacheid = md5($Date.$viewtype._SETTING_TEMPLATE.$eid.$uid.'u'.$pc_username.$theme.'c'.$category.'t'.$topic);
-
-	switch ($viewtype) 
-	{
-		case 'details':
-			if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_READ)) {
-				return LogUtil::registerPermissionError();
-			}
-      $out = pnModAPIFunc('PostCalendar','user','eventDetail', 
-                             array('eid'=>$eid, 'Date'=>$Date, 'cacheid'=>$cacheid));
-
-			if($out === false) { 
-       	pnRedirect(pnModURL(__POSTCALENDAR__,'user'));
-			}
-			// build template and fetch:
-			$tpl = pnRender::getInstance('PostCalendar');
-			PostCalendarSmartySetup($tpl);
-			if($tpl->is_cached($out['template'],$cacheid)) {
-				// use cached version
-				return $tpl->fetch($out['template'], $cacheid);
-			} else {
-				foreach ($out as $var=>$val) {
-					$tpl->assign($var,$val);
-				}
-				return $tpl->fetch($out['template']);
-			}
-			break;
-
- 		default :
-			if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_OVERVIEW)) {
-				return LogUtil::registerPermissionError();
-			}
-			//now function just returns an array of information to pass to template 5/9/09 CAH
-			$out = pnModAPIFunc('PostCalendar','user','buildView', 
-													array('Date'=>$Date, 'viewtype'=>$viewtype, 'cacheid'=>$cacheid));
-			// build template and fetch:
-			$tpl = pnRender::getInstance('PostCalendar');
-			PostCalendarSmartySetup($tpl);
-			if($tpl->is_cached($out['template'],$cacheid)) {
-				// use cached version
-				return $tpl->fetch($out['template'], $cacheid);
-			} else {
-				foreach ($out as $var=>$val) {
-					$tpl->assign($var,$val);
-				}
-				return $tpl->fetch($out['template']);
-    	} // end if/else
-			break;
-	} // end switch
-}
-
-
-/**
  * search events
  */
 function postcalendar_user_search()
@@ -247,7 +243,7 @@ function postcalendar_user_search()
 		$pc_topic = FormUtil::getPassedValue('pc_topic');
 		$submit = FormUtil::getPassedValue('submit');
 	
-		$categories = pnModAPIFunc(__POSTCALENDAR__, 'user', 'getCategories');
+		$categories = pnModAPIFunc('PostCalendar', 'user', 'getCategories');
 		$cat_options = '';
 		foreach($categories as $category) {
 			$cat_options .= "<option value='".$category[catid]."'>".$category[catname]."</option>";
@@ -255,7 +251,7 @@ function postcalendar_user_search()
 	$tpl->assign('CATEGORY_OPTIONS',$cat_options);
 	
 	if(_SETTING_DISPLAY_TOPICS) {
-		$topics = pnModAPIFunc(__POSTCALENDAR__,'user','getTopics');
+		$topics = pnModAPIFunc('PostCalendar','user','getTopics');
 		$top_options = '';
 		foreach($topics as $topic) {
 			$top_options .= "<option value='".$topic['topicid']."'>".$topic['topictext']."</option>";
@@ -274,7 +270,7 @@ function postcalendar_user_search()
 	//=================================================================
     //  Output the search form
 	//=================================================================
-	$thisformaction=pnModURL(__POSTCALENDAR__,'user','search');
+	$thisformaction=pnModURL('PostCalendar','user','search');
 	$thisformaction = DataUtil::formatForDisplay($thisformaction);
 	$tpl->assign('FORM_ACTION',$thisformaction);
 	//=================================================================
