@@ -309,13 +309,6 @@ function postcalendar_eventapi_getEvents($args)
 	} // <- end of foreach($events as $event)
 	return $days;
 }
-/*
-	This function deletes one event provided the event ID (eid)
-*/
-function postcalendar_eventapi_deleteevent($args)
-{
-	return DBUtil::deleteObjectByID('postcalendar_events', $args['eid'], 'eid');
-}
 /**
  *	postcalendar_eventapi_writeEvent()
  *	write an event to the DB
@@ -1366,5 +1359,38 @@ function postcalendar_eventapi_eventDetail($args)
 	}
 	*/
 	return $function_out;
+}
+/**
+ *	postcalendar_eventapi_update()
+ *	expected args: eventarray=array([id]=>array([id]=>[idval],[colname]=>[newval],
+ *		[id2]=>array([id2]=>[idval],[colname]=>[newval])
+ *
+ */
+function postcalendar_eventapi_update($eventarray) {
+	if (!is_array($eventarray)) return false;
+	$res=DBUtil::updateObjectArray ($eventarray, 'postcalendar_events', 'eid');
+	if ($res) { return true; } else { return false; }
+}
+/**
+ *  postcalendar_eventapi_deleteevent
+ *  This function deletes one event provided the event ID (eid)
+ *	expected args: args=array(['eid']=>idval)
+ *
+ */
+function postcalendar_eventapi_deleteevent($args)
+{
+	return DBUtil::deleteObjectByID('postcalendar_events', $args['eid'], 'eid');
+}
+/**
+ *  postcalendar_eventapi_deleteeventarray
+ *  This function deletes several events when provided an array of ids
+ *	expected args: args=array([idval]=>val,[idval2]=>val,[idval3]=>val...)
+ *  note the vals are not used. just the keys
+ *
+ */
+function postcalendar_eventapi_deleteeventarray($args)
+{
+	if (!is_array($args)) return false;
+	return DBUtil::deleteObjectsFromKeyArray ($args, 'postcalendar_events', 'eid');
 }
 ?>

@@ -84,7 +84,9 @@ class postcalendar_event_editHandler extends pnFormHandler
 		else if ($args['commandName'] == 'delete')
 		{
 			$uname = pnUserGetVar('uname');
-			if (($uname != $event['informant']) OR (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN))) {
+			if (($uname == $event['informant']) OR (pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN))) {
+				//proceed
+			} else {
 				return $render->pnFormSetErrorMsg(_PC_CAN_NOT_DELETE);
 			}
 			$result = pnModAPIFunc('PostCalendar', 'event', 'deleteevent',
@@ -794,7 +796,9 @@ function postcalendar_event_new($args)
 	//	Enter the event into the DB
 	//================================================================
 	if($form_action == 'commit') {
-		if (!pnSecConfirmAuthKey()) { return(_NO_DIRECT_ACCESS); }
+		if (!pnSecConfirmAuthKey()) {
+			return(_NO_DIRECT_ACCESS);
+		}
 		if(!empty($error_msg)) {
             $preview = false;
             $output .= '<table border="0" width="100%" cellpadding="1" cellspacing="0"><tr><td bgcolor="red">';
@@ -807,127 +811,60 @@ function postcalendar_event_new($args)
             $output .= '<br /><br />';
         } else {
         	// V4B TS start - save the start date, before the vars are cleared (needed for the redirect on success)
-			$url_date = $event_startyear.$event_startmonth.$event_startday;
+					$url_date = $event_startyear.$event_startmonth.$event_startday;
 
-            if (!pnModAPIFunc('PostCalendar','event','writeEvent',$eventdata)) {
-        		$output .= '<center><div style="padding:5px; border:1px solid red; background-color: pink;">';		
-				$output .= "<b>"._PC_EVENT_SUBMISSION_FAILED."</b>";		
-				$output .= '</div></center><br />';	
-				$output .= '<br />';
+					if (!pnModAPIFunc('PostCalendar','event','writeEvent',$eventdata)) {
+						$output .= '<center><div style="padding:5px; border:1px solid red; background-color: pink;">';		
+						$output .= "<b>"._PC_EVENT_SUBMISSION_FAILED."</b>";		
+						$output .= '</div></center><br />';	
+						$output .= '<br />';
         	} else {
-				pnModAPIFunc('PostCalendar','admin','clearCache');
-
-				$output .= '<center><div style="padding:5px; border:1px solid green; background-color: lightgreen;">';			
-				if($is_update) {
-					$output .= "<b>"._PC_EVENT_EDIT_SUCCESS."</b>";		
-				} else {
-					$output .= "<b>"._PC_EVENT_SUBMISSION_SUCCESS."</b>";		
-				}
-				$output .= '</div></center><br />';	
-				$output .= '<br />';
+						pnModAPIFunc('PostCalendar','admin','clearCache');
+		
+						$output .= '<center><div style="padding:5px; border:1px solid green; background-color: lightgreen;">';			
+						if($is_update) {
+							$output .= "<b>"._PC_EVENT_EDIT_SUCCESS."</b>";		
+						} else {
+							$output .= "<b>"._PC_EVENT_SUBMISSION_SUCCESS."</b>";		
+						}
+						$output .= '</div></center><br />';	
+						$output .= '<br />';
                 
                 // v4b TS start - save the start date, before the vars are cleared (needed for the redirect on success)
-                $url_date = $event_startyear.$event_startmonth.$event_startday;
+						$url_date = $event_startyear.$event_startmonth.$event_startday;
                 // v4b TS end
                 
         		// clear the form vars
         		$event_subject=$event_desc=$event_sharing=$event_category=$event_topic=
-				$event_startmonth=$event_startday=$event_startyear=$event_starttimeh=$event_starttimem=$event_startampm=
-				$event_endmonth=$event_endday=$event_endyear=$event_endtype=$event_dur_hours=$event_dur_minutes=
-				$event_duration=$event_allday=$event_location=$event_street1=$event_street2=$event_city=$event_state=
-				$event_postal=$event_location_info=$event_contname=$event_conttel=$event_contemail=
-				$event_website=$event_fee=$event_contact=$event_repeat=$event_repeat_freq=$event_repeat_freq_type=
-				$event_repeat_on_num=$event_repeat_on_day=$event_repeat_on_freq=$event_recurrspec=$uname=
-				$Date=$year=$month=$day=$pc_html_or_text=null;
-				$is_update = false;
-				$pc_event_id = 0;
-				// lets wrap all the data into array for passing to submit and preview functions
-				$eventdata = compact('event_subject','event_desc','event_sharing','event_category','event_topic',
-				'event_startmonth','event_startday','event_startyear','event_starttimeh','event_starttimem','event_startampm',
-				'event_endmonth','event_endday','event_endyear','event_endtype','event_dur_hours','event_dur_minutes',
-				'event_duration','event_allday','event_location','event_street1','event_street2','event_city','event_state',
-				'event_postal','event_location_info','event_contname','event_conttel','event_contemail',
-				'event_website','event_fee','event_contact','event_repeat','event_repeat_freq','event_repeat_freq_type',
-				'event_repeat_on_num','event_repeat_on_day','event_repeat_on_freq','event_recurrspec','uname',
-				'Date','year','month','day','pc_html_or_text','is_update','pc_event_id');
-			}
+						$event_startmonth=$event_startday=$event_startyear=$event_starttimeh=$event_starttimem=$event_startampm=
+						$event_endmonth=$event_endday=$event_endyear=$event_endtype=$event_dur_hours=$event_dur_minutes=
+						$event_duration=$event_allday=$event_location=$event_street1=$event_street2=$event_city=$event_state=
+						$event_postal=$event_location_info=$event_contname=$event_conttel=$event_contemail=
+						$event_website=$event_fee=$event_contact=$event_repeat=$event_repeat_freq=$event_repeat_freq_type=
+						$event_repeat_on_num=$event_repeat_on_day=$event_repeat_on_freq=$event_recurrspec=$uname=
+						$Date=$year=$month=$day=$pc_html_or_text=null;
+						$is_update = false;
+						$pc_event_id = 0;
+						// lets wrap all the data into array for passing to submit and preview functions
+						$eventdata = compact('event_subject','event_desc','event_sharing','event_category','event_topic',
+						'event_startmonth','event_startday','event_startyear','event_starttimeh','event_starttimem','event_startampm',
+						'event_endmonth','event_endday','event_endyear','event_endtype','event_dur_hours','event_dur_minutes',
+						'event_duration','event_allday','event_location','event_street1','event_street2','event_city','event_state',
+						'event_postal','event_location_info','event_contname','event_conttel','event_contemail',
+						'event_website','event_fee','event_contact','event_repeat','event_repeat_freq','event_repeat_freq_type',
+						'event_repeat_on_num','event_repeat_on_day','event_repeat_on_freq','event_recurrspec','uname',
+						'Date','year','month','day','pc_html_or_text','is_update','pc_event_id');
+					}
 
-			// V4B RNG Start
-			pnRedirect(pnModURL('PostCalendar', 'user', 'view',array('viewtype'=>'month','Date'=>$url_date)));
-			return true;
-			// V4B RNG End
+					// V4B RNG Start
+					pnRedirect(pnModURL('PostCalendar', 'user', 'view',array('viewtype'=>'month','Date'=>$url_date)));
+					return true;
+					// V4B RNG End
 
-        }
+       }
 	}
 
     $output .= pnModAPIFunc('PostCalendar','admin','buildSubmitForm',$eventdata);
 	return $output;
-}
-function postcalendar_event_approve()
-{
-	if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADD)) {
-		return LogUtil::registerPermissionError();
-	}
-
-	$pc_eid = FormUtil::getPassedValue('pc_eid');
-    $approve_list = '';
-    foreach($pc_eid as $eid) {
-        if(!empty($approve_list)) { $approve_list .= ','; }
-        $approve_list .= $eid;
-    }
-    
-    list($dbconn) = pnDBGetConn();
-    $pntable = pnDBGetTables();
-    $events_table = $pntable['postcalendar_events'];
-    $events_column = &$pntable['postcalendar_events_column'];
-    
-    $sql = "UPDATE $events_table
-            SET $events_column[eventstatus] = "._EVENT_APPROVED."
-            WHERE $events_column[eid] IN ($approve_list)";
-
-    $dbconn->Execute($sql);
-    if ($dbconn->ErrorNo() != 0) { 
-		$msg = _PC_ADMIN_EVENT_ERROR; 
-	} else { 
-		$msg = _PC_ADMIN_EVENTS_APPROVED; 
-	}
-    
-	pnModAPIFunc('PostCalendar','admin','clearCache');
-	return postcalendar_admin_showlist('',_EVENT_APPROVED,'listapproved',_PC_APPROVED_ADMIN,$msg);
-}
-
-function postcalendar_event_hide()
-{
-	if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_EDIT)) {
-		return LogUtil::registerPermissionError();
-	}
-	
-	$pc_eid = FormUtil::getPassedValue('pc_eid');
-    $output = "";
-    $event_list = '';
-    foreach($pc_eid as $eid) {
-        if(!empty($event_list)) { $event_list .= ','; }
-        $event_list .= $eid;
-    }
-    
-    list($dbconn) = pnDBGetConn();
-    $pntable = pnDBGetTables();
-    $events_table = $pntable['postcalendar_events'];
-    $events_column = &$pntable['postcalendar_events_column'];
-    
-    $sql = "UPDATE $events_table
-            SET $events_column[eventstatus] = "._EVENT_HIDDEN."
-            WHERE $events_column[eid] IN ($event_list)";
-
-    $dbconn->Execute($sql);
-    if ($dbconn->ErrorNo() != 0) {
-        $msg = _PC_ADMIN_EVENT_ERROR;
-    } else {
-        $msg = _PC_ADMIN_EVENTS_HIDDEN;
-    }
-    
-	pnModAPIFunc('PostCalendar','admin','clearCache');
-
-	return postcalendar_admin_showlist('',_EVENT_APPROVED,'listapproved',_PC_APPROVED_ADMIN,$msg);
 }
 ?>

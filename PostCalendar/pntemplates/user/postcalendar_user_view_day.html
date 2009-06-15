@@ -36,59 +36,64 @@
 <div class="calcontainer">
 	<ul class="eventslist">
 		<li class="eventslistitems">
-        <!--[ pc_sort_events var="S_EVENTS" sort="time" order="asc" value=$A_EVENTS ]-->
-	<!--[ foreach name=dates item=events key=date from=$S_EVENTS ]-->
+			<!--[ pc_sort_events var="S_EVENTS" sort="time" order="asc" value=$A_EVENTS ]-->
+			<!--[ foreach name=dates item=events key=date from=$S_EVENTS ]-->
+	    	<!--[ assign var="dayname" value=$date|date_format:"%w" ]-->
+	    	<!--[ assign var="day" value=$date|date_format:"%d"|string_format:"%1d" ]-->
+	    	<!--[ assign var="month" value=$date|date_format:"%m"|string_format:"%1d" ]-->
+	    	<!--[ assign var="year" value=$date|date_format:"%Y"|string_format:"%4d" ]-->
 
-    	<!--[ assign var="dayname" value=$date|date_format:"%w" ]-->
-    	<!--[ assign var="day" value=$date|date_format:"%d"|string_format:"%1d" ]-->
-    	<!--[ assign var="month" value=$date|date_format:"%m"|string_format:"%1d" ]-->
-    	<!--[ assign var="year" value=$date|date_format:"%Y"|string_format:"%4d" ]-->
-
-		<!--[ pc_sort_events var="S_EVENTS" sort="time" order="asc" value=$A_EVENTS ]-->
-		<!--[ assign var="oldCat" value="" ]-->
-		<!--[ if isset($events) ]-->
-		<!--[ foreach name=events item=event from=$S_EVENTS.$date ]-->
-			<!--[ assign var="cCat" value=$event.catname ]-->
-			<!--[ if $oldCat != $cCat ]-->
-				<!--[ if $smarty.foreach.events.first != true ]-->
-					</div>
-				<!--[ /if ]-->
-				<div style="padding: 2px; background-color: <!--[ $event.catcolor ]-->;">
-					<!--[ if $event.meeting_id ]--><!--[ pnimg src='meeting.gif' altml=true alt='_PC_THEME_MEETING' titleml=true title='_PC_THEME_MEETING' style='float: left;']--><!--[ /if ]--><!--[ $event.catname ]-->
-				</div>
-				<div style="padding: 2px; border:solid 1px <!--[ $event.catcolor ]-->;">
-			<!--[ /if ]-->
-			<!--[ if $24HOUR_TIME ]-->
-				<!--[ assign var="timestamp" value=$event.startTime|date_format:'%H:%M' ]-->
-			<!--[ else ]-->
-				<!--[ assign var="timestamp" value=$event.startTime|date_format:'%I:%M %p']-->
-			<!--[ /if ]-->
-			<!--[ if $event.alldayevent != true ]-->
-				<!--[ $timestamp ]-->  
-			<!--[ /if ]-->
-			<!--[ $event.uname ]--> <!-- // V4B SB Inseted Username to get a better overview -->
-			<a href="<!--[ pc_url action=detail eid=$event.eid date=$date ]-->" 
-			<!--[ pc_popup delay="500" 
-	            	   bgcolor=$event.catcolor 
-			    	   caption=$event.title 
-			    	   text=$event.hometext ]-->>
-    		<!--[ $event.title|strip_tags|pnvarprephtmldisplay ]--></a> 
-			<!--[ if $event.alldayevent != true ]-->
-				(<!--[ $event.duration_hours ]-->:<!--[ $event.duration_minutes ]-->)
-			<!--[ /if ]-->
-			<a href="index.php?module=PostCalendar&func=export&?eid=<!--[ $event.eid ]-->&date=<!--[ $date ]-->"><!--[ pnimg src='icaldown.gif' alt="Add this event to my calendar" ]--></a>
-			<br />
-			<!--[ assign var="oldCat" value=$event.catname ]-->
-			<!--[ if $smarty.foreach.events.last ]-->
-				<!--[ * we need to close out the <div> tag * ]-->
-				</div>
-			<!--[ /if ]-->
-		<!--[ foreachelse ]-->
-			<b><!--[pnml name='_PC_NO_EVENTS']--></b>
-		<!--[ /foreach ]-->
-		<!--[ /if ]-->
-	<!--[ /foreach ]-->
-	</li>
+				<!--[ pc_sort_events var="S_EVENTS" sort="time" order="asc" value=$A_EVENTS ]-->
+				<!--[ assign var="oldCat" value="" ]-->
+				<!--[ if isset($events) ]-->
+					<!--[ foreach name=events item=event from=$S_EVENTS.$date ]-->
+						<!--[ assign var="cCat" value=$event.catname ]-->
+						<!--[ if (empty($cCat)) ]-->
+							<!--[* assign a default catname and catcolor - this is a HACK!*]-->
+							<!--[ assign var="catname" value = $A_CATEGORY.0.name ]-->
+							<!--[ assign var="catcolor" value = $A_CATEGORY.0.color ]-->
+							<!--[ assign var="cCat" value = $catname ]-->
+						<!--[else]-->
+							<!--[ assign var="catname" value = $event.catname ]-->
+							<!--[ assign var="catcolor" value = $event.catcolor ]-->
+						<!--[/if]-->
+						<!--[ if $oldCat != $cCat ]-->
+							<!--[ if $smarty.foreach.events.first != true ]-->
+								</div>
+							<!--[ /if ]-->
+							<div style="padding: 2px; background-color: <!--[ $event.catcolor ]-->;">
+								<!--[ if $event.meeting_id ]--><!--[ pnimg src='meeting.gif' altml=true alt='_PC_THEME_MEETING' titleml=true title='_PC_THEME_MEETING' style='float: left;']--><!--[ /if ]--><!--[ $event.catname ]-->
+							</div>
+							<div style="padding: 2px; border:solid 1px <!--[ $event.catcolor ]-->;">
+						<!--[ /if ]-->
+						<!--[ if $24HOUR_TIME ]-->
+							<!--[ assign var="timestamp" value=$event.startTime|date_format:'%H:%M' ]-->
+						<!--[ else ]-->
+							<!--[ assign var="timestamp" value=$event.startTime|date_format:'%I:%M %p']-->
+						<!--[ /if ]-->
+						<!--[ if $event.alldayevent != true ]-->
+							<!--[ $timestamp ]-->  
+						<!--[ /if ]-->
+						<!--[ $event.uname ]--> <!-- // V4B SB Inseted Username to get a better overview -->
+						<a href="<!--[ pc_url action=detail eid=$event.eid date=$date ]-->" 
+							<!--[ pc_popup delay="500" bgcolor=$event.catcolor caption=$event.title text=$event.hometext ]-->>
+					   		<!--[ $event.title|strip_tags|pnvarprephtmldisplay ]--></a> 
+						<!--[ if $event.alldayevent != true ]-->
+							(<!--[ $event.duration_hours ]-->:<!--[ $event.duration_minutes ]-->)
+						<!--[ /if ]-->
+						<a href="index.php?module=PostCalendar&func=export&?eid=<!--[ $event.eid ]-->&date=<!--[ $date ]-->"><!--[ pnimg src='icaldown.gif' alt="Add this event to my calendar" ]--></a>
+						<br />
+						<!--[ assign var="oldCat" value=$event.catname ]-->
+						<!--[ if $smarty.foreach.events.last ]-->
+							<!--[* we need to close out the <div> tag *]-->
+							</div>
+						<!--[ /if ]-->
+					<!--[ foreachelse ]-->
+						<b><!--[pnml name='_PC_NO_EVENTS']--></b>
+					<!--[ /foreach ]--><!--[* /foreach events *]-->
+				<!--[ /if ]--><!--[* /if events *]-->
+			<!--[ /foreach ]--><!--[* /foreach dates *]-->
+		</li>
 	</ul>
 </div><!-- end calcontainer -->
 <div style='text-align:right;'>

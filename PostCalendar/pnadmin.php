@@ -64,18 +64,27 @@ function postcalendar_admin_modifyconfig($msg='',$showMenu=true)
 	return $pnRender->fetch('admin/postcalendar_admin_modifyconfig.htm');
 }
 
-function postcalendar_admin_listapproved() { return postcalendar_admin_showlist('',_EVENT_APPROVED,'listapproved',_PC_APPROVED_ADMIN); }
-function postcalendar_admin_listhidden() { return postcalendar_admin_showlist('',_EVENT_HIDDEN,'listhidden',_PC_HIDDEN_ADMIN); }
-function postcalendar_admin_listqueued() { return postcalendar_admin_showlist('',_EVENT_QUEUED,'listqueued',_PC_QUEUED_ADMIN); }
-function postcalendar_admin_showlist($e='',$type,$function,$title,$msg='')
+function postcalendar_admin_listapproved() {
+	$args['type']=_EVENT_APPROVED;$args['function']='listapproved';$args['title']=_PC_APPROVED_ADMIN;	return postcalendar_admin_showlist($args);
+}
+function postcalendar_admin_listhidden() {
+	$args['type']=_EVENT_HIDDEN;$args['function']='listhidden';$args['title']=_PC_HIDDEN_ADMIN;	return postcalendar_admin_showlist($args);
+}
+function postcalendar_admin_listqueued() {
+	$args['type']=_EVENT_QUEUED;$args['function']='listqueued';$args['title']=_PC_QUEUED_ADMIN;	return postcalendar_admin_showlist($args);
+}
+function postcalendar_admin_showlist($args)
 {
 	if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
 		return LogUtil::registerPermissionError();
 	}
+	extract($args);
+	// $args should be $e='',$type,$function,$title,$msg=''
+	if (!isset($type) or empty($function)) return false; //  $title not required, type can be 1, 0, -1
 
 	$pnRender = pnRender::getInstance('PostCalendar');
-	$pnRender->assign('e', $e);
-	$pnRender->assign('msg', $msg);
+	if (!empty($e)) $pnRender->assign('e', $e);
+	if (!empty($msg)) $pnRender->assign('msg', $msg);
 	
 	$offset_increment = _SETTING_HOW_MANY_EVENTS;
 	if(empty($offset_increment)) $offset_increment = 15;
@@ -118,7 +127,7 @@ function postcalendar_admin_showlist($e='',$type,$function,$title,$msg='')
 	if(count($events) >= $offset_increment) {
 		$nextlink = pnModUrl('PostCalendar','admin',$function,array('offset'=>$offset+$offset_increment,'sort'=>$sort,'sdir'=>$sdir));
 	} else {
-		$nextlink = flase;
+		$nextlink = false;
 	}
 	$pnRender->assign('nextlink', $nextlink);
 	$pnRender->assign('offset_increment', $offset_increment);
@@ -142,15 +151,15 @@ function postcalendar_admin_adminevents()
         
 		switch($thelist) {
             case 'listqueued' :
-                $output .= postcalendar_admin_showlist($e,_EVENT_QUEUED,'showlist');
+                $output .= pnModFunc('PostCalendar', 'admin', 'showlist', array('e'=>$e, 'type'=>_EVENT_QUEUED, 'function'=>'showlist'));
                 break;
                 
             case 'listhidden' :
-                $output .= postcalendar_admin_showlist($e,_EVENT_HIDDEN,'showlist');
+                $output .= pnModFunc('PostCalendar', 'admin', 'showlist', array('e'=>$e, 'type'=>_EVENT_HIDDEN, 'function'=>'showlist'));
                 break;
                 
             case 'listapproved' :
-                $output .= postcalendar_admin_showlist($e,_EVENT_APPROVED,'showlist');
+                $output .= pnModFunc('PostCalendar', 'admin', 'showlist', array('e'=>$e, 'type'=>_EVENT_APPROVED, 'function'=>'showlist'));
                 break;
         }
         return $output;     
@@ -161,26 +170,23 @@ function postcalendar_admin_adminevents()
     $function = '';
     switch ($action) {
         case _ADMIN_ACTION_APPROVE :
-            $function = 'approve';
+            $function = 'approveevents';
 			$are_you_sure_text = _PC_APPROVE_ARE_YOU_SURE;
 			break;
             
         case _ADMIN_ACTION_HIDE :
-            $function = 'hide';
+            $function = 'hideevents';
 			$are_you_sure_text = _PC_HIDE_ARE_YOU_SURE;
 			break;
             
         case _ADMIN_ACTION_DELETE :
-            $function = 'delete';
+            $function = 'deleteevents';
 			$are_you_sure_text = _PC_DELETE_ARE_YOU_SURE;
 			break;
     }
 	
 	if(!empty($function)) {
-		$output .= '<form action="'.pnModUrl('PostCalendar','event',$function).'" method="post">';
-    	$output .= $are_you_sure_text.' ';
-    	$output .= '<input type="submit" name="submit" value="'._PC_ADMIN_YES.'" />';
-		$output .= '<br /><br />';
+		$output .= '<form action="'.pnModUrl('PostCalendar','admin',$function).'" method="post">';
 	}
 
 	$pnRender = pnRender::getInstance('PostCalendar');
@@ -599,22 +605,106 @@ function postcalendar_admin_testSystem()
 	$tpl->assign('infos', $infos);
 	return $tpl->fetch('admin/postcalendar_admin_systeminfo.htm');
 }
+/* 
+ *	postcalendar_admin_approveevents
+ *	update status of events so that they are viewable by users
+ *
+ */
+function postcalendar_admin_approveevents()
+{
+	if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADD)) {
+		return LogUtil::registerPermissionError();
+	}
+
+	$pc_eid = FormUtil::getPassedValue('pc_eid');
+	if (!is_array($pc_eid)) return _PC_ADMIN_EVENT_ERROR;
+
+	// structure array for DB interaction
+	$eventarray=array();
+    foreach($pc_eid as $eid) {
+		$eventarray[$eid]=array('eid'=>$eid,'eventstatus'=>_EVENT_APPROVED);
+	}
+    
+	// update the DB
+	$res = pnModAPIFunc('PostCalendar','event','update',$eventarray);
+	if ($res) {
+		$msg = _PC_ADMIN_EVENTS_APPROVED;
+		pnModAPIFunc('PostCalendar','admin','clearCache');
+	} else {
+		$msg = _PC_ADMIN_EVENT_ERROR;
+	}
+
+	pnModAPIFunc('PostCalendar','admin','clearCache');
+	return pnModFunc('PostCalendar','admin','showlist',array('type'=>_EVENT_APPROVED,'function'=>'listapproved','title'=>_PC_APPROVED_ADMIN,'msg'=>$msg));
+}
+
+/* 
+ *	postcalendar_admin_hideevents
+ *	update status of events so that they are hidden from view
+ *
+ */
+function postcalendar_admin_hideevents()
+{
+	if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_EDIT)) {
+		return LogUtil::registerPermissionError();
+	}
+	
+	$pc_eid = FormUtil::getPassedValue('pc_eid');
+	if (!is_array($pc_eid)) return _PC_ADMIN_EVENT_ERROR;
+
+	// structure array for DB interaction
+	$eventarray=array();
+    foreach($pc_eid as $eid) {
+		$eventarray[$eid]=array('eid'=>$eid,'eventstatus'=>_EVENT_HIDDEN);
+	}
+
+	// update the DB
+	$res = pnModAPIFunc('PostCalendar','event','update',$eventarray);
+	if ($res) {
+		$msg = _PC_ADMIN_EVENTS_HIDDEN;
+		pnModAPIFunc('PostCalendar','admin','clearCache');
+	} else {
+		$msg = _PC_ADMIN_EVENT_ERROR;
+	}
+
+	pnModAPIFunc('PostCalendar','admin','clearCache');
+	return pnModFunc('PostCalendar','admin','showlist',array('type'=>_EVENT_APPROVED,'function'=>'listapproved','title'=>_PC_APPROVED_ADMIN,'msg'=>$msg));
+}
+/* 
+ *	postcalendar_admin_deleteevents
+ *	delete array of events
+ *
+ */
+function postcalendar_admin_deleteevents()
+{
+	if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_DELETE)) {
+		return LogUtil::registerPermissionError();
+	}
+	
+	$pc_eid = FormUtil::getPassedValue('pc_eid');
+	if (!is_array($pc_eid)) return _PC_ADMIN_EVENT_ERROR;
+
+	// structure array for DB interaction
+	$eventarray=array();
+	foreach($pc_eid as $eid) {
+		$eventarray[$eid]=$eid;
+	}
+
+	// update the DB
+	$res = pnModAPIFunc('PostCalendar','event','deleteeventarray',$eventarray);
+	if ($res) {
+		$msg = _PC_ADMIN_EVENTS_DELETED;
+		pnModAPIFunc('PostCalendar','admin','clearCache');
+	} else {
+		$msg = _PC_ADMIN_EVENT_ERROR;
+	}
+
+	pnModAPIFunc('PostCalendar','admin','clearCache');
+	return pnModFunc('PostCalendar','admin','showlist',array('type'=>_EVENT_APPROVED,'function'=>'listapproved','title'=>_PC_APPROVED_ADMIN,'msg'=>$msg));
+}
 /****************************************************
  * The functions below are moved to eventapi
  ****************************************************/
-function postcalendar_admin_approveevents()
-{
-	return pnModFunc('PostCalendar', 'event', 'approve');
-}
-function postcalendar_admin_hideevents()
-{
-	return pnModFunc('PostCalendar', 'event', 'hide');
-}
-
-function postcalendar_admin_deleteevents()
-{
-	return pnModFunc('postcalendar', 'event', 'delete');
-}
 function postcalendar_admin_edit($args) {
 	return pnModFunc('PostCalendar', 'event', 'new', $args);
 }
