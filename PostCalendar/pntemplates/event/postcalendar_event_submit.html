@@ -1,3 +1,4 @@
+<!--[ pndebug ]-->
 <!--[ pc_calendar_init ]-->
 
 <!--[* THIS PART LOOKS BAD IN FF/ hence commented out -CAH *]-->
@@ -48,7 +49,7 @@
                     <tr>
                         <td valign="top" align="left"><input type="radio" name="<!--[ $InputTimed ]-->" value="<!--[ $ValueTimed ]-->" <!--[ $SelectedTimed ]--> /></td>
                         <td valign="top" align="left"><!--[ $TimedEventTitle ]--></td>
-                        <td valign="top" align="left"><!--[ $SelectTimedHours ]--> <!--[ $SelectTimedMinutes ]--> <!--[ $SelectTimedAMPM ]--></td>
+                        <td valign="top" align="left"><!--[html_select_time time=$SelectedTime display_seconds=false use_24_hours=$24HOUR_TIME minute_interval=$minute_interval prefix="event_starttime"]--></td>
                     </tr>
                     <tr>
                         <td valign="top" align="left">&nbsp;</td>

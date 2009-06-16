@@ -104,6 +104,7 @@ function postcalendar_icalapi_writeicalevent ($ve)
 	
 	$emid	= DBUtil::selectFieldMax ('postcalendar_events', 'meeting_id');
 	//CAH seems like the emid should be incremented by 1 for a new event...
+	$emid++; // normal writeEvent function leaves at 0 if no participants
 	
 	$pc_endDate		= $ve['enddate']['year']."-".$ve['enddate']['month']."-".$ve['enddate']['day']; 
 	$pc_endTime		= $ve['endtime']['hour'].":".$ve['endtime']['min'].":".$ve['endtime']['sec'];
@@ -184,7 +185,8 @@ function postcalendar_icalapi_writeicalevent ($ve)
 		$obj['sharing']			= 1; // 3 would be global
 		$obj['language']		= NULL;
 		$obj['meeting_id']	= $emid;
-		$result = DBUtil::insertObject ($obj, 'postcalendar_events');
+
+		$result = pnModAPIFunc('PostCalendar','event','create', $obj);
 	}
 	
 	pnModAPIFunc('PostCalendar','admin','clearCache');

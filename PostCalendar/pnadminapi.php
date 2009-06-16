@@ -71,7 +71,7 @@ function postcalendar_adminapi_getlinks()
 		$links[] = array('url' => pnModURL('PostCalendar', 'admin', 'categories'), 'text' => _EDIT_PC_CONFIG_CATEGORIES);
 	}
 	if (pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADD)) {
-		$links[] = array('url' => pnModURL('PostCalendar', 'admin', 'submit'), 'text' => _PC_CREATE_EVENT);
+		$links[] = array('url' => pnModURL('PostCalendar', 'event', 'new'), 'text' => _PC_CREATE_EVENT);
 	}
 	if (pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
 		$links[] = array('url' => pnModURL('PostCalendar', 'admin', 'listapproved'), 'text' => _PC_VIEW_APPROVED);
@@ -106,90 +106,6 @@ function postcalendar_adminapi_getAdminListEvents($args)
     }
 
     return DBUtil::selectObjectArray ('postcalendar_events', $where, $sort, $offset, $offset_increment, false);
-}
-
-function postcalendar_adminapi_buildHourSelect($args) 
-{
-    extract($args);
-    $time24hours = pnModGetVar('PostCalendar','time24hours');
-    
-    if(!isset($hour)){
-        $hour = $time24hours ? date('H') : date('h'); 
-    }
-    
-    $output = new pnHTML();
-    $output->SetInputMode(_PNH_VERBATIMINPUT);
-    
-    $options = array();
-	if($time24hours) {
-        for($i = 0; $i < 24; $i++) {
-            $sel = false;
-            if($i == $hour) {
-                $sel = true;
-            }
-            $options[$i]['id']       = $i;
-            $options[$i]['selected'] = $sel;
-            $options[$i]['name']     = $i < 10 ? '0'.$i : $i;  
-        }
-    } else {
-        for($i = 0; $i < 12; $i++) {
-            $sel = false;
-            if($i == $hour) {
-                $sel = true;
-            }
-            $options[$i]['id']       = $i+1;
-            $options[$i]['selected'] = $sel;
-            $options[$i]['name']     = $i+1 < 10 ? '0'.$i+1 : $i+1;     
-        }
-    }
-    
-    $output->FormSelectMultiple('pc_hour',$options);
-    return $output->GetOutput();
-}
-
-function postcalendar_adminapi_buildMinSelect($args) 
-{
-    extract($args);
-    
-    if(!isset($min)){
-        $min = date('i'); 
-    }
-    
-    $output = new pnHTML();
-    $output->SetInputMode(_PNH_VERBATIMINPUT);
-    
-    $options = array();
-    for ($i = 0; $i <= 45; $i+5) {
-        $options[$i]['id']       = $i;
-        $options[$i]['selected'] = false;
-        $options[$i]['name']     = $i < 10 ? '0'.$i+1 : $i+1;            
-    }
-    
-    $output->FormSelectMultiple('pc_min',$options);
-    return $output->GetOutput();
-}
-
-function postcalendar_adminapi_buildAMPMSelect($args) 
-{   
-    extract($args);
-    
-    $output = new pnHTML();
-    $output->SetInputMode(_PNH_VERBATIMINPUT);
-    
-    $options = array();
-    if(pnModGetVar('PostCalendar','time24hours')) {
-        return false;
-    } else {
-        $options[0]['id']        = 'AM';
-        $options[0]['selected']  = '';
-        $options[0]['name']      = 'AM';
-        $options[1]['id']        = 'PM';
-        $options[1]['selected']  = '';
-        $options[1]['name']      = 'PM';
-    }
-    
-    $output->FormSelectMultiple('pc_ampm',$options);
-    return $output->GetOutput();
 }
 
 function postcalendar_adminapi_clearCache()
