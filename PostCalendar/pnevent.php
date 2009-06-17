@@ -320,11 +320,8 @@ function postcalendar_event_new($args)
         $eventdata['data_loaded'] = false;
     }
     
-    // lets get the module's information
-    //$modinfo = pnModGetInfo(pnModGetIDFromName('PostCalendar'));
     $categories = pnModAPIFunc('PostCalendar','user','getCategories');
-	
-	
+
 	//================================================================
 	//	ERROR CHECKING
 	//================================================================

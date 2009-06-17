@@ -66,11 +66,8 @@ function smarty_function_pc_url($args)
     switch($action) 
     {
         case 'submit' :
-            $link = pnModURL('PostCalendar','user','submit',array('tplview'=>$template_view,'Date'=>$Date));
-            break;
-        
         case 'submit-admin' :
-            $link = pnModURL('PostCalendar','admin','submit',array('tplview'=>$template_view,'Date'=>$Date));
+            $link = pnModURL('PostCalendar','event','new',array('tplview'=>$template_view,'Date'=>$Date));
             break;
         
         case 'search' :

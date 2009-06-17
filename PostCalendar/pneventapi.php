@@ -518,7 +518,7 @@ function postcalendar_eventapi_buildSubmitForm($args)
 	if (!$admin) $admin = false; //reset default value
 	
 	$output = new pnHTML();
-	$output->SetInputMode(_PNH_VERBATIMINPUT);
+	$output->SetOutputMode(_PNH_RETURNOUTPUT);
 
 	$tpl = pnRender::getInstance('PostCalendar');
 	PostCalendarSmartySetup($tpl);
@@ -556,20 +556,15 @@ function postcalendar_eventapi_buildSubmitForm($args)
 		$useroptions = $optstart . $optuser . $optbody . $optend;
 		$tpl->assign('UserSelector', $useroptions);
 	}
-	// v4b TS start
 
 	$endDate = $event_endyear.$event_endmonth.$event_endday;
 	$today = postcalendar_getDate();
 	if(($endDate == '')||($endDate == '00000000')) {
-		$endvalue = substr($today, 6, 2).'-';
-		$endvalue .= substr($today, 4, 2).'-';
-		$endvalue .= substr($today, 0, 4);
+		$endvalue = substr($today, 6, 2) .'-'. substr($today, 4, 2) .'-'. substr($today, 0, 4);
 		// V4B RNG: build other date format for JS cal
 		$endDate = substr($today, 0, 4) .'-'. substr($today, 4, 2) . '-' . substr($today, 6, 2);
 	} else {
-		$endvalue = substr($endDate, 6, 2).'-';
-		$endvalue .= substr($endDate, 4, 2).'-';
-		$endvalue .= substr($endDate, 0, 4);
+		$endvalue = substr($endDate, 6, 2) .'-'. substr($endDate, 4, 2) .'-'. substr($endDate, 0, 4);
 		// V4B RNG: build other date format for JS cal
 		$endDate = substr($endDate, 0, 4) .'-'. substr($endDate, 4, 2) . '-' . substr($endDate, 6, 2);
 	}
@@ -579,23 +574,17 @@ function postcalendar_eventapi_buildSubmitForm($args)
 	$startdate = $event_startyear.$event_startmonth.$event_startday;
 	$today = postcalendar_getDate();
 	if($startdate == '') {
-		$startvalue = substr($today, 6, 2).'-';
-		$startvalue .= substr($today, 4, 2).'-';
-		$startvalue .= substr($today, 0, 4);
+		$startvalue = substr($today, 6, 2) .'-'. substr($today, 4, 2) .'-'. substr($today, 0, 4);
 		// V4B RNG: build other date format for JS cal
 		$startdate = substr($today, 0, 4) .'-'. substr($today, 4, 2) . '-' . substr($today, 6, 2);
 	} else {
-		$startvalue = substr($startdate, 6, 2).'-';
-		$startvalue .= substr($startdate, 4, 2).'-';
-		$startvalue .= substr($startdate, 0, 4);
+		$startvalue = substr($startdate, 6, 2) .'-'. substr($startdate, 4, 2) .'-'. substr($startdate, 0, 4);
 		// V4B RNG: build other date format for JS cal
 		$startdate = substr($startdate, 0, 4) .'-'. substr($startdate, 4, 2) . '-' . substr($startdate, 6, 2);
 	}
 	$tpl->assign('startvalue', $startvalue);	
 	$tpl->assign('startdate', $startdate);
 	
-	// v4b TS end
-
 	// V4B SB END // JAVASCRIPT CALENDAR
 
 	// V4B SB Start // Selectboxes for the participants
@@ -644,44 +633,27 @@ function postcalendar_eventapi_buildSubmitForm($args)
 	//=================================================================
 	//	PARSE MAIN
 	//=================================================================
-	$tpl->assign('VIEW_TYPE',''); // E_ALL Fix
-	$tpl->assign('FUNCTION',FormUtil::getPassedValue('func'));
-	$tpl->assign('ModuleName', $modname);
-	$tpl->assign('ModuleDirectory', $modir);
-	$tpl->assign('category',$all_categories);
-	$tpl->assign('NewEventHeader',			_PC_NEW_EVENT_HEADER);
-	$tpl->assign('EventTitle',				_PC_EVENT_TITLE);
-	$tpl->assign('Required',				_PC_REQUIRED);
-	$tpl->assign('DateTimeTitle',			_PC_DATE_TIME);
-	$tpl->assign('AlldayEventTitle',		_PC_ALLDAY_EVENT);
-	$tpl->assign('TimedEventTitle',			_PC_TIMED_EVENT);
-	$tpl->assign('TimedDurationTitle',		_PC_TIMED_DURATION);
-	$tpl->assign('TimedDurationHoursTitle', _PC_TIMED_DURATION_HOURS);
-	$tpl->assign('TimedDurationMinutesTitle',_PC_TIMED_DURATION_MINUTES);
-	$tpl->assign('EventDescTitle',			_PC_EVENT_DESC);
+	$tpl->assign('VIEW_TYPE',					''); // E_ALL Fix
+	$tpl->assign('FUNCTION',					FormUtil::getPassedValue('func'));
+	$tpl->assign('ModuleName',				$modname);
+	$tpl->assign('ModuleDirectory',		$modir);
+	$tpl->assign('category',					$all_categories);
 		
 	//=================================================================
 	//	PARSE INPUT_EVENT_TITLE
 	//=================================================================
-	$tpl->assign('InputEventTitle', 'event_subject');
-	$tpl->assign('ValueEventTitle', pnVarPrepForDisplay($event_subject));
+	$tpl->assign('ValueEventTitle',		pnVarPrepForDisplay($event_subject));
 	
 	//=================================================================
 	//	PARSE SELECT_DATE_TIME
 	//=================================================================
-	$output->SetOutputMode(_PNH_RETURNOUTPUT);
-	$output->SetOutputMode(_PNH_KEEPOUTPUT);
-	$tpl->assign('InputAllday', 'event_allday');
-	$tpl->assign('ValueAllday', '1');
-	$tpl->assign('SelectedAllday', $event_allday==1 ? 'checked':'');
-	$tpl->assign('InputTimed', 'event_allday');
-	$tpl->assign('ValueTimed', '0');
-	$tpl->assign('SelectedTimed', $event_allday==0 ? 'checked':'');
+
+	$tpl->assign('SelectedAllday',		$event_allday==1 ? 'checked':'');
+	$tpl->assign('SelectedTimed',			$event_allday==0 ? 'checked':'');
 	
 	//=================================================================
 	//	PARSE SELECT_END_DATE_TIME
 	//=================================================================
-	$output->SetOutputMode(_PNH_RETURNOUTPUT);
 	if(_SETTING_USE_INT_DATES) 
 	{
 		$sel_data = pnModAPIFunc('PostCalendar','user','buildDaySelect',array('pc_day'=>$day,'selected'=>$event_endday));
@@ -698,7 +670,6 @@ function postcalendar_eventapi_buildSubmitForm($args)
 	}
 	$sel_data = pnModAPIFunc('PostCalendar','user','buildYearSelect',array('pc_year'=>$year,'selected'=>$event_endyear));
 	$formdata .= $output->FormSelectMultiple('event_endyear', $sel_data);
-	$output->SetOutputMode(_PNH_KEEPOUTPUT);
 	$tpl->assign('SelectEndDate', $formdata);
 	
 	//=================================================================
@@ -710,31 +681,6 @@ function postcalendar_eventapi_buildSubmitForm($args)
 		$event_starttimeh = 9;	// provide a reasonable default rather than 0 hours
 	// V4B RNG End V4B SB END */
 
-	$stimes = pnModAPIFunc('PostCalendar','user','buildTimeSelect',array('hselected'=>$event_starttimeh,'mselected'=>$event_starttimem));
-	
-	$output->SetOutputMode(_PNH_RETURNOUTPUT);
-	$timed_hours = $output->FormSelectMultiple('event_starttimeh', $stimes['h']);
-	$timed_minutes = $output->FormSelectMultiple('event_starttimem', $stimes['m']);
-	if(!_SETTING_TIME_24HOUR) 
-	{
-		$ampm = array();
-		$ampm[0]['id']			= pnVarPrepForStore(_AM_VAL);
-		$ampm[0]['selected']	= $stimes['ap'] == _AM_VAL;
-		$ampm[0]['name']		= pnVarPrepForDisplay(_PC_AM);
-		$ampm[1]['id']			= pnVarPrepForStore(_PM_VAL);
-		$ampm[1]['selected']	= $stimes['ap'] == _PM_VAL;
-		$ampm[1]['name']		= pnVarPrepForDisplay(_PC_PM);
-		$timed_ampm = $output->FormSelectMultiple('event_startampm', $ampm);
-	} 
-	else 
-		$timed_ampm = '';
-
-	$output->SetOutputMode(_PNH_KEEPOUTPUT);
-	
-	$tpl->assign('SelectTimedHours', $timed_hours);
-	$tpl->assign('SelectTimedMinutes', $timed_minutes);
-	$tpl->assign('SelectTimedAMPM', $timed_ampm);
-	// CAH ADD June 16, 2009 - hopefully to replace above ^^
 	$tpl->assign('minute_interval', _SETTING_TIME_INCREMENT);
 	if (empty($event_starttimeh)) {$event_starttimeh = "01"; $event_starttimem = "00";}
 	$tpl->assign('SelectedTime', $event_starttimeh.":".$event_starttimem);
@@ -743,10 +689,7 @@ function postcalendar_eventapi_buildSubmitForm($args)
 	//	PARSE SELECT_DURATION
 	//=================================================================
 
-	// V4B RNG Start
-	if (!$event_dur_hours)
-		$event_dur_hours = 1;  // provide a reasonable default rather than 0 hours
-	// V4B RNG End
+	if (!$event_dur_hours) $event_dur_hours = 1;  // provide a reasonable default rather than 0 hours
 
 	for($i=0; $i<=24; $i+=1) 
 		$TimedDurationHours[$i] = array('value'=>$i,
@@ -754,7 +697,6 @@ function postcalendar_eventapi_buildSubmitForm($args)
 						'name'=>sprintf('%02d',$i));
 
 	$tpl->assign('TimedDurationHours',$TimedDurationHours);
-	$tpl->assign('InputTimedDurationHours', 'event_dur_hours');
 	
 	for($i=0; $i<60; $i+=_SETTING_TIME_INCREMENT) 
 		$TimedDurationMinutes[$i] = array('value'=>$i,
@@ -762,12 +704,10 @@ function postcalendar_eventapi_buildSubmitForm($args)
 						  'name'=>sprintf('%02d',$i));
 
 	$tpl->assign('TimedDurationMinutes',$TimedDurationMinutes);
-	$tpl->assign('InputTimedDurationMinutes', 'event_dur_minutes');
 	
 	//=================================================================
 	//	PARSE INPUT_EVENT_DESC
 	//=================================================================
-	$tpl->assign('InputEventDesc', 'event_desc');
 	if(empty($pc_html_or_text)) 
 	{
 		$display_type = substr($event_desc,0,6);
@@ -789,19 +729,9 @@ function postcalendar_eventapi_buildSubmitForm($args)
 
 	$tpl->assign('ValueEventDesc', pnVarPrepForDisplay($event_desc));
 		
-	$eventHTMLorText  = "<select name=\"pc_html_or_text\">";
-	if($pc_html_or_text == 'text') 
-		$eventHTMLorText .= "<option value=\"text\" selected=\"selected\">"._PC_SUBMIT_TEXT."</option>";
-	else 
-		$eventHTMLorText .= "<option value=\"text\">"._PC_SUBMIT_TEXT."</option>";
-
-	if($pc_html_or_text == 'html') 
-		$eventHTMLorText .= "<option value=\"html\" selected=\"selected\">"._PC_SUBMIT_HTML."</option>";
-	else 
-		$eventHTMLorText .= "<option value=\"html\">"._PC_SUBMIT_HTML."</option>";
-
-	$eventHTMLorText .= "</select>";
+	$eventHTMLorText = array('text'=>_PC_SUBMIT_TEXT, 'html'=>_PC_SUBMIT_HTML);
 	$tpl->assign('EventHTMLorText',$eventHTMLorText);
+	$tpl->assign('EventHTMLorTextVal',$pc_html_or_text);
 
 	//=================================================================
 	//	PARSE select_event_topic_block
@@ -819,8 +749,6 @@ function postcalendar_eventapi_buildSubmitForm($args)
 		// only show this if we have topics to show
 		if(count($topics) > 0) {
 			$tpl->assign('topics',$topics);
-			$tpl->assign('EventTopicTitle', _PC_EVENT_TOPIC);
-			$tpl->assign('InputEventTopic', 'event_topic');
 		}
 	}
 	
@@ -830,23 +758,14 @@ function postcalendar_eventapi_buildSubmitForm($args)
 	$categories = array();
 	foreach($all_categories as $category) 
 	{
-		// FIXME !!!!!
-		$categories[] = array('value'	 => $category['catid'],
-					  'selected' => ($category['catid']==$event_category ? 'selected' : ''),
-					  'name'	 => $category['catname'],
-					  'color'	 => $category['catcolor'],
-					  'desc'	 => $category['catdesc']);
+		$categories[$category['catid']] = $category['catname'];
 	}
-
-
-	// only show this if we have categories to show
-	// you should ALWAYS have at least one valid category
 	if(count($categories) > 0) 
 	{
 		$tpl->assign('categories',$categories);
-		$tpl->assign('EventCategoriesTitle', _PC_EVENT_CATEGORY);
-		$tpl->assign('InputEventCategory', 'event_category');
-	} 
+	}
+	//$event_category is selected category id
+	$tpl->assign('event_category',$event_category);
 
 	//=================================================================
 	//	PARSE event_sharing_block
@@ -877,61 +796,27 @@ function postcalendar_eventapi_buildSubmitForm($args)
 					  'name'=>$cell[1]));
 
 	$tpl->assign('sharing',$sharing);
-	$tpl->assign('EventSharingTitle', _PC_SHARING);
-	$tpl->assign('InputEventSharing','event_sharing');
 	//=================================================================
 	//	location information
 	//=================================================================
-	$tpl->assign('EventLocationTitle',	_PC_EVENT_LOCATION);
-	$tpl->assign('InputLocation',		'event_location');
 	$tpl->assign('ValueLocation',		pnVarPrepForDisplay($event_location));
-	$tpl->assign('EventStreetTitle',	_PC_EVENT_STREET);
-	$tpl->assign('InputStreet1',		'event_street1');
 	$tpl->assign('ValueStreet1',		pnVarPrepForDisplay($event_street1));
-	$tpl->assign('InputStreet2',		'event_street2');
 	$tpl->assign('ValueStreet2',		pnVarPrepForDisplay($event_street2));
-	$tpl->assign('EventCityTitle',		_PC_EVENT_CITY);
-	$tpl->assign('InputCity',			'event_city');
 	$tpl->assign('ValueCity',			pnVarPrepForDisplay($event_city));
-	$tpl->assign('EventStateTitle',		_PC_EVENT_STATE);
-	$tpl->assign('InputState',			'event_state');
 	$tpl->assign('ValueState',			pnVarPrepForDisplay($event_state));
-	$tpl->assign('EventPostalTitle',	_PC_EVENT_POSTAL);
-	$tpl->assign('InputPostal',			'event_postal');
 	$tpl->assign('ValuePostal',			pnVarPrepForDisplay($event_postal));
 	//=================================================================
 	//	contact information
 	//=================================================================
-	$tpl->assign('EventContactTitle',	_PC_EVENT_CONTACT);
-	$tpl->assign('InputContact',		'event_contname');
 	$tpl->assign('ValueContact',		pnVarPrepForDisplay($event_contname));
-	$tpl->assign('EventPhoneTitle',		_PC_EVENT_PHONE);
-	$tpl->assign('InputPhone',			'event_conttel');
 	$tpl->assign('ValuePhone',			pnVarPrepForDisplay($event_conttel));
-	$tpl->assign('EventEmailTitle',		_PC_EVENT_EMAIL);
-	$tpl->assign('InputEmail',			'event_contemail');
 	$tpl->assign('ValueEmail',			pnVarPrepForDisplay($event_contemail));
-	$tpl->assign('EventWebsiteTitle',	_PC_EVENT_WEBSITE);
-	$tpl->assign('InputWebsite',		'event_website');
 	$tpl->assign('ValueWebsite',		pnVarPrepForDisplay($event_website));
-	$tpl->assign('EventFeeTitle',		_PC_EVENT_FEE);
-	$tpl->assign('InputFee',			'event_fee');
 	$tpl->assign('ValueFee',			pnVarPrepForDisplay($event_fee));
 	//=================================================================
 	//	Repeating Information
 	//=================================================================
-	$tpl->assign('RepeatingHeader',		_PC_REPEATING_HEADER);
-	$tpl->assign('NoRepeatTitle',		_PC_NO_REPEAT);
-	$tpl->assign('RepeatTitle',			_PC_REPEAT);
-	$tpl->assign('RepeatOnTitle',		_PC_REPEAT_ON);
-	$tpl->assign('OfTheMonthTitle',		_PC_OF_THE_MONTH);
-	$tpl->assign('EndDateTitle',		_PC_END_DATE);
-	$tpl->assign('NoEndDateTitle',		_PC_NO_END);
-	$tpl->assign('InputNoRepeat', 'event_repeat');
-	$tpl->assign('ValueNoRepeat', '0');
 	$tpl->assign('SelectedNoRepeat', (int) $event_repeat==0 ? 'checked':'');
-	$tpl->assign('InputRepeat', 'event_repeat');
-	$tpl->assign('ValueRepeat', '1');
 	$tpl->assign('SelectedRepeat', (int) $event_repeat==1 ? 'checked':'');
 	
 	unset($in); 
@@ -943,7 +828,6 @@ function postcalendar_eventapi_buildSubmitForm($args)
 						'selected'=>($keys[$k]==$event_repeat_freq?'selected':''),
 						'name'=>$v));
 
-	$tpl->assign('InputRepeatFreq','event_repeat_freq');
 	if(empty($event_repeat_freq) || $event_repeat_freq < 1) $event_repeat_freq = 1;
 		$tpl->assign('InputRepeatFreqVal',$event_repeat_freq);
 	$tpl->assign('repeat_freq',$repeat_freq);
@@ -957,11 +841,7 @@ function postcalendar_eventapi_buildSubmitForm($args)
 						   'selected'=>($keys[$k]==$event_repeat_freq_type?'selected':''),
 						   'name'=>$v));
 
-	$tpl->assign('InputRepeatFreqType','event_repeat_freq_type');
 	$tpl->assign('repeat_freq_type',$repeat_freq_type);
-	
-	$tpl->assign('InputRepeatOn', 'event_repeat');
-	$tpl->assign('ValueRepeatOn', '2');
 	$tpl->assign('SelectedRepeatOn', (int) $event_repeat==2 ? 'checked':'');
 	
 	unset($in); 
@@ -973,7 +853,6 @@ function postcalendar_eventapi_buildSubmitForm($args)
 						'selected'=>($keys[$k]==$event_repeat_on_num?'selected':''),
 						'name'=>$v));
 
-	$tpl->assign('InputRepeatOnNum', 'event_repeat_on_num');
 	$tpl->assign('repeat_on_num',$repeat_on_num);
 	
 	unset($in); 
@@ -985,7 +864,6 @@ function postcalendar_eventapi_buildSubmitForm($args)
 						'selected'=>($keys[$k]==$event_repeat_on_day ? 'selected' : ''),
 						'name'=>$v));
 
-	$tpl->assign('InputRepeatOnDay', 'event_repeat_on_day');
 	$tpl->assign('repeat_on_day',$repeat_on_day);
 	
 	unset($in); 
@@ -997,47 +875,28 @@ function postcalendar_eventapi_buildSubmitForm($args)
 						 'selected'=>($keys[$k] == $event_repeat_on_freq ? 'selected' : ''),
 						 'name'=>$v));
 
-	$tpl->assign('InputRepeatOnFreq', 'event_repeat_on_freq');
 	if(empty($event_repeat_on_freq) || $event_repeat_on_freq < 1) 
 		$event_repeat_on_freq = 1;
 	$tpl->assign('InputRepeatOnFreqVal', $event_repeat_on_freq);
 	$tpl->assign('repeat_on_freq',$repeat_on_freq);
-	$tpl->assign('MonthsTitle',_PC_MONTHS);
 	
 	//=================================================================
 	//	PARSE INPUT_END_DATE
 	//=================================================================
-	$tpl->assign('InputEndOn', 'event_endtype');
-	$tpl->assign('ValueEndOn', '1');
 	$tpl->assign('SelectedEndOn', (int) $event_endtype==1 ? 'checked':'');
 	//=================================================================
 	//	PARSE INPUT_NO_END
 	//=================================================================
-	$tpl->assign('InputNoEnd', 'event_endtype');
-	$tpl->assign('ValueNoEnd', '0');
 	$tpl->assign('SelectedNoEnd', (int) $event_endtype==0 ? 'checked':'');
 	
-	$output->SetOutputMode(_PNH_RETURNOUTPUT);
-	$authkey = $output->FormHidden('authid',pnSecGenAuthKey());
-	$output->SetOutputMode(_PNH_KEEPOUTPUT);
-	
-	$form_hidden = "<input type=\"hidden\" name=\"is_update\" value=\"$is_update\" />";
-	$form_hidden .= "<input type=\"hidden\" name=\"pc_event_id\" value=\"$pc_event_id\" />";
+	$tpl->assign('is_update', $is_update);
+	$tpl->assign('pc_event_id', $pc_event_id);
 	if(isset($data_loaded)) 
 	{
-		$form_hidden .= "<input type=\"hidden\" name=\"data_loaded\" value=\"$data_loaded\" />";
-		$tpl->assign('FormHidden',$form_hidden);
+		$tpl->assign('data_loaded',$data_loaded);
 	}
-	$form_submit = '<select name="form_action">
-			<option value="preview">'._PC_EVENT_PREVIEW.'</option>
-			<option value="commit" selected>'._PC_EVENT_SUBMIT.'</option>
-			</select>'.$authkey.'<input type="submit" name="_submit" value="go" onclick="return selectItems();">' ; // V4B SB added Javascript call to Button
-	$tpl->assign('FormSubmit',$form_submit);
-
-	// do not cache this page
-	$output->Text($tpl->fetch("event/postcalendar_event_submit.html"));
-	$output->Text(postcalendar_footer());
-	return $output->GetOutput();
+	
+	return $tpl->fetch("event/postcalendar_event_submit.html");
 }
 
 function postcalendar_eventapi_fixEventDetails($event)

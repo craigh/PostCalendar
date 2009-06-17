@@ -16,68 +16,69 @@
 <!-- V4B end -->
 <!--[pnsecauthaction realm="0" comp="PostCalendar::" inst=".*" level="ACCESS_ADMIN" assign="auth"]-->
 <!--[ if $auth ]-->
-<!--[* include file="admin/postcalendar_admin_menu.htm" *]-->
-<form name="nd" action="<!--[ pc_url action="submit-admin" ]-->" method="post" enctype="application/x-www-form-urlencoded">
-<!--[ else ]-->
-<form name="nd" action="<!--[ pc_url action="submit" ]-->" method="post" enctype="application/x-www-form-urlencoded">
 <!--[ /if ]-->
+<!--[ include file="user/postcalendar_user_navigation_small.html" ]-->
+
+<form name="nd" action="<!--[ pc_url action="submit" ]-->" method="post" enctype="application/x-www-form-urlencoded">
+	<input type="hidden" name="authid" value="<!--[pnsecgenauthkey module="PostCalendar"]-->">
+
 <div style='border-color:#CCCCCC;border-style:solid;border-width:0 1px 1px;color:inherit;margin-bottom:1.25em;padding:0 1% 5px;width:auto;'>
 <div style='float:right; padding-top:5px;'><!--[pnimg modname=PostCalendar src=admin.gif altml=true]--></div>
 <h2 style='border-bottom:1px solid #CCCCCC;margin-top:0;text-align:left;'>_PC_ADDCALENDAREVENT</h2>
 <div class="tabsystem" style="padding-top:16px;">
 <div class="tabpage tdefault">
-<h2 style='border-bottom:1px solid #CCCCCC;margin-top:0;text-align:left;'><!--[ $NewEventHeader ]--></h2>
+<h2 style='border-bottom:1px solid #CCCCCC;margin-top:0;text-align:left;'><!--[pnml name='_PC_NEW_EVENT_HEADER']--></h2>
     <table width="100%" border="0" cellpadding="2" cellspacing="0">
     <!-- EVENT INFO ROWS -->            
         <tr>
             <td align="left" valign="top" width="50%">
-                <!--[ $EventTitle ]-->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!--[ $Required ]--><br />
-                <input type="text" name="<!--[ $InputEventTitle ]-->" value="<!--[ $ValueEventTitle ]-->" /><br />
+                <!--[pnml name='_PC_EVENT_TITLE']-->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!--[pnml name='_PC_REQUIRED']--><br />
+                <input type="text" name="event_subject" value="<!--[ $ValueEventTitle ]-->" /><br />
 		        <!-- V4B Start -->
-		        For User&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!--[ $Required ]--><br />
+		        For User&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!--[pnml name='_PC_REQUIRED']--><br />
 		        <!--[ $UserSelector ]--><br /><br />
 		        <!-- V4B End -->
 		
-		        <!--[ $DateTimeTitle ]-->&nbsp;&nbsp;&nbsp;
+		        <!--[pnml name='_PC_DATE_TIME']-->&nbsp;&nbsp;&nbsp;
 		        <!--[ pc_calendar_build_input_box htmlName="meetingdate_start" dateFormat="%d-%m-%Y" defaultString=$startvalue defaultDate=$startdate ]-->
 		        <br/ ><br />
                 <table border="0" cellpadding="0" cellspacing="1">
                     <tr>
-                        <td valign="top" align="left"><input type="radio" name="<!--[ $InputAllday ]-->" value="<!--[ $ValueAllday ]-->" <!--[ $SelectedAllday ]--> /></td>
-                        <td valign="top" align="left"><!--[ $AlldayEventTitle ]--></td>
+                        <td valign="top" align="left"><input type="radio" name="event_allday" value="1" <!--[ $SelectedAllday ]--> /></td>
+                        <td valign="top" align="left"><!--[pnml name='_PC_ALLDAY_EVENT']--></td>
                     </tr>
                     <tr>
-                        <td valign="top" align="left"><input type="radio" name="<!--[ $InputTimed ]-->" value="<!--[ $ValueTimed ]-->" <!--[ $SelectedTimed ]--> /></td>
-                        <td valign="top" align="left"><!--[ $TimedEventTitle ]--></td>
+                        <td valign="top" align="left"><input type="radio" name="event_allday" value="0" <!--[ $SelectedTimed ]--> /></td>
+                        <td valign="top" align="left"><!--[pnml name='_PC_TIMED_EVENT']--></td>
                         <td valign="top" align="left"><!--[html_select_time time=$SelectedTime display_seconds=false use_24_hours=$24HOUR_TIME minute_interval=$minute_interval prefix="event_starttime"]--></td>
                     </tr>
                     <tr>
                         <td valign="top" align="left">&nbsp;</td>
-                        <td valign="top" align="left"><!--[ $TimedDurationTitle ]--></td>
+                        <td valign="top" align="left"><!--[pnml name='_PC_TIMED_DURATION']--></td>
                         <td valign="top" align="left">
                         <!--[ strip ]-->
-                            <select name="<!--[ $InputTimedDurationHours ]-->">
+                            <select name="event_dur_hours">
                             <!--[ foreach item=time from=$TimedDurationHours ]-->
                                 <option value="<!--[ $time.value ]-->" <!--[ $time.selected ]-->><!--[ $time.name ]--></option>
                             <!--[ /foreach ]-->
                             </select>
                         <!--[ /strip ]--> 
-                        <!--[ $TimedDurationHoursTitle ]-->
+                        <!--[pnml name='_PC_TIMED_DURATION_HOURS']-->
                     
                         <!--[ strip ]-->
-                        <select name="<!--[ $InputTimedDurationMinutes ]-->">
+                        <select name="event_dur_minutes">
                             <!--[ foreach item=time from=$TimedDurationMinutes ]-->
                                 <option value="<!--[ $time.value ]-->" <!--[ $time.selected ]-->><!--[ $time.name ]--></option>
                             <!--[ /foreach ]-->
                         </select>
                         <!--[ /strip ]-->
-                        <!--[ $TimedDurationMinutesTitle ]-->
+                        <!--[pnml name='_PC_TIMED_DURATION_MINUTES']-->
                         </td>
                     </tr>
                 </table>
 		        <br/ >
-                <!--[ $EventDescTitle ]--><br />
-		        <textarea id="description" name="<!--[ $InputEventDesc ]-->" wrap="virtual" rows="5" cols="40"><!--[ $ValueEventDesc ]--></textarea>
+                <!--[pnml name='_PC_EVENT_DESC']--><br />
+		        <textarea id="description" name="event_desc" wrap="virtual" rows="5" cols="40"><!--[ $ValueEventDesc ]--></textarea>
     			<!-- V4B SB 2nd Submitarea START -->
 	    		<table width=70% border=0 align=middle><tr><td>
 				<!--[ $FormSubmit ]-->
@@ -87,9 +88,9 @@
                 
                 <td align="left" valign="top" width="50%">
                 <!--[ if $displayTopics eq 1 ]-->
-                    <!--[ $EventTopicTitle ]--><br />
+                    <!--[pnml name='_PC_EVENT_TOPIC']--><br />
                     <!--[ strip ]-->
-                    <select name="<!--[ $InputEventTopic ]-->">
+                    <select name="event_topic">
                     <!--[ foreach item=topic from=$topics ]-->
                         <option value="<!--[ $topic.value ]-->" <!--[ $topic.selected ]-->><!--[ $topic.name ]--></option>
                     <!--[ /foreach ]-->
@@ -97,31 +98,25 @@
                     <!--[ /strip ]-->
                     <br />
                 <!--[ /if ]-->
-                <!--[ $EventSharingTitle ]--><br />
+                <!--[pnml name='_PC_SHARING']--><br />
                 <!--[ strip ]-->
-                <select name="<!--[ $InputEventSharing ]-->">
+                <select name="event_sharing">
                 <!--[ foreach item=share from=$sharing ]-->
                     <option value="<!--[ $share.value ]-->" <!--[ $share.selected ]-->><!--[ $share.name ]--></option>
                 <!--[ /foreach ]-->
                 </select>
                 <!--[ /strip ]-->
                 <br />
-                <!--[ $EventCategoriesTitle ]--><br />
-                <!--[ strip ]-->
-                <select name="<!--[ $InputEventCategory ]-->">
-                <!--[ foreach item=category from=$categories ]-->
-                    <option value="<!--[ $category.value ]-->" <!--[ $category.selected ]-->><!--[ $category.name ]--></option>
-                <!--[ /foreach ]-->
-                </select>
-                <!--[ /strip ]-->
+                <!--[pnml name='_PC_EVENT_CATEGORY']--><br />
+                <!--[html_options name=event_category options=$categories selected=$event_category]-->
                 <br />
                 <table border="0" cellpadding="0" cellspacing="2">
                 <tr>
                     <td colspan="3" valign="middle">
-                        <!--[ $EventLocationTitle ]--><br />
+                        <!--[pnml name='_PC_EVENT_LOCATION']--><br />
                         <table border="0" align="left" cellpadding="0" cellspacing="0">
                             <tr>
-                                <td><input size="40" type="text" name="<!--[ $InputLocation ]-->"  value="<!--[ $ValueLocation ]-->" /></td>
+                                <td><input size="40" type="text" name="event_location"  value="<!--[ $ValueLocation ]-->" /></td>
 				<td>&nbsp;&nbsp;<!--[ if ($pcAddressbook && $addressAvailable) ]--><a href="javascript:postcalendarFindContact();"><img src="modules/PostCalendar/pnimages/addressbook.gif" border="0" /></a><!--[ /if ]--></td>
                             </tr>
                         </table>
@@ -129,31 +124,31 @@
                 </tr>
                 <tr>
                     <td colspan="3">
-                        <!--[ $EventStreetTitle ]--><br />
-                        <input size="40" type="text" name="<!--[ $InputStreet1 ]-->"  value="<!--[ $ValueStreet1 ]-->" /><br />
-                        <input size="40" type="text" name="<!--[ $InputStreet2 ]-->"  value="<!--[ $ValueStreet2 ]-->" />
+                        <!--[pnml name='_PC_EVENT_STREET']--><br />
+                        <input size="40" type="text" name="event_street1"  value="<!--[ $ValueStreet1 ]-->" /><br />
+                        <input size="40" type="text" name="event_street2"  value="<!--[ $ValueStreet2 ]-->" />
                     </td>
                 </tr>
                 <tr>
-                    <td><!--[ $EventCityTitle ]--></td><td><!--[ $EventStateTitle ]--></td><td><!--[ $EventPostalTitle ]--></td>
+                    <td><!--[pnml name='_PC_EVENT_CITY']--></td><td><!--[pnml name='_PC_EVENT_STATE']--></td><td><!--[pnml name='_PC_EVENT_POSTAL']--></td>
                 </tr>
                 <tr>
-                    <td><input size="10" type="text" name="<!--[ $InputCity ]-->"  value="<!--[ $ValueCity ]-->" /></td>
-                    <td><input size="10" type="text" name="<!--[ $InputState ]-->"  value="<!--[ $ValueState ]-->" /></td>
-                    <td><input size="10" type="text" name="<!--[ $InputPostal ]-->"  value="<!--[ $ValuePostal ]-->" /></td>
+                    <td><input size="10" type="text" name="event_city"  value="<!--[ $ValueCity ]-->" /></td>
+                    <td><input size="10" type="text" name="event_state"  value="<!--[ $ValueState ]-->" /></td>
+                    <td><input size="10" type="text" name="event_postal"  value="<!--[ $ValuePostal ]-->" /></td>
                 </tr>
                 </table>
                 <br />
-                <!--[ $EventContactTitle ]--><br />
-                <input type="text" name="<!--[ $InputContact ]-->"   value="<!--[ $ValueContact ]-->" /><br />
-                <!--[ $EventPhoneTitle ]--><br />
-                <input type="text" name="<!--[ $InputPhone ]-->"     value="<!--[ $ValuePhone ]-->" /><br />
-                <!--[ $EventEmailTitle ]--><br />
-                <input type="text" name="<!--[ $InputEmail ]-->"     value="<!--[ $ValueEmail ]-->" /><br />
-                <!--[ $EventWebsiteTitle ]--><br />
-                <input type="text" name="<!--[ $InputWebsite ]-->"   value="<!--[ $ValueWebsite ]-->" /><br />
-                <!--[ $EventFeeTitle ]--><br />
-                <input type="text" name="<!--[ $InputFee ]-->"       value="<!--[ $ValueFee ]-->" /><br />
+                <!--[pnml name='_PC_EVENT_CONTACT']--><br />
+                <input type="text" name="event_contname" value="<!--[ $ValueContact ]-->" /><br />
+                <!--[pnml name='_PC_EVENT_PHONE']--><br />
+                <input type="text" name="event_conttel" value="<!--[ $ValuePhone ]-->" /><br />
+                <!--[pnml name='_PC_EVENT_EMAIL']--><br />
+                <input type="text" name="event_contemail" value="<!--[ $ValueEmail ]-->" /><br />
+                <!--[pnml name='_PC_EVENT_WEBSITE']--><br />
+                <input type="text" name="event_website" value="<!--[ $ValueWebsite ]-->" /><br />
+                <!--[pnml name='_PC_EVENT_FEE']--><br />
+                <input type="text" name="event_fee" value="<!--[ $ValueFee ]-->" /><br />
             </td>
         </tr>
     </table>
@@ -164,47 +159,47 @@
 <!--[pnmodgetvar module="PostCalendar" name="pcRepeating"|pnvarprepfordisplay assign="pcDisplayRepeating"]-->
 <!--[ if $pcDisplayRepeating ]-->
 <div class="tabpage">
-<h2 style='border-bottom:1px solid #CCCCCC;margin-top:0;text-align:left;'><!--[ $RepeatingHeader ]--></h2>
+<h2 style='border-bottom:1px solid #CCCCCC;margin-top:0;text-align:left;'><!--[pnml name='_PC_REPEATING_HEADER']--></h2>
     <table width="100%" border="0" cellpadding="2" cellspacing="0">   
         <tr>
             <td colspan="2" align="left" valign="middle" width="100%">
-                <input type="radio" name="<!--[ $InputNoRepeat ]-->" value="<!--[ $ValueNoRepeat ]-->" <!--[ $SelectedNoRepeat ]--> />
-                <!--[ $NoRepeatTitle ]--><br />
+                <input type="radio" name="event_repeat" value="0" <!--[ $SelectedNoRepeat ]--> />
+                <!--[pnml name='_PC_NO_REPEAT']--><br />
                 
-                <input type="radio" name="<!--[ $InputRepeat ]-->" value="<!--[ $ValueRepeat ]-->" <!--[ $SelectedRepeat ]--> /> 
-                <!--[ $RepeatTitle ]-->
-                <input type="text" name="<!--[ $InputRepeatFreq ]-->" value="<!--[ $InputRepeatFreqVal ]-->" size="4" />
+                <input type="radio" name="event_repeat" value="1" <!--[ $SelectedRepeat ]--> /> 
+                <!--[pnml name='_PC_REPEAT']-->
+                <input type="text" name="event_repeat_freq" value="<!--[ $InputRepeatFreqVal ]-->" size="4" />
 				<!--
-				<select name="<!--[ $InputRepeatFreq ]-->">
+				<select name="event_repeat_freq">
                 <!--[ foreach item=repeat from=$repeat_freq ]-->
                     <option value="<!--[ $repeat.value ]-->" <!--[ $repeat.selected ]-->><!--[ $repeat.name ]--></option>
                 <!--[ /foreach ]-->
                 </select>
                 -->
-                <select name="<!--[ $InputRepeatFreqType ]-->">
+                <select name="event_repeat_freq_type">
                 <!--[ foreach item=repeat from=$repeat_freq_type ]-->
                     <option value="<!--[ $repeat.value ]-->" <!--[ $repeat.selected ]-->><!--[ $repeat.name ]--></option>
                 <!--[ /foreach ]-->
                 </select>
                 <br />
                 
-                <input type="radio" name="<!--[ $InputRepeatOn ]-->" value="<!--[ $ValueRepeatOn ]-->" <!--[ $SelectedRepeatOn ]--> /> 
-                <!--[ $RepeatOnTitle ]-->
-                <select name="<!--[ $InputRepeatOnNum ]-->">
+                <input type="radio" name="event_repeat" value="2" <!--[ $SelectedRepeatOn ]--> /> 
+                <!--[pnml name='_PC_REPEAT_ON']-->
+                <select name="event_repeat_on_num">
                 <!--[ foreach item=repeat from=$repeat_on_num ]-->
                     <option value="<!--[ $repeat.value ]-->" <!--[ $repeat.selected ]-->><!--[ $repeat.name ]--></option>
                 <!--[ /foreach ]-->
                 </select>
-                <select name="<!--[ $InputRepeatOnDay ]-->">
+                <select name="event_repeat_on_day">
                 <!--[ foreach item=repeat from=$repeat_on_day ]-->
                     <option value="<!--[ $repeat.value ]-->" <!--[ $repeat.selected ]-->><!--[ $repeat.name ]--></option>
                 <!--[ /foreach ]-->
                 </select>&nbsp;
-                <!--[ $OfTheMonthTitle ]-->&nbsp;
-				<input type="text" name="<!--[ $InputRepeatOnFreq ]-->" value="<!--[ $InputRepeatOnFreqVal ]-->" size="4" />
-				<!--[ $MonthsTitle ]-->.
+                <!--[pnml name='_PC_OF_THE_MONTH']-->&nbsp;
+				<input type="text" name="event_repeat_on_freq" value="<!--[ $InputRepeatOnFreqVal ]-->" size="4" />
+				<!--[pnml name='_PC_MONTHS']-->.
 				<!--
-                <select name="<!--[ $InputRepeatOnFreq ]-->">
+                <select name="event_repeat_on_freq">
                 <!--[ foreach item=repeat from=$repeat_on_freq ]-->
                     <option value="<!--[ $repeat.value ]-->" <!--[ $repeat.selected ]-->><!--[ $repeat.name ]--></option>
                 <!--[ /foreach ]-->
@@ -212,33 +207,32 @@
 				-->
                 <br /><br />
                 
-                <!--[ $EndDateTitle ]--><br />
-                <input type="radio" name="<!--[ $InputEndOn ]-->" value="<!--[ $ValueEndOn ]-->" <!--[ $SelectedEndOn ]--> />&nbsp;
+                <!--[pnml name='_PC_END_DATE']--><br />
+                <input type="radio" name="event_endtype" value="1" <!--[ $SelectedEndOn ]--> />&nbsp;
 		<!--[ if $startdate > $endDate ]-->
                 	<!--[ pc_calendar_build_input_box htmlName="meetingdate_end" dateFormat="%d-%m-%Y" defaultString=$startvalue defaultDate=$startdate ]--><br />
                 <!--[ else ]-->
                 	<!--[ pc_calendar_build_input_box htmlName="meetingdate_end" dateFormat="%d-%m-%Y" defaultString=$endvalue defaultDate=$endDate ]--><br />
                 <!--[ /if ]-->
-                <input type="radio" name="<!--[ $InputNoEnd ]-->" value="<!--[ $ValueNoEnd ]-->" <!--[ $SelectedNoEnd ]--> />&nbsp;
-                <!--[ $NoEndDateTitle ]-->
+                <input type="radio" name="event_endtype" value="0" <!--[ $SelectedNoEnd ]--> />&nbsp;
+                <!--[pnml name='_PC_NO_END']-->
             </td>
         </tr>
     </table>
 </div>
 <!--[ else ]-->
-    <input type="hidden" name="<!--[ $InputNoRepeat ]-->" value="1">
-    <input type="hidden" name="<!--[ $InputRepeat ]-->" value="">
-    <input type="hidden" name="<!--[ $InputRepeatFreq ]-->" value="<!--[ $InputRepeatFreqVal ]-->">
-    <input type="hidden" name="<!--[ $InputRepeatFreqType ]-->" value="1">
-    <input type="hidden" name="<!--[ $InputRepeatOnNum ]-->" value="1">
-    <input type="hidden" name="<!--[ $InputRepeatOnDay ]-->" value="1">
-    <input type="hidden" name="<!--[ $InputEndOn ]-->" value="<!--[ $ValueEndOn ]-->">
+    <input type="hidden" name="event_repeat" value="1">
+    <input type="hidden" name="event_repeat" value="">
+    <input type="hidden" name="event_repeat_freq" value="<!--[ $InputRepeatFreqVal ]-->">
+    <input type="hidden" name="event_repeat_freq_type" value="1">
+    <input type="hidden" name="event_repeat_on_num" value="1">
+    <input type="hidden" name="event_repeat_on_day" value="1">
+    <input type="hidden" name="event_endtype" value="1">
     <input type="hidden" name="meetingdate_end" value="<!--[ $endDate ]-->" >
-    <input type="hidden" name="<!--[ $InputNoEnd ]-->" value="0">
+    <input type="hidden" name="event_endtype" value="0">
 <!--[ /if ]-->
 <!-- REPEATING ROWS -->
 
-<!-- V4B Start -->
 <!--[pnmodgetvar module="PostCalendar" name="pcMeeting"|pnvarprepfordisplay assign="pcDisplayMeeting"]-->
 <!--[ if $pcDisplayMeeting ]-->
 <div class="tabpage">
@@ -267,9 +261,14 @@
 </div>
 </div>
 <!--[ /if ]-->
-<!-- V4B End -->
-<!--[ $EventHTMLorText ]-->
-<!--[ $FormHidden ]-->
-<!--[ $FormSubmit ]-->
+<!--[html_options name=pc_html_or_text options=$EventHTMLorText selected=$EventHTMLorTextVal]-->
+<input type="hidden" name="is_update" value="<!--[$is_update]-->">
+<input type="hidden" name="pc_event_id" value="<!--[$pc_event_id]-->">
+<!--[if !empty($data_loaded) ]--> <input type="hidden" name="data_loaded" value="<!--[$data_loaded]-->"><!--[/if]-->
+<select name="form_action">
+	<option value="preview"><!--[pnml name='_PC_EVENT_PREVIEW']--></option>
+	<option value="commit" selected><!--[pnml name='_PC_EVENT_SUBMIT']--></option>
+</select><input type="submit" name="_submit" value="go" onclick="return selectItems();">
+
 </form>
 </div> <!-- /page container-->
