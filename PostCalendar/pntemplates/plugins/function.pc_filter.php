@@ -56,22 +56,18 @@ function smarty_function_pc_filter($args, &$smarty)
         $viewtype = _SETTING_DEFAULT_VIEW; 
 	 
     $types = explode(',',$type);
-    $output = new pnHTML();
-    $output->SetOutputMode(_PNH_RETURNOUTPUT);
+
     $modinfo = pnModGetInfo(pnModGetIDFromName('PostCalendar'));
     $mdir = pnVarPrepForOS($modinfo['directory']);
     unset($modinfo);
 
-    $pcTemplate = pnVarPrepForOS(_SETTING_TEMPLATE);
-    if(empty($pcTemplate)) 
-        $pcTemplate = 'default'; 
-	
     //================================================================
     //	build the username filter pulldown
     //================================================================
     if(in_array('user',$types)) 
     {
         @define('_PC_FORM_USERNAME',true);
+				// this is another sport to pull only users that have submitted events!!! not ALL users...
         $users = DBUtil::selectObjectArray ('users', '', 'uname');
 
         $useroptions  = "<select name=\"pc_username\" class=\"$class\">";
@@ -134,10 +130,6 @@ function smarty_function_pc_filter($args, &$smarty)
     $submit = "<input type=\"submit\" name=\"submit\" value=\"$label\" class=\"$class\" />";
     $orderArray = array('user'=>$useroptions, 'category'=>$catoptions, 'topic'=>$topoptions, 'jump'=>$submit);
 
-    //print $useroptions;
-    //print $catoptions;
-    //print $topoptions;
-
     if(isset($order)) 
     {
         $newOrder = array();
@@ -158,6 +150,6 @@ function smarty_function_pc_filter($args, &$smarty)
         echo $element;
 
     if(!in_array('user',$types)) 
-        echo $output->FormHidden('pc_username',$pc_username);
+        echo "<input type='hidden' name='pc_username' value='$pc_username' />";
 }
 ?>

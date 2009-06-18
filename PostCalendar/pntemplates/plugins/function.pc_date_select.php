@@ -73,21 +73,20 @@ function smarty_function_pc_date_select($args)
     }
 
     $dayselect=$monthselect=$yearselect=$viewselect='';
-    $output =& new pnHTML();
-    $output->SetOutputMode(_PNH_RETURNOUTPUT);
+    // note: pcHtmlUtil is an extension of the core HtmlUtil class
+    //       it was extended to provide month names (text)
+    //       a patch for core was supplied to Zikula and may appear in v1.2
+    //       at which time, this should be reverted to HtmlUtil
+    Loader::loadClass ('pcHtmlUtil','modules/PostCalendar/pnincludes');
     if($args['day'] === true) {
-        $sel_data = pnModAPIFunc('PostCalendar','user','buildDaySelect',array('pc_day'=>$d));
-        $dayselect = $output->FormSelectMultiple('jumpday', $sel_data);
+        $dayselect = pcHtmlUtil::getSelector_DatetimeDay($d,'jumpday');
     }
-        
     if($args['month'] === true) {
-        $sel_data = pnModAPIFunc('PostCalendar','user','buildMonthSelect',array('pc_month'=>$m));
-        $monthselect = $output->FormSelectMultiple('jumpmonth', $sel_data);
+
+        $monthselect = pcHtmlUtil::getSelector_DatetimeMonth($m,'jumpmonth', false, false, 1,true);
     }
-        
     if($args['year'] === true) {
-        $sel_data = pnModAPIFunc('PostCalendar','user','buildYearSelect',array('pc_year'=>$y));
-        $yearselect = $output->FormSelectMultiple('jumpyear', $sel_data);
+        $yearselect = pcHtmlUtil::getSelector_DatetimeYear($y,'jumpyear', date('Y')-10, date('Y')+10);
     }
 		
     if($args['view'] === true) {
@@ -104,14 +103,13 @@ function smarty_function_pc_date_select($args)
         $sel_data[3]['id']         = 'year';
         $sel_data[3]['selected']   = $viewtype=='year';
         $sel_data[3]['name']       = _CAL_YEARVIEW;
-        $viewselect = $output->FormSelectMultiple('viewtype', $sel_data);
+        $viewselect = pcHtmlUtil::FormSelectMultipleSubmit('viewtype', $sel_data);
     }
 
     if(!isset($args['label'])) 
         $args['label'] = _PC_JUMP_MENU_SUBMIT;
 
     $jumpsubmit = '<input type="submit" name="submit" value="'.$args['label'].'" />';
-    $output->SetOutputMode(_PNH_KEEPOUTPUT);
     
     $orderArray = array('day'   => $dayselect,
                         'month' => $monthselect,

@@ -167,125 +167,6 @@ function postcalendar_userapi_getmonthname($args)
 			    '10' => _CALOCT, '11' => _CALNOV, '12' => _CALDEC);
 	return $month_name[date('m',$Date)];
 }
-/**
- *  Returns an array of form data for FormSelectMultiple
- */
-function postcalendar_adminapi_buildTimeSelect($args) 
-{ 
-	return postcalendar_userapi_buildTimeSelect($args); 
-}
-
-function postcalendar_userapi_buildTimeSelect($args) 
-{   
-	$inc = _SETTING_TIME_INCREMENT;
-	extract($args); unset($args);
-	$output = array('h'=>array(),'m'=>array(),'ap'=>1);
-
-	if((bool)_SETTING_TIME_24HOUR) 
-	{
-		$start=0; 
-		$end=23; 
-	}
-	else 
-	{ 
-		$start=1; 
-		$end=12;
-		// $hselected = $hselected > 12 ? $hselected-=12 : $hselected; 
-		if ($hselected > 12)
-		{
-			$hselected = $hselected - 12;
-			$output['ap'] = 2; //PM
-		}
-	}
-    
-	for($c=0,$h=$start; $h<=$end; $h++,$c++) 
-	{
-	$hour = sprintf('%02d',$h);
-	$output['h'][$c]['id']         = pnVarPrepForStore($h);
-	$output['h'][$c]['selected']   = $hselected == $hour;
-	$output['h'][$c]['name']       = pnVarPrepForDisplay($hour);
-	}
-    
-	for($c=0,$m=0; $m<=(60-$inc);$m+=$inc,$c++) 
-	{
-		$min = sprintf('%02d',$m);
-		$output['m'][$c]['id']         = pnVarPrepForStore($m);
-		$output['m'][$c]['selected']   = $mselected == $min;
-		$output['m'][$c]['name']       = pnVarPrepForDisplay($min);
-	}
-
-	return $output;
-}
-
-/**
- *  Returns an array of form data for FormSelectMultiple
- */
-function postcalendar_adminapi_buildMonthSelect($args) { return postcalendar_userapi_buildMonthSelect($args); }
-function postcalendar_userapi_buildMonthSelect($args) 
-{
-    extract($args); unset($args);
-    if(!isset($pc_month)) { $pc_month = Date_Calc::getMonth(); } 
-    // create the return object to be inserted into the form
-    $output = array();
-    if(!isset($selected)) $selected = '';
-    for ($c=0,$i=1;$i<=12;$i++,$c++) {
-        if ($selected)              { $sel = $selected == $i ? true : false; }
-        elseif ($i == $pc_month)    { $sel = true; } 
-        else                        { $sel = false; }
-        $output[$c]['id']       = sprintf('%02d',$i);
-        $output[$c]['selected'] = $sel;
-        $output[$c]['name']     = postcalendar_userapi_getmonthname(array('Date'=>mktime(0,0,0,$i,15)));
-    }
-    return $output;
-}
-
-/**
- *  Returns an array of form data for FormSelectMultiple
- */
-function postcalendar_adminapi_buildDaySelect($args) { return postcalendar_userapi_buildDaySelect($args); }
-function postcalendar_userapi_buildDaySelect($args) 
-{   
-    extract($args); unset($args);
-    if(!isset($pc_day)) { $pc_day = Date_Calc::getDay(); }
-    // create the return object to be inserted into the form
-    $output = array();
-    if(!isset($selected)) $selected = '';
-    for($c=0,$i=1; $i<=31; $i++,$c++) {   
-        if ($selected)          { $sel = $selected == $i ? true : false; }
-        elseif ($i == $pc_day)  { $sel = true; } 
-        else                    { $sel = false; }
-        $output[$c]['id']       = sprintf('%02d',$i);
-        $output[$c]['selected'] = $sel;
-        $output[$c]['name']     = sprintf('%02d',$i);
-    }
-    return $output;
-}
-
-/**
- *  Returns an array of form data for FormSelectMultiple
- */
-function postcalendar_adminapi_buildYearSelect($args) { return postcalendar_userapi_buildYearSelect($args); }
-function postcalendar_userapi_buildYearSelect($args) 
-{   
-    extract($args); unset($args);
-    if(!isset($pc_year)) { $pc_year = date('Y'); }
-    // create the return object to be inserted into the form
-    $output = array();
-    // we want the list to contain 10 years before today and 30 years after
-    // maybe this will eventually become a user defined value
-    $pc_start_year = date('Y') - 10;
-    $pc_end_year = date('Y') + 30;
-    if(!isset($selected)) $selected = '';
-    for($c=0,$i=$pc_start_year; $i<=$pc_end_year; $i++,$c++) {   
-        if ($selected)          { $sel = $selected == $i ? true : false; } 
-        elseif ($i == $pc_year) { $sel = true; } 
-        else                    { $sel = false; }
-        $output[$c]['id']       = sprintf('%04d',$i);
-        $output[$c]['selected'] = $sel;
-        $output[$c]['name']     = sprintf('%04d',$i);
-    }
-    return $output;
-}
 
 function postcalendar_adminapi_getCategories() { return postcalendar_userapi_getCategories(); }
 function postcalendar_userapi_getCategories()
@@ -329,7 +210,6 @@ function pc_notify($eid,$is_update)
 	$message .= "\n\n\n\n";
 	$message .= "----\n";
 	$message .= "PostCalendar $modversion\n";
-	$message .= "http://www.postcalendar.tv";
 	
 	mail(_SETTING_NOTIFY_EMAIL,$subject,$message,
 		  "From: " . _SETTING_NOTIFY_EMAIL . "\r\n"
@@ -342,10 +222,6 @@ function pc_notify($eid,$is_update)
 
 function postcalendar_footer()
 {   
-	// lets get the module's information
-	//$modinfo = pnModGetInfo(pnModGetIDFromName('PostCalendar'));
-	//$footer = "<p align=\"right\"><a href=\"http://www.postcalendar.tv\">PostCalendar v$modinfo[version]</a></p>";
-	//return $footer;
 	return '';
 }
 

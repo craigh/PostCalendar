@@ -9,7 +9,7 @@
 <!--[ /if ]-->
 <div class="postcalendar_block_view_day">
 <!--[ if $SHOW_TITLE eq 1 ]-->
-	<h2 class='postcalendar_block_innertitle'><!--[ $TODAYS_EVENTS_TITLE ]--></h2>
+	<h2 class='postcalendar_block_innertitle'><!--[pnml name='_PC_TODAYS_EVENTS']--></h2>
 <!--[ /if ]-->
 <!--[ pc_sort_events var="S_EVENTS" sort="time" order="asc" value=$A_EVENTS ]-->
 <!--[ foreach name=dates item=events key=date from=$S_EVENTS ]-->

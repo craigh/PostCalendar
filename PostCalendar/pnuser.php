@@ -34,11 +34,10 @@
  *
  */
 Loader::requireOnce('includes/pnForm.php');
-//don't think I'll need the next two lines anymore...
+//don't think I'll need the next line anymore...
 // UPDATE: in order to not use the APIload below, the functions all have to have standard names
 // and be called with pnModFunc (or API)
 pnModAPILoad('PostCalendar','user');
-require_once ('includes/HtmlUtil.class.php');
 
 function postcalendar_user_main()
 {
@@ -259,15 +258,6 @@ function postcalendar_user_search()
 		$tpl->assign('TOPIC_OPTIONS',$top_options);
 	}
 	//=================================================================
-    //  Find out what Template we're using    
-	//=================================================================
-/*
-    $template_name = _SETTING_TEMPLATE;
-    if(!isset($template_name)) {
-    	$template_name = 'default';
-    }
-*/
-	//=================================================================
     //  Output the search form
 	//=================================================================
 	$thisformaction=pnModURL('PostCalendar','user','search');
@@ -328,44 +318,35 @@ function postcalendar_user_export ()
   # Clean up the dates and force the format to be correct
   if ($start == '') { 
     $start = date ("m/d/Y"); 
-  }
-  else { 
+  } else { 
     $start = date ("m/d/Y", strtotime ($start)); 
   }
 
   if ($end == '') { 
     $end = date("m/d/Y", (time() + 30*60*60*24)); 
-  }
-  else { 
+  } else { 
     $end = date ("m/d/Y", strtotime ($end)); 
   }
 
-  if ($date != "") 
-  { 
+  if ($date != "") { 
     $start = date ("m/d/Y", strtotime ($date)); 
     $end = $start; 
   }
 
-  if (!$debug)
-  {
+  if (!$debug) {
       $filename = mktime () . ($etype == 'ical' ? '.ics' : '.xml');
       header ("Content-Type: text/calendar");
-      if (($format == "") || ($format == "inline"))
-      {
+      if (($format == "") || ($format == "inline")) {
           header ("Content-Disposition: inline; filename=$filename");
-      }
-      else
-      {
+      } else {
           header ("Content-Disposition: attachment; filename=$filename");
       }
   }
 
-  if ($debug) 
-  { 
+  if ($debug) { 
     echo ("<PRE>"); 
   }
 
-  //pnModAPILoad ('PostCalendar', 'user');
   $events = pnModAPIFunc ('PostCalendar', 'user', 'pcGetEvents', array ('start' => $start, 'end' => $end));
 
   # sort the events by start date and time, sevent has the sorted list
@@ -384,10 +365,8 @@ function postcalendar_user_export ()
   if ($debug && $debugallowed) { echo "<P><HR WIDTH=100%><P>Sorted Events are <P>\r\n"; prayer ($sevents); };
 
   if ($etype == 'ical')
-    //return postcalendar_icalapi_export_ical ($sevents);
 		return pnModAPIFunc ('PostCalendar', 'ical', 'export_ical', ($sevents));
   else
-    //return postcalendar_user_export_rss ($sevents, $start, $end);
 		return pnModFunc ('PostCalendar', 'user', 'export_rss', array ($sevents, $start, $end));
 }
 

@@ -516,9 +516,6 @@ function postcalendar_eventapi_buildSubmitForm($args)
 	unset($args);
 
 	if (!$admin) $admin = false; //reset default value
-	
-	$output = new pnHTML();
-	$output->SetOutputMode(_PNH_RETURNOUTPUT);
 
 	$tpl = pnRender::getInstance('PostCalendar');
 	PostCalendarSmartySetup($tpl);
@@ -544,6 +541,7 @@ function postcalendar_eventapi_buildSubmitForm($args)
 
 		@define('_PC_FORM_USERNAME',true);
 
+		//CAH this MUST be reduced to users that have submitted events - not EVERY USER! ack!
 		$users = DBUtil::selectObjectArray ('users', '', 'uname');
 		foreach ($users as $user)
 		{
@@ -584,11 +582,8 @@ function postcalendar_eventapi_buildSubmitForm($args)
 	}
 	$tpl->assign('startvalue', $startvalue);	
 	$tpl->assign('startdate', $startdate);
-	
 	// V4B SB END // JAVASCRIPT CALENDAR
-
 	// V4B SB Start // Selectboxes for the participants
-	//
 	//================================================================
 	//	build the userlist select box
 	//================================================================
@@ -647,40 +642,12 @@ function postcalendar_eventapi_buildSubmitForm($args)
 	//=================================================================
 	//	PARSE SELECT_DATE_TIME
 	//=================================================================
-
 	$tpl->assign('SelectedAllday',		$event_allday==1 ? 'checked':'');
 	$tpl->assign('SelectedTimed',			$event_allday==0 ? 'checked':'');
-	
-	//=================================================================
-	//	PARSE SELECT_END_DATE_TIME
-	//=================================================================
-	if(_SETTING_USE_INT_DATES) 
-	{
-		$sel_data = pnModAPIFunc('PostCalendar','user','buildDaySelect',array('pc_day'=>$day,'selected'=>$event_endday));
-		$formdata = $output->FormSelectMultiple('event_endday', $sel_data);
-		$sel_data = pnModAPIFunc('PostCalendar','user','buildMonthSelect',array('pc_month'=>$month,'selected'=>$event_endmonth));
-		$formdata .= $output->FormSelectMultiple('event_endmonth', $sel_data);
-	} 
-	else 
-	{
-		$sel_data = pnModAPIFunc('PostCalendar','user','buildMonthSelect',array('pc_month'=>$month,'selected'=>$event_endmonth));
-		$formdata = $output->FormSelectMultiple('event_endmonth', $sel_data);
-		$sel_data = pnModAPIFunc('PostCalendar','user','buildDaySelect',array('pc_day'=>$day,'selected'=>$event_endday));
-		$formdata .= $output->FormSelectMultiple('event_endday', $sel_data);
-	}
-	$sel_data = pnModAPIFunc('PostCalendar','user','buildYearSelect',array('pc_year'=>$year,'selected'=>$event_endyear));
-	$formdata .= $output->FormSelectMultiple('event_endyear', $sel_data);
-	$tpl->assign('SelectEndDate', $formdata);
-	
+
 	//=================================================================
 	//	PARSE SELECT_TIMED_EVENT
 	//=================================================================
-
-	/* // V4B RNG Start V4B SB START keep the default starttime of 0 hours so an allday event appears at the beginning of an eventlist.
-	if (!$event_starttimeh)
-		$event_starttimeh = 9;	// provide a reasonable default rather than 0 hours
-	// V4B RNG End V4B SB END */
-
 	$tpl->assign('minute_interval', _SETTING_TIME_INCREMENT);
 	if (empty($event_starttimeh)) {$event_starttimeh = "01"; $event_starttimem = "00";}
 	$tpl->assign('SelectedTime', $event_starttimeh.":".$event_starttimem);
