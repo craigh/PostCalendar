@@ -130,15 +130,18 @@ function postcalendar_eventapi_queryEvents($args)
 	$topicNames = DBUtil::selectFieldArray ('topics', 'topicname', '', '', false, 'topicid');
 	
 	// added temp_meeting_id
+	// this prevents duplicate display of same event for different participants
+	// but is a bit of a strange way of doing it...
 	$old_m_id = "NULL";
-	$ak = array_keys ($events);
-	foreach ($ak as $key) {
-		$new_m_id = $key['meeting_id'];
+	//$ak = array_keys ($events);
+	foreach ($events as $key=>$evt) {
+		$new_m_id = $evt['meeting_id'];
 		if ( ($old_m_id) && ($old_m_id != "NULL") && ($new_m_id > 0) && ($old_m_id == $new_m_id) ) {
 			$old_m_id = $new_m_id;
 			unset ($events[$key]);
 		}
 		$events[$key] = pnModAPIFunc('PostCalendar','event','fixEventDetails',$events[$key]);
+		$old_m_id = $evt['meeting_id'];
 	}
 	return $events;
 }
@@ -150,9 +153,6 @@ function postcalendar_eventapi_queryEvents($args)
  **/
 function postcalendar_eventapi_getEvents($args)
 {	
-	//echo "pcGetdebug<br>";
-	//pcDebugVar($args);
-	
 	$s_keywords = $s_category = $s_topic = '';
 	extract($args);
 	$date = postcalendar_getDate();
@@ -317,7 +317,7 @@ function postcalendar_eventapi_getEvents($args)
  */
 function postcalendar_eventapi_writeEvent($args) 
 {
-	$event_for_userid = $_POST['event_for_userid']; // gets the value out of the event_for_userid dropdown
+	$event_for_userid = $_POST['event_for_userid']; // gets the value out of the event_for_userid dropdown :: becomes aid?
 
 	extract($args); unset($args);
 	list($dbconn) = pnDBGetConn();
@@ -326,131 +326,111 @@ function postcalendar_eventapi_writeEvent($args)
 	define('PC_ACCESS_ADMIN', pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_OVERVIEW));
 	
 	// determine if the event is to be published immediately or not
-	if( (bool) _SETTING_DIRECT_SUBMIT || (bool) PC_ACCESS_ADMIN || ($event_sharing != SHARING_GLOBAL) ) 
+	if ( (bool) _SETTING_DIRECT_SUBMIT || (bool) PC_ACCESS_ADMIN || ($event_sharing != SHARING_GLOBAL) ) {
 		$event_status = _EVENT_APPROVED;
-	else 
+	} else {
 		$event_status = _EVENT_QUEUED;
-	
+	}
+
 	// set up some vars for the insert statement
 	$startDate = $event_startyear.'-'.$event_startmonth.'-'.$event_startday;
-	if($event_endtype == 1) 
+	if ($event_endtype == 1) {
 		$endDate = $event_endyear.'-'.$event_endmonth.'-'.$event_endday;
-	else 
+	} else {
 		$endDate = '0000-00-00';
-	
+	}
+
 	if(!isset($event_allday)) $event_allday = 0;
 
-	if((bool)_SETTING_TIME_24HOUR) 
+	if ((bool)_SETTING_TIME_24HOUR) {
 		$startTime = $event_starttimeh.':'.$event_starttimem.':00';
-	else 
-		if($event_startampm == _AM_VAL) 
+	} else { 
+		if ($event_startampm == _AM_VAL) {
 			$event_starttimeh = $event_starttimeh == 12 ? '00' : $event_starttimeh;
-		else 
+		} else {
 			$event_starttimeh = $event_starttimeh != 12 ? $event_starttimeh+=12 : $event_starttimeh;
+		}
+	}
 
 	$startTime = sprintf('%02d',$event_starttimeh).':'.sprintf('%02d',$event_starttimem).':00';
-	
-	// get rid of variables we no longer need to save memory
-	unset($event_startyear,$event_startmonth,$event_startday,$event_endyear,$event_endmonth,
-		  $event_endday,$event_starttimeh,$event_starttimem);
 		
 	$event_userid = $event_for_userid;
 	
-	if($pc_html_or_text == 'html') 
-		$event_desc = ':html:'.$event_desc;
-	else 
-		$event_desc = ':text:'.$event_desc;
-
-	if(($event_desc==':text:')||($event_desc==':html:'))
-		$event_desc .= 'n/a';
+	if (empty($event_desc))	{
+		$event_desc .= 'n/a'; // default description
+	} else {
+		$event_desc = ':'.$pc_html_or_text.':'.$event_desc; // inserts :text:/:html: before actual content
+	}
 	
-	
-	// V4B RNG Start, added event_for_userid, pc_event_id
-	list($event_subject,$event_desc,$event_topic,$startDate,$endDate,$event_repeat,
-		$startTime,$event_allday,$event_category,$event_location_info,$event_conttel,
-		$event_contname,$event_contemail,$event_website,$event_fee,$event_status,
-		$event_recurrspec,$event_duration,$event_sharing,$event_userid,$event_for_userid,
-		 $pc_event_id) = 
-			@pnVarPrepForStore($event_subject,$event_desc,$event_topic,$startDate,$endDate,
-				$event_repeat,$startTime,$event_allday,$event_category,
-				$event_location_info,$event_conttel,$event_contname,$event_contemail,
-				$event_website,$event_fee,$event_status,$event_recurrspec,$event_duration,
-				$event_sharing,$event_userid,$event_for_userid,$pc_event_id);
-
-	// V4B SB Start defining pc_meeting_id
-	// v4b TS moved some line, added NULL if no participant
+	// Start defining pc_meeting_id
 	if($_POST['participants']) {
 		$participants = $_POST['participants'];
-		$pc_meeting_id	= DBUtil::selectFieldMax ('postcalendar_events', 'meeting_id');
+		$pc_meeting_id	= (int) DBUtil::selectFieldMax ('postcalendar_events', 'meeting_id');
 		$pc_meeting_id++;
 	} else {
 		$pc_meeting_id = 0;
 	}
-	if(!in_array($event_for_userid, $participants))
-		$participants[] = $event_for_userid;   
-	// V4B SB End 
+	if(!in_array($event_for_userid, $participants))	$participants[] = $event_for_userid;   
 	
 	if(!isset($is_update)) $is_update = false; 
 
 	if(!$is_update) $pc_event_id = $dbconn->GenId($pntable['postcalendar_events']);
 
-	// v4b TS start - build an array of users for mail notification
+	// build an array of users for mail notification
 	$pc_mail_users = array ();
 	
 	foreach($participants as $part) // V4B SB LOOP to insert events for every participant
 	{
-		//consider pnVarprepforstore? look up at line 375
 		$eventarray[$pc_event_id] = array( 
-					'title'				=>$event_subject,
-					'hometext'		=>$event_desc,
-					'topic'				=>$event_topic,
-					'eventDate'		=>$startDate,
-					'endDate'			=>$endDate,
-					'recurrtype'	=>$event_repeat,
-					'startTime'		=>$startTime,
-					'alldayevent'	=>$event_allday,
-					'catid'				=>$event_category,
-					'location'		=>$event_location_info,
-					'conttel'			=>$event_conttel,
-					'contname'		=>$event_contname,
-					'contemail'		=>$event_contemail,
-					'website'			=>$event_website,
-					'fee'					=>$event_fee,
-					'eventstatus'	=>$event_status,
-					'recurrspec'	=>$event_recurrspec,
-					'duration'		=>$event_duration,
-					'sharing'			=>$event_sharing,
-					'aid'					=>$part);
-		if($is_update) {
-			$eventarray[$pc_event_id]['eid']						= $pc_event_id;
-			$result=pnModAPIFunc('postcalendar', 'event', 'update', $eventarray);
+					'title'				=>pnVarPrepForStore($event_subject),
+					'hometext'		=>pnVarPrepForStore($event_desc),
+					'topic'				=>pnVarPrepForStore($event_topic),
+					'eventDate'		=>pnVarPrepForStore($startDate),
+					'endDate'			=>pnVarPrepForStore($endDate),
+					'recurrtype'	=>pnVarPrepForStore($event_repeat),
+					'startTime'		=>pnVarPrepForStore($startTime),
+					'alldayevent'	=>pnVarPrepForStore($event_allday),
+					'catid'				=>pnVarPrepForStore($event_category),
+					'location'		=>pnVarPrepForStore($event_location_info),
+					'conttel'			=>pnVarPrepForStore($event_conttel),
+					'contname'		=>pnVarPrepForStore($event_contname),
+					'contemail'		=>pnVarPrepForStore($event_contemail),
+					'website'			=>pnVarPrepForStore($event_website),
+					'fee'					=>pnVarPrepForStore($event_fee),
+					'eventstatus'	=>pnVarPrepForStore($event_status),
+					'recurrspec'	=>pnVarPrepForStore($event_recurrspec),
+					'duration'		=>pnVarPrepForStore($event_duration),
+					'sharing'			=>pnVarPrepForStore($event_sharing),
+					'aid'					=>pnVarPrepForStore($part));
+		if ($is_update) {
+			$eventarray[$pc_event_id]['eid']						= pnVarPrepForStore($pc_event_id);
+			$result=pnModAPIFunc('postcalendar', 'event', 'update', $eventarray[$pc_event_id]);
 		} else {
-			$eventarray[$pc_event_id]['time']					= now();
-			$eventarray[$pc_event_id]['pc_informant']	= $uname;
-			$eventarray[$pc_event_id]['pc_meeting_id']	= $pc_meeting_id;
+			$eventarray[$pc_event_id]['time']				= pnVarPrepForStore(date("Y-m-d H:i:s")); //current date
+			$eventarray[$pc_event_id]['informant']	= pnVarPrepForStore($uname);
+			$eventarray[$pc_event_id]['meeting_id']	= pnVarPrepForStore($pc_meeting_id);
 
-			$result=pnModAPIFunc('postcalendar', 'event', 'create', $eventarray);
+			$result=pnModAPIFunc('postcalendar', 'event', 'create', $eventarray[$pc_event_id]);
 		}
-		if($result === false) 
-		{
+		if ($result === false) {
 			// post some kind of error message...
 			return false;
 		}
 		
 		// v4b TS start - build an array of users for mail notification
-		if (( pnUserGetVar('uname', $part) != $uname ) && (!$is_update)) 
-		{
+		if (( pnUserGetVar('uname', $part) != $uname ) && (!$is_update)) {
 			$pc_mail_users[] = $part;
 			$pc_mail_events[] = $dbconn->PO_Insert_ID($pntable['postcalendar_events'],'pc_eid');
 		}
 	}	 // V4B SB Foreach End
 	
-	if((bool)$is_update)
+	if ((bool)$is_update) {
 		$eid = $pc_event_id;
-	else 
+	} else {
 		$eid = $dbconn->PO_Insert_ID($pntable['postcalendar_events'],'pc_eid');
+	}
 
-	pc_notify($eid,$is_update);
+	pc_notify($eid,$is_update); // this is sending email
 	
 	// v4b TS start - mail information for participants
 	if (!$is_update) 
@@ -525,14 +505,9 @@ function postcalendar_eventapi_buildSubmitForm($args)
 	//================================================================
 	//		  build the username filter pulldown
 	//================================================================
-	if(true)
+	if(true) // if why?
 	{
 		$event_for_userid = (int)DBUtil::selectFieldByID ('postcalendar_events', 'aid', $pc_event_id, 'eid');
-
-		$optstart	  = "<select name=\"event_for_userid\">";
-		$optbody	  = "";
-		$optuser	  = "";
-		$optend		  = '</select>';
 
 		$uid   = pnUserGetVar('uid');
 		$uname = pnUserGetVar('uname');
@@ -541,18 +516,13 @@ function postcalendar_eventapi_buildSubmitForm($args)
 
 		@define('_PC_FORM_USERNAME',true);
 
-		//CAH this MUST be reduced to users that have submitted events - not EVERY USER! ack!
-		$users = DBUtil::selectObjectArray ('users', '', 'uname');
-		foreach ($users as $user)
-		{
-			if ($idsel==$user['uid'])
-				$optuser = "<option value=\"$user[uid]\" selected>$user[uname]</option>";
-			else
-				$optbody .= "<option value=\"$user[uid]\">$user[uname]</option>";
+		//get users that have submitted events previously
+		$users = DBUtil::selectFieldArray ('postcalendar_events', 'informant', null, null, true, 'aid');
+		if (!array_key_exists($idsel, $users)) { 
+			$users[$uid] = $uname; // add cuurent user to userlist if not already there
 		}
-
-		$useroptions = $optstart . $optuser . $optbody . $optend;
-		$tpl->assign('UserSelector', $useroptions);
+		$tpl->assign('users', $users);
+		$tpl->assign('user_selected', $idsel);
 	}
 
 	$endDate = $event_endyear.$event_endmonth.$event_endday;
@@ -587,18 +557,19 @@ function postcalendar_eventapi_buildSubmitForm($args)
 	//================================================================
 	//	build the userlist select box
 	//================================================================
-	if(true)
+	if(true) // change this to only perform if displaymeetingoptions & useaddressbook?
 	{
 		$ca = array();
 		$ca['uid'] = 'uid';
 		$ca['uname'] = 'uname';
-			$users = DBUtil::selectObjectArray ('users', '', '', -1, -1, 'uid', null, $ca);
+		//$users = DBUtil::selectObjectArray ('users', '', '', -1, -1, 'uid', null, $ca);
+		$users = DBUtil::selectFieldArray ('users', 'uname', null, null, true, 'uid');
 
-		$useroptions  = "<select name=\"tn[]\" multiple size=\"5\">";
-		foreach($users as $user) 
-			$useroptions .= "<option value=\"".$user['uid']."\">".$user['uname']."</option>";
-		$useroptions .= '</select>';
-		$tpl->assign('UserListSelector', $useroptions);
+		//$useroptions  = "<select name=\"tn[]\" multiple size=\"5\">";
+		//foreach($users as $user) 
+		//	$useroptions .= "<option value=\"".$user['uid']."\">".$user['uname']."</option>";
+		//$useroptions .= '</select>';
+		$tpl->assign('UserListSelectorOptions', $users);
 	}
 
 	//================================================================

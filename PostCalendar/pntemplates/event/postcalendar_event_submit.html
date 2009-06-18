@@ -1,4 +1,3 @@
-<!--[ pndebug ]-->
 <!--[ pc_calendar_init ]-->
 
 <!--[* THIS PART LOOKS BAD IN FF/ hence commented out -CAH *]-->
@@ -34,10 +33,9 @@
             <td align="left" valign="top" width="50%">
                 <!--[pnml name='_PC_EVENT_TITLE']-->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!--[pnml name='_PC_REQUIRED']--><br />
                 <input type="text" name="event_subject" value="<!--[ $ValueEventTitle ]-->" /><br />
-		        <!-- V4B Start -->
+
 		        For User&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!--[pnml name='_PC_REQUIRED']--><br />
-		        <!--[ $UserSelector ]--><br /><br />
-		        <!-- V4B End -->
+		        <!--[html_options name=event_for_userid options=$users selected=$user_selected]--><br /><br />
 		
 		        <!--[pnml name='_PC_DATE_TIME']-->&nbsp;&nbsp;&nbsp;
 		        <!--[ pc_calendar_build_input_box htmlName="meetingdate_start" dateFormat="%d-%m-%Y" defaultString=$startvalue defaultDate=$startdate ]-->
@@ -244,7 +242,7 @@
 		            <tr>
     		            <td>
 	                		 <!--[pnml name='_PC_PARTICIPANTAVAILABLE']--><br>
-		                     <!--[ $UserListSelector ]--><br>
+		                     <select name="tn[]" multiple size="5"><!--[html_options options=$UserListSelectorOptions ]--></select><br>
                              <input class="submit" onclick="MoveOption('tn','participants');" type="button" value="Add >>" name="Add">
                         </td>
 		                <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
