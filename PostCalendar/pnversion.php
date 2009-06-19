@@ -33,19 +33,20 @@
  *  http://www.gnu.org/copyleft/gpl.html
  *
  */
-$modversion['name']		= 'PostCalendar';
+$modversion['name']		= _PC_MODULENAME;
 $modversion['id']		= '$Revision$'; // svn revision #
 $modversion['version']		= '5.1.0';
-$modversion['description']	= 'Zikula Calendar Module';
+$modversion['description']	= _PC_MODULEDESCRIPTION;
 $modversion['credits']		= 'docs/credits.txt';
 $modversion['help']		= 'docs/help.txt';
 $modversion['changelog']	= 'docs/changelog.txt';
 $modversion['license']		= 'docs/license.txt';
 $modversion['official']		= 0;
 $modversion['author']		= 'Craig Heydenburg';
-$modversion['contact']          = 'http://code.zikula.org/soundwebdevelopment/';
-$modversion['admin']            = 1;
-$modversion['securityschema']   = array('PostCalendar::Event' 	 => 'Event Title::Event ID',
+$modversion['contact']		= 'http://code.zikula.org/soundwebdevelopment/';
+$modversion['admin']		= 1;
+$modversion['user']			= 1;
+$modversion['securityschema']	= array('PostCalendar::Event' 	 => 'Event Title::Event ID',
 					'PostCalendar::Category' => 'Category Name::Category ID',
 					'PostCalendar::Topic' 	 => 'Topic Name::Topic ID',
                                         'PostCalendar::User' 	 => 'User Name::User ID',

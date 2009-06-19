@@ -24,6 +24,8 @@
  *  http://www.gnu.org/copyleft/gpl.html
  *
  */
-define('_CREATETABLEFAILED', 'Table creation failed');
-define('_UPDATETABLEFAILED', 'Table update failed');
+define('_PC_DEFAUT_CATEGORY_NAME', 'Default');
+define('_PC_DEFAUT_CATEGORY_DESCR', 'Default Category');
+define('_PC_UPGRADETABLESFAILED', 'Upgrading tables failed');
+define('_PC_CONVERTCATEGORIESFAILED', 'Converting to new-style categories failed');
 ?>

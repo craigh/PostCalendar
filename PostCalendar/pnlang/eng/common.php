@@ -119,6 +119,7 @@ define('_PC_CAT_DELETE', 'Delete');
 define('_PC_CAT_DESC', 'Category Description');
 define('_PC_CAT_NAME', 'Category Name');
 define('_PC_CAT_NEW', 'New =>');
+define('_PC_CATEGORIESCONFIRM', 'Confirm Category change');
 define('_PC_CATS_CONFIRM', 'YES!');
 define('_PC_CLEAR_CACHE', 'Clear Smarty Cache');
 define('_PC_CLICK_FOR_MORE', 'click for more');

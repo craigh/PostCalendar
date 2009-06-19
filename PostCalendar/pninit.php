@@ -48,79 +48,18 @@
  */
 function postcalendar_init()
 {
-    list($dbconn) = pnDBGetConn();
-    $pntable = pnDBGetTables();
-    $events_table = $pntable['postcalendar_events'];
-    $cat_table    = $pntable['postcalendar_categories'];
-    
-	// after reading some posts i've decided to adopt the new
-    // $pntable style which does not append table names.
-    // if you use joins in your SQL please remember this!
-    $sql = "CREATE TABLE $events_table (
-            pc_eid int(11) unsigned NOT NULL auto_increment,
-            pc_catid int(11) NOT NULL default 0,
-            pc_aid varchar(30) NOT NULL default '',
-            pc_title varchar(150) default '',
-            pc_time datetime,
-            pc_hometext text default '',
-            pc_comments int(11) default 0,
-            pc_counter mediumint(8) unsigned default 0,
-            pc_topic int(3) NOT NULL default 1,
-            pc_informant varchar(20) NOT NULL default '',
-            pc_eventDate date NOT NULL default '0000-00-00',
-            pc_endDate date NOT NULL default '0000-00-00',
-            pc_duration bigint(20) NOT NULL default 0,
-            pc_recurrtype int(1) NOT NULL default 0,
-            pc_recurrspec text default '',
-            pc_recurrfreq int(3) NOT NULL default 0,
-            pc_startTime time,
-            pc_endTime time,
-            pc_alldayevent int(1) NOT NULL default 0,
-            pc_location text default '',
-            pc_conttel varchar(50) default '',
-            pc_contname varchar(50) default '',
-            pc_contemail varchar(255) default '',
-            pc_website varchar(255) default '',
-            pc_fee varchar(50) default '',
-            pc_eventstatus int(11) NOT NULL default 0,
-            pc_sharing int(11) NOT NULL default 0,
-            pc_language varchar(30) default '',"
-            /* V4B SB important to make and manage meetings */
-            ."pc_meeting_id int(11) NULL default 0,
-            PRIMARY KEY (pc_eid),
-			KEY basic_event (pc_catid,pc_aid,pc_eventDate,pc_endDate,pc_eventstatus,pc_sharing,pc_topic)
-			)";
-    $dbconn->Execute($sql);
-    if ($dbconn->ErrorNo() != 0) {
-        pnSessionSetVar('errormsg', $dbconn->ErrorMsg());
-        return false;
+    // create tables
+    if (!DBUtil::createTable('postcalendar_events') || !DBUtil::createTable('postcalendar_categories')) {
+        return LogUtil::registerError(_CREATETABLEFAILED);
+    }
+
+    // insert default category
+    $defaultcat = array('catname' => _PC_DEFAUT_CATEGORY_NAME,
+                        'catdesc' => _PC_DEFAUT_CATEGORY_DESCR);
+    if (!DBUtil::insertObject ($defaultcat, 'postcalendar_categories', 'catid')) {
+        return LogUtil::registerError(_CREATEFAILED);
     }
     
-    // create the category table
-    $sql = "CREATE TABLE $cat_table (
-            pc_catid int(11) unsigned NOT NULL auto_increment,
-            pc_catname varchar(100) NOT NULL default 'Undefined',
-            pc_catcolor varchar(50) NOT NULL default '#FF0000',
-            pc_catdesc text default '',
-            PRIMARY KEY (pc_catid),
-			KEY basic_cat (pc_catname,pc_catcolor)
-			)";
-    $dbconn->Execute($sql);
-    if ($dbconn->ErrorNo() != 0) {
-        pnSessionSetVar('errormsg', $dbconn->ErrorMsg());
-        return false;
-    }
-	
-	// insert default category
-    $catid = $dbconn->GenID($cat_table);
-	$sql = "INSERT INTO $cat_table (pc_catid, pc_catname, pc_catcolor, pc_catdesc)
-	        VALUES($catid,'Default','#ff0000','Default Category')";
-	$dbconn->Execute($sql);
-    if ($dbconn->ErrorNo() != 0) {
-        pnSessionSetVar('errormsg', $dbconn->ErrorMsg());
-        return false;
-    }		
-	
     // PostCalendar Default Settings
     pnModSetVar('PostCalendar', 'pcTime24Hours',              '0');
     pnModSetVar('PostCalendar', 'pcEventsOpenInNewWindow',    '0');
@@ -573,9 +512,6 @@ function postcalendar_upgrade($oldversion)
 		case '3.1.2' :
 		case '3.1.3' :
 		case '3.1.4' :
-            return postcalendar_upgrade('3.9.0');
-            break;
-		
 		case '3.9.0' :
 		case '3.9.1' :
 		case '3.9.2' :
@@ -609,9 +545,6 @@ function postcalendar_upgrade($oldversion)
 		case '3.9.5':
 		case '3.9.6':
 		case '3.9.7':
-			return postcalendar_upgrade('3.9.8');
-			break;
-			
 		case '3.9.8':
 			pnModDelVar('PostCalendar', 'pcSafeMode');
 			pnModSetVar('PostCalendar', 'pcNotifyAdmin', '0');
@@ -638,13 +571,23 @@ function postcalendar_upgrade($oldversion)
             }
             
             // v4b TS end
+			return postcalendar_upgrade('5.0.0');
 			break;
 		case '5.0.0':
 			pnModSetVar('PostCalendar', 'pcTemplate', 'default');
+			return postcalendar_upgrade('5.0.1');
 			break;
 		case '5.0.1':
-      pnModDelVar('PostCalendar','pcTemplate');
+			pnModDelVar('PostCalendar','pcTemplate');
+			return postcalendar_upgrade('5.1.0');
 			break;
+		case '5.1.0':
+			// change the database. DBUtil + ADODB detect the changes on their own
+			// and perform all necessary steps without help from the module author
+			if (!DBUtil::changeTable('postcalendar_events') || !DBUtil::changeTable('postcalendar_categories')) {
+				return LogUtil::registerError(_PC_UPGRADETABLESFAILED);
+			}
+		case '5.5.0':
 	}
 	
 	// if we get this far - load the userapi and clear the cache
@@ -673,70 +616,10 @@ function postcalendar_upgrade($oldversion)
  */
 function postcalendar_delete()
 {
-    list($dbconn) = pnDBGetConn();
-    $pntable = pnDBGetTables();
-    $events_table  =  $pntable['postcalendar_events'];
-    $cat_table     =  $pntable['postcalendar_categories'];
-    $blocks_table  =  $pntable['blocks'];
-    $blocks_column =& $pntable['blocks_column'];
-    
-    // get the module id
-    $modid = pnModGetIDFromName('PostCalendar');
-    
-    // remove the PostCalendar events table
-    $sql = "DROP TABLE $events_table";
-    $dbconn->Execute($sql);
-    if ($dbconn->ErrorNo() != 0) {
-        pnSessionSetVar('errormsg', $dbconn->ErrorMsg());
-        return false;
-    }
-    
-	// remove the PostCalendar categories table
-    $sql = "DROP TABLE $cat_table";
-    $dbconn->Execute($sql);
-    if ($dbconn->ErrorNo() != 0) {
-        pnSessionSetVar('errormsg', $dbconn->ErrorMsg());
-        return false;
-    }
-    
-    // remove all the PostCalendar variables from the DB
-    pnModDelVar('PostCalendar', 'pcTime24Hours');
-    pnModDelVar('PostCalendar', 'pcEventsOpenInNewWindow');
-    pnModDelVar('PostCalendar', 'pcUseInternationalDates');
-    pnModDelVar('PostCalendar', 'pcFirstDayOfWeek');
-    pnModDelVar('PostCalendar', 'pcDayHighlightColor');
-    pnModDelVar('PostCalendar', 'pcUsePopups');
-	pnModDelVar('PostCalendar', 'pcDisplayTopics');
-    pnModDelVar('PostCalendar', 'pcAllowDirectSubmit');
-    pnModDelVar('PostCalendar', 'pcListHowManyEvents');
-	pnModDelVar('PostCalendar', 'pcTimeIncrement');
-	pnModDelVar('PostCalendar', 'pcAllowSiteWide');
-	pnModDelVar('PostCalendar', 'pcAllowUserCalendar');
-	pnModDelVar('PostCalendar', 'pcEventDateFormat');
-	pnModDelVar('PostCalendar', 'pcTemplate');
-    // v4b TS start
-    pnModDelVar('PostCalendar', 'pcRepeating');
-    pnModDelVar('PostCalendar', 'pcMeeting');
-    pnModDelVar('PostCalendar', 'pcAddressbook');
-    // v4b TS end
-	pnModDelVar('PostCalendar', 'pcUseCache');
-	pnModDelVar('PostCalendar', 'pcCacheLifetime');
-	pnModDelVar('PostCalendar', 'pcDefaultView');
-	pnModDelVar('PostCalendar', 'pcSafeMode');
-	pnModDelVar('PostCalendar', 'pcNotifyAdmin');
-	pnModDelVar('PostCalendar', 'pcNotifyEmail');
-    
-    // remove any blocks associated with PostCalendar
-    // Seems the core does not clean up installed blocks so I will.
-    // I appologize for accessing core tables directly.
-    $sql = "DELETE FROM $blocks_table WHERE $blocks_column[mid] = '$modid'";
-    $dbconn->Execute($sql);
-    if ($dbconn->ErrorNo() != 0) {
-        pnSessionSetVar('errormsg', $dbconn->ErrorMsg());
-        return false;
-    }
-    
-    // Deletion successful
-    return true;
+	$result =            DBUtil::dropTable('postcalendar_events');
+	$result = $result && DBUtil::dropTable('postcalendar_categories');
+	$result = $result && pnModDelVar('PostCalendar');
+
+	return $result;
 }
 ?>

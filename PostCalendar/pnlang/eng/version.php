@@ -24,8 +24,6 @@
  *  http://www.gnu.org/copyleft/gpl.html
  *
  */
-define('_PC_DEFAUT_CATEGORY_NAME', 'Default');
-define('_PC_DEFAUT_CATEGORY_DESCR', 'Default Category');
-define('_PC_UPGRADETABLESFAILED', 'Upgrading tables failed');
-define('_PC_CONVERTCATEGORIESFAILED', 'Converting to new-style categories failed');
+define('_PC_MODULENAME', 'PostCalendar');
+define('_PC_MODULEDESCRIPTION', 'Zikula Calendar Module');
 ?>

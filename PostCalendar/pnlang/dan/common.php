@@ -96,6 +96,7 @@ define('_PC_ARE_YOU_SURE',              'Are you sure you\'d like to continue wi
 define('_PC_DELETE_CATS',               'Delete Categories with ID(s) : ');
 define('_PC_ADD_CAT',                   'Add new category : ');
 define('_PC_MODIFY_CATS',               'Make modifications to current categories.');
+define('_PC_CATEGORIESCONFIRM',         'Confirm Category change');
 define('_PC_CATS_CONFIRM',              'YES!');
 define('_PC_DEFAULT_TEMPLATE',          'Default Template');
 define('_PC_DEFAULT_VIEW',          	'Default Calendar View');
