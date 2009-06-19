@@ -288,7 +288,7 @@ function postcalendar_event_new($args)
 		$eventdata['event_contemail'] = $event['contemail'];
 		$eventdata['event_website'] = $event['website'];
 		$eventdata['event_fee'] = $event['fee'];
-        $eventdata['event_contact'] = $event['event_contact'];
+		$eventdata['event_contact'] = $event['event_contact'];
 		$eventdata['event_repeat'] = $event['recurrtype'];
 		$rspecs = unserialize($event['recurrspec']);
 		$eventdata['event_repeat_freq'] = $rspecs['event_repeat_freq'];
@@ -308,6 +308,7 @@ function postcalendar_event_new($args)
 		$eventdata['pc_html_or_text'] = $pc_html_or_text;
 
 		$eventdata['event_for_userid'] = $event_for_userid;
+		$eventdata['meeting_id'] = $event['meeting_id']; 
 		$eventdata['participants'] = $event_participants; 
 	}
 	
@@ -470,7 +471,7 @@ function postcalendar_event_new($args)
        }
 	}
 
-    $output .= pnModAPIFunc('PostCalendar','event','buildSubmitForm',$eventdata);
+	$output .= pnModAPIFunc('PostCalendar','event','buildSubmitForm',$eventdata);
 	return $output;
 }
 ?>

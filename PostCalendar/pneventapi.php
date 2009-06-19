@@ -491,6 +491,7 @@ function postcalendar_eventapi_buildSubmitForm($args)
 	if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADD)) {
 		return LogUtil::registerPermissionError();
 	}
+	//pcDebugVar($args); die;
 
 	extract($args); 
 	unset($args);
@@ -519,7 +520,7 @@ function postcalendar_eventapi_buildSubmitForm($args)
 		//get users that have submitted events previously
 		$users = DBUtil::selectFieldArray ('postcalendar_events', 'informant', null, null, true, 'aid');
 		if (!array_key_exists($idsel, $users)) { 
-			$users[$uid] = $uname; // add cuurent user to userlist if not already there
+			$users[$uid] = $uname; // add current user to userlist if not already there
 		}
 		$tpl->assign('users', $users);
 		$tpl->assign('user_selected', $idsel);
@@ -553,46 +554,27 @@ function postcalendar_eventapi_buildSubmitForm($args)
 	$tpl->assign('startvalue', $startvalue);	
 	$tpl->assign('startdate', $startdate);
 	// V4B SB END // JAVASCRIPT CALENDAR
-	// V4B SB Start // Selectboxes for the participants
 	//================================================================
 	//	build the userlist select box
 	//================================================================
-	if(true) // change this to only perform if displaymeetingoptions & useaddressbook?
-	{
-		$ca = array();
-		$ca['uid'] = 'uid';
-		$ca['uname'] = 'uname';
-		//$users = DBUtil::selectObjectArray ('users', '', '', -1, -1, 'uid', null, $ca);
-		$users = DBUtil::selectFieldArray ('users', 'uname', null, null, true, 'uid');
-
-		//$useroptions  = "<select name=\"tn[]\" multiple size=\"5\">";
-		//foreach($users as $user) 
-		//	$useroptions .= "<option value=\"".$user['uid']."\">".$user['uname']."</option>";
-		//$useroptions .= '</select>';
-		$tpl->assign('UserListSelectorOptions', $users);
+	if(true) { // change this to only perform if displaymeetingoptions & useaddressbook?
+		$users = DBUtil::selectFieldArray ('users', 'uname', null, null, true, 'uid'); // ALL users... ick.
 	}
 
 	//================================================================
 	//	build the participants select box
 	//================================================================
-	if($event['meeting_id'])
-	{
-		$where	   = 'WHERE pc_meeting_id=' . pnVarPrepForStore ($event['meeting_id']);
-		$attendees = DBUtil::selectFieldArray ('postcalendar_events', 'aid', $where);
-		foreach($attendees as $user) 
-		$useroptions .= "<option value=\"".$user['uid']."\">".$user['uname']."</option>";
-
+	if($meeting_id) {  //means a meeting is established (i.e. not 0)
 		$participants = array();
-		foreach($attendees as $uid) 
-		$participants[$uid] = $users[$uid]['uname'];
-
-		$useroptions  = "<select name=\"tn[]\" multiple size=\"5\">";
-		foreach($participants as $k=>$v) 
-		$useroptions .= "<option value=\"$k\">$v</option>";
-		$useroptions .= '</select>';
-		$tpl->assign('ParticipantSelector', $useroptions);
+		$where	   = 'WHERE pc_meeting_id=' . pnVarPrepForStore ($meeting_id);
+		$attendees = DBUtil::selectFieldArray ('postcalendar_events', 'aid', $where);
+		foreach($attendees as $uid) {
+			$participants[$uid] = $users[$uid];
+			unset($users[$uid]);
+		}
+		$tpl->assign('ParticipantsSelected', $participants);
 	}
-	// V4B RNG end
+	$tpl->assign('UserListSelectorOptions', $users);
 
 	$all_categories = pnModAPIFunc('PostCalendar','user','getCategories');
 
@@ -740,7 +722,7 @@ function postcalendar_eventapi_buildSubmitForm($args)
 	$tpl->assign('ValueLocation',		pnVarPrepForDisplay($event_location));
 	$tpl->assign('ValueStreet1',		pnVarPrepForDisplay($event_street1));
 	$tpl->assign('ValueStreet2',		pnVarPrepForDisplay($event_street2));
-	$tpl->assign('ValueCity',			pnVarPrepForDisplay($event_city));
+	$tpl->assign('ValueCity',				pnVarPrepForDisplay($event_city));
 	$tpl->assign('ValueState',			pnVarPrepForDisplay($event_state));
 	$tpl->assign('ValuePostal',			pnVarPrepForDisplay($event_postal));
 	//=================================================================
@@ -750,7 +732,7 @@ function postcalendar_eventapi_buildSubmitForm($args)
 	$tpl->assign('ValuePhone',			pnVarPrepForDisplay($event_conttel));
 	$tpl->assign('ValueEmail',			pnVarPrepForDisplay($event_contemail));
 	$tpl->assign('ValueWebsite',		pnVarPrepForDisplay($event_website));
-	$tpl->assign('ValueFee',			pnVarPrepForDisplay($event_fee));
+	$tpl->assign('ValueFee',				pnVarPrepForDisplay($event_fee));
 	//=================================================================
 	//	Repeating Information
 	//=================================================================
@@ -849,13 +831,10 @@ function postcalendar_eventapi_fixEventDetails($event)
 	$euid = $event['aid'];
 	
 	// is this a public event to be shown as busy?
-	if($event['sharing'] == SHARING_PRIVATE && $euid != $suid) 
-	{
+	if($event['sharing'] == SHARING_PRIVATE && $euid != $suid) {
 		// they are not supposed to see this
 		return false;
-	} 
-	elseif($event['sharing'] == SHARING_BUSY && $euid != $suid) 
-	{
+	} elseif($event['sharing'] == SHARING_BUSY && $euid != $suid) {
 		// make it not display any information
 		$event['title']		= _USER_BUSY_TITLE;
 		$event['hometext']	= _USER_BUSY_MESSAGE;
@@ -865,9 +844,7 @@ function postcalendar_eventapi_fixEventDetails($event)
 						 'event_street1', 'event_street2', 'event_city', 'event_state', 'event_postal');
 		foreach ($fields as $field)
 			$event[$field] = '';
-	} 
-	else
-	{
+	} else {
 		// FIXME: this entire thing should be a sub-array 
 		$location = unserialize($event['location']);
 		$event['event_location'] = $location['event_location'];
@@ -1033,13 +1010,11 @@ function postcalendar_eventapi_eventDetail($args)
 		$attendees = DBUtil::selectFieldArray ('postcalendar_events', 'aid', $where);
 	
 		// FIXME: do we need this here? Just to do a lookup? 
-		$ca = array();
-		$ca['uid'] = 'uid';
-		$ca['uname'] = 'uname';
 		$users = DBUtil::selectObjectArray ('users', '', '', -1, -1, 'uid', null, $ca);
 
-		foreach ($attendees as $uid)
+		foreach ($attendees as $uid) {
 			$participants[] = $users[$uid]['uname'];
+		}
 
 		sort ($participants);
 	}
