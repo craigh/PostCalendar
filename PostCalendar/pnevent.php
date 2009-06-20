@@ -334,23 +334,28 @@ function postcalendar_event_new($args)
     $reqCount = count($required_vars);
     for ($r=0; $r<$reqCount; $r++) {
         if(empty($$required_vars[$r]) || !preg_match('/\S/i',$$required_vars[$r])) {
-            $error_msg .= '<b>' . $required_name[$r] . '</b> ' . _PC_SUBMIT_ERROR4 . '<br />';
+            //$error_msg .= '<b>' . $required_name[$r] . '</b> ' . _PC_SUBMIT_ERROR4 . '<br />';
+						LogUtil::registerError('<b>' . $required_name[$r] . '</b> ' . _PC_SUBMIT_ERROR4 . '<br />');
         }
     }
     unset($reqCount);
 	// check repeating frequencies
 	if($event_repeat == REPEAT) {
 		if(!isset($event_repeat_freq) ||  $event_repeat_freq < 1 || empty($event_repeat_freq)) {
-			$error_msg .= _PC_SUBMIT_ERROR5 . '<br />';
-        } elseif(!is_numeric($event_repeat_freq)) {
-			$error_msg .= _PC_SUBMIT_ERROR6 . '<br />';
-        }
+			//$error_msg .= _PC_SUBMIT_ERROR5 . '<br />';
+			LogUtil::registerError(_PC_SUBMIT_ERROR5);
+		} elseif(!is_numeric($event_repeat_freq)) {
+			//$error_msg .= _PC_SUBMIT_ERROR6 . '<br />';
+			LogUtil::registerError(_PC_SUBMIT_ERROR6);
+		}
 	} elseif($event_repeat == REPEAT_ON) {
 		if(!isset($event_repeat_on_freq) || $event_repeat_on_freq < 1 || empty($event_repeat_on_freq)) {
-			$error_msg .= _PC_SUBMIT_ERROR5 . '<br />';
-        } elseif(!is_numeric($event_repeat_on_freq)) {
-			$error_msg .= _PC_SUBMIT_ERROR6 . '<br />';
-        }
+			//$error_msg .= _PC_SUBMIT_ERROR5 . '<br />';
+			LogUtil::registerError(_PC_SUBMIT_ERROR5);
+		} elseif(!is_numeric($event_repeat_on_freq)) {
+			//$error_msg .= _PC_SUBMIT_ERROR6 . '<br />';
+			LogUtil::registerError(_PC_SUBMIT_ERROR6);
+		}
 	}
     // check date validity
     if(_SETTING_TIME_24HOUR) {
@@ -368,13 +373,16 @@ function postcalendar_event_new($args)
     $edate = strtotime($event_endyear.'-'.$event_endmonth.'-'.$event_endday);
     $tdate = strtotime(date('Y-m-d'));
     if($edate < $sdate && $event_endtype == 1) {
-        $error_msg .= _PC_SUBMIT_ERROR1 . '<br />';
+      //  $error_msg .= _PC_SUBMIT_ERROR1 . '<br />';
+			LogUtil::registerError(_PC_SUBMIT_ERROR1);
     }
     if(!checkdate($event_startmonth,$event_startday,$event_startyear)) {
-        $error_msg .= _PC_SUBMIT_ERROR2 . '<br />';
+      //  $error_msg .= _PC_SUBMIT_ERROR2 . '<br />';
+			LogUtil::registerError(_PC_SUBMIT_ERROR2);
     }
     if(!checkdate($event_endmonth,$event_endday,$event_endyear)) {
-        $error_msg .= _PC_SUBMIT_ERROR3 . '<br />';
+      //  $error_msg .= _PC_SUBMIT_ERROR3 . '<br />';
+			LogUtil::registerError(_PC_SUBMIT_ERROR3);
     }
     
 	//================================================================
@@ -382,7 +390,11 @@ function postcalendar_event_new($args)
 	//================================================================
     if($form_action == 'preview') {
     	// check authid
-        if (!pnSecConfirmAuthKey()) { return(_NO_DIRECT_ACCESS); }
+        //if (!pnSecConfirmAuthKey()) { return(_NO_DIRECT_ACCESS); }
+		if (!SecurityUtil :: confirmAuthKey())
+			return LogUtil :: registerAuthidError(pnModURL('postcalendar', 'admin', 'main'));
+
+/*
         if(!empty($error_msg)) {
             $preview = false;
             $output .= '<table border="0" width="100%" cellpadding="1" cellspacing="0"><tr><td bgcolor="red">';
@@ -393,17 +405,20 @@ function postcalendar_event_new($args)
             $output .= '</td></td></table>';
             $output .= '</td></td></table>';
             $output .= '<br /><br />';
-        } else {
+        } else { */
             $output .= pnModAPIFunc('PostCalendar','user','eventPreview',$eventdata);
-			$output .= '<br />';
-        }
+			//$output .= '<br />';
+        //}
     }
     
 	//================================================================
 	//	Enter the event into the DB
 	//================================================================
 	if($form_action == 'commit') {
-		if (!pnSecConfirmAuthKey()) {
+		if (!SecurityUtil :: confirmAuthKey())
+			return LogUtil :: registerAuthidError(pnModURL('postcalendar', 'admin', 'main'));
+
+/*		if (!pnSecConfirmAuthKey()) {
 			return(_NO_DIRECT_ACCESS);
 		}
 		if(!empty($error_msg)) {
@@ -417,25 +432,29 @@ function postcalendar_event_new($args)
             $output .= '</td></td></table>';
             $output .= '<br /><br />';
         } else {
+*/
         	// V4B TS start - save the start date, before the vars are cleared (needed for the redirect on success)
 					$url_date = $event_startyear.$event_startmonth.$event_startday;
 
 					if (!pnModAPIFunc('PostCalendar','event','writeEvent',$eventdata)) {
-						$output .= '<center><div style="padding:5px; border:1px solid red; background-color: pink;">';		
-						$output .= "<b>"._PC_EVENT_SUBMISSION_FAILED."</b>";		
-						$output .= '</div></center><br />';	
-						$output .= '<br />';
+						//$output .= '<center><div style="padding:5px; border:1px solid red; background-color: pink;">';		
+						//$output .= "<b>"._PC_EVENT_SUBMISSION_FAILED."</b>";		
+						//$output .= '</div></center><br />';	
+						//$output .= '<br />';
+						LogUtil :: registerError(_PC_EVENT_SUBMISSION_FAILED);
         	} else {
 						pnModAPIFunc('PostCalendar','admin','clearCache');
 		
-						$output .= '<center><div style="padding:5px; border:1px solid green; background-color: lightgreen;">';			
+						//$output .= '<center><div style="padding:5px; border:1px solid green; background-color: lightgreen;">';			
 						if($is_update) {
-							$output .= "<b>"._PC_EVENT_EDIT_SUCCESS."</b>";		
+							//$output .= "<b>"._PC_EVENT_EDIT_SUCCESS."</b>";
+							LogUtil :: registerStatus(_PC_EVENT_EDIT_SUCCESS);		
 						} else {
-							$output .= "<b>"._PC_EVENT_SUBMISSION_SUCCESS."</b>";		
+							//$output .= "<b>"._PC_EVENT_SUBMISSION_SUCCESS."</b>";		
+							LogUtil :: registerStatus(_PC_EVENT_SUBMISSION_SUCCESS);		
 						}
-						$output .= '</div></center><br />';	
-						$output .= '<br />';
+						//$output .= '</div></center><br />';	
+						//$output .= '<br />';
                 
                 // v4b TS start - save the start date, before the vars are cleared (needed for the redirect on success)
 						$url_date = $event_startyear.$event_startmonth.$event_startday;
@@ -468,7 +487,7 @@ function postcalendar_event_new($args)
 					return true;
 					// V4B RNG End
 
-       }
+       //}
 	}
 
 	$output .= pnModAPIFunc('PostCalendar','event','buildSubmitForm',$eventdata);

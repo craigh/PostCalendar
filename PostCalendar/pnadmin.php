@@ -50,16 +50,13 @@ function postcalendar_admin_main()
 	return postcalendar_admin_modifyconfig();
 }
 
-function postcalendar_admin_modifyconfig($msg='',$showMenu=true)
+function postcalendar_admin_modifyconfig()
 {   
-	unset($showMenu); //remove this eventually
-	
 	if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
 		return LogUtil::registerPermissionError();
 	}
 	
 	$pnRender = pnRender::getInstance('PostCalendar');
-	$pnRender->assign('msg', $msg);
 
 	return $pnRender->fetch('admin/postcalendar_admin_modifyconfig.htm');
 }
@@ -79,12 +76,10 @@ function postcalendar_admin_showlist($args)
 		return LogUtil::registerPermissionError();
 	}
 	extract($args);
-	// $args should be $e='',$type,$function,$title,$msg=''
+	// $args should be $type,$function,$title
 	if (!isset($type) or empty($function)) return false; //  $title not required, type can be 1, 0, -1
 
 	$pnRender = pnRender::getInstance('PostCalendar');
-	if (!empty($e)) $pnRender->assign('e', $e);
-	if (!empty($msg)) $pnRender->assign('msg', $msg);
 	
 	$offset_increment = _SETTING_HOW_MANY_EVENTS;
 	if(empty($offset_increment)) $offset_increment = 15;
@@ -147,19 +142,19 @@ function postcalendar_admin_adminevents()
     $thelist     = FormUtil::getPassedValue('thelist');
     
     if(!isset($pc_event_id)) {
-        $e  = _PC_NO_EVENT_SELECTED;
+				LogUtil::registerError(_PC_NO_EVENT_SELECTED);
         
 		switch($thelist) {
             case 'listqueued' :
-                $output .= pnModFunc('PostCalendar', 'admin', 'showlist', array('e'=>$e, 'type'=>_EVENT_QUEUED, 'function'=>'showlist'));
+                $output .= pnModFunc('PostCalendar', 'admin', 'showlist', array('type'=>_EVENT_QUEUED, 'function'=>'showlist'));
                 break;
                 
             case 'listhidden' :
-                $output .= pnModFunc('PostCalendar', 'admin', 'showlist', array('e'=>$e, 'type'=>_EVENT_HIDDEN, 'function'=>'showlist'));
+                $output .= pnModFunc('PostCalendar', 'admin', 'showlist', array('type'=>_EVENT_HIDDEN, 'function'=>'showlist'));
                 break;
                 
             case 'listapproved' :
-                $output .= pnModFunc('PostCalendar', 'admin', 'showlist', array('e'=>$e, 'type'=>_EVENT_APPROVED, 'function'=>'showlist'));
+                $output .= pnModFunc('PostCalendar', 'admin', 'showlist', array('type'=>_EVENT_APPROVED, 'function'=>'showlist'));
                 break;
         }
         return $output;     
@@ -277,8 +272,9 @@ function postcalendar_admin_resetDefaults()
 	pnModSetVar('PostCalendar', 'pcNotifyEmail', pnConfigGetVar('adminmail'));
 	
 	pnModAPIFunc('PostCalendar','admin','clearCache');
-		
-	return postcalendar_admin_modifyconfig(_PC_UPDATED_DEFAULTS);
+
+	LogUtil::registerStatus(_PC_UPDATED_DEFAULTS);
+	return postcalendar_admin_modifyconfig();
 }
 
 function postcalendar_admin_updateconfig()
@@ -362,18 +358,17 @@ function postcalendar_admin_updateconfig()
 
 	pnModAPIFunc('PostCalendar','admin','clearCache');
 
-	return postcalendar_admin_modifyconfig(_PC_UPDATED);
+	LogUtil::registerStatus(_PC_UPDATED);
+	return postcalendar_admin_modifyconfig();
 }
 
-function postcalendar_admin_categories($msg='',$e='')
+function postcalendar_admin_categories()
 {
 	if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
 		return LogUtil::registerPermissionError();
 	}
 
 	$pnRender = pnRender::getInstance('PostCalendar');
-	$pnRender->assign('e', $e);
-	$pnRender->assign('msg', $msg);
 
 	$cats = pnModAPIFunc('PostCalendar','admin','getCategories');
 	$pnRender->assign('cats', $cats);
@@ -461,8 +456,9 @@ function postcalendar_admin_categoriesUpdate()
 		}
 	}
 
+	$action_success = true;
+
 	//update categories
-	$e =  $msg = '';
 	$obj = array();
 	foreach($modID as $k=>$id) {
 		$obj['catid']= $id;
@@ -470,13 +466,15 @@ function postcalendar_admin_categoriesUpdate()
 		$obj['catdesc']  = $modDesc[$k];
 		$obj['catcolor'] = $modColor[$k];
 		$res = DBUtil::updateObject ($obj, 'postcalendar_categories', '', 'catid');
-		if (!$res) $e .= 'UPDATE FAILED';
+		//if (!$res) $e .= 'UPDATE FAILED';
+		if (!$res) { LogUtil::registerError('_PC_UPDATE_FAILED'); $action_status = false; }
 	}
 
 	// delete categories
 	if (isset($dels) && $dels) {
 		$res = DBUtil::deleteObjectsFromKeyArray (array_flip($del), 'postcalendar_categories', 'catid');
-		if (!$res) $e .= 'DELETE FAILED';
+		//if (!$res) $e .= 'DELETE FAILED';
+		if (!$res) { LogUtil::registerError('_PC_DELETE_FAILED'); $action_status = false; }
 	}
 
 	// add category
@@ -486,11 +484,12 @@ function postcalendar_admin_categoriesUpdate()
 		$obj['catdesc']  = $newdesc;
 		$obj['catcolor'] = $newcolor;
 		$res = DBUtil::insertObject ($obj, 'postcalendar_categories', false, 'catid');
-		if (!$res) $e .= 'INSERT FAILED';
+		//if (!$res) $e .= 'INSERT FAILED';
+		if (!$res) { LogUtil::registerError('_PC_INSERT_FAILED'); $action_status = false; }
 	}
 
-	if (empty($e)) $msg = 'DONE';
-	return postcalendar_admin_categories($msg,$e);
+	if ($action_status) LogUtil::registerStatus('_PC_DONE'); // category updated/deleted/added
+	return postcalendar_admin_categories();
 }
 
 function postcalendar_admin_manualClearCache() {
@@ -498,8 +497,12 @@ function postcalendar_admin_manualClearCache() {
 		return LogUtil::registerPermissionError();
 	}
 	$clear = pnModAPIFunc('PostCalendar','admin','clearCache');
-	if ($clear) return postcalendar_admin_modifyconfig(_PC_CACHE_CLEARED);
-	return postcalendar_admin_modifyconfig(_PC_CACHE_NOTCLEARED);
+	if ($clear) {
+		LogUtil::registerStatus(_PC_CACHE_CLEARED);
+		return postcalendar_admin_modifyconfig();
+	}
+	LogUtil::registerStatus(_PC_CACHE_NOTCLEARED);
+	return postcalendar_admin_modifyconfig();
 }
 
 function postcalendar_admin_testSystem()
@@ -561,46 +564,52 @@ function postcalendar_admin_testSystem()
 	$modversion = array();
 	include  "modules/$pcDir/pnversion.php";
 
-	$error = '';
+	//$error = '';
 	if ($modversion['version'] != $version) {
-  	$error  = '<br /><div style=\"color: red;\">';
-		$error .= "new version $modversion[version] installed but not updated!";
-		$error .= '</div>';
+		LogUtil::registerError("new version ".$modversion[version]." installed but not updated!");
+  	//$error  = '<br /><div style=\"color: red;\">';
+		//$error .= "new version $modversion[version] installed but not updated!";
+		//$error .= '</div>';
 	}
-	array_push($infos, array('Module version', $version . " $error"));
+	//array_push($infos, array('Module version', $version . " $error"));
+	array_push($infos, array('Module version', $version));
 	array_push($infos, array('smarty version', $tpl->_version));
 	array_push($infos, array('smarty location',  SMARTY_DIR));
 	array_push($infos, array('smarty template dir', $tpl->template_dir));
 
 	$info = $tpl->compile_dir;
-	$error = '';
+	//$error = '';
 	if (!file_exists($tpl->compile_dir)) {
-	  	$error .= " compile dir doesn't exist! [$tpl->compile_dir]<br />";
+	  	//$error .= " compile dir doesn't exist! [$tpl->compile_dir]<br />";
+			LogUtil::registerError("compile dir doesn't exist! [".$tpl->compile_dir."]");
 	} else {
 	  	// dir exists -> check if it's writeable
 		if (!is_writeable($tpl->compile_dir)) {
 	 		$error .= " compile dir not writeable! [$tpl->compile_dir]<br />";
+			LogUtil::registerError("compile dir not writeable! [".$tpl->compile_dir."]");
 	  }
 	}
-	if (strlen($error) > 0) {
-	  $info .= "<br /><div style=\"color: red;\">$error</div>";
-	}
-	array_push($infos, array('smarty compile dir',  $info));
+//	if (strlen($error) > 0) {
+//	  $info .= "<br /><div style=\"color: red;\">$error</div>";
+//	}
+	array_push($infos, array('smarty compile dir', $tpl->compile_dir));
 
 	$info = $tpl->cache_dir;
-	$error = "";
+	//$error = "";
 	if (!file_exists($tpl->cache_dir)) {
-	  $error .= " cache dir doesn't exist! [$tpl->cache_dir]<br />";
+	  //$error .= " cache dir doesn't exist! [$tpl->cache_dir]<br />";
+		LogUtil::registerError("cache dir doesn't exist! [".$tpl->cache_dir."]");
 	} else {
 	  // dir exists -> check if it's writeable
 	  if (!is_writeable($tpl->cache_dir)) {
-	 		$error .= " cache dir not writeable! [$tpl->cache_dir]<br />";
+	 		//$error .= " cache dir not writeable! [$tpl->cache_dir]<br />";
+			LogUtil::registerError("cache dir not writeable! [".$tpl->cache_dir."]");
 	  }
 	}
-	if (strlen($error) > 0) {
-	 	$info .= "<br /><div style=\"color: red;\">$error</div>";
-	}
-	array_push($infos, array('smarty cache dir',  $info));
+//	if (strlen($error) > 0) {
+//	 	$info .= "<br /><div style=\"color: red;\">$error</div>";
+//	}
+	array_push($infos, array('smarty cache dir', $tpl->cache_dir));
 
 	$tpl->assign('infos', $infos);
 	return $tpl->fetch('admin/postcalendar_admin_systeminfo.htm');
@@ -628,14 +637,13 @@ function postcalendar_admin_approveevents()
 	// update the DB
 	$res = pnModAPIFunc('PostCalendar','event','update',$eventarray);
 	if ($res) {
-		$msg = _PC_ADMIN_EVENTS_APPROVED;
-		pnModAPIFunc('PostCalendar','admin','clearCache');
+		LogUtil::registerStatus(_PC_ADMIN_EVENTS_APPROVED);
 	} else {
-		$msg = _PC_ADMIN_EVENT_ERROR;
+		LogUtil::registerError(_PC_ADMIN_EVENT_ERROR);
 	}
 
 	pnModAPIFunc('PostCalendar','admin','clearCache');
-	return pnModFunc('PostCalendar','admin','showlist',array('type'=>_EVENT_APPROVED,'function'=>'listapproved','title'=>_PC_APPROVED_ADMIN,'msg'=>$msg));
+	return pnModFunc('PostCalendar','admin','showlist',array('type'=>_EVENT_APPROVED,'function'=>'listapproved','title'=>_PC_APPROVED_ADMIN));
 }
 
 /* 
@@ -661,14 +669,13 @@ function postcalendar_admin_hideevents()
 	// update the DB
 	$res = pnModAPIFunc('PostCalendar','event','update',$eventarray);
 	if ($res) {
-		$msg = _PC_ADMIN_EVENTS_HIDDEN;
-		pnModAPIFunc('PostCalendar','admin','clearCache');
+		LogUtil::registerStatus(_PC_ADMIN_EVENTS_HIDDEN);
 	} else {
-		$msg = _PC_ADMIN_EVENT_ERROR;
+		LogUtil::registerError(_PC_ADMIN_EVENT_ERROR);
 	}
 
 	pnModAPIFunc('PostCalendar','admin','clearCache');
-	return pnModFunc('PostCalendar','admin','showlist',array('type'=>_EVENT_APPROVED,'function'=>'listapproved','title'=>_PC_APPROVED_ADMIN,'msg'=>$msg));
+	return pnModFunc('PostCalendar','admin','showlist',array('type'=>_EVENT_APPROVED,'function'=>'listapproved','title'=>_PC_APPROVED_ADMIN));
 }
 /* 
  *	postcalendar_admin_deleteevents
@@ -693,14 +700,13 @@ function postcalendar_admin_deleteevents()
 	// update the DB
 	$res = pnModAPIFunc('PostCalendar','event','deleteeventarray',$eventarray);
 	if ($res) {
-		$msg = _PC_ADMIN_EVENTS_DELETED;
-		pnModAPIFunc('PostCalendar','admin','clearCache');
+		LogUtil::registerStatus(_PC_ADMIN_EVENTS_DELETED);
 	} else {
-		$msg = _PC_ADMIN_EVENT_ERROR;
+		LogUtil::registerError(_PC_ADMIN_EVENT_ERROR);
 	}
 
 	pnModAPIFunc('PostCalendar','admin','clearCache');
-	return pnModFunc('PostCalendar','admin','showlist',array('type'=>_EVENT_APPROVED,'function'=>'listapproved','title'=>_PC_APPROVED_ADMIN,'msg'=>$msg));
+	return pnModFunc('PostCalendar','admin','showlist',array('type'=>_EVENT_APPROVED,'function'=>'listapproved','title'=>_PC_APPROVED_ADMIN));
 }
 /****************************************************
  * The functions below are moved to eventapi

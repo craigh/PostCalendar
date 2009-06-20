@@ -3,11 +3,9 @@
 <div class="pn-admincontainer">
 <div class="pn-adminpageicon"><!--[pnimg modname=PostCalendar src=admin.gif altml=true]--></div>
 <h2><!--[pnml name=$title]--></h2>
-<!--[if empty($events) ]--><!--[assign var="e" value=_PC_NO_EVENTS]--><!--[/if]-->
-<!--[if !empty($e)]--><div style="padding:5px; border:1px solid red; background-color: pink;font-weight:bold;text-align:center;"><!--[$e]--></div><!--[/if]-->
-<!--[if !empty($msg)]--><div style="padding:5px; border:1px solid green; background-color: lightgreen;font-weight:bold;text-align:center;"><!--[$msg]--></div><!--[/if]-->
-
-<!--[if !empty($events) ]-->
+<!--[if empty($events) ]-->
+	<!--[assign var="e" value=_PC_NO_EVENTS]-->
+<!--[else]-->
 	<form class="pn-adminform" name="listevents" action="<!--[pnmodurl modname="PostCalendar" type="admin" func="adminEvents"]-->" method="post" enctype="application/x-www-form-urlencoded">
 		<div>
 			<input type="hidden" name="authid" value="<!--[pnsecgenauthkey module="PostCalendar"]-->">

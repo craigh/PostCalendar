@@ -190,7 +190,7 @@ function postcalendar_userapi_getTopics()
 	return DBUtil::selectObjectArray ('topics', '', 'topictext', -1, -1, '', $permFilter);
 }
 
-function pc_notify($eid,$is_update)
+function pc_notify($eid,$is_update) // send an email to admin on new event submission
 {
 	if(!(bool)_SETTING_NOTIFY_ADMIN) 
 		return true; 
