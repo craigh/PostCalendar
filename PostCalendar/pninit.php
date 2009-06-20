@@ -48,44 +48,41 @@
  */
 function postcalendar_init()
 {
-    // create tables
-    if (!DBUtil::createTable('postcalendar_events') || !DBUtil::createTable('postcalendar_categories')) {
-        return LogUtil::registerError(_CREATETABLEFAILED);
-    }
+	// create tables
+	if (!DBUtil::createTable('postcalendar_events') || !DBUtil::createTable('postcalendar_categories')) {
+		return LogUtil::registerError(_CREATETABLEFAILED);
+	}
+	
+	// insert default category
+	$defaultcat = array('catname' => _PC_DEFAUT_CATEGORY_NAME,
+	                    'catdesc' => _PC_DEFAUT_CATEGORY_DESCR);
+	if (!DBUtil::insertObject ($defaultcat, 'postcalendar_categories', 'catid')) {
+		return LogUtil::registerError(_CREATEFAILED);
+	}
 
-    // insert default category
-    $defaultcat = array('catname' => _PC_DEFAUT_CATEGORY_NAME,
-                        'catdesc' => _PC_DEFAUT_CATEGORY_DESCR);
-    if (!DBUtil::insertObject ($defaultcat, 'postcalendar_categories', 'catid')) {
-        return LogUtil::registerError(_CREATEFAILED);
-    }
-    
-    // PostCalendar Default Settings
-    pnModSetVar('PostCalendar', 'pcTime24Hours',              '0');
-    pnModSetVar('PostCalendar', 'pcEventsOpenInNewWindow',    '0');
-    pnModSetVar('PostCalendar', 'pcUseInternationalDates',    '0');
-    pnModSetVar('PostCalendar', 'pcFirstDayOfWeek',           '0');
-    pnModSetVar('PostCalendar', 'pcDayHighlightColor',        '#FF0000');
-    pnModSetVar('PostCalendar', 'pcUsePopups',                '1');
-	pnModSetVar('PostCalendar', 'pcDisplayTopics',            '0');
-    pnModSetVar('PostCalendar', 'pcAllowDirectSubmit',        '0');
-    pnModSetVar('PostCalendar', 'pcListHowManyEvents',        '15');
-	pnModSetVar('PostCalendar', 'pcTimeIncrement',        	'15');
-	pnModSetVar('PostCalendar', 'pcAllowSiteWide',        	'0');
-	pnModSetVar('PostCalendar', 'pcAllowUserCalendar',        '1');
-	pnModSetVar('PostCalendar', 'pcEventDateFormat',        	'%Y-%m-%d');
-//	pnModSetVar('PostCalendar', 'pcTemplate',         		'default');
+	// PostCalendar Default Settings
+	pnModSetVar('PostCalendar', 'pcTime24Hours',          '0');
+	pnModSetVar('PostCalendar', 'pcEventsOpenInNewWindow','0');
+	pnModSetVar('PostCalendar', 'pcUseInternationalDates','0');
+	pnModSetVar('PostCalendar', 'pcFirstDayOfWeek',       '0');
+	pnModSetVar('PostCalendar', 'pcDayHighlightColor',    '#FF0000');
+	pnModSetVar('PostCalendar', 'pcUsePopups',            '1');
+	pnModSetVar('PostCalendar', 'pcDisplayTopics',        '0');
+	pnModSetVar('PostCalendar', 'pcAllowDirectSubmit',    '0');
+	pnModSetVar('PostCalendar', 'pcListHowManyEvents',    '15');
+	pnModSetVar('PostCalendar', 'pcTimeIncrement',        '15');
+	pnModSetVar('PostCalendar', 'pcAllowSiteWide',       	'0');
+	pnModSetVar('PostCalendar', 'pcAllowUserCalendar',    '1');
+	pnModSetVar('PostCalendar', 'pcEventDateFormat',      '%Y-%m-%d');
 	pnModSetVar('PostCalendar', 'pcUseCache',         		'1');
-	pnModSetVar('PostCalendar', 'pcCacheLifetime',         	'3600');
-	pnModSetVar('PostCalendar', 'pcDefaultView',         		'month');
-	pnModSetVar('PostCalendar', 'pcNotifyAdmin',         		'0');
-	pnModSetVar('PostCalendar', 'pcNotifyEmail',         		pnConfigGetVar('adminmail'));
-    // v4b TS start
-    pnModSetVar('PostCalendar', 'pcRepeating',         		'0');
-    pnModSetVar('PostCalendar', 'pcMeeting',          		'0');
-    pnModSetVar('PostCalendar', 'pcAddressbook',      		'1');
-    // v4b TS end
-    return true;
+	pnModSetVar('PostCalendar', 'pcCacheLifetime',        '3600');
+	pnModSetVar('PostCalendar', 'pcDefaultView',         	'month');
+	pnModSetVar('PostCalendar', 'pcNotifyAdmin',         	'0');
+	pnModSetVar('PostCalendar', 'pcNotifyEmail',         	pnConfigGetVar('adminmail'));
+	pnModSetVar('PostCalendar', 'pcRepeating',         		'0');
+	pnModSetVar('PostCalendar', 'pcMeeting',          		'0');
+	pnModSetVar('PostCalendar', 'pcAddressbook',      		'1');
+	return true;
 }
 
 /**

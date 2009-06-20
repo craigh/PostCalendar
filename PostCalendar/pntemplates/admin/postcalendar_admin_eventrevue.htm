@@ -3,5 +3,12 @@
 <div class="pn-admincontainer">
 <div class="pn-adminpageicon"><!--[pnimg modname=PostCalendar src=admin.gif altml=true]--></div>
 <h2><!--[pnml name="_PC_EVENTREVUE"]--></h2>
+<!--[if (!empty($function)) ]-->
+	<form action="<!--[pnmodurl modname="PostCalendar" type="admin" func=$function ]-->" method="post">
+<!--[/if]-->
 <!--[$output]-->
+<!--[if (!empty($function)) ]-->
+	<!--[$areyousure]--><input type="submit" name="submit" value="<!--[pnml name='_PC_ADMIN_YES']-->" />
+	</form>
+<!--[/if]-->
 </div><!-- /pn-admincontainer -->

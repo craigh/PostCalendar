@@ -93,26 +93,20 @@
 </div>
 </div>
 <!--[ pnmodcallhooks hookobject=item hookaction=display hookid=$A_EVENT.eid returnurl="index.php?module=PostCalendar&func=view&viewtype=details&eid=$eid" ]-->
-<!--[ if $PRINT_VIEW != 1 ]-->
-<div>
-<!--[pnsecauthaction comp="::" inst=".*" level="ACCESS_ADMIN" assign="ACCESS_ADMIN"]-->
-	<!--[ if $ACCESS_ADMIN ]-->
-		<a href="<!--[ $ADMIN_EDIT ]-->" <!--[ $ADMIN_TARGET ]-->><!--[pnml name='_PC_ADMIN_ACTION_EDIT']--></a> |
-		<a href="<!--[ $ADMIN_COPY ]-->" <!--[ $ADMIN_TARGET ]-->><!--[pnml name='_PC_ADMIN_ACTION_COPY']--></a> |
-		<a href="<!--[ $ADMIN_DELETE ]-->" <!--[ $ADMIN_TARGET ]-->><!--[pnml name='_PC_ADMIN_ACTION_DELETE']--></a>
-	<!--[ elseif $USER_CAN_EDIT ]-->
-		<a href="<!--[ $USER_EDIT ]-->" <!--[ $USER_TARGET ]-->><!--[pnml name='_PC_ADMIN_ACTION_EDIT']--></a> |
-    <a href="<!--[ $USER_COPY ]-->" <!--[ $USER_TARGET ]-->><!--[pnml name='_PC_ADMIN_ACTION_COPY']--></a> |
-		<a href="<!--[ $USER_DELETE ]-->" <!--[ $USER_TARGET ]-->><!--[pnml name='_PC_ADMIN_ACTION_DELETE']--></a>
+<!--[ if $PRINT_VIEW eq false ]-->
+	<!--[ if $USER_CAN_EDIT ]-->
+		<div>
+			<a href="<!--[ $EVENT_EDIT ]-->"><!--[pnml name='_PC_ADMIN_ACTION_EDIT']--></a> |
+	    <a href="<!--[ $EVENT_COPY ]-->"><!--[pnml name='_PC_ADMIN_ACTION_COPY']--></a> |
+			<a href="<!--[ $EVENT_DELETE ]-->"><!--[pnml name='_PC_ADMIN_ACTION_DELETE']--></a>
+		</div>
 	<!--[ /if ]-->
-</div>
-<!--[ /if ]-->
-<div style='text-align:right;'>
-	<!--[ if $PRINT_VIEW eq true ]-->
+<!--[ else ]-->
+	<div style='text-align:right;'>
 		<!--[ assign var="viewtype" value=$smarty.get.viewtype ]-->
 		<!--[if ((empty($smarty.get.viewtype)) or (!isset($smarty.get.viewtype)))]-->
 			<!--[pnmodgetvar module="PostCalendar" name="pcDefaultView" assign="viewtype" ]-->
 		<!--[/if]-->
 		<a href="<!--[pnmodurl modname="PostCalendar" func="view" viewtype=$viewtype Date=$smarty.get.Date eid=$A_EVENT.eid ]-->"><!--[pnml name="_PC_RETURN']--></a>
-	<!--[/if]-->
-</div>
+	</div>
+<!--[/if]-->

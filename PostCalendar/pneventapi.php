@@ -1024,47 +1024,46 @@ function postcalendar_eventapi_eventDetail($args)
 	//=================================================================
 	//	populate the template $ADMIN_OPTIONS
 	//=================================================================
-	$target='';
-	if(_SETTING_OPEN_NEW_WINDOW) 
-		$target = 'target="csCalendar"';
+	//$target='';
+	//if(_SETTING_OPEN_NEW_WINDOW) 
+	//	$target = 'target="csCalendar"';
 
-	$admin_edit_url = $admin_delete_url = '';
+/*	$admin_edit_url = $admin_delete_url = '';
 	if (pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) 
 	{
-		$admin_edit_url		= pnModURL('PostCalendar','admin','submit',array('eid'=>$eid));
-		//$admin_delete_url	  = pnModURL('PostCalendar','admin','adminevents',array('action'=>_ACTION_DELETE,'eid'=>$eid));
-		$admin_delete_url	= pnModURL('PostCalendar','user','delete',array('eid'=>$eid));
-		$admin_copy_url		= pnModURL('PostCalendar','admin','submit',array('eid'=>$eid,'form_action'=>'copy'));
+		$admin_edit_url		= pnModURL('PostCalendar','event','submit',array('eid'=>$eid));
+		$admin_delete_url	= pnModURL('PostCalendar','event','delete',array('eid'=>$eid));
+		$admin_copy_url		= pnModURL('PostCalendar','event','submit',array('eid'=>$eid,'form_action'=>'copy'));
 	}
+*/
 	$user_edit_url = $user_delete_url = '';
 	
-	if(pnUserLoggedIn()) 
+	if(pnUserLoggedIn()) { 
 		$logged_in_uid = pnUserGetVar('uid');
-	else 
+	} else {
 		$logged_in_uid = 1;
-	
+	}
+
 	$can_edit = false;
 	if ((pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADD) && $logged_in_uid == $event['aid']) || 
-		 pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN))
-	{
-		$user_edit_url	   = pnModURL('PostCalendar','user','submit',array('eid'=>$eid));
-		$user_delete_url   = pnModURL('PostCalendar','user','delete',array('eid'=>$eid));
-		// v4b TS start 1 line
-		$user_copy_url	   = pnModURL('PostCalendar','user','submit',array('eid'=>$eid,'form_action'=>'copy'));
+		 pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
+		$user_edit_url	   = pnModURL('PostCalendar','event','submit',array('eid'=>$eid));
+		$user_delete_url   = pnModURL('PostCalendar','event','delete',array('eid'=>$eid));
+		$user_copy_url	   = pnModURL('PostCalendar','event','submit',array('eid'=>$eid,'form_action'=>'copy'));
 		$can_edit = true;
 	}
 
-	$function_out['ADMIN_TARGET'] = $target;
+/*	$function_out['ADMIN_TARGET'] = $target;
 	$function_out['ADMIN_EDIT'] = $admin_edit_url;
 	$function_out['ADMIN_DELETE'] = $admin_delete_url;
-	// v4b TS start 2 lines
 	$function_out['ADMIN_COPY'] = $admin_copy_url;
-	$function_out['USER_COPY'] = $user_copy_url;
+*/
+	$function_out['EVENT_COPY'] = $user_copy_url;
 
-	$function_out['USER_TARGET'] = $target;
-	$function_out['USER_EDIT'] = $user_edit_url;
-	$function_out['USER_DELETE'] = $user_delete_url;
-	$function_out['USER_CAN_EDIT'] = $can_edit;
+	//$function_out['USER_TARGET'] = $target;
+	$function_out['EVENT_EDIT'] = $user_edit_url;
+	$function_out['EVENT_DELETE'] = $user_delete_url;
+	$function_out['EVENT_CAN_EDIT'] = $can_edit;
 
 	/*
 	if($popup != 1) {	 

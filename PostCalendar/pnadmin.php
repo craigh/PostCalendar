@@ -1,5 +1,4 @@
 <?php
-require_once ('modules/PostCalendar/global.php');
 require_once ('modules/PostCalendar/common.api.php');
 
 /**
@@ -136,82 +135,58 @@ function postcalendar_admin_adminevents()
 		return LogUtil::registerPermissionError();
 	}
 
-    $output = '';
-    $action      = FormUtil::getPassedValue('action');
-    $pc_event_id = FormUtil::getPassedValue('pc_event_id');
-    $thelist     = FormUtil::getPassedValue('thelist');
-    
-    if(!isset($pc_event_id)) {
-				LogUtil::registerError(_PC_NO_EVENT_SELECTED);
-        
+	$action		 = FormUtil::getPassedValue('action');
+	$pc_event_id = FormUtil::getPassedValue('pc_event_id'); // could be an array or single val
+	$thelist	 = FormUtil::getPassedValue('thelist');
+	
+	if(!isset($pc_event_id)) {
+		LogUtil::registerError(_PC_NO_EVENT_SELECTED);
+
+		// return to where we came from
 		switch($thelist) {
-            case 'listqueued' :
-                $output .= pnModFunc('PostCalendar', 'admin', 'showlist', array('type'=>_EVENT_QUEUED, 'function'=>'showlist'));
-                break;
-                
-            case 'listhidden' :
-                $output .= pnModFunc('PostCalendar', 'admin', 'showlist', array('type'=>_EVENT_HIDDEN, 'function'=>'showlist'));
-                break;
-                
-            case 'listapproved' :
-                $output .= pnModFunc('PostCalendar', 'admin', 'showlist', array('type'=>_EVENT_APPROVED, 'function'=>'showlist'));
-                break;
-        }
-        return $output;     
-    }
-    
-    // main menu
-    $output = "";
-    $function = '';
-    switch ($action) {
-        case _ADMIN_ACTION_APPROVE :
-            $function = 'approveevents';
+			case 'listqueued' :
+				return pnModFunc('PostCalendar', 'admin', 'showlist', array('type'=>_EVENT_QUEUED, 'function'=>'showlist'));
+			case 'listhidden' :
+				return pnModFunc('PostCalendar', 'admin', 'showlist', array('type'=>_EVENT_HIDDEN, 'function'=>'showlist'));
+			case 'listapproved' :
+				return pnModFunc('PostCalendar', 'admin', 'showlist', array('type'=>_EVENT_APPROVED, 'function'=>'showlist'));
+		}
+	}
+	
+	$function = '';
+	switch ($action) {
+		case _ADMIN_ACTION_APPROVE :
+			$function = 'approveevents';
 			$are_you_sure_text = _PC_APPROVE_ARE_YOU_SURE;
 			break;
-            
-        case _ADMIN_ACTION_HIDE :
-            $function = 'hideevents';
+		case _ADMIN_ACTION_HIDE :
+			$function = 'hideevents';
 			$are_you_sure_text = _PC_HIDE_ARE_YOU_SURE;
-			break;
-            
-        case _ADMIN_ACTION_DELETE :
-            $function = 'deleteevents';
+			break;	
+		case _ADMIN_ACTION_DELETE :
+			$function = 'deleteevents';
 			$are_you_sure_text = _PC_DELETE_ARE_YOU_SURE;
 			break;
-    }
-	
-	if(!empty($function)) {
-		$output .= '<form action="'.pnModUrl('PostCalendar','admin',$function).'" method="post">';
 	}
-
+	
 	$pnRender = pnRender::getInstance('PostCalendar');
 	PostCalendarSmartySetup($pnRender);
 
-	if(is_array($pc_event_id)) {
-		foreach($pc_event_id as $eid) {
-			// get event info
-			$eventitems = pnModAPIFunc('PostCalendar','admin','eventDetail',array('eid'=>$eid,'nopop'=>true));
-			// build template and fetch:
-			foreach ($eventitems as $var=>$val) {
-				$pnRender->assign($var,$val);
-			}
-			$output .= $pnRender->fetch($eventitems['template']);
-			$output .= '<input type="hidden" name="pc_eid[]" value="'.$eid.'" />';
-		}
-	} else {
+	$pnRender->assign('function',$function);
+	$pnRender->assign('areyousure',$are_you_sure_text);
+
+	if (!is_array($pc_event_id)) { $events[0]=$pc_event_id; } else { $events = $pc_event_id; } //create array if not already
+
+	$output = "";
+	foreach($events as $eid) {
 		// get event info
-		$eventitems = pnModAPIFunc('PostCalendar','admin','eventDetail',array('eid'=>$pc_event_id,'nopop'=>true));
+		$eventitems = pnModAPIFunc('PostCalendar','event','eventDetail',array('eid'=>$eid,'nopop'=>true));
 		// build template and fetch:
 		foreach ($eventitems as $var=>$val) {
 			$pnRender->assign($var,$val);
 		}
 		$output .= $pnRender->fetch($eventitems['template']);
-		$output .= '<input type="hidden" name="pc_eid[0]" value="'.$pc_event_id.'" />';
-	}
-	if(!empty($function)) {
-		$output .= $are_you_sure_text.' ';
-		$output .= '<input type="submit" name="submit" value="'._PC_ADMIN_YES.'" />';
-		$output .= '</form>';
+		$output .= '<input type="hidden" name="pc_eid[]" value="'.$eid.'" />';
 	}
 
 	$pnRender->assign('output',$output);
@@ -225,28 +200,7 @@ function postcalendar_admin_resetDefaults()
 	}
 	
 	// remove all the PostCalendar variables from the DB
-	pnModDelVar('PostCalendar', 'pcTime24Hours');
-	pnModDelVar('PostCalendar', 'pcEventsOpenInNewWindow');
-	pnModDelVar('PostCalendar', 'pcUseInternationalDates');
-	pnModDelVar('PostCalendar', 'pcFirstDayOfWeek');
-	pnModDelVar('PostCalendar', 'pcDayHighlightColor');
-	pnModDelVar('PostCalendar', 'pcUsePopups');
-	pnModDelVar('PostCalendar', 'pcDisplayTopics');
-	pnModDelVar('PostCalendar', 'pcAllowDirectSubmit');
-	pnModDelVar('PostCalendar', 'pcListHowManyEvents');
-	pnModDelVar('PostCalendar', 'pcTimeIncrement');
-	pnModDelVar('PostCalendar', 'pcAllowSiteWide');
-	pnModDelVar('PostCalendar', 'pcAllowUserCalendar');
-	pnModDelVar('PostCalendar', 'pcEventDateFormat');
-	pnModDelVar('PostCalendar', 'pcTemplate');
-	pnModDelVar('PostCalendar', 'pcRepeating');
-	pnModDelVar('PostCalendar', 'pcMeeting');
-	pnModDelVar('PostCalendar', 'pcAddressbook');
-	pnModDelVar('PostCalendar', 'pcUseCache');
-	pnModDelVar('PostCalendar', 'pcCacheLifetime');
-	pnModDelVar('PostCalendar', 'pcDefaultView');
-	pnModDelVar('PostCalendar', 'pcNotifyAdmin');
-	pnModDelVar('PostCalendar', 'pcNotifyEmail');
+	pnModDelVar('PostCalendar');
 	
 	// PostCalendar Default Settings
 	pnModSetVar('PostCalendar', 'pcTime24Hours',  '0');
@@ -292,7 +246,6 @@ function postcalendar_admin_updateconfig()
 	$pcListHowManyEvents = FormUtil::getPassedValue ('pcListHowManyEvents', 15);
 	$pcDisplayTopics = FormUtil::getPassedValue ('pcDisplayTopics', 0);
 	$pcEventDateFormat   = FormUtil::getPassedValue ('pcEventDateFormat', '%Y-%m-%d');
-	//$pcTemplate  = FormUtil::getPassedValue ('pcTemplate', 'default');
 	$pcRepeating = FormUtil::getPassedValue ('pcRepeating', 0);
 	$pcMeeting   = FormUtil::getPassedValue ('pcMeeting', 0);
 	$pcAddressbook   = FormUtil::getPassedValue ('pcAddressbook', 0);
@@ -306,31 +259,8 @@ function postcalendar_admin_updateconfig()
 	$pcNotifyEmail   = FormUtil::getPassedValue ('pcNotifyEmail', pnConfigGetVar('adminmail'));
 	// v4b TS end
 	   
-	// make sure we enter something into the DB   
-	// delete the old vars - we're doing this because Zikula variable 
-	// handling sometimes has old values in the $GLOBALS we need to clear
-	pnModDelVar('PostCalendar', 'pcTime24Hours');
-	pnModDelVar('PostCalendar', 'pcEventsOpenInNewWindow');
-	pnModDelVar('PostCalendar', 'pcUseInternationalDates');
-	pnModDelVar('PostCalendar', 'pcFirstDayOfWeek');
-	pnModDelVar('PostCalendar', 'pcDayHighlightColor');
-	pnModDelVar('PostCalendar', 'pcUsePopups');
-	pnModDelVar('PostCalendar', 'pcAllowDirectSubmit');
-	pnModDelVar('PostCalendar', 'pcListHowManyEvents');
-	pnModDelVar('PostCalendar', 'pcDisplayTopics');
-	pnModDelVar('PostCalendar', 'pcEventDateFormat');
-	pnModDelVar('PostCalendar', 'pcTemplate');
-	pnModDelVar('PostCalendar', 'pcRepeating');// v4b TS
-	pnModDelVar('PostCalendar', 'pcMeeting');  // v4b TS
-	pnModDelVar('PostCalendar', 'pcAddressbook');  // v4b TS
-	pnModDelVar('PostCalendar', 'pcAllowSiteWide');
-	pnModDelVar('PostCalendar', 'pcAllowUserCalendar');
-	pnModDelVar('PostCalendar', 'pcTimeIncrement');
-	pnModDelVar('PostCalendar', 'pcDefaultView');
-	pnModDelVar('PostCalendar', 'pcUseCache');
-	pnModDelVar('PostCalendar', 'pcCacheLifetime');
-	pnModDelVar('PostCalendar', 'pcNotifyAdmin');
-	pnModDelVar('PostCalendar', 'pcNotifyEmail');
+	// delete all the old vars
+	pnModDelVar('PostCalendar');
 		
 	// set the new variables
 	pnModSetVar('PostCalendar', 'pcTime24Hours',   $pcTime24Hours);
@@ -343,7 +273,6 @@ function postcalendar_admin_updateconfig()
 	pnModSetVar('PostCalendar', 'pcListHowManyEvents', $pcListHowManyEvents);
 	pnModSetVar('PostCalendar', 'pcDisplayTopics', $pcDisplayTopics);
 	pnModSetVar('PostCalendar', 'pcEventDateFormat',   $pcEventDateFormat);
-	pnModSetVar('PostCalendar', 'pcTemplate',  $pcTemplate);
 	pnModSetVar('PostCalendar', 'pcRepeating', $pcRepeating);   // v4b TS
 	pnModSetVar('PostCalendar', 'pcMeeting',   $pcMeeting); // v4b TS
 	pnModSetVar('PostCalendar', 'pcAddressbook',   $pcAddressbook); // v4b TS
@@ -466,14 +395,12 @@ function postcalendar_admin_categoriesUpdate()
 		$obj['catdesc']  = $modDesc[$k];
 		$obj['catcolor'] = $modColor[$k];
 		$res = DBUtil::updateObject ($obj, 'postcalendar_categories', '', 'catid');
-		//if (!$res) $e .= 'UPDATE FAILED';
 		if (!$res) { LogUtil::registerError('_PC_UPDATE_FAILED'); $action_status = false; }
 	}
 
 	// delete categories
 	if (isset($dels) && $dels) {
 		$res = DBUtil::deleteObjectsFromKeyArray (array_flip($del), 'postcalendar_categories', 'catid');
-		//if (!$res) $e .= 'DELETE FAILED';
 		if (!$res) { LogUtil::registerError('_PC_DELETE_FAILED'); $action_status = false; }
 	}
 
@@ -484,7 +411,6 @@ function postcalendar_admin_categoriesUpdate()
 		$obj['catdesc']  = $newdesc;
 		$obj['catcolor'] = $newcolor;
 		$res = DBUtil::insertObject ($obj, 'postcalendar_categories', false, 'catid');
-		//if (!$res) $e .= 'INSERT FAILED';
 		if (!$res) { LogUtil::registerError('_PC_INSERT_FAILED'); $action_status = false; }
 	}
 
@@ -564,14 +490,9 @@ function postcalendar_admin_testSystem()
 	$modversion = array();
 	include  "modules/$pcDir/pnversion.php";
 
-	//$error = '';
 	if ($modversion['version'] != $version) {
 		LogUtil::registerError("new version ".$modversion[version]." installed but not updated!");
-  	//$error  = '<br /><div style=\"color: red;\">';
-		//$error .= "new version $modversion[version] installed but not updated!";
-		//$error .= '</div>';
 	}
-	//array_push($infos, array('Module version', $version . " $error"));
 	array_push($infos, array('Module version', $version));
 	array_push($infos, array('smarty version', $tpl->_version));
 	array_push($infos, array('smarty location',  SMARTY_DIR));
@@ -580,35 +501,24 @@ function postcalendar_admin_testSystem()
 	$info = $tpl->compile_dir;
 	//$error = '';
 	if (!file_exists($tpl->compile_dir)) {
-	  	//$error .= " compile dir doesn't exist! [$tpl->compile_dir]<br />";
 			LogUtil::registerError("compile dir doesn't exist! [".$tpl->compile_dir."]");
 	} else {
 	  	// dir exists -> check if it's writeable
 		if (!is_writeable($tpl->compile_dir)) {
-	 		$error .= " compile dir not writeable! [$tpl->compile_dir]<br />";
 			LogUtil::registerError("compile dir not writeable! [".$tpl->compile_dir."]");
 	  }
 	}
-//	if (strlen($error) > 0) {
-//	  $info .= "<br /><div style=\"color: red;\">$error</div>";
-//	}
 	array_push($infos, array('smarty compile dir', $tpl->compile_dir));
 
 	$info = $tpl->cache_dir;
-	//$error = "";
 	if (!file_exists($tpl->cache_dir)) {
-	  //$error .= " cache dir doesn't exist! [$tpl->cache_dir]<br />";
 		LogUtil::registerError("cache dir doesn't exist! [".$tpl->cache_dir."]");
 	} else {
 	  // dir exists -> check if it's writeable
 	  if (!is_writeable($tpl->cache_dir)) {
-	 		//$error .= " cache dir not writeable! [$tpl->cache_dir]<br />";
 			LogUtil::registerError("cache dir not writeable! [".$tpl->cache_dir."]");
 	  }
 	}
-//	if (strlen($error) > 0) {
-//	 	$info .= "<br /><div style=\"color: red;\">$error</div>";
-//	}
 	array_push($infos, array('smarty cache dir', $tpl->cache_dir));
 
 	$tpl->assign('infos', $infos);
