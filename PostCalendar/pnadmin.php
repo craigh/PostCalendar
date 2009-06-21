@@ -177,19 +177,13 @@ function postcalendar_admin_adminevents()
 
 	if (!is_array($pc_event_id)) { $events[0]=$pc_event_id; } else { $events = $pc_event_id; } //create array if not already
 
-	$output = "";
 	foreach($events as $eid) {
 		// get event info
 		$eventitems = pnModAPIFunc('PostCalendar','event','eventDetail',array('eid'=>$eid,'nopop'=>true));
-		// build template and fetch:
-		foreach ($eventitems as $var=>$val) {
-			$pnRender->assign($var,$val);
-		}
-		$output .= $pnRender->fetch($eventitems['template']);
-		$output .= '<input type="hidden" name="pc_eid[]" value="'.$eid.'" />';
+		$alleventinfo[$eid]=$eventitems['A_EVENT'];
 	}
+	$pnRender->assign('alleventinfo',$alleventinfo);
 
-	$pnRender->assign('output',$output);
 	return $pnRender->fetch("admin/postcalendar_admin_eventrevue.htm");
 }
 

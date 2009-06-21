@@ -50,8 +50,6 @@ require_once ('modules/PostCalendar/global.php');
  */
 function postcalendar_eventapi_queryEvents($args)
 {	
-	//echo "pcQuerydebug<br>";
-	//pcDebugVar ($args);
 	$end = '0000-00-00';
 	extract($args);
 
@@ -491,7 +489,6 @@ function postcalendar_eventapi_buildSubmitForm($args)
 	if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADD)) {
 		return LogUtil::registerPermissionError();
 	}
-	//pcDebugVar($args); die;
 
 	extract($args); 
 	unset($args);
@@ -914,9 +911,7 @@ function postcalendar_eventapi_eventDetail($args)
 	$popup = FormUtil::getPassedValue('popup');
 	extract($args); 
 	unset($args);
-
-	if (!$admin) $admin = false;
-
+	
 	if(!isset($cacheid)) $cacheid = null;
 	if(!isset($eid)) return false;
 	if(!isset($nopop)) $nopop = false;
@@ -932,16 +927,10 @@ function postcalendar_eventapi_eventDetail($args)
 			$function_out['TPL_VIEW'] = $template_view;
 		/* end */
   
-	if($admin) {
-		$function_out['template'] = "admin/postcalendar_admin_view_event_details.htm";
-		$function_out['Date'] = postcalendar_getDate();
-	} else {
-		$function_out['template'] = "user/postcalendar_user_view_event_details.html";
-	}
+	$function_out['template'] = "user/postcalendar_user_view_event_details.html";
 	if ($popup == true) $function_out['template'] = "user/postcalendar_user_view_popup.html";
 	
-	// let's get the DB information
-	//$event = postcalendar_userapi_pcGetEventDetails($eid);
+	// get the DB information
 	$event = pnModAPIFunc('PostCalendar','event','getEventDetails',$eid);
 	// if the above is false, it's a private event for another user
 	// we should not diplay this - so we just exit gracefully
@@ -991,17 +980,17 @@ function postcalendar_eventapi_eventDetail($args)
 	
 	if(!empty($event['location']) || !empty($event['street1']) ||
 		!empty($event['street2']) || !empty($event['city']) ||
-		!empty($event['state']) || !empty($event['postal'])) 
+		!empty($event['state']) || !empty($event['postal'])) {
 		$function_out['LOCATION_INFO'] = true;
-	else 
+	} else {
 		$function_out['LOCATION_INFO'] = false;
-	
+	}
 	if(!empty($event['contname']) || !empty($event['contemail']) ||
-		!empty($event['conttel']) || !empty($event['website'])) 
+		!empty($event['conttel']) || !empty($event['website'])) {
 		$function_out['CONTACT_INFO'] = true;
-	else 
+	} else {
 		$function_out['CONTACT_INFO'] = false;
-	
+	}
 	// determine meeting participants
 	$participants = array();
 	if ($event['meeting_id'])
@@ -1010,6 +999,8 @@ function postcalendar_eventapi_eventDetail($args)
 		$attendees = DBUtil::selectFieldArray ('postcalendar_events', 'aid', $where);
 	
 		// FIXME: do we need this here? Just to do a lookup? 
+		// CAH June20, 2009 This should be a lookup of ONLY the attendees...
+		// take a look at edit/new event code
 		$users = DBUtil::selectObjectArray ('users', '', '', -1, -1, 'uid', null, $ca);
 
 		foreach ($attendees as $uid) {
