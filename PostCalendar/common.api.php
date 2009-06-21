@@ -192,6 +192,19 @@ function postcalendar_userapi_getTopics()
 
 function pc_notify($eid,$is_update) // send an email to admin on new event submission
 {
+	/* SAMPLE EMAIL PROCESS FROM USERS MODULE:
+        $pnRender->assign('email', $args['email']);
+        $pnRender->assign('uname', $args['uname']);
+        //$pnRender->assign('uid', $args['uid']);
+        $pnRender->assign('makepass', $makepass);
+        $pnRender->assign('moderation', $moderation);
+        $pnRender->assign('moderated', $args['moderated']);
+
+        // Password Email - Must be send now as the password will be encrypted and unretrievable later on.
+        $message = $pnRender->fetch('users_userapi_welcomeemail.htm');
+        $subject = pnML('_USERS_WELCOMESUBJECT', array('sitename' => $sitename, 'uname' => $args['uname']));
+        pnModAPIFunc('Mailer', 'user', 'sendmessage', array('toaddress' => $args['email'], 'subject' => $subject, 'body' => $message, 'html' => true));
+	*/
 	if(!(bool)_SETTING_NOTIFY_ADMIN) 
 		return true; 
 	
