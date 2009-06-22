@@ -192,46 +192,31 @@ function postcalendar_userapi_getTopics()
 
 function pc_notify($eid,$is_update) // send an email to admin on new event submission
 {
-	/* SAMPLE EMAIL PROCESS FROM USERS MODULE:
-        $pnRender->assign('email', $args['email']);
-        $pnRender->assign('uname', $args['uname']);
-        //$pnRender->assign('uid', $args['uid']);
-        $pnRender->assign('makepass', $makepass);
-        $pnRender->assign('moderation', $moderation);
-        $pnRender->assign('moderated', $args['moderated']);
-
-        // Password Email - Must be send now as the password will be encrypted and unretrievable later on.
-        $message = $pnRender->fetch('users_userapi_welcomeemail.htm');
-        $subject = pnML('_USERS_WELCOMESUBJECT', array('sitename' => $sitename, 'uname' => $args['uname']));
-        pnModAPIFunc('Mailer', 'user', 'sendmessage', array('toaddress' => $args['email'], 'subject' => $subject, 'body' => $message, 'html' => true));
-	*/
 	if(!(bool)_SETTING_NOTIFY_ADMIN) 
-		return true; 
-	
-	$subject = _PC_NOTIFY_SUBJECT;
-	
-	if((bool)$is_update) 
-		$message = _PC_NOTIFY_UPDATE_MSG;
-	else 
-		$message = _PC_NOTIFY_NEW_MSG;
-	
+		return true;
+
+	//need to put a test in here for if the admin submitted the event, if not, probably don't send email.
+
 	$modinfo = pnModGetInfo(pnModGetIDFromName('PostCalendar'));
 	$modversion = pnVarPrepForOS($modinfo['version']);
-	unset($modinfo);
-	
-	$message .= pnModURL('PostCalendar','admin','adminevents',array('pc_event_id'=>$eid,'action'=>_ADMIN_ACTION_VIEW));
-	$message .= "\n\n\n\n";
-	$message .= "----\n";
-	$message .= "PostCalendar $modversion\n";
-	
-	mail(_SETTING_NOTIFY_EMAIL,$subject,$message,
-		  "From: " . _SETTING_NOTIFY_EMAIL . "\r\n"
-		  ."X-Mailer: PHP/" . phpversion() . "\r\n"
-		  ."X-Mailer: PostCalendar/$modversion" );
+
+	$pnRender = pnRender::getInstance('PostCalendar');
+	$pnRender->assign('is_update', $is_update);
+	$pnRender->assign('modversion', $modversion);
+	$pnRender->assign('eid', $eid);
+	$pnRender->assign('link', pnModURL('PostCalendar','admin','adminevents',array('pc_event_id'=>$eid,'action'=>_ADMIN_ACTION_VIEW));
+	$message = $pnRender->fetch('email/postcalendar_email_adminnotify.htm');
+
+	$messagesent = pnModAPIFunc('Mailer', 'user', 'sendmessage', array('toaddress' => _SETTING_NOTIFY_EMAIL, 'subject' => _PC_NOTIFY_SUBJECT, 'body' => $message, 'html' => true));
 		  
-	return true;
+	if ($messagesent) {
+		LogUtil::registerStatus('Admin notify email sent');
+		return true;
+	} else {
+		LogUtil::registerError('Admin notify email not sent');
+		return false;
+	}
 }
-/** HERE **/
 
 function postcalendar_footer()
 {   
