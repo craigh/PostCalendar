@@ -189,32 +189,9 @@ function postcalendar_userapi_getTopics()
     return DBUtil::selectObjectArray('topics', '', 'topictext', -1, -1, '', $permFilter);
 }
 
-function pc_notify($eid, $is_update) // send an email to admin on new event submission
+function pc_notify($eid, $is_update) //this function renamed and moved to adminapi
 {
-    if (!(bool) _SETTING_NOTIFY_ADMIN) return true;
-
-    //need to put a test in here for if the admin submitted the event, if not, probably don't send email.
-
-    $modinfo = pnModGetInfo(pnModGetIDFromName('PostCalendar'));
-    $modversion = pnVarPrepForOS($modinfo['version']);
-
-    $pnRender = pnRender::getInstance('PostCalendar');
-    $pnRender->assign('is_update', $is_update);
-    $pnRender->assign('modversion', $modversion);
-    $pnRender->assign('eid', $eid);
-    $pnRender->assign('link', pnModURL('PostCalendar', 'admin', 'adminevents', array('pc_event_id' => $eid, 'action' => _ADMIN_ACTION_VIEW)));
-    $message = $pnRender->fetch('email/postcalendar_email_adminnotify.htm');
-
-    $messagesent = pnModAPIFunc('Mailer', 'user', 'sendmessage',
-        array('toaddress' => _SETTING_NOTIFY_EMAIL, 'subject' => _PC_NOTIFY_SUBJECT, 'body' => $message, 'html' => true));
-
-    if ($messagesent) {
-        LogUtil::registerStatus('Admin notify email sent');
-        return true;
-    } else {
-        LogUtil::registerError('Admin notify email not sent');
-        return false;
-    }
+    return pnModAPIFunc('PostCalendar','admin','notify',compact('eid','is_update');
 }
 
 function postcalendar_footer()

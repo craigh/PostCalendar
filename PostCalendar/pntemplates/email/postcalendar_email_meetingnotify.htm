@@ -1,1 +1,19 @@
 <!--[ $Id$ ]-->
+<h2><!--[pnml name="_POSTALENDAR_MAILGREET_NOTIFICATION"]--></h2>
+
+<p><!--[pnml name="_POSTALENDAR_MAILGREET"]-->,</p>
+
+<p><!--[pnml name="_POSTALENDAR_MAILOPEN" pc_author=$pc_author]--></p>
+
+<p><!--[pnml name="_POSTALENDAR_MAILEVENTDETAILS_SUB" event_subject=$event_subject]-->
+<!--[pnml name="_POSTALENDAR_MAILEVENTDETAILS_DES" pc_description=$pc_description]-->
+<!--[pnml name="_POSTALENDAR_MAILEVENTDETAILS_DAT" startDate=$startDate]-->
+<!--[pnml name="_POSTALENDAR_MAILEVENTDETAILS_TIM" pc_start_time=$pc_start_time]-->
+<!--[pnml name="_POSTALENDAR_MAILEVENTDETAILS_DUR" pc_dur_hours=$pc_dur_hours pc_dur_minutes=$pc_dur_minutes]--></p>
+
+<p><!--[pnml name="_POSTALENDAR_MAILFOOT" pc_URL=$pc_URL]--></p>
+
+<hr />
+<p>A Message from your PostCalendar <!--[$modversion]--><br />
+@ <!--[$smarty.now|date_format:'%Y-%m-%d %H:%M:%S']--><br />
+from <!--[$smarty.server.SERVER_NAME]--></p>

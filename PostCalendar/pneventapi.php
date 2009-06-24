@@ -341,11 +341,10 @@ function postcalendar_eventapi_writeEvent($args)
 {
     $event_for_userid = $_POST['event_for_userid']; // gets the value out of the event_for_userid dropdown :: becomes aid?
 
-
     extract($args);
     unset($args);
-    list($dbconn) = pnDBGetConn();
-    $pntable = pnDBGetTables();
+    //list($dbconn) = pnDBGetConn();
+    //$pntable = pnDBGetTables();
 
     define('PC_ACCESS_ADMIN', pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_OVERVIEW));
 
@@ -398,14 +397,11 @@ function postcalendar_eventapi_writeEvent($args)
 
     if (!isset($is_update)) $is_update = false;
 
-    if (!$is_update) $pc_event_id = $dbconn->GenId($pntable['postcalendar_events']);
-
     // build an array of users for mail notification
     $pc_mail_users = array();
 
-    foreach ($participants as $part) // V4B SB LOOP to insert events for every participant
-{
-        $eventarray[$pc_event_id] = array(
+    foreach ($participants as $part) { // V4B SB LOOP to insert events for every participant
+        $eventarray = array(
                         'title' => pnVarPrepForStore($event_subject),
                         'hometext' => pnVarPrepForStore($event_desc),
                         'topic' => pnVarPrepForStore($event_topic),
@@ -427,83 +423,35 @@ function postcalendar_eventapi_writeEvent($args)
                         'sharing' => pnVarPrepForStore($event_sharing),
                         'aid' => pnVarPrepForStore($part));
         if ($is_update) {
-            $eventarray[$pc_event_id]['eid'] = pnVarPrepForStore($pc_event_id);
-            $result = pnModAPIFunc('postcalendar', 'event', 'update', $eventarray[$pc_event_id]);
+            $eventarray['eid'] = pnVarPrepForStore($pc_event_id);
+            $result = pnModAPIFunc('postcalendar', 'event', 'update', array($pc_event_id=>$eventarray));
         } else {
-            $eventarray[$pc_event_id]['time'] = pnVarPrepForStore(date("Y-m-d H:i:s")); //current date
-            $eventarray[$pc_event_id]['informant'] = pnVarPrepForStore($uname);
-            $eventarray[$pc_event_id]['meeting_id'] = pnVarPrepForStore($pc_meeting_id);
+            unset ($eventarray['eid']); //be sure that eid is not set on insert op to autoincrement value
+            $eventarray['time'] = pnVarPrepForStore(date("Y-m-d H:i:s")); //current date
+            $eventarray['informant'] = pnVarPrepForStore($uname);
+            $eventarray['meeting_id'] = pnVarPrepForStore($pc_meeting_id);
 
-            $result = pnModAPIFunc('postcalendar', 'event', 'create', $eventarray[$pc_event_id]);
+            $result = pnModAPIFunc('postcalendar', 'event', 'create', $eventarray);
+            if (pnUserGetVar('uname', $part) != $uname) {
+                $pc_mail_users[] = $part;
+                $pc_mail_events[] = $result['eid'];
+            }
         }
         if ($result === false) {
             // post some kind of error message...
             return false;
         }
 
-        // v4b TS start - build an array of users for mail notification
-        if ((pnUserGetVar('uname', $part) != $uname) && (!$is_update)) {
-            $pc_mail_users[] = $part;
-            $pc_mail_events[] = $dbconn->PO_Insert_ID($pntable['postcalendar_events'], 'pc_eid');
-        }
     } // V4B SB Foreach End
 
+    $eid=$result['eid'];
 
-    if ((bool) $is_update) {
-        $eid = $pc_event_id;
-    } else {
-        $eid = $dbconn->PO_Insert_ID($pntable['postcalendar_events'], 'pc_eid');
-    }
+    pnModAPIFunc('PostCalendar','admin','meeting_mailparticipants',compact('eid','is_update'));
+    //pc_notify($eid, $is_update); // this is sending email
 
-    pc_notify($eid, $is_update); // this is sending email
+    pnModAPIFunc('PostCalendar','admin','meeting_mailparticipants',
+        compact('event_duration','event_desc','startDate','startTime','pc_mail_users','pc_mail_events','uname','is_update'));
 
-
-    // v4b TS start - mail information for participants
-    if (!$is_update) {
-        // prepare the values for putput
-        @list($pc_dur_hours, $dmin) = @explode('.', ($event_duration / 60 / 60));
-        $pc_dur_minutes = substr(sprintf('%.2f', '.' . 60 * ($dmin / 100)), 2, 2);
-        $display_type = substr($event_desc, 0, 6);
-
-        if ($display_type == ':text:') $pc_description = substr($event_desc, 6);
-        elseif ($display_type == ':html:') $pc_description = substr($event_desc, 6);
-
-        list($x, $y, $z) = explode('-', $startDate);
-        list($a, $b, $c) = explode('-', $startTime);
-        $time = mktime($a, $b, $c, $y, $z, $x);
-        $pc_start_time = strftime('%H:%M', $time);
-
-        for ($i = 0; $i < count($pc_mail_users); $i++) {
-            // build the url, get the authors name
-            $pc_eid = $pc_mail_events[$i];
-            $pc_URL = pnModURL('PostCalendar', 'user', 'view',
-                array('viewtype' => 'details', 'eid' => $pc_eid));
-            //$pc_author = pnUserGetVar('name', $event_for_userid);
-            $pc_author = $uname;
-
-            // process mail file to generate mail text
-            $currentlang = pnVarPrepForOS(
-                pnUserGetLang());
-            $mailfile = "modules/PostCalendar/pnlang/$currentlang/mails/mail_meeting_notification.php";
-
-            if (file_exists($mailfile)) {
-                $fhandle = fopen($mailfile, "r");
-                $mailtext = fread($fhandle, filesize($mailfile));
-                fclose($fhandle);
-                $mailtext = '$mailtext = "' . $mailtext . '";';
-                eval($mailtext);
-
-                // mail the users
-                $extraHeader = "From: noreply";
-                $email = pnUserGetVar('email', $pc_mail_users[$i]);
-                $subject = _PC_MEETING_MAIL_TITLE . ": $event_subject";
-
-                if ($email) pnMail($email, $subject, $mailtext, $extraHeader);
-            }
-        }
-    }
-
-    // v4b TS end - mail information for participants
     return true;
 }
 
@@ -1118,13 +1066,14 @@ function postcalendar_eventapi_eventDetail($args)
  *	This function creates a new event row in the DB
  *	expected args: obj=array([colname]=>[newval],[colname]=>[newval],[colname]=>[newval], etc...)
  *
+ *  returns the created object with updated id field
  */
 function postcalendar_eventapi_create($obj)
 {
     if (!is_array($obj)) return false;
     $res = DBUtil::insertObject($obj, 'postcalendar_events', 'eid');
     if ($res) {
-        return true;
+        return $res;
     } else {
         return false;
     }
@@ -1135,13 +1084,14 @@ function postcalendar_eventapi_create($obj)
  *	expected args: eventarray=array([id]=>array([id]=>[idval],[colname]=>[newval],
  *		[id2]=>array([id2]=>[idval],[colname]=>[newval])
  *
+ *  returns the updated object(s)
  */
 function postcalendar_eventapi_update($eventarray)
 {
     if (!is_array($eventarray)) return false;
     $res = DBUtil::updateObjectArray($eventarray, 'postcalendar_events', 'eid');
     if ($res) {
-        return true;
+        return $res;
     } else {
         return false;
     }

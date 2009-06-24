@@ -118,10 +118,6 @@ function postcalendar_icalapi_writeicalevent($ve)
     if (($endstamp - $startstamp == 86400) and ($ve['endtime']['hour'] == "00") and ($ve['endtime']['min'] == "00") and ($ve['endtime']['sec'] == "00")) {
         $ve['allday'] = 1; // allday event true
     }
-    //$diearr = array($startstamp,$endstamp,$ve['allday']);
-    //die(print_r($diearr));
-    //die(print_r($ve));
-
 
     // set duration if it doesn't exist (in seconds)
     if (empty($ve['duration'])) {
@@ -135,7 +131,8 @@ function postcalendar_icalapi_writeicalevent($ve)
 
     $emid = DBUtil::selectFieldMax('postcalendar_events', 'meeting_id');
     //CAH seems like the emid should be incremented by 1 for a new event...
-    $emid++; // normal writeEvent function leaves at 0 if no participants
+    //note: should only be adding meeting_id if the meeting has participants.
+    //$emid++; // normal writeEvent function leaves at 0 if no participants
 
 
     $pc_endDate = $ve['enddate']['year'] . "-" . $ve['enddate']['month'] . "-" . $ve['enddate']['day'];

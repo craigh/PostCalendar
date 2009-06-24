@@ -25,9 +25,6 @@
  *
  */
 
-//=========================================================================
-//  ok, here's the rest of the language defines
-//=========================================================================
 define('_GETFAILED',            'Items load failed');
 define('_CALAPPOINTMENTS',      'Appointments');
 define('_CALEVENTS',            'Events');

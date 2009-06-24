@@ -112,3 +112,84 @@ function postcalendar_adminapi_clearCache()
 
     return $res;
 }
+function postcalendar_adminapi_meeting_mailparticipants ($args)
+{
+    extract($args);
+    /* expected: $event_subject,$event_duration,$pc_description,$startDate,$startTime,$uname,$pc_eid,$pc_mail_users */
+
+    $pnRender = pnRender::getInstance('PostCalendar');
+
+	@list($pc_dur_hours, $dmin) = @explode('.', ($event_duration / 60 / 60));
+    $pnRender->assign('pc_dur_hours', $pc_dur_hours);
+
+	$pc_dur_minutes = substr(sprintf('%.2f', '.' . 60 * ($dmin / 100)), 2, 2);
+    $pnRender->assign('pc_dur_minutes', $pc_dur_minutes);
+
+	$pc_description = substr($event_desc, 6);
+    $pnRender->assign('pc_description', $pc_description);
+
+	list($x, $y, $z) = explode('-', $startDate);
+	list($a, $b, $c) = explode('-', $startTime);
+	$pc_start_time = strftime('%H:%M', mktime($a, $b, $c, $y, $z, $x));
+    $pnRender->assign('startDate', $startDate);
+    $pnRender->assign('pc_start_time', $pc_start_time);
+
+    $pc_author = $uname;
+    $pnRender->assign('pc_author', $pc_author);
+
+	$pc_URL = pnModURL('PostCalendar', 'user', 'view', array('viewtype' => 'details', 'eid' => $pc_eid[0]));
+    $pnRender->assign('pc_URL', $pc_URL);
+
+    $modinfo = pnModGetInfo(pnModGetIDFromName('PostCalendar'));
+    $modversion = pnVarPrepForOS($modinfo['version']);
+    $pnRender->assign('modversion', $modversion);
+
+	for ($i = 0; $i < count($pc_mail_users); $i++) {
+		$toaddress[$i] = pnUserGetVar('email', $pc_mail_users[$i]); //create array of email addresses to mailto
+	}
+
+	$subject = _PC_MEETING_MAIL_TITLE . ": $event_subject";
+    $message = $pnRender->fetch('email/postcalendar_email_meetingnotify.htm');
+
+    $messagesent = pnModAPIFunc('Mailer', 'user', 'sendmessage',
+        array('toaddress' => $toaddress, 'subject' => $subject, 'body' => $message, 'html' => true));
+
+    if ($messagesent) {
+        LogUtil::registerStatus('Meeting notify email sent');
+        return true;
+    } else {
+        LogUtil::registerError('Meeting notify email not sent');
+        return false;
+    }
+}
+
+// send an email to admin on new event submission
+function postcalendar_adminapi_notify($args)
+{
+    extract($args);
+
+    if (!(bool) _SETTING_NOTIFY_ADMIN) return true;
+
+    //need to put a test in here for if the admin submitted the event, if not, probably don't send email.
+
+    $modinfo = pnModGetInfo(pnModGetIDFromName('PostCalendar'));
+    $modversion = pnVarPrepForOS($modinfo['version']);
+
+    $pnRender = pnRender::getInstance('PostCalendar');
+    $pnRender->assign('is_update', $is_update);
+    $pnRender->assign('modversion', $modversion);
+    $pnRender->assign('eid', $eid);
+    $pnRender->assign('link', pnModURL('PostCalendar', 'admin', 'adminevents', array('pc_event_id' => $eid, 'action' => _ADMIN_ACTION_VIEW)));
+    $message = $pnRender->fetch('email/postcalendar_email_adminnotify.htm');
+
+    $messagesent = pnModAPIFunc('Mailer', 'user', 'sendmessage',
+        array('toaddress' => _SETTING_NOTIFY_EMAIL, 'subject' => _PC_NOTIFY_SUBJECT, 'body' => $message, 'html' => true));
+
+    if ($messagesent) {
+        LogUtil::registerStatus('Admin notify email sent');
+        return true;
+    } else {
+        LogUtil::registerError('Admin notify email not sent');
+        return false;
+    }
+}
