@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 define('_CALALLDAY', 'All Day');
 define('_CALAPPOINTMENTS', 'Appointments');
@@ -330,4 +330,3 @@ define('_PC_SEARCH_OR','OR');
 define('_PC_SEARCH_IN','IN');
 define('_PC_CONTACT','Contact Information');
 define('_PC_BLOCK_LONG', 'Long');
-?>

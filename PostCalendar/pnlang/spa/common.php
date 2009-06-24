@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 define('_CAL_DAYVIEW',                          'Día');
 define('_CAL_MONTHVIEW',                        'Mes');
@@ -299,4 +299,3 @@ define('_POSTCALENDAR',         'PostCalendar');
 define('_POSTCALENDARNOAUTH',                   'Acceso no autorizado al Modulo Postcalendar');
 define('_USER_BUSY_MESSAGE',                    'Estoy ocupado en estos momentos.');
 define('_USER_BUSY_TITLE',                              'Ocupado');
-?>

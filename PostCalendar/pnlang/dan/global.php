@@ -5,17 +5,17 @@
  *  PostCalendar::PostNuke Events Calendar Module
  *  Copyright (C) 2002  The PostCalendar Team
  *  http://postcalendar.tv
- *  
+ *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation; either version 2 of the License, or
  *  (at your option) any later version.
- *  
+ *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
- *  
+ *
  *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -29,10 +29,10 @@
  define('_DATE_STARTMESSAGE', 'insert Startdate');
  // V4B SB END
 
- 
 
- 
- 
+
+
+
 //=========================================================================
 //  The following define is necessary for the date and time functions
 //  set it to the locale for this language
@@ -191,4 +191,3 @@ define('_PC_SUBMIT_ERROR6',             'Your repeating frequency must be an int
 define('_PC_ADMIN_EVENT_ERROR', 		'There was an error while processing your request.');
 define('_PC_ADMIN_EVENTS_DELETED', 		'Your event has been deleted.');
 @define('_NO_DIRECT_ACCESS',            'You can not access this function directly.');
-?>

@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 define('_CALALLDAY', 'Tous les jours');
 define('_CALAPPOINTMENTS', 'Rendez-vous');
@@ -299,4 +299,3 @@ define('_PC_PARTICIPANTAVAILABLE', 'Participants disponibles');
 define('_PC_PARTICIPANTSELECTED', 'Participants choisis');
 define('_PC_ENTRIES_REMOVED', 'les anciens enregistrements ont été supprimés!');
 define('_PC_REMOVE_USERENTRIES', 'Supprimer les anciens enregistrements');
-?>

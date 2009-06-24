@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 define('_CALALLDAY', 'ganzer Tag');
 define('_CALAPPOINTMENTS', 'Termine');
@@ -306,5 +306,3 @@ define('_PC_PARTICIPANTAVAILABLE', 'Verfügbare Teilnehmer');
 define('_PC_PARTICIPANTSELECTED', 'Ausgewählte Teilnehmer');
 define('_PC_ENTRIES_REMOVED', 'Einträge von ehemaligen Benutzern wurden gelöscht!');
 define('_PC_REMOVE_USERENTRIES', 'Ex-Benutzereinträge löschen');
-
-?>

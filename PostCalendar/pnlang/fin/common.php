@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 define('_CALALLDAY', 'Koko päivä');
 define('_CALAPPOINTMENTS', 'Tapaamiset');
@@ -297,4 +297,3 @@ define('_USER_BUSY_TITLE', 'Varattu');
 define('_PC_PARTICIPANT', 'Osallistujat');
 define('_PC_PARTICIPANTAVAILABLE', 'Saapuvilla olevat osallistujat');
 define('_PC_PARTICIPANTSELECTED', 'Valitut osallistujat');
-?>
