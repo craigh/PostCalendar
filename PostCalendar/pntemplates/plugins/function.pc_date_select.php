@@ -34,9 +34,9 @@
  */
 function smarty_function_pc_date_select($args)
 {
-    $print = pnVarCleanFromInput('print');
-    $tplview = pnVarCleanFromInput('tplview');
-    $viewtype = pnVarCleanFromInput('viewtype');
+    $print = FormUtil::getPassedValue('print');
+    $tplview = FormUtil::getPassedValue('tplview');
+    $viewtype = FormUtil::getPassedValue('viewtype');
     $Date = postcalendar_getDate();
 
     if (!isset($viewtype)) $viewtype = _SETTING_DEFAULT_VIEW;

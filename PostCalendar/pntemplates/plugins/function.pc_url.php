@@ -41,12 +41,12 @@ function smarty_function_pc_url($args)
     if (empty($print)) $print = false;
     else $print = true;
 
-    $template_view = pnVarCleanFromInput('tplview');
-    $viewtype = strtolower(pnVarCleanFromInput('viewtype'));
-    $pc_username = pnVarCleanFromInput('pc_username');
-    $category = pnVarCleanFromInput('pc_category');
-    $topic = pnVarCleanFromInput('pc_topic');
-    $popup = pnVarCleanFromInput('popup');
+    $template_view = FormUtil::getPassedValue('tplview');
+    $viewtype = strtolower(FormUtil::getPassedValue('viewtype'));
+    $pc_username = FormUtil::getPassedValue('pc_username');
+    $category = FormUtil::getPassedValue('pc_category');
+    $topic = FormUtil::getPassedValue('pc_topic');
+    $popup = FormUtil::getPassedValue('popup');
     $today = DateUtil::getDatetime('', '%Y%m%d000000');
 
     if (empty($date)) $Date = postcalendar_getDate();
@@ -56,7 +56,7 @@ function smarty_function_pc_url($args)
     $Date = str_replace('-', '', $Date);
 
     $pcModInfo = pnModGetInfo(pnModGetIDFromName('PostCalendar'));
-    $pcDir = pnVarPrepForOS($pcModInfo['directory']);
+    $pcDir = DataUtil::formatForOS($pcModInfo['directory']);
 
     switch ($action) {
         case 'submit':

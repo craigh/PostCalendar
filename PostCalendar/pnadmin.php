@@ -454,7 +454,7 @@ function postcalendar_admin_testSystem()
     }
 
     $modinfo = pnModGetInfo(pnModGetIDFromName('PostCalendar'));
-    $pcDir = pnVarPrepForOS($modinfo['directory']);
+    $pcDir = DataUtil::formatForOS($modinfo['directory']);
     $version = $modinfo['version'];
     unset($modinfo);
 

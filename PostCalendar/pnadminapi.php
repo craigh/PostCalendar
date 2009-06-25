@@ -141,7 +141,7 @@ function postcalendar_adminapi_meeting_mailparticipants ($args)
     $pnRender->assign('pc_URL', $pc_URL);
 
     $modinfo = pnModGetInfo(pnModGetIDFromName('PostCalendar'));
-    $modversion = pnVarPrepForOS($modinfo['version']);
+    $modversion = DataUtil::formatForOS($modinfo['version']);
     $pnRender->assign('modversion', $modversion);
 
 	for ($i = 0; $i < count($pc_mail_users); $i++) {
@@ -173,7 +173,7 @@ function postcalendar_adminapi_notify($args)
     //need to put a test in here for if the admin submitted the event, if not, probably don't send email.
 
     $modinfo = pnModGetInfo(pnModGetIDFromName('PostCalendar'));
-    $modversion = pnVarPrepForOS($modinfo['version']);
+    $modversion = DataUtil::formatForOS($modinfo['version']);
 
     $pnRender = pnRender::getInstance('PostCalendar');
     $pnRender->assign('is_update', $is_update);

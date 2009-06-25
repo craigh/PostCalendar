@@ -59,7 +59,7 @@ function pcDebugVar($in)
 
 function pcVarPrepForDisplay($s)
 {
-    $s = nl2br(pnVarPrepForDisplay(postcalendar_removeScriptTags($s)));
+    $s = nl2br(DataUtil::formatForDisplay(postcalendar_removeScriptTags($s)));
     $s = preg_replace('/&amp;(#)?([0-9a-z]+);/i', '&\\1\\2;', $s);
     return $s;
 }
@@ -191,7 +191,7 @@ function postcalendar_userapi_getTopics()
 
 function pc_notify($eid, $is_update) //this function renamed and moved to adminapi
 {
-    return pnModAPIFunc('PostCalendar','admin','notify',compact('eid','is_update');
+    return pnModAPIFunc('PostCalendar','admin','notify',compact('eid','is_update'));
 }
 
 function postcalendar_footer()

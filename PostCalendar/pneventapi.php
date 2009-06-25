@@ -98,8 +98,8 @@ function postcalendar_eventapi_queryEvents($args)
     if (!empty($s_keywords)) $where .= "AND ($s_keywords) ";
     if (!empty($s_category)) $where .= "AND ($s_category) ";
     if (!empty($s_topic)) $where .= "AND ($s_topic) ";
-    if (!empty($category)) $where .= "AND (tbl.pc_catid = '" . pnVarPrepForStore($category) . "') ";
-    if (!empty($topic)) $where .= "AND (tbl.pc_topic = '" . pnVarPrepForStore($topic) . "') ";
+    if (!empty($category)) $where .= "AND (tbl.pc_catid = '" . DataUtil::formatForStore($category) . "') ";
+    if (!empty($topic)) $where .= "AND (tbl.pc_topic = '" . DataUtil::formatForStore($topic) . "') ";
     // End Search functionality
 
     $sort .= "ORDER BY pc_meeting_id";
@@ -339,6 +339,9 @@ function postcalendar_eventapi_getEvents($args)
  */
 function postcalendar_eventapi_writeEvent($args)
 {
+    //TODO: remove use of $_POST vars
+    // remove multiple event inserts based on participants (ticket filed)
+
     $event_for_userid = $_POST['event_for_userid']; // gets the value out of the event_for_userid dropdown :: becomes aid?
 
     extract($args);
@@ -402,34 +405,34 @@ function postcalendar_eventapi_writeEvent($args)
 
     foreach ($participants as $part) { // V4B SB LOOP to insert events for every participant
         $eventarray = array(
-                        'title' => pnVarPrepForStore($event_subject),
-                        'hometext' => pnVarPrepForStore($event_desc),
-                        'topic' => pnVarPrepForStore($event_topic),
-                        'eventDate' => pnVarPrepForStore($startDate),
-                        'endDate' => pnVarPrepForStore($endDate),
-                        'recurrtype' => pnVarPrepForStore($event_repeat),
-                        'startTime' => pnVarPrepForStore($startTime),
-                        'alldayevent' => pnVarPrepForStore($event_allday),
-                        'catid' => pnVarPrepForStore($event_category),
-                        'location' => pnVarPrepForStore($event_location_info),
-                        'conttel' => pnVarPrepForStore($event_conttel),
-                        'contname' => pnVarPrepForStore($event_contname),
-                        'contemail' => pnVarPrepForStore($event_contemail),
-                        'website' => pnVarPrepForStore($event_website),
-                        'fee' => pnVarPrepForStore($event_fee),
-                        'eventstatus' => pnVarPrepForStore($event_status),
-                        'recurrspec' => pnVarPrepForStore($event_recurrspec),
-                        'duration' => pnVarPrepForStore($event_duration),
-                        'sharing' => pnVarPrepForStore($event_sharing),
-                        'aid' => pnVarPrepForStore($part));
+                        'title' => DataUtil::formatForStore($event_subject),
+                        'hometext' => DataUtil::formatForStore($event_desc),
+                        'topic' => DataUtil::formatForStore($event_topic),
+                        'eventDate' => DataUtil::formatForStore($startDate),
+                        'endDate' => DataUtil::formatForStore($endDate),
+                        'recurrtype' => DataUtil::formatForStore($event_repeat),
+                        'startTime' => DataUtil::formatForStore($startTime),
+                        'alldayevent' => DataUtil::formatForStore($event_allday),
+                        'catid' => DataUtil::formatForStore($event_category),
+                        'location' => DataUtil::formatForStore($event_location_info),
+                        'conttel' => DataUtil::formatForStore($event_conttel),
+                        'contname' => DataUtil::formatForStore($event_contname),
+                        'contemail' => DataUtil::formatForStore($event_contemail),
+                        'website' => DataUtil::formatForStore($event_website),
+                        'fee' => DataUtil::formatForStore($event_fee),
+                        'eventstatus' => DataUtil::formatForStore($event_status),
+                        'recurrspec' => DataUtil::formatForStore($event_recurrspec),
+                        'duration' => DataUtil::formatForStore($event_duration),
+                        'sharing' => DataUtil::formatForStore($event_sharing),
+                        'aid' => DataUtil::formatForStore($part));
         if ($is_update) {
-            $eventarray['eid'] = pnVarPrepForStore($pc_event_id);
+            $eventarray['eid'] = DataUtil::formatForStore($pc_event_id);
             $result = pnModAPIFunc('postcalendar', 'event', 'update', array($pc_event_id=>$eventarray));
         } else {
             unset ($eventarray['eid']); //be sure that eid is not set on insert op to autoincrement value
-            $eventarray['time'] = pnVarPrepForStore(date("Y-m-d H:i:s")); //current date
-            $eventarray['informant'] = pnVarPrepForStore($uname);
-            $eventarray['meeting_id'] = pnVarPrepForStore($pc_meeting_id);
+            $eventarray['time'] = DataUtil::formatForStore(date("Y-m-d H:i:s")); //current date
+            $eventarray['informant'] = DataUtil::formatForStore($uname);
+            $eventarray['meeting_id'] = DataUtil::formatForStore($pc_meeting_id);
 
             $result = pnModAPIFunc('postcalendar', 'event', 'create', $eventarray);
             if (pnUserGetVar('uname', $part) != $uname) {
@@ -446,11 +449,12 @@ function postcalendar_eventapi_writeEvent($args)
 
     $eid=$result['eid'];
 
-    pnModAPIFunc('PostCalendar','admin','meeting_mailparticipants',compact('eid','is_update'));
-    //pc_notify($eid, $is_update); // this is sending email
+    pnModAPIFunc('PostCalendar','admin','notify',compact('eid','is_update')); //notify admin and informant
 
-    pnModAPIFunc('PostCalendar','admin','meeting_mailparticipants',
-        compact('event_duration','event_desc','startDate','startTime','pc_mail_users','pc_mail_events','uname','is_update'));
+    if ($pc_meeting_id) { //notify meeting participants
+        pnModAPIFunc('PostCalendar','admin','meeting_mailparticipants',
+            compact('event_duration','event_desc','startDate','startTime','pc_mail_users','pc_mail_events','uname','is_update'));
+    }
 
     return true;
 }
@@ -544,7 +548,7 @@ function postcalendar_eventapi_buildSubmitForm($args)
     //================================================================
     if ($meeting_id) { //means a meeting is established (i.e. not 0)
         $participants = array();
-        $where = 'WHERE pc_meeting_id=' . pnVarPrepForStore($meeting_id);
+        $where = 'WHERE pc_meeting_id=' . DataUtil::formatForStore($meeting_id);
         $attendees = DBUtil::selectFieldArray('postcalendar_events', 'aid', $where);
         foreach ($attendees as $uid) {
             $participants[$uid] = $users[$uid];
@@ -568,7 +572,7 @@ function postcalendar_eventapi_buildSubmitForm($args)
     //=================================================================
     //	PARSE INPUT_EVENT_TITLE
     //=================================================================
-    $tpl->assign('ValueEventTitle', pnVarPrepForDisplay($event_subject));
+    $tpl->assign('ValueEventTitle', DataUtil::formatForDisplay($event_subject));
 
     //=================================================================
     //	PARSE SELECT_DATE_TIME
@@ -623,7 +627,7 @@ function postcalendar_eventapi_buildSubmitForm($args)
         unset($display_type);
     }
 
-    $tpl->assign('ValueEventDesc', pnVarPrepForDisplay($event_desc));
+    $tpl->assign('ValueEventDesc', DataUtil::formatForDisplay($event_desc));
 
     $eventHTMLorText = array('text' => _PC_SUBMIT_TEXT, 'html' => _PC_SUBMIT_HTML);
     $tpl->assign('EventHTMLorText', $eventHTMLorText);
@@ -693,20 +697,20 @@ function postcalendar_eventapi_buildSubmitForm($args)
     //=================================================================
     //	location information
     //=================================================================
-    $tpl->assign('ValueLocation', pnVarPrepForDisplay($event_location));
-    $tpl->assign('ValueStreet1', pnVarPrepForDisplay($event_street1));
-    $tpl->assign('ValueStreet2', pnVarPrepForDisplay($event_street2));
-    $tpl->assign('ValueCity', pnVarPrepForDisplay($event_city));
-    $tpl->assign('ValueState', pnVarPrepForDisplay($event_state));
-    $tpl->assign('ValuePostal', pnVarPrepForDisplay($event_postal));
+    $tpl->assign('ValueLocation', DataUtil::formatForDisplay($event_location));
+    $tpl->assign('ValueStreet1', DataUtil::formatForDisplay($event_street1));
+    $tpl->assign('ValueStreet2', DataUtil::formatForDisplay($event_street2));
+    $tpl->assign('ValueCity', DataUtil::formatForDisplay($event_city));
+    $tpl->assign('ValueState', DataUtil::formatForDisplay($event_state));
+    $tpl->assign('ValuePostal', DataUtil::formatForDisplay($event_postal));
     //=================================================================
     //	contact information
     //=================================================================
-    $tpl->assign('ValueContact', pnVarPrepForDisplay($event_contname));
-    $tpl->assign('ValuePhone', pnVarPrepForDisplay($event_conttel));
-    $tpl->assign('ValueEmail', pnVarPrepForDisplay($event_contemail));
-    $tpl->assign('ValueWebsite', pnVarPrepForDisplay($event_website));
-    $tpl->assign('ValueFee', pnVarPrepForDisplay($event_fee));
+    $tpl->assign('ValueContact', DataUtil::formatForDisplay($event_contname));
+    $tpl->assign('ValuePhone', DataUtil::formatForDisplay($event_conttel));
+    $tpl->assign('ValueEmail', DataUtil::formatForDisplay($event_contemail));
+    $tpl->assign('ValueWebsite', DataUtil::formatForDisplay($event_website));
+    $tpl->assign('ValueFee', DataUtil::formatForDisplay($event_fee));
     //=================================================================
     //	Repeating Information
     //=================================================================
@@ -973,7 +977,7 @@ function postcalendar_eventapi_eventDetail($args)
     // determine meeting participants
     $participants = array();
     if ($event['meeting_id']) {
-        $where = 'WHERE pc_meeting_id=' . pnVarPrepForStore($event['meeting_id']);
+        $where = 'WHERE pc_meeting_id=' . DataUtil::formatForStore($event['meeting_id']);
         $attendees = DBUtil::selectFieldArray('postcalendar_events', 'aid', $where);
 
         // FIXME: do we need this here? Just to do a lookup?

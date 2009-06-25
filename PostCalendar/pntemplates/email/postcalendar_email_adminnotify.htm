@@ -1,4 +1,4 @@
-<!--[ $Id$ ]-->
+<!--[* $Id$ *]-->
 <h2><!--[pnml name="_PC_NOTIFY_SUBJECT"]--></h2>
 
 <!--[if $is_update eq true]-->
@@ -7,7 +7,7 @@
 	<p><!--[pnml name="_PC_NOTIFY_NEW_MSG"]--></p>
 <!--[/if]-->
 
-<p><a href='<!--[$link]-->'>Event #<!--[$eid]--></a></p>
+<p><a href='<!--[$link|pnvarprephtmldisplay]-->'>Event #<!--[$eid]--></a></p>
 <hr />
 <p>A Message from your PostCalendar <!--[$modversion]--><br />
 @ <!--[$smarty.now|date_format:'%Y-%m-%d %H:%M:%S']--><br />

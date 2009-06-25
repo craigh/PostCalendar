@@ -150,15 +150,15 @@ function postcalendar_event_new($args)
     $event_topic    = FormUtil::getPassedValue('event_topic');
 
     // event start information
-    $event_meetingdate_start = FormUtil::getPassedValue('meetingdate_start'); // V4B SB START
+    $event_meetingdate_start = FormUtil::getPassedValue('meetingdate_start');
     if (strchr($event_meetingdate_start, '-')) {
         $event_startmonth = substr($event_meetingdate_start, 5, 2);
         $event_startday   = substr($event_meetingdate_start, 8, 2);
-        $event_startyear  = substr($event_meetingdate_start, 0, 4); // V4B SB END
+        $event_startyear  = substr($event_meetingdate_start, 0, 4);
     } else {
         $event_startmonth = substr($event_meetingdate_start, 4, 2);
         $event_startday   = substr($event_meetingdate_start, 6, 2);
-        $event_startyear  = substr($event_meetingdate_start, 0, 4); // V4B SB END
+        $event_startyear  = substr($event_meetingdate_start, 0, 4);
     }
 
     $event_starttimeh = FormUtil::getPassedValue('event_starttimeHour');
@@ -167,7 +167,7 @@ function postcalendar_event_new($args)
     $event_startampm  = ($event_startMer == "am" ? 1 : 2); // reformat to old way
 
     // event end information
-    $event_meetingdate_end = FormUtil::getPassedValue('meetingdate_end'); // V4B SB START
+    $event_meetingdate_end = FormUtil::getPassedValue('meetingdate_end');
     if (strchr($event_meetingdate_end, '-')) {
         $event_endmonth = substr($event_meetingdate_end, 5, 2);
         $event_endday   = substr($event_meetingdate_end, 8, 2);
@@ -182,7 +182,7 @@ function postcalendar_event_new($args)
         $event_endday   = $event_startday;
         $event_endyear  = $event_startyear; // V4B SB END
     }
-    $event_endtype     = FormUtil::getPassedValue('event_endtype');
+    $event_endtype     = FormUtil::getPassedValue('event_endtype'); //0 = no end daate
     $event_dur_hours   = FormUtil::getPassedValue('event_dur_hours');
     $event_dur_minutes = FormUtil::getPassedValue('event_dur_minutes');
     $event_duration    = (60 * 60 * $event_dur_hours) + (60 * $event_dur_minutes);
@@ -325,17 +325,20 @@ function postcalendar_event_new($args)
     //	ERROR CHECKING
     //================================================================
     // $required_vars = array('event_subject','event_desc');
+    /* THIS SEEMS WAY TO COMPLICATED...  CAH 6/24/2009
     $required_vars = array('event_subject');
     // $required_name = array(_PC_EVENT_TITLE,_PC_EVENT_DESC);
     $required_name = array(_PC_EVENT_TITLE);
-    $error_msg = '';
     $reqCount = count($required_vars);
     for ($r = 0; $r < $reqCount; $r++) {
         if (empty($$required_vars[$r]) || !preg_match('/\S/i', $$required_vars[$r])) {
             LogUtil::registerError('<b>' . $required_name[$r] . '</b> ' . _PC_SUBMIT_ERROR4 . '<br />');
         }
     }
-    unset($reqCount);
+    unset($reqCount); */
+    if (empty($event_subject)) LogUtil::registerError('<b>event subject</b>'._PC_SUBMIT_ERROR4.'<br />');
+    // if this truly is empty, it should abort!
+
     // check repeating frequencies
     if ($event_repeat == REPEAT) {
         if (!isset($event_repeat_freq) || $event_repeat_freq < 1 || empty($event_repeat_freq)) {
@@ -365,6 +368,7 @@ function postcalendar_event_new($args)
     $sdate = strtotime($event_startyear . '-' . $event_startmonth . '-' . $event_startday);
     $edate = strtotime($event_endyear . '-' . $event_endmonth . '-' . $event_endday);
     $tdate = strtotime(date('Y-m-d'));
+
     if ($edate < $sdate && $event_endtype == 1) {
         LogUtil::registerError(_PC_SUBMIT_ERROR1);
     }
@@ -374,7 +378,6 @@ function postcalendar_event_new($args)
     if (!checkdate($event_endmonth, $event_endday, $event_endyear)) {
         LogUtil::registerError(_PC_SUBMIT_ERROR3);
     }
-
     //================================================================
     //	Preview the event
     //================================================================
@@ -391,8 +394,12 @@ function postcalendar_event_new($args)
         if (!SecurityUtil::confirmAuthKey()) return LogUtil::registerAuthidError(
             pnModURL('postcalendar', 'admin', 'main'));
 
-        //save the start date, before the vars are cleared (needed for the redirect on success)
-        $url_date = $event_startyear . $event_startmonth . $event_startday;
+//echo $event_startmonth."-".$event_startday."-".$event_startyear."<br />";
+//echo $event_endmonth."-".$event_endday."-".$event_endyear."<br />";
+//echo "event_subject: ".$event_subject."<br />";
+//echo "edate: ".$edate. "sdate: ".$sdate." event_endtype:".$event_endtype."<br />";
+//echo "event_startmonth: ".$event_startmonth." event_startday: ".$event_startday." event_startyear: ".$event_startyear."<br />";
+//die;
 
         if (!pnModAPIFunc('PostCalendar', 'event', 'writeEvent', $eventdata)) {
             LogUtil::registerError(_PC_EVENT_SUBMISSION_FAILED);
@@ -406,6 +413,8 @@ function postcalendar_event_new($args)
 
             // save the start date, before the vars are cleared (needed for the redirect on success)
             $url_date = $event_startyear . $event_startmonth . $event_startday;
+
+            // don't think the code below is needed (~20 lines)
 
             // clear the form vars
             $event_subject = $event_desc = $event_sharing = $event_category = $event_topic = $event_startmonth = $event_startday = $event_startyear = $event_starttimeh = $event_starttimem = $event_startampm = $event_endmonth = $event_endday = $event_endyear = $event_endtype = $event_dur_hours = $event_dur_minutes = $event_duration = $event_allday = $event_location = $event_street1 = $event_street2 = $event_city = $event_state = $event_postal = $event_location_info = $event_contname = $event_conttel = $event_contemail = $event_website = $event_fee = $event_contact = $event_repeat = $event_repeat_freq = $event_repeat_freq_type = $event_repeat_on_num = $event_repeat_on_day = $event_repeat_on_freq = $event_recurrspec = $uname = $Date = $year = $month = $day = $pc_html_or_text = null;
@@ -427,7 +436,7 @@ function postcalendar_event_new($args)
                 'month', 'day', 'pc_html_or_text', 'is_update', 'pc_event_id');
         }
 
-        pnRedirect(pnModURL('PostCalendar', 'user', 'view', array('viewtype' => 'month', 'Date' => $url_date)));
+        pnRedirect(pnModURL('PostCalendar', 'user', 'view', array('viewtype' => 'month', 'Date' => $url_date))); // change to default view or previous
         return true;
     }
 

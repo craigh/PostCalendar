@@ -98,21 +98,6 @@ function postcalendar_init()
  */
 function postcalendar_upgrade($oldversion)
 {
-    // note: the comment below is no longer tru - CAH  13 Apr 2009
-    /**
-     *	Until Zikula fixes the bugs
-     *	with the module upgrade we are
-     *	going to have to do it ourselves.
-     *
-     *	Please do not use the Modules admin
-     *	to upgrade PostCalendar.  Use the
-     *	link provided in the PostCalendar
-     *	Admin section.
-     */
-    //$pcModInfo = pnModGetInfo(pnModGetIDFromName('PostCalendar'));
-    //$pcDir = pnVarPrepForOS($pcModInfo['directory']);
-
-
     list($dbconn) = pnDBGetConn();
     $pntable = pnDBGetTables();
     $events_table = $pntable['postcalendar_events'];

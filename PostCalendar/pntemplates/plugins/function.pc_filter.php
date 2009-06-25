@@ -47,16 +47,16 @@ function smarty_function_pc_filter($args, &$smarty)
     if (!isset($m)) $m = substr($Date, 4, 2);
     if (!isset($d)) $d = substr($Date, 6, 2);
 
-    $tplview = pnVarCleanFromInput('tplview');
-    $viewtype = pnVarCleanFromInput('viewtype');
-    $pc_username = pnVarCleanFromInput('pc_username');
+    $tplview = FormUtil::getPassedValue('tplview');
+    $viewtype = FormUtil::getPassedValue('viewtype');
+    $pc_username = FormUtil::getPassedValue('pc_username');
 
     if (!isset($viewtype)) $viewtype = _SETTING_DEFAULT_VIEW;
 
     $types = explode(',', $type);
 
     $modinfo = pnModGetInfo(pnModGetIDFromName('PostCalendar'));
-    $mdir = pnVarPrepForOS($modinfo['directory']);
+    $mdir = DataUtil::formatForOS($modinfo['directory']);
     unset($modinfo);
 
     //================================================================
@@ -84,7 +84,7 @@ function smarty_function_pc_filter($args, &$smarty)
     //================================================================
     if (in_array('category', $types)) {
         @define('_PC_FORM_CATEGORY', true);
-        $category = pnVarCleanFromInput('pc_category');
+        $category = FormUtil::getPassedValue('pc_category');
         $categories = pnModAPIFunc('PostCalendar', 'user', 'getCategories');
         $catoptions = "<select name=\"pc_category\" class=\"$class\">";
         $catoptions .= "<option value=\"\" class=\"$class\">" . _PC_FILTER_CATEGORY . "</option>";
@@ -100,7 +100,7 @@ function smarty_function_pc_filter($args, &$smarty)
     //================================================================
     if (in_array('topic', $types) && _SETTING_DISPLAY_TOPICS) {
         @define('_PC_FORM_TOPIC', true);
-        $topic = pnVarCleanFromInput('pc_topic');
+        $topic = FormUtil::getPassedValue('pc_topic');
         $topics = pnModAPIFunc('PostCalendar', 'user', 'getTopics');
         $topoptions = "<select name=\"pc_topic\" class=\"$class\">";
         $topoptions .= "<option value=\"\" class=\"$class\">" . _PC_FILTER_TOPIC . "</option>";

@@ -45,19 +45,19 @@ function smarty_function_pc_form_nav_close($args = array())
         echo '<input type="hidden" name="Date" value="' . $Date . '" />';
     }
     if (!defined('_PC_FORM_VIEW_TYPE')) {
-        echo '<input type="hidden" name="viewtype" value="' . pnVarCleanFromInput('viewtype') . '" />';
+        echo '<input type="hidden" name="viewtype" value="' . FormUtil::getPassedValue('viewtype') . '" />';
     }
     if (!defined('_PC_FORM_TEMPLATE')) {
-        echo '<input type="hidden" name="tplview" value="' . pnVarCleanFromInput('tplview') . '" />';
+        echo '<input type="hidden" name="tplview" value="' . FormUtil::getPassedValue('tplview') . '" />';
     }
     if (!defined('_PC_FORM_USERNAME')) {
-        echo '<input type="hidden" name="pc_username" value="' . pnVarCleanFromInput('pc_username') . '" />';
+        echo '<input type="hidden" name="pc_username" value="' . FormUtil::getPassedValue('pc_username') . '" />';
     }
     if (!defined('_PC_FORM_CATEGORY')) {
-        echo '<input type="hidden" name="pc_category" value="' . pnVarCleanFromInput('pc_category') . '" />';
+        echo '<input type="hidden" name="pc_category" value="' . FormUtil::getPassedValue('pc_category') . '" />';
     }
     if (!defined('_PC_FORM_TOPIC')) {
-        echo '<input type="hidden" name="pc_topic" value="' . pnVarCleanFromInput('pc_topic') . '" />';
+        echo '<input type="hidden" name="pc_topic" value="' . FormUtil::getPassedValue('pc_topic') . '" />';
     }
 
     echo '</form>';

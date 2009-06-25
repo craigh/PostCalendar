@@ -87,7 +87,7 @@ EOF;
  */
 function search_postcalendar()
 {
-    $active = pnVarCleanFromInput('active_postcalendar');
+    $active = FormUtil::getPassedValue('active_postcalendar');
     if (!isset($active)) return false;
 
     if (!pnModAvailable('PostCalendar') || !pnModAPILoad('PostCalendar', 'user')) return '';
@@ -105,10 +105,10 @@ function search_postcalendar()
     $tpl->assign('TPL_VIEW', $template_view);
     /* end */
 
-    $k = pnVarCleanFromInput('q');
-    $k_andor = pnVarCleanFromInput('bool');
-    $pc_category = pnVarCleanFromInput('pc_category');
-    $pc_topic = pnVarCleanFromInput('pc_topic');
+    $k = FormUtil::getPassedValue('q');
+    $k_andor = FormUtil::getPassedValue('bool');
+    $pc_category = FormUtil::getPassedValue('pc_category');
+    $pc_topic = FormUtil::getPassedValue('pc_topic');
 
     //=================================================================
     //  Find out what Template we're using

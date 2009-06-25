@@ -87,7 +87,7 @@ function postcalendar_userapi_buildView($args)
     //	Find out what Template we're using
 
 
-    $function_out['template'] = pnVarPrepForOS('user/postcalendar_user_view_' . $viewtype . '.html');
+    $function_out['template'] = DataUtil::formatForOS('user/postcalendar_user_view_' . $viewtype . '.html');
 
     //=================================================================
     //	finish setting things up
