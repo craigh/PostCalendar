@@ -158,7 +158,7 @@ function postcalendar_upgrade($oldversion)
             $dbconn->Execute($sql);
             if ($dbconn->ErrorNo() != 0) {
                 die('event table alter error : ' . $dbconn->ErrorMsg());
-                return false;
+                // return false;
             }
             // v4b TS end
 
@@ -173,7 +173,7 @@ function postcalendar_upgrade($oldversion)
             $dbconn->Execute($sql);
             if ($dbconn->ErrorNo() != 0) {
                 die('cat table create error : ' . $dbconn->ErrorMsg());
-                return false;
+                // return false;
             }
 
             // insert the current hardcoded categories into the new categories table
@@ -196,7 +196,7 @@ function postcalendar_upgrade($oldversion)
                 if ($dbconn->ErrorNo() != 0) {
                     die(
                         'cat table insert error : ' . $dbconn->ErrorMsg());
-                    return false;
+                    // return false;
                 }
             }
 
@@ -213,7 +213,7 @@ function postcalendar_upgrade($oldversion)
                 if ($dbconn->ErrorNo() != 0) {
                     die(
                         'event table update error : ' . $dbconn->ErrorMsg());
-                    return false;
+                    // return false;
                 }
             }
 
@@ -222,7 +222,7 @@ function postcalendar_upgrade($oldversion)
             $dbconn->Execute($sql);
             if ($dbconn->ErrorNo() != 0) {
                 die('cat table alter error : ' . $dbconn->ErrorMsg());
-                return false;
+                // return false;
             }
 
             // remove the old vars as they are no longer needed
@@ -358,7 +358,7 @@ function postcalendar_upgrade($oldversion)
             $result = $dbconn->Execute($sql);
             if ($dbconn->ErrorNo() != 0) {
                 die($dbconn->ErrorMsg());
-                return false;
+                // return false;
             }
             if (!isset($result)) return false;
             // grab the results and start the conversion
@@ -529,7 +529,7 @@ function postcalendar_upgrade($oldversion)
                     $updatesql);
                 if ($dbconn->ErrorNo() != 0) {
                     die($dbconn->ErrorMsg());
-                    return false;
+                    // return false;
                 }
                 // next event please
             }
@@ -560,7 +560,7 @@ function postcalendar_upgrade($oldversion)
             $dbconn->Execute($sql);
             if ($dbconn->ErrorNo() != 0) {
                 die($dbconn->ErrorMsg());
-                return false;
+                // return false;
             }
             // adding indexes
             $sql = "ALTER TABLE $cat_table
@@ -568,7 +568,7 @@ function postcalendar_upgrade($oldversion)
             $dbconn->Execute($sql);
             if ($dbconn->ErrorNo() != 0) {
                 die($dbconn->ErrorMsg());
-                return false;
+                // return false;
             }
             return postcalendar_upgrade('3.9.4');
             break;
@@ -600,7 +600,7 @@ function postcalendar_upgrade($oldversion)
             $dbconn->Execute($sql);
             if ($dbconn->ErrorNo() != 0) {
                 die('event table alter error : ' . $dbconn->ErrorMsg());
-                return false;
+                // return false;
             }
 
             // v4b TS end

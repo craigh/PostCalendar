@@ -74,7 +74,7 @@ function postcalendar_icalapi_processupload($fileparts)
     }
     //if (in_array(false,$eventwritten) return false;	//is this the better way than below?
     foreach ($eventwritten as $valid) {
-        if (!valid) return false; // if any event not written return false
+        if (!$valid) return false; // if any event not written return false
     }
     return true; //return true if all events written
 }
@@ -115,7 +115,7 @@ function postcalendar_icalapi_writeicalevent($ve)
     $startstamp = mktime($ve['starttime']['hour'], $ve['starttime']['min'], $ve['starttime']['sec'], $ve['startdate']['month'],
         $ve['startdate']['day'], $ve['startdate']['year']);
     $stampdiff = $endstamp - $startstamp;
-    if (($endstamp - $startstamp == 86400) and ($ve['endtime']['hour'] == "00") and ($ve['endtime']['min'] == "00") and ($ve['endtime']['sec'] == "00")) {
+    if (($stampdiff == 86400) and ($ve['endtime']['hour'] == "00") and ($ve['endtime']['min'] == "00") and ($ve['endtime']['sec'] == "00")) {
         $ve['allday'] = 1; // allday event true
     }
 

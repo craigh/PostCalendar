@@ -103,4 +103,4 @@ function smarty_function_pc_calendar_build_input_box($params, &$smarty)
     if ($assign) $smarty->assign($assign, $html);
     else return $html;
 }
-?>
+

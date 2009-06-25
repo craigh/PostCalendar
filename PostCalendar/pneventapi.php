@@ -315,7 +315,7 @@ function postcalendar_eventapi_getEvents($args)
                             $dnum--,
                             $rday, $nm,
                             $ny,
-                            $format = "%Y-%m-%d");
+                            "%Y-%m-%d");
                     } while ($occurance === -1);
                     if (isset($days[$occurance]) && $occurance <= $stop) {
                         array_push($days[$occurance],

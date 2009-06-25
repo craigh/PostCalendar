@@ -64,8 +64,7 @@ function postcalendar_userapi_getLongDayName($args)
  */
 function postcalendar_userapi_buildView($args)
 {
-    extract($args);
-    unset($args);
+    $Date = $args['Date'];
 
     //=================================================================
     //	grab the post variables
