@@ -1,40 +1,40 @@
 <?php
 /**
- *	SVN: $Id$
+ * SVN: $Id$
  *
- *  @package     PostCalendar
- *  @author      $Author$
- *  @link	     $HeadURL$
- *  @version     $Revision$
+ * @package     PostCalendar
+ * @author      $Author$
+ * @link        $HeadURL$
+ * @version     $Revision$
  *
- *	PostCalendar::Zikula Events Calendar Module
- *	Copyright (C) 2002	The PostCalendar Team
- *	http://postcalendar.tv
- *	Copyright (C) 2009	Sound Web Development
- *	Craig Heydenburg
- *	http://code.zikula.org/soundwebdevelopment/
+ * PostCalendar::Zikula Events Calendar Module
+ * Copyright (C) 2002    The PostCalendar Team
+ * http://postcalendar.tv
+ * Copyright (C) 2009    Sound Web Development
+ * Craig Heydenburg
+ * http://code.zikula.org/soundwebdevelopment/
  *
- *	This program is free software; you can redistribute it and/or modify
- *	it under the terms of the GNU General Public License as published by
- *	the Free Software Foundation; either version 2 of the License, or
- *	(at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
  *
- *	This program is distributed in the hope that it will be useful,
- *	but WITHOUT ANY WARRANTY; without even the implied warranty of
- *	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *	GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *	You should have received a copy of the GNU General Public License
- *	along with this program; if not, write to the Free Software
- *	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- *	To read the license please read the docs/license.txt or visit
- *	http://www.gnu.org/copyleft/gpl.html
+ * To read the license please read the docs/license.txt or visit
+ * http://www.gnu.org/copyleft/gpl.html
  *
  */
 
 //=========================================================================
-//	Require utility classes
+// Require utility classes
 //=========================================================================
 require_once 'modules/PostCalendar/common.api.php';
 
@@ -55,50 +55,47 @@ function postcalendar_userapi_getLongDayName($args)
 }
 
 /**
- *	postcalendar_userapi_buildView
+ * postcalendar_userapi_buildView
  *
- *	Builds the calendar display
- *	@param string $Date mm/dd/yyyy format (we should use timestamps)
- *	@return string generated html output
- *	@access public
+ * Builds the calendar display
+ * @param string $Date mm/dd/yyyy format (we should use timestamps)
+ * @return string generated html output
+ * @access public
  */
 function postcalendar_userapi_buildView($args)
 {
     $Date = $args['Date'];
 
     //=================================================================
-    //	grab the post variables
+    // grab the post variables
     $pc_username = FormUtil::getPassedValue('pc_username');
     $category = FormUtil::getPassedValue('pc_category');
     $topic = FormUtil::getPassedValue('pc_topic');
     //=================================================================
-    //	set the correct date
+    // set the correct date
     if (!$Date) $Date = postcalendar_getDate(); // if not explicit arg, get from input
-
 
     if (strlen($Date) == 8 && is_numeric($Date)) $Date .= '000000'; // 20060101
 
-
     //=================================================================
-    //	get the current view
+    // get the current view
     if (!isset($viewtype)) $viewtype = 'month'; // default view
     //=================================================================
-    //	Find out what Template we're using
-
+    // Find out what Template we're using
 
     $function_out['template'] = DataUtil::formatForOS('user/postcalendar_user_view_' . $viewtype . '.html');
 
     //=================================================================
-    //	finish setting things up
+    // finish setting things up
     $the_year = substr($Date, 0, 4);
     $the_month = substr($Date, 4, 2);
     $the_day = substr($Date, 6, 2);
     $last_day = Date_Calc::daysInMonth($the_month, $the_year);
     //=================================================================
-    //	populate the template object with information for
-    //	Month Names, Long Day Names and Short Day Names
-    //	as translated in the language files
-    //	(may be adding more here soon - based on need)
+    // populate the template object with information for
+    // Month Names, Long Day Names and Short Day Names
+    // as translated in the language files
+    // (may be adding more here soon - based on need)
     //=================================================================
     $pc_month_names = array(
                     _CALJAN, _CALFEB, _CALMAR, _CALAPR, _CALMAY,
@@ -108,11 +105,11 @@ function postcalendar_userapi_buildView($args)
                     _CALFRIDAYSHORT, _CALSATURDAYSHORT);
     $pc_long_day_names = array(_CALSUNDAY, _CALMONDAY, _CALTUESDAY, _CALWEDNESDAY, _CALTHURSDAY, _CALFRIDAY, _CALSATURDAY);
     //=================================================================
-    //	here we need to set up some information for later
-    //	variable creation.	This helps us establish the correct
-    //	date ranges for each view.	There may be a better way
-    //	to handle all this, but my brain hurts, so your comments
-    //	are very appreciated and welcomed.
+    // here we need to set up some information for later
+    // variable creation.    This helps us establish the correct
+    // date ranges for each view.    There may be a better way
+    // to handle all this, but my brain hurts, so your comments
+    // are very appreciated and welcomed.
     //=================================================================
     switch (_SETTING_FIRST_DAY_WEEK) {
         case _IS_MONDAY:
@@ -153,14 +150,13 @@ function postcalendar_userapi_buildView($args)
             break;
     }
     //=================================================================
-    //	Week View is a bit of a pain, so we need to
-    //	do some extra setup for that view.	This section will
-    //	find the correct starting and ending dates for a given
-    //	seven day period, based on the day of the week the
-    //	calendar is setup to run under (Sunday, Saturday, Monday)
+    // Week View is a bit of a pain, so we need to
+    // do some extra setup for that view.    This section will
+    // find the correct starting and ending dates for a given
+    // seven day period, based on the day of the week the
+    // calendar is setup to run under (Sunday, Saturday, Monday)
     //=================================================================
-    $first_day_of_week = sprintf(
-        '%02d', $the_day - $week_day);
+    $first_day_of_week = sprintf('%02d', $the_day - $week_day);
     $week_first_day = date('m/d/Y', mktime(0, 0, 0, $the_month, $first_day_of_week, $the_year));
     list($week_first_day_month, $week_first_day_date, $week_first_day_year) = explode('/', $week_first_day);
     $week_first_day_month_name = pnModAPIFunc('PostCalendar', 'user', 'getmonthname',
@@ -171,15 +167,14 @@ function postcalendar_userapi_buildView($args)
         array('Date' => mktime(0, 0, 0, $week_last_day_month, $week_last_day_date, $week_last_day_year)));
 
     //=================================================================
-    //	Setup some information so we know the actual month's dates
-    //	also get today's date for later use and highlighting
+    // Setup some information so we know the actual month's dates
+    // also get today's date for later use and highlighting
     //=================================================================
-    $month_view_start = date('Y-m-d',
-        mktime(0, 0, 0, $the_month, 1, $the_year));
+    $month_view_start = date('Y-m-d', mktime(0, 0, 0, $the_month, 1, $the_year));
     $month_view_end = date('Y-m-t', mktime(0, 0, 0, $the_month, 1, $the_year));
     $today_date = postcalendar_today('%Y-%m-%d');
     //=================================================================
-    //	Setup the starting and ending date ranges for pcGetEvents()
+    // Setup the starting and ending date ranges for pcGetEvents()
     //=================================================================
     switch ($viewtype) {
         case 'day':
@@ -204,13 +199,13 @@ function postcalendar_userapi_buildView($args)
             break;
     }
     //=================================================================
-    //	Load the events
+    // Load the events
     //=================================================================
     $eventsByDate = & pnModAPIFunc('PostCalendar', 'event', 'getEvents',
         array('start' => $starting_date, 'end' => $ending_date));
 
     //=================================================================
-    //	Create an array with the day names in the correct order
+    // Create an array with the day names in the correct order
     //=================================================================
     $daynames = array();
     $numDays = count($pc_long_day_names);
@@ -233,48 +228,39 @@ function postcalendar_userapi_buildView($args)
     }
     unset($numDays);
     //=================================================================
-    //	Prepare some values for the template
+    // Prepare some values for the template
     //=================================================================
-    $prev_month = Date_Calc::beginOfPrevMonth(1, $the_month, $the_year,
-        '%Y%m%d');
+    $prev_month = Date_Calc::beginOfPrevMonth(1, $the_month, $the_year, '%Y%m%d');
     $next_month = Date_Calc::beginOfNextMonth(1, $the_month, $the_year, '%Y%m%d');
 
     //=================================================================
-    //	Prepare links for template
+    // Prepare links for template
     //=================================================================
     $pc_prev = pnModURL('PostCalendar', 'user', 'view',
-        array('viewtype' => 'month', 'Date' => $prev_month, 'pc_username' => $pc_username, 'pc_category' => $category,
-                        'pc_topic' => $topic));
+        array('viewtype' => 'month', 'Date' => $prev_month, 'pc_username' => $pc_username, 'pc_category' => $category, 'pc_topic' => $topic));
     $pc_next = pnModURL('PostCalendar', 'user', 'view',
-        array('viewtype' => 'month', 'Date' => $next_month, 'pc_username' => $pc_username, 'pc_category' => $category,
-                        'pc_topic' => $topic));
+        array('viewtype' => 'month', 'Date' => $next_month, 'pc_username' => $pc_username, 'pc_category' => $category, 'pc_topic' => $topic));
     $prev_day = Date_Calc::prevDay($the_day, $the_month, $the_year, '%Y%m%d');
     $next_day = Date_Calc::nextDay($the_day, $the_month, $the_year, '%Y%m%d');
     $pc_prev_day = pnModURL('PostCalendar', 'user', 'view',
-        array('viewtype' => 'day', 'Date' => $prev_day, 'pc_username' => $pc_username, 'pc_category' => $category,
-                        'pc_topic' => $topic));
+        array('viewtype' => 'day', 'Date' => $prev_day, 'pc_username' => $pc_username, 'pc_category' => $category, 'pc_topic' => $topic));
     $pc_next_day = pnModURL('PostCalendar', 'user', 'view',
-        array('viewtype' => 'day', 'Date' => $next_day, 'pc_username' => $pc_username, 'pc_category' => $category,
-                        'pc_topic' => $topic));
+        array('viewtype' => 'day', 'Date' => $next_day, 'pc_username' => $pc_username, 'pc_category' => $category, 'pc_topic' => $topic));
     $prev_week = date('Ymd', mktime(0, 0, 0, $week_first_day_month, $week_first_day_date - 7, $week_first_day_year));
     $next_week = date('Ymd', mktime(0, 0, 0, $week_last_day_month, $week_last_day_date + 1, $week_last_day_year));
     $pc_prev_week = pnModURL('PostCalendar', 'user', 'view',
-        array('viewtype' => 'week', 'Date' => $prev_week, 'pc_username' => $pc_username, 'pc_category' => $category,
-                        'pc_topic' => $topic));
+        array('viewtype' => 'week', 'Date' => $prev_week, 'pc_username' => $pc_username, 'pc_category' => $category, 'pc_topic' => $topic));
     $pc_next_week = pnModURL('PostCalendar', 'user', 'view',
-        array('viewtype' => 'week', 'Date' => $next_week, 'pc_username' => $pc_username, 'pc_category' => $category,
-                        'pc_topic' => $topic));
+        array('viewtype' => 'week', 'Date' => $next_week, 'pc_username' => $pc_username, 'pc_category' => $category, 'pc_topic' => $topic));
     $prev_year = date('Ymd', mktime(0, 0, 0, 1, 1, $the_year - 1));
     $next_year = date('Ymd', mktime(0, 0, 0, 1, 1, $the_year + 1));
     $pc_prev_year = pnModURL('PostCalendar', 'user', 'view',
-        array('viewtype' => 'year', 'Date' => $prev_year, 'pc_username' => $pc_username, 'pc_category' => $category,
-                        'pc_topic' => $topic));
+        array('viewtype' => 'year', 'Date' => $prev_year, 'pc_username' => $pc_username, 'pc_category' => $category, 'pc_topic' => $topic));
     $pc_next_year = pnModURL('PostCalendar', 'user', 'view',
-        array('viewtype' => 'year', 'Date' => $next_year, 'pc_username' => $pc_username, 'pc_category' => $category,
-                        'pc_topic' => $topic));
+        array('viewtype' => 'year', 'Date' => $next_year, 'pc_username' => $pc_username, 'pc_category' => $category, 'pc_topic' => $topic));
 
     //=================================================================
-    //	Populate the template
+    // Populate the template
     //=================================================================
     $all_categories = pnModAPIFunc('PostCalendar', 'user', 'getCategories');
     $categories = array();
@@ -325,7 +311,7 @@ function postcalendar_userapi_buildView($args)
         $function_out['raw1'] = "<html><head></head><body>\n";
         //$tpl->display("$template");
         $function_out['raw2'] .= postcalendar_footer();
-        // V4B TS start ***	 Hook code for displaying stuff for events in popup
+        // V4B TS start ***     Hook code for displaying stuff for events in popup
         if ($_GET["type"] != "admin") {
             $hooks = pnModCallHooks('item', 'display', $eid, "index.php?module=PostCalendar&amp;type=user&amp;func=view&amp;viewtype=details&amp;eid=$eid&amp;popup=1");
             $function_out['raw2'] .= $hooks;
@@ -341,21 +327,30 @@ function postcalendar_userapi_buildView($args)
 }
 
 /**
- *	postcalendar_userapi_eventPreview
- *	Creates the detailed event display and outputs html.
- *	Accepts an array of key/value pairs
- *	@param array $event array of event details from the form
- *	@return string html output
- *	@access public
+ * postcalendar_userapi_eventPreview
+ * Creates the detailed event display and outputs html.
+ * Accepts an array of key/value pairs
+ * @param array $event array of event details from the form
+ * @return string html output
+ * @access public
  */
 function postcalendar_userapi_eventPreview($args)
 {
+    // Argument check - make sure that all required arguments are present,
+    // if not then set an appropriate error message and return
+    if (!isset($args['event_starttimeh']) ||
+        !isset($args['event_starttimem']) ||
+        !isset($args['event_startday']) ||
+        !isset($args['event_startmonth']) ||
+        !isset($args['event_endday']) ||
+        !isset($args['event_endmonth']) ||
+        !isset($args['event_startampm']) ||
+        !isset($args['event_endmonth'])) {
+        return LogUtil::registerError(_MODARGSERROR . ' in postcalendar_userapi_eventPreview');
+    }
 
-    extract($args);
-    unset($args);
-    $uid = pnUserGetVar('uid');
     //=================================================================
-    //	Setup Render Template Engine
+    // Setup Render Template Engine
     //=================================================================
     $tpl = pnRender::getInstance('PostCalendar');
     PostCalendarSmartySetup($tpl);
@@ -369,26 +364,25 @@ function postcalendar_userapi_eventPreview($args)
     /* end */
 
     // add preceding zeros
-    $event_starttimeh = sprintf('%02d', $event_starttimeh);
-    $event_starttimem = sprintf('%02d', $event_starttimem);
-    $event_startday = sprintf('%02d', $event_startday);
-    $event_startmonth = sprintf('%02d', $event_startmonth);
-    $event_endday = sprintf('%02d', $event_endday);
-    $event_endmonth = sprintf('%02d', $event_endmonth);
+    $event_starttimeh = sprintf('%02d', $args['event_starttimeh']);
+    $event_starttimem = sprintf('%02d', $args['event_starttimem']);
+    $event_startday = sprintf('%02d', $args['event_startday']);
+    $event_startmonth = sprintf('%02d', $args['event_startmonth']);
+    $event_endday = sprintf('%02d', $args['event_endday']);
+    $event_endmonth = sprintf('%02d', $args['event_endmonth']);
 
     if (!(bool) _SETTING_TIME_24HOUR) {
-        if ($event_startampm == _PM_VAL) {
+        if ($args['event_startampm'] == _PM_VAL) {
             if ($event_starttimeh != 12) {
                 $event_starttimeh += 12;
             }
-        } elseif ($event_startampm == _AM_VAL) {
+        } elseif ($args['event_startampm'] == _AM_VAL) {
             if ($event_starttimeh == 12) {
                 $event_starttimeh = 00;
             }
         }
     }
 
-    $event_startampm . " - ";
     $startTime = $event_starttimeh . ':' . $event_starttimem . ' ';
 
     $event = array();
@@ -428,7 +422,7 @@ function postcalendar_userapi_eventPreview($args)
 
     $event['meetingdate_start'] = $meetingdate_start;
     //=================================================================
-    //	get event's topic information
+    // get event's topic information
     //=================================================================
     if (_SETTING_DISPLAY_TOPICS) {
         $topic = DBUtil::selectObjectByID('topics', $event['topic'], 'topicid');
@@ -437,7 +431,7 @@ function postcalendar_userapi_eventPreview($args)
     }
 
     //=================================================================
-    //	populate the template
+    // populate the template
     //=================================================================
     if (!empty($event['location']) || !empty($event['street1']) || !empty(
         $event['street2']) || !empty($event['city']) || !empty($event['state']) || !empty($event['postal'])) {
@@ -456,11 +450,11 @@ function postcalendar_userapi_eventPreview($args)
 }
 
 /**
- *	__increment()
- *	returns the next valid date for an event based on the
- *	current day,month,year,freq and type
- *	@private
- *	@returns string YYYY-MM-DD
+ * __increment()
+ * returns the next valid date for an event based on the
+ * current day,month,year,freq and type
+ * @private
+ * @returns string YYYY-MM-DD
  */
 function __increment($d, $m, $y, $f, $t)
 {
@@ -474,6 +468,7 @@ function __increment($d, $m, $y, $f, $t)
         return date('Y-m-d', mktime(0, 0, 0, $m, $d, ($y + $f)));
     }
 }
+
 /****************************************************
  * The functions below are moved to eventapi
  ****************************************************/

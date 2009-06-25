@@ -1,35 +1,35 @@
 <?php
 /**
- *	SVN: $Id$
+ * SVN: $Id$
  *
- *  @package     PostCalendar
- *  @author      $Author$
- *  @link	     $HeadURL$
- *  @version     $Revision$
+ * @package     PostCalendar
+ * @author      $Author$
+ * @link        $HeadURL$
+ * @version     $Revision$
  *
- *  PostCalendar::Zikula Events Calendar Module
- *  Copyright (C) 2002  The PostCalendar Team
- *  http://postcalendar.tv
- *  Copyright (C) 2009  Sound Web Development
- *  Craig Heydenburg
- *  http://code.zikula.org/soundwebdevelopment/
+ * PostCalendar::Zikula Events Calendar Module
+ * Copyright (C) 2002  The PostCalendar Team
+ * http://postcalendar.tv
+ * Copyright (C) 2009  Sound Web Development
+ * Craig Heydenburg
+ * http://code.zikula.org/soundwebdevelopment/
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- *  To read the license please read the docs/license.txt or visit
- *  http://www.gnu.org/copyleft/gpl.html
+ * To read the license please read the docs/license.txt or visit
+ * http://www.gnu.org/copyleft/gpl.html
  *
  */
 Loader::requireOnce('includes/pnForm.php');
@@ -48,6 +48,7 @@ function postcalendar_user_main()
     // get the date and go to the view function
     return postcalendar_user_view(array('Date' => postcalendar_getDate()));
 }
+
 /**
  * view items
  * This is a standard function to provide an overview of all of the items
@@ -146,14 +147,25 @@ function postcalendar_user_display($args)
             break;
     } // end switch
 }
+
+/**
+ * Extension of the pnFormHandler class to handle a file upload
+ */
 class postcalendar_user_fileuploadHandler extends pnFormHandler
 {
     function initialize(&$render)
     {
         if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADD)) return $render->pnFormSetErrorMsg(_NOTAUTHORIZED);
-
         return true;
     }
+
+    /**
+     * The handler for command 'submit' in the file upload handler
+     *
+     * @param  pnFormRender $render The pnFormRender instance
+     * @param  array        $args   A reference to the arguments array
+     * @return boolean              True if successfull, false otherwise
+     */
     function handleCommand(&$render, $args)
     {
         if ($args['commandName'] == 'submit') {
@@ -162,7 +174,6 @@ class postcalendar_user_fileuploadHandler extends pnFormHandler
             // should your command event also do.
             //   if (!$render->pnFormIsValid())
             //       return false;
-
 
             $data = $render->pnFormGetValues();
             $delimiter = "/"; // assume filesystem delimiter is '/' - could change this based on server info?
@@ -299,6 +310,7 @@ function postcalendar_user_search()
 
     return $tpl->fetch("search/postcalendar_search.html");
 }
+
 function postcalendar_user_export()
 {
     # control whether debug and extendedinfo flags are allowed
@@ -380,7 +392,7 @@ function postcalendar_user_export_rss($sevents, $start, $end)
     $category = FormUtil::getPassedValue('category');
     $sitename = getenv('SERVER_NAME');
 
-    require_once ('modules/PostCalendar/pnincludes/rssfeedcreator.php');
+    require_once 'modules/PostCalendar/pnincludes/rssfeedcreator.php';
     $rss = new UniversalFeedCreator();
     $rss->useCached();
     $rss->title = "$sitename $start - $end Calendar";
@@ -458,7 +470,6 @@ function postcalendar_user_export_rss($sevents, $start, $end)
                 //echo "<link>$altrep</link>\n";
                 //echo "</item>\n";
 
-
                 $item = new FeedItem();
                 $item->title = "$summary - " . date("F jS", strtotime($cdate));
                 $item->link = $url;
@@ -480,7 +491,6 @@ function postcalendar_user_export_rss($sevents, $start, $end)
 
 ###############################################################################
 
-
 function eventdatecmp($a, $b)
 {
     if ($a[startTime] < $b[startTime]) return -1;
@@ -488,7 +498,6 @@ function eventdatecmp($a, $b)
 }
 
 ###############################################################################
-
 
 function postcalendar_user_findContact()
 {
@@ -541,6 +550,7 @@ function postcalendar_user_findContact()
 
     return true;
 }
+
 // parsefilename returns an array
 // ([0]=>pathname, [1]=>filename)
 // could be used to parse many strings
@@ -557,6 +567,7 @@ function parsefilename($delim, $str, $lim = 1)
 
     return array_merge(array(implode($delim, $out[0])), $out[1]);
 }
+
 /****************************************************
  * The functions below are moved to event
  ****************************************************/

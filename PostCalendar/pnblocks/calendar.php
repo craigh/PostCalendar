@@ -1,35 +1,35 @@
 <?php
 /**
- *	SVN: $Id$
+ * SVN: $Id$
  *
- *  @package     PostCalendar
- *  @author      $Author$
- *  @link	     $HeadURL$
- *  @version     $Revision$
+ * @package     PostCalendar
+ * @author      $Author$
+ * @link        $HeadURL$
+ * @version     $Revision$
  *
- *	PostCalendar::PostNuke Events Calendar Module
- *	Copyright (C) 2002	The PostCalendar Team
- *	http://postcalendar.tv
- *	Copyright (C) 2009	Sound Web Development
- *	Craig Heydenburg
- *	http://code.zikula.org/soundwebdevelopment/
+ * PostCalendar::PostNuke Events Calendar Module
+ * Copyright (C) 2002    The PostCalendar Team
+ * http://postcalendar.tv
+ * Copyright (C) 2009    Sound Web Development
+ * Craig Heydenburg
+ * http://code.zikula.org/soundwebdevelopment/
  *
- *	This program is free software; you can redistribute it and/or modify
- *	it under the terms of the GNU General Public License as published by
- *	the Free Software Foundation; either version 2 of the License, or
- *	(at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
  *
- *	This program is distributed in the hope that it will be useful,
- *	but WITHOUT ANY WARRANTY; without even the implied warranty of
- *	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *	GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *	You should have received a copy of the GNU General Public License
- *	along with this program; if not, write to the Free Software
- *	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- *	To read the license please read the docs/license.txt or visit
- *	http://www.gnu.org/copyleft/gpl.html
+ * To read the license please read the docs/license.txt or visit
+ * http://www.gnu.org/copyleft/gpl.html
  *
  */
 
@@ -109,7 +109,6 @@ function postcalendar_calendarblock_display($blockinfo)
     }
     // end cache return
 
-
     // set up the next and previous months to move to
     $prev_month = Date_Calc::beginOfPrevMonth(1, $the_month, $the_year, '%Y%m%d');
     $next_month = Date_Calc::beginOfNextMonth(1, $the_month, $the_year, '%Y%m%d');
@@ -126,7 +125,7 @@ function postcalendar_calendarblock_display($blockinfo)
                             mktime(0, 0, 0, $the_month, 1, $the_year))));
     $month_link_text = $pc_month_name . ' ' . $the_year;
     //*******************************************************************
-    //	Here we get the events for the current month view
+    // Here we get the events for the current month view
     //*******************************************************************
     $day_of_week = 1;
     $pc_month_names = array(_CALJAN, _CALFEB, _CALMAR, _CALAPR, _CALMAY, _CALJUN, _CALJUL, _CALAUG, _CALSEP, _CALOCT, _CALNOV, _CALDEC);
@@ -225,7 +224,6 @@ function postcalendar_calendarblock_display($blockinfo)
     }
     // V4B RNG Hack end ...
 
-
     $tpl->assign_by_ref('A_MONTH_NAMES', $pc_month_names);
     $tpl->assign_by_ref('A_LONG_DAY_NAMES', $pc_long_day_names);
     $tpl->assign_by_ref('A_SHORT_DAY_NAMES', $pc_short_day_names);
@@ -299,7 +297,6 @@ function postcalendar_calendarblock_modify($blockinfo)
     if (empty($vars['pcbshowsslinks'])) $vars['pcbshowsslinks'] = 0;
 
     $pnRender = pnRender::getInstance('PostCalendar', false); // no caching
-
 
     $pnRender->assign('vars', $vars);
 

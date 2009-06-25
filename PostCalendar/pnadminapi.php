@@ -1,35 +1,35 @@
 <?php
 /**
- *	SVN: $Id$
+ * SVN: $Id$
  *
- *  @package     PostCalendar
- *  @author      $Author$
- *  @link	     $HeadURL$
- *  @version     $Revision$
+ * @package     PostCalendar
+ * @author      $Author$
+ * @link        $HeadURL$
+ * @version     $Revision$
  *
- *  PostCalendar::Zikula Events Calendar Module
- *  Copyright (C) 2002  The PostCalendar Team
- *  http://postcalendar.tv
- *  Copyright (C) 2009  Sound Web Development
- *  Craig Heydenburg
- *  http://code.zikula.org/soundwebdevelopment/
+ * PostCalendar::Zikula Events Calendar Module
+ * Copyright (C) 2002  The PostCalendar Team
+ * http://postcalendar.tv
+ * Copyright (C) 2009  Sound Web Development
+ * Craig Heydenburg
+ * http://code.zikula.org/soundwebdevelopment/
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- *  To read the license please read the docs/license.txt or visit
- *  http://www.gnu.org/copyleft/gpl.html
+ * To read the license please read the docs/license.txt or visit
+ * http://www.gnu.org/copyleft/gpl.html
  *
  */
 
@@ -92,6 +92,7 @@ function postcalendar_adminapi_getlinks()
     // Return the links array back to the calling function
     return $links;
 }
+
 function postcalendar_adminapi_getAdminListEvents($args)
 {
     extract($args);
@@ -107,11 +108,12 @@ function postcalendar_adminapi_getAdminListEvents($args)
 
 function postcalendar_adminapi_clearCache()
 {
-    $pnRender = pnRender::getInstance('PostCalendar'); //	PostCalendarSmartySetup not needed
+    $pnRender = pnRender::getInstance('PostCalendar'); // PostCalendarSmartySetup not needed
     $res = $pnRender->clear_all_cache();
 
     return $res;
 }
+
 function postcalendar_adminapi_meeting_mailparticipants ($args)
 {
     extract($args);
@@ -151,8 +153,7 @@ function postcalendar_adminapi_meeting_mailparticipants ($args)
 	$subject = _PC_MEETING_MAIL_TITLE . ": $event_subject";
     $message = $pnRender->fetch('email/postcalendar_email_meetingnotify.htm');
 
-    $messagesent = pnModAPIFunc('Mailer', 'user', 'sendmessage',
-        array('toaddress' => $toaddress, 'subject' => $subject, 'body' => $message, 'html' => true));
+    $messagesent = pnModAPIFunc('Mailer', 'user', 'sendmessage', array('toaddress' => $toaddress, 'subject' => $subject, 'body' => $message, 'html' => true));
 
     if ($messagesent) {
         LogUtil::registerStatus('Meeting notify email sent');
@@ -182,8 +183,7 @@ function postcalendar_adminapi_notify($args)
     $pnRender->assign('link', pnModURL('PostCalendar', 'admin', 'adminevents', array('pc_event_id' => $eid, 'action' => _ADMIN_ACTION_VIEW)));
     $message = $pnRender->fetch('email/postcalendar_email_adminnotify.htm');
 
-    $messagesent = pnModAPIFunc('Mailer', 'user', 'sendmessage',
-        array('toaddress' => _SETTING_NOTIFY_EMAIL, 'subject' => _PC_NOTIFY_SUBJECT, 'body' => $message, 'html' => true));
+    $messagesent = pnModAPIFunc('Mailer', 'user', 'sendmessage', array('toaddress' => _SETTING_NOTIFY_EMAIL, 'subject' => _PC_NOTIFY_SUBJECT, 'body' => $message, 'html' => true));
 
     if ($messagesent) {
         LogUtil::registerStatus('Admin notify email sent');

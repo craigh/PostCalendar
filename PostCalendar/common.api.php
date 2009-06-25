@@ -1,35 +1,35 @@
 <?php
 /**
- *	SVN: $Id$
+ * SVN: $Id$
  *
- *  @package     PostCalendar
- *  @author      $Author$
- *  @link	     $HeadURL$
- *  @version     $Revision$
+ * @package     PostCalendar
+ * @author      $Author$
+ * @link        $HeadURL$
+ * @version     $Revision$
  *
- *  PostCalendar::Zikula Events Calendar Module
- *  Copyright (C) 2002  The PostCalendar Team
- *  http://postcalendar.tv
- *  Copyright (C) 2009  Sound Web Development
- *  Craig Heydenburg
- *  http://code.zikula.org/soundwebdevelopment/
+ * PostCalendar::Zikula Events Calendar Module
+ * Copyright (C) 2002  The PostCalendar Team
+ * http://postcalendar.tv
+ * Copyright (C) 2009  Sound Web Development
+ * Craig Heydenburg
+ * http://code.zikula.org/soundwebdevelopment/
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- *  To read the license please read the docs/license.txt or visit
- *  http://www.gnu.org/copyleft/gpl.html
+ * To read the license please read the docs/license.txt or visit
+ * http://www.gnu.org/copyleft/gpl.html
  *
  */
 
@@ -49,6 +49,7 @@ function PostCalendarSmartySetup(&$smarty)
     $smarty->assign('24HOUR_TIME', _SETTING_TIME_24HOUR);
     return true;
 }
+
 function pcDebugVar($in)
 {
     echo '<pre>';
@@ -92,6 +93,7 @@ function postcalendar_user_getDate($format = '%Y%m%d%H%M%S')
 {
     return postcalendar_getDate($format);
 }
+
 function postcalendar_getDate($format = '%Y%m%d%H%M%S')
 {
     $Date =      FormUtil::getPassedValue('Date');
@@ -121,13 +123,14 @@ function postcalendar_today($format = '%Y%m%d')
 {
     return DateUtil::getDatetime('', $format);
     /*
-	$time = time();
-	if (pnUserLoggedIn())
-		$time += (pnUserGetVar('timezone_offset') - pnConfigGetVar('timezone_offset')) * 3600;
+    $time = time();
+    if (pnUserLoggedIn())
+        $time += (pnUserGetVar('timezone_offset') - pnConfigGetVar('timezone_offset')) * 3600;
 
-	return strftime($format,$time);
-	*/
+    return strftime($format,$time);
+    */
 }
+
 /**
  * postcalendar_adminapi_getmonthname()
  *
@@ -164,6 +167,7 @@ function postcalendar_adminapi_getCategories()
 {
     return postcalendar_userapi_getCategories();
 }
+
 function postcalendar_userapi_getCategories()
 {
     return DBUtil::selectObjectArray('postcalendar_categories', '', 'catname');
@@ -173,6 +177,7 @@ function postcalendar_adminapi_getTopics()
 {
     return postcalendar_userapi_getTopics();
 }
+
 function postcalendar_userapi_getTopics()
 {
     $permFilter = array();
@@ -321,10 +326,11 @@ function sort_byTimeD($a, $b)
     if ($a['startTime'] < $b['startTime']) return 1;
     elseif ($a['startTime'] > $b['startTime']) return -1;
 }
+
 /**
- *	pc_clean
- *	@param s string text to clean
- *	@return string cleaned up text
+ * pc_clean
+ * @param s string text to clean
+ * @return string cleaned up text
  */
 function pc_clean($s)
 {
@@ -343,6 +349,7 @@ function pc_clean($s)
     $tmp = explode(' ', $s);
     return join("'+' ", $tmp);
 }
+
 /****************************************************
  * The functions below are moved to eventapi
  ****************************************************/

@@ -1,35 +1,35 @@
 <?php
 /**
- *	SVN: $Id$
+ * SVN: $Id$
  *
- *  @package     PostCalendar
- *  @author      $Author$
- *  @link	     $HeadURL$
- *  @version     $Revision$
+ * @package     PostCalendar
+ * @author      $Author$
+ * @link        $HeadURL$
+ * @version     $Revision$
  *
- *  PostCalendar::Zikula Events Calendar Module
- *  Copyright (C) 2002  The PostCalendar Team
- *  http://postcalendar.tv
- *  Copyright (C) 2009  Sound Web Development
- *  Craig Heydenburg
- *  http://code.zikula.org/soundwebdevelopment/
+ * PostCalendar::Zikula Events Calendar Module
+ * Copyright (C) 2002  The PostCalendar Team
+ * http://postcalendar.tv
+ * Copyright (C) 2009  Sound Web Development
+ * Craig Heydenburg
+ * http://code.zikula.org/soundwebdevelopment/
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- *  To read the license please read the docs/license.txt or visit
- *  http://www.gnu.org/copyleft/gpl.html
+ * To read the license please read the docs/license.txt or visit
+ * http://www.gnu.org/copyleft/gpl.html
  *
  */
 Loader::requireOnce('includes/pnForm.php');
@@ -61,41 +61,34 @@ class postcalendar_event_editHandler extends pnFormHandler
 
         if ($args['commandName'] == 'update') {
             /*
-			if (!$render->pnFormIsValid())
-				return false;
+            if (!$render->pnFormIsValid())
+                return false;
 
-			$recipeData = $render->pnFormGetValues();
-			$recipeData['id'] = $this->recipeId;
+            $recipeData = $render->pnFormGetValues();
+            $recipeData['id'] = $this->recipeId;
 
-			$result = pnModAPIFunc('howtopnforms', 'recipe', 'update',
-								   array('recipe' => $recipeData));
-			if ($result === false)
-				return $render->pnFormSetErrorMsg(howtopnformsErrorAPIGet());
+            $result = pnModAPIFunc('howtopnforms', 'recipe', 'update', array('recipe' => $recipeData));
+            if ($result === false)
+                return $render->pnFormSetErrorMsg(howtopnformsErrorAPIGet());
 
-			$url = pnModUrl('howtopnforms', 'recipe', 'view',
-							array('rid' => $this->recipeId));
-			*/
+            $url = pnModUrl('howtopnforms', 'recipe', 'view', array('rid' => $this->recipeId));
+            */
         } else if ($args['commandName'] == 'delete') {
             $uname = pnUserGetVar('uname');
-            if (($uname != $event['informant']) and (!pnSecAuthAction(0, 'PostCalendar::', '::',
-                ACCESS_ADMIN))) {
+            if (($uname != $event['informant']) and (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN))) {
                 return $render->pnFormSetErrorMsg(_PC_CAN_NOT_DELETE);
             }
             $result = pnModAPIFunc('PostCalendar', 'event', 'deleteevent', array('eid' => $this->eid));
             if ($result === false) return $render->pnFormSetErrorMsg(_PC_ADMIN_EVENT_ERROR);
 
-            $redir = pnModUrl('PostCalendar', 'user', 'view',
-                array('viewtype' => pnModGetVar('PostCalendar', 'pcDefaultView')));
+            $redir = pnModUrl('PostCalendar', 'user', 'view', array('viewtype' => pnModGetVar('PostCalendar', 'pcDefaultView')));
             return $render->pnFormRedirect($redir);
         } else if ($args['commandName'] == 'cancel') {
-            $url = pnModUrl('PostCalendar', 'user', 'view',
-                array('eid' => $this->eid, 'viewtype' => 'details',
-                                'Date' => $event['Date']));
+            $url = pnModUrl('PostCalendar', 'user', 'view', array('eid' => $this->eid, 'viewtype' => 'details', 'Date' => $event['Date']));
         }
 
         if ($url != null) {
-            /*pnModAPIFunc('PageLock', 'user', 'releaseLock',
-						 array('lockName' => "HowtoPnFormsRecipe{$this->recipeId}")); */
+            /*pnModAPIFunc('PageLock', 'user', 'releaseLock', array('lockName' => "HowtoPnFormsRecipe{$this->recipeId}")); */
             return $render->pnFormRedirect($url);
         }
 
@@ -103,10 +96,10 @@ class postcalendar_event_editHandler extends pnFormHandler
     }
 }
 
-/*
-	This is a user form 'are you sure' display
-	to delete an event
-*/
+/**
+ * This is a user form 'are you sure' display
+ * to delete an event
+ */
 function postcalendar_event_delete()
 {
     if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADD)) {
@@ -125,6 +118,7 @@ function postcalendar_event_edit($args)
 {
     return postcalendar_event_new($args);
 }
+
 function postcalendar_event_new($args)
 {
     // We need at least ADD permission to submit an event
@@ -322,7 +316,7 @@ function postcalendar_event_new($args)
     $categories = pnModAPIFunc('PostCalendar', 'user', 'getCategories');
 
     //================================================================
-    //	ERROR CHECKING
+    // ERROR CHECKING
     //================================================================
     // $required_vars = array('event_subject','event_desc');
     /* THIS SEEMS WAY TO COMPLICATED...  CAH 6/24/2009
@@ -379,27 +373,25 @@ function postcalendar_event_new($args)
         LogUtil::registerError(_PC_SUBMIT_ERROR3);
     }
     //================================================================
-    //	Preview the event
+    // Preview the event
     //================================================================
     if ($form_action == 'preview') {
-        if (!SecurityUtil::confirmAuthKey()) return LogUtil::registerAuthidError(
-            pnModURL('postcalendar', 'admin', 'main'));
+        if (!SecurityUtil::confirmAuthKey()) return LogUtil::registerAuthidError(pnModURL('postcalendar', 'admin', 'main'));
         $output .= pnModAPIFunc('PostCalendar', 'user', 'eventPreview', $eventdata);
     }
 
     //================================================================
-    //	Enter the event into the DB
+    // Enter the event into the DB
     //================================================================
     if ($form_action == 'commit') {
-        if (!SecurityUtil::confirmAuthKey()) return LogUtil::registerAuthidError(
-            pnModURL('postcalendar', 'admin', 'main'));
+        if (!SecurityUtil::confirmAuthKey()) return LogUtil::registerAuthidError(pnModURL('postcalendar', 'admin', 'main'));
 
-//echo $event_startmonth."-".$event_startday."-".$event_startyear."<br />";
-//echo $event_endmonth."-".$event_endday."-".$event_endyear."<br />";
-//echo "event_subject: ".$event_subject."<br />";
-//echo "edate: ".$edate. "sdate: ".$sdate." event_endtype:".$event_endtype."<br />";
-//echo "event_startmonth: ".$event_startmonth." event_startday: ".$event_startday." event_startyear: ".$event_startyear."<br />";
-//die;
+        //echo $event_startmonth."-".$event_startday."-".$event_startyear."<br />";
+        //echo $event_endmonth."-".$event_endday."-".$event_endyear."<br />";
+        //echo "event_subject: ".$event_subject."<br />";
+        //echo "edate: ".$edate. "sdate: ".$sdate." event_endtype:".$event_endtype."<br />";
+        //echo "event_startmonth: ".$event_startmonth." event_startday: ".$event_startday." event_startyear: ".$event_startyear."<br />";
+        //die;
 
         if (!pnModAPIFunc('PostCalendar', 'event', 'writeEvent', $eventdata)) {
             LogUtil::registerError(_PC_EVENT_SUBMISSION_FAILED);

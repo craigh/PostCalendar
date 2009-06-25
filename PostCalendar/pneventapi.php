@@ -1,51 +1,51 @@
 <?php
-require_once 'modules/PostCalendar/global.php';
-
 /**
- *	SVN: $Id$
+ * SVN: $Id$
  *
- *  @package     PostCalendar
- *  @author      $Author$
- *  @link	     $HeadURL$
- *  @version     $Revision$
+ * @package     PostCalendar
+ * @author      $Author$
+ * @link        $HeadURL$
+ * @version     $Revision$
  *
- *	PostCalendar::Zikula Events Calendar Module
- *	Copyright (C) 2002	The PostCalendar Team
- *	http://postcalendar.tv
- *	Copyright (C) 2009	Sound Web Development
- *	Craig Heydenburg
- *	http://code.zikula.org/soundwebdevelopment/
+ * PostCalendar::Zikula Events Calendar Module
+ * Copyright (C) 2002    The PostCalendar Team
+ * http://postcalendar.tv
+ * Copyright (C) 2009    Sound Web Development
+ * Craig Heydenburg
+ * http://code.zikula.org/soundwebdevelopment/
  *
- *	This program is free software; you can redistribute it and/or modify
- *	it under the terms of the GNU General Public License as published by
- *	the Free Software Foundation; either version 2 of the License, or
- *	(at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
  *
- *	This program is distributed in the hope that it will be useful,
- *	but WITHOUT ANY WARRANTY; without even the implied warranty of
- *	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *	GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *	You should have received a copy of the GNU General Public License
- *	along with this program; if not, write to the Free Software
- *	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- *	To read the license please read the docs/license.txt or visit
- *	http://www.gnu.org/copyleft/gpl.html
+ * To read the license please read the docs/license.txt or visit
+ * http://www.gnu.org/copyleft/gpl.html
  *
  */
+
+require_once 'modules/PostCalendar/global.php';
 
 /**
  * This is the event handler api
  **/
 
 /**
- *	postcalendar_eventapi_queryEvents //new name
- *	Returns an array containing the event's information (plural or singular?)
- *	@params array(key=>value)
- *	@params string key eventstatus
- *	@params int value -1 == hidden ; 0 == queued ; 1 == approved
- *	@return array $events[][]
+ * postcalendar_eventapi_queryEvents //new name
+ * Returns an array containing the event's information (plural or singular?)
+ * @params array(key=>value)
+ * @params string key eventstatus
+ * @params int value -1 == hidden ; 0 == queued ; 1 == approved
+ * @return array $events[][]
  */
 function postcalendar_eventapi_queryEvents($args)
 {
@@ -72,8 +72,8 @@ function postcalendar_eventapi_queryEvents($args)
     list($sy, $sm, $sd) = explode('-', $start);
 
     $where = "WHERE pc_eventstatus=$eventstatus
-						AND (pc_endDate>='$start' OR (pc_endDate='0000-00-00' AND pc_recurrtype<>'0') OR pc_eventDate>='$start')
-						AND pc_eventDate<='$end' ";
+              AND (pc_endDate>='$start' OR (pc_endDate='0000-00-00' AND pc_recurrtype<>'0') OR pc_eventDate>='$start')
+              AND pc_eventDate<='$end' ";
 
     if (isset($ruserid)) {
         // get all events for the specified username
@@ -97,9 +97,9 @@ function postcalendar_eventapi_queryEvents($args)
     // Start Search functionality
     if (!empty($s_keywords)) $where .= "AND ($s_keywords) ";
     if (!empty($s_category)) $where .= "AND ($s_category) ";
-    if (!empty($s_topic)) $where .= "AND ($s_topic) ";
-    if (!empty($category)) $where .= "AND (tbl.pc_catid = '" . DataUtil::formatForStore($category) . "') ";
-    if (!empty($topic)) $where .= "AND (tbl.pc_topic = '" . DataUtil::formatForStore($topic) . "') ";
+    if (!empty($s_topic))    $where .= "AND ($s_topic) ";
+    if (!empty($category))   $where .= "AND (tbl.pc_catid = '" . DataUtil::formatForStore($category) . "') ";
+    if (!empty($topic))      $where .= "AND (tbl.pc_topic = '" . DataUtil::formatForStore($topic) . "') ";
     // End Search functionality
 
     $sort .= "ORDER BY pc_meeting_id";
@@ -147,8 +147,6 @@ function postcalendar_eventapi_queryEvents($args)
 
 /**
  * I believe this function returns an array of events sorted by date
- *
- *
  **/
 function postcalendar_eventapi_getEvents($args)
 {
@@ -183,15 +181,14 @@ function postcalendar_eventapi_getEvents($args)
     }
     if (!isset($events)) {
         if (!isset($s_keywords)) $s_keywords = '';
-        $a = array('start' => $start_date, 'end' => $end_date, 's_keywords' => $s_keywords, 's_category' => $s_category,
-                        's_topic' => $s_topic);
+        $a = array('start' => $start_date, 'end' => $end_date, 's_keywords' => $s_keywords, 's_category' => $s_category, 's_topic' => $s_topic);
         $events = pnModAPIFunc('PostCalendar', 'event', 'queryEvents', $a);
     }
 
     //==============================================================
-    //	Here we build an array consisting of the date ranges
-    //	specific to the current view.  This array is then
-    //	used to build the calendar display.
+    // Here we build an array consisting of the date ranges
+    // specific to the current view.  This array is then
+    // used to build the calendar display.
     //==============================================================
     $days = array();
     $sday = Date_Calc::dateToDays($sd, $sm, $sy);
@@ -209,7 +206,7 @@ function postcalendar_eventapi_getEvents($args)
     //$nuke_users = array();
 
     //foreach($users as $user) {
-    //	  $nuke_users[strtolower($user['uname'])] = $user['uid'];
+    //    $nuke_users[strtolower($user['uname'])] = $user['uid'];
     //}
     //unset($users);
 
@@ -219,14 +216,12 @@ function postcalendar_eventapi_getEvents($args)
         // get the user id of event's author
         //$cuserid = @$nuke_users[strtolower($event['uname'])];
         // CAH mod 4/12/09
-        $cuserid = pnUserGetIDFromName(
-            strtolower($event['uname']));
+        $cuserid = pnUserGetIDFromName( strtolower($event['uname']));
 
         // check the current event's permissions
         // the user does not have permission to view this event
         // if any of the following evaluate as false
-        if (!pnSecAuthAction(
-            0, 'PostCalendar::Event', "$event[title]::$event[eid]", ACCESS_OVERVIEW)) {
+        if (!pnSecAuthAction(0, 'PostCalendar::Event', "$event[title]::$event[eid]", ACCESS_OVERVIEW)) {
             continue;
         } elseif (!pnSecAuthAction(0, 'PostCalendar::Category', "$event[catname]::$event[catid]", ACCESS_OVERVIEW)) {
             continue;
@@ -248,7 +243,7 @@ function postcalendar_eventapi_getEvents($args)
 
         switch ($event['recurrtype']) {
             //==============================================================
-            //	Events that do not repeat only have a startday
+            // Events that do not repeat only have a startday
             //==============================================================
             case NO_REPEAT:
                 if (isset($days[$event['eventDate']])) {
@@ -256,9 +251,9 @@ function postcalendar_eventapi_getEvents($args)
                 }
                 break;
             //==============================================================
-            //	Find events that repeat at a certain frequency
-            //	Every,Every Other,Every Third,Every Fourth
-            //	Day,Week,Month,Year,MWF,TR,M-F,SS
+            // Find events that repeat at a certain frequency
+            // Every,Every Other,Every Third,Every Fourth
+            // Day,Week,Month,Year,MWF,TR,M-F,SS
             //==============================================================
             case REPEAT:
                 $rfreq = $event_recurrspec['event_repeat_freq'];
@@ -270,41 +265,36 @@ function postcalendar_eventapi_getEvents($args)
                 $nd = $esD;
                 $occurance = Date_Calc::dateFormat($nd, $nm, $ny, '%Y-%m-%d');
                 while ($occurance < $start_date) {
-                    $occurance = __increment($nd, $nm, $ny, $rfreq,
-                        $rtype);
+                    $occurance = __increment($nd, $nm, $ny, $rfreq, $rtype);
                     list($ny, $nm, $nd) = explode('-', $occurance);
                 }
                 while ($occurance <= $stop) {
                     if (isset($days[$occurance])) {
-                        array_push($days[$occurance],
-                            $event);
+                        array_push($days[$occurance], $event);
                     }
-                    $occurance = __increment($nd, $nm, $ny, $rfreq,
-                        $rtype);
+                    $occurance = __increment($nd, $nm, $ny, $rfreq, $rtype);
                     list($ny, $nm, $nd) = explode('-', $occurance);
                 }
                 break;
             //==============================================================
-            //	Find events that repeat on certain parameters
-            //	On 1st,2nd,3rd,4th,Last
-            //	Sun,Mon,Tue,Wed,Thu,Fri,Sat
-            //	Every N Months
+            // Find events that repeat on certain parameters
+            // On 1st,2nd,3rd,4th,Last
+            // Sun,Mon,Tue,Wed,Thu,Fri,Sat
+            //    Every N Months
             //==============================================================
             case REPEAT_ON:
                 $rfreq = $event_recurrspec['event_repeat_on_freq'];
                 $rnum = $event_recurrspec['event_repeat_on_num'];
                 $rday = $event_recurrspec['event_repeat_on_day'];
                 //==============================================================
-                //	Populate - Enter data into the event array
+                // Populate - Enter data into the event array
                 //==============================================================
                 $nm = $esM;
                 $ny = $esY;
                 $nd = $esD;
                 // make us current
                 while ($ny < $cy) {
-                    $occurance = date('Y-m-d',
-                        mktime(0, 0, 0, $nm + $rfreq,
-                            $nd, $ny));
+                    $occurance = date('Y-m-d', mktime(0, 0, 0, $nm + $rfreq, $nd, $ny));
                     list($ny, $nm, $nd) = explode('-', $occurance);
                 }
                 // populate the event array
@@ -318,8 +308,7 @@ function postcalendar_eventapi_getEvents($args)
                             "%Y-%m-%d");
                     } while ($occurance === -1);
                     if (isset($days[$occurance]) && $occurance <= $stop) {
-                        array_push($days[$occurance],
-                            $event);
+                        array_push($days[$occurance], $event);
                     }
                     $occurance = date('Y-m-d',
                         mktime(0, 0, 0, $nm + $rfreq,
@@ -332,10 +321,10 @@ function postcalendar_eventapi_getEvents($args)
     return $days;
 }
 /**
- *	postcalendar_eventapi_writeEvent()
- *	write an event to the DB
- *	@param $args array of event data
- *	@return bool true on success : false on failure;
+ * postcalendar_eventapi_writeEvent()
+ * write an event to the DB
+ * @param $args array of event data
+ * @return bool true on success : false on failure;
  */
 function postcalendar_eventapi_writeEvent($args)
 {
@@ -447,7 +436,7 @@ function postcalendar_eventapi_writeEvent($args)
 
     } // V4B SB Foreach End
 
-    $eid=$result['eid'];
+    $eid = $result['eid'];
 
     pnModAPIFunc('PostCalendar','admin','notify',compact('eid','is_update')); //notify admin and informant
 
@@ -460,8 +449,8 @@ function postcalendar_eventapi_writeEvent($args)
 }
 
 /**
- *	postcalendar_eventapi_buildSubmitForm()
- *	create event submit form
+ * postcalendar_eventapi_buildSubmitForm()
+ * create event submit form
  */
 function postcalendar_eventapi_buildSubmitForm($args)
 {
@@ -474,14 +463,13 @@ function postcalendar_eventapi_buildSubmitForm($args)
 
     if (!$admin) $admin = false; //reset default value
 
-
     $tpl = pnRender::getInstance('PostCalendar');
     PostCalendarSmartySetup($tpl);
     $tpl->caching = false;
 
     // V4B RNG start
     //================================================================
-    //		  build the username filter pulldown
+    // build the username filter pulldown
     //================================================================
     if (true) // if why?
     {
@@ -495,8 +483,7 @@ function postcalendar_eventapi_buildSubmitForm($args)
         @define('_PC_FORM_USERNAME', true);
 
         //get users that have submitted events previously
-        $users = DBUtil::selectFieldArray('postcalendar_events', 'informant',
-            null, null, true, 'aid');
+        $users = DBUtil::selectFieldArray('postcalendar_events', 'informant', null, null, true, 'aid');
         if (!array_key_exists($idsel, $users)) {
             $users[$uid] = $uname; // add current user to userlist if not already there
         }
@@ -509,13 +496,11 @@ function postcalendar_eventapi_buildSubmitForm($args)
     if (($endDate == '') || ($endDate == '00000000')) {
         $endvalue = substr($today, 6, 2) . '-' . substr($today, 4, 2) . '-' . substr($today, 0, 4);
         // V4B RNG: build other date format for JS cal
-        $endDate = substr($today, 0, 4) . '-' . substr($today, 4, 2) . '-' . substr(
-            $today, 6, 2);
+        $endDate = substr($today, 0, 4) . '-' . substr($today, 4, 2) . '-' . substr($today, 6, 2);
     } else {
         $endvalue = substr($endDate, 6, 2) . '-' . substr($endDate, 4, 2) . '-' . substr($endDate, 0, 4);
         // V4B RNG: build other date format for JS cal
-        $endDate = substr($endDate, 0, 4) . '-' . substr($endDate, 4, 2) . '-' . substr(
-            $endDate, 6, 2);
+        $endDate = substr($endDate, 0, 4) . '-' . substr($endDate, 4, 2) . '-' . substr($endDate, 6, 2);
     }
     $tpl->assign('endvalue', $endvalue);
     $tpl->assign('endDate', $endDate);
@@ -525,26 +510,24 @@ function postcalendar_eventapi_buildSubmitForm($args)
     if ($startdate == '') {
         $startvalue = substr($today, 6, 2) . '-' . substr($today, 4, 2) . '-' . substr($today, 0, 4);
         // V4B RNG: build other date format for JS cal
-        $startdate = substr($today, 0, 4) . '-' . substr($today, 4, 2) . '-' . substr(
-            $today, 6, 2);
+        $startdate = substr($today, 0, 4) . '-' . substr($today, 4, 2) . '-' . substr($today, 6, 2);
     } else {
         $startvalue = substr($startdate, 6, 2) . '-' . substr($startdate, 4, 2) . '-' . substr($startdate, 0, 4);
         // V4B RNG: build other date format for JS cal
-        $startdate = substr($startdate, 0, 4) . '-' . substr($startdate, 4, 2) . '-' . substr(
-            $startdate, 6, 2);
+        $startdate = substr($startdate, 0, 4) . '-' . substr($startdate, 4, 2) . '-' . substr($startdate, 6, 2);
     }
     $tpl->assign('startvalue', $startvalue);
     $tpl->assign('startdate', $startdate);
     // V4B SB END // JAVASCRIPT CALENDAR
     //================================================================
-    //	build the userlist select box
+    // build the userlist select box
     //================================================================
     if (true) { // change this to only perform if displaymeetingoptions & useaddressbook?
         $users = DBUtil::selectFieldArray('users', 'uname', null, null, true, 'uid'); // ALL users... ick.
     }
 
     //================================================================
-    //	build the participants select box
+    // build the participants select box
     //================================================================
     if ($meeting_id) { //means a meeting is established (i.e. not 0)
         $participants = array();
@@ -561,7 +544,7 @@ function postcalendar_eventapi_buildSubmitForm($args)
     $all_categories = pnModAPIFunc('PostCalendar', 'user', 'getCategories');
 
     //=================================================================
-    //	PARSE MAIN
+    // PARSE MAIN
     //=================================================================
     $tpl->assign('VIEW_TYPE', ''); // E_ALL Fix
     $tpl->assign('FUNCTION', FormUtil::getPassedValue('func'));
@@ -570,18 +553,18 @@ function postcalendar_eventapi_buildSubmitForm($args)
     $tpl->assign('category', $all_categories);
 
     //=================================================================
-    //	PARSE INPUT_EVENT_TITLE
+    // PARSE INPUT_EVENT_TITLE
     //=================================================================
     $tpl->assign('ValueEventTitle', DataUtil::formatForDisplay($event_subject));
 
     //=================================================================
-    //	PARSE SELECT_DATE_TIME
+    // PARSE SELECT_DATE_TIME
     //=================================================================
     $tpl->assign('SelectedAllday', $event_allday == 1 ? 'checked' : '');
     $tpl->assign('SelectedTimed', $event_allday == 0 ? 'checked' : '');
 
     //=================================================================
-    //	PARSE SELECT_TIMED_EVENT
+    // PARSE SELECT_TIMED_EVENT
     //=================================================================
     $tpl->assign('minute_interval', _SETTING_TIME_INCREMENT);
     if (empty($event_starttimeh)) {
@@ -591,27 +574,23 @@ function postcalendar_eventapi_buildSubmitForm($args)
     $tpl->assign('SelectedTime', $event_starttimeh . ":" . $event_starttimem);
 
     //=================================================================
-    //	PARSE SELECT_DURATION
+    // PARSE SELECT_DURATION
     //=================================================================
-
 
     if (!$event_dur_hours) $event_dur_hours = 1; // provide a reasonable default rather than 0 hours
 
-
     for ($i = 0; $i <= 24; $i += 1)
-        $TimedDurationHours[$i] = array('value' => $i, 'selected' => ($event_dur_hours == $i ? 'selected' : ''),
-                        'name' => sprintf('%02d', $i));
+        $TimedDurationHours[$i] = array('value' => $i, 'selected' => ($event_dur_hours == $i ? 'selected' : ''), 'name' => sprintf('%02d', $i));
 
     $tpl->assign('TimedDurationHours', $TimedDurationHours);
 
     for ($i = 0; $i < 60; $i += _SETTING_TIME_INCREMENT)
-        $TimedDurationMinutes[$i] = array('value' => $i, 'selected' => ($event_dur_minutes == $i ? 'selected' : ''),
-                        'name' => sprintf('%02d', $i));
+        $TimedDurationMinutes[$i] = array('value' => $i, 'selected' => ($event_dur_minutes == $i ? 'selected' : ''), 'name' => sprintf('%02d', $i));
 
     $tpl->assign('TimedDurationMinutes', $TimedDurationMinutes);
 
     //=================================================================
-    //	PARSE INPUT_EVENT_DESC
+    // PARSE INPUT_EVENT_DESC
     //=================================================================
     if (empty($pc_html_or_text)) {
         $display_type = substr($event_desc, 0, 6);
@@ -634,7 +613,7 @@ function postcalendar_eventapi_buildSubmitForm($args)
     $tpl->assign('EventHTMLorTextVal', $pc_html_or_text);
 
     //=================================================================
-    //	PARSE select_event_topic_block
+    // PARSE select_event_topic_block
     //=================================================================
     $tpl->assign('displayTopics', _SETTING_DISPLAY_TOPICS);
     if ((bool) _SETTING_DISPLAY_TOPICS) {
@@ -654,7 +633,7 @@ function postcalendar_eventapi_buildSubmitForm($args)
     }
 
     //=================================================================
-    //	PARSE select_event_type_block
+    // PARSE select_event_type_block
     //=================================================================
     $categories = array();
     foreach ($all_categories as $category) {
@@ -667,7 +646,7 @@ function postcalendar_eventapi_buildSubmitForm($args)
     $tpl->assign('event_category', $event_category);
 
     //=================================================================
-    //	PARSE event_sharing_block
+    // PARSE event_sharing_block
     //=================================================================
     $data = array();
     if (_SETTING_ALLOW_USER_CAL) {
@@ -685,17 +664,15 @@ function postcalendar_eventapi_buildSubmitForm($args)
     if (!isset($event_sharing)) $event_sharing = 1;
     // V4B RNG End
 
-
     $sharing = array();
     foreach ($data as $cell)
-        array_push($sharing,
-            array('value' => $cell[0],
+        array_push($sharing, array('value' => $cell[0],
                             'selected' => ((int) $event_sharing == $cell[0] ? 'selected' : ''),
                             'name' => $cell[1]));
 
     $tpl->assign('sharing', $sharing);
     //=================================================================
-    //	location information
+    // location information
     //=================================================================
     $tpl->assign('ValueLocation', DataUtil::formatForDisplay($event_location));
     $tpl->assign('ValueStreet1', DataUtil::formatForDisplay($event_street1));
@@ -704,7 +681,7 @@ function postcalendar_eventapi_buildSubmitForm($args)
     $tpl->assign('ValueState', DataUtil::formatForDisplay($event_state));
     $tpl->assign('ValuePostal', DataUtil::formatForDisplay($event_postal));
     //=================================================================
-    //	contact information
+    // contact information
     //=================================================================
     $tpl->assign('ValueContact', DataUtil::formatForDisplay($event_contname));
     $tpl->assign('ValuePhone', DataUtil::formatForDisplay($event_conttel));
@@ -712,7 +689,7 @@ function postcalendar_eventapi_buildSubmitForm($args)
     $tpl->assign('ValueWebsite', DataUtil::formatForDisplay($event_website));
     $tpl->assign('ValueFee', DataUtil::formatForDisplay($event_fee));
     //=================================================================
-    //	Repeating Information
+    // Repeating Information
     //=================================================================
     $tpl->assign('SelectedNoRepeat', (int) $event_repeat == 0 ? 'checked' : '');
     $tpl->assign('SelectedRepeat', (int) $event_repeat == 1 ? 'checked' : '');
@@ -722,9 +699,7 @@ function postcalendar_eventapi_buildSubmitForm($args)
     $keys = array(REPEAT_EVERY, REPEAT_EVERY_OTHER, REPEAT_EVERY_THIRD, REPEAT_EVERY_FOURTH);
     $repeat_freq = array();
     foreach ($in as $k => $v)
-        array_push($repeat_freq,
-            array('value' => $keys[$k], 'selected' => ($keys[$k] == $event_repeat_freq ? 'selected' : ''),
-                            'name' => $v));
+        array_push($repeat_freq, array('value' => $keys[$k], 'selected' => ($keys[$k] == $event_repeat_freq ? 'selected' : ''), 'name' => $v));
 
     if (empty($event_repeat_freq) || $event_repeat_freq < 1) $event_repeat_freq = 1;
     $tpl->assign('InputRepeatFreqVal', $event_repeat_freq);
@@ -735,9 +710,7 @@ function postcalendar_eventapi_buildSubmitForm($args)
     $keys = array(REPEAT_EVERY_DAY, REPEAT_EVERY_WEEK, REPEAT_EVERY_MONTH, REPEAT_EVERY_YEAR);
     $repeat_freq_type = array();
     foreach ($in as $k => $v)
-        array_push($repeat_freq_type,
-            array('value' => $keys[$k], 'selected' => ($keys[$k] == $event_repeat_freq_type ? 'selected' : ''),
-                            'name' => $v));
+        array_push($repeat_freq_type, array('value' => $keys[$k], 'selected' => ($keys[$k] == $event_repeat_freq_type ? 'selected' : ''), 'name' => $v));
 
     $tpl->assign('repeat_freq_type', $repeat_freq_type);
     $tpl->assign('SelectedRepeatOn', (int) $event_repeat == 2 ? 'checked' : '');
@@ -747,9 +720,7 @@ function postcalendar_eventapi_buildSubmitForm($args)
     $keys = array(REPEAT_ON_1ST, REPEAT_ON_2ND, REPEAT_ON_3RD, REPEAT_ON_4TH, REPEAT_ON_LAST);
     $repeat_on_num = array();
     foreach ($in as $k => $v)
-        array_push($repeat_on_num,
-            array('value' => $keys[$k], 'selected' => ($keys[$k] == $event_repeat_on_num ? 'selected' : ''),
-                            'name' => $v));
+        array_push($repeat_on_num, array('value' => $keys[$k], 'selected' => ($keys[$k] == $event_repeat_on_num ? 'selected' : ''), 'name' => $v));
 
     $tpl->assign('repeat_on_num', $repeat_on_num);
 
@@ -758,34 +729,27 @@ function postcalendar_eventapi_buildSubmitForm($args)
     $keys = array(REPEAT_ON_SUN, REPEAT_ON_MON, REPEAT_ON_TUE, REPEAT_ON_WED, REPEAT_ON_THU, REPEAT_ON_FRI, REPEAT_ON_SAT);
     $repeat_on_day = array();
     foreach ($in as $k => $v)
-        array_push($repeat_on_day,
-            array('value' => $keys[$k],
-                            'selected' => ($keys[$k] == $event_repeat_on_day ? 'selected' : ''),
-                            'name' => $v));
+        array_push($repeat_on_day, array('value' => $keys[$k], 'selected' => ($keys[$k] == $event_repeat_on_day ? 'selected' : ''), 'name' => $v));
 
     $tpl->assign('repeat_on_day', $repeat_on_day);
 
     unset($in);
-    $in = array(_PC_OF_EVERY_MONTH, _PC_OF_EVERY_2MONTH, _PC_OF_EVERY_3MONTH, _PC_OF_EVERY_4MONTH, _PC_OF_EVERY_6MONTH,
-                    _PC_OF_EVERY_YEAR);
+    $in = array(_PC_OF_EVERY_MONTH, _PC_OF_EVERY_2MONTH, _PC_OF_EVERY_3MONTH, _PC_OF_EVERY_4MONTH, _PC_OF_EVERY_6MONTH, _PC_OF_EVERY_YEAR);
     $keys = array(REPEAT_ON_MONTH, REPEAT_ON_2MONTH, REPEAT_ON_3MONTH, REPEAT_ON_4MONTH, REPEAT_ON_6MONTH, REPEAT_ON_YEAR);
     $repeat_on_freq = array();
     foreach ($in as $k => $v)
-        array_push($repeat_on_freq,
-            array('value' => $keys[$k],
-                            'selected' => ($keys[$k] == $event_repeat_on_freq ? 'selected' : ''),
-                            'name' => $v));
+        array_push($repeat_on_freq, array('value' => $keys[$k], 'selected' => ($keys[$k] == $event_repeat_on_freq ? 'selected' : ''), 'name' => $v));
 
     if (empty($event_repeat_on_freq) || $event_repeat_on_freq < 1) $event_repeat_on_freq = 1;
     $tpl->assign('InputRepeatOnFreqVal', $event_repeat_on_freq);
     $tpl->assign('repeat_on_freq', $repeat_on_freq);
 
     //=================================================================
-    //	PARSE INPUT_END_DATE
+    // PARSE INPUT_END_DATE
     //=================================================================
     $tpl->assign('SelectedEndOn', (int) $event_endtype == 1 ? 'checked' : '');
     //=================================================================
-    //	PARSE INPUT_NO_END
+    // PARSE INPUT_NO_END
     //=================================================================
     $tpl->assign('SelectedNoEnd', (int) $event_endtype == 0 ? 'checked' : '');
 
@@ -805,9 +769,8 @@ function postcalendar_eventapi_fixEventDetails($event)
     $event['duration_minutes'] = substr(sprintf('%.2f', '.' . 60 * ($dmin / 100)), 2, 2);
     // ---
 
-
     $suid = pnUserGetVar('uid');
-    //	$euid = DBUtil::selectFieldByID ('users', 'uid', $event['uname'], 'uname');
+    // $euid = DBUtil::selectFieldByID ('users', 'uid', $event['uname'], 'uname');
     $euid = $event['aid'];
 
     // is this a public event to be shown as busy?
@@ -834,7 +797,7 @@ function postcalendar_eventapi_fixEventDetails($event)
         $event['event_city'] = $location['event_city'];
         $event['event_state'] = $location['event_state'];
         $event['event_postal'] = $location['event_postal'];
-        //$event['date']	 = str_replace('-','',$Date);
+        //$event['date'] = str_replace('-','',$Date);
     }
 
     return $event;
@@ -843,7 +806,6 @@ function postcalendar_eventapi_fixEventDetails($event)
 //function postcalendar_userapi_pcGetEventDetails($eid)
 function postcalendar_eventapi_getEventDetails($eid)
 {
-
     if (!isset($eid)) return false;
 
     // FIXME !!!
@@ -867,25 +829,24 @@ function postcalendar_eventapi_getEventDetails($eid)
                     'compare_field_table' => 'catid',
                     'compare_field_join' => 'catid');
     // FIXME!!!!!!
-    //$joinInfo[] = array (	  'join_table'			=>	'topics',
-    //'join_field'			=>	'topictext',
-    //'object_field_name'	=>	'topictext',
-    //'compare_field_table' =>	'topicid',
-    //'compare_field_join'	=>	'topic');
-    $event = DBUtil::selectExpandedObjectByID(
-        'postcalendar_events', $joinInfo, $eid, 'eid');
-    //	$event = postcalendar_userapi_pcFixEventDetails ($event);
+    //$joinInfo[] = array (      'join_table'            =>    'topics',
+    //'join_field'            =>    'topictext',
+    //'object_field_name'    =>    'topictext',
+    //'compare_field_table' =>    'topicid',
+    //'compare_field_join'    =>    'topic');
+    $event = DBUtil::selectExpandedObjectByID('postcalendar_events', $joinInfo, $eid, 'eid');
+    // $event = postcalendar_userapi_pcFixEventDetails ($event);
     $event = pnModAPIFunc('PostCalendar', 'event', 'fixEventDetails', $event);
     return $event;
 }
 
 /**
- *	postcalendar_userapi_eventDetail
- *	Creates the detailed event display and outputs html.
- *	Accepts an array of key/value pairs
- *	@param int $eid the id of the event to display
- *	@return string html output
- *	@access public
+ * postcalendar_userapi_eventDetail
+ * Creates the detailed event display and outputs html.
+ * Accepts an array of key/value pairs
+ * @param int $eid the id of the event to display
+ * @return string html output
+ * @access public
  */
 //function postcalendar_adminapi_eventDetail($args) { return postcalendar_userapi_eventDetail($args,true); }
 //function postcalendar_userapi_eventDetail($args,$admin=false)
@@ -983,8 +944,7 @@ function postcalendar_eventapi_eventDetail($args)
         // FIXME: do we need this here? Just to do a lookup?
         // CAH June20, 2009 This should be a lookup of ONLY the attendees...
         // take a look at edit/new event code
-        $users = DBUtil::selectObjectArray(
-            'users', '', '', -1, -1, 'uid', null, $ca);
+        $users = DBUtil::selectObjectArray( 'users', '', '', -1, -1, 'uid', null, $ca);
 
         foreach ($attendees as $uid) {
             $participants[] = $users[$uid]['uname'];
@@ -995,20 +955,19 @@ function postcalendar_eventapi_eventDetail($args)
     $function_out['participants'] = $participants;
 
     //=================================================================
-    //	populate the template $ADMIN_OPTIONS
+    // populate the template $ADMIN_OPTIONS
     //=================================================================
     //$target='';
     //if(_SETTING_OPEN_NEW_WINDOW)
-    //	$target = 'target="csCalendar"';
+    //    $target = 'target="csCalendar"';
 
-
-    /*	$admin_edit_url = $admin_delete_url = '';
-	if (pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN))
-	{
-		$admin_edit_url		= pnModURL('PostCalendar','event','submit',array('eid'=>$eid));
-		$admin_delete_url	= pnModURL('PostCalendar','event','delete',array('eid'=>$eid));
-		$admin_copy_url		= pnModURL('PostCalendar','event','submit',array('eid'=>$eid,'form_action'=>'copy'));
-	}
+    /*    $admin_edit_url = $admin_delete_url = '';
+    if (pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN))
+    {
+        $admin_edit_url        = pnModURL('PostCalendar','event','submit',array('eid'=>$eid));
+        $admin_delete_url    = pnModURL('PostCalendar','event','delete',array('eid'=>$eid));
+        $admin_copy_url        = pnModURL('PostCalendar','event','submit',array('eid'=>$eid,'form_action'=>'copy'));
+    }
 */
     $user_edit_url = $user_delete_url = '';
 
@@ -1019,19 +978,19 @@ function postcalendar_eventapi_eventDetail($args)
     }
 
     $can_edit = false;
-    if ((pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADD) && $logged_in_uid == $event['aid']) || pnSecAuthAction(0,
-        'PostCalendar::', '::', ACCESS_ADMIN)) {
+    if ((pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADD) && $logged_in_uid == $event['aid'])
+        || pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
         $user_edit_url = pnModURL('PostCalendar', 'event', 'submit', array('eid' => $eid));
         $user_delete_url = pnModURL('PostCalendar', 'event', 'delete', array('eid' => $eid));
         $user_copy_url = pnModURL('PostCalendar', 'event', 'submit', array('eid' => $eid, 'form_action' => 'copy'));
         $can_edit = true;
     }
 
-    /*	$function_out['ADMIN_TARGET'] = $target;
-	$function_out['ADMIN_EDIT'] = $admin_edit_url;
-	$function_out['ADMIN_DELETE'] = $admin_delete_url;
-	$function_out['ADMIN_COPY'] = $admin_copy_url;
-*/
+    /*    $function_out['ADMIN_TARGET'] = $target;
+    $function_out['ADMIN_EDIT'] = $admin_edit_url;
+    $function_out['ADMIN_DELETE'] = $admin_delete_url;
+    $function_out['ADMIN_COPY'] = $admin_copy_url;
+    */
     $function_out['EVENT_COPY'] = $user_copy_url;
 
     //$function_out['USER_TARGET'] = $target;
@@ -1040,35 +999,35 @@ function postcalendar_eventapi_eventDetail($args)
     $function_out['EVENT_CAN_EDIT'] = $can_edit;
 
     /*
-	if($popup != 1) {
-		return $function_out;
-	} else {
-		// this concept needs to be changed to simply use a different template if using a popup. CAH 5/9/09
-		$theme = pnUserGetTheme();
-		$function_out['raw1'] = "<html><head></head><body>\n";
-	  //$tpl->display("view_event_details.html",$cacheid);
+    if($popup != 1) {
+        return $function_out;
+    } else {
+        // this concept needs to be changed to simply use a different template if using a popup. CAH 5/9/09
+        $theme = pnUserGetTheme();
+        $function_out['raw1'] = "<html><head></head><body>\n";
+        //$tpl->display("view_event_details.html",$cacheid);
 
-		$function_out['raw2'] .= postcalendar_footer();
-		// V4B TS start ***	 Hook code for displaying stuff for events in popup
-		if ($_GET["type"] != "admin") {
-			$hooks = pnModCallHooks('item', 'display', $eid, "index.php?module=PostCalendar&type=user&func=view&viewtype=details&eid=$eid&popup=1");
-			$function_out['raw2'] .= $hooks;
-		}
-		// V4B TS end ***  End of Hook code
-		$function_out['raw2'] .= "\n</body></html>";
-		//session_write_close();
-		//exit;
-		$function_out['displayaspopup'] = true;
-		return $function_out;
-	}
-	*/
+        $function_out['raw2'] .= postcalendar_footer();
+        // V4B TS start ***     Hook code for displaying stuff for events in popup
+        if ($_GET["type"] != "admin") {
+            $hooks = pnModCallHooks('item', 'display', $eid, "index.php?module=PostCalendar&type=user&func=view&viewtype=details&eid=$eid&popup=1");
+            $function_out['raw2'] .= $hooks;
+        }
+        // V4B TS end ***  End of Hook code
+        $function_out['raw2'] .= "\n</body></html>";
+        //session_write_close();
+        //exit;
+        $function_out['displayaspopup'] = true;
+        return $function_out;
+    }
+    */
     return $function_out;
 }
 
 /**
- *	postcalendar_eventapi_create()
- *	This function creates a new event row in the DB
- *	expected args: obj=array([colname]=>[newval],[colname]=>[newval],[colname]=>[newval], etc...)
+ * postcalendar_eventapi_create()
+ * This function creates a new event row in the DB
+ * expected args: obj=array([colname]=>[newval],[colname]=>[newval],[colname]=>[newval], etc...)
  *
  *  returns the created object with updated id field
  */
@@ -1082,11 +1041,12 @@ function postcalendar_eventapi_create($obj)
         return false;
     }
 }
+
 /**
- *	postcalendar_eventapi_update()
- *	This function updates many events at once with any new values...
- *	expected args: eventarray=array([id]=>array([id]=>[idval],[colname]=>[newval],
- *		[id2]=>array([id2]=>[idval],[colname]=>[newval])
+ * postcalendar_eventapi_update()
+ * This function updates many events at once with any new values...
+ * expected args: eventarray=array([id]=>array([id]=>[idval],[colname]=>[newval],
+ *     [id2]=>array([id2]=>[idval],[colname]=>[newval])
  *
  *  returns the updated object(s)
  */
@@ -1100,21 +1060,23 @@ function postcalendar_eventapi_update($eventarray)
         return false;
     }
 }
+
 /**
- *	postcalendar_eventapi_deleteevent
- *	This function deletes one event provided the event ID (eid)
- *	expected args: args=array(['eid']=>idval)
+ * postcalendar_eventapi_deleteevent
+ * This function deletes one event provided the event ID (eid)
+ * expected args: args=array(['eid']=>idval)
  *
  */
 function postcalendar_eventapi_deleteevent($args)
 {
     return DBUtil::deleteObjectByID('postcalendar_events', $args['eid'], 'eid');
 }
+
 /**
- *	postcalendar_eventapi_deleteeventarray
- *	This function deletes several events when provided an array of ids
- *	expected args: args=array([idval]=>val,[idval2]=>val,[idval3]=>val...)
- *	note the vals are not used. just the keys
+ * postcalendar_eventapi_deleteeventarray
+ * This function deletes several events when provided an array of ids
+ * expected args: args=array([idval]=>val,[idval2]=>val,[idval3]=>val...)
+ * note the vals are not used. just the keys
  *
  */
 function postcalendar_eventapi_deleteeventarray($args)

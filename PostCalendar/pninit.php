@@ -1,49 +1,49 @@
 <?php
 /**
- *	SVN: $Id$
+ * SVN: $Id$
  *
- *  @package     PostCalendar
- *  @author      $Author$
- *  @link	     $HeadURL$
- *  @version     $Revision$
+ * @package     PostCalendar
+ * @author      $Author$
+ * @link        $HeadURL$
+ * @version     $Revision$
  *
- *  PostCalendar::Zikula Events Calendar Module
- *  Copyright (C) 2002  The PostCalendar Team
- *  http://postcalendar.tv
- *  Copyright (C) 2009  Sound Web Development
- *  Craig Heydenburg
- *  http://code.zikula.org/soundwebdevelopment/
+ * PostCalendar::Zikula Events Calendar Module
+ * Copyright (C) 2002  The PostCalendar Team
+ * http://postcalendar.tv
+ * Copyright (C) 2009  Sound Web Development
+ * Craig Heydenburg
+ * http://code.zikula.org/soundwebdevelopment/
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- *  To read the license please read the docs/license.txt or visit
- *  http://www.gnu.org/copyleft/gpl.html
+ * To read the license please read the docs/license.txt or visit
+ * http://www.gnu.org/copyleft/gpl.html
  *
  */
 
 /**
- *	Initializes a new install of PostCalendar
+ * Initializes a new install of PostCalendar
  *
- *	This function will initialize a new installation of PostCalendar.
- *	It is accessed via the Zikula Admin interface and should
- *	not be called directly.
+ * This function will initialize a new installation of PostCalendar.
+ * It is accessed via the Zikula Admin interface and should
+ * not be called directly.
  *
- *	@return  boolean	true/false
- *	@access  public
- *	@author  Roger Raymond <iansym@yahoo.com>
- *	@copyright	The PostCalendar Team 2002
+ * @return  boolean    true/false
+ * @access  public
+ * @author  Roger Raymond <iansym@yahoo.com>
+ * @copyright    The PostCalendar Team 2002
  */
 function postcalendar_init()
 {
@@ -84,17 +84,17 @@ function postcalendar_init()
 }
 
 /**
- *	Upgrades an old install of PostCalendar
+ * Upgrades an old install of PostCalendar
  *
- *	This function is used to upgrade an old version
- *	of PostCalendar.  It is accessed via the Zikula
- *	Admin interface and should not be called directly.
+ * This function is used to upgrade an old version
+ * of PostCalendar.  It is accessed via the Zikula
+ * Admin interface and should not be called directly.
  *
- *	@return boolean	true/false
- *	@param  string	$oldversion Version we're upgrading
- *	@access  public
- *	@author  Roger Raymond <iansym@yahoo.com>
- *	@copyright	The PostCalendar Team 2002
+ * @return boolean    true/false
+ * @param  string    $oldversion Version we're upgrading
+ * @access  public
+ * @author  Roger Raymond <iansym@yahoo.com>
+ * @copyright    The PostCalendar Team 2002
  */
 function postcalendar_upgrade($oldversion)
 {
@@ -112,7 +112,7 @@ function postcalendar_upgrade($oldversion)
         case '3.04':
 
             // we need the Date_Calc class
-            require_once ("modules/$pcDir/DateCalc.php");
+            require_once 'modules/PostCalendar/pnincludes/DateCalc.class.php';
 
             // Update PostCalendar Variables
             pnModSetVar('PostCalendar', 'pcTime24Hours', pnModGetVar('PostCalendar', 'time24hours'));
@@ -128,7 +128,7 @@ function postcalendar_upgrade($oldversion)
             pnModSetVar('PostCalendar', 'pcAllowSiteWide', '0');
             pnModSetVar('PostCalendar', 'pcAllowUserCalendar', '1');
             pnModSetVar('PostCalendar', 'pcEventDateFormat', '%Y-%m-%d');
-            //			pnModSetVar('PostCalendar', 'pcTemplate', 'default');
+            // pnModSetVar('PostCalendar', 'pcTemplate', 'default');
             pnModSetVar('PostCalendar', 'pcUseCache', '1');
             pnModSetVar('PostCalendar', 'pcCacheLifetime', '3600');
             pnModSetVar('PostCalendar', 'pcDefaultView', 'month');
@@ -141,11 +141,11 @@ function postcalendar_upgrade($oldversion)
             // alter the events table and change some old columns
             $sql = "ALTER TABLE $events_table
                     ADD pc_catid int(11) default '0' NOT NULL,
-					ADD pc_duration bigint(20) default '0' NOT NULL,
+                    ADD pc_duration bigint(20) default '0' NOT NULL,
                     ADD pc_sharing int(11) default '0' NOT NULL,
                     ADD pc_language varchar(30) default '',
                     ADD pc_meeting_id int(11) NULL default 0,
-					CHANGE pc_eid pc_eid int(11) unsigned NOT NULL auto_increment,
+                    CHANGE pc_eid pc_eid int(11) unsigned NOT NULL auto_increment,
                     CHANGE pc_location pc_location text,
                     CHANGE pc_conttel pc_conttel varchar(50),
                     CHANGE pc_contname pc_contname varchar(150),
@@ -177,8 +177,7 @@ function postcalendar_upgrade($oldversion)
             }
 
             // insert the current hardcoded categories into the new categories table
-            $category1 = pnVarPrepForStore(
-                pnModGetVar('PostCalendar', 'category1'));
+            $category1 = pnVarPrepForStore(pnModGetVar('PostCalendar', 'category1'));
             $category2 = pnVarPrepForStore(pnModGetVar('PostCalendar', 'category2'));
             $category3 = pnVarPrepForStore(pnModGetVar('PostCalendar', 'category3'));
             $category4 = pnVarPrepForStore(pnModGetVar('PostCalendar', 'category4'));
@@ -194,8 +193,7 @@ function postcalendar_upgrade($oldversion)
             foreach ($inserts as $insert) {
                 $dbconn->Execute($insert);
                 if ($dbconn->ErrorNo() != 0) {
-                    die(
-                        'cat table insert error : ' . $dbconn->ErrorMsg());
+                    die('cat table insert error : ' . $dbconn->ErrorMsg());
                     // return false;
                 }
             }
@@ -211,8 +209,7 @@ function postcalendar_upgrade($oldversion)
             foreach ($updates as $update) {
                 $dbconn->Execute($update);
                 if ($dbconn->ErrorNo() != 0) {
-                    die(
-                        'event table update error : ' . $dbconn->ErrorMsg());
+                    die('event table update error : ' . $dbconn->ErrorMsg());
                     // return false;
                 }
             }
@@ -226,8 +223,7 @@ function postcalendar_upgrade($oldversion)
             }
 
             // remove the old vars as they are no longer needed
-            pnModDelVar('PostCalendar',
-                'category1');
+            pnModDelVar('PostCalendar', 'category1');
             pnModDelVar('PostCalendar', 'category2');
             pnModDelVar('PostCalendar', 'category3');
             pnModDelVar('PostCalendar', 'category4');
@@ -499,8 +495,7 @@ function postcalendar_upgrade($oldversion)
                         break;
                 }
                 // ok, figure out the event's duration
-                list($sh, $sm, $ss) = explode(
-                    ':', $start);
+                list($sh, $sm, $ss) = explode(':', $start);
                 list($eh, $em, $es) = explode(':', $end);
                 $stime = mktime($sh, $sm, $ss, 1, 1, 1970);
                 // if the ending hour is less than the starting hour
@@ -512,21 +507,19 @@ function postcalendar_upgrade($oldversion)
                 }
                 $duration = $etime - $stime;
                 // prep the vars for the sql statement
-                $eid = pnVarPrepForStore(
-                    $eid);
+                $eid = pnVarPrepForStore($eid);
                 $recurrtype = pnVarPrepForStore($recurrtype);
                 $recurrspec = pnVarPrepForStore(serialize($recurrspec));
                 // create our sql statement
                 $updatesql = "UPDATE $events_table SET
                               pc_aid = '0',
-							  pc_recurrtype = $recurrtype,
+                              pc_recurrtype = $recurrtype,
                               pc_recurrspec = '$recurrspec',
                               pc_duration = $duration,
-							  pc_sharing = " . SHARING_GLOBAL . "
+                              pc_sharing = " . SHARING_GLOBAL . "
                               WHERE pc_eid = $eid";
                 // execute our sql statement
-                $dbconn->Execute(
-                    $updatesql);
+                $dbconn->Execute($updatesql);
                 if ($dbconn->ErrorNo() != 0) {
                     die($dbconn->ErrorMsg());
                     // return false;
@@ -547,8 +540,7 @@ function postcalendar_upgrade($oldversion)
         case '3.9.1':
         case '3.9.2':
             // ading pcSafeMode
-            pnModSetVar('PostCalendar',
-                'pcSafeMode', '0');
+            pnModSetVar('PostCalendar', 'pcSafeMode', '0');
             return postcalendar_upgrade('3.9.3');
             break;
 
@@ -556,7 +548,7 @@ function postcalendar_upgrade($oldversion)
         case '3.9.3.1':
             // adding indexes
             $sql = "ALTER TABLE $events_table
-					ADD INDEX basic_event (pc_catid,pc_aid,pc_eventDate,pc_endDate,pc_eventstatus,pc_sharing,pc_topic)";
+                    ADD INDEX basic_event (pc_catid,pc_aid,pc_eventDate,pc_endDate,pc_eventstatus,pc_sharing,pc_topic)";
             $dbconn->Execute($sql);
             if ($dbconn->ErrorNo() != 0) {
                 die($dbconn->ErrorMsg());
@@ -564,7 +556,7 @@ function postcalendar_upgrade($oldversion)
             }
             // adding indexes
             $sql = "ALTER TABLE $cat_table
-					ADD INDEX basic_cat (pc_catname, pc_catcolor)";
+                    ADD INDEX basic_cat (pc_catname, pc_catcolor)";
             $dbconn->Execute($sql);
             if ($dbconn->ErrorNo() != 0) {
                 die($dbconn->ErrorMsg());
@@ -590,8 +582,7 @@ function postcalendar_upgrade($oldversion)
         case '4.0.2':
         case '4.0.3': // Also support upgrades from PostCalendar 4.03a (http://www.krapohl.info)
             // v4b TS start
-            pnModSetVar(
-                'PostCalendar', 'pcRepeating', '0');
+            pnModSetVar('PostCalendar', 'pcRepeating', '0');
             pnModSetVar('PostCalendar', 'pcMeeting', '0');
             pnModSetVar('PostCalendar', 'pcAddressbook', '1');
             $sql = "ALTER TABLE $events_table
@@ -604,8 +595,7 @@ function postcalendar_upgrade($oldversion)
             }
 
             // v4b TS end
-            return postcalendar_upgrade(
-                '5.0.0');
+            return postcalendar_upgrade('5.0.0');
             break;
         case '5.0.0':
             pnModSetVar('PostCalendar', 'pcTemplate', 'default');
@@ -618,9 +608,7 @@ function postcalendar_upgrade($oldversion)
         case '5.1.0':
             // change the database. DBUtil + ADODB detect the changes on their own
             // and perform all necessary steps without help from the module author
-            if (!DBUtil::changeTable(
-                'postcalendar_events') || !DBUtil::changeTable(
-                'postcalendar_categories')) {
+            if (!DBUtil::changeTable('postcalendar_events') || !DBUtil::changeTable('postcalendar_categories')) {
                 return LogUtil::registerError(_PC_UPGRADETABLESFAILED);
             }
         case '5.5.0':
@@ -628,27 +616,27 @@ function postcalendar_upgrade($oldversion)
 
     // if we get this far - load the userapi and clear the cache
     /*
-	if(!pnModAPILoad('PostCalendar','user')) {
-		return false;
-	}
-	$tpl =& new pcRender();
-	$tpl->clear_all_cache();
-	$tpl->clear_compiled_tpl();
-	*/
+    if(!pnModAPILoad('PostCalendar','user')) {
+        return false;
+    }
+    $tpl =& new pcRender();
+    $tpl->clear_all_cache();
+    $tpl->clear_compiled_tpl();
+    */
     return true;
 }
 
 /**
- *	Deletes an install of PostCalendar
+ * Deletes an install of PostCalendar
  *
- *	This function removes PostCalendar from you
- *	Zikula install and should be accessed via
- *	the Zikula Admin interface
+ * This function removes PostCalendar from you
+ * Zikula install and should be accessed via
+ * the Zikula Admin interface
  *
- *	@return  boolean	true/false
- *	@access  public
- *	@author  Roger Raymond <iansym@yahoo.com>
- *	@copyright	The PostCalendar Team 2002
+ * @return  boolean    true/false
+ * @access  public
+ * @author  Roger Raymond <iansym@yahoo.com>
+ * @copyright    The PostCalendar Team 2002
  */
 function postcalendar_delete()
 {

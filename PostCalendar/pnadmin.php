@@ -1,39 +1,39 @@
 <?php
-require_once 'modules/PostCalendar/common.api.php';
-
 /**
- *	SVN: $Id$
+ * SVN: $Id$
  *
- *  @package     PostCalendar
- *  @author      $Author$
- *  @link	     $HeadURL$
- *  @version     $Revision$
+ * @package     PostCalendar
+ * @author      $Author$
+ * @link        $HeadURL$
+ * @version     $Revision$
  *
- *  PostCalendar::Zikula Events Calendar Module
- *  Copyright (C) 2002  The PostCalendar Team
- *  http://postcalendar.tv
- *  Copyright (C) 2009  Sound Web Development
- *  Craig Heydenburg
- *  http://code.zikula.org/soundwebdevelopment/
+ * PostCalendar::Zikula Events Calendar Module
+ * Copyright (C) 2002  The PostCalendar Team
+ * http://postcalendar.tv
+ * Copyright (C) 2009  Sound Web Development
+ * Craig Heydenburg
+ * http://code.zikula.org/soundwebdevelopment/
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- *  To read the license please read the docs/license.txt or visit
- *  http://www.gnu.org/copyleft/gpl.html
+ * To read the license please read the docs/license.txt or visit
+ * http://www.gnu.org/copyleft/gpl.html
  *
  */
+
+require_once 'modules/PostCalendar/common.api.php';
 
 /**
  * the main administration function
@@ -128,8 +128,7 @@ function postcalendar_admin_showlist($args)
     }
     $pnRender->assign('prevlink', $prevlink);
     if (count($events) >= $offset_increment) {
-        $nextlink = pnModUrl('PostCalendar', 'admin', $args['function'],
-            array('offset' => $offset + $offset_increment, 'sort' => $sort, 'sdir' => $sdir));
+        $nextlink = pnModUrl('PostCalendar', 'admin', $args['function'], array('offset' => $offset + $offset_increment, 'sort' => $sort, 'sdir' => $sdir));
     } else {
         $nextlink = false;
     }
@@ -458,7 +457,7 @@ function postcalendar_admin_testSystem()
     $version = $modinfo['version'];
     unset($modinfo);
 
-    $tpl = pnRender::getInstance('PostCalendar'); //	PostCalendarSmartySetup not needed
+    $tpl = pnRender::getInstance('PostCalendar'); // PostCalendarSmartySetup not needed
     $infos = array();
 
     if (phpversion() >= '4.1.0') {
@@ -541,8 +540,8 @@ function postcalendar_admin_testSystem()
     return $tpl->fetch('admin/postcalendar_admin_systeminfo.htm');
 }
 /*
- *	postcalendar_admin_approveevents
- *	update status of events so that they are viewable by users
+ * postcalendar_admin_approveevents
+ * update status of events so that they are viewable by users
  *
  */
 function postcalendar_admin_approveevents()
@@ -569,13 +568,12 @@ function postcalendar_admin_approveevents()
     }
 
     pnModAPIFunc('PostCalendar', 'admin', 'clearCache');
-    return pnModFunc('PostCalendar', 'admin', 'showlist',
-        array('type' => _EVENT_APPROVED, 'function' => 'listapproved', 'title' => _PC_APPROVED_ADMIN));
+    return pnModFunc('PostCalendar', 'admin', 'showlist', array('type' => _EVENT_APPROVED, 'function' => 'listapproved', 'title' => _PC_APPROVED_ADMIN));
 }
 
 /*
- *	postcalendar_admin_hideevents
- *	update status of events so that they are hidden from view
+ * postcalendar_admin_hideevents
+ * update status of events so that they are hidden from view
  *
  */
 function postcalendar_admin_hideevents()
@@ -605,8 +603,8 @@ function postcalendar_admin_hideevents()
     return pnModFunc('PostCalendar', 'admin', 'showlist', array('type' => _EVENT_APPROVED, 'function' => 'listapproved', 'title' => _PC_APPROVED_ADMIN));
 }
 /*
- *	postcalendar_admin_deleteevents
- *	delete array of events
+ * postcalendar_admin_deleteevents
+ * delete array of events
  *
  */
 function postcalendar_admin_deleteevents()

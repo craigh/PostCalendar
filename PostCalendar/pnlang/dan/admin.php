@@ -9,4 +9,4 @@ if (!defined('_POSTCALENDARNOAUTH'))
     define('_POSTCALENDARNOAUTH','Not authorised to access PostCalendar module');
 }
 
-require_once ('modules/PostCalendar/pnlang/eng/common.php');
+require_once 'modules/PostCalendar/pnlang/dan/common.php';

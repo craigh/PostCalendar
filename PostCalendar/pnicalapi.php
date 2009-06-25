@@ -1,35 +1,35 @@
 <?php
 /**
- *	SVN: $Id$
+ * SVN: $Id$
  *
- *  @package     PostCalendar
- *  @author      $Author$
- *  @link	     $HeadURL$
- *  @version     $Revision$
+ * @package     PostCalendar
+ * @author      $Author$
+ * @link        $HeadURL$
+ * @version     $Revision$
  *
- *  PostCalendar::Zikula Events Calendar Module
- *  Copyright (C) 2002  The PostCalendar Team
- *  http://postcalendar.tv
- *  Copyright (C) 2009  Sound Web Development
- *  Craig Heydenburg
- *  http://code.zikula.org/soundwebdevelopment/
+ * PostCalendar::Zikula Events Calendar Module
+ * Copyright (C) 2002  The PostCalendar Team
+ * http://postcalendar.tv
+ * Copyright (C) 2009  Sound Web Development
+ * Craig Heydenburg
+ * http://code.zikula.org/soundwebdevelopment/
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- *  To read the license please read the docs/license.txt or visit
- *  http://www.gnu.org/copyleft/gpl.html
+ * To read the license please read the docs/license.txt or visit
+ * http://www.gnu.org/copyleft/gpl.html
  *
  */
 
@@ -42,10 +42,10 @@ Loader::requireOnce('modules/PostCalendar/pnincludes/iCalcreator.class.php');
 // process uploaded .ics file
 // store to PC database
 // args expected:
-/*	Fileparts
-			array([0]=>pathname
-						[1]=>filename
-						[delimiter]=>delimiter)
+/*    Fileparts
+            array([0]        =>pathname
+                  [1]        =>filename
+                  [delimiter]=>delimiter)
 */
 function postcalendar_icalapi_processupload($fileparts)
 {
@@ -72,12 +72,13 @@ function postcalendar_icalapi_processupload($fileparts)
         //die(print_r($ve));
         $eventwritten[$uid] = postcalendar_icalapi_writeicalevent($ve);
     }
-    //if (in_array(false,$eventwritten) return false;	//is this the better way than below?
+    //if (in_array(false,$eventwritten) return false;    //is this the better way than below?
     foreach ($eventwritten as $valid) {
         if (!$valid) return false; // if any event not written return false
     }
     return true; //return true if all events written
 }
+
 //write event to DB
 // argument expect: $ve array of ONE event info
 function postcalendar_icalapi_writeicalevent($ve)
@@ -108,7 +109,6 @@ function postcalendar_icalapi_writeicalevent($ve)
     //$ve['endtime']['sec'] < $ve['starttime']['sec'] ? $ve['endtime']['min']++ : '';
     //$ve['endtime']['min'] < $ve['starttime']['min'] ? $ve['endtime']['hour']++ : '';
 
-
     // determine if this is an all day event
     $endstamp = mktime($ve['endtime']['hour'], $ve['endtime']['min'], $ve['endtime']['sec'],
         $ve['enddate']['month'], $ve['enddate']['day'], $ve['enddate']['year']);
@@ -134,7 +134,6 @@ function postcalendar_icalapi_writeicalevent($ve)
     //note: should only be adding meeting_id if the meeting has participants.
     //$emid++; // normal writeEvent function leaves at 0 if no participants
 
-
     $pc_endDate = $ve['enddate']['year'] . "-" . $ve['enddate']['month'] . "-" . $ve['enddate']['day'];
     $pc_endTime = $ve['endtime']['hour'] . ":" . $ve['endtime']['min'] . ":" . $ve['endtime']['sec'];
     $pc_eventDate = $ve['startdate']['year'] . "-" . $ve['startdate']['month'] . "-" . $ve['startdate']['day'];
@@ -143,7 +142,7 @@ function postcalendar_icalapi_writeicalevent($ve)
 
     $adddescitems = postcalendar_icalap_parsedesc($ve['description']);
     foreach ($adddescitems as $key => $val) // should be using array_merge here?
-{
+    {
         if (empty($key)) $key = "description"; // overwrites old extended version
         $ve[$key] = $ve[$val];
     }
@@ -170,12 +169,12 @@ function postcalendar_icalapi_writeicalevent($ve)
     // check to see if an event already exists that is exactly the same...
     // seems like there should be an easier way to check...
     $where = array();
-    if ($ve['catid']) $where[] = "pc_catid		 = {$ve['catid']}";
-    if (is_numeric($pc_aid)) $where[] = "pc_aid			 = '$pc_aid'";
-    if (isset($ve['title'])) $where[] = "pc_title		 = '{$ve['title']}'";
-    if (isset($ve['description'])) $where[] = "pc_hometext	 = ':text:{$ve['description']}'";
+    if ($ve['catid'])              $where[] = "pc_catid     = {$ve['catid']}";
+    if (is_numeric($pc_aid))       $where[] = "pc_aid       = '$pc_aid'";
+    if (isset($ve['title']))       $where[] = "pc_title     = '{$ve['title']}'";
+    if (isset($ve['description'])) $where[] = "pc_hometext  = ':text:{$ve['description']}'";
     if (strlen($pc_eventDate) > 2) $where[] = "pc_eventDate = '$pc_eventDate'";
-    if (!is_null($duration)) $where[] = "pc_duration	 = $duration";
+    if (!is_null($duration))       $where[] = "pc_duration  = $duration";
     if (strlen($pc_startTime) > 2) $where[] = "pc_startTime = '$pc_startTime'";
 
     $where = count($where) ? ' WHERE ' . implode(' AND ', $where) : '';
@@ -249,8 +248,7 @@ function postcalendar_icalapi_export_ical($sevents)
                 $duration = $item['duration'];
                 $title = $item['title'];
                 $summary = $item['title'];
-                $description = html_entity_decode(
-                    strip_tags(substr($item['hometext'], 6)));
+                $description = html_entity_decode(strip_tags(substr($item['hometext'], 6)));
                 $evcategory = $item['catname'];
                 $location = $item['event_location'];
                 $uid = $item['eid'] . "--" . strtotime($item['time']) . "@$sitename";
@@ -261,7 +259,7 @@ function postcalendar_icalapi_export_ical($sevents)
                 $topic = $item['topic'];
 
                 # this block of code cleans up encodings such as &#113; in the
-                # email addresses.	These were escaped on store by postcalendar
+                # email addresses.    These were escaped on store by postcalendar
                 # and I'm too lazy to figure out a regexp to fix it.
                 # it builds two arrays with search and replace and then calls
                 # str_replace once to translate everything over.
@@ -275,24 +273,23 @@ function postcalendar_icalapi_export_ical($sevents)
                 $organizer = $email;
 
                 # indent the original description so VEVENT doesn't blow up on DESCRIPTION
-                $description = preg_replace(
-                    '!^!m', str_repeat(' ', 2), $description);
+                $description = preg_replace('!^!m', str_repeat(' ', 2), $description);
 
                 # Build the event description text.
                 $descadd = "";
-                if (!empty($item['contname'])) $descadd .= "	 Contact: " . $item['contname'] . "\N";
-                if (!empty($item['conttel'])) $descadd .= "	 Phone: " . $item['conttel'] . "\N";
-                if (!empty($email)) $descadd .= "	 Email: " . $email . "\N";
-                if (!empty($item['website'])) $descadd .= "	 URL: " . $item['website'] . "\N";
-                if (!empty($item['fee'])) $descadd .= "	 Fee: " . $item['fee'] . "\N";
-                if (!empty($item['topic'])) $descadd .= "	 Topic: " . $item['topic'] . "\N";
-                if (!empty($descadd)) $descadd = "	 For more information:\N" . $descadd;
-                $evtdesc = $description . "\N" . $descadd;
+                if (!empty($item['contname'])) $descadd .= "     Contact: " . $item['contname'] . "\n";
+                if (!empty($item['conttel']))  $descadd .= "     Phone: " . $item['conttel'] . "\n";
+                if (!empty($email))            $descadd .= "     Email: " . $email . "\n";
+                if (!empty($item['website']))  $descadd .= "     URL: " . $item['website'] . "\n";
+                if (!empty($item['fee']))      $descadd .= "     Fee: " . $item['fee'] . "\n";
+                if (!empty($item['topic']))    $descadd .= "     Topic: " . $item['topic'] . "\n";
+                if (!empty($descadd))          $descadd  = "     For more information:\n" . $descadd;
+                $evtdesc = $description . "\n" . $descadd;
 
-                if ($item['event_location']) $eventdesc .= "	 Location: " . $item['event_location'] . "\N";
-                if ($item['event_street1']) $eventdesc .= "	 Street Addr 1: " . $item['event_street1'] . "\N";
-                if ($item['event_street2']) $eventdesc .= "	 Street Addr 2: " . $item['event_street2'] . "\N";
-                if ($item['event_city']) $eventdesc .= "	 City, ST ZIP: " . $item['event_city'] . "," . $item['event_state'] . " " . $item['event_postal'] . "\N";
+                if ($item['event_location']) $eventdesc .= "     Location: " . $item['event_location'] . "\n";
+                if ($item['event_street1'])  $eventdesc .= "     Street Addr 1: " . $item['event_street1'] . "\n";
+                if ($item['event_street2'])  $eventdesc .= "     Street Addr 2: " . $item['event_street2'] . "\n";
+                if ($item['event_city'])     $eventdesc .= "     City, ST ZIP: " . $item['event_city'] . "," . $item['event_state'] . " " . $item['event_postal'] . "\n";
 
                 # Build the ALTREP line as a link to the actual calendar
                 $args = array();
@@ -304,8 +301,7 @@ function postcalendar_icalapi_export_ical($sevents)
                 # output the vCard/iCal VEVENT object
                 $vevent = new vevent();
                 if ($organizer != "") {
-                    $vevent->setProperty('ORGANIZER:MAILTO',
-                        $organizer);
+                    $vevent->setProperty('ORGANIZER:MAILTO', $organizer);
                     $vevent->setProperty('CONTACT:MAILTO', $organizer);
                 }
                 if ($url != "") {
@@ -318,8 +314,7 @@ function postcalendar_icalapi_export_ical($sevents)
                 $vevent->setProperty('LOCATION', $location);
                 $vevent->setProperty('TRANSP', 'OPAQUE');
                 $vevent->setProperty('CLASS', 'CONFIDENTIAL');
-                $vevent->setProperty('DTSTAMP',
-                    gmdate("Ymd") . "T" . gmdate("His") . "Z");
+                $vevent->setProperty('DTSTAMP', gmdate("Ymd") . "T" . gmdate("His") . "Z");
                 if ($allday) {
                     $item['startTime'] = "00:00:00"; // midnight
                     $duration = 86400; // one day
@@ -329,15 +324,12 @@ function postcalendar_icalapi_export_ical($sevents)
                 # build the normal date/time string ...
                 $evtstr = $item['eventDate'] . " " . $item['startTime'];
                 # convert it to unix time ...
-                $evttime = strtotime(
-                    $evtstr);
+                $evttime = strtotime($evtstr);
                 # add duration to get the end time ...
                 $evtend = $evttime + $duration; //duration is already expressed in seconds (e.g. 3600 = one hour)
 
-
                 # format it for output
-                $startdate = gmdate(
-                    "Y^m^d^H^i^s", $evttime);
+                $startdate = gmdate("Y^m^d^H^i^s", $evttime);
                 list($year, $month, $day, $hour, $min, $sec) = explode("^", $startdate);
                 $vevent->setProperty('dtstart',
                     array('year' => $year, 'month' => $month,
@@ -361,9 +353,7 @@ function postcalendar_icalapi_export_ical($sevents)
                     $extinfo['date'] = gmdate("Ymd", $evttime);
                     $extinfo['eid'] = $peid;
                     $extinfo['eventtime'] = $evttime;
-                    $extinfo['icallink'] = "http://$sitename/modules/PostCalendar/ical.php?eid=$peid&date=" . date(
-                        "Ymd",
-                        strtotime($item['eventDate']));
+                    $extinfo['icallink'] = "http://$sitename/modules/PostCalendar/ical.php?eid=$peid&date=" . date("Ymd", strtotime($item['eventDate']));
                     $extinfo['evtstartunixtime'] = $evttime;
                     $extinfo['evtendunixtime'] = $evtend;
 
@@ -371,8 +361,7 @@ function postcalendar_icalapi_export_ical($sevents)
                         $extinfo[$key] = $item[$key];
                     }
 
-                    $vevent->setProperty('COMMENT',
-                        serialize($extinfo));
+                    $vevent->setProperty('COMMENT', serialize($extinfo));
                 }
                 $v->setComponent($vevent);
             }
@@ -381,6 +370,7 @@ function postcalendar_icalapi_export_ical($sevents)
     $v->returnCalendar();
     return true;
 }
+
 function postcalendar_icalapi_getTZ()
 {
     $tzinfo = pnConfigGetVar('timezone_info');
@@ -391,6 +381,7 @@ function postcalendar_icalapi_getTZ()
     }
     return array($tzid, $timezones[$tzid]);
 }
+
 function parseicalfield($field)
 {
     $items = array(); // array to hold parsed items
@@ -404,10 +395,12 @@ function parseicalfield($field)
     }
     return $items;
 }
+
 function postcalendar_icalap_parsedesc($desc)
 {
     return parseicalfield($desc);
 }
+
 function postcalendar_icalapi_parseloc($loc)
 {
     $locitems = parseicalfield($loc);
@@ -423,6 +416,7 @@ function postcalendar_icalapi_parseloc($loc)
                     'event_postal' => $locitems['zip']);
     return $event_location_data;
 }
+
 function postcalendar_icalapi_parsecats($category)
 {
     $cat_id = DBUtil::selectFieldByID('postcalendar_categories', 'catid', $category, 'catname');
@@ -430,6 +424,7 @@ function postcalendar_icalapi_parsecats($category)
     if (!$cat_id) $cat_id = 1;
     return $cat_id;
 }
+
 function convert_dtend($end, $dur)
 {
     extract($end);
