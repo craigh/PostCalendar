@@ -484,3 +484,23 @@ function postcalendar_userapi_deleteevents($args)
 {
     return pnModAPIFunc('PostCalendar', 'event', 'deleteevent', $args);
 }
+function postcalendar_userapi_submitEvent($args)
+{
+    return pnModAPIFunc('PostCalendar', 'event', 'writeEvent', $args);
+}
+function postcalendar_userapi_buildSubmitForm($args)
+{
+    return pnModAPIFunc('PostCalendar', 'event', 'buildSubmitForm', $args);
+}
+function postcalendar_userapi_pcFixEventDetails($args)
+{
+    return pnModAPIFunc('PostCalendar', 'event', 'fixEventDetails', $args);
+}
+function postcalendar_userapi_pcGetEventDetails($args)
+{
+    return pnModAPIFunc('PostCalendar', 'event', 'getEventDetails', $args);
+}
+function postcalendar_userapi_eventDetail($args)
+{
+    return pnModAPIFunc('PostCalendar', 'event', 'eventDetail', $args);
+}

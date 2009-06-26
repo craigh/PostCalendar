@@ -200,7 +200,7 @@ define('_PC_JUMP_MENU_SUBMIT', 'go');
 define('_PC_LEGEND', 'Legend:');
 define('_PC_LIST_HOW_MANY', 'Show how many events on admin pages?');
 define('_PC_LOCALE', 'en_US');
-define('_PC_MEETING_MAIL_TITLE', 'v4b-Meeting - New event');
+define('_PC_MEETING_MAIL_TITLE', 'Meeting - New event');
 define('_PC_MODIFY_CATS', 'Make modifications to current categories.');
 define('_PC_MONDAY', 'Monday');
 define('_PC_MONTHS', 'Month(s)');

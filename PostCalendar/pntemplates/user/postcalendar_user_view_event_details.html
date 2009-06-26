@@ -94,7 +94,7 @@
 </div>
 <!--[ pnmodcallhooks hookobject=item hookaction=display hookid=$A_EVENT.eid returnurl="index.php?module=PostCalendar&func=view&viewtype=details&eid=$eid" ]-->
 <!--[ if $PRINT_VIEW eq false ]-->
-	<!--[ if $USER_CAN_EDIT ]-->
+	<!--[ if $EVENT_CAN_EDIT ]-->
 		<div>
 			<a href="<!--[ $EVENT_EDIT ]-->"><!--[pnml name='_PC_ADMIN_ACTION_EDIT']--></a> |
 	    <a href="<!--[ $EVENT_COPY ]-->"><!--[pnml name='_PC_ADMIN_ACTION_COPY']--></a> |

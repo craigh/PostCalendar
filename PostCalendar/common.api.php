@@ -67,7 +67,7 @@ function pcVarPrepForDisplay($s)
 
 function pcVarPrepHTMLDisplay($s)
 {
-    return pnVarPrepHTMLDisplay(postcalendar_removeScriptTags($s));
+    return DataUtil::formatForDisplayHTML(postcalendar_removeScriptTags($s));
 }
 
 function pcGetTopicName($topicid)
@@ -349,102 +349,3 @@ function pc_clean($s)
     $tmp = explode(' ', $s);
     return join("'+' ", $tmp);
 }
-
-/****************************************************
- * The functions below are moved to eventapi
- ****************************************************/
-function postcalendar_userapi_submitEvent($args)
-{
-    return pnModAPIFunc('PostCalendar', 'event', 'writeEvent', $args);
-}
-function postcalendar_adminapi_submitEvent($args)
-{
-    return pnModAPIFunc('PostCalendar', 'event', 'writeEvent', $args);
-}
-function postcalendar_userapi_buildSubmitForm($args)
-{
-    return pnModAPIFunc('PostCalendar', 'event', 'buildSubmitForm', $args);
-}
-function postcalendar_adminapi_buildSubmitForm($args)
-{
-    $args['admin'] = true;
-    return pnModAPIFunc('PostCalendar', 'event', 'buildSubmitForm', $args);
-}
-function postcalendar_userapi_pcFixEventDetails($args)
-{
-    return pnModAPIFunc('PostCalendar', 'event', 'fixEventDetails', $args);
-}
-function postcalendar_userapi_pcGetEventDetails($args)
-{
-    return pnModAPIFunc('PostCalendar', 'event', 'getEventDetails', $args);
-}
-function postcalendar_userapi_eventDetail($args)
-{
-    return pnModAPIFunc('PostCalendar', 'event', 'eventDetail', $args);
-}
-function postcalendar_adminapi_eventDetail($args)
-{
-    $args['admin'] = true;
-    return pnModAPIFunc('PostCalendar', 'event', 'eventDetail', $args);
-}
-/****************************************************/
-
-/**************************************
-THE FOLLOWING FUNCTIONS ARE MOVED AND RENAMED
-
-FROM USERAPI to EVENTAPI:
-OLD: postcalendar_userapi_pcQueryEvents
-NEW: postcalendar_eventapi_queryEvents
-
-OLD: postcalendar_userapi_pcGetEvents
-NEW: postcalendar_eventapi_getEvents
-
-OLD: postcalendar_userapi_deleteevents
-NEW: postcalendar_eventapi_deleteevent
-
-FROM USER TO EVENT:
-OLD: postcalendar_user_delete
-NEW: postcalendar_event_delete
-
-OLD: postcalendar_user_submit
-NEW: postcalendar_event_new
-
-OLD: postcalendar_user_edit
-NEW: postcalendar_event_edit
-
-FROM COMMON TO EVENTAPI:
-OLD: postcalendar_userapi_submitEvent
-OLD: postcalendar_adminapi_submitEvent
-NEW: postcalendar_eventapi_writeEvent
-
-OLD: postcalendar_userapi_buildSubmitForm
-OLD: postcalendar_adminapi_buildSubmitForm
-NEW: postcalendar_eventapi_buildSubmitForm
-
-OLD: postcalendar_userapi_pcFixEventDetails
-NEW: postcalendar_eventapi_fixEventDetails
-
-OLD: postcalendar_userapi_pcGetEventDetails
-NEW: postcalendar_eventapi_getEventDetails
-
-OLD: postcalendar_userapi_eventDetail
-OLD: postcalendar_adminapi_eventDetail
-NEW: postcalendar_eventapi_eventDetail
-
-FROM ADMIN TO EVENT:
-OLD: postcalendar_admin_approveevents
-OLD: postcalendar_event_approve
-
-OLD: postcalendar_admin_hideevents
-NEW: postcalendar_event_hide
-
-OLD: postcalendar_admin_deleteevents
-NEW: postcalendar_event_delete (also from USER)
-
-OLD: postcalendar_admin_edit
-NEW: postcalendar_event_new (also from USER)
-
-OLD: postcalendar_admin_submit
-NEW: postcalendar_event_new (also from USER)
-
- ***************************************/

@@ -120,6 +120,7 @@ function postcalendar_adminapi_meeting_mailparticipants ($args)
     /* expected: $event_subject,$event_duration,$pc_description,$startDate,$startTime,$uname,$pc_eid,$pc_mail_users */
 
     $pnRender = pnRender::getInstance('PostCalendar');
+    $pnRender->assign('eid', $pc_eid);
 
 	@list($pc_dur_hours, $dmin) = @explode('.', ($event_duration / 60 / 60));
     $pnRender->assign('pc_dur_hours', $pc_dur_hours);
@@ -139,7 +140,7 @@ function postcalendar_adminapi_meeting_mailparticipants ($args)
     $pc_author = $uname;
     $pnRender->assign('pc_author', $pc_author);
 
-	$pc_URL = pnModURL('PostCalendar', 'user', 'view', array('viewtype' => 'details', 'eid' => $pc_eid[0]));
+	$pc_URL = pnModURL('PostCalendar', 'user', 'view', array('viewtype' => 'details', 'eid' => $pc_eid));
     $pnRender->assign('pc_URL', $pc_URL);
 
     $modinfo = pnModGetInfo(pnModGetIDFromName('PostCalendar'));
@@ -165,6 +166,7 @@ function postcalendar_adminapi_meeting_mailparticipants ($args)
 }
 
 // send an email to admin on new event submission
+// args expected: eid & is_update
 function postcalendar_adminapi_notify($args)
 {
     extract($args);
@@ -192,4 +194,21 @@ function postcalendar_adminapi_notify($args)
         LogUtil::registerError('Admin notify email not sent');
         return false;
     }
+}
+/****************************************************
+ * The functions below are moved to eventapi
+ ****************************************************/
+function postcalendar_adminapi_submitEvent($args)
+{
+    return pnModAPIFunc('PostCalendar', 'event', 'writeEvent', $args);
+}
+function postcalendar_adminapi_buildSubmitForm($args)
+{
+    $args['admin'] = true;
+    return pnModAPIFunc('PostCalendar', 'event', 'buildSubmitForm', $args);
+}
+function postcalendar_adminapi_eventDetail($args)
+{
+    $args['admin'] = true;
+    return pnModAPIFunc('PostCalendar', 'event', 'eventDetail', $args);
 }

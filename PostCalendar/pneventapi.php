@@ -954,22 +954,6 @@ function postcalendar_eventapi_eventDetail($args)
     }
     $function_out['participants'] = $participants;
 
-    //=================================================================
-    // populate the template $ADMIN_OPTIONS
-    //=================================================================
-    //$target='';
-    //if(_SETTING_OPEN_NEW_WINDOW)
-    //    $target = 'target="csCalendar"';
-
-    /*    $admin_edit_url = $admin_delete_url = '';
-    if (pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN))
-    {
-        $admin_edit_url        = pnModURL('PostCalendar','event','submit',array('eid'=>$eid));
-        $admin_delete_url    = pnModURL('PostCalendar','event','delete',array('eid'=>$eid));
-        $admin_copy_url        = pnModURL('PostCalendar','event','submit',array('eid'=>$eid,'form_action'=>'copy'));
-    }
-*/
-    $user_edit_url = $user_delete_url = '';
 
     if (pnUserLoggedIn()) {
         $logged_in_uid = pnUserGetVar('uid');
@@ -977,6 +961,7 @@ function postcalendar_eventapi_eventDetail($args)
         $logged_in_uid = 1;
     }
 
+    $user_edit_url = $user_delete_url = $user_copy_url = '';
     $can_edit = false;
     if ((pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADD) && $logged_in_uid == $event['aid'])
         || pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
@@ -985,15 +970,7 @@ function postcalendar_eventapi_eventDetail($args)
         $user_copy_url = pnModURL('PostCalendar', 'event', 'submit', array('eid' => $eid, 'form_action' => 'copy'));
         $can_edit = true;
     }
-
-    /*    $function_out['ADMIN_TARGET'] = $target;
-    $function_out['ADMIN_EDIT'] = $admin_edit_url;
-    $function_out['ADMIN_DELETE'] = $admin_delete_url;
-    $function_out['ADMIN_COPY'] = $admin_copy_url;
-    */
     $function_out['EVENT_COPY'] = $user_copy_url;
-
-    //$function_out['USER_TARGET'] = $target;
     $function_out['EVENT_EDIT'] = $user_edit_url;
     $function_out['EVENT_DELETE'] = $user_delete_url;
     $function_out['EVENT_CAN_EDIT'] = $can_edit;

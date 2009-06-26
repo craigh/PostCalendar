@@ -100,7 +100,7 @@ function postcalendar_user_display($args)
             if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_READ)) {
                 return LogUtil::registerPermissionError();
             }
-            $out = pnModAPIFunc('PostCalendar', 'user', 'eventDetail',
+            $out = pnModAPIFunc('PostCalendar', 'event', 'eventDetail',
                 array('eid' => $eid, 'Date' => $Date, 'cacheid' => $cacheid));
 
             if ($out === false) {
@@ -112,8 +112,7 @@ function postcalendar_user_display($args)
             PostCalendarSmartySetup($tpl);
             if ($tpl->is_cached($out['template'], $cacheid)) {
                 // use cached version
-                return $tpl->fetch(
-                    $out['template'], $cacheid);
+                return $tpl->fetch($out['template'], $cacheid);
             } else {
                 foreach ($out as $var => $val) {
                     $tpl->assign($var, $val);
