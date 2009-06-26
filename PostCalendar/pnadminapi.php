@@ -116,11 +116,13 @@ function postcalendar_adminapi_clearCache()
 
 function postcalendar_adminapi_meeting_mailparticipants ($args)
 {
+    //TODO: if ($is_update) send appropriate message...
     extract($args);
-    /* expected: $event_subject,$event_duration,$pc_description,$startDate,$startTime,$uname,$pc_eid,$pc_mail_users */
+    /* expected: $event_subject,$event_duration,$event_desc,$startDate,$startTime,$uname,$eid,$pc_mail_users,$is_update */
 
     $pnRender = pnRender::getInstance('PostCalendar');
-    $pnRender->assign('eid', $pc_eid);
+    $pnRender->assign('eid', $eid);
+    $pnRender->assign('event_subject', $event_subject);
 
 	@list($pc_dur_hours, $dmin) = @explode('.', ($event_duration / 60 / 60));
     $pnRender->assign('pc_dur_hours', $pc_dur_hours);
@@ -129,7 +131,7 @@ function postcalendar_adminapi_meeting_mailparticipants ($args)
     $pnRender->assign('pc_dur_minutes', $pc_dur_minutes);
 
 	$pc_description = substr($event_desc, 6);
-    $pnRender->assign('pc_description', $pc_description);
+    $pnRender->assign('pc_description', $event_desc);
 
 	list($x, $y, $z) = explode('-', $startDate);
 	list($a, $b, $c) = explode('-', $startTime);
@@ -140,7 +142,7 @@ function postcalendar_adminapi_meeting_mailparticipants ($args)
     $pc_author = $uname;
     $pnRender->assign('pc_author', $pc_author);
 
-	$pc_URL = pnModURL('PostCalendar', 'user', 'view', array('viewtype' => 'details', 'eid' => $pc_eid));
+	$pc_URL = pnModURL('PostCalendar', 'user', 'view', array('viewtype' => 'details', 'eid' => $eid), null, null, true);
     $pnRender->assign('pc_URL', $pc_URL);
 
     $modinfo = pnModGetInfo(pnModGetIDFromName('PostCalendar'));
@@ -169,11 +171,10 @@ function postcalendar_adminapi_meeting_mailparticipants ($args)
 // args expected: eid & is_update
 function postcalendar_adminapi_notify($args)
 {
+    //TODO: needd to put a test in here for if the admin submitted the event, if not, probably don't send email. (ticket 24)
     extract($args);
 
     if (!(bool) _SETTING_NOTIFY_ADMIN) return true;
-
-    //need to put a test in here for if the admin submitted the event, if not, probably don't send email.
 
     $modinfo = pnModGetInfo(pnModGetIDFromName('PostCalendar'));
     $modversion = DataUtil::formatForOS($modinfo['version']);
@@ -182,7 +183,7 @@ function postcalendar_adminapi_notify($args)
     $pnRender->assign('is_update', $is_update);
     $pnRender->assign('modversion', $modversion);
     $pnRender->assign('eid', $eid);
-    $pnRender->assign('link', pnModURL('PostCalendar', 'admin', 'adminevents', array('pc_event_id' => $eid, 'action' => _ADMIN_ACTION_VIEW)));
+    $pnRender->assign('link', pnModURL('PostCalendar', 'admin', 'adminevents', array('pc_event_id' => $eid, 'action' => _ADMIN_ACTION_VIEW), null, null, true));
     $message = $pnRender->fetch('email/postcalendar_email_adminnotify.htm');
 
     $messagesent = pnModAPIFunc('Mailer', 'user', 'sendmessage', array('toaddress' => _SETTING_NOTIFY_EMAIL, 'subject' => _PC_NOTIFY_SUBJECT, 'body' => $message, 'html' => true));

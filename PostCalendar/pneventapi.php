@@ -335,8 +335,6 @@ function postcalendar_eventapi_writeEvent($args)
 
     extract($args);
     unset($args);
-    //list($dbconn) = pnDBGetConn();
-    //$pntable = pnDBGetTables();
 
     define('PC_ACCESS_ADMIN', pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_OVERVIEW));
 
@@ -417,7 +415,7 @@ function postcalendar_eventapi_writeEvent($args)
         if ($is_update) {
             $eventarray['eid'] = DataUtil::formatForStore($pc_event_id);
             $result = pnModAPIFunc('postcalendar', 'event', 'update', array($pc_event_id=>$eventarray));
-        } else {
+        } else { //new event
             unset ($eventarray['eid']); //be sure that eid is not set on insert op to autoincrement value
             $eventarray['time'] = DataUtil::formatForStore(date("Y-m-d H:i:s")); //current date
             $eventarray['informant'] = DataUtil::formatForStore($uname);
@@ -436,13 +434,13 @@ function postcalendar_eventapi_writeEvent($args)
 
     } // V4B SB Foreach End
 
-    $eid = $result['eid'];
+    $eid = $result['eid']; // set eid to last event submitted
 
     pnModAPIFunc('PostCalendar','admin','notify',compact('eid','is_update')); //notify admin and informant
 
     if ($pc_meeting_id) { //notify meeting participants
         pnModAPIFunc('PostCalendar','admin','meeting_mailparticipants',
-            compact('event_duration','event_desc','startDate','startTime','pc_mail_users','pc_mail_events','uname','is_update'));
+            compact('event_subject','event_duration','event_desc','startDate','startTime','pc_mail_users','eid','uname','is_update'));
     }
 
     return true;
