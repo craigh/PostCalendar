@@ -89,34 +89,9 @@ function postcalendar_removeScriptTags($in)
     return preg_replace("/<script.*?>(.*?)<\/script>/", "", $in);
 }
 
-function postcalendar_user_getDate($format = '%Y%m%d%H%M%S')
-{
-    return postcalendar_getDate($format);
-}
-
 function postcalendar_getDate($format = '%Y%m%d%H%M%S')
 {
-    $Date =      FormUtil::getPassedValue('Date');
-    $jumpday =   FormUtil::getPassedValue('jumpday');
-    $jumpmonth = FormUtil::getPassedValue('jumpmonth');
-    $jumpyear =  FormUtil::getPassedValue('jumpyear');
-
-    // if(!isset($Date))
-    if (empty($Date)) {
-        // if we still don't have a date then calculate it
-        $time = time();
-        if (pnUserLoggedIn()) $time += (pnUserGetVar('timezone_offset') - pnConfigGetVar('timezone_offset')) * 3600;
-        // check the jump menu
-        if (!isset($jumpday))   $jumpday = strftime('%d', $time);
-        if (!isset($jumpmonth)) $jumpmonth = strftime('%m', $time);
-        if (!isset($jumpyear))  $jumpyear = strftime('%Y', $time);
-        $Date = (int) "$jumpyear$jumpmonth$jumpday";
-    }
-
-    $y = substr($Date, 0, 4);
-    $m = substr($Date, 4, 2);
-    $d = substr($Date, 6, 2);
-    return strftime($format, mktime(0, 0, 0, $m, $d, $y));
+    return pnModAPIFunc('PostCalendar','user','getDate',compact('format'));
 }
 
 function postcalendar_today($format = '%Y%m%d')

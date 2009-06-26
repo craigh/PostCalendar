@@ -126,12 +126,14 @@ function postcalendar_event_new($args)
         return LogUtil::registerPermissionError();
     }
 
-    pnModAPILoad('PostCalendar', 'user');
-    $output = "";
+    extract($args); //if there are args, does that mean were are editing an event?
 
-    extract($args);
-
-    $Date  = postcalendar_getDate();
+    //not sure these three lines are needed with call to getDate here
+    $jumpday   = FormUtil::getPassedValue('jumpday');
+    $jumpmonth = FormUtil::getPassedValue('jumpmonth');
+    $jumpyear  = FormUtil::getPassedValue('jumpyear');
+    
+    $Date  = pnModAPIFunc('PostCalendar','user','getDate',compact('jumpday','jumpmonth','jumpyear'));
     $year  = substr($Date, 0, 4);
     $month = substr($Date, 4, 2);
     $day   = substr($Date, 6, 2);
@@ -200,6 +202,7 @@ function postcalendar_event_new($args)
 
     // event repeating data
     $event_repeat           = FormUtil::getPassedValue('event_repeat');
+    if (!isset($event_repeat)) $event_repeat = 0;
     $event_repeat_freq      = FormUtil::getPassedValue('event_repeat_freq');
     $event_repeat_freq_type = FormUtil::getPassedValue('event_repeat_freq_type');
     $event_repeat_on_num    = FormUtil::getPassedValue('event_repeat_on_num');
@@ -222,12 +225,9 @@ function postcalendar_event_new($args)
     } else {
         $uname = pnConfigGetVar('anonymous');
     }
-    if (!isset($event_repeat)) {
-        $event_repeat = 0;
-    }
 
-    if (!isset($pc_event_id) || empty($pc_event_id) || $data_loaded) {
-        // lets wrap all the data into array for passing to submit and preview functions
+    if (!isset($pc_event_id) || empty($pc_event_id) || $data_loaded) { // this is a new event
+        // wrap all the data into array for passing to commit and preview functions
         $eventdata = compact('event_subject', 'event_desc', 'event_sharing',
             'event_category', 'event_topic', 'event_startmonth', 'event_startday', 'event_startyear',
             'event_starttimeh', 'event_starttimem', 'event_startampm', 'event_endmonth',
@@ -244,10 +244,10 @@ function postcalendar_event_new($args)
         $eventdata['event_for_userid'] = $event_for_userid;
 
         $event_participants = FormUtil::getPassedValue('participants');
-    } else {
+    } else { // we are editing an existing event or copying an exisiting event
         $event = pnModAPIFunc('PostCalendar', 'event', 'getEventDetails', $pc_event_id);
         if (($uname != $event['informant']) and (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN))) {
-            return _PC_CAN_NOT_EDIT;
+            return _PC_CAN_NOT_EDIT; // need to change this to logutil
         }
         $eventdata['event_subject'] = $event['title'];
         $eventdata['event_desc'] = $event['hometext'];
@@ -316,68 +316,58 @@ function postcalendar_event_new($args)
     $categories = pnModAPIFunc('PostCalendar', 'user', 'getCategories');
 
     //================================================================
-    // ERROR CHECKING
+    // ERROR CHECKING IF ACTION IS PREVIEW OR COMMIT
     //================================================================
-    // $required_vars = array('event_subject','event_desc');
-    /* THIS SEEMS WAY TO COMPLICATED...  CAH 6/24/2009
-    $required_vars = array('event_subject');
-    // $required_name = array(_PC_EVENT_TITLE,_PC_EVENT_DESC);
-    $required_name = array(_PC_EVENT_TITLE);
-    $reqCount = count($required_vars);
-    for ($r = 0; $r < $reqCount; $r++) {
-        if (empty($$required_vars[$r]) || !preg_match('/\S/i', $$required_vars[$r])) {
-            LogUtil::registerError('<b>' . $required_name[$r] . '</b> ' . _PC_SUBMIT_ERROR4 . '<br />');
+    if (($form_action == 'preview') OR ($form_action == 'commit')) {
+        if (empty($event_subject)) LogUtil::registerError('<b>event subject</b>'._PC_SUBMIT_ERROR4.'<br />');
+        // if this truly is empty and we are committing, it should abort!
+    
+        // check repeating frequencies
+        if ($event_repeat == REPEAT) {
+            if (!isset($event_repeat_freq) || $event_repeat_freq < 1 || empty($event_repeat_freq)) {
+                LogUtil::registerError(_PC_SUBMIT_ERROR5);
+            } elseif (!is_numeric($event_repeat_freq)) {
+                LogUtil::registerError(_PC_SUBMIT_ERROR6);
+            }
+        } elseif ($event_repeat == REPEAT_ON) {
+            if (!isset($event_repeat_on_freq) || $event_repeat_on_freq < 1 || empty($event_repeat_on_freq)) {
+                LogUtil::registerError(_PC_SUBMIT_ERROR5);
+            } elseif (!is_numeric($event_repeat_on_freq)) {
+                LogUtil::registerError(_PC_SUBMIT_ERROR6);
+            }
         }
-    }
-    unset($reqCount); */
-    if (empty($event_subject)) LogUtil::registerError('<b>event subject</b>'._PC_SUBMIT_ERROR4.'<br />');
-    // if this truly is empty, it should abort!
-
-    // check repeating frequencies
-    if ($event_repeat == REPEAT) {
-        if (!isset($event_repeat_freq) || $event_repeat_freq < 1 || empty($event_repeat_freq)) {
-            LogUtil::registerError(_PC_SUBMIT_ERROR5);
-        } elseif (!is_numeric($event_repeat_freq)) {
-            LogUtil::registerError(_PC_SUBMIT_ERROR6);
-        }
-    } elseif ($event_repeat == REPEAT_ON) {
-        if (!isset($event_repeat_on_freq) || $event_repeat_on_freq < 1 || empty($event_repeat_on_freq)) {
-            LogUtil::registerError(_PC_SUBMIT_ERROR5);
-        } elseif (!is_numeric($event_repeat_on_freq)) {
-            LogUtil::registerError(_PC_SUBMIT_ERROR6);
-        }
-    }
-    // check date validity
-    if (_SETTING_TIME_24HOUR) {
-        $startTime = $event_starttimeh . ':' . $event_starttimem;
-        $endTime = $event_endtimeh . ':' . $event_endtimem;
-    } else {
-        if ($event_startampm == _AM_VAL) {
-            $event_starttimeh = $event_starttimeh == 12 ? '00' : $event_starttimeh;
+        // check date validity
+        if (_SETTING_TIME_24HOUR) {
+            $startTime = $event_starttimeh . ':' . $event_starttimem;
+            $endTime = $event_endtimeh . ':' . $event_endtimem;
         } else {
-            $event_starttimeh = $event_starttimeh != 12 ? $event_starttimeh += 12 : $event_starttimeh;
+            if ($event_startampm == _AM_VAL) {
+                $event_starttimeh = $event_starttimeh == 12 ? '00' : $event_starttimeh;
+            } else {
+                $event_starttimeh = $event_starttimeh != 12 ? $event_starttimeh += 12 : $event_starttimeh;
+            }
+            $startTime = $event_starttimeh . ':' . $event_starttimem;
         }
-        $startTime = $event_starttimeh . ':' . $event_starttimem;
-    }
-    $sdate = strtotime($event_startyear . '-' . $event_startmonth . '-' . $event_startday);
-    $edate = strtotime($event_endyear . '-' . $event_endmonth . '-' . $event_endday);
-    $tdate = strtotime(date('Y-m-d'));
-
-    if ($edate < $sdate && $event_endtype == 1) {
-        LogUtil::registerError(_PC_SUBMIT_ERROR1);
-    }
-    if (!checkdate($event_startmonth, $event_startday, $event_startyear)) {
-        LogUtil::registerError(_PC_SUBMIT_ERROR2);
-    }
-    if (!checkdate($event_endmonth, $event_endday, $event_endyear)) {
-        LogUtil::registerError(_PC_SUBMIT_ERROR3);
-    }
+        $sdate = strtotime($event_startyear . '-' . $event_startmonth . '-' . $event_startday);
+        $edate = strtotime($event_endyear . '-' . $event_endmonth . '-' . $event_endday);
+        $tdate = strtotime(date('Y-m-d'));
+    
+        if ($edate < $sdate && $event_endtype == 1) {
+            LogUtil::registerError(_PC_SUBMIT_ERROR1);
+        }
+        if (!checkdate($event_startmonth, $event_startday, $event_startyear)) {
+            LogUtil::registerError(_PC_SUBMIT_ERROR2);
+        }
+        if (!checkdate($event_endmonth, $event_endday, $event_endyear)) {
+            LogUtil::registerError(_PC_SUBMIT_ERROR3);
+        }
+    } // end if form_action = preview/commit
     //================================================================
     // Preview the event
     //================================================================
     if ($form_action == 'preview') {
         if (!SecurityUtil::confirmAuthKey()) return LogUtil::registerAuthidError(pnModURL('postcalendar', 'admin', 'main'));
-        $output .= pnModAPIFunc('PostCalendar', 'user', 'eventPreview', $eventdata);
+        $output = pnModAPIFunc('PostCalendar', 'user', 'eventPreview', $eventdata);
     }
 
     //================================================================
@@ -385,13 +375,6 @@ function postcalendar_event_new($args)
     //================================================================
     if ($form_action == 'commit') {
         if (!SecurityUtil::confirmAuthKey()) return LogUtil::registerAuthidError(pnModURL('postcalendar', 'admin', 'main'));
-
-        //echo $event_startmonth."-".$event_startday."-".$event_startyear."<br />";
-        //echo $event_endmonth."-".$event_endday."-".$event_endyear."<br />";
-        //echo "event_subject: ".$event_subject."<br />";
-        //echo "edate: ".$edate. "sdate: ".$sdate." event_endtype:".$event_endtype."<br />";
-        //echo "event_startmonth: ".$event_startmonth." event_startday: ".$event_startday." event_startyear: ".$event_startyear."<br />";
-        //die;
 
         if (!pnModAPIFunc('PostCalendar', 'event', 'writeEvent', $eventdata)) {
             LogUtil::registerError(_PC_EVENT_SUBMISSION_FAILED);
@@ -405,27 +388,6 @@ function postcalendar_event_new($args)
 
             // save the start date, before the vars are cleared (needed for the redirect on success)
             $url_date = $event_startyear . $event_startmonth . $event_startday;
-
-            // don't think the code below is needed (~20 lines)
-
-            // clear the form vars
-            $event_subject = $event_desc = $event_sharing = $event_category = $event_topic = $event_startmonth = $event_startday = $event_startyear = $event_starttimeh = $event_starttimem = $event_startampm = $event_endmonth = $event_endday = $event_endyear = $event_endtype = $event_dur_hours = $event_dur_minutes = $event_duration = $event_allday = $event_location = $event_street1 = $event_street2 = $event_city = $event_state = $event_postal = $event_location_info = $event_contname = $event_conttel = $event_contemail = $event_website = $event_fee = $event_contact = $event_repeat = $event_repeat_freq = $event_repeat_freq_type = $event_repeat_on_num = $event_repeat_on_day = $event_repeat_on_freq = $event_recurrspec = $uname = $Date = $year = $month = $day = $pc_html_or_text = null;
-            $is_update = false;
-            $pc_event_id = 0;
-            //  wrap all the data into array for passing to submit and preview functions
-            $eventdata = compact(
-                'event_subject', 'event_desc', 'event_sharing', 'event_category',
-                'event_topic', 'event_startmonth', 'event_startday', 'event_startyear',
-                'event_starttimeh', 'event_starttimem', 'event_startampm',
-                'event_endmonth', 'event_endday', 'event_endyear', 'event_endtype',
-                'event_dur_hours', 'event_dur_minutes', 'event_duration',
-                'event_allday', 'event_location', 'event_street1', 'event_street2',
-                'event_city', 'event_state', 'event_postal', 'event_location_info',
-                'event_contname', 'event_conttel', 'event_contemail', 'event_website',
-                'event_fee', 'event_contact', 'event_repeat', 'event_repeat_freq',
-                'event_repeat_freq_type', 'event_repeat_on_num', 'event_repeat_on_day',
-                'event_repeat_on_freq', 'event_recurrspec', 'uname', 'Date', 'year',
-                'month', 'day', 'pc_html_or_text', 'is_update', 'pc_event_id');
         }
 
         pnRedirect(pnModURL('PostCalendar', 'user', 'view', array('viewtype' => 'month', 'Date' => $url_date))); // change to default view or previous

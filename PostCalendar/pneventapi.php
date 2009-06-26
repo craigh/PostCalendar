@@ -963,9 +963,9 @@ function postcalendar_eventapi_eventDetail($args)
     $can_edit = false;
     if ((pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADD) && $logged_in_uid == $event['aid'])
         || pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
-        $user_edit_url = pnModURL('PostCalendar', 'event', 'submit', array('eid' => $eid));
+        $user_edit_url = pnModURL('PostCalendar', 'event', 'edit', array('eid' => $eid));
         $user_delete_url = pnModURL('PostCalendar', 'event', 'delete', array('eid' => $eid));
-        $user_copy_url = pnModURL('PostCalendar', 'event', 'submit', array('eid' => $eid, 'form_action' => 'copy'));
+        $user_copy_url = pnModURL('PostCalendar', 'event', 'new', array('eid' => $eid, 'form_action' => 'copy'));
         $can_edit = true;
     }
     $function_out['EVENT_COPY'] = $user_copy_url;

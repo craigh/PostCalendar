@@ -73,7 +73,10 @@ function postcalendar_userapi_buildView($args)
     $topic = FormUtil::getPassedValue('pc_topic');
     //=================================================================
     // set the correct date
-    if (!$Date) $Date = postcalendar_getDate(); // if not explicit arg, get from input
+    $jumpday   = FormUtil::getPassedValue('jumpday');
+    $jumpmonth = FormUtil::getPassedValue('jumpmonth');
+    $jumpyear  = FormUtil::getPassedValue('jumpyear');
+    if (!$Date) $Date = pnModAPIFunc('PostCalendar','user','getDate',compact('jumpday','jumpmonth','jumpyear')); // if not explicit arg, get from input
 
     if (strlen($Date) == 8 && is_numeric($Date)) $Date .= '000000'; // 20060101
 
@@ -467,6 +470,36 @@ function __increment($d, $m, $y, $f, $t)
     } elseif ($t == REPEAT_EVERY_YEAR) {
         return date('Y-m-d', mktime(0, 0, 0, $m, $d, ($y + $f)));
     }
+}
+
+function postcalendar_userapi_getDate($args)
+{
+    if (!is_array($args)) {
+        $format = $args; //backwards compatibility
+    } else {
+        $format    = $args['format'];
+        $Date      = $args['Date']; //FormUtil::getPassedValue('Date');
+        $jumpday   = $args['jumpday']; //FormUtil::getPassedValue('jumpday');
+        $jumpmonth = $args['jumpmonth']; //FormUtil::getPassedValue('jumpmonth');
+        $jumpyear  = $args['jumpyear']; //FormUtil::getPassedValue('jumpyear');
+    }
+    if(empty($format)) $format = '%Y%m%d%H%M%S'; // default format
+
+    if (empty($Date)) {
+        // if we still don't have a date then calculate it
+        $time = time();
+        if (pnUserLoggedIn()) $time += (pnUserGetVar('timezone_offset') - pnConfigGetVar('timezone_offset')) * 3600;
+        // check the jump menu
+        if (!isset($jumpday))   $jumpday = strftime('%d', $time);
+        if (!isset($jumpmonth)) $jumpmonth = strftime('%m', $time);
+        if (!isset($jumpyear))  $jumpyear = strftime('%Y', $time);
+        $Date = (int) "$jumpyear$jumpmonth$jumpday";
+    }
+
+    $y = substr($Date, 0, 4);
+    $m = substr($Date, 4, 2);
+    $d = substr($Date, 6, 2);
+    return strftime($format, mktime(0, 0, 0, $m, $d, $y));
 }
 
 /****************************************************
