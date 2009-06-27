@@ -42,20 +42,18 @@ require_once 'modules/PostCalendar/global.php';
 /**
  * postcalendar_eventapi_queryEvents //new name
  * Returns an array containing the event's information (plural or singular?)
- * @params array(key=>value)
- * @params string key eventstatus
- * @params int value -1 == hidden ; 0 == queued ; 1 == approved
- * @return array $events[][]
+ * @param array $args arguments. Expected keys:
+ *              eventstatus: -1 == hidden ; 0 == queued ; 1 == approved (default)
+ *              start: Event start date (default today)
+ * @return array The events
  */
 function postcalendar_eventapi_queryEvents($args)
 {
-    $end = '0000-00-00';
-    extract($args);
 
     //CAH we should not be get form values in an API function
     $pc_username = FormUtil::getPassedValue('pc_username');
-    $topic = FormUtil::getPassedValue('pc_topic');
-    $category = FormUtil::getPassedValue('pc_category');
+    $topic       = FormUtil::getPassedValue('pc_topic');
+    $category    = FormUtil::getPassedValue('pc_category');
     $userid = pnUserGetVar('uid');
 
     if (!empty($pc_username) && (strtolower($pc_username) != 'anonymous')) {
@@ -66,11 +64,10 @@ function postcalendar_eventapi_queryEvents($args)
         }
     }
 
-    if (!isset($eventstatus) || ((int) $eventstatus < -1 || (int) $eventstatus > 1)) $eventstatus = 1;
-
-    if (!isset($start)) $start = Date_Calc::dateNow('%Y-%m-%d');
-    list($sy, $sm, $sd) = explode('-', $start);
-
+    $start = isset($args['start']) ? $args['start'] : Date_Calc::dateNow('%Y-%m-%d');
+    $eventstatus = isset($args['eventstatus']) && in_array((int) $args['eventstatus'], array(-1, 0, 1)) ? $args['eventstatus'] : 1;
+    // TODO: why is this line below here?
+    $end = '0000-00-00';
     $where = "WHERE pc_eventstatus=$eventstatus
               AND (pc_endDate>='$start' OR (pc_endDate='0000-00-00' AND pc_recurrtype<>'0') OR pc_eventDate>='$start')
               AND pc_eventDate<='$end' ";
@@ -95,9 +92,9 @@ function postcalendar_eventapi_queryEvents($args)
     }
 
     // Start Search functionality
-    if (!empty($s_keywords)) $where .= "AND ($s_keywords) ";
-    if (!empty($s_category)) $where .= "AND ($s_category) ";
-    if (!empty($s_topic))    $where .= "AND ($s_topic) ";
+    if (!empty($args['s_keywords'])) $where .= "AND ({$args['s_keywords']}) ";
+    if (!empty($args['s_category'])) $where .= "AND ({$args['s_category']}) ";
+    if (!empty($args['s_topic']))    $where .= "AND ({$args['s_topic']}) ";
     if (!empty($category))   $where .= "AND (tbl.pc_catid = '" . DataUtil::formatForStore($category) . "') ";
     if (!empty($topic))      $where .= "AND (tbl.pc_topic = '" . DataUtil::formatForStore($topic) . "') ";
     // End Search functionality
@@ -126,7 +123,7 @@ function postcalendar_eventapi_queryEvents($args)
                     'compare_field_join' => 'catid');
 
     $events = DBUtil::selectExpandedObjectArray('postcalendar_events', $joinInfo, $where, $sort);
-    $topicNames = DBUtil::selectFieldArray('topics', 'topicname', '', '', false, 'topicid');
+    // $topicNames = DBUtil::selectFieldArray('topics', 'topicname', '', '', false, 'topicid');
 
     // added temp_meeting_id
     // this prevents duplicate display of same event for different participants
@@ -150,8 +147,6 @@ function postcalendar_eventapi_queryEvents($args)
  **/
 function postcalendar_eventapi_getEvents($args)
 {
-    $s_keywords = $s_category = $s_topic = '';
-    extract($args);
     //not sure these three lines are needed with call to getDate here
     // don't like getPassedValue in api function
     $jumpday   = FormUtil::getPassedValue('jumpday');
@@ -163,11 +158,11 @@ function postcalendar_eventapi_getEvents($args)
     $cm = substr($date, 4, 2);
     $cd = substr($date, 6, 2);
 
-    if (isset($start) && isset($end)) {
+    if (isset($args['start']) && isset($args['end'])) {
         // parse start date
-        list($sm, $sd, $sy) = explode('/', $start);
+        list($sm, $sd, $sy) = explode('/', $args['start']);
         // parse end date
-        list($em, $ed, $ey) = explode('/', $end);
+        list($em, $ed, $ey) = explode('/', $args['end']);
 
         $s = (int) "$sy$sm$sd";
         if ($s > $date) {
@@ -185,10 +180,14 @@ function postcalendar_eventapi_getEvents($args)
         $start_date = $sy . '-' . $sm . '-' . $sd;
         $end_date = $ey . '-' . $em . '-' . $ed;
     }
-    if (!isset($events)) {
-        if (!isset($s_keywords)) $s_keywords = '';
+    if (!isset($args['events'])) {
+        $s_keywords = !empty($args['s_keywords']) ? $args['s_keywords'] : '';
+        $s_category = !empty($args['s_category']) ? $args['s_category'] : '';
+        $s_topic    = !empty($args['s_topic'])    ? $args['s_topic']    : '';
         $a = array('start' => $start_date, 'end' => $end_date, 's_keywords' => $s_keywords, 's_category' => $s_category, 's_topic' => $s_topic);
         $events = pnModAPIFunc('PostCalendar', 'event', 'queryEvents', $a);
+    } else {
+        $events = $args['events'];
     }
 
     //==============================================================
@@ -339,22 +338,19 @@ function postcalendar_eventapi_writeEvent($args)
 
     $event_for_userid = $_POST['event_for_userid']; // gets the value out of the event_for_userid dropdown :: becomes aid?
 
-    extract($args);
-    unset($args);
-
     define('PC_ACCESS_ADMIN', pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_OVERVIEW));
 
     // determine if the event is to be published immediately or not
-    if ((bool) _SETTING_DIRECT_SUBMIT || (bool) PC_ACCESS_ADMIN || ($event_sharing != SHARING_GLOBAL)) {
+    if ((bool) _SETTING_DIRECT_SUBMIT || (bool) PC_ACCESS_ADMIN || ($args['event_sharing'] != SHARING_GLOBAL)) {
         $event_status = _EVENT_APPROVED;
     } else {
         $event_status = _EVENT_QUEUED;
     }
 
     // set up some vars for the insert statement
-    $startDate = $event_startyear . '-' . $event_startmonth . '-' . $event_startday;
-    if ($event_endtype == 1) {
-        $endDate = $event_endyear . '-' . $event_endmonth . '-' . $event_endday;
+    $startDate = $args['event_startyear'] . '-' . $args['event_startmonth'] . '-' . $args['event_startday'];
+    if ($args['event_endtype'] == 1) {
+        $endDate = $args['event_endyear'] . '-' . $args['event_endmonth'] . '-' . $args['event_endday'];
     } else {
         $endDate = '0000-00-00';
     }
@@ -362,16 +358,16 @@ function postcalendar_eventapi_writeEvent($args)
     if (!isset($event_allday)) $event_allday = 0;
 
     if ((bool) _SETTING_TIME_24HOUR) {
-        $startTime = $event_starttimeh . ':' . $event_starttimem . ':00';
+        $startTime = $args['event_starttimeh'] . ':' . $event_starttimem . ':00';
     } else {
         if ($event_startampm == _AM_VAL) {
-            $event_starttimeh = $event_starttimeh == 12 ? '00' : $event_starttimeh;
+            $args['event_starttimeh'] = $args['event_starttimeh'] == 12 ? '00' : $args['event_starttimeh'];
         } else {
-            $event_starttimeh = $event_starttimeh != 12 ? $event_starttimeh += 12 : $event_starttimeh;
+            $args['event_starttimeh'] = $args['event_starttimeh'] != 12 ? $args['event_starttimeh'] += 12 : $args['event_starttimeh'];
         }
     }
 
-    $startTime = sprintf('%02d', $event_starttimeh) . ':' . sprintf('%02d', $event_starttimem) . ':00';
+    $startTime = sprintf('%02d', $args['event_starttimeh']) . ':' . sprintf('%02d', $event_starttimem) . ':00';
 
     $event_userid = $event_for_userid;
 
@@ -866,12 +862,11 @@ function postcalendar_eventapi_eventDetail($args)
     }
 
     $popup = FormUtil::getPassedValue('popup');
-    extract($args);
-    unset($args);
 
-    if (!isset($cacheid)) $cacheid = null;
-    if (!isset($eid)) return false;
-    if (!isset($nopop)) $nopop = false;
+    if (!isset($args['cacheid'])) $args['cacheid'] = null;
+    if (!isset($args['eid'])) return false;
+    // if (!isset($args['nopop'])) $args['nopop'] = false;
+    $Date = $args['Date'];
     $uid = pnUserGetVar('uid');
 
     //$tpl = pnRender::getInstance('PostCalendar');
@@ -888,7 +883,7 @@ function postcalendar_eventapi_eventDetail($args)
     if ($popup == true) $function_out['template'] = "user/postcalendar_user_view_popup.html";
 
     // get the DB information
-    $event = pnModAPIFunc('PostCalendar', 'event', 'getEventDetails', $eid);
+    $event = pnModAPIFunc('PostCalendar', 'event', 'getEventDetails', $args['eid']);
     // if the above is false, it's a private event for another user
     // we should not diplay this - so we just exit gracefully
     if ($event === false) return false;
@@ -953,7 +948,7 @@ function postcalendar_eventapi_eventDetail($args)
         // FIXME: do we need this here? Just to do a lookup?
         // CAH June20, 2009 This should be a lookup of ONLY the attendees...
         // take a look at edit/new event code
-        $users = DBUtil::selectObjectArray( 'users', '', '', -1, -1, 'uid', null, $ca);
+        $users = DBUtil::selectObjectArray( 'users', '', '', -1, -1, 'uid', null, $args['ca']);
 
         foreach ($attendees as $uid) {
             $participants[] = $users[$uid]['uname'];
@@ -974,9 +969,9 @@ function postcalendar_eventapi_eventDetail($args)
     $can_edit = false;
     if ((pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADD) && $logged_in_uid == $event['aid'])
         || pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
-        $user_edit_url = pnModURL('PostCalendar', 'event', 'edit', array('eid' => $eid));
-        $user_delete_url = pnModURL('PostCalendar', 'event', 'delete', array('eid' => $eid));
-        $user_copy_url = pnModURL('PostCalendar', 'event', 'new', array('eid' => $eid, 'form_action' => 'copy'));
+        $user_edit_url = pnModURL('PostCalendar', 'event', 'edit', array('eid' => $args['eid']));
+        $user_delete_url = pnModURL('PostCalendar', 'event', 'delete', array('eid' => $args['eid']));
+        $user_copy_url = pnModURL('PostCalendar', 'event', 'new', array('eid' => $args['eid'], 'form_action' => 'copy'));
         $can_edit = true;
     }
     $function_out['EVENT_COPY'] = $user_copy_url;
@@ -991,11 +986,11 @@ function postcalendar_eventapi_eventDetail($args)
         // this concept needs to be changed to simply use a different template if using a popup. CAH 5/9/09
         $theme = pnUserGetTheme();
         $function_out['raw1'] = "<html><head></head><body>\n";
-        //$tpl->display("view_event_details.html",$cacheid);
+        //$tpl->display("view_event_details.html",$args['cacheid']);
 
         // V4B TS start ***     Hook code for displaying stuff for events in popup
         if ($_GET["type"] != "admin") {
-            $hooks = pnModCallHooks('item', 'display', $eid, "index.php?module=PostCalendar&type=user&func=view&viewtype=details&eid=$eid&popup=1");
+            $hooks = pnModCallHooks('item', 'display', $args['eid'], "index.php?module=PostCalendar&type=user&func=view&viewtype=details&eid=".$args['eid']."&popup=1");
             $function_out['raw2'] .= $hooks;
         }
         // V4B TS end ***  End of Hook code

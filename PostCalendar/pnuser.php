@@ -84,13 +84,16 @@ function postcalendar_user_display($args)
     $pc_topic = FormUtil::getPassedValue('pc_topic');
     $pc_username = FormUtil::getPassedValue('pc_username');
 
-    extract($args);
+    $Date = $args['Date'];
+    $viewtype = $args['viewtype'];
     if (empty($Date) && empty($viewtype)) {
         return false;
     }
 
     $uid = pnUserGetVar('uid');
     $theme = pnUserGetTheme();
+    $category = $args['category'];
+    $topic = $args['topic'];
     $cacheid = md5($Date . $viewtype . _SETTING_TEMPLATE . $eid . $uid . 'u' . $pc_username . $theme . 'c' . $category . 't' . $topic);
 
     switch ($viewtype) {
