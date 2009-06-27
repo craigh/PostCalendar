@@ -122,6 +122,7 @@ function postcalendar_adminapi_clearCache()
  */
 function postcalendar_adminapi_meeting_mailparticipants($args)
 {
+    //TODO: if ($is_update) send appropriate message...
     $pnRender = pnRender::getInstance('PostCalendar');
     $pnRender->assign('eid', $args['eid']);
     $pnRender->assign('event_subject', $event_subject);
@@ -178,6 +179,7 @@ function postcalendar_adminapi_meeting_mailparticipants($args)
  */
 function postcalendar_adminapi_notify($args)
 {
+    //TODO: needd to put a test in here for if the admin submitted the event, if not, probably don't send email. (ticket 24)
     if (!(bool) _SETTING_NOTIFY_ADMIN) return true;
 
     $modinfo = pnModGetInfo(pnModGetIDFromName('PostCalendar'));
