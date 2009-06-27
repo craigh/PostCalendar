@@ -95,13 +95,15 @@ function postcalendar_adminapi_getlinks()
 
 function postcalendar_adminapi_getAdminListEvents($args)
 {
-    $where = 'WHERE pc_eventstatus=' . $args['type'];
-    if ($args['sort']) {
-        if ($args['sdir'] == 0)     $args['sort'] .= ' DESC';
-        elseif ($args['sdir'] == 1) $args['sort'] .= ' ASC';
+    extract($args);
+
+    $where = "WHERE pc_eventstatus=$type";
+    if ($sort) {
+        if ($sdir == 0) $sort .= ' DESC';
+        elseif ($sdir == 1) $sort .= ' ASC';
     }
 
-    return DBUtil::selectObjectArray('postcalendar_events', $where, $args['sort'], $args['offset'], $args['offset_increment'], false);
+    return DBUtil::selectObjectArray('postcalendar_events', $where, $sort, $offset, $offset_increment, false);
 }
 
 function postcalendar_adminapi_clearCache()
@@ -123,41 +125,43 @@ function postcalendar_adminapi_clearCache()
 function postcalendar_adminapi_meeting_mailparticipants($args)
 {
     //TODO: if ($is_update) send appropriate message...
+    extract($args);
+    /* expected: $event_subject,$event_duration,$event_desc,$startDate,$startTime,$uname,$eid,$pc_mail_users,$is_update */
+
     $pnRender = pnRender::getInstance('PostCalendar');
-    $pnRender->assign('eid', $args['eid']);
+    $pnRender->assign('eid', $eid);
     $pnRender->assign('event_subject', $event_subject);
 
-    @list($pc_dur_hours, $dmin) = @explode('.', ($args['event_duration'] / 60 / 60));
+	@list($pc_dur_hours, $dmin) = @explode('.', ($event_duration / 60 / 60));
     $pnRender->assign('pc_dur_hours', $pc_dur_hours);
 
-    $pc_dur_minutes = substr(sprintf('%.2f', '.' . 60 * ($dmin / 100)), 2, 2);
+	$pc_dur_minutes = substr(sprintf('%.2f', '.' . 60 * ($dmin / 100)), 2, 2);
     $pnRender->assign('pc_dur_minutes', $pc_dur_minutes);
 
-    $pc_description = substr($args['event_desc'], 6);
+	$pc_description = substr($event_desc, 6);
     $pnRender->assign('pc_description', $event_desc);
 
-    list($x, $y, $z) = explode('-', $args['startDate']);
-    list($a, $b, $c) = explode('-', $args['startTime']);
-    $pc_start_time = strftime('%H:%M', mktime($a, $b, $c, $y, $z, $x));
-    $pnRender->assign('startDate', $args['startDate']);
+	list($x, $y, $z) = explode('-', $startDate);
+	list($a, $b, $c) = explode('-', $startTime);
+	$pc_start_time = strftime('%H:%M', mktime($a, $b, $c, $y, $z, $x));
+    $pnRender->assign('startDate', $startDate);
     $pnRender->assign('pc_start_time', $pc_start_time);
 
-    $pc_author = $args['uname'];
+    $pc_author = $uname;
     $pnRender->assign('pc_author', $pc_author);
 
-    $pc_URL = pnModURL('PostCalendar', 'user', 'view', array('viewtype' => 'details', 'eid' => $args['eid']), null, null, true);
+	$pc_URL = pnModURL('PostCalendar', 'user', 'view', array('viewtype' => 'details', 'eid' => $eid), null, null, true);
     $pnRender->assign('pc_URL', $pc_URL);
 
     $modinfo = pnModGetInfo(pnModGetIDFromName('PostCalendar'));
     $modversion = DataUtil::formatForOS($modinfo['version']);
     $pnRender->assign('modversion', $modversion);
 
-    foreach ($args['pc_mail_users'] as $mail_uid) {
-        //create array of email addresses to mailto
-        $toaddress[$mail_uid] = pnUserGetVar('email', $mail_uid);
-    }
+	for ($i = 0; $i < count($pc_mail_users); $i++) {
+		$toaddress[$i] = pnUserGetVar('email', $pc_mail_users[$i]); //create array of email addresses to mailto
+	}
 
-    $subject = _PC_MEETING_MAIL_TITLE . ": {$args['event_subject']}";
+	$subject = _PC_MEETING_MAIL_TITLE . ": $event_subject";
     $message = $pnRender->fetch('email/postcalendar_email_meetingnotify.htm');
 
     $messagesent = pnModAPIFunc('Mailer', 'user', 'sendmessage', array('toaddress' => $toaddress, 'subject' => $subject, 'body' => $message, 'html' => true));
@@ -180,16 +184,18 @@ function postcalendar_adminapi_meeting_mailparticipants($args)
 function postcalendar_adminapi_notify($args)
 {
     //TODO: needd to put a test in here for if the admin submitted the event, if not, probably don't send email. (ticket 24)
+    extract($args);
+
     if (!(bool) _SETTING_NOTIFY_ADMIN) return true;
 
     $modinfo = pnModGetInfo(pnModGetIDFromName('PostCalendar'));
     $modversion = DataUtil::formatForOS($modinfo['version']);
 
     $pnRender = pnRender::getInstance('PostCalendar');
-    $pnRender->assign('is_update', $args['is_update']);
+    $pnRender->assign('is_update', $is_update);
     $pnRender->assign('modversion', $modversion);
-    $pnRender->assign('eid', $args['eid']);
-    $pnRender->assign('link', pnModURL('PostCalendar', 'admin', 'adminevents', array('pc_event_id' => $args['eid'], 'action' => _ADMIN_ACTION_VIEW), null, null, true));
+    $pnRender->assign('eid', $eid);
+    $pnRender->assign('link', pnModURL('PostCalendar', 'admin', 'adminevents', array('pc_event_id' => $eid, 'action' => _ADMIN_ACTION_VIEW), null, null, true));
     $message = $pnRender->fetch('email/postcalendar_email_adminnotify.htm');
 
     $messagesent = pnModAPIFunc('Mailer', 'user', 'sendmessage', array('toaddress' => _SETTING_NOTIFY_EMAIL, 'subject' => _PC_NOTIFY_SUBJECT, 'body' => $message, 'html' => true));

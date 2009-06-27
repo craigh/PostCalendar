@@ -427,9 +427,12 @@ function postcalendar_icalapi_parsecats($category)
 
 function convert_dtend($end, $dur)
 {
-    $endsecs = mktime($end['hour'], $end['min'], $end['sec'], $end['month'], $end['day'], $end['year']);
-    $dursecs = 3600 * $dur['hour'] + 60 * $dur['min'] + $dur['sec'];
+    extract($end);
+    $endsecs = mktime($hour, $min, $sec, $month, $day, $year);
+    extract($dur);
+    $dursecs = 3600 * $hour + 60 * $min + $sec;
     $newendsecs = $endsecs + $dursecs;
     $datetime = gmdate("Y^m^d^H^i^s", $newendsecs);
-    return explode("^", $datetime);
+    list($year, $month, $day, $hour, $min, $sec) = explode("^", $datetime);
+    return compact("year", "month", "day", "hour", "min", "sec");
 }

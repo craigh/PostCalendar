@@ -114,17 +114,19 @@ function postcalendar_event_delete()
 /**
  * submit an event
  */
-function postcalendar_event_edit()
+function postcalendar_event_edit($args)
 {
-    return postcalendar_event_new();
+    return postcalendar_event_new($args);
 }
 
-function postcalendar_event_new()
+function postcalendar_event_new($args)
 {
     // We need at least ADD permission to submit an event
     if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADD)) {
         return LogUtil::registerPermissionError();
     }
+
+    extract($args); //if there are args, does that mean were are editing an event?
 
     //not sure these three lines are needed with call to getDate here
     $jumpday   = FormUtil::getPassedValue('jumpday');
@@ -200,7 +202,8 @@ function postcalendar_event_new()
     $event_contact   = FormUtil::getPassedValue('event_contact');
 
     // event repeating data
-    $event_repeat           = FormUtil::getPassedValue('event_repeat', 0);
+    $event_repeat           = FormUtil::getPassedValue('event_repeat');
+    if (!isset($event_repeat)) $event_repeat = 0;
     $event_repeat_freq      = FormUtil::getPassedValue('event_repeat_freq');
     $event_repeat_freq_type = FormUtil::getPassedValue('event_repeat_freq_type');
     $event_repeat_on_num    = FormUtil::getPassedValue('event_repeat_on_num');
@@ -214,7 +217,7 @@ function postcalendar_event_new()
     $pc_event_id        = FormUtil::getPassedValue('eid');
     $data_loaded        = FormUtil::getPassedValue('data_loaded');
     $is_update          = FormUtil::getPassedValue('is_update');
-    //$authid             = FormUtil::getPassedValue('authid');
+    $authid             = FormUtil::getPassedValue('authid');
     $event_for_userid   = FormUtil::getPassedValue('event_for_userid');
     $event_participants = FormUtil::getPassedValue('participants');
 
@@ -311,7 +314,7 @@ function postcalendar_event_new()
         $eventdata['data_loaded'] = false;
     }
 
-    //$categories = pnModAPIFunc('PostCalendar', 'user', 'getCategories');
+    $categories = pnModAPIFunc('PostCalendar', 'user', 'getCategories');
 
     //================================================================
     // ERROR CHECKING IF ACTION IS PREVIEW OR COMMIT
@@ -360,7 +363,6 @@ function postcalendar_event_new()
             LogUtil::registerError(_PC_SUBMIT_ERROR3);
         }
     } // end if form_action = preview/commit
-
     //================================================================
     // Preview the event
     //================================================================
