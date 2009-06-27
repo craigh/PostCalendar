@@ -130,8 +130,9 @@ function postcalendar_event_new()
     $jumpday   = FormUtil::getPassedValue('jumpday');
     $jumpmonth = FormUtil::getPassedValue('jumpmonth');
     $jumpyear  = FormUtil::getPassedValue('jumpyear');
-    
-    $Date  = pnModAPIFunc('PostCalendar','user','getDate',compact('jumpday','jumpmonth','jumpyear'));
+
+    $Date  = FormUtil::getPassedValue('Date');    
+    $Date  = pnModAPIFunc('PostCalendar','user','getDate',compact('Date','jumpday','jumpmonth','jumpyear'));
     $year  = substr($Date, 0, 4);
     $month = substr($Date, 4, 2);
     $day   = substr($Date, 6, 2);

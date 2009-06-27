@@ -152,7 +152,8 @@ function postcalendar_eventapi_getEvents($args)
     $jumpday   = FormUtil::getPassedValue('jumpday');
     $jumpmonth = FormUtil::getPassedValue('jumpmonth');
     $jumpyear  = FormUtil::getPassedValue('jumpyear');
-    $date = pnModAPIFunc('PostCalendar','user','getDate',compact('jumpday','jumpmonth','jumpyear'));
+    $Date  = FormUtil::getPassedValue('Date');    
+    $date  = pnModAPIFunc('PostCalendar','user','getDate',compact('Date','jumpday','jumpmonth','jumpyear'));
 
     $cy = substr($date, 0, 4);
     $cm = substr($date, 4, 2);
@@ -497,7 +498,8 @@ function postcalendar_eventapi_buildSubmitForm($args)
     $jumpday   = FormUtil::getPassedValue('jumpday');
     $jumpmonth = FormUtil::getPassedValue('jumpmonth');
     $jumpyear  = FormUtil::getPassedValue('jumpyear');
-    $today = pnModAPIFunc('PostCalendar','user','getDate',compact('jumpday','jumpmonth','jumpyear'));
+    $Date  = FormUtil::getPassedValue('Date');    
+    $today  = pnModAPIFunc('PostCalendar','user','getDate',compact('Date','jumpday','jumpmonth','jumpyear'));
     if (($endDate == '') || ($endDate == '00000000')) {
         $endvalue = substr($today, 6, 2) . '-' . substr($today, 4, 2) . '-' . substr($today, 0, 4);
         // V4B RNG: build other date format for JS cal
