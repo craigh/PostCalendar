@@ -272,14 +272,14 @@ function postcalendar_eventapi_getEvents($args)
                 $nd = $esD;
                 $occurance = Date_Calc::dateFormat($nd, $nm, $ny, '%Y-%m-%d');
                 while ($occurance < $start_date) {
-                    $occurance = __increment($nd, $nm, $ny, $rfreq, $rtype);
+                    $occurance = dateIncrement($nd, $nm, $ny, $rfreq, $rtype);
                     list($ny, $nm, $nd) = explode('-', $occurance);
                 }
                 while ($occurance <= $stop) {
                     if (isset($days[$occurance])) {
                         array_push($days[$occurance], $event);
                     }
-                    $occurance = __increment($nd, $nm, $ny, $rfreq, $rtype);
+                    $occurance = dateIncrement($nd, $nm, $ny, $rfreq, $rtype);
                     list($ny, $nm, $nd) = explode('-', $occurance);
                 }
                 break;
@@ -908,13 +908,13 @@ function postcalendar_eventapi_eventDetail($args)
     // populate the template
     $display_type = substr($event['hometext'], 0, 6);
     if ($display_type == ':text:') {
-        $prepFunction = 'pcVarPrepForDisplay';
+        $prepFunction = 'DataUtil::formatForDisplay';
         $event['hometext'] = substr($event['hometext'], 6);
     } elseif ($display_type == ':html:') {
-        $prepFunction = 'pcVarPrepHTMLDisplay';
+        $prepFunction = 'DataUtil::formatForDisplayHTML';
         $event['hometext'] = substr($event['hometext'], 6);
     } else {
-        $prepFunction = 'pcVarPrepHTMLDisplay';
+        $prepFunction = 'DataUtil::formatForDisplayHTML';
     }
 
     unset($display_type);
@@ -925,7 +925,7 @@ function postcalendar_eventapi_eventDetail($args)
     $event['conttel'] = $prepFunction($event['conttel']);
     $event['contname'] = $prepFunction($event['contname']);
     $event['contemail'] = $prepFunction($event['contemail']);
-    $event['website'] = $prepFunction(postcalendar_makeValidURL($event['website']));
+    $event['website'] = $prepFunction(makeValidURL($event['website']));
     $event['fee'] = $prepFunction($event['fee']);
     $event['location'] = $prepFunction($event['event_location']);
     $event['street1'] = $prepFunction($event['event_street1']);
@@ -1070,4 +1070,38 @@ function postcalendar_eventapi_deleteeventarray($args)
 {
     if (!is_array($args)) return false;
     return DBUtil::deleteObjectsFromKeyArray($args, 'postcalendar_events', 'eid');
+}
+/**
+ * makeValidURL()
+ * returns 'improved' url based on input string
+ * checks to make sure scheme is present
+ * @private
+ * @returns string
+ */
+if (!function_exists('makeValidURL')) { // also defined in pnadminapi.php
+    function makeValidURL($s)
+    {
+        if (empty($s)) return '';
+        if (!preg_match('|^http[s]?:\/\/|i', $s)) $s = 'http://' . $s;
+        return $s;
+    }
+}
+/**
+ * dateIncrement()
+ * returns the next valid date for an event based on the
+ * current day,month,year,freq and type
+ * @private
+ * @returns string YYYY-MM-DD
+ */
+function dateIncrement($d, $m, $y, $f, $t)
+{
+    if ($t == REPEAT_EVERY_DAY) {
+        return date('Y-m-d', mktime(0, 0, 0, $m, ($d + $f), $y));
+    } elseif ($t == REPEAT_EVERY_WEEK) {
+        return date('Y-m-d', mktime(0, 0, 0, $m, ($d + (7 * $f)), $y));
+    } elseif ($t == REPEAT_EVERY_MONTH) {
+        return date('Y-m-d', mktime(0, 0, 0, ($m + $f), $d, $y));
+    } elseif ($t == REPEAT_EVERY_YEAR) {
+        return date('Y-m-d', mktime(0, 0, 0, $m, $d, ($y + $f)));
+    }
 }

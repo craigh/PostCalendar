@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'modules/PostCalendar/common.api.php';
+require_once 'modules/PostCalendar/global.php';
 
 /**
  * the main administration function

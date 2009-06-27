@@ -36,7 +36,7 @@
 //=========================================================================
 // Require utility classes
 //=========================================================================
-require_once 'modules/PostCalendar/common.api.php';
+require_once 'modules/PostCalendar/global.php';
 
 function postcalendar_userapi_getLongDayName($args)
 {
@@ -393,9 +393,9 @@ function postcalendar_userapi_eventPreview($args)
     $event['uname'] = $uname;
     $event['catid'] = $event_category;
     if ($pc_html_or_text == 'html') {
-        $prepFunction = 'pcVarPrepHTMLDisplay';
+        $prepFunction = 'DataUtil::formatForDisplayHTML';
     } else {
-        $prepFunction = 'pcVarPrepForDisplay';
+        $prepFunction = 'DataUtil::formatForDisplay';
     }
     $event['title'] = $prepFunction($event_subject);
     $event['hometext'] = $prepFunction($event_desc);
@@ -414,7 +414,7 @@ function postcalendar_userapi_eventPreview($args)
     $event['conttel'] = $prepFunction($event_conttel);
     $event['contname'] = $prepFunction($event_contname);
     $event['contemail'] = $prepFunction($event_contemail);
-    $event['website'] = $prepFunction(postcalendar_makeValidURL($event_website));
+    $event['website'] = $prepFunction(makeValidURL($event_website));
     $event['fee'] = $prepFunction($event_fee);
     $event['location'] = $prepFunction($event_location);
     $event['street1'] = $prepFunction($event_street1);
@@ -453,23 +453,17 @@ function postcalendar_userapi_eventPreview($args)
 }
 
 /**
- * __increment()
- * returns the next valid date for an event based on the
- * current day,month,year,freq and type
+ * makeValidURL()
+ * returns 'improved' url based on input string
+ * checks to make sure scheme is present
  * @private
- * @returns string YYYY-MM-DD
+ * @returns string
  */
-function __increment($d, $m, $y, $f, $t)
+function makeValidURL($s)
 {
-    if ($t == REPEAT_EVERY_DAY) {
-        return date('Y-m-d', mktime(0, 0, 0, $m, ($d + $f), $y));
-    } elseif ($t == REPEAT_EVERY_WEEK) {
-        return date('Y-m-d', mktime(0, 0, 0, $m, ($d + (7 * $f)), $y));
-    } elseif ($t == REPEAT_EVERY_MONTH) {
-        return date('Y-m-d', mktime(0, 0, 0, ($m + $f), $d, $y));
-    } elseif ($t == REPEAT_EVERY_YEAR) {
-        return date('Y-m-d', mktime(0, 0, 0, $m, $d, ($y + $f)));
-    }
+    if (empty($s)) return '';
+    if (!preg_match('|^http[s]?:\/\/|i', $s)) $s = 'http://' . $s;
+    return $s;
 }
 
 function postcalendar_userapi_getDate($args)

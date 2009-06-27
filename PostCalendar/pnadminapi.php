@@ -36,7 +36,7 @@
 //=========================================================================
 //  Require utility classes
 //=========================================================================
-require_once 'modules/PostCalendar/common.api.php';
+require_once 'modules/PostCalendar/global.php';
 
 /**
  * Get available admin panel links
