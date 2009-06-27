@@ -61,8 +61,7 @@ function postcalendar_calendarblock_display($blockinfo)
     }
     if (!pnModLoad('PostCalendar')) return 'Unable to load module [PostCalendar]';
 
-    // What is today's date
-    //$Date = pnModFunc('postcalendar', 'user', 'getDate');
+    // today's date
     $Date = DateUtil::getDatetime('', '%Y%m%d%H%M%S');
 
     // Get variables from content block
@@ -81,7 +80,7 @@ function postcalendar_calendarblock_display($blockinfo)
     $the_day = substr($Date, 6, 2);
 
     $tpl = pnRender::getInstance('PostCalendar');
-    PostCalendarSmartySetup($tpl);
+    pnModAPIFunc('PostCalendar','user','SmartySetup', $tpl);
 
     // If block is cached, return cached version
     $tpl->cache_id = $blockinfo['bid'] . ':' . pnUserGetVar('uid');

@@ -179,7 +179,7 @@ function postcalendar_admin_adminevents()
     }
 
     $pnRender = pnRender::getInstance('PostCalendar');
-    PostCalendarSmartySetup($pnRender);
+    pnModAPIFunc('PostCalendar','user','SmartySetup', $pnRender);
 
     $pnRender->assign('function', $function);
     $pnRender->assign('areyousure', $are_you_sure_text);

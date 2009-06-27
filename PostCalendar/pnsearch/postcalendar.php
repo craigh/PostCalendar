@@ -95,7 +95,7 @@ function search_postcalendar()
 
     //$tpl = new pnRender();
     $tpl = pnRender::getInstance('PostCalendar');
-    PostCalendarSmartySetup($tpl);
+    pnModAPIFunc('PostCalendar','user','SmartySetup', $tpl);
     /* Trim as needed */
     $func = FormUtil::getPassedValue('func');
     $template_view = FormUtil::getPassedValue('tplview');

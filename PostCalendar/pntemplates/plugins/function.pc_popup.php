@@ -187,3 +187,25 @@ function smarty_function_pc_popup($args)
     }
     echo ');" onMouseOut="nd();"';
 }
+
+/**
+ * pc_clean
+ * @param s string text to clean
+ * @return string cleaned up text
+ */
+function pc_clean($s)
+{
+    $display_type = substr($s, 0, 6);
+
+    if ($display_type == ':text:') $s = substr($s, 6);
+    elseif ($display_type == ':html:') $s = substr($s, 6);
+
+    unset($display_type);
+    $s = preg_replace('/[\r|\n]/i', '', $s);
+    $s = str_replace("'", "\'", $s);
+    $s = str_replace('"', '&quot;', $s);
+    // break really long lines - only break at spaces to allow for
+    // correct interpretation of special characters
+    $tmp = explode(' ', $s);
+    return join("'+' ", $tmp);
+}

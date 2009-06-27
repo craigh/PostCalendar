@@ -107,7 +107,7 @@ function postcalendar_user_display($args)
             // build template and fetch:
             $tpl = pnRender::getInstance(
                 'PostCalendar');
-            PostCalendarSmartySetup($tpl);
+            pnModAPIFunc('PostCalendar','user','SmartySetup', $tpl);
             if ($tpl->is_cached($out['template'], $cacheid)) {
                 // use cached version
                 return $tpl->fetch($out['template'], $cacheid);
@@ -130,7 +130,7 @@ function postcalendar_user_display($args)
             // build template and fetch:
             $tpl = pnRender::getInstance(
                 'PostCalendar');
-            PostCalendarSmartySetup($tpl);
+            pnModAPIFunc('PostCalendar','user','SmartySetup', $tpl);
             if ($tpl->is_cached($out['template'], $cacheid)) {
                 // use cached version
                 return $tpl->fetch(
@@ -234,7 +234,7 @@ function postcalendar_user_search()
     }
 
     $tpl = pnRender::getInstance('PostCalendar');
-    PostCalendarSmartySetup($tpl);
+    pnModAPIFunc('PostCalendar','user','SmartySetup', $tpl);
     /* Trim as needed */
     $func = FormUtil::getPassedValue('func');
     $template_view = FormUtil::getPassedValue('tplview');
@@ -501,7 +501,7 @@ function postcalendar_user_findContact()
 
     //$tpl_contact = new pnRender();
     $tpl_contact = pnRender::getInstance('PostCalendar');
-    PostCalendarSmartySetup($tpl_contact);
+    pnModAPIFunc('PostCalendar','user','SmartySetup', $tpl_contact);
     /* Trim as needed */
     $func = FormUtil::getPassedValue('func');
     $template_view = FormUtil::getPassedValue('tplview');

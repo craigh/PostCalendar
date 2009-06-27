@@ -468,7 +468,7 @@ function postcalendar_eventapi_buildSubmitForm($args)
     if (!$admin) $admin = false; //reset default value
 
     $tpl = pnRender::getInstance('PostCalendar');
-    PostCalendarSmartySetup($tpl);
+    pnModAPIFunc('PostCalendar','user','SmartySetup', $tpl);
     $tpl->caching = false;
 
     // V4B RNG start

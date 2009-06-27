@@ -356,7 +356,7 @@ function postcalendar_userapi_eventPreview($args)
     // Setup Render Template Engine
     //=================================================================
     $tpl = pnRender::getInstance('PostCalendar');
-    PostCalendarSmartySetup($tpl);
+    pnModAPIFunc('PostCalendar','user','SmartySetup', $tpl);
     $tpl->caching = false;
     /* Trim as needed */
     $func = FormUtil::getPassedValue('func');
@@ -478,10 +478,10 @@ function postcalendar_userapi_getDate($args)
         $format = $args; //backwards compatibility
     } else {
         $format    = $args['format'];
-        $Date      = $args['Date']; //FormUtil::getPassedValue('Date');
-        $jumpday   = $args['jumpday']; //FormUtil::getPassedValue('jumpday');
-        $jumpmonth = $args['jumpmonth']; //FormUtil::getPassedValue('jumpmonth');
-        $jumpyear  = $args['jumpyear']; //FormUtil::getPassedValue('jumpyear');
+        $Date      = $args['Date'];
+        $jumpday   = $args['jumpday'];
+        $jumpmonth = $args['jumpmonth'];
+        $jumpyear  = $args['jumpyear'];
     }
     if(empty($format)) $format = '%Y%m%d%H%M%S'; // default format
 
@@ -512,7 +512,7 @@ function postcalendar_userapi_getDate($args)
  */
 function postcalendar_userapi_getmonthname($args)
 {
-    if (!isset($args['Date'])) return false;
+    if (!isset($args['Date'])) return LogUtil::registerError(_MODARGSERROR . ' in postcalendar_userapi_getmonthname');
 
     $month_name = array('01' => _CALJAN, '02' => _CALFEB, '03' => _CALMAR,
                     '04' => _CALAPR, '05' => _CALMAY, '06' => _CALJUN,
@@ -540,6 +540,19 @@ function postcalendar_userapi_getTopics()
                     'level'        => ACCESS_OVERVIEW);
 
     return DBUtil::selectObjectArray('topics', '', 'topictext', -1, -1, '', $permFilter);
+}
+function postcalendar_userapi_SmartySetup(&$smarty)
+{
+    if (!is_object($smarty)) return LogUtil::registerError(_MODARGSERROR . ' in postcalendar_userapi_SmartySetup');
+
+    $smarty->assign('USE_POPUPS', _SETTING_USE_POPUPS);
+    $smarty->assign('USE_TOPICS', _SETTING_DISPLAY_TOPICS);
+    $smarty->assign('USE_INT_DATES', _SETTING_USE_INT_DATES);
+    $smarty->assign('OPEN_NEW_WINDOW', _SETTING_OPEN_NEW_WINDOW);
+    $smarty->assign('EVENT_DATE_FORMAT', _SETTING_DATE_FORMAT);
+    $smarty->assign('HIGHLIGHT_COLOR', _SETTING_DAY_HICOLOR);
+    $smarty->assign('24HOUR_TIME', _SETTING_TIME_24HOUR);
+    return true;
 }
 
 /****************************************************
