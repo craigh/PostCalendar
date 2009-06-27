@@ -50,14 +50,10 @@ function PostCalendarSmartySetup(&$smarty)
     return true;
 }
 
-function pcDebugVar($in)
-{
-    echo '<pre>';
-    if (is_array($in)) print_r($in);
-    else echo $in;
-    echo '</pre>';
-}
-
+//=========================================================================
+// some old security-related string cleaning functions
+// can these be eliminated?
+//=========================================================================
 function pcVarPrepForDisplay($s)
 {
     $s = nl2br(DataUtil::formatForDisplay(postcalendar_removeScriptTags($s)));
@@ -68,11 +64,6 @@ function pcVarPrepForDisplay($s)
 function pcVarPrepHTMLDisplay($s)
 {
     return DataUtil::formatForDisplayHTML(postcalendar_removeScriptTags($s));
-}
-
-function pcGetTopicName($topicid)
-{
-    return DBUtil::selectFieldByID('topics', 'topicname', $topicid, 'topicid');
 }
 
 function postcalendar_makeValidURL($s)
@@ -89,187 +80,31 @@ function postcalendar_removeScriptTags($in)
     return preg_replace("/<script.*?>(.*?)<\/script>/", "", $in);
 }
 
-function postcalendar_getDate($format = '%Y%m%d%H%M%S')
-{
-    return pnModAPIFunc('PostCalendar','user','getDate',compact('format'));
-}
-
-function postcalendar_today($format = '%Y%m%d')
-{
-    return DateUtil::getDatetime('', $format);
-    /*
-    $time = time();
-    if (pnUserLoggedIn())
-        $time += (pnUserGetVar('timezone_offset') - pnConfigGetVar('timezone_offset')) * 3600;
-
-    return strftime($format,$time);
-    */
-}
-
 /**
- * postcalendar_adminapi_getmonthname()
- *
- * Returns the month name translated for the user's current language
- *
- * @param array $args['Date'] number of month to return
- * @return string month name in user's language
+ * pc_clean
+ * @param s string text to clean
+ * @return string cleaned up text
  */
-function postcalendar_adminapi_getmonthname($args)
+function pc_clean($s)
 {
-    return postcalendar_userapi_getmonthname($args);
+    $display_type = substr($s, 0, 6);
+
+    if ($display_type == ':text:') $s = substr($s, 6);
+    elseif ($display_type == ':html:') $s = substr($s, 6);
+
+    unset($display_type);
+    $s = preg_replace('/[\r|\n]/i', '', $s);
+    $s = str_replace("'", "\'", $s);
+    $s = str_replace('"', '&quot;', $s);
+    // ok, now we need to break really long lines
+    // we only want to break at spaces to allow for
+    // correct interpretation of special characters
+    $tmp = explode(' ', $s);
+    return join("'+' ", $tmp);
 }
-
-/**
- * postcalendar_userapi_getmonthname()
- *
- * Returns the month name translated for the user's current language
- *
- * @param array $args['Date'] date to return month name of
- * @return string month name in user's language
- */
-function postcalendar_userapi_getmonthname($args)
-{
-    if (!isset($args['Date'])) return false;
-
-    $month_name = array('01' => _CALJAN, '02' => _CALFEB, '03' => _CALMAR,
-                    '04' => _CALAPR, '05' => _CALMAY, '06' => _CALJUN,
-                    '07' => _CALJUL, '08' => _CALAUG, '09' => _CALSEP,
-                    '10' => _CALOCT, '11' => _CALNOV, '12' => _CALDEC);
-    return $month_name[date('m', $args['Date'])];
-}
-
-function postcalendar_adminapi_getCategories()
-{
-    return postcalendar_userapi_getCategories();
-}
-
-function postcalendar_userapi_getCategories()
-{
-    return DBUtil::selectObjectArray('postcalendar_categories', '', 'catname');
-}
-
-function postcalendar_adminapi_getTopics()
-{
-    return postcalendar_userapi_getTopics();
-}
-
-function postcalendar_userapi_getTopics()
-{
-    $permFilter = array();
-    $permFilter[] = array(
-                    'realm'            => 0,
-                    'component_left'   => 'PostCalendar',
-                    'component_middle' => '',
-                    'component_right'  => 'Topic',
-                    'instance_left'    => 'topicid',
-                    'instance_middle'  => '',
-                    'instance_right'   => 'topicname',
-                    'level'        => ACCESS_OVERVIEW);
-
-    return DBUtil::selectObjectArray('topics', '', 'topictext', -1, -1, '', $permFilter);
-}
-
-function pc_notify($eid, $is_update) //this function renamed and moved to adminapi
-{
-    return pnModAPIFunc('PostCalendar','admin','notify',compact('eid','is_update'));
-}
-
-function postcalendar_footer()
-{
-    return '';
-}
-
-function postcalendar_smarty_pc_sort_day($params, &$smarty)
-{
-    extract($params);
-
-    if (empty($var)) {
-        $smarty->trigger_error("sort_array: missing 'var' parameter");
-        return;
-    }
-
-    if (!in_array('value', array_keys($params))) {
-        $smarty->trigger_error("sort_array: missing 'value' parameter");
-        return;
-    }
-
-    if (!in_array('order', array_keys($params))) $order = 'asc';
-
-    if (!in_array('inc', array_keys($params))) $inc = '15';
-
-    if (!in_array('start', array_keys($params))) {
-        $sh = '08';
-        $sm = '00';
-    } else {
-        list($sh, $sm) = explode(':', $start);
-    }
-
-    if (!in_array('end', array_keys($params))) {
-        $eh = '21';
-        $em = '00';
-    } else {
-        list($eh, $em) = explode(':', $end);
-    }
-
-    if (strtolower($order) == 'asc') $function = 'sort_byTimeA';
-
-    if (strtolower($order) == 'desc') $function = 'sort_byTimeD';
-
-    foreach ($value as $events) {
-        usort($events, $function);
-        $newArray = $events;
-    }
-
-    // here we want to create an intelligent array of
-    // columns and rows to build a nice day view
-    $ch = $sh;
-    $cm = $sm;
-    while ("$ch:$cm" <= "$eh:$em") {
-        $hours["$ch:$cm"] = array();
-        $cm += $inc;
-        if ($cm >= 60) {
-            $cm = '00';
-            $ch = sprintf('%02d', $ch + 1);
-        }
-    }
-
-    $alldayevents = array();
-    foreach ($newArray as $event) {
-        list($sh, $sm, $ss) = explode(':', $event['startTime']);
-        $eh = sprintf('%02d', $sh + $event['duration_hours']);
-        $em = sprintf('%02d', $sm + $event['duration_minutes']);
-
-        if ($event['alldayevent']) {
-            // we need an entire column . save till later
-            $alldayevents[] = $event;
-        } else {
-            //find open time slots - avoid overlapping
-            $needed = array();
-            $ch = $sh;
-            $cm = $sm;
-            //what times do we need?
-            while ("$ch:$cm" < "$eh:$em") {
-                $needed[] = "$ch:$cm";
-                $cm += $inc;
-                if ($cm >= 60) {
-                    $cm = '00';
-                    $ch = sprintf('%02d', $ch + 1);
-                }
-            }
-            $i = 0;
-            foreach ($needed as $time) {
-                if ($i == 0) {
-                    $hours[$time][] = $event;
-                    $key = count($hours[$time]) - 1;
-                } else {
-                    $hours[$time][$key] = 'continued';
-                }
-                $i++;
-            }
-        }
-    }
-    $smarty->assign_by_ref($var, $hours);
-}
+//=========================================================================
+// end security-related string cleaning functions
+//=========================================================================
 
 function sort_byCategoryA($a, $b)
 {
@@ -300,27 +135,4 @@ function sort_byTimeD($a, $b)
 {
     if ($a['startTime'] < $b['startTime']) return 1;
     elseif ($a['startTime'] > $b['startTime']) return -1;
-}
-
-/**
- * pc_clean
- * @param s string text to clean
- * @return string cleaned up text
- */
-function pc_clean($s)
-{
-    $display_type = substr($s, 0, 6);
-
-    if ($display_type == ':text:') $s = substr($s, 6);
-    elseif ($display_type == ':html:') $s = substr($s, 6);
-
-    unset($display_type);
-    $s = preg_replace('/[\r|\n]/i', '', $s);
-    $s = str_replace("'", "\'", $s);
-    $s = str_replace('"', '&quot;', $s);
-    // ok, now we need to break really long lines
-    // we only want to break at spaces to allow for
-    // correct interpretation of special characters
-    $tmp = explode(' ', $s);
-    return join("'+' ", $tmp);
 }

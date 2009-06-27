@@ -41,7 +41,11 @@ function smarty_function_pc_form_nav_close($args = array())
     else $target = '';
 
     if (!defined('_PC_FORM_DATE')) {
-        $Date = postcalendar_getDate();
+        //not sure these three lines are needed with call to getDate here
+        $jumpday   = FormUtil::getPassedValue('jumpday');
+        $jumpmonth = FormUtil::getPassedValue('jumpmonth');
+        $jumpyear  = FormUtil::getPassedValue('jumpyear');
+        $Date  = pnModAPIFunc('PostCalendar','user','getDate',compact('jumpday','jumpmonth','jumpyear'));
         echo '<input type="hidden" name="Date" value="' . $Date . '" />';
     }
     if (!defined('_PC_FORM_VIEW_TYPE')) {

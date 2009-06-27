@@ -40,8 +40,13 @@ function smarty_function_pc_week_range($args)
     // $args['format1'] format date 1 like this
     // $args['format2'] format date 1 like this
     setlocale(LC_TIME, _PC_LOCALE);
-    if (!isset($args['date'])) $args['date'] = postcalendar_getDate();
-
+    if (!isset($args['date'])) {
+        //not sure these three lines are needed with call to getDate here
+        $jumpday   = FormUtil::getPassedValue('jumpday');
+        $jumpmonth = FormUtil::getPassedValue('jumpmonth');
+        $jumpyear  = FormUtil::getPassedValue('jumpyear');
+        $args['date'] = pnModAPIFunc('PostCalendar','user','getDate',compact('jumpday','jumpmonth','jumpyear'));
+    }
     $y = substr($args['date'], 0, 4);
     $m = substr($args['date'], 4, 2);
     $d = substr($args['date'], 6, 2);

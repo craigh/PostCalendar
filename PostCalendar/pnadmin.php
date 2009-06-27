@@ -306,7 +306,7 @@ function postcalendar_admin_categories()
 
     $pnRender = pnRender::getInstance('PostCalendar');
 
-    $cats = pnModAPIFunc('PostCalendar', 'admin', 'getCategories');
+    $cats = pnModAPIFunc('PostCalendar', 'user', 'getCategories');
     $pnRender->assign('cats', $cats);
 
     return $pnRender->fetch('admin/postcalendar_admin_categories.htm');

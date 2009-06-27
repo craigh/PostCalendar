@@ -65,6 +65,7 @@ function postcalendar_userapi_getLongDayName($args)
 function postcalendar_userapi_buildView($args)
 {
     $Date = $args['Date'];
+    $viewtype = $args['viewtype'];
 
     //=================================================================
     // grab the post variables
@@ -175,7 +176,7 @@ function postcalendar_userapi_buildView($args)
     //=================================================================
     $month_view_start = date('Y-m-d', mktime(0, 0, 0, $the_month, 1, $the_year));
     $month_view_end = date('Y-m-t', mktime(0, 0, 0, $the_month, 1, $the_year));
-    $today_date = postcalendar_today('%Y-%m-%d');
+    $today_date = DateUtil::getDatetime('', '%Y-%m-%d');
     //=================================================================
     // Setup the starting and ending date ranges for pcGetEvents()
     //=================================================================
@@ -313,7 +314,6 @@ function postcalendar_userapi_buildView($args)
         $theme = pnUserGetTheme();
         $function_out['raw1'] = "<html><head></head><body>\n";
         //$tpl->display("$template");
-        $function_out['raw2'] .= postcalendar_footer();
         // V4B TS start ***     Hook code for displaying stuff for events in popup
         if ($_GET["type"] != "admin") {
             $hooks = pnModCallHooks('item', 'display', $eid, "index.php?module=PostCalendar&amp;type=user&amp;func=view&amp;viewtype=details&amp;eid=$eid&amp;popup=1");
@@ -500,6 +500,46 @@ function postcalendar_userapi_getDate($args)
     $m = substr($Date, 4, 2);
     $d = substr($Date, 6, 2);
     return strftime($format, mktime(0, 0, 0, $m, $d, $y));
+}
+
+/**
+ * postcalendar_userapi_getmonthname()
+ *
+ * Returns the month name translated for the user's current language
+ *
+ * @param array $args['Date'] date to return month name of
+ * @return string month name in user's language
+ */
+function postcalendar_userapi_getmonthname($args)
+{
+    if (!isset($args['Date'])) return false;
+
+    $month_name = array('01' => _CALJAN, '02' => _CALFEB, '03' => _CALMAR,
+                    '04' => _CALAPR, '05' => _CALMAY, '06' => _CALJUN,
+                    '07' => _CALJUL, '08' => _CALAUG, '09' => _CALSEP,
+                    '10' => _CALOCT, '11' => _CALNOV, '12' => _CALDEC);
+    return $month_name[date('m', $args['Date'])];
+}
+
+function postcalendar_userapi_getCategories()
+{
+    return DBUtil::selectObjectArray('postcalendar_categories', '', 'catname');
+}
+
+function postcalendar_userapi_getTopics()
+{
+    $permFilter = array();
+    $permFilter[] = array(
+                    'realm'            => 0,
+                    'component_left'   => 'PostCalendar',
+                    'component_middle' => '',
+                    'component_right'  => 'Topic',
+                    'instance_left'    => 'topicid',
+                    'instance_middle'  => '',
+                    'instance_right'   => 'topicname',
+                    'level'        => ACCESS_OVERVIEW);
+
+    return DBUtil::selectObjectArray('topics', '', 'topictext', -1, -1, '', $permFilter);
 }
 
 /****************************************************

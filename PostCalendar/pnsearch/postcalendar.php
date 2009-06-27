@@ -37,13 +37,12 @@ $search_modules[] = array('title' => 'PostCalendar', 'func_search' => 'search_po
 
 function search_postcalendar_opt()
 {
-    //global $bgcolor2, $textcolor1;
-    if (!pnModAvailable('PostCalendar') || !pnModAPILoad('PostCalendar', 'user')) {
+    if (!pnModAvailable('PostCalendar') || !pnModAPILoad('PostCalendar', 'user')) { //may not need the modload line
         return '';
     }
 
     $title = _SEARCH_POSTCALENDAR;
-    $categories = postcalendar_userapi_getCategories();
+    $categories = pnModAPIFunc('PostCalendar', 'user', 'getCategories');
     $cat_options = '';
     foreach ($categories as $category) {
         $cat_options .= "<option value=\"$category[catid]\">$category[catname]</option>";
@@ -51,7 +50,7 @@ function search_postcalendar_opt()
     unset($categories);
 
     if (_SETTING_DISPLAY_TOPICS) {
-        $topics = postcalendar_userapi_getTopics();
+        $topics = pnModAPIFunc('PostCalendar', 'user', 'getTopics');
         $top_options = '<select name="pc_topic"><option value="">' . _SRCHALLTOPICS . '</option>';
         foreach ($topics as $topic) {
             $top_options .= "<option value=\"$topic[id]\">$topic[text]</option>";
@@ -110,13 +109,6 @@ function search_postcalendar()
     $pc_category = FormUtil::getPassedValue('pc_category');
     $pc_topic = FormUtil::getPassedValue('pc_topic');
 
-    //=================================================================
-    //  Find out what Template we're using
-    //=================================================================
-    /* $template_name = _SETTING_TEMPLATE;
-    if(!isset($template_name))
-        $template_name = 'default';
-    */
     //=================================================================
     //  Perform the search if we have data
     //=================================================================

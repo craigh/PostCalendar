@@ -42,7 +42,12 @@ function smarty_function_pc_filter($args, &$smarty)
         return;
     }
 
-    $Date = postcalendar_getDate();
+    $jumpday   = FormUtil::getPassedValue('jumpday');
+    $jumpmonth = FormUtil::getPassedValue('jumpmonth');
+    $jumpyear  = FormUtil::getPassedValue('jumpyear');
+    
+    $Date  = pnModAPIFunc('PostCalendar','user','getDate',compact('jumpday','jumpmonth','jumpyear'));
+
     if (!isset($y)) $y = substr($Date, 0, 4);
     if (!isset($m)) $m = substr($Date, 4, 2);
     if (!isset($d)) $d = substr($Date, 6, 2);

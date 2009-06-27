@@ -44,9 +44,7 @@ function postcalendar_user_main()
     if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_OVERVIEW)) {
         return LogUtil::registerPermissionError();
     }
-
-    // get the date and go to the view function
-    return postcalendar_user_view(array('Date' => postcalendar_getDate()));
+    return postcalendar_user_view();
 }
 
 /**
@@ -67,10 +65,10 @@ function postcalendar_user_view()
     $jumpmonth = FormUtil::getPassedValue('jumpmonth');
     $jumpyear = FormUtil::getPassedValue('jumpyear');
 
-    if (empty($Date)) $Date = postcalendar_getDate();
+    if (empty($Date)) $Date = pnModAPIFunc('PostCalendar','user','getDate',compact('jumpday','jumpmonth','jumpyear'));
     if (!isset($viewtype)) $viewtype = _SETTING_DEFAULT_VIEW;
 
-    return postcalendar_user_display(array('viewtype' => $viewtype, 'Date' => $Date)) . postcalendar_footer();
+    return postcalendar_user_display(array('viewtype' => $viewtype, 'Date' => $Date));
 }
 
 /**

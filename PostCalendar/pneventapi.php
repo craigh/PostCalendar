@@ -152,7 +152,13 @@ function postcalendar_eventapi_getEvents($args)
 {
     $s_keywords = $s_category = $s_topic = '';
     extract($args);
-    $date = postcalendar_getDate();
+    //not sure these three lines are needed with call to getDate here
+    // don't like getPassedValue in api function
+    $jumpday   = FormUtil::getPassedValue('jumpday');
+    $jumpmonth = FormUtil::getPassedValue('jumpmonth');
+    $jumpyear  = FormUtil::getPassedValue('jumpyear');
+    $date = pnModAPIFunc('PostCalendar','user','getDate',compact('jumpday','jumpmonth','jumpyear'));
+
     $cy = substr($date, 0, 4);
     $cm = substr($date, 4, 2);
     $cd = substr($date, 6, 2);
@@ -212,7 +218,7 @@ function postcalendar_eventapi_getEvents($args)
 
     foreach ($events as $event) {
         // get the name of the topic
-        $topicname = pcGetTopicName($event['topic']);
+        $topicname = DBUtil::selectFieldByID('topics', 'topicname', $event['topic'], 'topicid');
         // get the user id of event's author
         //$cuserid = @$nuke_users[strtolower($event['uname'])];
         // CAH mod 4/12/09
@@ -490,7 +496,12 @@ function postcalendar_eventapi_buildSubmitForm($args)
     }
 
     $endDate = $event_endyear . $event_endmonth . $event_endday;
-    $today = postcalendar_getDate();
+    //not sure these three lines are needed with call to getDate here
+    // don't like getPassedValue in api function
+    $jumpday   = FormUtil::getPassedValue('jumpday');
+    $jumpmonth = FormUtil::getPassedValue('jumpmonth');
+    $jumpyear  = FormUtil::getPassedValue('jumpyear');
+    $today = pnModAPIFunc('PostCalendar','user','getDate',compact('jumpday','jumpmonth','jumpyear'));
     if (($endDate == '') || ($endDate == '00000000')) {
         $endvalue = substr($today, 6, 2) . '-' . substr($today, 4, 2) . '-' . substr($today, 0, 4);
         // V4B RNG: build other date format for JS cal
@@ -504,7 +515,7 @@ function postcalendar_eventapi_buildSubmitForm($args)
     $tpl->assign('endDate', $endDate);
 
     $startdate = $event_startyear . $event_startmonth . $event_startday;
-    $today = postcalendar_getDate();
+    //$today = postcalendar_getDate(); //already set 14 lines above
     if ($startdate == '') {
         $startvalue = substr($today, 6, 2) . '-' . substr($today, 4, 2) . '-' . substr($today, 0, 4);
         // V4B RNG: build other date format for JS cal
@@ -982,7 +993,6 @@ function postcalendar_eventapi_eventDetail($args)
         $function_out['raw1'] = "<html><head></head><body>\n";
         //$tpl->display("view_event_details.html",$cacheid);
 
-        $function_out['raw2'] .= postcalendar_footer();
         // V4B TS start ***     Hook code for displaying stuff for events in popup
         if ($_GET["type"] != "admin") {
             $hooks = pnModCallHooks('item', 'display', $eid, "index.php?module=PostCalendar&type=user&func=view&viewtype=details&eid=$eid&popup=1");

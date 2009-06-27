@@ -38,8 +38,11 @@ function smarty_function_pc_url($args)
     unset($args);
     if (!isset($action)) $action = _SETTING_DEFAULT_VIEW;
 
-    if (empty($print)) $print = false;
-    else $print = true;
+    if (empty($print)) {
+        $print = false;
+    } else {
+        $print = true;
+    }
 
     $template_view = FormUtil::getPassedValue('tplview');
     $viewtype = strtolower(FormUtil::getPassedValue('viewtype'));
@@ -48,15 +51,18 @@ function smarty_function_pc_url($args)
     $topic = FormUtil::getPassedValue('pc_topic');
     $popup = FormUtil::getPassedValue('popup');
     $today = DateUtil::getDatetime('', '%Y%m%d000000');
-
-    if (empty($date)) $Date = postcalendar_getDate();
-    else $Date = $date;
-
+    
+    if (empty($date)) {
+        //not sure these three lines are needed with call to getDate here
+        $jumpday   = FormUtil::getPassedValue('jumpday');
+        $jumpmonth = FormUtil::getPassedValue('jumpmonth');
+        $jumpyear  = FormUtil::getPassedValue('jumpyear');
+        $Date  = pnModAPIFunc('PostCalendar','user','getDate',compact('jumpday','jumpmonth','jumpyear'));
+    } else {
+        $Date = $date;
+    }
     // some extra cleanup if necessary
     $Date = str_replace('-', '', $Date);
-
-    $pcModInfo = pnModGetInfo(pnModGetIDFromName('PostCalendar'));
-    $pcDir = DataUtil::formatForOS($pcModInfo['directory']);
 
     switch ($action) {
         case 'submit':
@@ -129,8 +135,11 @@ function smarty_function_pc_url($args)
             break;
     }
 
-    if ($print) $link .= '" target="_blank"';
-    elseif (_SETTING_OPEN_NEW_WINDOW && $viewtype == 'details') $link .= '" target="csCalendar"';
+    if ($print) {
+        $link .= '" target="_blank"';
+    } elseif (_SETTING_OPEN_NEW_WINDOW && $viewtype == 'details') {
+        $link .= '" target="csCalendar"';
+    }
 
     echo DataUtil::formatForDisplay($link);
 }

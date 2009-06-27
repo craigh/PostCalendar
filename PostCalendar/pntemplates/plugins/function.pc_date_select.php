@@ -37,7 +37,11 @@ function smarty_function_pc_date_select($args)
     $print = FormUtil::getPassedValue('print');
     $tplview = FormUtil::getPassedValue('tplview');
     $viewtype = FormUtil::getPassedValue('viewtype');
-    $Date = postcalendar_getDate();
+
+    $jumpday   = FormUtil::getPassedValue('jumpday');
+    $jumpmonth = FormUtil::getPassedValue('jumpmonth');
+    $jumpyear  = FormUtil::getPassedValue('jumpyear');
+    $Date  = pnModAPIFunc('PostCalendar','user','getDate',compact('jumpday','jumpmonth','jumpyear'));
 
     if (!isset($viewtype)) $viewtype = _SETTING_DEFAULT_VIEW;
 
