@@ -53,7 +53,8 @@ function smarty_function_pc_week_range($args)
         $jumpday   = FormUtil::getPassedValue('jumpday');
         $jumpmonth = FormUtil::getPassedValue('jumpmonth');
         $jumpyear  = FormUtil::getPassedValue('jumpyear');
-        $args['date'] = pnModAPIFunc('PostCalendar','user','getDate',compact('jumpday','jumpmonth','jumpyear'));
+        $Date      = FormUtil::getPassedValue('Date');
+        $args['date']      = pnModAPIFunc('PostCalendar','user','getDate',compact('Date','jumpday','jumpmonth','jumpyear'));
     }
 
     if (!isset($args['sep'])) $args['sep'] = ' - ';

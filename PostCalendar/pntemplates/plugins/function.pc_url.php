@@ -51,7 +51,8 @@ function smarty_function_pc_url($args)
         $jumpday   = FormUtil::getPassedValue('jumpday');
         $jumpmonth = FormUtil::getPassedValue('jumpmonth');
         $jumpyear  = FormUtil::getPassedValue('jumpyear');
-        $date  = pnModAPIFunc('PostCalendar','user','getDate',compact('jumpday','jumpmonth','jumpyear'));
+        $Date      = FormUtil::getPassedValue('Date');
+        $date      = pnModAPIFunc('PostCalendar','user','getDate',compact('Date','jumpday','jumpmonth','jumpyear'));
     }
     // some extra cleanup if necessary
     $date = str_replace('-', '', $date);

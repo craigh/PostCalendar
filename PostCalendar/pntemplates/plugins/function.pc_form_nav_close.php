@@ -42,7 +42,8 @@ function smarty_function_pc_form_nav_close()
         $jumpday   = FormUtil::getPassedValue('jumpday');
         $jumpmonth = FormUtil::getPassedValue('jumpmonth');
         $jumpyear  = FormUtil::getPassedValue('jumpyear');
-        $Date  = pnModAPIFunc('PostCalendar','user','getDate',compact('jumpday','jumpmonth','jumpyear'));
+        $Date      = FormUtil::getPassedValue('Date');
+        $Date      = pnModAPIFunc('PostCalendar','user','getDate',compact('Date','jumpday','jumpmonth','jumpyear'));
         echo '<input type="hidden" name="Date" value="' . $Date . '" />';
     }
     if (!defined('_PC_FORM_VIEW_TYPE')) {
