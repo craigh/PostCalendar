@@ -32,48 +32,37 @@
  * http://www.gnu.org/copyleft/gpl.html
  *
  */
+
 function smarty_function_pc_sort_day($params, &$smarty)
 {
-    extract($params);
-
-    if (empty($var)) {
-        $smarty->trigger_error("sort_array: missing 'var' parameter");
+    if (!array_key_exists('var', $params) || empty($params['var'])) {
+        $smarty->trigger_error("sort_array: missing or empty 'var' parameter");
         return;
     }
 
-    if (!in_array('value', array_keys($params))) {
-        $smarty->trigger_error("sort_array: missing 'value' parameter");
+    if (!array_key_exists('value', $params) || !is_array($params['value'])) {
+        $smarty->trigger_error("sort_array: missing or invalid 'value' parameter");
         return;
     }
 
-    if (!in_array('order', array_keys($params))) {
-        $order = 'asc';
-    }
+    $order = array_key_exists('order', $params) ? $params['order'] : 'asc';
+    $inc = array_key_exists('inc', $params) ? $params['inc'] : 15;
 
-    if (!in_array('inc', array_keys($params))) {
-        $inc = '15';
+    $sh = '08'; $sm = '00';
+    if (array_key_exists('start', $params)) {
+        list($sh, $sm) = explode(':', $params['start']);
     }
-
-    if (!in_array('start', array_keys($params))) {
-        $sh = '08';
-        $sm = '00';
-    } else {
-        list($sh, $sm) = explode(':', $start);
-    }
-
-    if (!in_array('end', array_keys($params))) {
-        $eh = '21';
-        $em = '00';
-    } else {
-        list($eh, $em) = explode(':', $end);
+    $eh = '21'; $em = '00';
+    if (array_key_exists('end', $params)) {
+        list($eh, $em) = explode(':', $params['end']);
     }
 
     if (strtolower($order) == 'asc') $function = 'sort_byTimeA';
     if (strtolower($order) == 'desc') $function = 'sort_byTimeD';
 
-    foreach ($value as $events) {
+    foreach ($params['value'] as $events) {
         usort($events, $function);
-        $newArray = $events;
+        $newArray[] = $events;
     }
 
     // here we want to create an intelligent array of
@@ -91,7 +80,7 @@ function smarty_function_pc_sort_day($params, &$smarty)
 
     $alldayevents = array();
     foreach ($newArray as $event) {
-        list($sh, $sm, $ss) = explode(':', $event['startTime']);
+        list($sh, $sm, ) = explode(':', $event['startTime']);
         $eh = sprintf('%02d', $sh + $event['duration_hours']);
         $em = sprintf('%02d', $sm + $event['duration_minutes']);
 
@@ -126,5 +115,5 @@ function smarty_function_pc_sort_day($params, &$smarty)
     }
 
     //pcDebugVar($hours);
-    $smarty->assign_by_ref($var, $hours);
+    $smarty->assign_by_ref($params['var'], $hours);
 }

@@ -34,14 +34,10 @@
  */
 function smarty_function_pc_date_format($args)
 {
-    extract($args);
-    unset($args);
+    $format = isset($params['format']) ? $params['format'] : _SETTING_DATE_FORMAT;
     setlocale(LC_TIME, _PC_LOCALE);
-    if (!isset($format)) {
-        $format = _SETTING_DATE_FORMAT;
-    }
-    if (isset($date)) {
-        echo strftime($format, smarty_make_timestamp($date));
+    if (isset($args['date'])) {
+        echo strftime($format, smarty_make_timestamp($args['date']));
     } else {
         echo strftime($format, time());
     }

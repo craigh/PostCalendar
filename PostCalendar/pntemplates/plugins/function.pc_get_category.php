@@ -34,9 +34,6 @@
  */
 function smarty_function_pc_get_category($args, &$smarty)
 {
-    extract($args);
-    unset($args);
-
     $category = FormUtil::getPassedValue('pc_category');
     $categories = pnModAPIFunc('PostCalendar', 'user', 'getCategories');
     $catoptions = "<select name=\"pc_category\">";
@@ -48,8 +45,8 @@ function smarty_function_pc_get_category($args, &$smarty)
         }
     }
     //echo urlencode ($name);
-    if (isset($assign)) {
-        $smarty->assign($assign, urlencode($name));
+    if (isset($args['assign'])) {
+        $smarty->assign($args['assign'], urlencode($name));
     } else {
         return urlencode($name);
     }

@@ -32,13 +32,21 @@
  * http://www.gnu.org/copyleft/gpl.html
  *
  */
+
+/**
+ * Get week range
+ *
+ * @param array $args array with arguments.
+ *                    $args['date'] date to use for range building
+ *                    $args['sep'] seperate the dates by this string
+ *                    $args['format'] format all dates like this
+ *                    $args['format1'] format date 1 like this
+ *                    $args['format2'] format date 2 like this
+ * @param Smarty $smarty the Smarty instance
+ * @return unknown
+ */
 function smarty_function_pc_week_range($args)
 {
-    // $args['date'] date to use for range building
-    // $args['sep'] seperate the dates by this string
-    // $args['format'] format all dates like this
-    // $args['format1'] format date 1 like this
-    // $args['format2'] format date 1 like this
     setlocale(LC_TIME, _PC_LOCALE);
     if (!isset($args['date'])) {
         //not sure these three lines are needed with call to getDate here
@@ -47,9 +55,6 @@ function smarty_function_pc_week_range($args)
         $jumpyear  = FormUtil::getPassedValue('jumpyear');
         $args['date'] = pnModAPIFunc('PostCalendar','user','getDate',compact('jumpday','jumpmonth','jumpyear'));
     }
-    $y = substr($args['date'], 0, 4);
-    $m = substr($args['date'], 4, 2);
-    $d = substr($args['date'], 6, 2);
 
     if (!isset($args['sep'])) $args['sep'] = ' - ';
 
@@ -60,6 +65,10 @@ function smarty_function_pc_week_range($args)
         $args['format1'] = $args['format'];
         $args['format2'] = $args['format'];
     }
+
+    $y = substr($args['date'], 0, 4);
+    $m = substr($args['date'], 4, 2);
+    $d = substr($args['date'], 6, 2);
 
     // get the week date range for the supplied $date
     $dow = date('w', mktime(0, 0, 0, $m, $d, $y));

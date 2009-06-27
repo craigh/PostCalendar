@@ -32,157 +32,169 @@
  * http://www.gnu.org/copyleft/gpl.html
  *
  */
+
+/**
+ * Define popups
+ *
+ * @param array $args Array of function arguments.
+ *                    Required keys: text, inarray, function
+ *                    Optional keys: trigger, sticky, caption, fgcolor, bgcolor, textcolor, capcolor, closecolor,
+ *                    textfont, captionfont, closefont, textsize, captionsize, closesize,
+ *                    width, height, left, right, center, above, below, border, offsetx, offsety,
+ *                    fgbackground, bgbackground, closetext, noclose, status, autostatus, autostatuscap,
+ *                    caparray, capicon, snapx, snapy, fixx, fixy, background, padx, pady,
+ *                    fullhtml, frame, timeout, delay, hauto, vauto
+ */
 function smarty_function_pc_popup($args)
 {
     // if we're not using popups just return an empty string
     if (!_SETTING_USE_POPUPS) return;
 
-    extract($args);
+    if (empty($args['text']) && !isset($args['inarray']) && empty($args['function']))
+        $args['text'] = "overlib: attribute 'text' or 'inarray' or 'function' required";
 
-    if (empty($text) && !isset($inarray) && empty($function)) $text = "overlib: attribute 'text' or 'inarray' or 'function' required";
+    if (empty($args['trigger'])) $args['trigger'] = " onMouseOver";
 
-    if (empty($trigger)) $trigger = " onMouseOver";
-
-    echo $trigger . '="return overlib(\'' . pc_clean($text) . '\'';
-    if ($sticky) {
+    echo $args['trigger'] . '="return overlib(\'' . pc_clean($args['text']) . '\'';
+    if ($args['sticky']) {
         echo ",STICKY";
     }
-    if (!empty($caption)) {
-        echo ",CAPTION,'" . pc_clean($caption) . "'";
+    if (!empty($args['caption'])) {
+        echo ",CAPTION,'" . pc_clean($args['caption']) . "'";
     }
-    if (!empty($fgcolor)) {
-        echo ",FGCOLOR,'$fgcolor'";
+    if (!empty($args['fgcolor'])) {
+        echo ",FGCOLOR,'{$args['fgcolor']}'";
     }
-    if (!empty($bgcolor)) {
-        echo ",BGCOLOR,'$bgcolor'";
+    if (!empty($args['bgcolor'])) {
+        echo ",BGCOLOR,'{$args['bgcolor']}'";
     }
-    if (!empty($textcolor)) {
-        echo ",TEXTCOLOR,'$textcolor'";
+    if (!empty($args['textcolor'])) {
+        echo ",TEXTCOLOR,'{$args['textcolor']}'";
     }
-    if (!empty($capcolor)) {
-        echo ",CAPCOLOR,'$capcolor'";
+    if (!empty($args['capcolor'])) {
+        echo ",CAPCOLOR,'{$args['capcolor']}'";
     }
-    if (!empty($closecolor)) {
-        echo ",CLOSECOLOR,'$closecolor'";
+    if (!empty($args['closecolor'])) {
+        echo ",CLOSECOLOR,'{$args['closecolor']}'";
     }
-    if (!empty($textfont)) {
-        echo ",TEXTFONT,'$textfont'";
+    if (!empty($args['textfont'])) {
+        echo ",TEXTFONT,'{$args['textfont']}'";
     }
-    if (!empty($captionfont)) {
-        echo ",CAPTIONFONT,'$captionfont'";
+    if (!empty($args['captionfont'])) {
+        echo ",CAPTIONFONT,'{$args['captionfont']}'";
     }
-    if (!empty($closefont)) {
-        echo ",CLOSEFONT,'$closefont'";
+    if (!empty($args['closefont'])) {
+        echo ",CLOSEFONT,'{$args['closefont']}'";
     }
-    if (!empty($textsize)) {
-        echo ",TEXTSIZE,$textsize";
+    if (!empty($args['textsize'])) {
+        echo ",TEXTSIZE,{$args['textsize']}";
     }
-    if (!empty($captionsize)) {
-        echo ",CAPTIONSIZE,$captionsize";
+    if (!empty($args['captionsize'])) {
+        echo ",CAPTIONSIZE,{$args['captionsize']}";
     }
-    if (!empty($closesize)) {
-        echo ",CLOSESIZE,$closesize";
+    if (!empty($args['closesize'])) {
+        echo ",CLOSESIZE,{$args['closesize']}";
     }
-    if (!empty($width)) {
-        echo ",WIDTH,$width";
+    if (!empty($args['width'])) {
+        echo ",WIDTH,{$args['width']}";
     }
-    if (!empty($height)) {
-        echo ",HEIGHT,$height";
+    if (!empty($args['height'])) {
+        echo ",HEIGHT,{$args['height']}";
     }
-    if (!empty($left)) {
+    if (!empty($args['left'])) {
         echo ",LEFT";
     }
-    if (!empty($right)) {
+    if (!empty($args['right'])) {
         echo ",RIGHT";
     }
-    if (!empty($center)) {
+    if (!empty($args['center'])) {
         echo ",CENTER";
     }
-    if (!empty($above)) {
+    if (!empty($args['above'])) {
         echo ",ABOVE";
     }
-    if (!empty($below)) {
+    if (!empty($args['below'])) {
         echo ",BELOW";
     }
-    if (isset($border)) {
-        echo ",BORDER,$border";
+    if (isset($args['border'])) {
+        echo ",BORDER,{$args['border']}";
     }
-    if (isset($offsetx)) {
-        echo ",OFFSETX,$offsetx";
+    if (isset($args['offsetx'])) {
+        echo ",OFFSETX,{$args['offsetx']}";
     }
-    if (isset($offsety)) {
-        echo ",OFFSETY,$offsety";
+    if (isset($args['offsety'])) {
+        echo ",OFFSETY,{$args['offsety']}";
     }
-    if (!empty($fgbackground)) {
-        echo ",FGBACKGROUND,'$fgbackground'";
+    if (!empty($args['fgbackground'])) {
+        echo ",FGBACKGROUND,'{$args['fgbackground']}'";
     }
-    if (!empty($bgbackground)) {
-        echo ",BGBACKGROUND,'$bgbackground'";
+    if (!empty($args['bgbackground'])) {
+        echo ",BGBACKGROUND,'{$args['bgbackground']}'";
     }
-    if (!empty($closetext)) {
-        echo ",CLOSETEXT,'" . pc_clean($closetext) . "'";
+    if (!empty($args['closetext'])) {
+        echo ",CLOSETEXT,'" . pc_clean($args['closetext']) . "'";
     }
-    if (!empty($noclose)) {
+    if (!empty($args['noclose'])) {
         echo ",NOCLOSE";
     }
-    if (!empty($status)) {
-        echo ",STATUS,'" . pc_clean($status) . "'";
+    if (!empty($args['status'])) {
+        echo ",STATUS,'" . pc_clean($args['status']) . "'";
     }
-    if (!empty($autostatus)) {
+    if (!empty($args['autostatus'])) {
         echo ",AUTOSTATUS";
     }
-    if (!empty($autostatuscap)) {
+    if (!empty($args['autostatuscap'])) {
         echo ",AUTOSTATUSCAP";
     }
-    if (isset($inarray)) {
-        echo ",INARRAY,'$inarray'";
+    if (isset($args['inarray'])) {
+        echo ",INARRAY,'{$args['inarray']}'";
     }
-    if (isset($caparray)) {
-        echo ",CAPARRAY,'$caparray'";
+    if (isset($args['caparray'])) {
+        echo ",CAPARRAY,'{$args['caparray']}'";
     }
-    if (!empty($capicon)) {
-        echo ",CAPICON,'$capicon'";
+    if (!empty($args['capicon'])) {
+        echo ",CAPICON,'{$args['capicon']}'";
     }
-    if (!empty($snapx)) {
-        echo ",SNAPX,$snapx";
+    if (!empty($args['snapx'])) {
+        echo ",SNAPX,{$args['snapx']}";
     }
-    if (!empty($snapy)) {
-        echo ",SNAPY,$snapy";
+    if (!empty($args['snapy'])) {
+        echo ",SNAPY,{$args['snapy']}";
     }
-    if (isset($fixx)) {
-        echo ",FIXX,$fixx";
+    if (isset($args['fixx'])) {
+        echo ",FIXX,{$args['fixx']}";
     }
-    if (isset($fixy)) {
-        echo ",FIXY,$fixy";
+    if (isset($args['fixy'])) {
+        echo ",FIXY,{$args['fixy']}";
     }
-    if (!empty($background)) {
-        echo ",BACKGROUND,'$background'";
+    if (!empty($args['background'])) {
+        echo ",BACKGROUND,'{$args['background']}'";
     }
-    if (!empty($padx)) {
-        echo ",PADX,$padx";
+    if (!empty($args['padx'])) {
+        echo ",PADX,{$args['padx']}";
     }
-    if (!empty($pady)) {
-        echo ",PADY,$pady";
+    if (!empty($args['pady'])) {
+        echo ",PADY,{$args['pady']}";
     }
-    if (!empty($fullhtml)) {
+    if (!empty($args['fullhtml'])) {
         echo ",FULLHTML";
     }
-    if (!empty($frame)) {
-        echo ",FRAME,'$frame'";
+    if (!empty($args['frame'])) {
+        echo ",FRAME,'{$args['frame']}'";
     }
-    if (isset($timeout)) {
-        echo ",TIMEOUT,$timeout";
+    if (isset($args['timeout'])) {
+        echo ",TIMEOUT,{$args['timeout']}";
     }
-    if (!empty($function)) {
-        echo ",FUNCTION,'$function'";
+    if (!empty($args['function'])) {
+        echo ",FUNCTION,'{$args['function']}'";
     }
-    if (isset($delay)) {
-        echo ",DELAY,$delay";
+    if (isset($args['delay'])) {
+        echo ",DELAY,{$args['delay']}";
     }
-    if (!empty($hauto)) {
+    if (!empty($args['hauto'])) {
         echo ",HAUTO";
     }
-    if (!empty($vauto)) {
+    if (!empty($args['vauto'])) {
         echo ",VAUTO";
     }
     echo ');" onMouseOut="nd();"';

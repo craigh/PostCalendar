@@ -51,9 +51,6 @@
  */
 function smarty_function_pc_calendar_init($params, &$smarty)
 {
-    extract($params);
-    unset($params);
-
     $currentLang = pnSessionGetVar('lang');
     $calLang = 'en';
     $langFile = 'javascript/jscalendar/lang/calendar-en.js';
@@ -72,6 +69,6 @@ function smarty_function_pc_calendar_init($params, &$smarty)
 
     $init = true;
 
-    if (isset($assign)) $smarty->assign($assign, $init);
+    if (isset($params['assign'])) $smarty->assign($params['assign'], $init);
     else return;
 }

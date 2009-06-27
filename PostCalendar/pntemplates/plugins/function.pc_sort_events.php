@@ -34,28 +34,24 @@
  */
 function smarty_function_pc_sort_events($params, &$smarty)
 {
-    extract($params);
-
-    if (empty($var)) {
-        $smarty->trigger_error("sort_array: missing 'var' parameter");
+    if (!array_key_exists('var', $params) || empty($params['var'])) {
+        $smarty->trigger_error("pc_sort_events: missing or empty 'var' parameter");
         return;
     }
 
-    if (!in_array('value', array_keys($params))) {
-        $smarty->trigger_error("sort_array: missing 'value' parameter");
+    if (!array_key_exists('value', $params) || !is_array($params['value'])) {
+        $smarty->trigger_error("pc_sort_events: missing or invalid 'value' parameter");
         return;
     }
 
-    if (!in_array('sort', array_keys($params))) {
-        $smarty->trigger_error("sort_array: missing 'sort' parameter");
+    if (!array_key_exists('sort', $params)) {
+        $smarty->trigger_error("pc_sort_events: missing 'sort' parameter");
         return;
     }
 
-    if (!in_array('order', array_keys($params))) {
-        $order = 'asc';
-    }
+    $order = array_key_exists('order', $params) ? $params['order'] : 'asc';
 
-    switch ($sort) {
+    switch ($params['sort']) {
         case 'category':
             if (strtolower($order) == 'asc') $function = 'sort_byCategoryA';
             if (strtolower($order) == 'desc') $function = 'sort_byCategoryD';
@@ -73,13 +69,12 @@ function smarty_function_pc_sort_events($params, &$smarty)
     }
 
     $newArray = array();
-    foreach ($value as $date => $events) {
+    foreach ($params['value'] as $date => $events) {
         usort($events, $function);
-        $newArray[$date] = array();
         $newArray[$date] = $events;
     }
 
-    $smarty->assign_by_ref($var, $newArray);
+    $smarty->assign_by_ref($params['var'], $newArray);
 }
 /**
  * Sorting Functions

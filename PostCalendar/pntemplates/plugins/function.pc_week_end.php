@@ -32,15 +32,21 @@
  * http://www.gnu.org/copyleft/gpl.html
  *
  */
+
+/**
+ * Get last day of the week
+ *
+ * @param array $args array with arguments.
+ *                    $args['date'] date to use for range building
+ *                    $args['sep'] seperate the dates by this string
+ *                    $args['format'] format all dates like this
+ *                    $args['format1'] format date 1 like this
+ *                    $args['format2'] format date 2 like this
+ * @param Smarty $smarty the Smarty instance
+ * @return unknown
+ */
 function smarty_function_pc_week_end($args, &$smarty)
 {
-    // $args['date'] date to use for range building
-    // $args['sep'] seperate the dates by this string
-    // $args['format'] format all dates like this
-    // $args['format1'] format date 1 like this
-    // $args['format2'] format date 1 like this
-    extract($args);
-
     setlocale(LC_TIME, _PC_LOCALE);
     if (!isset($args['date'])) {
         //not sure these three lines are needed with call to getDate here
@@ -49,43 +55,43 @@ function smarty_function_pc_week_end($args, &$smarty)
         $jumpyear  = FormUtil::getPassedValue('jumpyear');
         $args['date'] = pnModAPIFunc('PostCalendar','user','getDate',compact('jumpday','jumpmonth','jumpyear'));
     }
-    $y = substr($args['date'], 0, 4);
-    $m = substr($args['date'], 4, 2);
-    $d = substr($args['date'], 6, 2);
 
     if (!isset($args['sep'])) $args['sep'] = ' - ';
 
     if (!isset($args['format'])) {
         if (!isset($args['format1'])) $args['format1'] = _SETTING_DATE_FORMAT;
-
         if (!isset($args['format2'])) $args['format2'] = _SETTING_DATE_FORMAT;
     } else {
         $args['format1'] = $args['format'];
         $args['format2'] = $args['format'];
     }
 
+    $y = substr($args['date'], 0, 4);
+    $m = substr($args['date'], 4, 2);
+    $d = substr($args['date'], 6, 2);
+
     // get the week date range for the supplied $date
     $dow = date('w', mktime(0, 0, 0, $m, $d, $y));
     if (_SETTING_FIRST_DAY_WEEK == 0) {
-        $firstDay = strftime('%Y-%m-%d', mktime(0, 0, 0, $m, ($d - $dow), $y));
+        // $firstDay = strftime('%Y-%m-%d', mktime(0, 0, 0, $m, ($d - $dow), $y));
         $lastDay = strftime('%Y-%m-%d', mktime(0, 0, 0, $m, ($d + (6 - $dow)), $y));
     } elseif (_SETTING_FIRST_DAY_WEEK == 1) {
         $sub = ($dow == 0 ? 6 : $dow - 1);
-        $firstDay = strftime('%Y-%m-%d', mktime(0, 0, 0, $m, ($d - $sub), $y));
+        // $firstDay = strftime('%Y-%m-%d', mktime(0, 0, 0, $m, ($d - $sub), $y));
         $lastDay = strftime('%Y-%m-%d', mktime(0, 0, 0, $m, ($d + (6 - $sub)), $y));
     } elseif (_SETTING_FIRST_DAY_WEEK == 6) {
         $sub = ($dow == 6 ? 0 : $dow + 1);
-        $firstDay = strftime('%Y-%m-%d', mktime(0, 0, 0, $m, ($d - $sub), $y));
+        // $firstDay = strftime('%Y-%m-%d', mktime(0, 0, 0, $m, ($d - $sub), $y));
         $lastDay = strftime('%y-%m-%d', mktime(0, 0, 0, $m, ($d + (6 - $sub)), $y));
     }
 
     // return the formated range
     //echo $lastDay;
 
-    if (isset($assign)) {
-        $smarty->assign($assign, $lastDay);
+    if (isset($args['assign'])) {
+        $smarty->assign($args['assign'], $lastDay);
+        return;
     } else {
         return $lastDay;
     }
-
 }

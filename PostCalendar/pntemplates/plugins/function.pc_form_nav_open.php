@@ -32,10 +32,8 @@
  * http://www.gnu.org/copyleft/gpl.html
  *
  */
-function smarty_function_pc_form_nav_open($args = array())
+function smarty_function_pc_form_nav_open()
 {
-    extract($args);
-    unset($args);
     $viewtype = strtolower(FormUtil::getPassedValue('viewtype'));
 
     if (_SETTING_OPEN_NEW_WINDOW && $viewtype == 'details') $target = 'target="csCalendar"';
