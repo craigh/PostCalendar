@@ -611,6 +611,8 @@ function postcalendar_upgrade($oldversion)
             if (!DBUtil::changeTable('postcalendar_events') || !DBUtil::changeTable('postcalendar_categories')) {
                 return LogUtil::registerError(_PC_UPGRADETABLESFAILED);
             }
+            pnModSetVar('PostCalendar', 'pcNotifyAdmin2Admin', '0');
+
         case '5.5.0':
     }
 

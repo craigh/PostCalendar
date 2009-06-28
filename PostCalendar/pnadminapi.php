@@ -167,10 +167,10 @@ function postcalendar_adminapi_meeting_mailparticipants($args)
     $messagesent = pnModAPIFunc('Mailer', 'user', 'sendmessage', array('toaddress' => $toaddress, 'subject' => $subject, 'body' => $message, 'html' => true));
 
     if ($messagesent) {
-        LogUtil::registerStatus('Meeting notify email sent');
+        LogUtil::registerStatus(_POSTCALENDAR_MEETINGEMAILSENT);
         return true;
     } else {
-        LogUtil::registerError('Meeting notify email not sent');
+        LogUtil::registerError(_POSTCALENDAR_MEETINGEMAILNOT);
         return false;
     }
 }
@@ -183,10 +183,12 @@ function postcalendar_adminapi_meeting_mailparticipants($args)
  */
 function postcalendar_adminapi_notify($args)
 {
-    //TODO: needd to put a test in here for if the admin submitted the event, if not, probably don't send email. (ticket 24)
     extract($args);
 
     if (!(bool) _SETTING_NOTIFY_ADMIN) return true;
+    $isadmin = SecurityUtil::checkPermission('PostCalendar::', 'null::null', ACCESS_ADMIN);
+    $notifyadmin2admin = pnModGetVar('PostCalendar', 'pcNotifyAdmin2Admin');
+    if ($isadmin && !$notifyadmin2admin) return true;
 
     $modinfo = pnModGetInfo(pnModGetIDFromName('PostCalendar'));
     $modversion = DataUtil::formatForOS($modinfo['version']);
@@ -201,10 +203,10 @@ function postcalendar_adminapi_notify($args)
     $messagesent = pnModAPIFunc('Mailer', 'user', 'sendmessage', array('toaddress' => _SETTING_NOTIFY_EMAIL, 'subject' => _PC_NOTIFY_SUBJECT, 'body' => $message, 'html' => true));
 
     if ($messagesent) {
-        LogUtil::registerStatus('Admin notify email sent');
+        LogUtil::registerStatus(_POSTCALENDAR_NOTIFYEMAILSENT);
         return true;
     } else {
-        LogUtil::registerError('Admin notify email not sent');
+        LogUtil::registerError(_POSTCALENDAR_NOTIFYEMAILNOT);
         return false;
     }
 }

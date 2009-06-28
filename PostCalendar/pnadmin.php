@@ -264,6 +264,7 @@ function postcalendar_admin_updateconfig()
     $pcDefaultView           = FormUtil::getPassedValue('pcDefaultView', 'month');
     $pcNotifyAdmin           = FormUtil::getPassedValue('pcNotifyAdmin', 0);
     $pcNotifyEmail           = FormUtil::getPassedValue('pcNotifyEmail', pnConfigGetVar('adminmail'));
+    $pcNotifyAdmin2Admin     = FormUtil::getPassedValue('pcNotifyAdmin2Admin', 0);
     // v4b TS end
 
     // delete all the old vars
@@ -291,6 +292,7 @@ function postcalendar_admin_updateconfig()
     pnModSetVar('PostCalendar', 'pcCacheLifetime', $pcCacheLifetime);
     pnModSetVar('PostCalendar', 'pcNotifyAdmin', $pcNotifyAdmin);
     pnModSetVar('PostCalendar', 'pcNotifyEmail', $pcNotifyEmail);
+    pnModSetVar('PostCalendar', 'pcNotifyAdmin2Admin', $pcNotifyAdmin2Admin);
 
     pnModAPIFunc('PostCalendar', 'admin', 'clearCache');
 
