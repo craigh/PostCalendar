@@ -84,29 +84,35 @@ function sort_byCategoryA($a, $b)
 {
     if ($a['catname'] < $b['catname']) return -1;
     elseif ($a['catname'] > $b['catname']) return 1;
+    else return 0;
 }
 function sort_byCategoryD($a, $b)
 {
     if ($a['catname'] < $b['catname']) return 1;
     elseif ($a['catname'] > $b['catname']) return -1;
+    else return 0;
 }
 function sort_byTitleA($a, $b)
 {
     if ($a['title'] < $b['title']) return -1;
     elseif ($a['title'] > $b['title']) return 1;
+    else return 0;
 }
 function sort_byTitleD($a, $b)
 {
     if ($a['title'] < $b['title']) return 1;
     elseif ($a['title'] > $b['title']) return -1;
+    else return 0;
 }
 function sort_byTimeA($a, $b)
 {
     if ($a['startTime'] < $b['startTime']) return -1;
     elseif ($a['startTime'] > $b['startTime']) return 1;
+    else return 0;
 }
 function sort_byTimeD($a, $b)
 {
     if ($a['startTime'] < $b['startTime']) return 1;
     elseif ($a['startTime'] > $b['startTime']) return -1;
+    else return 0;
 }
