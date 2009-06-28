@@ -27,7 +27,7 @@
 			<!--[ if $PRINT_VIEW eq false ]--><a href="<!--[ $PREV_DAY_URL ]-->">&lt;&lt;</a><!--[/if]-->
     	<!--[ if $USE_INT_DATES eq true ]-->
 				<!--[ pc_date_format date=$DATE format='%A, %d %B %Y']-->
-			<!--[ else ]-->	
+			<!--[ else ]-->
 				<!--[ pc_date_format date=$DATE format='%A, %B %d %Y']-->
 			<!--[ /if ]-->
 			<!--[ if $PRINT_VIEW eq false ]--><a href="<!--[ $NEXT_DAY_URL ]-->">&gt;&gt;</a><!--[/if]-->
@@ -72,16 +72,16 @@
 							<!--[ assign var="timestamp" value=$event.startTime|date_format:'%I:%M %p']-->
 						<!--[ /if ]-->
 						<!--[ if $event.alldayevent != true ]-->
-							<!--[ $timestamp ]-->  
+							<!--[ $timestamp ]-->
 						<!--[ /if ]-->
 						<!--[ $event.uname ]--> <!-- // V4B SB Inseted Username to get a better overview -->
-						<a href="<!--[ pc_url action=detail eid=$event.eid date=$date ]-->" 
+						<a href="<!--[ pc_url action=detail eid=$event.eid date=$date ]-->"
 							<!--[ pc_popup delay="500" bgcolor=$event.catcolor caption=$event.title text=$event.hometext ]-->>
-					   		<!--[ $event.title|strip_tags|pnvarprephtmldisplay ]--></a> 
+					   		<!--[ $event.title|strip_tags|pnvarprephtmldisplay ]--></a>
 						<!--[ if $event.alldayevent != true ]-->
 							(<!--[ $event.duration_hours ]-->:<!--[ $event.duration_minutes ]-->)
 						<!--[ /if ]-->
-						<a href="index.php?module=PostCalendar&func=export&?eid=<!--[ $event.eid ]-->&date=<!--[ $date ]-->"><!--[ pnimg src='icaldown.gif' alt="Add this event to my calendar" ]--></a>
+						<a href="<!--[pnmodurl modname="PostCalendar" type="user" func="export" eid=$event.eid date=$date]-->"><!--[ pnimg src='icaldown.gif' alt="Add this event to my calendar" ]--></a>
 						<br />
 						<!--[ assign var="oldCat" value=$event.catname ]-->
 						<!--[ if $smarty.foreach.events.last ]-->
