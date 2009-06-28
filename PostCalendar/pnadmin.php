@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'modules/PostCalendar/global.php';
+require_once dirname(__FILE__) . '/global.php';
 
 /**
  * the main administration function
@@ -453,7 +453,6 @@ function postcalendar_admin_testSystem()
     }
 
     $modinfo = pnModGetInfo(pnModGetIDFromName('PostCalendar'));
-    $pcDir = DataUtil::formatForOS($modinfo['directory']);
     $version = $modinfo['version'];
     unset($modinfo);
 
@@ -464,6 +463,7 @@ function postcalendar_admin_testSystem()
         $__SERVER = $_SERVER;
         $__ENV    = $_ENV;
     } else {
+        global $HTTP_SERVER_VARS, $HTTP_ENV_VARS;
         $__SERVER = $HTTP_SERVER_VARS;
         $__ENV    = $HTTP_ENV_VARS;
     }
@@ -500,10 +500,10 @@ function postcalendar_admin_testSystem()
     array_push($infos, array('SAPI', php_sapi_name()));
     array_push($infos, array('OS', php_uname()));
     array_push($infos, array('WebServer', $__SERVER['SERVER_SOFTWARE']));
-    array_push($infos, array('Module dir', "modules/$pcDir"));
+    array_push($infos, array('Module dir', dirname(__FILE__)));
 
     $modversion = array();
-    include "modules/$pcDir/pnversion.php";
+    include dirname(__FILE__) . '/pnversion.php';
 
     if ($modversion['version'] != $version) {
         LogUtil::registerError("new version " . $modversion[version] . " installed but not updated!");

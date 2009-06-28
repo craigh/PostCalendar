@@ -33,7 +33,7 @@
  *
  */
 Loader::requireOnce('includes/pnForm.php');
-require_once 'modules/PostCalendar/global.php';
+require_once dirname(__FILE__) . '/global.php';
 
 /**
  * This is the event handler file
@@ -322,7 +322,7 @@ function postcalendar_event_new($args)
     if (($form_action == 'preview') OR ($form_action == 'commit')) {
         if (empty($event_subject)) LogUtil::registerError('<b>event subject</b>'._PC_SUBMIT_ERROR4.'<br />');
         // if this truly is empty and we are committing, it should abort!
-    
+
         // check repeating frequencies
         if ($event_repeat == REPEAT) {
             if (!isset($event_repeat_freq) || $event_repeat_freq < 1 || empty($event_repeat_freq)) {
@@ -352,7 +352,7 @@ function postcalendar_event_new($args)
         $sdate = strtotime($event_startyear . '-' . $event_startmonth . '-' . $event_startday);
         $edate = strtotime($event_endyear . '-' . $event_endmonth . '-' . $event_endday);
         $tdate = strtotime(date('Y-m-d'));
-    
+
         if ($edate < $sdate && $event_endtype == 1) {
             LogUtil::registerError(_PC_SUBMIT_ERROR1);
         }

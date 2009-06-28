@@ -112,7 +112,7 @@ function postcalendar_upgrade($oldversion)
         case '3.04':
 
             // we need the Date_Calc class
-            require_once 'modules/PostCalendar/pnincludes/DateCalc.class.php';
+            require_once dirname(__FILE__) . '/pnincludes/DateCalc.class.php';
 
             // Update PostCalendar Variables
             pnModSetVar('PostCalendar', 'pcTime24Hours', pnModGetVar('PostCalendar', 'time24hours'));

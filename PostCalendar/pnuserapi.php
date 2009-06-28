@@ -36,7 +36,7 @@
 //=========================================================================
 // Require utility classes
 //=========================================================================
-require_once 'modules/PostCalendar/global.php';
+require_once dirname(__FILE__) . '/global.php';
 
 function postcalendar_userapi_getLongDayName($args)
 {

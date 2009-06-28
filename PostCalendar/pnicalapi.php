@@ -37,7 +37,7 @@
 This api utilizes iCalcreator class to manipulate uploaded files
 and create downloadable event files
 */
-Loader::requireOnce('modules/PostCalendar/pnincludes/iCalcreator.class.php');
+Loader::requireOnce(dirname(__FILE__) . '/pnincludes/iCalcreator.class.php');
 
 // process uploaded .ics file
 // store to PC database

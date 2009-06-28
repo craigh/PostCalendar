@@ -33,7 +33,7 @@
  *
  */
 
-require_once 'modules/PostCalendar/global.php';
+require_once dirname(__FILE__) . '/global.php';
 
 /**
  * This is the event handler api

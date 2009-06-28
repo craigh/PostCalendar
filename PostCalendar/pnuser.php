@@ -419,7 +419,7 @@ function postcalendar_user_export_rss($sevents, $start, $end)
     $category = FormUtil::getPassedValue('category');
     $sitename = getenv('SERVER_NAME');
 
-    require_once 'modules/PostCalendar/pnincludes/rssfeedcreator.php';
+    require_once dirname(__FILE__) . '/pnincludes/rssfeedcreator.php';
     $rss = new UniversalFeedCreator();
     $rss->useCached();
     $rss->title = "$sitename $start - $end Calendar";
@@ -512,7 +512,9 @@ function postcalendar_user_export_rss($sevents, $start, $end)
         }
     }
 
-    $rss->saveFeed('RSS2.0', 'modules/PostCalendar/rsstmp.xml', true);
+    // TODO Actually save this in a logical place, and make sure the cached version is reachable and downloadable through
+    // some backend process.
+    $rss->saveFeed('RSS2.0', dirname(__FILE__) . '/rsstmp.xml', true);
     return true;
 }
 
