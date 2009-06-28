@@ -153,6 +153,39 @@ class postcalendar_user_fileuploadHandler extends pnFormHandler
     function initialize(&$render)
     {
         if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADD)) return $render->pnFormSetErrorMsg(_NOTAUTHORIZED);
+
+//        $items = array( array('text' => 'A', 'value' => '1'),
+//        array('text' => 'B', 'value' => '2'),
+//        array('text' => 'C', 'value' => '3') );
+
+        //=================================================================
+        // select_event_type_block
+        $all_categories = pnModAPIFunc('PostCalendar', 'user', 'getCategories');
+        $categories = array();
+        foreach ($all_categories as $category) {
+            $categories[] = array('text' => $category['catname'], 'value' => $category['catid']);
+        }
+        if (count($categories) > 0) {
+            $render->assign('categories', $categories);
+        }
+        $render->assign('event_category', $event_category);
+    
+        //=================================================================
+        // event_sharing_block
+        $data = array();
+        if (_SETTING_ALLOW_USER_CAL) {
+            $data[]=array('text'=>_PC_SHARE_PRIVATE, 'value'=>SHARING_PRIVATE);
+            $data[]=array('text'=>_PC_SHARE_PUBLIC, 'value'=>SHARING_PUBLIC);
+            $data[]=array('text'=>_PC_SHARE_SHOWBUSY, 'value'=>SHARING_BUSY);
+        }
+        if (pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN) || _SETTING_ALLOW_GLOBAL || !_SETTING_ALLOW_USER_CAL) {
+            $data[]=array('text'=>_PC_SHARE_GLOBAL, 'value'=>SHARING_GLOBAL);
+            $data[]=array('text'=>_PC_SHARE_HIDEDESC, 'value'=>SHARING_HIDEDESC);
+        }
+        $render->assign('sharingselect', $data);
+        if (!isset($event_sharing)) $event_sharing = SHARING_PUBLIC;
+        $render->assign('event_sharing', $event_sharing);
+
         return true;
     }
 
@@ -173,11 +206,8 @@ class postcalendar_user_fileuploadHandler extends pnFormHandler
             //       return false;
 
             $data = $render->pnFormGetValues();
-            $delimiter = "/"; // assume filesystem delimiter is '/' - could change this based on server info?
-            $fileparts = parsefilename($delimiter, $data['icsupload']['tmp_name'], -2);
-            $fileparts['delimiter'] = $delimiter;
 
-            $result = pnModAPIFunc('PostCalendar', 'ical', 'processupload', $fileparts);
+            $result = pnModAPIFunc('PostCalendar', 'ical', 'processupload', $data);
 
             if ($result != true) return $render->pnFormSetErrorMsg(_PC_COULDNOTPROCESSFILEUPLOAD);
 

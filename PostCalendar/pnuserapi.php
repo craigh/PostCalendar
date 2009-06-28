@@ -286,28 +286,28 @@ function postcalendar_userapi_buildView($args)
     $func = FormUtil::getPassedValue('func');
     $template_view = FormUtil::getPassedValue('tplview');
     if (!$template_view) $template_view = 'month';
-    $function_out['FUNCTION'] = $func;
-    $function_out['TPL_VIEW'] = $template_view;
-    $function_out['VIEW_TYPE'] = $viewtype;
-    $function_out['A_MONTH_NAMES'] = $pc_month_names;
-    $function_out['A_LONG_DAY_NAMES'] = $pc_long_day_names;
+    $function_out['FUNCTION']          = $func;
+    $function_out['TPL_VIEW']          = $template_view;
+    $function_out['VIEW_TYPE']         = $viewtype;
+    $function_out['A_MONTH_NAMES']     = $pc_month_names;
+    $function_out['A_LONG_DAY_NAMES']  = $pc_long_day_names;
     $function_out['A_SHORT_DAY_NAMES'] = $pc_short_day_names;
-    $function_out['S_LONG_DAY_NAMES'] = $daynames;
+    $function_out['S_LONG_DAY_NAMES']  = $daynames;
     $function_out['S_SHORT_DAY_NAMES'] = $sdaynames;
-    $function_out['A_EVENTS'] = $eventsByDate;
-    $function_out['A_CATEGORY'] = $categories;
-    $function_out['PREV_MONTH_URL'] = DataUtil::formatForDisplay($pc_prev);
-    $function_out['NEXT_MONTH_URL'] = DataUtil::formatForDisplay($pc_next);
-    $function_out['PREV_DAY_URL'] = DataUtil::formatForDisplay($pc_prev_day);
-    $function_out['NEXT_DAY_URL'] = DataUtil::formatForDisplay($pc_next_day);
-    $function_out['PREV_WEEK_URL'] = DataUtil::formatForDisplay($pc_prev_week);
-    $function_out['NEXT_WEEK_URL'] = DataUtil::formatForDisplay($pc_next_week);
-    $function_out['PREV_YEAR_URL'] = DataUtil::formatForDisplay($pc_prev_year);
-    $function_out['NEXT_YEAR_URL'] = DataUtil::formatForDisplay($pc_next_year);
-    $function_out['MONTH_START_DATE'] = $month_view_start;
-    $function_out['MONTH_END_DATE'] = $month_view_end;
-    $function_out['TODAY_DATE'] = $today_date;
-    $function_out['DATE'] = $Date;
+    $function_out['A_EVENTS']          = $eventsByDate;
+    $function_out['A_CATEGORY']        = $categories;
+    $function_out['PREV_MONTH_URL']    = DataUtil::formatForDisplay($pc_prev);
+    $function_out['NEXT_MONTH_URL']    = DataUtil::formatForDisplay($pc_next);
+    $function_out['PREV_DAY_URL']      = DataUtil::formatForDisplay($pc_prev_day);
+    $function_out['NEXT_DAY_URL']      = DataUtil::formatForDisplay($pc_next_day);
+    $function_out['PREV_WEEK_URL']     = DataUtil::formatForDisplay($pc_prev_week);
+    $function_out['NEXT_WEEK_URL']     = DataUtil::formatForDisplay($pc_next_week);
+    $function_out['PREV_YEAR_URL']     = DataUtil::formatForDisplay($pc_prev_year);
+    $function_out['NEXT_YEAR_URL']     = DataUtil::formatForDisplay($pc_next_year);
+    $function_out['MONTH_START_DATE']  = $month_view_start;
+    $function_out['MONTH_END_DATE']    = $month_view_end;
+    $function_out['TODAY_DATE']        = $today_date;
+    $function_out['DATE']              = $Date;
 
     if ($popup) {
         // this concept needs to be changed to simply use a different template if using a popup. CAH 5/9/09
@@ -393,12 +393,11 @@ function postcalendar_userapi_eventPreview($args)
     $event['uname'] = $uname;
     $event['catid'] = $event_category;
     if ($pc_html_or_text == 'html') {
-        $prepFunction = 'DataUtil::formatForDisplayHTML';
+        $event['hometext'] = DataUtil::formatForDisplayHTML($event_desc);
     } else {
-        $prepFunction = 'DataUtil::formatForDisplay';
+        $event['hometext'] = DataUtil::formatForDisplay($event_desc);
     }
-    $event['title'] = $prepFunction($event_subject);
-    $event['hometext'] = $prepFunction($event_desc);
+    $event['title'] = DataUtil::formatForDisplay($event_subject);
     $event['desc'] = $event['hometext'];
     $event['date'] = str_pad(str_replace('-', '', $event_startyear . $event_startmonth . $event_startday), 14, '0');
     $event['duration'] = $event_duration;
@@ -411,17 +410,17 @@ function postcalendar_userapi_eventPreview($args)
     $event['recurrspec'] = $event_recurrspec;
     $event['topic'] = $event_topic;
     $event['alldayevent'] = $event_allday;
-    $event['conttel'] = $prepFunction($event_conttel);
-    $event['contname'] = $prepFunction($event_contname);
-    $event['contemail'] = $prepFunction($event_contemail);
-    $event['website'] = $prepFunction(makeValidURL($event_website));
-    $event['fee'] = $prepFunction($event_fee);
-    $event['location'] = $prepFunction($event_location);
-    $event['street1'] = $prepFunction($event_street1);
-    $event['street2'] = $prepFunction($event_street2);
-    $event['city'] = $prepFunction($event_city);
-    $event['state'] = $prepFunction($event_state);
-    $event['postal'] = $prepFunction($event_postal);
+    $event['conttel'] = DataUtil::formatForDisplay($event_conttel);
+    $event['contname'] = DataUtil::formatForDisplay($event_contname);
+    $event['contemail'] = DataUtil::formatForDisplay($event_contemail);
+    $event['website'] = DataUtil::formatForDisplay(makeValidURL($event_website));
+    $event['fee'] = DataUtil::formatForDisplay($event_fee);
+    $event['location'] = DataUtil::formatForDisplay($event_location);
+    $event['street1'] = DataUtil::formatForDisplay($event_street1);
+    $event['street2'] = DataUtil::formatForDisplay($event_street2);
+    $event['city'] = DataUtil::formatForDisplay($event_city);
+    $event['state'] = DataUtil::formatForDisplay($event_state);
+    $event['postal'] = DataUtil::formatForDisplay($event_postal);
 
     $event['meetingdate_start'] = $meetingdate_start;
     //=================================================================

@@ -97,13 +97,7 @@
                     <br />
                 <!--[ /if ]-->
                 <!--[pnml name='_PC_SHARING']--><br />
-                <!--[ strip ]-->
-                <select name="event_sharing">
-                <!--[ foreach item=share from=$sharing ]-->
-                    <option value="<!--[ $share.value ]-->" <!--[ $share.selected ]-->><!--[ $share.name ]--></option>
-                <!--[ /foreach ]-->
-                </select>
-                <!--[ /strip ]-->
+                <!--[html_options name=event_sharing options=$sharingselect selected=$event_sharing]-->
                 <br />
                 <!--[pnml name='_PC_EVENT_CATEGORY']--><br />
                 <!--[html_options name=event_category options=$categories selected=$event_category]-->

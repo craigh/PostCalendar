@@ -661,27 +661,20 @@ function postcalendar_eventapi_buildSubmitForm($args)
     //=================================================================
     $data = array();
     if (_SETTING_ALLOW_USER_CAL) {
-        array_push($data, array(SHARING_PRIVATE, _PC_SHARE_PRIVATE));
-        array_push($data, array(SHARING_PUBLIC, _PC_SHARE_PUBLIC));
-        array_push($data, array(SHARING_BUSY, _PC_SHARE_SHOWBUSY));
+        $data[SHARING_PRIVATE]=_PC_SHARE_PRIVATE;
+        $data[SHARING_PUBLIC]=_PC_SHARE_PUBLIC;
+        $data[SHARING_BUSY]=_PC_SHARE_SHOWBUSY;
     }
 
     if (pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN) || _SETTING_ALLOW_GLOBAL || !_SETTING_ALLOW_USER_CAL) {
-        array_push($data, array(SHARING_GLOBAL, _PC_SHARE_GLOBAL));
-        array_push($data, array(SHARING_HIDEDESC, _PC_SHARE_HIDEDESC));
+        $data[SHARING_GLOBAL]=_PC_SHARE_GLOBAL;
+        $data[SHARING_HIDEDESC]=_PC_SHARE_HIDEDESC;
     }
+    $tpl->assign('sharingselect', $data);
 
-    // V4B RNG Start
-    if (!isset($event_sharing)) $event_sharing = 1;
-    // V4B RNG End
+    if (!isset($event_sharing)) $event_sharing = SHARING_PUBLIC;
+    $tpl->assign('event_sharing', $event_sharing);
 
-    $sharing = array();
-    foreach ($data as $cell)
-        array_push($sharing, array('value' => $cell[0],
-                            'selected' => ((int) $event_sharing == $cell[0] ? 'selected' : ''),
-                            'name' => $cell[1]));
-
-    $tpl->assign('sharing', $sharing);
     //=================================================================
     // location information
     //=================================================================
@@ -906,33 +899,27 @@ function postcalendar_eventapi_eventDetail($args)
     }
 
     // populate the template
-    $display_type = substr($event['hometext'], 0, 6);
-    if ($display_type == ':text:') {
-        $prepFunction = 'DataUtil::formatForDisplay';
-        $event['hometext'] = substr($event['hometext'], 6);
-    } elseif ($display_type == ':html:') {
-        $prepFunction = 'DataUtil::formatForDisplayHTML';
-        $event['hometext'] = substr($event['hometext'], 6);
-    } else {
-        $prepFunction = 'DataUtil::formatForDisplayHTML';
-    }
-
-    unset($display_type);
     // prep the vars for output
-    $event['title'] = $prepFunction($event['title']);
-    $event['hometext'] = $prepFunction($event['hometext']);
-    $event['desc'] = $event['hometext'];
-    $event['conttel'] = $prepFunction($event['conttel']);
-    $event['contname'] = $prepFunction($event['contname']);
-    $event['contemail'] = $prepFunction($event['contemail']);
-    $event['website'] = $prepFunction(makeValidURL($event['website']));
-    $event['fee'] = $prepFunction($event['fee']);
-    $event['location'] = $prepFunction($event['event_location']);
-    $event['street1'] = $prepFunction($event['event_street1']);
-    $event['street2'] = $prepFunction($event['event_street2']);
-    $event['city'] = $prepFunction($event['event_city']);
-    $event['state'] = $prepFunction($event['event_state']);
-    $event['postal'] = $prepFunction($event['event_postal']);
+    $display_type = substr($event['hometext'], 0, 6);
+    $event['hometext'] = substr($event['hometext'], 6);
+    if ($display_type==":text:") {
+        $event['hometext']  = DataUtil::formatForDisplay($event['hometext']);
+    } else { // type = :html:
+        $event['hometext']  = DataUtil::formatForDisplayHTML($event['hometext']);
+    }
+    $event['desc']      = $event['hometext'];
+    $event['title']     = DataUtil::formatForDisplay($event['title']);
+    $event['conttel']   = DataUtil::formatForDisplay($event['conttel']);
+    $event['contname']  = DataUtil::formatForDisplay($event['contname']);
+    $event['contemail'] = DataUtil::formatForDisplay($event['contemail']);
+    $event['website']   = DataUtil::formatForDisplay(makeValidURL($event['website']));
+    $event['fee']       = DataUtil::formatForDisplay($event['fee']);
+    $event['location']  = DataUtil::formatForDisplay($event['event_location']);
+    $event['street1']   = DataUtil::formatForDisplay($event['event_street1']);
+    $event['street2']   = DataUtil::formatForDisplay($event['event_street2']);
+    $event['city']      = DataUtil::formatForDisplay($event['event_city']);
+    $event['state']     = DataUtil::formatForDisplay($event['event_state']);
+    $event['postal']    = DataUtil::formatForDisplay($event['event_postal']);
     $function_out['A_EVENT'] = $event;
 
     if (!empty($event['location']) || !empty($event['street1']) || !empty($event['street2']) || !empty($event['city']) || !empty(

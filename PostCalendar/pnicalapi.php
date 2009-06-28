@@ -47,8 +47,13 @@ Loader::requireOnce('modules/PostCalendar/pnincludes/iCalcreator.class.php');
                   [1]        =>filename
                   [delimiter]=>delimiter)
 */
-function postcalendar_icalapi_processupload($fileparts)
+function postcalendar_icalapi_processupload($data)
 {
+    /* echo "<pre>";print_r($data);echo"</pre>";die; */
+    $delimiter = "/"; // assume filesystem delimiter is '/' - could change this based on server info?
+    $fileparts = parsefilename($delimiter, $data['icsupload']['tmp_name'], -2);
+    $fileparts['delimiter'] = $delimiter;
+
     $vcalendar = new vcalendar();
     $vcalendar->setConfig("unique_id", getenv('SERVER_NAME'));
     $vcalendar->setConfig("directory", $fileparts[0]);
@@ -66,9 +71,11 @@ function postcalendar_icalapi_processupload($fileparts)
         $ve['dtstart'] = $vevent->getProperty("dtstart");
         $ve['dtend'] = $vevent->getProperty("dtend");
         $ve['duration'] = $vevent->getProperty("duration");
-        while ($category = $vevent->getProperty("categories")) {
-            $ve['categories'][] = $category;
-        }
+        //while ($category = $vevent->getProperty("categories")) {
+        //    $ve['categories'][] = $category;
+        //}
+        $ve['event_sharing'] = $data['event_sharing'];
+        $ve['catid'] = $data['event_category'];
         //die(print_r($ve));
         $eventwritten[$uid] = postcalendar_icalapi_writeicalevent($ve);
     }
@@ -129,7 +136,7 @@ function postcalendar_icalapi_writeicalevent($ve)
     $pc_aid = pnSessionGetVar('uid');
     $pc_informant = pnUserGetVar('name', $pc_aid);
 
-    $emid = DBUtil::selectFieldMax('postcalendar_events', 'meeting_id');
+    //$emid = DBUtil::selectFieldMax('postcalendar_events', 'meeting_id'); //disabled June 27 2009 CAH
     //CAH seems like the emid should be incremented by 1 for a new event...
     //note: should only be adding meeting_id if the meeting has participants.
     //$emid++; // normal writeEvent function leaves at 0 if no participants
@@ -150,11 +157,11 @@ function postcalendar_icalapi_writeicalevent($ve)
     //$event_location_data = postcalendar_icalapi_parseloc($ve['location']);
     $ve['pc_location'] = serialize(postcalendar_icalapi_parseloc($ve['location']));
 
-    //will replace this with cat select on import
-    foreach ($ve['categories'] as $category) {
+    //will replace this with cat select on import - DONE - $ve[catid'] is now on import
+    //foreach ($ve['categories'] as $category) {
         // PC only expects one category right now, so this should loop and then keep the last one
-        $ve['catid'] = postcalendar_icalapi_parsecats($category);
-    }
+    //    $ve['catid'] = postcalendar_icalapi_parsecats($category);
+    //}
     if (empty($ve['catid'])) $ve['catid'] = 1;
 
     //CAH I wonder why this appears all hardcoded... not accepting recurring events?
@@ -206,9 +213,9 @@ function postcalendar_icalapi_writeicalevent($ve)
         $obj['website'] = $ve['url'];
         $obj['fee'] = $ve['fee'];
         $obj['eventstatus'] = 1; // 0 would be pending
-        $obj['sharing'] = 1; // 3 would be global
+        $obj['sharing'] = $ve['event_sharing']; //1; // 3 would be global
         $obj['language'] = NULL;
-        $obj['meeting_id'] = $emid;
+        $obj['meeting_id'] = 0; // $emid;  //disabled June 27 2009 CAH
 
         $result = pnModAPIFunc('PostCalendar', 'event', 'create', $obj);
     }
