@@ -217,7 +217,7 @@ define('_PC_NOTIFY_ADMIN', 'Informer l\'admin de la soumission/modification d\év
 define('_PC_NOTIFY_EMAIL', 'Email de l\'Admin');
 define('_PC_NOTIFY_NEW_MSG', "L'évènement Postcalendar suivant a été ajouté:\n\n");
 define('_PC_NOTIFY_SUBJECT', 'NOTIFICATION : Soumission/Modification d\'évènement PostCalendar');
-define('_PC_NOTIFY_UPDATE_MSG', "L\'évènement suivant à été modifié :\n\n");
+define('_PC_NOTIFY_UPDATE_MSG', "L'évènement suivant à été modifié :\n\n");
 define('_PC_NUM_COLS_IN_YEAR_VIEW', 'Nombre de colonnes dans la vue d\'année.');
 define('_PC_OF_EVERY_2MONTH', 'autre mois');
 define('_PC_OF_EVERY_3MONTH', '3 mois');
