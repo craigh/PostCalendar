@@ -67,6 +67,7 @@ function postcalendar_admin_listapproved()
     $args['title']    = _PC_APPROVED_ADMIN;
     return postcalendar_admin_showlist($args);
 }
+
 function postcalendar_admin_listhidden()
 {
     $args = array();
@@ -75,6 +76,7 @@ function postcalendar_admin_listhidden()
     $args['title']    = _PC_HIDDEN_ADMIN;
     return postcalendar_admin_showlist($args);
 }
+
 function postcalendar_admin_listqueued()
 {
     $args = array();
@@ -83,6 +85,7 @@ function postcalendar_admin_listqueued()
     $args['title']    = _PC_QUEUED_ADMIN;
     return postcalendar_admin_showlist($args);
 }
+
 function postcalendar_admin_showlist($args)
 {
     if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
@@ -97,16 +100,11 @@ function postcalendar_admin_showlist($args)
     $offset_increment = _SETTING_HOW_MANY_EVENTS;
     if (empty($offset_increment)) $offset_increment = 15;
 
-    $offset = FormUtil::getPassedValue('offset');
-    $sort   = FormUtil::getPassedValue('sort');
-    $sdir   = FormUtil::getPassedValue('sdir');
-    if (!isset($sort)) $sort = 'time';
-    if (!isset($sdir)) {
-        $sdir = 1; //default true
-    } else {
-        $sdir = $sdir ? 0 : 1; //if true change to false, if false change to true
-    }
-    if (!isset($offset)) $offset = 0;
+    $offset = FormUtil::getPassedValue('offset', 0);
+    $sort   = FormUtil::getPassedValue('sort', 'time');
+    $sdir   = FormUtil::getPassedValue('sdir', 1);
+    $original_sdir = $sdir;
+    $sdir = $sdir ? 0 : 1; //if true change to false, if false change to true
 
     $events = pnModAPIFunc('PostCalendar', 'admin', 'getAdminListEvents',
         array('type' => $args['type'], 'sdir' => $sdir, 'sort' => $sort, 'offset' => $offset,
@@ -115,20 +113,20 @@ function postcalendar_admin_showlist($args)
     $pnRender->assign('title', $args['title']);
     $pnRender->assign('function', $args['function']);
     $pnRender->assign('events', $events);
-    $pnRender->assign('title_sort_url', pnModUrl('PostCalendar', 'admin', $args['function'], array('offset' => $offset, 'sort' => 'title', 'sdir' => $sdir)));
-    $pnRender->assign('time_sort_url', pnModUrl('PostCalendar', 'admin', $args['function'], array('offset' => $offset, 'sort' => 'time', 'sdir' => $sdir)));
+    $pnRender->assign('title_sort_url', pnModUrl('PostCalendar', 'admin', $args['function'], array('sort' => 'title', 'sdir' => $sdir)));
+    $pnRender->assign('time_sort_url', pnModUrl('PostCalendar', 'admin', $args['function'], array('sort' => 'time', 'sdir' => $sdir)));
     $pnRender->assign('formactions', array(_ADMIN_ACTION_VIEW => _PC_ADMIN_ACTION_VIEW, _ADMIN_ACTION_APPROVE => _PC_ADMIN_ACTION_APPROVE,
                         _ADMIN_ACTION_HIDE => _PC_ADMIN_ACTION_HIDE,
                         _ADMIN_ACTION_DELETE => _PC_ADMIN_ACTION_DELETE));
     $pnRender->assign('actionselected', _ADMIN_ACTION_VIEW);
     if ($offset > 1) {
-        $prevlink = pnModUrl('PostCalendar', 'admin', $args['function'], array('offset' => $offset - $offset_increment, 'sort' => $sort, 'sdir' => $sdir));
+        $prevlink = pnModUrl('PostCalendar', 'admin', $args['function'], array('offset' => $offset - $offset_increment, 'sort' => $sort, 'sdir' => $original_sdir));
     } else {
         $prevlink = false;
     }
     $pnRender->assign('prevlink', $prevlink);
     if (count($events) >= $offset_increment) {
-        $nextlink = pnModUrl('PostCalendar', 'admin', $args['function'], array('offset' => $offset + $offset_increment, 'sort' => $sort, 'sdir' => $sdir));
+        $nextlink = pnModUrl('PostCalendar', 'admin', $args['function'], array('offset' => $offset + $offset_increment, 'sort' => $sort, 'sdir' => $original_sdir));
     } else {
         $nextlink = false;
     }
@@ -604,6 +602,7 @@ function postcalendar_admin_hideevents()
     pnModAPIFunc('PostCalendar', 'admin', 'clearCache');
     return pnModFunc('PostCalendar', 'admin', 'showlist', array('type' => _EVENT_APPROVED, 'function' => 'listapproved', 'title' => _PC_APPROVED_ADMIN));
 }
+
 /*
  * postcalendar_admin_deleteevents
  * delete array of events
