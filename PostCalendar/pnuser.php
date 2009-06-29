@@ -154,10 +154,6 @@ class postcalendar_user_fileuploadHandler extends pnFormHandler
     {
         if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADD)) return $render->pnFormSetErrorMsg(_NOTAUTHORIZED);
 
-//        $items = array( array('text' => 'A', 'value' => '1'),
-//        array('text' => 'B', 'value' => '2'),
-//        array('text' => 'C', 'value' => '3') );
-
         //=================================================================
         // select_event_type_block
         $all_categories = pnModAPIFunc('PostCalendar', 'user', 'getCategories');
@@ -329,7 +325,7 @@ function postcalendar_user_search()
         if (!empty($s_category)) $searchargs['s_category'] = $s_category;
         if (!empty($s_topic)) $searchargs['s_topic'] = $s_topic;
 
-        $eventsByDate = & postcalendar_userapi_pcGetEvents($searchargs);
+        $eventsByDate = & pnModAPIFunc('PostCalendar','event','getEvents',$searchargs);
         $tpl->assign('SEARCH_PERFORMED', true);
         $tpl->assign('A_EVENTS', $eventsByDate);
     }
@@ -385,7 +381,7 @@ function postcalendar_user_export()
         echo ("<PRE>");
     }
 
-    $events = pnModAPIFunc('PostCalendar', 'user', 'pcGetEvents', array('start' => $start, 'end' => $end));
+    $events = pnModAPIFunc('PostCalendar', 'event', 'getEvents', array('start' => $start, 'end' => $end));
 
     # sort the events by start date and time, sevent has the sorted list
     $sevents = array();
@@ -409,8 +405,11 @@ function postcalendar_user_export()
     }
     ;
 
-    if ($etype == 'ical') return pnModAPIFunc('PostCalendar', 'ical', 'export_ical', ($sevents));
-    else return pnModFunc('PostCalendar', 'user', 'export_rss', array($sevents, $start, $end));
+    if ($etype == 'ical') {
+        return pnModAPIFunc('PostCalendar', 'ical', 'export_ical', ($sevents));
+    } else {
+        return pnModFunc('PostCalendar', 'user', 'export_rss', array($sevents, $start, $end));
+    }
 }
 
 function postcalendar_user_export_rss($sevents, $start, $end)
@@ -487,15 +486,6 @@ function postcalendar_user_export_rss($sevents, $start, $end)
                 $args['viewtype'] = 'details';
                 $args['eid'] = $peid;
                 $url = pnModURL('PostCalendar', 'user', 'view', $args);
-
-                # output the RSS item
-                //echo "<item>\n";
-                //echo "<guid>$altrep</guid>";
-                //echo "<title>$summary - " . date ("F jS", strtotime ($cdate)) . " ($evcategory)</title>\n";
-                //echo "<description>\n$evtdesc\n</description>\n";
-                //echo "<category>$evcategory</category>";
-                //echo "<link>$altrep</link>\n";
-                //echo "</item>\n";
 
                 $item = new FeedItem();
                 $item->title = "$summary - " . date("F jS", strtotime($cdate));

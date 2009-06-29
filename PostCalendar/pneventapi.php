@@ -44,7 +44,11 @@ require_once dirname(__FILE__) . '/global.php';
  * Returns an array containing the event's information (plural or singular?)
  * @param array $args arguments. Expected keys:
  *              eventstatus: -1 == hidden ; 0 == queued ; 1 == approved (default)
- *              start: Event start date (default today)
+ *              start: Events start date (default today)
+ *              end: Events end_date (default 000-00-00)
+ *              s_keywords: search info
+ *              s_category: search info
+ *              s_topic: search info
  * @return array The events
  */
 function postcalendar_eventapi_queryEvents($args)
@@ -54,8 +58,9 @@ function postcalendar_eventapi_queryEvents($args)
 
     //CAH we should not be get form values in an API function
     $pc_username = FormUtil::getPassedValue('pc_username');
-    $topic = FormUtil::getPassedValue('pc_topic');
-    $category = FormUtil::getPassedValue('pc_category');
+    $topic       = FormUtil::getPassedValue('pc_topic');
+    $category    = FormUtil::getPassedValue('pc_category');
+
     $userid = pnUserGetVar('uid');
 
     if (!empty($pc_username) && (strtolower($pc_username) != 'anonymous')) {
@@ -126,13 +131,10 @@ function postcalendar_eventapi_queryEvents($args)
                     'compare_field_join' => 'catid');
 
     $events = DBUtil::selectExpandedObjectArray('postcalendar_events', $joinInfo, $where, $sort);
-    $topicNames = DBUtil::selectFieldArray('topics', 'topicname', '', '', false, 'topicid');
+    //$topicNames = DBUtil::selectFieldArray('topics', 'topicname', '', '', false, 'topicid');
 
-    // added temp_meeting_id
     // this prevents duplicate display of same event for different participants
-    // but is a bit of a strange way of doing it...
     $old_m_id = "NULL";
-    //$ak = array_keys ($events);
     foreach ($events as $key => $evt) {
         $new_m_id = $evt['meeting_id'];
         if (($old_m_id) && ($old_m_id != "NULL") && ($new_m_id > 0) && ($old_m_id == $new_m_id)) {
@@ -147,6 +149,10 @@ function postcalendar_eventapi_queryEvents($args)
 
 /**
  * I believe this function returns an array of events sorted by date
+ * expected args (from postcalendar_userapi_buildView): start, end
+ *    if either is present, both must be present. else uses today's/jumped date.
+ * expected args (from pnsearch/postcalendar.php/search_postcalendar): s_keywords, s_category, s_topic
+ * same ^^^ in (postcalendar_user_search)
  **/
 function postcalendar_eventapi_getEvents($args)
 {
@@ -186,14 +192,14 @@ function postcalendar_eventapi_getEvents($args)
         $start_date = $sy . '-' . $sm . '-' . $sd;
         $end_date = $ey . '-' . $em . '-' . $ed;
     }
-    if (!isset($events)) {
+    if (!isset($events)) { // why would $events have a value?
         if (!isset($s_keywords)) $s_keywords = '';
         $a = array('start' => $start_date, 'end' => $end_date, 's_keywords' => $s_keywords, 's_category' => $s_category, 's_topic' => $s_topic);
         $events = pnModAPIFunc('PostCalendar', 'event', 'queryEvents', $a);
     }
 
     //==============================================================
-    // Here we build an array consisting of the date ranges
+    // Here an array is built consisting of the date ranges
     // specific to the current view.  This array is then
     // used to build the calendar display.
     //==============================================================
@@ -208,21 +214,10 @@ function postcalendar_eventapi_getEvents($args)
         $days[$store_date] = array();
     }
 
-    //echo "GetEvents Line 729<br>";
-    //$users = pnUserGetAll();
-    //$nuke_users = array();
-
-    //foreach($users as $user) {
-    //    $nuke_users[strtolower($user['uname'])] = $user['uid'];
-    //}
-    //unset($users);
-
     foreach ($events as $event) {
         // get the name of the topic
         $topicname = DBUtil::selectFieldByID('topics', 'topicname', $event['topic'], 'topicid');
         // get the user id of event's author
-        //$cuserid = @$nuke_users[strtolower($event['uname'])];
-        // CAH mod 4/12/09
         $cuserid = pnUserGetIDFromName( strtolower($event['uname']));
 
         // check the current event's permissions
@@ -243,7 +238,7 @@ function postcalendar_eventapi_getEvents($args)
         $event_recurrspec = @unserialize($event['recurrspec']);
         // determine the stop date for this event
         if ($event['endDate'] == '0000-00-00') {
-            $stop = $end_date; //CAH enddate has no value here (maybe passed as arg?)
+            $stop = $end_date;
         } else {
             $stop = $event['endDate'];
         }

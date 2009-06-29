@@ -67,14 +67,14 @@ function postcalendar_calendarblock_display($blockinfo)
     // Get variables from content block
     $vars = pnBlockVarsFromContent($blockinfo['content']);
 
-    $showcalendar = $vars['pcbshowcalendar'];
-    $showevents = $vars['pcbeventoverview'];
-    $eventslimit = $vars['pcbeventslimit'];
-    $nextevents = $vars['pcbnextevents'];
+    $showcalendar   = $vars['pcbshowcalendar'];
+    $showevents     = $vars['pcbeventoverview'];
+    $eventslimit    = $vars['pcbeventslimit'];
+    $nextevents     = $vars['pcbnextevents'];
     $pcbshowsslinks = $vars['pcbshowsslinks'];
     $pcbeventsrange = $vars['pcbeventsrange'];
 
-    // Let's setup the info to build this
+    // setup the info to build this
     $the_year = substr($Date, 0, 4);
     $the_month = substr($Date, 4, 2);
     $the_day = substr($Date, 6, 2);
@@ -124,7 +124,7 @@ function postcalendar_calendarblock_display($blockinfo)
                             mktime(0, 0, 0, $the_month, 1, $the_year))));
     $month_link_text = $pc_month_name . ' ' . $the_year;
     //*******************************************************************
-    // Here we get the events for the current month view
+    // get the events for the current month view
     //*******************************************************************
     $day_of_week = 1;
     $pc_month_names = array(_CALJAN, _CALFEB, _CALMAR, _CALAPR, _CALMAY, _CALJUN, _CALJUL, _CALAUG, _CALSEP, _CALOCT, _CALNOV, _CALDEC);
@@ -175,7 +175,8 @@ function postcalendar_calendarblock_display($blockinfo)
     $starting_date = date('m/d/Y', mktime(0, 0, 0, $the_month, 1 - $first_day, $the_year));
     $ending_date = date('m/t/Y', mktime(0, 0, 0, $the_month + $pcbeventsrange, 1, $the_year));
 
-    $eventsByDate = pnModAPIFunc('PostCalendar', 'user', 'pcGetEvents', array('start' => $starting_date, 'end' => $ending_date));
+    // this grabs more events that required and could slow down the process.
+    $eventsByDate = pnModAPIFunc('PostCalendar', 'event', 'getEvents', array('start' => $starting_date, 'end' => $ending_date));
     $calendarView = Date_Calc::getCalendarMonth($the_month, $the_year, '%Y-%m-%d');
 
     $sdaynames = array();

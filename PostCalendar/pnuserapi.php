@@ -33,26 +33,7 @@
  *
  */
 
-//=========================================================================
-// Require utility classes
-//=========================================================================
 require_once dirname(__FILE__) . '/global.php';
-
-function postcalendar_userapi_getLongDayName($args)
-{
-    if (!isset($args['Date'])) {
-        return false;
-    }
-    $pc_long_day = array(
-                    _CALLONGFIRSTDAY,
-                    _CALLONGSECONDDAY,
-                    _CALLONGTHIRDDAY,
-                    _CALLONGFOURTHDAY,
-                    _CALLONGFIFTHDAY,
-                    _CALLONGSIXTHDAY,
-                    _CALLONGSEVENTHDAY);
-    return $pc_long_day[Date("w", $args['Date'])];
-}
 
 /**
  * postcalendar_userapi_buildView
@@ -82,11 +63,11 @@ function postcalendar_userapi_buildView($args)
     if (strlen($Date) == 8 && is_numeric($Date)) $Date .= '000000'; // 20060101
 
     //=================================================================
-    // get the current view
-    if (!isset($viewtype)) $viewtype = 'month'; // default view
-    //=================================================================
-    // Find out what Template we're using
+    // set viewtype to default if not provided.
+    if (!isset($viewtype)) $viewtype = _SETTING_DEFAULT_VIEW;
 
+    //=================================================================
+    // set the Template to use
     $function_out['template'] = DataUtil::formatForOS('user/postcalendar_user_view_' . $viewtype . '.html');
 
     //=================================================================
@@ -96,9 +77,8 @@ function postcalendar_userapi_buildView($args)
     $the_day = substr($Date, 6, 2);
     $last_day = Date_Calc::daysInMonth($the_month, $the_year);
     //=================================================================
-    // populate the template object with information for
-    // Month Names, Long Day Names and Short Day Names
-    // as translated in the language files
+    // prepare Month Names, Long Day Names and Short Day Names
+    // as translated in the language files for template
     // (may be adding more here soon - based on need)
     //=================================================================
     $pc_month_names = array(
@@ -109,11 +89,9 @@ function postcalendar_userapi_buildView($args)
                     _CALFRIDAYSHORT, _CALSATURDAYSHORT);
     $pc_long_day_names = array(_CALSUNDAY, _CALMONDAY, _CALTUESDAY, _CALWEDNESDAY, _CALTHURSDAY, _CALFRIDAY, _CALSATURDAY);
     //=================================================================
-    // here we need to set up some information for later
-    // variable creation.    This helps us establish the correct
-    // date ranges for each view.    There may be a better way
-    // to handle all this, but my brain hurts, so your comments
-    // are very appreciated and welcomed.
+    // set up some information for later variable creation.
+    // This helps establish the correct date ranges for each view.
+    // There may be a better way to handle all this.
     //=================================================================
     switch (_SETTING_FIRST_DAY_WEEK) {
         case _IS_MONDAY:
@@ -200,6 +178,10 @@ function postcalendar_userapi_buildView($args)
             $starting_date = date('m/d/Y', mktime(0, 0, 0, 1, 1, $the_year));
             $ending_date = date('m/d/Y', mktime(0, 0, 0, 1, 1, $the_year + 1));
             $calendarView = Date_Calc::getCalendarYear($the_year, '%Y-%m-%d');
+            break;
+        case 'list':
+            $starting_date = date('m/d/Y', mktime(0, 0, 0, $the_month, $the_day, $the_year));
+            $ending_date = date('m/t/Y', mktime(0, 0, 0, $the_month, 1, $the_year));
             break;
     }
     //=================================================================

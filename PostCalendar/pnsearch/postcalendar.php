@@ -143,7 +143,7 @@ function search_postcalendar()
     if (!empty($s_category)) $searchargs['s_category'] = $s_category;
     if (!empty($s_topic)) $searchargs['s_topic'] = $s_topic;
 
-    $eventsByDate = postcalendar_userapi_pcGetEvents($searchargs);
+    $eventsByDate = pnModAPIFunc('PostCalendar','event','getEvents',$searchargs);
     $tpl->assign_by_ref('A_EVENTS', $eventsByDate);
     $tpl->caching = false;
 
