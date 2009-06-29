@@ -134,7 +134,7 @@ function postcalendar_icalapi_writeicalevent($ve)
     }
     //$pc_aid = pnUserGetVar('uid'); // seems like it should be this...
     $pc_aid = pnSessionGetVar('uid');
-    $pc_informant = pnUserGetVar('name', $pc_aid);
+    $pc_informant = pnUserGetVar('uname', $pc_aid);
 
     //$emid = DBUtil::selectFieldMax('postcalendar_events', 'meeting_id'); //disabled June 27 2009 CAH
     //CAH seems like the emid should be incremented by 1 for a new event...

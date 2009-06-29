@@ -48,8 +48,10 @@
 				<ul>
 					<li><a href="<!--[$viplink|pnvarprepfordisplay]-->">
 						<!--[pnimg src="icaldown.gif" altml=true titleml=true alt='_PC_ICALDOWN' title='_PC_ICALDOWN' ]--></a></li>
+					<!--[ if $ACCESS_ADD eq true ]-->
 					<li><a href="<!--[ pnmodurl modname='PostCalendar' type='user' func='upload' ]-->">
 						<!--[pnimg src="icalup.gif" altml=true titleml=true alt='_PC_ICALUP' title='_PC_ICALUP' ]--></a></li>
+                    <!--[/if]-->
 					<!--[ if $DATE|truncate:8:"" ne $TODAY_DATE|replace:'-':'' ]-->
 						<li><a href="<!--[ pc_url action='today' ]-->"><!--[pnimg src='today.gif' alt="Today" title="Jump to Today" ]--></a></li>
 					<!--[/if]-->
