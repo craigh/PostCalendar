@@ -124,17 +124,14 @@ function postcalendar_user_display($args)
                 return LogUtil::registerPermissionError();
             }
             //now function just returns an array of information to pass to template 5/9/09 CAH
-            $out = pnModAPIFunc(
-                'PostCalendar', 'user', 'buildView',
+            $out = pnModAPIFunc('PostCalendar', 'user', 'buildView',
                 array('Date' => $Date, 'viewtype' => $viewtype, 'cacheid' => $cacheid));
             // build template and fetch:
-            $tpl = pnRender::getInstance(
-                'PostCalendar');
+            $tpl = pnRender::getInstance('PostCalendar');
             pnModAPIFunc('PostCalendar','user','SmartySetup', $tpl);
             if ($tpl->is_cached($out['template'], $cacheid)) {
                 // use cached version
-                return $tpl->fetch(
-                    $out['template'], $cacheid);
+                return $tpl->fetch($out['template'], $cacheid);
             } else {
                 foreach ($out as $var => $val) {
                     $tpl->assign($var, $val);

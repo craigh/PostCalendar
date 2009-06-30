@@ -105,6 +105,14 @@ function smarty_function_pc_url($args)
                                 'pc_category' => $category,
                                 'pc_topic' => $topic));
             break;
+        case 'list':
+            $link = pnModURL('PostCalendar', 'user', 'view',
+                array('tplview' => $template_view, 'viewtype' => 'list',
+                                'Date' => $date,
+                                'pc_username' => $pc_username,
+                                'pc_category' => $category,
+                                'pc_topic' => $topic));
+            break;
         case 'detail':
             if (isset($args['eid'])) {
                 if (_SETTING_OPEN_NEW_WINDOW && !$popup) {

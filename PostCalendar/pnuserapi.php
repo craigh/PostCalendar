@@ -60,7 +60,7 @@ function postcalendar_userapi_buildView($args)
     $jumpyear  = FormUtil::getPassedValue('jumpyear');
     if (!$Date) $Date = pnModAPIFunc('PostCalendar','user','getDate',compact('jumpday','jumpmonth','jumpyear')); // if not explicit arg, get from input
 
-    if (strlen($Date) == 8 && is_numeric($Date)) $Date .= '000000'; // 20060101
+    if (strlen($Date) == 8 && is_numeric($Date)) $Date .= '000000'; // 20060101 + 000000
 
     //=================================================================
     // set viewtype to default if not provided.
@@ -182,6 +182,7 @@ function postcalendar_userapi_buildView($args)
         case 'list':
             $starting_date = date('m/d/Y', mktime(0, 0, 0, $the_month, $the_day, $the_year));
             $ending_date = date('m/t/Y', mktime(0, 0, 0, $the_month, 1, $the_year));
+            $calendarView = Date_Calc::getCalendarMonth($the_month, $the_year, '%Y-%m-%d');
             break;
     }
     //=================================================================
@@ -223,9 +224,9 @@ function postcalendar_userapi_buildView($args)
     // Prepare links for template
     //=================================================================
     $pc_prev = pnModURL('PostCalendar', 'user', 'view',
-        array('viewtype' => 'month', 'Date' => $prev_month, 'pc_username' => $pc_username, 'pc_category' => $category, 'pc_topic' => $topic));
+        array('viewtype' => $viewtype, 'Date' => $prev_month, 'pc_username' => $pc_username, 'pc_category' => $category, 'pc_topic' => $topic));
     $pc_next = pnModURL('PostCalendar', 'user', 'view',
-        array('viewtype' => 'month', 'Date' => $next_month, 'pc_username' => $pc_username, 'pc_category' => $category, 'pc_topic' => $topic));
+        array('viewtype' => $viewtype, 'Date' => $next_month, 'pc_username' => $pc_username, 'pc_category' => $category, 'pc_topic' => $topic));
     $prev_day = Date_Calc::prevDay($the_day, $the_month, $the_year, '%Y%m%d');
     $next_day = Date_Calc::nextDay($the_day, $the_month, $the_year, '%Y%m%d');
     $pc_prev_day = pnModURL('PostCalendar', 'user', 'view',

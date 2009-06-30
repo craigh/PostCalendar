@@ -3,6 +3,7 @@
 <!--[ assign var='week_src' value='week.gif' ]-->
 <!--[ assign var='month_src' value='month.gif' ]-->
 <!--[ assign var='year_src' value='year.gif' ]-->
+<!--[ assign var='list_src' value='list.gif' ]-->
 <!--[ assign var='add_src' value='add.gif' ]-->
 <!--[ assign var='search_src' value='search.gif' ]-->
 <!--[ pc_get_category assign='category' ]-->
@@ -22,6 +23,9 @@
 <!--[ elseif $VIEW_TYPE eq "year" ]-->
 	<!--[ assign var='year_src' value='year_on.gif' ]-->
 	<!--[ pnmodurl modname="PostCalendar" type="user" func="export" start=$DATE|date_format:'%Y-01-01' end=$DATE|date_format:'%Y-12-31' format="attach" category=$category assign='viplink']-->
+<!--[ elseif $VIEW_TYPE eq "list" ]-->
+	<!--[ assign var='list_src' value='list_on.gif' ]-->
+	<!--[ pnmodurl modname="PostCalendar" type="user" func="export" start=$MONTH_START_DATE end=$MONTH_END_DATE format="attach" category=$category assign='viplink']-->
 <!--[/if]-->
 
 <!--[ if $FUNCTION eq "submit" ]-->
@@ -63,7 +67,9 @@
 						<!--[pnimg src=$month_src altml=true titleml=true alt="_CAL_MONTHVIEW" title="_CAL_MONTHVIEW" ]--></a></li>
 					<li><a href="<!--[ pc_url action='year' ]-->">
 						<!--[pnimg src=$year_src altml=true titleml=true alt="_CAL_YEARVIEW" title="_CAL_YEARVIEW" ]--></a></li>
-					<!--[ if $ACCESS_ADD eq true ]-->
+					<li><a href="<!--[ pc_url action='list' ]-->">
+						<!--[pnimg src=$list_src altml=true titleml=true alt="_CAL_LISTVIEW" title="_CAL_LISTVIEW" ]--></a></li>
+                    <!--[ if $ACCESS_ADD eq true ]-->
 						<li><a href="<!--[ pc_url action='submit' ]-->">
 							<!--[pnimg src=$add_src altml=true titleml=true alt="_PC_CREATE_EVENT" title="_PC_CREATE_EVENT" ]--></a></li>
 					<!--[ /if ]-->
