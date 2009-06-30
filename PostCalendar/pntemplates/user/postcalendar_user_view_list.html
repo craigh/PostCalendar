@@ -1,3 +1,4 @@
+<!--[ pndebug ]-->
 <!--[pnsecauthaction comp="::" inst=".*" level="ACCESS_ADD" assign="ACCESS_ADD"]-->
 <!--[ if $smarty.get.theme eq "Printer" ]-->
 	<!--[* page presented in printer theme *]-->
@@ -32,18 +33,20 @@
 	<!--[ foreach name=weeks item=days from=$CAL_FORMAT ]-->
 
 		<!--[ foreach name=days item=date from=$days ]-->
-		<div onmouseover="this.style.backgroundColor='white'"
+        <div onmouseover="this.style.backgroundColor='white'"
 			onmouseout="this.style.backgroundColor=''"
 			onclick="javascript:location.href='<!--[ pc_url action=day date=$date ]-->';">
-			<table width="100%" border="0" cellpadding="0" cellspacing="0">
-                <tr><td colspan='2' align="left" valign="top"><!--[ $date|date_format:"%d" ]--></td></tr>
+<!--[* 		<table width="100%" border="0" cellpadding="0" cellspacing="0">
+                <tr><td colspan='2' align="left" valign="top"><!--[ $date|date_format:"%A, %B %e, %Y" ]--></td></tr>
 				<tr>
 					<td colspan="2" valign="top" align="left">
+*]-->
 					<!--[ *sort the events by category so we can make it pretty* ]-->
 					<!--[ pc_sort_events var="S_EVENTS" sort="time" order="asc" value=$A_EVENTS ]-->
 					<!--[ assign var="oldCat" value="" ]-->
 					<!--[ if isset($S_EVENTS) ]-->
 					<!--[ foreach name=events item=event from=$S_EVENTS.$date ]-->
+                        <h3><!--[ $date|date_format:"%A, %B %e, %Y" ]--></h3>
 						<!--[ assign var="cCat" value=$event.catname ]-->
 						<!--[ if $oldCat != $cCat ]-->
 							<!--[ if $smarty.foreach.events.first != true ]-->
@@ -87,9 +90,10 @@
 						<!--[ /if ]-->
 					<!--[ /foreach ]-->
 					<!--[ /if ]-->
-					</td>
+<!--[*    			</td>
 				</tr>
 			</table>
+*]-->
 		</div>
 		<!--[ /foreach ]-->
 	<!--[ /foreach ]-->

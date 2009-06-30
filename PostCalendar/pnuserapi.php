@@ -180,8 +180,8 @@ function postcalendar_userapi_buildView($args)
             $calendarView = Date_Calc::getCalendarYear($the_year, '%Y-%m-%d');
             break;
         case 'list':
-            $starting_date = date('m/d/Y', mktime(0, 0, 0, $the_month, $the_day, $the_year));
-            $ending_date = date('m/t/Y', mktime(0, 0, 0, $the_month, 1, $the_year));
+            $starting_date = date('m/d/Y', mktime(0, 0, 0, $the_month, 1 - $first_day, $the_year));
+            $ending_date = date('m/d/Y', mktime(0, 0, 0, $the_month, $the_last_day, $the_year));
             $calendarView = Date_Calc::getCalendarMonth($the_month, $the_year, '%Y-%m-%d');
             break;
     }
