@@ -1,8 +1,8 @@
 <!--[pnsecauthaction comp="::" inst=".*" level="ACCESS_ADD" assign="ACCESS_ADD"]-->
 <!--[ if $smarty.get.theme eq "Printer" ]-->
-	<!--[* page presented in printer theme *]-->
-	<!--[ assign var="ACCESS_ADD" value=0 ]-->
-	<!--[ assign var="PRINT_VIEW" value=1 ]-->
+    <!--[* page presented in printer theme *]-->
+    <!--[ assign var="ACCESS_ADD" value=0 ]-->
+    <!--[ assign var="PRINT_VIEW" value=1 ]-->
 <!--[/if]-->
 <!--[ if $PRINT_VIEW != 1 ]-->
 <!--[ include file="user/postcalendar_user_navigation.html" ]-->
@@ -11,11 +11,11 @@
 <!--[* add JS to page if needed *]-->
 <!--[ pnmodgetvar module="PostCalendar" name="pcUsePopups" assign="pcUsePopups" ]-->
 <!--[ if $pcUsePopups eq true ]-->
-	<!--[pnpageaddvar name="javascript" value="modules/PostCalendar/pnjavascript/postcalendar_overlibconfig.js"]-->
+    <!--[pnpageaddvar name="javascript" value="modules/PostCalendar/pnjavascript/postcalendar_overlibconfig.js"]-->
 <!--[ /if ]-->
 <!--[ pnmodgetvar module="PostCalendar" name="pcEventsOpenInNewWindow" assign="pcEventsOpenInNewWindow" ]-->
 <!--[ if pcEventsOpenInNewWindow eq true ]-->
-	<!--[pnpageaddvar name="javascript" value="modules/PostCalendar/pnjavascript/postcalendar_jspopup.js"]-->
+    <!--[pnpageaddvar name="javascript" value="modules/PostCalendar/pnjavascript/postcalendar_jspopup.js"]-->
 <!--[ /if ]-->
 
 <!--[ assign var="dayname" value=$DATE|date_format:"%w" ]-->
@@ -24,85 +24,60 @@
 <!--[ assign var="year" value=$DATE|date_format:"%Y"|string_format:"%4d" ]-->
 <!--[ assign var="icaldate" value=$DATE|date_format:"%Y-%m-%d" ]-->
 <h2 class="postcalendar_header">
-			<!--[ if $PRINT_VIEW eq false ]--><a href="<!--[ $PREV_DAY_URL ]-->">&lt;&lt;</a><!--[/if]-->
-    	<!--[ if $USE_INT_DATES eq true ]-->
-				<!--[ pc_date_format date=$DATE format='%A, %d %B %Y']-->
-			<!--[ else ]-->
-				<!--[ pc_date_format date=$DATE format='%A, %B %d %Y']-->
-			<!--[ /if ]-->
-			<!--[ if $PRINT_VIEW eq false ]--><a href="<!--[ $NEXT_DAY_URL ]-->">&gt;&gt;</a><!--[/if]-->
+    <!--[ if $PRINT_VIEW eq false ]--><a href="<!--[ $PREV_DAY_URL ]-->">&lt;&lt;</a><!--[/if]-->
+    <!--[ if $USE_INT_DATES eq true ]-->
+        <!--[ pc_date_format date=$DATE format='%A, %d %B %Y']-->
+    <!--[ else ]-->
+        <!--[ pc_date_format date=$DATE format='%A, %B %d %Y']-->
+    <!--[ /if ]-->
+    <!--[ if $PRINT_VIEW eq false ]--><a href="<!--[ $NEXT_DAY_URL ]-->">&gt;&gt;</a><!--[/if]-->
 </h2>
 
 <div class="calcontainer">
-	<ul class="eventslist">
-		<li class="eventslistitems">
-			<!--[ pc_sort_events var="S_EVENTS" sort="time" order="asc" value=$A_EVENTS ]-->
-			<!--[ foreach name=dates item=events key=date from=$S_EVENTS ]-->
-	    	<!--[ assign var="dayname" value=$date|date_format:"%w" ]-->
-	    	<!--[ assign var="day" value=$date|date_format:"%d"|string_format:"%1d" ]-->
-	    	<!--[ assign var="month" value=$date|date_format:"%m"|string_format:"%1d" ]-->
-	    	<!--[ assign var="year" value=$date|date_format:"%Y"|string_format:"%4d" ]-->
-
-				<!--[ pc_sort_events var="S_EVENTS" sort="time" order="asc" value=$A_EVENTS ]-->
-				<!--[ assign var="oldCat" value="" ]-->
-				<!--[ if isset($events) ]-->
-					<!--[ foreach name=events item=event from=$S_EVENTS.$date ]-->
-						<!--[ assign var="cCat" value=$event.catname ]-->
-						<!--[ if (empty($cCat)) ]-->
-							<!--[* assign a default catname and catcolor - this is a HACK!*]-->
-							<!--[ assign var="catname" value = $A_CATEGORY.0.name ]-->
-							<!--[ assign var="catcolor" value = $A_CATEGORY.0.color ]-->
-							<!--[ assign var="cCat" value = $catname ]-->
-						<!--[else]-->
-							<!--[ assign var="catname" value = $event.catname ]-->
-							<!--[ assign var="catcolor" value = $event.catcolor ]-->
-						<!--[/if]-->
-						<!--[ if $oldCat != $cCat ]-->
-							<!--[ if $smarty.foreach.events.first != true ]-->
-								</div>
-							<!--[ /if ]-->
-							<div style="padding: 2px; background-color: <!--[ $event.catcolor ]-->;">
-								<!--[ if $event.meeting_id ]--><!--[ pnimg src='meeting.gif' altml=true alt='_PC_THEME_MEETING' titleml=true title='_PC_THEME_MEETING' style='float: left;']--><!--[ /if ]--><!--[ $event.catname ]-->
-							</div>
-							<div style="padding: 2px; border:solid 1px <!--[ $event.catcolor ]-->;">
-						<!--[ /if ]-->
-						<!--[ if $24HOUR_TIME ]-->
-							<!--[ assign var="timestamp" value=$event.startTime|date_format:'%H:%M' ]-->
-						<!--[ else ]-->
-							<!--[ assign var="timestamp" value=$event.startTime|date_format:'%I:%M %p']-->
-						<!--[ /if ]-->
-						<!--[ if $event.alldayevent != true ]-->
-							<!--[ $timestamp ]-->
-						<!--[ /if ]-->
-						<!--[ $event.uname ]--> <!-- // V4B SB Inseted Username to get a better overview -->
-						<a href="<!--[ pc_url action=detail eid=$event.eid date=$date ]-->"
-							<!--[ pc_popup delay="500" bgcolor=$event.catcolor caption=$event.title text=$event.hometext ]-->>
-					   		<!--[ $event.title|strip_tags|pnvarprephtmldisplay ]--></a>
-						<!--[ if $event.alldayevent != true ]-->
-							(<!--[ $event.duration_hours ]-->:<!--[ $event.duration_minutes ]-->)
-						<!--[ /if ]-->
-						<a href="<!--[pnmodurl modname="PostCalendar" type="user" func="export" eid=$event.eid date=$date]-->"><!--[ pnimg src='icaldown.gif' alt="Add this event to my calendar" ]--></a>
-						<br />
-						<!--[ assign var="oldCat" value=$event.catname ]-->
-						<!--[ if $smarty.foreach.events.last ]-->
-							<!--[* we need to close out the <div> tag *]-->
-							</div>
-						<!--[ /if ]-->
-					<!--[ foreachelse ]-->
-						<b><!--[pnml name='_PC_NO_EVENTS']--></b>
-					<!--[ /foreach ]--><!--[* /foreach events *]-->
-				<!--[ /if ]--><!--[* /if events *]-->
-			<!--[ /foreach ]--><!--[* /foreach dates *]-->
-		</li>
-	</ul>
+    <ul class="eventslist">
+        <!--[ pc_sort_events var="S_EVENTS" sort="time" order="asc" value=$A_EVENTS ]-->
+        <!--[ foreach name=dates item=events key=date from=$S_EVENTS ]-->
+            <!--[ assign var="dayname" value=$date|date_format:"%w" ]-->
+            <!--[ assign var="day" value=$date|date_format:"%d"|string_format:"%1d" ]-->
+            <!--[ assign var="month" value=$date|date_format:"%m"|string_format:"%1d" ]-->
+            <!--[ assign var="year" value=$date|date_format:"%Y"|string_format:"%4d" ]-->
+            <!--[ pc_sort_events var="S_EVENTS" sort="time" order="asc" value=$A_EVENTS ]-->
+            <!--[ if isset($events) ]-->
+                <!--[ foreach name=events item=event from=$S_EVENTS.$date ]-->
+                    <!--[ assign var="catname" value = $event.catname ]-->
+                    <!--[ assign var="catcolor" value = $event.catcolor ]-->
+                    <!--[ if $24HOUR_TIME ]-->
+                        <!--[ assign var="timestamp" value=$event.startTime|date_format:'%H:%M' ]-->
+                    <!--[ else ]-->
+                        <!--[ assign var="timestamp" value=$event.startTime|date_format:'%I:%M %p']-->
+                    <!--[ /if ]-->
+                    <!--[ assign var="title" value=$event.title|strip_tags ]-->
+                    <!--[ $event.uname ]-->
+                    <li class="eventslistitems">
+                        <div style="padding: 1px 4px; display: inline; background: <!--[ $event.catcolor ]-->;"><!--[ if $event.meeting_id ]--><!--[ pnimg src='meeting.gif' altml=true alt='_PC_THEME_MEETING' titleml=true title='_PC_THEME_MEETING' style='float: left;']--><!--[ /if ]--><!--[ $event.catname ]--></div>
+                        <!--[ $timestamp ]-->&nbsp;
+                        <a style="text-decoration: none;" href="<!--[ pc_url action=detail eid=$event.eid date=$date ]-->"><!--[ $title|pnvarprephtmldisplay ]--></a>
+                        <!--[ if $event.alldayevent != true ]-->
+                            (<!--[ $event.duration_hours ]-->:<!--[ $event.duration_minutes ]-->)
+                        <!--[ else ]-->
+                            (<!--[pnml name='_PC_ALLDAY_EVENT']-->)
+                        <!--[/if]-->
+                        <a href="<!--[pnmodurl modname="PostCalendar" type="user" func="export" eid=$event.eid date=$date]-->"><!--[ pnimg src='icaldown.gif' alt="Add this event to my calendar" ]--></a>
+                    </li>
+                <!--[ foreachelse ]-->
+                    <li><b><!--[pnml name='_PC_NO_EVENTS']--></b></li>
+                <!--[ /foreach ]--><!--[* /foreach events *]-->
+            <!--[ /if ]--><!--[* /if events *]-->
+        <!--[ /foreach ]--><!--[* /foreach dates *]-->
+    </ul>
 </div><!-- end calcontainer -->
 <div style='text-align:right;'>
-	<!--[ if $PRINT_VIEW eq true ]-->
-		<!--[ assign var="viewtype" value=$smarty.get.viewtype ]-->
-		<!--[if ((empty($smarty.get.viewtype)) or (!isset($smarty.get.viewtype)))]-->
-			<!--[pnmodgetvar module="PostCalendar" name="pcDefaultView" assign="viewtype" ]-->
-		<!--[/if]-->
-		<a href="<!--[pnmodurl modname="PostCalendar" func="view" viewtype=$viewtype Date=$smarty.get.Date ]-->"><!--[pnml name="_PC_RETURN']--></a>
-	<!--[/if]-->
+    <!--[ if $PRINT_VIEW eq true ]-->
+        <!--[ assign var="viewtype" value=$smarty.get.viewtype ]-->
+        <!--[if ((empty($smarty.get.viewtype)) or (!isset($smarty.get.viewtype)))]-->
+            <!--[pnmodgetvar module="PostCalendar" name="pcDefaultView" assign="viewtype" ]-->
+        <!--[/if]-->
+        <a href="<!--[pnmodurl modname="PostCalendar" func="view" viewtype=$viewtype Date=$smarty.get.Date ]-->"><!--[pnml name="_PC_RETURN']--></a>
+    <!--[/if]-->
 </div>
 <!--[ include file="user/postcalendar_user_footer.html" ]-->
