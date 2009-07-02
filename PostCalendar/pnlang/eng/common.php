@@ -21,6 +21,7 @@ define('_CALFRIDAYSHORT', 'F');
 define('_CALJAN', 'January');
 define('_CALJUL', 'July');
 define('_CALJUN', 'June');
+define('_CAL_LISTVIEW', 'List');
 define('_CALLOCATION', 'Location');
 define('_CALLONGFIFTHDAY', 'Thurdsay');
 define('_CALLONGFIRSTDAY', 'Sunday');

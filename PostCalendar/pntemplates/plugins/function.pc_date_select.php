@@ -106,6 +106,9 @@ function smarty_function_pc_date_select($args)
         $sel_data[3]['id'] = 'year';
         $sel_data[3]['selected'] = $viewtype == 'year';
         $sel_data[3]['name'] = _CAL_YEARVIEW;
+        $sel_data[4]['id'] = 'list';
+        $sel_data[4]['selected'] = $viewtype == 'list';
+        $sel_data[4]['name'] = _CAL_LISTVIEW;
         $viewselect = pcHtmlUtil::FormSelectMultipleSubmit('viewtype', $sel_data);
     }
 
