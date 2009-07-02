@@ -66,7 +66,7 @@ function smarty_function_pc_popup($args)
         echo ",FGCOLOR,'{$args['fgcolor']}'";
     }
     if (!empty($args['bgcolor'])) {
-        echo ",BGCOLOR,'{$args['bgcolor']}'";
+        echo ",BGCOLOR,'".$args['bgcolor']."'";
     }
     if (!empty($args['textcolor'])) {
         echo ",TEXTCOLOR,'{$args['textcolor']}'";

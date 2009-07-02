@@ -293,25 +293,6 @@ function postcalendar_userapi_buildView($args)
     $function_out['MONTH_END_DATE']    = $month_view_end;
     $function_out['TODAY_DATE']        = $today_date;
     $function_out['DATE']              = $Date;
-
-    if ($popup) {
-        // this concept needs to be changed to simply use a different template if using a popup. CAH 5/9/09
-        $theme = pnUserGetTheme();
-        $function_out['raw1'] = "<html><head></head><body>\n";
-        //$tpl->display("$template");
-        // V4B TS start ***     Hook code for displaying stuff for events in popup
-        if ($_GET["type"] != "admin") {
-            $hooks = pnModCallHooks('item', 'display', $eid, "index.php?module=PostCalendar&amp;type=user&amp;func=view&amp;viewtype=details&amp;eid=$eid&amp;popup=1");
-            $function_out['raw2'] .= $hooks;
-        }
-        $function_out['raw2'] .= "\n</body></html>";
-        //session_write_close();
-        //exit;
-        $function_out['displayaspopup'] = true;
-        return $function_out;
-    } else {
-        return $function_out;
-    }
 }
 
 /**

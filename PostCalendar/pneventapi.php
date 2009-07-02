@@ -836,7 +836,6 @@ function postcalendar_eventapi_getEventDetails($eid)
     //'compare_field_table' =>    'topicid',
     //'compare_field_join'    =>    'topic');
     $event = DBUtil::selectExpandedObjectByID('postcalendar_events', $joinInfo, $eid, 'eid');
-    // $event = postcalendar_userapi_pcFixEventDetails ($event);
     $event = pnModAPIFunc('PostCalendar', 'event', 'fixEventDetails', $event);
     return $event;
 }
@@ -849,15 +848,12 @@ function postcalendar_eventapi_getEventDetails($eid)
  * @return string html output
  * @access public
  */
-//function postcalendar_adminapi_eventDetail($args) { return postcalendar_userapi_eventDetail($args,true); }
-//function postcalendar_userapi_eventDetail($args,$admin=false)
 function postcalendar_eventapi_eventDetail($args)
 {
     if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_READ)) {
         return LogUtil::registerPermissionError();
     }
 
-    $popup = FormUtil::getPassedValue('popup');
     extract($args);
     unset($args);
 
@@ -875,9 +871,6 @@ function postcalendar_eventapi_eventDetail($args)
     $function_out['FUNCTION'] = $func;
     $function_out['TPL_VIEW'] = $template_view;
     /* end */
-
-    $function_out['template'] = "user/postcalendar_user_view_event_details.html";
-    if ($popup == true) $function_out['template'] = "user/postcalendar_user_view_popup.html";
 
     // get the DB information
     $event = pnModAPIFunc('PostCalendar', 'event', 'getEventDetails', $eid);
@@ -970,28 +963,6 @@ function postcalendar_eventapi_eventDetail($args)
     $function_out['EVENT_DELETE'] = $user_delete_url;
     $function_out['EVENT_CAN_EDIT'] = $can_edit;
 
-    /*
-    if($popup != 1) {
-        return $function_out;
-    } else {
-        // this concept needs to be changed to simply use a different template if using a popup. CAH 5/9/09
-        $theme = pnUserGetTheme();
-        $function_out['raw1'] = "<html><head></head><body>\n";
-        //$tpl->display("view_event_details.html",$cacheid);
-
-        // V4B TS start ***     Hook code for displaying stuff for events in popup
-        if ($_GET["type"] != "admin") {
-            $hooks = pnModCallHooks('item', 'display', $eid, "index.php?module=PostCalendar&type=user&func=view&viewtype=details&eid=$eid&popup=1");
-            $function_out['raw2'] .= $hooks;
-        }
-        // V4B TS end ***  End of Hook code
-        $function_out['raw2'] .= "\n</body></html>";
-        //session_write_close();
-        //exit;
-        $function_out['displayaspopup'] = true;
-        return $function_out;
-    }
-    */
     return $function_out;
 }
 

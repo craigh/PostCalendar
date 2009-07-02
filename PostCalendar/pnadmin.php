@@ -228,6 +228,7 @@ function postcalendar_admin_resetDefaults()
     pnModSetVar('PostCalendar', 'pcCacheLifetime', '3600');
     pnModSetVar('PostCalendar', 'pcDefaultView', 'month');
     pnModSetVar('PostCalendar', 'pcNotifyAdmin', '0');
+    pnModSetVar('PostCalendar', 'pcNotifyAdmin2Admin', '0');
     pnModSetVar('PostCalendar', 'pcNotifyEmail', pnConfigGetVar('adminmail'));
 
     pnModAPIFunc('PostCalendar', 'admin', 'clearCache');

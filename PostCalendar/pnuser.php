@@ -83,6 +83,7 @@ function postcalendar_user_display($args)
     $pc_category = FormUtil::getPassedValue('pc_category');
     $pc_topic = FormUtil::getPassedValue('pc_topic');
     $pc_username = FormUtil::getPassedValue('pc_username');
+    $popup = FormUtil::getPassedValue('popup');
 
     extract($args);
     if (empty($Date) && empty($viewtype)) {
@@ -98,24 +99,30 @@ function postcalendar_user_display($args)
             if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_READ)) {
                 return LogUtil::registerPermissionError();
             }
-            $out = pnModAPIFunc('PostCalendar', 'event', 'eventDetail',
-                array('eid' => $eid, 'Date' => $Date, 'cacheid' => $cacheid));
+            $detailstemplate = "user/postcalendar_user_view_event_details.html";
+            if ($popup == true) $detailstemplate = "user/postcalendar_user_view_popup.html";
 
-            if ($out === false) {
-                pnRedirect(pnModURL('PostCalendar', 'user'));
-            }
             // build template and fetch:
-            $tpl = pnRender::getInstance(
-                'PostCalendar');
+            $tpl = pnRender::getInstance('PostCalendar');
             pnModAPIFunc('PostCalendar','user','SmartySetup', $tpl);
-            if ($tpl->is_cached($out['template'], $cacheid)) {
+            if ($tpl->is_cached($detailstemplate, $cacheid)) {
                 // use cached version
-                return $tpl->fetch($out['template'], $cacheid);
+                return $tpl->fetch($detailstemplate, $cacheid);
             } else {
+                $out = pnModAPIFunc('PostCalendar', 'event', 'eventDetail',
+                    array('eid' => $eid, 'Date' => $Date, 'cacheid' => $cacheid));
+                if ($out === false) {
+                    pnRedirect(pnModURL('PostCalendar', 'user'));
+                }
                 foreach ($out as $var => $val) {
                     $tpl->assign($var, $val);
                 }
-                return $tpl->fetch($out['template']);
+                if ($popup == true) {
+                    $tpl->display($detailstemplate);
+                    return true; // displays template without theme wrap
+                } else {
+                    return $tpl->fetch($detailstemplate);
+                }
             }
             break;
 
