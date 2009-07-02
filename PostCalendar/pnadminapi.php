@@ -130,28 +130,29 @@ function postcalendar_adminapi_meeting_mailparticipants($args)
 
     $pnRender = pnRender::getInstance('PostCalendar');
     $pnRender->assign('eid', $eid);
-    $pnRender->assign('event_subject', $event_subject);
+    $pnRender->assign('event_subject', DataUtil::formatForDisplay($event_subject));
 
 	@list($pc_dur_hours, $dmin) = @explode('.', ($event_duration / 60 / 60));
-    $pnRender->assign('pc_dur_hours', $pc_dur_hours);
+    $pnRender->assign('pc_dur_hours', DataUtil::formatForDisplay($pc_dur_hours));
 
 	$pc_dur_minutes = substr(sprintf('%.2f', '.' . 60 * ($dmin / 100)), 2, 2);
-    $pnRender->assign('pc_dur_minutes', $pc_dur_minutes);
+    $pnRender->assign('pc_dur_minutes', DataUtil::formatForDisplay($pc_dur_minutes));
 
 	$pc_description = substr($event_desc, 6);
-    $pnRender->assign('pc_description', $event_desc);
+    $pnRender->assign('pc_description', DataUtil::formatForDisplayHTML(substr($event_desc, 6)));
 
+    // need to investigate all day event?
 	list($x, $y, $z) = explode('-', $startDate);
 	list($a, $b, $c) = explode('-', $startTime);
 	$pc_start_time = strftime('%H:%M', mktime($a, $b, $c, $y, $z, $x));
     $pnRender->assign('startDate', $startDate);
-    $pnRender->assign('pc_start_time', $pc_start_time);
+    $pnRender->assign('pc_start_time', DataUtil::formatForDisplay($pc_start_time));
 
     $pc_author = $uname;
-    $pnRender->assign('pc_author', $pc_author);
+    $pnRender->assign('pc_author', DataUtil::formatForDisplay($pc_author));
 
 	$pc_URL = pnModURL('PostCalendar', 'user', 'view', array('viewtype' => 'details', 'eid' => $eid), null, null, true);
-    $pnRender->assign('pc_URL', $pc_URL);
+    $pnRender->assign('pc_URL', DataUtil::formatForOS($pc_URL));
 
     $modinfo = pnModGetInfo(pnModGetIDFromName('PostCalendar'));
     $modversion = DataUtil::formatForOS($modinfo['version']);

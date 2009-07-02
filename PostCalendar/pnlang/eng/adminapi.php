@@ -7,7 +7,7 @@ define('_POSTCALENDAR_MAILGREET_NOTIFICATION', 'PostCalendar Meeting Notificatio
 define('_POSTCALENDAR_MAILGREET',              'Hello');
 define('_POSTCALENDAR_MAILOPEN',               'The user %pc_author% has created a new meeting event for you:');
 define('_POSTCALENDAR_MAILEVENTDETAILS_SUB',   'Event        : %event_subject%');
-define('_POSTCALENDAR_MAILEVENTDETAILS_DES',   'Description  : %pc_description%');
+define('_POSTCALENDAR_MAILEVENTDETAILS_DES',   'Description  : ');
 define('_POSTCALENDAR_MAILEVENTDETAILS_DAT',   'Date         : %startDate%');
 define('_POSTCALENDAR_MAILEVENTDETAILS_TIM',   'Time         : %pc_start_time%');
 define('_POSTCALENDAR_MAILEVENTDETAILS_DUR',   'Duration     : %pc_dur_hours%:%pc_dur_minutes%');
