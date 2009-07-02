@@ -20,7 +20,7 @@
 
 <!--[if !empty($preview)]-->
     <div style='background-color:#CCCCCC; border: 2px solid #999999; margin: 2em; padding: 1em;'>
-        <h3 style='border-bottom: 1px solid #999999;'>Event Preview</h3>
+        <h3 style='border-bottom: 1px solid #999999;'><!--[pnml name='_CALEVENTPREVIEW']--></h3>
         <!--[$preview]-->
     </div>
 <!--[/if]-->
@@ -29,7 +29,7 @@
 
 <div style='border-color:#CCCCCC;border-style:solid;border-width:0 1px 1px;color:inherit;margin-bottom:1.25em;padding:0 1% 5px;width:auto;'>
 <div style='float:right; padding-top:5px;'><!--[pnimg modname=PostCalendar src=admin.gif altml=true]--></div>
-<h2 style='border-bottom:1px solid #CCCCCC;margin-top:0;text-align:left;'>_PC_ADDCALENDAREVENT</h2>
+<h2 style='border-bottom:1px solid #CCCCCC;margin-top:1em;text-align:left;'><!--[pnml name='_PC_ADDCALENDAREVENT']--></h2>
 <div class="tabsystem" style="padding-top:16px;">
 <div class="tabpage tdefault">
 <h2 style='border-bottom:1px solid #CCCCCC;margin-top:0;text-align:left;'><!--[pnml name='_PC_NEW_EVENT_HEADER']--></h2>
@@ -157,7 +157,7 @@
 <!--[pnmodgetvar module="PostCalendar" name="pcRepeating"|pnvarprepfordisplay assign="pcDisplayRepeating"]-->
 <!--[ if $pcDisplayRepeating ]-->
 <div class="tabpage">
-<h2 style='border-bottom:1px solid #CCCCCC;margin-top:0;text-align:left;'><!--[pnml name='_PC_REPEATING_HEADER']--></h2>
+<h2 style='border-bottom:1px solid #CCCCCC;margin-top:1em;text-align:left;'><!--[pnml name='_PC_REPEATING_HEADER']--></h2>
     <table width="100%" border="0" cellpadding="2" cellspacing="0">   
         <tr>
             <td colspan="2" align="left" valign="middle" width="100%">
@@ -234,7 +234,7 @@
 <!--[pnmodgetvar module="PostCalendar" name="pcMeeting"|pnvarprepfordisplay assign="pcDisplayMeeting"]-->
 <!--[ if $pcDisplayMeeting ]-->
 <div class="tabpage">
-<h2 style='border-bottom:1px solid #CCCCCC;margin-top:0;text-align:left;'><!--[pnml name='_PC_PARTICIPANT']--></h2>
+<h2 style='border-bottom:1px solid #CCCCCC;margin-top:1em;text-align:left;'><!--[pnml name='_PC_PARTICIPANT']--></h2>
     <table width="100%" border="0" cellpadding="2" cellspacing="0">   
         <tr>
 		    <td colspan="2" valign="top" width="270">

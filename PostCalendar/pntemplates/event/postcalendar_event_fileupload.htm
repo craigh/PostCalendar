@@ -1,22 +1,25 @@
 <!--[*  $Id$  *]-->
-<h2><!--[pnml name=_PC_FILEUPLOAD]--></h2>
+<!--[ include file="user/postcalendar_user_navigation_small.html" ]-->
+
+<h2 style='padding-top:1em;'><!--[pnml name=_PC_FILEUPLOAD]--></h2>
 
 <!--[pnform enctype="multipart/form-data"]-->
 
   <!--[pnformsetinitialfocus inputId=icsupload]-->
 
-    <div class="row">
+    <div class="row" style='padding-top:1em;'>
         <!--[pnformlabel for=icsupload text=_PC_FILETOUPLOAD]-->
         <!--[pnformuploadinput id=icsupload mandatory=1 maxLength=255 width=35em]-->
     </div>
-    <div class="row">
+    <div class="row" style='padding-top:1em;'>
         <!--[pnml name='_PC_SHARING']-->
         <!--[pnformdropdownlist id="event_sharing" items=$sharingselect]-->
         <!--[pnml name='_PC_EVENT_CATEGORY']-->
         <!--[pnformdropdownlist id="event_category" items=$categories]-->
     </div>
-
-    <!--[pnformbutton commandName="submit" text="_SUBMIT"]-->
-    <!--[pnformbutton commandName="cancel" text="_CANCEL"]-->
+    <div class="row" style='padding-top:1em;'>
+        <!--[pnformbutton commandName="submit" text="_SUBMIT"]-->
+        <!--[pnformbutton commandName="cancel" text="_CANCEL"]-->
+    </div>
 
 <!--[/pnform]-->

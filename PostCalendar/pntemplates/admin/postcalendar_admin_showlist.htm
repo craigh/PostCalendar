@@ -11,9 +11,9 @@
 			<input type="hidden" name="authid" value="<!--[pnsecgenauthkey module="PostCalendar"]-->">
 			<table class="pn-admintable">
 				<tr>
-					<td><b><!--[pnml name='_SELECT']--></b></td>
+					<td><b><!--[pnml name='_CALSELECT']--></b></td>
 					<td><b><a href='<!--[$title_sort_url]-->'><!--[pnml name='_TITLE']--></a></b></td>
-					<td><b><a href='<!--[$time_sort_url]-->'><!--[pnml name='_TIMESTAMP']--></a></b></td>
+					<td><b><a href='<!--[$time_sort_url]-->'><!--[pnml name='_CALTIMESTAMP']--></a></b></td>
 				</tr>
 				<!--[section name=event loop=$events]-->  
 					<tr class="<!--[cycle values="pn-odd,pn-even"]-->">
@@ -30,13 +30,13 @@
 			</div>
 			<div id="listmanipulator" style='text-align: center; background-color:#cccccc; padding:.5em; margin-top:.5em;'>
 				<!--[if !empty($prevlink) ]-->
-					<< <a href="<!--[$prevlink]-->"><!--[pnml name="_PC_PREV"]--> <!--[$offset_increment]--> <!--[pnml name="_EVENTS"]--></a>
+					<< <a href="<!--[$prevlink]-->"><!--[pnml name="_PC_PREV"]--> <!--[$offset_increment]--> <!--[pnml name="_CALEVENTS"]--></a>
 				<!--[else]-->
 					<!--[pnml name="_PC_PREV"]-->
 				<!--[/if]-->
 				&nbsp;|&nbsp;
 				<!--[if !empty($nextlink) ]-->
-					<a href="<!--[$nextlink]-->"><!--[pnml name="_PC_NEXT"]--> <!--[$offset_increment]--> <!--[pnml name="_EVENTS"]--></a> >>
+					<a href="<!--[$nextlink]-->"><!--[pnml name="_PC_NEXT"]--> <!--[$offset_increment]--> <!--[pnml name="_CALEVENTS"]--></a> >>
 				<!--[else]-->
 					<!--[pnml name="_PC_NEXT"]-->
 				<!--[/if]-->
