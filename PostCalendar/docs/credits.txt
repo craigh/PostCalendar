@@ -4,6 +4,7 @@ Credits
 ========================================================================
 	Version 5.0+
 		Craig Heydenburg
+        Arjen Tebbenhof
 
 	Version 4.0
 		Robert Gasch

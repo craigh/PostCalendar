@@ -3,7 +3,7 @@ SVN: $Id$
 @package         PostCalendar 
 @lastmodified    $Date$ 
 @modifiedby      $Author$ 
-@HeadURL	       $HeadURL$ 
+@HeadURL	     $HeadURL$ 
 @version         $Revision$ 
 
 PostCalendar::Zikula Events Calendar Module

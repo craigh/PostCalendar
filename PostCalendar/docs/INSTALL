@@ -7,7 +7,7 @@ PLEASE ALSO READ THE DOCUMENTATION (possibly) AVAILABLE ONLINE AT
 
 	http://code.zikula.org/soundwebdevelopment/wiki/PostCalendar
 
-PostCalendar 5.1.0 requires the (legacy) Topics module to function.
+PostCalendar 5.5.0 requires the (legacy) Topics module to function.
 Please be sure that module is installed and functional before proceeding.
 
 To install PostCalendar simply unzip/untar the distribution inside your 
@@ -48,6 +48,12 @@ and place all the necessary files there.
 
 Using the standard Zikula Module upgrade method, upgrade your module.
 
+Notes for version 5.5.0
+    1. There are no database changes from previous versions, but the database
+        is refactored to match the new DBUtil tools.
+    2. A new list view is included. This is a list of all events in the month.
+    3. There is a new option in the Settings - notify about admin submission.
+    4. iCal up/download improved dramatically via iCalcreator
 Notes for version 5.1.0
 	1. There are no database changes from previous version
 	2. The old method of PostCalendar 'themes' has been removed
@@ -57,6 +63,8 @@ Notes for version 5.1.0
 			- you can override this with stylesheet overrides (same link as above)
 	4. Known issues outstanding are listed in the ticket list:
 			- http://code.zikula.org/soundwebdevelopment/report/1
+Notes for version 5.0.1
+    First version that was (mostly) compatible with Zikula. Available via SVN only.
 
 ========================================================================
 Menu Configuration
