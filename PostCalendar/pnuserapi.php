@@ -293,6 +293,8 @@ function postcalendar_userapi_buildView($args)
     $function_out['MONTH_END_DATE']    = $month_view_end;
     $function_out['TODAY_DATE']        = $today_date;
     $function_out['DATE']              = $Date;
+
+    return $function_out;
 }
 
 /**

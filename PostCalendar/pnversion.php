@@ -34,7 +34,7 @@
  */
 $modversion['name']           = _PC_MODULENAME;
 $modversion['id']             = '$Revision$'; // svn revision #
-$modversion['version']        = '5.1.0';
+$modversion['version']        = '5.5.0';
 $modversion['description']    = _PC_MODULEDESCRIPTION;
 $modversion['credits']        = 'docs/credits.txt';
 $modversion['help']           = 'docs/help.txt';

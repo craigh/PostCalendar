@@ -87,6 +87,7 @@ function postcalendar_user_display($args)
 
     extract($args);
     if (empty($Date) && empty($viewtype)) {
+        return LogUtil::registerError(_MODARGSERROR . ' in postcalendar_user_display');
         return false;
     }
 
@@ -99,8 +100,6 @@ function postcalendar_user_display($args)
             if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_READ)) {
                 return LogUtil::registerPermissionError();
             }
-            $detailstemplate = "user/postcalendar_user_view_event_details.html";
-            if ($popup == true) $detailstemplate = "user/postcalendar_user_view_popup.html";
 
             // build template and fetch:
             $tpl = pnRender::getInstance('PostCalendar');
@@ -118,10 +117,10 @@ function postcalendar_user_display($args)
                     $tpl->assign($var, $val);
                 }
                 if ($popup == true) {
-                    $tpl->display($detailstemplate);
+                    $tpl->display('user/postcalendar_user_view_popup.html');
                     return true; // displays template without theme wrap
                 } else {
-                    return $tpl->fetch($detailstemplate);
+                    return $tpl->fetch('user/postcalendar_user_view_event_details.html');
                 }
             }
             break;
