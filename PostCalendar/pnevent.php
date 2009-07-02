@@ -120,7 +120,7 @@ function postcalendar_event_edit($args)
 }
 /**
  * @function    postcalendar_event_new
- * 
+ *
  * @Description    This function is used to generate a form for a new event
  *                 and edit an existing event
  *                 and preview a nearly submitted event
@@ -141,7 +141,7 @@ function postcalendar_event_new($args)
     $jumpmonth = FormUtil::getPassedValue('jumpmonth');
     $jumpyear  = FormUtil::getPassedValue('jumpyear');
 
-    $Date  = FormUtil::getPassedValue('Date');    
+    $Date  = FormUtil::getPassedValue('Date');
     $Date  = pnModAPIFunc('PostCalendar','user','getDate',compact('Date','jumpday','jumpmonth','jumpyear'));
     $year  = substr($Date, 0, 4);
     $month = substr($Date, 4, 2);
@@ -200,7 +200,9 @@ function postcalendar_event_new($args)
     $event_city      = FormUtil::getPassedValue('event_city');
     $event_state     = FormUtil::getPassedValue('event_state');
     $event_postal    = FormUtil::getPassedValue('event_postal');
-    $event_location_info = serialize(compact('event_location', 'event_street1', 'event_street2', 'event_city', 'event_state', 'event_postal'));
+    $event_location_info = compact('event_location', 'event_street1', 'event_street2', 'event_city', 'event_state', 'event_postal');
+    foreach ($event_location_info as &$litmp) $litmp = DataUtil::formatForStore($litmp);
+    $event_location_info = serialize($event_location_info);
     // contact data
     $event_contname  = FormUtil::getPassedValue('event_contname');
     $event_conttel   = FormUtil::getPassedValue('event_conttel');
@@ -217,7 +219,9 @@ function postcalendar_event_new($args)
     $event_repeat_on_num    = FormUtil::getPassedValue('event_repeat_on_num');
     $event_repeat_on_day    = FormUtil::getPassedValue('event_repeat_on_day');
     $event_repeat_on_freq   = FormUtil::getPassedValue('event_repeat_on_freq');
-    $event_recurrspec = serialize(compact('event_repeat_freq', 'event_repeat_freq_type', 'event_repeat_on_num', 'event_repeat_on_day', 'event_repeat_on_freq'));
+    $event_recurrspec = compact('event_repeat_freq', 'event_repeat_freq_type', 'event_repeat_on_num', 'event_repeat_on_day', 'event_repeat_on_freq');
+    foreach ($event_recurrspec as &$rctmp) $rctmp = DataUtil::formatForStore($rctmp);
+    $event_recurrspec = serialize($event_recurrspec);
 
     $form_action        = FormUtil::getPassedValue('form_action');
     $pc_html_or_text    = FormUtil::getPassedValue('pc_html_or_text');

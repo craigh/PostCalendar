@@ -163,7 +163,7 @@ function postcalendar_eventapi_getEvents($args)
     $jumpday   = FormUtil::getPassedValue('jumpday');
     $jumpmonth = FormUtil::getPassedValue('jumpmonth');
     $jumpyear  = FormUtil::getPassedValue('jumpyear');
-    $Date  = FormUtil::getPassedValue('Date');    
+    $Date  = FormUtil::getPassedValue('Date');
     $date  = pnModAPIFunc('PostCalendar','user','getDate',compact('Date','jumpday','jumpmonth','jumpyear'));
 
     $cy = substr($date, 0, 4);
@@ -218,12 +218,12 @@ function postcalendar_eventapi_getEvents($args)
         // get the name of the topic
         $topicname = DBUtil::selectFieldByID('topics', 'topicname', $event['topic'], 'topicid');
         // get the user id of event's author
-        $cuserid = pnUserGetIDFromName( strtolower($event['uname']));
+        $cuserid = pnUserGetIDFromName( strtolower($event['informant']));
 
         // check the current event's permissions
         // the user does not have permission to view this event
         // if any of the following evaluate as false
-        if (!pnSecAuthAction(0, 'PostCalendar::Event', "$event[title]::$event[eid]", ACCESS_OVERVIEW)) {
+        if (!pnSecAuthAction(0, 'PostCalendar::Event', "{$event['title']}::{$event['eid']}", ACCESS_OVERVIEW)) {
             continue;
         } elseif (!pnSecAuthAction(0, 'PostCalendar::Category', "$event[catname]::$event[catid]", ACCESS_OVERVIEW)) {
             continue;
@@ -235,7 +235,7 @@ function postcalendar_eventapi_getEvents($args)
         // parse the event start date
         list($esY, $esM, $esD) = explode('-', $event['eventDate']);
         // grab the recurring specs for the event
-        $event_recurrspec = @unserialize($event['recurrspec']);
+        $event_recurrspec = unserialize($event['recurrspec']);
         // determine the stop date for this event
         if ($event['endDate'] == '0000-00-00') {
             $stop = $end_date;
@@ -403,14 +403,14 @@ function postcalendar_eventapi_writeEvent($args)
                         'startTime' => DataUtil::formatForStore($startTime),
                         'alldayevent' => DataUtil::formatForStore($event_allday),
                         'catid' => DataUtil::formatForStore($event_category),
-                        'location' => DataUtil::formatForStore($event_location_info),
+                        'location' => $event_location_info,                       // Serialized, already formatted for storage
                         'conttel' => DataUtil::formatForStore($event_conttel),
                         'contname' => DataUtil::formatForStore($event_contname),
                         'contemail' => DataUtil::formatForStore($event_contemail),
                         'website' => DataUtil::formatForStore($event_website),
                         'fee' => DataUtil::formatForStore($event_fee),
                         'eventstatus' => DataUtil::formatForStore($event_status),
-                        'recurrspec' => DataUtil::formatForStore($event_recurrspec),
+                        'recurrspec' => $event_recurrspec,                        // Serialized, already formatted for storage
                         'duration' => DataUtil::formatForStore($event_duration),
                         'sharing' => DataUtil::formatForStore($event_sharing),
                         'aid' => DataUtil::formatForStore($part));
@@ -497,7 +497,7 @@ function postcalendar_eventapi_buildSubmitForm($args)
     $jumpday   = FormUtil::getPassedValue('jumpday');
     $jumpmonth = FormUtil::getPassedValue('jumpmonth');
     $jumpyear  = FormUtil::getPassedValue('jumpyear');
-    $Date  = FormUtil::getPassedValue('Date');    
+    $Date  = FormUtil::getPassedValue('Date');
     $today  = pnModAPIFunc('PostCalendar','user','getDate',compact('Date','jumpday','jumpmonth','jumpyear'));
     if (($endDate == '') || ($endDate == '00000000')) {
         $endvalue = substr($today, 6, 2) . '-' . substr($today, 4, 2) . '-' . substr($today, 0, 4);
