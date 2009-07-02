@@ -18,6 +18,12 @@
 <!--[ /if ]-->
 <!--[ include file="user/postcalendar_user_navigation_small.html" ]-->
 
+<!--[if !empty($preview)]-->
+    <div style='background-color:#CCCCCC; border: 2px solid #999999; margin: 2em; padding: 1em;'>
+        <h3 style='border-bottom: 1px solid #999999;'>Event Preview</h3>
+        <!--[$preview]-->
+    </div>
+<!--[/if]-->
 <form name="nd" action="<!--[ pc_url action="submit" ]-->" method="post" enctype="application/x-www-form-urlencoded">
 	<input type="hidden" name="authid" value="<!--[pnsecgenauthkey module="PostCalendar"]-->">
 

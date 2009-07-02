@@ -118,7 +118,15 @@ function postcalendar_event_edit($args)
 {
     return postcalendar_event_new($args);
 }
-
+/**
+ * @function    postcalendar_event_new
+ * 
+ * @Description    This function is used to generate a form for a new event
+ *                 and edit an existing event
+ *                 and preview a nearly submitted event
+ *                 and copy an existing event
+ *                 and process a submitted event
+ */
 function postcalendar_event_new($args)
 {
     // We need at least ADD permission to submit an event
@@ -368,7 +376,7 @@ function postcalendar_event_new($args)
     //================================================================
     if ($form_action == 'preview') {
         if (!SecurityUtil::confirmAuthKey()) return LogUtil::registerAuthidError(pnModURL('postcalendar', 'admin', 'main'));
-        $output = pnModAPIFunc('PostCalendar', 'user', 'eventPreview', $eventdata);
+        $eventdata['preview'] = pnModAPIFunc('PostCalendar', 'user', 'eventPreview', $eventdata);
     }
 
     //================================================================
@@ -395,6 +403,5 @@ function postcalendar_event_new($args)
         return true;
     }
 
-    $output .= pnModAPIFunc('PostCalendar', 'event', 'buildSubmitForm', $eventdata);
-    return $output;
+    return pnModAPIFunc('PostCalendar', 'event', 'buildSubmitForm', $eventdata);
 }

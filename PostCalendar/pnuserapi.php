@@ -337,6 +337,8 @@ function postcalendar_userapi_eventPreview($args)
         return LogUtil::registerError(_MODARGSERROR . ' in postcalendar_userapi_eventPreview');
     }
 
+    extract($args);
+
     //=================================================================
     // Setup Render Template Engine
     //=================================================================

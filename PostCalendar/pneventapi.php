@@ -758,6 +758,8 @@ function postcalendar_eventapi_buildSubmitForm($args)
         $tpl->assign('data_loaded', $data_loaded);
     }
 
+    $tpl->assign('preview', $preview);
+
     return $tpl->fetch("event/postcalendar_event_submit.html");
 }
 
