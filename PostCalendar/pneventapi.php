@@ -449,7 +449,7 @@ function postcalendar_eventapi_writeEvent($args)
 }
 
 /**
- * postcalendar_eventapi_buildSubmitForm()
+     * postcalendar_eventapi_buildSubmitForm()
  * create event submit form
  */
 function postcalendar_eventapi_buildSubmitForm($args)
@@ -584,16 +584,8 @@ function postcalendar_eventapi_buildSubmitForm($args)
     //=================================================================
 
     if (!$event_dur_hours) $event_dur_hours = 1; // provide a reasonable default rather than 0 hours
-
-    for ($i = 0; $i <= 24; $i += 1)
-        $TimedDurationHours[$i] = array('value' => $i, 'selected' => ($event_dur_hours == $i ? 'selected' : ''), 'name' => sprintf('%02d', $i));
-
-    $tpl->assign('TimedDurationHours', $TimedDurationHours);
-
-    for ($i = 0; $i < 60; $i += _SETTING_TIME_INCREMENT)
-        $TimedDurationMinutes[$i] = array('value' => $i, 'selected' => ($event_dur_minutes == $i ? 'selected' : ''), 'name' => sprintf('%02d', $i));
-
-    $tpl->assign('TimedDurationMinutes', $TimedDurationMinutes);
+    if (!$event_dur_minutes) $event_dur_minutes = 00; // provide a reasonable default rather than 0 hours
+    $tpl->assign('event_duration', $event_dur_hours.":".$event_dur_minutes);
 
     //=================================================================
     // PARSE INPUT_EVENT_DESC

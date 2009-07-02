@@ -59,16 +59,20 @@
                     <tr>
                         <td valign="top" align="left">&nbsp;</td>
                         <td valign="top" align="left"><!--[pnml name='_PC_TIMED_DURATION']--></td>
-                        <td valign="top" align="left">
+                        <td valign="top" align="left"><!--[html_select_time time=$event_duration display_seconds=false display_minutes=false display_meridian=false use_24_hours=true prefix="event_dur_hours"]-->
+                        <!--[*
                         <!--[ strip ]-->
                             <select name="event_dur_hours">
                             <!--[ foreach item=time from=$TimedDurationHours ]-->
                                 <option value="<!--[ $time.value ]-->" <!--[ $time.selected ]-->><!--[ $time.name ]--></option>
                             <!--[ /foreach ]-->
                             </select>
-                        <!--[ /strip ]--> 
+                        <!--[ /strip ]-->
+                        *]--> 
                         <!--[pnml name='_PC_TIMED_DURATION_HOURS']-->
                     
+                        <!--[html_select_time time=$event_duration display_seconds=false display_hours=false display_meridian=false minute_interval=$minute_interval prefix="event_dur_hours"]-->
+                        <!--[*
                         <!--[ strip ]-->
                         <select name="event_dur_minutes">
                             <!--[ foreach item=time from=$TimedDurationMinutes ]-->
@@ -76,6 +80,7 @@
                             <!--[ /foreach ]-->
                         </select>
                         <!--[ /strip ]-->
+                        *]-->
                         <!--[pnml name='_PC_TIMED_DURATION_MINUTES']-->
                         </td>
                     </tr>
@@ -270,4 +275,3 @@
 
 </form>
 </div> <!-- /page container-->
-<!--[ pndebug ]-->
