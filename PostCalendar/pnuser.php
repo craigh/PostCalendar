@@ -221,7 +221,6 @@ class postcalendar_user_fileuploadHandler extends pnFormHandler
         }
         echo "no command found";
         $data = $render->pnFormGetValues();
-        pcDebugVar($data);
         return true;
     }
 }
