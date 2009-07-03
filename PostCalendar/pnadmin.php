@@ -204,33 +204,18 @@ function postcalendar_admin_resetDefaults()
         return LogUtil::registerPermissionError();
     }
 
-    // remove all the PostCalendar variables from the DB
+    $defaults = pnModFunc('PostCalendar', 'init', 'getdefaults');
+    if (!count($defaults)) {
+        return LogUtil::registerError(_GETFAILED);
+    }
+
+    // delete all the old vars
     pnModDelVar('PostCalendar');
 
-    // PostCalendar Default Settings
-    pnModSetVar('PostCalendar', 'pcTime24Hours', '0');
-    pnModSetVar('PostCalendar', 'pcEventsOpenInNewWindow', '0');
-    pnModSetVar('PostCalendar', 'pcUseInternationalDates', '0');
-    pnModSetVar('PostCalendar', 'pcFirstDayOfWeek', '0');
-    pnModSetVar('PostCalendar', 'pcDayHighlightColor', '#FF0000');
-    pnModSetVar('PostCalendar', 'pcUsePopups', '1');
-    pnModSetVar('PostCalendar', 'pcDisplayTopics', '0');
-    pnModSetVar('PostCalendar', 'pcAllowDirectSubmit', '0');
-    pnModSetVar('PostCalendar', 'pcListHowManyEvents', '15');
-    pnModSetVar('PostCalendar', 'pcTimeIncrement', '15');
-    pnModSetVar('PostCalendar', 'pcAllowSiteWide', '0');
-    pnModSetVar('PostCalendar', 'pcAllowUserCalendar', '1');
-    pnModSetVar('PostCalendar', 'pcEventDateFormat', '%Y-%m-%d');
-    pnModSetVar('PostCalendar', 'pcRepeating', '0');
-    pnModSetVar('PostCalendar', 'pcMeeting', '0');
-    pnModSetVar('PostCalendar', 'pcAddressbook', '1');
-    pnModSetVar('PostCalendar', 'pcUseCache', '1');
-    pnModSetVar('PostCalendar', 'pcCacheLifetime', '3600');
-    pnModSetVar('PostCalendar', 'pcDefaultView', 'month');
-    pnModSetVar('PostCalendar', 'pcNotifyAdmin', '0');
-    pnModSetVar('PostCalendar', 'pcNotifyAdmin2Admin', '0');
-    pnModSetVar('PostCalendar', 'pcNotifyEmail', pnConfigGetVar('adminmail'));
+    // set the new variables
+    pnModSetVars('PostCalendar', $defaults);
 
+    // clear the cache
     pnModAPIFunc('PostCalendar', 'admin', 'clearCache');
 
     LogUtil::registerStatus(_PC_UPDATED_DEFAULTS);
@@ -242,57 +227,45 @@ function postcalendar_admin_updateconfig()
     if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
         return LogUtil::registerPermissionError();
     }
-    $pcTime24Hours           = FormUtil::getPassedValue('pcTime24Hours', 0);
-    $pcEventsOpenInNewWindow = FormUtil::getPassedValue('pcEventsOpenInNewWindow', 0);
-    $pcUseInternationalDates = FormUtil::getPassedValue('pcUseInternationalDates', 0);
-    $pcFirstDayOfWeek        = FormUtil::getPassedValue('pcFirstDayOfWeek', 0);
-    $pcDayHighlightColor     = FormUtil::getPassedValue('pcDayHighlightColor', '#FF0000');
-    $pcUsePopups             = FormUtil::getPassedValue('pcUsePopups', 0);
-    $pcAllowDirectSubmit     = FormUtil::getPassedValue('pcAllowDirectSubmit', 0);
-    $pcListHowManyEvents     = FormUtil::getPassedValue('pcListHowManyEvents', 15);
-    $pcDisplayTopics         = FormUtil::getPassedValue('pcDisplayTopics', 0);
-    $pcEventDateFormat       = FormUtil::getPassedValue('pcEventDateFormat', '%Y-%m-%d');
-    $pcRepeating             = FormUtil::getPassedValue('pcRepeating', 0);
-    $pcMeeting               = FormUtil::getPassedValue('pcMeeting', 0);
-    $pcAddressbook           = FormUtil::getPassedValue('pcAddressbook', 0);
-    $pcAllowSiteWide         = FormUtil::getPassedValue('pcAllowSiteWide', 0);
-    $pcAllowUserCalendar     = FormUtil::getPassedValue('pcAllowUserCalendar', 0);
-    $pcTimeIncrement         = FormUtil::getPassedValue('pcTimeIncrement', 15);
-    $pcUseCache              = FormUtil::getPassedValue('pcUseCache', 0);
-    $pcCacheLifetime         = FormUtil::getPassedValue('pcCacheLifetime', 3600);
-    $pcDefaultView           = FormUtil::getPassedValue('pcDefaultView', 'month');
-    $pcNotifyAdmin           = FormUtil::getPassedValue('pcNotifyAdmin', 0);
-    $pcNotifyEmail           = FormUtil::getPassedValue('pcNotifyEmail', pnConfigGetVar('adminmail'));
-    $pcNotifyAdmin2Admin     = FormUtil::getPassedValue('pcNotifyAdmin2Admin', 0);
+
+    $defaults = pnModFunc('PostCalendar', 'init', 'getdefaults');
+    if (!count($defaults)) {
+        return LogUtil::registerError(_GETFAILED);
+    }
+
+    $settings = array(
+    'pcTime24Hours'           => FormUtil::getPassedValue('pcTime24Hours', $defaults['pcTime24Hours']),
+    'pcEventsOpenInNewWindow' => FormUtil::getPassedValue('pcEventsOpenInNewWindow', $defaults['pcEventsOpenInNewWindow']),
+    'pcUseInternationalDates' => FormUtil::getPassedValue('pcUseInternationalDates', $defaults['pcUseInternationalDates']),
+    'pcFirstDayOfWeek'        => FormUtil::getPassedValue('pcFirstDayOfWeek', $defaults['pcFirstDayOfWeek']),
+    'pcDayHighlightColor'     => FormUtil::getPassedValue('pcDayHighlightColor', $defaults['pcDayHighlightColor']),
+    'pcUsePopups'             => FormUtil::getPassedValue('pcUsePopups', $defaults['pcUsePopups']),
+    'pcAllowDirectSubmit'     => FormUtil::getPassedValue('pcAllowDirectSubmit', $defaults['pcAllowDirectSubmit']),
+    'pcListHowManyEvents'     => FormUtil::getPassedValue('pcListHowManyEvents', $defaults['pcListHowManyEvents']),
+    'pcDisplayTopics'         => FormUtil::getPassedValue('pcDisplayTopics', $defaults['pcDisplayTopics']),
+    'pcEventDateFormat'       => FormUtil::getPassedValue('pcEventDateFormat', $defaults['pcEventDateFormat']),
+    'pcRepeating'             => FormUtil::getPassedValue('pcRepeating', $defaults['pcRepeating']),
+    'pcMeeting'               => FormUtil::getPassedValue('pcMeeting', $defaults['pcMeeting']),
+    'pcAddressbook'           => FormUtil::getPassedValue('pcAddressbook', $defaults['pcAddressbook']),
+    'pcAllowSiteWide'         => FormUtil::getPassedValue('pcAllowSiteWide', $defaults['pcAllowSiteWide']),
+    'pcAllowUserCalendar'     => FormUtil::getPassedValue('pcAllowUserCalendar', $defaults['pcAllowUserCalendar']),
+    'pcTimeIncrement'         => FormUtil::getPassedValue('pcTimeIncrement', $defaults['pcTimeIncrement']),
+    'pcUseCache'              => FormUtil::getPassedValue('pcUseCache', $defaults['pcUseCache']),
+    'pcCacheLifetime'         => FormUtil::getPassedValue('pcCacheLifetime', $defaults['pcCacheLifetime']),
+    'pcDefaultView'           => FormUtil::getPassedValue('pcDefaultView', $defaults['pcDefaultView']),
+    'pcNotifyAdmin'           => FormUtil::getPassedValue('pcNotifyAdmin', $defaults['pcNotifyAdmin']),
+    'pcNotifyEmail'           => FormUtil::getPassedValue('pcNotifyEmail', $defaults['pcNotifyEmail']),
+    'pcNotifyAdmin2Admin'     => FormUtil::getPassedValue('pcNotifyAdmin2Admin', $defaults['pcNotifyAdmin2Admin']),
+    );
     // v4b TS end
 
     // delete all the old vars
     pnModDelVar('PostCalendar');
 
     // set the new variables
-    pnModSetVar('PostCalendar', 'pcTime24Hours', $pcTime24Hours);
-    pnModSetVar('PostCalendar', 'pcEventsOpenInNewWindow', $pcEventsOpenInNewWindow);
-    pnModSetVar('PostCalendar', 'pcUseInternationalDates', $pcUseInternationalDates);
-    pnModSetVar('PostCalendar', 'pcFirstDayOfWeek', $pcFirstDayOfWeek);
-    pnModSetVar('PostCalendar', 'pcDayHighlightColor', $pcDayHighlightColor);
-    pnModSetVar('PostCalendar', 'pcUsePopups', $pcUsePopups);
-    pnModSetVar('PostCalendar', 'pcAllowDirectSubmit', $pcAllowDirectSubmit);
-    pnModSetVar('PostCalendar', 'pcListHowManyEvents', $pcListHowManyEvents);
-    pnModSetVar('PostCalendar', 'pcDisplayTopics', $pcDisplayTopics);
-    pnModSetVar('PostCalendar', 'pcEventDateFormat', $pcEventDateFormat);
-    pnModSetVar('PostCalendar', 'pcRepeating', $pcRepeating); // v4b TS
-    pnModSetVar('PostCalendar', 'pcMeeting', $pcMeeting); // v4b TS
-    pnModSetVar('PostCalendar', 'pcAddressbook', $pcAddressbook); // v4b TS
-    pnModSetVar('PostCalendar', 'pcAllowSiteWide', $pcAllowSiteWide);
-    pnModSetVar('PostCalendar', 'pcAllowUserCalendar', $pcAllowUserCalendar);
-    pnModSetVar('PostCalendar', 'pcTimeIncrement', $pcTimeIncrement);
-    pnModSetVar('PostCalendar', 'pcDefaultView', $pcDefaultView);
-    pnModSetVar('PostCalendar', 'pcUseCache', $pcUseCache);
-    pnModSetVar('PostCalendar', 'pcCacheLifetime', $pcCacheLifetime);
-    pnModSetVar('PostCalendar', 'pcNotifyAdmin', $pcNotifyAdmin);
-    pnModSetVar('PostCalendar', 'pcNotifyEmail', $pcNotifyEmail);
-    pnModSetVar('PostCalendar', 'pcNotifyAdmin2Admin', $pcNotifyAdmin2Admin);
+    pnModSetVars('PostCalendar', $settings);
 
+    // clear the cache
     pnModAPIFunc('PostCalendar', 'admin', 'clearCache');
 
     LogUtil::registerStatus(_PC_UPDATED);

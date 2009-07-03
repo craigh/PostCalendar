@@ -91,8 +91,8 @@ function postcalendar_pntables()
                     'recurrtype'  => 'I(1) NOTNULL DEFAULT 0',           // int(1) NOT NULL default 0
                     'recurrspec'  => 'X DEFAULT \'\'',                   // text default ''
                     'recurrfreq'  => 'I(3) NOTNULL DEFAULT 0',           // int(3) NOT NULL default 0
-                    'startTime'   => 'T',                                // time
-                    'endTime'     => 'T',                                // time
+                    'startTime'   => 'C(8) DEFAULT \'00:00:00\'',        // time (MySQL only, so now defined as varchar2)
+                    'endTime'     => 'C(8) DEFAULT \'00:00:00\'',        // time (MySQL only, so now defined as varchar2)
                     'alldayevent' => 'I(1) NOTNULL DEFAULT 0',           // int(1) NOT NULL default 0
                     'location'    => 'X',                                // text default ''
                     'conttel'     => 'C(50) DEFAULT \'\'',               // varchar(50) default ''

@@ -28,3 +28,4 @@ define('_PC_DEFAUT_CATEGORY_NAME', 'Default');
 define('_PC_DEFAUT_CATEGORY_DESCR', 'Default Category');
 define('_PC_UPGRADETABLESFAILED', 'Upgrading tables failed');
 define('_PC_CONVERTCATEGORIESFAILED', 'Converting to new-style categories failed');
+define('_PC_VERSIONTOOOLD', 'This version does not support upgrades from PostCalendar 3.x and lower. Please download and install at least version 4.0.3 (available from <a href="http://code.zikula.org/soundwebdevelopment/downloads">code.zikula.org/soundwebdevelopment</a>). Upgrading to PostCalendar %version% is possible from that version.');
