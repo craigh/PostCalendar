@@ -194,6 +194,7 @@ define('_PC_FILTER_TOPIC', 'All Topics');
 define('_PC_FILTER_USERS_ALL', 'All Users');
 define('_PC_FILTER_USERS', 'Default/Global');
 define('_PC_FIRST_DAY_OF_WEEK', 'First day of the week');
+define('_PC_FORUSER', 'For User');
 define('_PC_HIDDEN_ADMIN', 'Hidden Events Administration');
 define('_PC_HIDE_ARE_YOU_SURE', 'Are you sure you want to hide these events?');
 define('_PC_INTERNATIONAL_DATES', 'Use international date style');

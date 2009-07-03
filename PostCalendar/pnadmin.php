@@ -143,10 +143,10 @@ function postcalendar_admin_adminevents()
     }
 
     $action      = FormUtil::getPassedValue('action');
-    $pc_event_id = FormUtil::getPassedValue('pc_event_id'); // could be an array or single val
+    $events      = FormUtil::getPassedValue('events'); // could be an array or single val
     $thelist     = FormUtil::getPassedValue('thelist');
 
-    if (!isset($pc_event_id)) {
+    if (!isset($events)) {
         LogUtil::registerError(_PC_NO_EVENT_SELECTED);
 
         // return to where we came from
@@ -182,10 +182,8 @@ function postcalendar_admin_adminevents()
     $pnRender->assign('function', $function);
     $pnRender->assign('areyousure', $are_you_sure_text);
 
-    if (!is_array($pc_event_id)) {
-        $events[0] = $pc_event_id;
-    } else {
-        $events = $pc_event_id;
+    if (!is_array($events)) {
+        $events = array($events);
     } //create array if not already
 
     foreach ($events as $eid) {

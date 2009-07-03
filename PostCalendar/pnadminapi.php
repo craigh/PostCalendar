@@ -198,7 +198,7 @@ function postcalendar_adminapi_notify($args)
     $pnRender->assign('is_update', $is_update);
     $pnRender->assign('modversion', $modversion);
     $pnRender->assign('eid', $eid);
-    $pnRender->assign('link', pnModURL('PostCalendar', 'admin', 'adminevents', array('pc_event_id' => $eid, 'action' => _ADMIN_ACTION_VIEW), null, null, true));
+    $pnRender->assign('link', pnModURL('PostCalendar', 'admin', 'adminevents', array('events' => $eid, 'action' => _ADMIN_ACTION_VIEW), null, null, true));
     $message = $pnRender->fetch('email/postcalendar_email_adminnotify.htm');
 
     $messagesent = pnModAPIFunc('Mailer', 'user', 'sendmessage', array('toaddress' => _SETTING_NOTIFY_EMAIL, 'subject' => _PC_NOTIFY_SUBJECT, 'body' => $message, 'html' => true));

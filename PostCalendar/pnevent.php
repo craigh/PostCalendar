@@ -188,8 +188,8 @@ function postcalendar_event_new($args)
         $event_endyear  = $event_startyear; // V4B SB END
     }
     $event_endtype     = FormUtil::getPassedValue('event_endtype'); //0 = no end daate
-    $event_dur_hours   = FormUtil::getPassedValue('event_dur_hours');
-    $event_dur_minutes = FormUtil::getPassedValue('event_dur_minutes');
+    $event_dur_hours   = FormUtil::getPassedValue('event_dur_Hour');
+    $event_dur_minutes = FormUtil::getPassedValue('event_dur_Minute');
     $event_duration    = (60 * 60 * $event_dur_hours) + (60 * $event_dur_minutes);
     $event_allday      = FormUtil::getPassedValue('event_allday');
 
@@ -225,8 +225,7 @@ function postcalendar_event_new($args)
 
     $form_action        = FormUtil::getPassedValue('form_action');
     $pc_html_or_text    = FormUtil::getPassedValue('pc_html_or_text');
-    //$pc_event_id        = FormUtil::getPassedValue('pc_event_id');
-    $pc_event_id        = FormUtil::getPassedValue('eid');
+    $eid                = FormUtil::getPassedValue('eid');
     $data_loaded        = FormUtil::getPassedValue('data_loaded');
     $is_update          = FormUtil::getPassedValue('is_update');
     $authid             = FormUtil::getPassedValue('authid');
@@ -239,7 +238,7 @@ function postcalendar_event_new($args)
         $uname = pnConfigGetVar('anonymous');
     }
 
-    if (!isset($pc_event_id) || empty($pc_event_id) || $data_loaded) { // this is a new event
+    if (!isset($eid) || empty($eid) || $data_loaded) { // this is a new event
         // wrap all the data into array for passing to commit and preview functions
         $eventdata = compact('event_subject', 'event_desc', 'event_sharing',
             'event_category', 'event_topic', 'event_startmonth', 'event_startday', 'event_startyear',
@@ -252,13 +251,13 @@ function postcalendar_event_new($args)
             'event_repeat_on_day', 'event_repeat_on_freq', 'event_recurrspec', 'uname', 'Date', 'year',
             'month', 'day', 'pc_html_or_text');
         $eventdata['is_update'] = $is_update;
-        $eventdata['pc_event_id'] = $pc_event_id;
+        $eventdata['eid'] = $eid;
         $eventdata['data_loaded'] = true;
         $eventdata['event_for_userid'] = $event_for_userid;
 
         $event_participants = FormUtil::getPassedValue('participants');
     } else { // we are editing an existing event or copying an exisiting event
-        $event = pnModAPIFunc('PostCalendar', 'event', 'getEventDetails', $pc_event_id);
+        $event = pnModAPIFunc('PostCalendar', 'event', 'getEventDetails', $eid);
         if (($uname != $event['informant']) and (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN))) {
             return _PC_CAN_NOT_EDIT; // need to change this to logutil
         }
@@ -281,14 +280,6 @@ function postcalendar_event_new($args)
         $eventdata['event_dur_minutes'] = $event['duration_minutes'];
         $eventdata['event_duration'] = $event['duration'];
         $eventdata['event_allday'] = $event['alldayevent'];
-        $loc_data = unserialize($event['location']);
-        $eventdata['event_location'] = $loc_data['event_location'];
-        $eventdata['event_street1'] = $loc_data['event_street1'];
-        $eventdata['event_street2'] = $loc_data['event_street2'];
-        $eventdata['event_city'] = $loc_data['event_city'];
-        $eventdata['event_state'] = $loc_data['event_state'];
-        $eventdata['event_postal'] = $loc_data['event_postal'];
-        $eventdata['event_location_info'] = $loc_data;
         $eventdata['event_contname'] = $event['contname'];
         $eventdata['event_conttel'] = $event['conttel'];
         $eventdata['event_contemail'] = $event['contemail'];
@@ -296,32 +287,31 @@ function postcalendar_event_new($args)
         $eventdata['event_fee'] = $event['fee'];
         $eventdata['event_contact'] = $event['event_contact'];
         $eventdata['event_repeat'] = $event['recurrtype'];
-        $rspecs = unserialize($event['recurrspec']);
-        $eventdata['event_repeat_freq'] = $rspecs['event_repeat_freq'];
-        $eventdata['event_repeat_freq_type'] = $rspecs['event_repeat_freq_type'];
-        $eventdata['event_repeat_on_num'] = $rspecs['event_repeat_on_num'];
-        $eventdata['event_repeat_on_day'] = $rspecs['event_repeat_on_day'];
-        $eventdata['event_repeat_on_freq'] = $rspecs['event_repeat_on_freq'];
-        $eventdata['event_recurrspec'] = $rspecs;
         $eventdata['uname'] = $uname;
         $eventdata['Date'] = $Date;
         $eventdata['year'] = $year;
         $eventdata['month'] = $month;
         $eventdata['day'] = $day;
         $eventdata['is_update'] = true;
-        $eventdata['pc_event_id'] = $pc_event_id;
+        $eventdata['eid'] = $eid;
         $eventdata['data_loaded'] = true;
         $eventdata['pc_html_or_text'] = $pc_html_or_text;
 
         $eventdata['event_for_userid'] = $event_for_userid;
         $eventdata['meeting_id'] = $event['meeting_id'];
         $eventdata['participants'] = $event_participants;
+
+        $loc_data = unserialize($event['location']);
+        $rspecs = unserialize($event['recurrspec']);
+        $eventdata = array_merge($eventdata, $loc_data, $rspecs);
+        $eventdata['event_location_info'] = $loc_data;
+        $eventdata['event_recurrspec'] = $rspecs;
     }
 
     if ($form_action == 'copy') {
         $form_action = '';
-        unset($pc_event_id);
-        $eventdata['pc_event_id'] = '';
+        unset($eid);
+        $eventdata['eid'] = '';
         $eventdata['is_update'] = false;
         $eventdata['data_loaded'] = false;
     }

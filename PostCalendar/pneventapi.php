@@ -396,7 +396,7 @@ function postcalendar_eventapi_writeEvent($args)
         $eventarray = array(
                         'title' => DataUtil::formatForStore($event_subject),
                         'hometext' => DataUtil::formatForStore($event_desc),
-                        'topic' => DataUtil::formatForStore($event_topic),
+                        'topic' => (int) DataUtil::formatForStore($event_topic),
                         'eventDate' => DataUtil::formatForStore($startDate),
                         'endDate' => DataUtil::formatForStore($endDate),
                         'recurrtype' => DataUtil::formatForStore($event_repeat),
@@ -415,8 +415,8 @@ function postcalendar_eventapi_writeEvent($args)
                         'sharing' => DataUtil::formatForStore($event_sharing),
                         'aid' => DataUtil::formatForStore($part));
         if ($is_update) {
-            $eventarray['eid'] = DataUtil::formatForStore($pc_event_id);
-            $result = pnModAPIFunc('postcalendar', 'event', 'update', array($pc_event_id=>$eventarray));
+            $eventarray['eid'] = DataUtil::formatForStore($eid);
+            $result = pnModAPIFunc('postcalendar', 'event', 'update', array($eid => $eventarray));
         } else { //new event
             unset ($eventarray['eid']); //be sure that eid is not set on insert op to autoincrement value
             $eventarray['time'] = DataUtil::formatForStore(date("Y-m-d H:i:s")); //current date
@@ -473,7 +473,7 @@ function postcalendar_eventapi_buildSubmitForm($args)
     //================================================================
     if (true) // if why?
     {
-        $event_for_userid = (int) DBUtil::selectFieldByID('postcalendar_events', 'aid', $pc_event_id, 'eid');
+        $event_for_userid = (int) DBUtil::selectFieldByID('postcalendar_events', 'aid', $eid, 'eid');
 
         $uid = pnUserGetVar('uid');
         $uname = pnUserGetVar('uname');
@@ -745,7 +745,7 @@ function postcalendar_eventapi_buildSubmitForm($args)
     $tpl->assign('SelectedNoEnd', (int) $event_endtype == 0 ? 'checked' : '');
 
     $tpl->assign('is_update', $is_update);
-    $tpl->assign('pc_event_id', $pc_event_id);
+    $tpl->assign('eid', $eid);
     if (isset($data_loaded)) {
         $tpl->assign('data_loaded', $data_loaded);
     }

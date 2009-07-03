@@ -34,15 +34,15 @@
 <div class="tabpage tdefault">
 <h2 style='border-bottom:1px solid #CCCCCC;margin-top:0;text-align:left;'><!--[pnml name='_PC_NEW_EVENT_HEADER']--></h2>
     <table width="100%" border="0" cellpadding="2" cellspacing="0">
-    <!-- EVENT INFO ROWS -->            
+    <!-- EVENT INFO ROWS -->
         <tr>
             <td align="left" valign="top" width="50%">
                 <!--[pnml name='_PC_EVENT_TITLE']-->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!--[pnml name='_PC_REQUIRED']--><br />
                 <input type="text" name="event_subject" value="<!--[ $ValueEventTitle ]-->" /><br />
 
-		        For User&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!--[pnml name='_PC_REQUIRED']--><br />
+		        <!--[pnml name='_PC_FORUSER']-->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!--[pnml name='_PC_REQUIRED']--><br />
 		        <!--[html_options name=event_for_userid options=$users selected=$user_selected]--><br /><br />
-		
+
 		        <!--[pnml name='_PC_DATE_TIME']-->&nbsp;&nbsp;&nbsp;
 		        <!--[ pc_calendar_build_input_box htmlName="meetingdate_start" dateFormat="%d-%m-%Y" defaultString=$startvalue defaultDate=$startdate ]-->
 		        <br/ ><br />
@@ -59,22 +59,22 @@
                     <tr>
                         <td valign="top" align="left">&nbsp;</td>
                         <td valign="top" align="left"><!--[pnml name='_PC_TIMED_DURATION']--></td>
-                        <td valign="top" align="left"><!--[html_select_time time=$event_duration display_seconds=false display_minutes=false display_meridian=false use_24_hours=true prefix="event_dur_hours"]-->
+                        <td valign="top" align="left"><!--[html_select_time time=$event_duration display_seconds=false display_minutes=false display_meridian=false use_24_hours=true prefix="event_dur_"]-->
                         <!--[*
                         <!--[ strip ]-->
-                            <select name="event_dur_hours">
+                            <select name="event_dur_Hours">
                             <!--[ foreach item=time from=$TimedDurationHours ]-->
                                 <option value="<!--[ $time.value ]-->" <!--[ $time.selected ]-->><!--[ $time.name ]--></option>
                             <!--[ /foreach ]-->
                             </select>
                         <!--[ /strip ]-->
-                        *]--> 
+                        *]-->
                         <!--[pnml name='_PC_TIMED_DURATION_HOURS']-->
-                    
-                        <!--[html_select_time time=$event_duration display_seconds=false display_hours=false display_meridian=false minute_interval=$minute_interval prefix="event_dur_hours"]-->
+
+                        <!--[html_select_time time=$event_duration display_seconds=false display_hours=false display_meridian=false minute_interval=$minute_interval prefix="event_dur_"]-->
                         <!--[*
                         <!--[ strip ]-->
-                        <select name="event_dur_minutes">
+                        <select name="event_dur_Minutes">
                             <!--[ foreach item=time from=$TimedDurationMinutes ]-->
                                 <option value="<!--[ $time.value ]-->" <!--[ $time.selected ]-->><!--[ $time.name ]--></option>
                             <!--[ /foreach ]-->
@@ -94,7 +94,7 @@
 		    	</td></tr></table>
 			    <!-- V4B SB END -->
         		</td>
-                
+
                 <td align="left" valign="top" width="50%">
                 <!--[ if $displayTopics eq 1 ]-->
                     <!--[pnml name='_PC_EVENT_TOPIC']--><br />
@@ -158,18 +158,18 @@
 </div>
 <!-- EVENT INFO ROWS -->
 
-<!-- REPEATING ROWS -->         
+<!-- REPEATING ROWS -->
 <!--[pnmodgetvar module="PostCalendar" name="pcRepeating"|pnvarprepfordisplay assign="pcDisplayRepeating"]-->
 <!--[ if $pcDisplayRepeating ]-->
 <div class="tabpage">
 <h2 style='border-bottom:1px solid #CCCCCC;margin-top:1em;text-align:left;'><!--[pnml name='_PC_REPEATING_HEADER']--></h2>
-    <table width="100%" border="0" cellpadding="2" cellspacing="0">   
+    <table width="100%" border="0" cellpadding="2" cellspacing="0">
         <tr>
             <td colspan="2" align="left" valign="middle" width="100%">
                 <input type="radio" name="event_repeat" value="0" <!--[ $SelectedNoRepeat ]--> />
                 <!--[pnml name='_PC_NO_REPEAT']--><br />
-                
-                <input type="radio" name="event_repeat" value="1" <!--[ $SelectedRepeat ]--> /> 
+
+                <input type="radio" name="event_repeat" value="1" <!--[ $SelectedRepeat ]--> />
                 <!--[pnml name='_PC_REPEAT']-->
                 <input type="text" name="event_repeat_freq" value="<!--[ $InputRepeatFreqVal ]-->" size="4" />
 				<!--
@@ -185,8 +185,8 @@
                 <!--[ /foreach ]-->
                 </select>
                 <br />
-                
-                <input type="radio" name="event_repeat" value="2" <!--[ $SelectedRepeatOn ]--> /> 
+
+                <input type="radio" name="event_repeat" value="2" <!--[ $SelectedRepeatOn ]--> />
                 <!--[pnml name='_PC_REPEAT_ON']-->
                 <select name="event_repeat_on_num">
                 <!--[ foreach item=repeat from=$repeat_on_num ]-->
@@ -209,7 +209,7 @@
                 </select>
 				-->
                 <br /><br />
-                
+
                 <!--[pnml name='_PC_END_DATE']--><br />
                 <input type="radio" name="event_endtype" value="1" <!--[ $SelectedEndOn ]--> />&nbsp;
 		<!--[ if $startdate > $endDate ]-->
@@ -240,7 +240,7 @@
 <!--[ if $pcDisplayMeeting ]-->
 <div class="tabpage">
 <h2 style='border-bottom:1px solid #CCCCCC;margin-top:1em;text-align:left;'><!--[pnml name='_PC_PARTICIPANT']--></h2>
-    <table width="100%" border="0" cellpadding="2" cellspacing="0">   
+    <table width="100%" border="0" cellpadding="2" cellspacing="0">
         <tr>
 		    <td colspan="2" valign="top" width="270">
 	            <table>
@@ -266,7 +266,7 @@
 <!--[ /if ]-->
 <!--[html_options name=pc_html_or_text options=$EventHTMLorText selected=$EventHTMLorTextVal]-->
 <input type="hidden" name="is_update" value="<!--[$is_update]-->">
-<input type="hidden" name="pc_event_id" value="<!--[$pc_event_id]-->">
+<input type="hidden" name="eid" value="<!--[$eid]-->">
 <!--[if !empty($data_loaded) ]--> <input type="hidden" name="data_loaded" value="<!--[$data_loaded]-->"><!--[/if]-->
 <select name="form_action">
 	<option value="preview"><!--[pnml name='_PC_EVENT_PREVIEW']--></option>
