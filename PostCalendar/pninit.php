@@ -137,6 +137,7 @@ function postcalendar_init_getdefaults()
     $defaults = array(
     'pcTime24Hours'           => _TIMEFORMAT == 24 ? '1' : '0',
     'pcEventsOpenInNewWindow' => '0',
+    'pcUseInternationalDates' => '0',
     'pcFirstDayOfWeek'        => _DATEFIRSTWEEKDAY,
     'pcDayHighlightColor'     => '#FF0000',
     'pcUsePopups'             => '1',
