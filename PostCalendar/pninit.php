@@ -135,19 +135,18 @@ function postcalendar_init_getdefaults()
 {
     // PostCalendar Default Settings
     $defaults = array(
-    'pcTime24Hours'           => '0',
+    'pcTime24Hours'           => _TIMEFORMAT == 24 ? '1' : '0',
     'pcEventsOpenInNewWindow' => '0',
-    'pcUseInternationalDates' => '0',
-    'pcFirstDayOfWeek'        => '0',
+    'pcFirstDayOfWeek'        => _DATEFIRSTWEEKDAY,
     'pcDayHighlightColor'     => '#FF0000',
     'pcUsePopups'             => '1',
     'pcAllowDirectSubmit'     => '0',
     'pcListHowManyEvents'     => '15',
     'pcDisplayTopics'         => '0',
-    'pcEventDateFormat'       => '%Y-%m-%d',
+    'pcEventDateFormat'       => _DATEBRIEF,
     'pcRepeating'             => '0',
     'pcMeeting'               => '0',
-    'pcAddressbook'           => '1',
+    'pcAddressbook'           => pnModAvailable('v4bAddressBook') ? '1' : '0',
     'pcAllowSiteWide'         => '0',
     'pcAllowUserCalendar'     => '1',
     'pcTimeIncrement'         => '15',

@@ -69,7 +69,7 @@ define('_CONTTEL', 'Phone Number');
 define('_CONTWEBSITE', 'Website');
 define('_DATE_STARTMESSAGE', 'Insert Startdate');
 define('_EDIT_PC_CONFIG_CATEGORIES', 'Categories');
-define('_EDIT_PC_CONFIG_DEFAULT', 'Use Defaults');
+define('_EDIT_PC_CONFIG_DEFAULT', 'Reset to Defaults (for language "%defaultlang%")');
 define('_EDIT_PC_CONFIG_GLOBAL', 'Settings');
 define('_EVENTS_OPEN_IN_NEW_WINDOW', 'Events open in new window');
 define('_FEE', 'Fee');
