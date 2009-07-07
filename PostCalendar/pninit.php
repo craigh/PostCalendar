@@ -179,13 +179,13 @@ function postcalendar_init_reset_scribite()
         $mid = false;
 
         if (count($modconfig)) {
-            $modconfig['modfuncs'] = 'new';
+            $modconfig['modfuncs'] = 'new,edit,submit';
             $modconfig['modareas'] = 'description';
             $mid = pnModAPIFunc('scribite', 'admin', 'editmodule', $modconfig);
         } else {
             // create new module in db
             $modconfig = array('modulename' => 'PostCalendar',
-                               'modfuncs'   => 'new',
+                               'modfuncs'   => 'new,edit,submit',
                                'modareas'   => 'description',
                                'modeditor'  => '-');
             $mid = pnModAPIFunc('scribite', 'admin', 'addmodule', $modconfig);
