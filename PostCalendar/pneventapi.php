@@ -483,10 +483,11 @@ function postcalendar_eventapi_buildSubmitForm($args)
         @define('_PC_FORM_USERNAME', true);
 
         //get users that have submitted events previously
-        $users = DBUtil::selectFieldArray('postcalendar_events', 'informant', null, null, true, 'aid');
-        if (!array_key_exists($idsel, $users)) {
-            $users[$uid] = $uname; // add current user to userlist if not already there
-        }
+        //$users = DBUtil::selectFieldArray('postcalendar_events', 'informant', null, null, true, 'aid');
+        $users = DBUtil::selectFieldArray('users', 'uname', null, null, null, 'uid');
+        //if (!array_key_exists($idsel, $users)) {
+        //    $users[$uid] = $uname; // add current user to userlist if not already there
+        //}
         $tpl->assign('users', $users);
         $tpl->assign('user_selected', $idsel);
     }
