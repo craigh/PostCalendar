@@ -65,6 +65,8 @@ function postcalendar_init()
         return LogUtil::registerError(_CREATEFAILED);
     }
 
+    postcalendar_init_reset_scribite();
+
     return true;
 }
 
@@ -118,6 +120,7 @@ function postcalendar_upgrade($oldversion)
         case '5.1.0':
             pnModSetVar('PostCalendar', 'pcNotifyAdmin2Admin', '0');
         case '5.5.0':
+            postcalendar_init_reset_scribite();
     }
 
     // if we get this far - clear the cache
@@ -160,6 +163,40 @@ function postcalendar_init_getdefaults()
     );
 
     return $defaults;
+}
+
+/**
+ * Reset scribite config for PostCalendar module.
+ *
+ * Since we updated the functionname for creating / editing a new event from func=submit to func=new,
+ * scribite doesn't load any editor. If we force it to our new function.
+ */
+function postcalendar_init_reset_scribite()
+{
+    // update the scribite
+    if (pnModAvailable('scribite') && pnModAPILoad('scribite', 'user') && pnModAPILoad('scribite', 'admin')) {
+        $modconfig = pnModAPIFunc('scribite', 'user', 'getModuleConfig', array('modulename' => 'PostCalendar'));
+        $mid = false;
+
+        if (count($modconfig)) {
+            $modconfig['modfuncs'] = 'new';
+            $modconfig['modareas'] = 'description';
+            $mid = pnModAPIFunc('scribite', 'admin', 'editmodule', $modconfig);
+        } else {
+            // create new module in db
+            $modconfig = array('modulename' => 'PostCalendar',
+                               'modfuncs'   => 'new',
+                               'modareas'   => 'description',
+                               'modeditor'  => '-');
+            $mid = pnModAPIFunc('scribite', 'admin', 'addmodule', $modconfig);
+        }
+
+        // Error tracking
+        if ($mid === false) {
+            pnModLangLoad('scribite', 'user');
+            LogUtil::registerStatus (_EDITORNOCONFCHANGE);
+        }
+    }
 }
 
 /**
