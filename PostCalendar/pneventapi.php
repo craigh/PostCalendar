@@ -399,20 +399,20 @@ function postcalendar_eventapi_writeEvent($args)
                         'topic' => (int) DataUtil::formatForStore($event_topic),
                         'eventDate' => DataUtil::formatForStore($startDate),
                         'endDate' => DataUtil::formatForStore($endDate),
-                        'recurrtype' => DataUtil::formatForStore($event_repeat),
+                        'recurrtype' => (int) DataUtil::formatForStore($event_repeat),
                         'startTime' => DataUtil::formatForStore($startTime),
-                        'alldayevent' => DataUtil::formatForStore($event_allday),
-                        'catid' => DataUtil::formatForStore($event_category),
+                        'alldayevent' => (int) DataUtil::formatForStore($event_allday),
+                        'catid' => (int) DataUtil::formatForStore($event_category),
                         'location' => $event_location_info,                       // Serialized, already formatted for storage
                         'conttel' => DataUtil::formatForStore($event_conttel),
                         'contname' => DataUtil::formatForStore($event_contname),
                         'contemail' => DataUtil::formatForStore($event_contemail),
                         'website' => DataUtil::formatForStore($event_website),
                         'fee' => DataUtil::formatForStore($event_fee),
-                        'eventstatus' => DataUtil::formatForStore($event_status),
+                        'eventstatus' => (int) DataUtil::formatForStore($event_status),
                         'recurrspec' => $event_recurrspec,                        // Serialized, already formatted for storage
-                        'duration' => DataUtil::formatForStore($event_duration),
-                        'sharing' => DataUtil::formatForStore($event_sharing),
+                        'duration' => (int) DataUtil::formatForStore($event_duration),
+                        'sharing' => (int) DataUtil::formatForStore($event_sharing),
                         'aid' => DataUtil::formatForStore($part));
         if ($is_update) {
             $eventarray['eid'] = DataUtil::formatForStore($eid);
