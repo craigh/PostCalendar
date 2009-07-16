@@ -1,36 +1,12 @@
 <?php
 /**
- * SVN: $Id$
- *
  * @package     PostCalendar
  * @author      $Author$
  * @link        $HeadURL$
- * @version     $Revision$
- *
- * PostCalendar::Zikula Events Calendar Module
- * Copyright (C) 2002  The PostCalendar Team
- * http://postcalendar.tv
- * Copyright (C) 2009  Sound Web Development
- * Craig Heydenburg
- * http://code.zikula.org/soundwebdevelopment/
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- * To read the license please read the docs/license.txt or visit
- * http://www.gnu.org/copyleft/gpl.html
- *
+ * @version     $Id$
+ * @copyright   Copyright (c) 2002, The PostCalendar Team
+ * @copyright   Copyright (c) 2009, Craig Heydenburg, Sound Web Development
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
  */
 
 //=================================================================
@@ -120,20 +96,6 @@ define('_SETTING_SAFE_MODE',       pnModGetVar('PostCalendar', 'pcSafeMode'));
 define('_SETTING_NOTIFY_ADMIN',    pnModGetVar('PostCalendar', 'pcNotifyAdmin'));
 define('_SETTING_NOTIFY_EMAIL',    pnModGetVar('PostCalendar', 'pcNotifyEmail'));
 
-//=================================================================
-//  Make checking basic permissions easier
-//=================================================================
-/* shouldn't be needed any longer June 6, 2009
-define('PC_ACCESS_ADMIN',    pnSecAuthAction(0, 'PostCalendar::', 'null::null', ACCESS_ADMIN));
-define('PC_ACCESS_DELETE',   pnSecAuthAction(0, 'PostCalendar::', 'null::null', ACCESS_DELETE));
-define('PC_ACCESS_ADD',      pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADD));
-define('PC_ACCESS_EDIT',     pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_EDIT));
-define('PC_ACCESS_MODERATE', pnSecAuthAction(0, 'PostCalendar::', 'null::null', ACCESS_MODERATE));
-define('PC_ACCESS_COMMENT',  pnSecAuthAction(0, 'PostCalendar::', 'null::null', ACCESS_COMMENT));
-define('PC_ACCESS_READ',     pnSecAuthAction(0, 'PostCalendar::', 'null::null', ACCESS_READ));
-define('PC_ACCESS_OVERVIEW', pnSecAuthAction(0, 'PostCalendar::', 'null::null', ACCESS_OVERVIEW));
-define('PC_ACCESS_NONE',     pnSecAuthAction(0, 'PostCalendar::', 'null::null', ACCESS_NONE));
-*/
 
 //  Require and Setup utility classes and functions
 define('DATE_CALC_BEGIN_WEEKDAY', _SETTING_FIRST_DAY_WEEK);
