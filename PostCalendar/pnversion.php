@@ -10,7 +10,7 @@
  */
 $modversion['name']           = _PC_MODULENAME;
 $modversion['id']             = '$Revision$'; // svn revision #
-$modversion['version']        = '5.5.1';
+$modversion['version']        = '5.6-dev';
 $modversion['description']    = _PC_MODULEDESCRIPTION;
 $modversion['credits']        = 'docs/credits.txt';
 $modversion['changelog']      = 'http://code.zikula.org/soundwebdevelopment/';
