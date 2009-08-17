@@ -98,6 +98,7 @@ function postcalendar_upgrade($oldversion)
         case '5.5.0':
             postcalendar_init_reset_scribite();
         case '5.5.1':
+        case '5.5.2':
     }
 
     // if we get this far - clear the cache

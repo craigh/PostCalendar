@@ -177,7 +177,7 @@ function postcalendar_event_new($args)
     $event_state     = FormUtil::getPassedValue('event_state');
     $event_postal    = FormUtil::getPassedValue('event_postal');
     $event_location_info = compact('event_location', 'event_street1', 'event_street2', 'event_city', 'event_state', 'event_postal');
-    foreach ($event_location_info as &$litmp) $litmp = DataUtil::formatForStore($litmp);
+    foreach ($event_location_info as $key => $litmp) $event_location[$key] = DataUtil::formatForStore($litmp);
     $event_location_info = serialize($event_location_info);
     // contact data
     $event_contname  = FormUtil::getPassedValue('event_contname');
@@ -196,7 +196,7 @@ function postcalendar_event_new($args)
     $event_repeat_on_day    = FormUtil::getPassedValue('event_repeat_on_day');
     $event_repeat_on_freq   = FormUtil::getPassedValue('event_repeat_on_freq');
     $event_recurrspec = compact('event_repeat_freq', 'event_repeat_freq_type', 'event_repeat_on_num', 'event_repeat_on_day', 'event_repeat_on_freq');
-    foreach ($event_recurrspec as &$rctmp) $rctmp = DataUtil::formatForStore($rctmp);
+    foreach ($event_recurrspec as $key => $rctmp) $event_recurrspec[$key] = DataUtil::formatForStore($rctmp);
     $event_recurrspec = serialize($event_recurrspec);
 
     $form_action        = FormUtil::getPassedValue('form_action');
