@@ -404,11 +404,13 @@ function postcalendar_userapi_eventPreview($args)
  * @private
  * @returns string
  */
-function makeValidURL($s)
-{
-    if (empty($s)) return '';
-    if (!preg_match('|^http[s]?:\/\/|i', $s)) $s = 'http://' . $s;
-    return $s;
+if (!function_exists('makeValidURL')) {
+    function makeValidURL($s)
+    {
+        if (empty($s)) return '';
+        if (!preg_match('|^http[s]?:\/\/|i', $s)) $s = 'http://' . $s;
+        return $s;
+    }
 }
 
 function postcalendar_userapi_getDate($args)
