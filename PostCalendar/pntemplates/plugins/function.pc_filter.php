@@ -50,17 +50,15 @@ function smarty_function_pc_filter($args, &$smarty)
     //================================================================
     if (in_array('user', $types)) {
         @define('_PC_FORM_USERNAME', true);
-        // this is another sport to pull only users that have submitted events!!! not ALL users...
-        $users = DBUtil::selectObjectArray('users', '', 'uname');
+        $users = DBUtil::selectFieldArray('postcalendar_events', 'informant', null, null, true, 'aid'); 
 
         $useroptions = "<select name=\"pc_username\" $class>";
         $useroptions .= "<option value=\"\" $class>" . _PC_FILTER_USERS . "</option>";
         $selected = ($pc_username == '__PC_ALL__' ? 'selected="selected"' : '');
         $useroptions .= "<option value=\"__PC_ALL__\" $class $selected>" . _PC_FILTER_USERS_ALL . "</option>";
-        foreach ($users as $user) {
-            $uname = $user['uname'];
-            $sel = ($pc_username == $uname ? 'selected="selected"' : '');
-            $useroptions .= "<option value=\"$uname\" $sel $class>$uname</option>";
+        foreach ($users as $k => $v) {
+            $sel = ($pc_username == $v ? 'selected="selected"' : '');
+            $useroptions .= "<option value=\"$v\" $sel $class>$v</option>";
         }
         $useroptions .= '</select>';
     }

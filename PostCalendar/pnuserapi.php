@@ -108,8 +108,8 @@ function postcalendar_userapi_buildView($args)
             break;
     }
     //=================================================================
-    // Week View is a bit of a pain, so we need to
-    // do some extra setup for that view.    This section will
+    // Week View
+    // This section will
     // find the correct starting and ending dates for a given
     // seven day period, based on the day of the week the
     // calendar is setup to run under (Sunday, Saturday, Monday)
@@ -156,9 +156,7 @@ function postcalendar_userapi_buildView($args)
             $calendarView = Date_Calc::getCalendarYear($the_year, '%Y-%m-%d');
             break;
         case 'list':
-            //$starting_date = date('m/d/Y', mktime(0, 0, 0, $the_month, 1 - $first_day, $the_year));
             $starting_date = "$the_month/1/$the_year";
-            //$ending_date = date('m/d/Y', mktime(0, 0, 0, $the_month, $the_last_day, $the_year));
             $ending_date = "$the_month/$last_day/$the_year";
             $calendarView = Date_Calc::getCalendarMonth($the_month, $the_year, '%Y-%m-%d');
             break;
@@ -193,7 +191,7 @@ function postcalendar_userapi_buildView($args)
     }
     unset($numDays);
     //=================================================================
-    // Prepare some values for the template
+    // Prepare values for the template
     //=================================================================
     $prev_month = Date_Calc::beginOfPrevMonth(1, $the_month, $the_year, '%Y%m%d');
     $next_month = Date_Calc::beginOfNextMonth(1, $the_month, $the_year, '%Y%m%d');

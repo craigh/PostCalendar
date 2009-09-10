@@ -425,7 +425,7 @@ function postcalendar_eventapi_writeEvent($args)
 }
 
 /**
-     * postcalendar_eventapi_buildSubmitForm()
+ * postcalendar_eventapi_buildSubmitForm()
  * create event submit form
  */
 function postcalendar_eventapi_buildSubmitForm($args)
@@ -504,9 +504,12 @@ function postcalendar_eventapi_buildSubmitForm($args)
     // V4B SB END // JAVASCRIPT CALENDAR
     //================================================================
     // build the userlist select box
+    // the purpose of this box is to allow user to create a private event for another user
+    // this should be configurable by admin to allow/deny
+    // if denied, selected user should default to submittor
     //================================================================
     if (true) { // change this to only perform if displaymeetingoptions & useaddressbook?
-        $users = DBUtil::selectFieldArray('users', 'uname', null, null, true, 'uid'); // ALL users... ick.
+        $users = DBUtil::selectFieldArray('users', 'uname', null, null, true, 'uid');
     }
 
     //================================================================
