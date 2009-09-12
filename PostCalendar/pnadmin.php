@@ -230,6 +230,7 @@ function postcalendar_admin_updateconfig()
     'pcNotifyAdmin'           => FormUtil::getPassedValue('pcNotifyAdmin', 0),
     'pcNotifyEmail'           => FormUtil::getPassedValue('pcNotifyEmail', $defaults['pcNotifyEmail']),
     'pcNotifyAdmin2Admin'     => FormUtil::getPassedValue('pcNotifyAdmin2Admin', 0),
+    'pcAllowCatFilter'        => FormUtil::getPassedValue('pcAllowCatFilter', 0),
     );
     // v4b TS end
 

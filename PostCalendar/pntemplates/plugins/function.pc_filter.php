@@ -48,25 +48,30 @@ function smarty_function_pc_filter($args, &$smarty)
     //================================================================
     // build the username filter pulldown
     //================================================================
-    if (in_array('user', $types)) {
-        @define('_PC_FORM_USERNAME', true);
-        $users = DBUtil::selectFieldArray('postcalendar_events', 'informant', null, null, true, 'aid'); 
-
-        $useroptions = "<select name=\"pc_username\" $class>";
-        $useroptions .= "<option value=\"\" $class>" . _PC_FILTER_USERS . "</option>";
-        $selected = ($pc_username == '__PC_ALL__' ? 'selected="selected"' : '');
-        $useroptions .= "<option value=\"__PC_ALL__\" $class $selected>" . _PC_FILTER_USERS_ALL . "</option>";
-        foreach ($users as $k => $v) {
-            $sel = ($pc_username == $v ? 'selected="selected"' : '');
-            $useroptions .= "<option value=\"$v\" $sel $class>$v</option>";
-        }
-        $useroptions .= '</select>';
+    if (pnModGetVar('PostCalendar', 'pcAllowUserCalendar')) { // do not show if users not allowed personal calendar
+       if (in_array('user', $types)) {
+           @define('_PC_FORM_USERNAME', true);
+           $users = DBUtil::selectFieldArray('postcalendar_events', 'informant', null, null, true, 'aid'); 
+   
+           $useroptions = "<select name=\"pc_username\" $class>";
+           $useroptions .= "<option value=\"\" $class>" . _PC_FILTER_USERS . "</option>";
+           $selected = ($pc_username == '__PC_ALL__' ? 'selected="selected"' : '');
+           $useroptions .= "<option value=\"__PC_ALL__\" $class $selected>" . _PC_FILTER_USERS_ALL . "</option>";
+           foreach ($users as $k => $v) {
+               $sel = ($pc_username == $v ? 'selected="selected"' : '');
+               $useroptions .= "<option value=\"$v\" $sel $class>$v</option>";
+           }
+           $useroptions .= '</select>';
+       }
+    } else {
+        // remove user from types array to force hidden input display below
+        $key = array_search('user',$types);
+        unset($types[$key]);
     }
-
     //================================================================
     // build the category filter pulldown
     //================================================================
-    if (in_array('category', $types)) {
+    if (in_array('category', $types) && _SETTING_ALLOW_CAT_FILTER) {
         @define('_PC_FORM_CATEGORY', true);
         $category = FormUtil::getPassedValue('pc_category');
         $categories = pnModAPIFunc('PostCalendar', 'user', 'getCategories');
@@ -77,12 +82,16 @@ function smarty_function_pc_filter($args, &$smarty)
             $catoptions .= "<option value=\"$c[catid]\" $sel $class>$c[catname]</option>";
         }
         $catoptions .= '</select>';
+    } else {
+        $catoptions = '';
+        $key = array_search('category',$types);
+        unset($types[$key]);
     }
 
     //================================================================
     // build the topic filter pulldown
     //================================================================
-    if (in_array('topic', $types) && _SETTING_DISPLAY_TOPICS) {
+    if (in_array('topic', $types) && _SETTING_DISPLAY_TOPICS && _SETTING_ALLOW_CAT_FILTER) {
         @define('_PC_FORM_TOPIC', true);
         $topic = FormUtil::getPassedValue('pc_topic');
         $topics = pnModAPIFunc('PostCalendar', 'user', 'getTopics');
@@ -93,30 +102,40 @@ function smarty_function_pc_filter($args, &$smarty)
             $topoptions .= "<option value=\"$t[topicid]\" $sel $class>$t[topictext]</option>";
         }
         $topoptions .= '</select>';
-    } else
+    } else {
         $topoptions = '';
+        $key = array_search('topic',$types);
+        unset($types[$key]);
+    }
 
-    //================================================================
-    // build it in the correct order
-    //================================================================
-    $submit = "<input type=\"submit\" name=\"submit\" value=\"$label\" $class />";
-    $orderArray = array('user' => $useroptions, 'category' => $catoptions, 'topic' => $topoptions, 'jump' => $submit);
 
-    if (!is_null($order)) {
-        $newOrder = array();
-        $order = explode(',', $order);
-        foreach ($order as $tmp_order)
-            array_push($newOrder, $orderArray[$tmp_order]);
+    if (!empty($types)) {
+        //================================================================
+        // build it in the correct order
+        //================================================================
+        $submit = "<input type=\"submit\" name=\"submit\" value=\"$label\" $class />";
+        $orderArray = array('user' => $useroptions, 'category' => $catoptions, 'topic' => $topoptions, 'jump' => $submit);
+    
+        if (!is_null($order)) {
+            $newOrder = array();
+            $order = explode(',', $order);
+            foreach ($order as $tmp_order) {
+                array_push($newOrder, $orderArray[$tmp_order]);
+            }
+            foreach ($orderArray as $key => $old_order) {
+                if (!in_array($old_order, $newOrder)) array_push($newOrder, $orderArray[$key]);
+            }
 
-        foreach ($orderArray as $key => $old_order)
-            if (!in_array($old_order, $newOrder)) array_push($newOrder, $orderArray[$key]);
-
-        $order = $newOrder;
-    } else
-        $order = $orderArray;
-
-    foreach ($order as $element)
-        echo $element;
+            $order = $newOrder;
+        } else {
+            $order = $orderArray;
+        }
+    
+        foreach ($order as $element) {
+            echo $element;
+        }
+        echo "<br />";
+    }
 
     if (!in_array('user', $types)) echo "<input type='hidden' name='pc_username' value='$pc_username' />";
 }

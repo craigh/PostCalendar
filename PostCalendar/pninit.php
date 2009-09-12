@@ -19,7 +19,6 @@
  * @return  boolean    true/false
  * @access  public
  * @author  Roger Raymond <iansym@yahoo.com>
- * @copyright    The PostCalendar Team 2002
  */
 function postcalendar_init()
 {
@@ -99,6 +98,9 @@ function postcalendar_upgrade($oldversion)
             postcalendar_init_reset_scribite();
         case '5.5.1':
         case '5.5.2':
+        case '5.5.3':
+            pnModSetVar('PostCalendar', 'pcAllowCatFilter', '1');
+        //case '5.8.0':
     }
 
     // if we get this far - clear the cache
@@ -139,6 +141,7 @@ function postcalendar_init_getdefaults()
     'pcNotifyAdmin'           => '0',
     'pcNotifyEmail'           => pnConfigGetVar('adminmail'),
     'pcNotifyAdmin2Admin'     => '0',
+    'pcAllowCatFilter'        => '1',
     );
 
     return $defaults;

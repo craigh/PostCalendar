@@ -118,9 +118,14 @@
 			<!--[pnmodgetvar module="PostCalendar" name="pcMeeting" assign="pcM"]-->
 			<td><input type="checkbox" value="1" id="pcMeeting" name="pcMeeting"<!--[if $pcM eq true]--> checked="checked"<!--[/if]-->/></td>
 		</tr>
+        <tr class='pn-odd'>
+			<td><!--[pnml name='_PC_ALLOW_USER_CAT_FILTERING']--></td>
+			<!--[pnmodgetvar module="PostCalendar" name="pcAllowCatFilter" assign="pcACF"]-->
+			<td><input type="checkbox" value="1" id="pcAllowCatFilter" name="pcAllowCatFilter"<!--[if $pcACF eq true]--> checked="checked"<!--[/if]-->/></td>
+		</tr>
 <!--[ pnmodavailable modname="v4bAddressBook" assign="addressAvailable" ]-->
 <!--[ if $addressAvailable ]-->
-		<tr class='pn-odd'>
+		<tr class='pn-even'>
 			<td><!--[pnml name='_PC_USE_ADDRESSBOOK']--></td>
 			<!--[pnmodgetvar module="PostCalendar" name="pcAddressbook" assign="pcA"]-->
 			<td><input type="checkbox" value="1" id="pcAddressbook" name="pcAddressbook"<!--[if $pcA eq true]--> checked="checked"<!--[/if]-->/></td>

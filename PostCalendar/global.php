@@ -95,6 +95,7 @@ define('_SETTING_DEFAULT_VIEW',    pnModGetVar('PostCalendar', 'pcDefaultView'))
 define('_SETTING_SAFE_MODE',       pnModGetVar('PostCalendar', 'pcSafeMode'));
 define('_SETTING_NOTIFY_ADMIN',    pnModGetVar('PostCalendar', 'pcNotifyAdmin'));
 define('_SETTING_NOTIFY_EMAIL',    pnModGetVar('PostCalendar', 'pcNotifyEmail'));
+define('_SETTING_ALLOW_CAT_FILTER',    pnModGetVar('PostCalendar', 'pcAllowCatFilter'));
 
 
 //  Require and Setup utility classes and functions
