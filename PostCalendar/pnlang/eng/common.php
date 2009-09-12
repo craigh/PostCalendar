@@ -343,3 +343,7 @@ define('_CALTIMESTAMP', 'Timestamp (entered on)');
 define('_PC_SYSTEMINFO', 'Zikula & PostCalendar Current System Information');
 define('_PC_NAME', 'Component');
 define('_PC_INFO', 'Information');
+
+define ('_DELETEEVENT', 'Delete Event');
+define ('_PC_EVENTREVUE', 'Event Review');
+define ('_PC_ALLOW_USER_CAT_FILTERING', 'Allow Users to filter event display by Category/Topic');

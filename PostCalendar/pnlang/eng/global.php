@@ -176,6 +176,3 @@ define('_PC_DATE_FORMAT_INT','%A, %d %B %Y');
 define('_PC_DATE_FORMAT_STD','%A, %B %d %Y');
 define('_PC_DATE_FORMAT_BLOCK_INT','%a, %d %B %Y');
 define('_PC_DATE_FORMAT_BLOCK_STD','%a, %B %d %Y');
-
-define ('_DELETEEVENT', 'Delete Event');
-define ('_PC_EVENTREVUE', 'Event Review');
