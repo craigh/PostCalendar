@@ -8,7 +8,7 @@
  * @copyright   Copyright (c) 2009, Craig Heydenburg, Sound Web Development
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
  */
-function smarty_function_pc_url($args)
+function smarty_function_pc_url($args, &$smarty)
 {
     $action = array_key_exists('action', $args) && isset($args['action']) ? $args['action'] : _SETTING_DEFAULT_VIEW;
     $print  = array_key_exists('print',  $args) && !empty($args['print']) ? true            : false;
@@ -109,5 +109,11 @@ function smarty_function_pc_url($args)
         $link .= '" target="csCalendar"';
     }
 
-    echo DataUtil::formatForDisplay($link);
+    $ret_val = DataUtil::formatForDisplay($link);
+
+    if (isset($args['assign'])) {
+        $smarty->assign($args['assign'], $ret_val);
+    } else {
+        return $ret_val;
+    }
 }

@@ -8,7 +8,7 @@
  * @copyright   Copyright (c) 2009, Craig Heydenburg, Sound Web Development
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
  */
-function smarty_function_pc_date_select($args)
+function smarty_function_pc_date_select($args, &$smarty)
 {
     $print = FormUtil::getPassedValue('print');
     $tplview = FormUtil::getPassedValue('tplview');
@@ -106,9 +106,18 @@ function smarty_function_pc_date_select($args)
             if (!in_array($old_order, $newOrder)) array_push($newOrder, $orderArray[$key]);
 
         $order = $newOrder;
-    } else
+    } else {
         $order = $orderArray;
+    }
 
-    foreach ($order as $element)
-        echo $element;
+    $ret_val = "";
+    foreach ($order as $element) {
+        $ret_val .= $element;
+    }
+
+    if (isset($args['assign'])) {
+        $smarty->assign($args['assign'], $ret_val);
+    } else {
+        return $ret_val;
+    }
 }

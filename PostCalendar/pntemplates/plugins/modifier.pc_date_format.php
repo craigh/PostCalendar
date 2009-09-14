@@ -15,8 +15,13 @@ function smarty_modifier_pc_date_format($string, $format = null, $default_date =
 
     if (empty($format)) $format = _SETTING_DATE_FORMAT;
 
-    if ($string != '') return strftime($format, smarty_make_timestamp($string));
-    elseif (isset($default_date) && $default_date != '') return strftime($format, smarty_make_timestamp($default_date));
+    $ret_val = "";
 
-    return;
+    if ($string != '') {
+        $ret_val =  strftime($format, smarty_make_timestamp($string));
+    } elseif (isset($default_date) && $default_date != '') {
+        $ret_val =  strftime($format, smarty_make_timestamp($default_date));
+    }
+
+    return $ret_val;
 }

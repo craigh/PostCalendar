@@ -21,7 +21,7 @@
  * @param Smarty $smarty the Smarty instance
  * @return unknown
  */
-function smarty_function_pc_week_range($args)
+function smarty_function_pc_week_range($args, &$smarty)
 {
     setlocale(LC_TIME, _PC_LOCALE);
     if (!isset($args['date'])) {
@@ -62,6 +62,12 @@ function smarty_function_pc_week_range($args)
         $lastDay = strftime($args['format2'], mktime(0, 0, 0, $m, ($d + (6 - $sub)), $y));
     }
 
-    // return the formated range
-    echo $firstDay . $args['sep'] . $lastDay;
+    $ret_val = $firstDay . $args['sep'] . $lastDay;
+
+    if (isset($args['assign'])) {
+        $smarty->assign($args['assign'], $ret_val);
+        return;
+    } else {
+        return $ret_val;
+    }
 }

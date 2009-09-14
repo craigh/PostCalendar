@@ -130,12 +130,19 @@ function smarty_function_pc_filter($args, &$smarty)
         } else {
             $order = $orderArray;
         }
-    
+
+        $ret_val = "";
         foreach ($order as $element) {
-            echo $element;
+            $ret_val .= $element;
         }
-        echo "<br />";
+        $ret_val .= "<br />";
     }
 
-    if (!in_array('user', $types)) echo "<input type='hidden' name='pc_username' value='$pc_username' />";
+    if (!in_array('user', $types)) $ret_val .= "<input type='hidden' name='pc_username' value='$pc_username' />";
+
+    if (isset($args['assign'])) {
+        $smarty->assign($args['assign'], $ret_val);
+    } else {
+        return $ret_val;
+    }
 }

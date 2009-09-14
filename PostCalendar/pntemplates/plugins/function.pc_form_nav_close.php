@@ -8,8 +8,9 @@
  * @copyright   Copyright (c) 2009, Craig Heydenburg, Sound Web Development
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
  */
-function smarty_function_pc_form_nav_close()
+function smarty_function_pc_form_nav_close($args, &$smarty)
 {
+    $ret_val = "";
     // if (_SETTING_OPEN_NEW_WINDOW || isset($args['print'])) $target = 'target="csCalendar"';
     // else $target = '';
 
@@ -20,23 +21,29 @@ function smarty_function_pc_form_nav_close()
         $jumpyear  = FormUtil::getPassedValue('jumpyear');
         $Date      = FormUtil::getPassedValue('Date');
         $Date      = pnModAPIFunc('PostCalendar','user','getDate',compact('Date','jumpday','jumpmonth','jumpyear'));
-        echo '<input type="hidden" name="Date" value="' . $Date . '" />';
+        $ret_val .= '<input type="hidden" name="Date" value="' . $Date . '" />';
     }
     if (!defined('_PC_FORM_VIEW_TYPE')) {
-        echo '<input type="hidden" name="viewtype" value="' . FormUtil::getPassedValue('viewtype') . '" />';
+        $ret_val .= '<input type="hidden" name="viewtype" value="' . FormUtil::getPassedValue('viewtype') . '" />';
     }
     if (!defined('_PC_FORM_TEMPLATE')) {
-        echo '<input type="hidden" name="tplview" value="' . FormUtil::getPassedValue('tplview') . '" />';
+        $ret_val .= '<input type="hidden" name="tplview" value="' . FormUtil::getPassedValue('tplview') . '" />';
     }
     if (!defined('_PC_FORM_USERNAME')) {
-        echo '<input type="hidden" name="pc_username" value="' . FormUtil::getPassedValue('pc_username') . '" />';
+        $ret_val .= '<input type="hidden" name="pc_username" value="' . FormUtil::getPassedValue('pc_username') . '" />';
     }
     if (!defined('_PC_FORM_CATEGORY')) {
-        echo '<input type="hidden" name="pc_category" value="' . FormUtil::getPassedValue('pc_category') . '" />';
+        $ret_val .= '<input type="hidden" name="pc_category" value="' . FormUtil::getPassedValue('pc_category') . '" />';
     }
     if (!defined('_PC_FORM_TOPIC')) {
-        echo '<input type="hidden" name="pc_topic" value="' . FormUtil::getPassedValue('pc_topic') . '" />';
+        $ret_val .= '<input type="hidden" name="pc_topic" value="' . FormUtil::getPassedValue('pc_topic') . '" />';
     }
 
-    echo '</form>';
+    $ret_val .= '</form>';
+
+    if (isset($args['assign'])) {
+        $smarty->assign($args['assign'], $ret_val);
+    } else {
+        return $ret_val;
+    }
 }

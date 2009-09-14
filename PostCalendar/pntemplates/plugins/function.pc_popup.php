@@ -21,7 +21,7 @@
  *                    caparray, capicon, snapx, snapy, fixx, fixy, background, padx, pady,
  *                    fullhtml, frame, timeout, delay, hauto, vauto
  */
-function smarty_function_pc_popup($args)
+function smarty_function_pc_popup($args, &$smarty)
 {
     // if we're not using popups just return an empty string
     if (!_SETTING_USE_POPUPS) return;
@@ -30,150 +30,158 @@ function smarty_function_pc_popup($args)
         $args['text'] = "overlib: attribute 'text' or 'inarray' or 'function' required";
 
     if (empty($args['trigger'])) $args['trigger'] = " onMouseOver";
+    
+    $ret_val = "";
 
-    echo $args['trigger'] . '="return overlib(\'' . pc_clean($args['text']) . '\'';
+    $ret_val .= $args['trigger'] . '="return overlib(\'' . pc_clean($args['text']) . '\'';
     if ($args['sticky']) {
-        echo ",STICKY";
+        $ret_val .= ",STICKY";
     }
     if (!empty($args['caption'])) {
-        echo ",CAPTION,'" . pc_clean($args['caption']) . "'";
+        $ret_val .= ",CAPTION,'" . pc_clean($args['caption']) . "'";
     }
     if (!empty($args['fgcolor'])) {
-        echo ",FGCOLOR,'{$args['fgcolor']}'";
+        $ret_val .= ",FGCOLOR,'{$args['fgcolor']}'";
     }
     if (!empty($args['bgcolor'])) {
-        echo ",BGCOLOR,'".$args['bgcolor']."'";
+        $ret_val .= ",BGCOLOR,'".$args['bgcolor']."'";
     }
     if (!empty($args['textcolor'])) {
-        echo ",TEXTCOLOR,'{$args['textcolor']}'";
+        $ret_val .= ",TEXTCOLOR,'{$args['textcolor']}'";
     }
     if (!empty($args['capcolor'])) {
-        echo ",CAPCOLOR,'{$args['capcolor']}'";
+        $ret_val .= ",CAPCOLOR,'{$args['capcolor']}'";
     }
     if (!empty($args['closecolor'])) {
-        echo ",CLOSECOLOR,'{$args['closecolor']}'";
+        $ret_val .= ",CLOSECOLOR,'{$args['closecolor']}'";
     }
     if (!empty($args['textfont'])) {
-        echo ",TEXTFONT,'{$args['textfont']}'";
+        $ret_val .= ",TEXTFONT,'{$args['textfont']}'";
     }
     if (!empty($args['captionfont'])) {
-        echo ",CAPTIONFONT,'{$args['captionfont']}'";
+        $ret_val .= ",CAPTIONFONT,'{$args['captionfont']}'";
     }
     if (!empty($args['closefont'])) {
-        echo ",CLOSEFONT,'{$args['closefont']}'";
+        $ret_val .= ",CLOSEFONT,'{$args['closefont']}'";
     }
     if (!empty($args['textsize'])) {
-        echo ",TEXTSIZE,{$args['textsize']}";
+        $ret_val .= ",TEXTSIZE,{$args['textsize']}";
     }
     if (!empty($args['captionsize'])) {
-        echo ",CAPTIONSIZE,{$args['captionsize']}";
+        $ret_val .= ",CAPTIONSIZE,{$args['captionsize']}";
     }
     if (!empty($args['closesize'])) {
-        echo ",CLOSESIZE,{$args['closesize']}";
+        $ret_val .= ",CLOSESIZE,{$args['closesize']}";
     }
     if (!empty($args['width'])) {
-        echo ",WIDTH,{$args['width']}";
+        $ret_val .= ",WIDTH,{$args['width']}";
     }
     if (!empty($args['height'])) {
-        echo ",HEIGHT,{$args['height']}";
+        $ret_val .= ",HEIGHT,{$args['height']}";
     }
     if (!empty($args['left'])) {
-        echo ",LEFT";
+        $ret_val .= ",LEFT";
     }
     if (!empty($args['right'])) {
-        echo ",RIGHT";
+        $ret_val .= ",RIGHT";
     }
     if (!empty($args['center'])) {
-        echo ",CENTER";
+        $ret_val .= ",CENTER";
     }
     if (!empty($args['above'])) {
-        echo ",ABOVE";
+        $ret_val .= ",ABOVE";
     }
     if (!empty($args['below'])) {
-        echo ",BELOW";
+        $ret_val .= ",BELOW";
     }
     if (isset($args['border'])) {
-        echo ",BORDER,{$args['border']}";
+        $ret_val .= ",BORDER,{$args['border']}";
     }
     if (isset($args['offsetx'])) {
-        echo ",OFFSETX,{$args['offsetx']}";
+        $ret_val .= ",OFFSETX,{$args['offsetx']}";
     }
     if (isset($args['offsety'])) {
-        echo ",OFFSETY,{$args['offsety']}";
+        $ret_val .= ",OFFSETY,{$args['offsety']}";
     }
     if (!empty($args['fgbackground'])) {
-        echo ",FGBACKGROUND,'{$args['fgbackground']}'";
+        $ret_val .= ",FGBACKGROUND,'{$args['fgbackground']}'";
     }
     if (!empty($args['bgbackground'])) {
-        echo ",BGBACKGROUND,'{$args['bgbackground']}'";
+        $ret_val .= ",BGBACKGROUND,'{$args['bgbackground']}'";
     }
     if (!empty($args['closetext'])) {
-        echo ",CLOSETEXT,'" . pc_clean($args['closetext']) . "'";
+        $ret_val .= ",CLOSETEXT,'" . pc_clean($args['closetext']) . "'";
     }
     if (!empty($args['noclose'])) {
-        echo ",NOCLOSE";
+        $ret_val .= ",NOCLOSE";
     }
     if (!empty($args['status'])) {
-        echo ",STATUS,'" . pc_clean($args['status']) . "'";
+        $ret_val .= ",STATUS,'" . pc_clean($args['status']) . "'";
     }
     if (!empty($args['autostatus'])) {
-        echo ",AUTOSTATUS";
+        $ret_val .= ",AUTOSTATUS";
     }
     if (!empty($args['autostatuscap'])) {
-        echo ",AUTOSTATUSCAP";
+        $ret_val .= ",AUTOSTATUSCAP";
     }
     if (isset($args['inarray'])) {
-        echo ",INARRAY,'{$args['inarray']}'";
+        $ret_val .= ",INARRAY,'{$args['inarray']}'";
     }
     if (isset($args['caparray'])) {
-        echo ",CAPARRAY,'{$args['caparray']}'";
+        $ret_val .= ",CAPARRAY,'{$args['caparray']}'";
     }
     if (!empty($args['capicon'])) {
-        echo ",CAPICON,'{$args['capicon']}'";
+        $ret_val .= ",CAPICON,'{$args['capicon']}'";
     }
     if (!empty($args['snapx'])) {
-        echo ",SNAPX,{$args['snapx']}";
+        $ret_val .= ",SNAPX,{$args['snapx']}";
     }
     if (!empty($args['snapy'])) {
-        echo ",SNAPY,{$args['snapy']}";
+        $ret_val .= ",SNAPY,{$args['snapy']}";
     }
     if (isset($args['fixx'])) {
-        echo ",FIXX,{$args['fixx']}";
+        $ret_val .= ",FIXX,{$args['fixx']}";
     }
     if (isset($args['fixy'])) {
-        echo ",FIXY,{$args['fixy']}";
+        $ret_val .= ",FIXY,{$args['fixy']}";
     }
     if (!empty($args['background'])) {
-        echo ",BACKGROUND,'{$args['background']}'";
+        $ret_val .= ",BACKGROUND,'{$args['background']}'";
     }
     if (!empty($args['padx'])) {
-        echo ",PADX,{$args['padx']}";
+        $ret_val .= ",PADX,{$args['padx']}";
     }
     if (!empty($args['pady'])) {
-        echo ",PADY,{$args['pady']}";
+        $ret_val .= ",PADY,{$args['pady']}";
     }
     if (!empty($args['fullhtml'])) {
-        echo ",FULLHTML";
+        $ret_val .= ",FULLHTML";
     }
     if (!empty($args['frame'])) {
-        echo ",FRAME,'{$args['frame']}'";
+        $ret_val .= ",FRAME,'{$args['frame']}'";
     }
     if (isset($args['timeout'])) {
-        echo ",TIMEOUT,{$args['timeout']}";
+        $ret_val .= ",TIMEOUT,{$args['timeout']}";
     }
     if (!empty($args['function'])) {
-        echo ",FUNCTION,'{$args['function']}'";
+        $ret_val .= ",FUNCTION,'{$args['function']}'";
     }
     if (isset($args['delay'])) {
-        echo ",DELAY,{$args['delay']}";
+        $ret_val .= ",DELAY,{$args['delay']}";
     }
     if (!empty($args['hauto'])) {
-        echo ",HAUTO";
+        $ret_val .= ",HAUTO";
     }
     if (!empty($args['vauto'])) {
-        echo ",VAUTO";
+        $ret_val .= ",VAUTO";
     }
-    echo ');" onMouseOut="nd();"';
+    $ret_val .= ');" onMouseOut="nd();"';
+
+    if (isset($args['assign'])) {
+        $smarty->assign($args['assign'], $ret_val);
+    } else {
+        return $ret_val;
+    }
 }
 
 /**
@@ -185,8 +193,11 @@ function pc_clean($s)
 {
     $display_type = substr($s, 0, 6);
 
-    if ($display_type == ':text:') $s = substr($s, 6);
-    elseif ($display_type == ':html:') $s = substr($s, 6);
+    if ($display_type == ':text:') {
+        $s = substr($s, 6);
+    } elseif ($display_type == ':html:') {
+        $s = substr($s, 6);
+    }
 
     unset($display_type);
     $s = preg_replace('/[\r|\n]/i', '', $s);

@@ -8,27 +8,21 @@
  * @copyright   Copyright (c) 2009, Craig Heydenburg, Sound Web Development
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
  */
-/*
- * ----------------------------------------------------------------------
+/**
  * Original Author of  Robert Gasch
  * Author Contact: r.gasch@chello.nl, robert.gasch@value4business.com
- * Purpose of file: generate the html to display a calendar input box
  * Copyright: Value4Business GmbH
- * ----------------------------------------------------------------------
  */
-
 /**
- * v4b_calendar_build_input_box: generate the html to display a calendar input box
+ * pc_calendar_build_input_box: generate the html to display a calendar input box
  *
  * @author    Robert Gasch
- * @version     $Id$
  * @param    assign        The smarty variable to assign the resulting menu HTML to
  * @param    dateFormat    The JS Calendar date format to use
  * @param    defaultString   The default string to show for a date which hasn't been entered yet
  * @param    defaultDate     The default date submitted by the form (for a date which hasn't been entered yet)
  * @param    htmlName    The field name of the date field
  * @param    objectName    The object name of the field of the date field (final field name = "$objectName[$htmlName]")
- *
  */
 function smarty_function_pc_calendar_build_input_box($params, &$smarty)
 {
@@ -45,9 +39,9 @@ function smarty_function_pc_calendar_build_input_box($params, &$smarty)
 
     $html = '';
 
-    if (!$htmlName) exit('v4b_calendar_build_input_box: Missing htmlName ...');
+    if (!$htmlName) exit('pc_calendar_build_input_box: Missing htmlName ...');
 
-    if (!$dateFormat) exit('v4b_calendar_build_input_box: Missing dateFormat...');
+    if (!$dateFormat) exit('pc_calendar_build_input_box: Missing dateFormat...');
 
     $fieldKey = $htmlName;
     if ($objectName) $fieldKey = $objectName . '[' . $htmlName . ']';
@@ -76,7 +70,10 @@ function smarty_function_pc_calendar_build_input_box($params, &$smarty)
 
     $html .= 'singleClick : true }); </script>';
 
-    if ($assign) $smarty->assign($assign, $html);
-    else return $html;
+    if ($assign) {
+        $smarty->assign($assign, $html);
+    } else {
+        return $html;
+    }
 }
 
