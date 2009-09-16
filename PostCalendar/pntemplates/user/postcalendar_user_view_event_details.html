@@ -9,7 +9,7 @@
 <!--[ /if ]-->
 
 <h2 class="postcalendar_header">
-	<!--[ $A_EVENT.title|pnvarprephtmldisplay ]-->
+	<!--[ $A_EVENT.title|pnvarprephtmldisplay|pc_cleanVar ]-->
 </h2>
 
 <div class="calcontainer">
@@ -45,7 +45,7 @@
 </div>
 <div class="eventdetails">
 		<div>
-			<!--[ $A_EVENT.hometext ]-->
+			<!--[ $A_EVENT.hometext|pc_cleanVar ]-->
 		</div>
 		<div>
 			<!--[ if $LOCATION_INFO ]-->

@@ -64,7 +64,7 @@
                     <!--[ assign var="catcolor" value = $event.catcolor ]-->
                     <a href="<!--[ pc_url action=detail eid=$event.eid date=$date ]-->" 
                         <!--[ pc_popup delay="500" bgcolor=$catcolor caption=$event.title text=$event.hometext ]-->>
-                        <!--[ $event.title|strip_tags|pnvarprephtmldisplay ]--></a>
+                        <!--[ $event.title|strip_tags|pc_cleanVar ]--></a>
                     <!--[ if $event.alldayevent != true ]-->
                         (<!--[ $event.duration_hours ]-->:<!--[ $event.duration_minutes ]-->)
                     <!--[ else ]-->
