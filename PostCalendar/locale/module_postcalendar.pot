@@ -1,0 +1,849 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-09-18 06:30-0400\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: pnaccountapi.php:32 pnaccountapi.php:32
+#: pntemplates/event/postcalendar_event_fileupload.htm:21
+msgid "Submit"
+msgstr ""
+
+#: pnincludes/pcHtmlUtil.class.php:34
+msgid ""
+"January February March April May June July August September October November "
+"December"
+msgstr ""
+
+#: pneventapi.php:592 pneventapi.php:592
+msgid "Plain Text"
+msgstr ""
+
+#: pneventapi.php:592 pneventapi.php:592
+msgid "HTML"
+msgstr ""
+
+#: pneventapi.php:634 pnuser.php:152 pneventapi.php:634 pnuser.php:152
+msgid "Private"
+msgstr ""
+
+#: pneventapi.php:635 pnuser.php:153 pneventapi.php:635 pnuser.php:153
+msgid "Public"
+msgstr ""
+
+#: pneventapi.php:636 pnuser.php:154 pneventapi.php:636 pnuser.php:154
+msgid "Show as Busy"
+msgstr ""
+
+#: pneventapi.php:640 pnuser.php:157 pneventapi.php:640 pnuser.php:157
+msgid "Global"
+msgstr ""
+
+#: pneventapi.php:641 pnuser.php:158 pneventapi.php:641 pnuser.php:158
+msgid "Global, description private"
+msgstr ""
+
+#: pneventapi.php:672 pneventapi.php:672
+msgid "Every"
+msgstr ""
+
+#: pneventapi.php:672 pneventapi.php:672
+msgid "Every Other"
+msgstr ""
+
+#: pneventapi.php:672 pneventapi.php:672
+msgid "Every Third"
+msgstr ""
+
+#: pneventapi.php:672 pneventapi.php:672
+msgid "Every Fourth"
+msgstr ""
+
+#: pneventapi.php:683 pneventapi.php:683
+msgid "Day(s)"
+msgstr ""
+
+#: pneventapi.php:683 pneventapi.php:683
+msgid "Week(s)"
+msgstr ""
+
+#: pneventapi.php:683 pneventapi.php:683
+msgid "Month(s)"
+msgstr ""
+
+#: pneventapi.php:683 pneventapi.php:683
+msgid "Year(s)"
+msgstr ""
+
+#: pneventapi.php:693 pneventapi.php:693
+msgid "First"
+msgstr ""
+
+#: pneventapi.php:693 pneventapi.php:693
+msgid "Second"
+msgstr ""
+
+#: pneventapi.php:693 pneventapi.php:693
+msgid "Third"
+msgstr ""
+
+#: pneventapi.php:693 pneventapi.php:693
+msgid "Fourth"
+msgstr ""
+
+#: pneventapi.php:693 pneventapi.php:693
+msgid "Last"
+msgstr ""
+
+#: pneventapi.php:702 pneventapi.php:702
+msgid "Sun"
+msgstr ""
+
+#: pneventapi.php:702 pneventapi.php:702
+msgid "Mon"
+msgstr ""
+
+#: pneventapi.php:702 pneventapi.php:702
+msgid "Tue"
+msgstr ""
+
+#: pneventapi.php:702 pneventapi.php:702
+msgid "Wed"
+msgstr ""
+
+#: pneventapi.php:702 pneventapi.php:702
+msgid "Thu"
+msgstr ""
+
+#: pneventapi.php:702 pneventapi.php:702
+msgid "Fri"
+msgstr ""
+
+#: pneventapi.php:702 pneventapi.php:702
+msgid "Sat"
+msgstr ""
+
+#: pneventapi.php:711 pneventapi.php:711
+msgid "month"
+msgstr ""
+
+#: pneventapi.php:711 pneventapi.php:711
+msgid "other month"
+msgstr ""
+
+#: pneventapi.php:711 pneventapi.php:711
+msgid "3 months"
+msgstr ""
+
+#: pneventapi.php:711 pneventapi.php:711
+msgid "4 months"
+msgstr ""
+
+#: pneventapi.php:711 pneventapi.php:711
+msgid "6 months"
+msgstr ""
+
+#: pneventapi.php:711 pneventapi.php:711
+msgid "year"
+msgstr ""
+
+#: pneventapi.php:759 pneventapi.php:759
+msgid "Busy"
+msgstr ""
+
+#: pneventapi.php:760 pneventapi.php:761 pneventapi.php:760 pneventapi.php:761
+msgid "I am busy during this time."
+msgstr ""
+
+#: pnuserapi.php:62 pnuserapi.php:459 pnblocks/calendar.php:107
+#: pnuserapi.php:62 pnuserapi.php:459
+msgid "January"
+msgstr ""
+
+#: pnuserapi.php:62 pnuserapi.php:459 pnblocks/calendar.php:107
+#: pnuserapi.php:62 pnuserapi.php:459
+msgid "February"
+msgstr ""
+
+#: pnuserapi.php:62 pnuserapi.php:459 pnblocks/calendar.php:107
+#: pnuserapi.php:62 pnuserapi.php:459
+msgid "March"
+msgstr ""
+
+#: pnuserapi.php:62 pnuserapi.php:460 pnblocks/calendar.php:107
+#: pnuserapi.php:62 pnuserapi.php:460
+msgid "April"
+msgstr ""
+
+#: pnuserapi.php:62 pnuserapi.php:460 pnblocks/calendar.php:107
+#: pnuserapi.php:62 pnuserapi.php:460
+msgid "May"
+msgstr ""
+
+#: pnuserapi.php:63 pnuserapi.php:460 pnblocks/calendar.php:107
+#: pnuserapi.php:63 pnuserapi.php:460
+msgid "June"
+msgstr ""
+
+#: pnuserapi.php:63 pnuserapi.php:461 pnblocks/calendar.php:107
+#: pnuserapi.php:63 pnuserapi.php:461
+msgid "July"
+msgstr ""
+
+#: pnuserapi.php:63 pnuserapi.php:461 pnblocks/calendar.php:107
+#: pnuserapi.php:63 pnuserapi.php:461
+msgid "August"
+msgstr ""
+
+#: pnuserapi.php:63 pnuserapi.php:461 pnblocks/calendar.php:107
+#: pnuserapi.php:63 pnuserapi.php:461
+msgid "September"
+msgstr ""
+
+#: pnuserapi.php:63 pnuserapi.php:462 pnblocks/calendar.php:107
+#: pnuserapi.php:63 pnuserapi.php:462
+msgid "October"
+msgstr ""
+
+#: pnuserapi.php:64 pnuserapi.php:462 pnblocks/calendar.php:107
+#: pnuserapi.php:64 pnuserapi.php:462
+msgid "November"
+msgstr ""
+
+#: pnuserapi.php:64 pnuserapi.php:462 pnblocks/calendar.php:107
+#: pnuserapi.php:64 pnuserapi.php:462
+msgid "December"
+msgstr ""
+
+#: pnuserapi.php:65 pnuserapi.php:66 pnblocks/calendar.php:109
+#: pnblocks/calendar.php:110 pnuserapi.php:65 pnuserapi.php:66
+msgid "S"
+msgstr ""
+
+#: pnuserapi.php:65 pnblocks/calendar.php:109 pnuserapi.php:65
+msgid "M"
+msgstr ""
+
+#: pnuserapi.php:65 pnblocks/calendar.php:109 pnuserapi.php:65
+msgid "T"
+msgstr ""
+
+#: pnuserapi.php:65 pnblocks/calendar.php:109 pnuserapi.php:65
+msgid "W"
+msgstr ""
+
+#: pnuserapi.php:66 pnblocks/calendar.php:110 pnuserapi.php:66
+msgid "F"
+msgstr ""
+
+#: pnuserapi.php:67 pnblocks/calendar.php:112 pnuserapi.php:67
+#: pntemplates/admin/postcalendar_admin_modifyconfig.htm:80
+msgid "Sunday"
+msgstr ""
+
+#: pnuserapi.php:67 pnblocks/calendar.php:112 pnuserapi.php:67
+#: pntemplates/admin/postcalendar_admin_modifyconfig.htm:81
+msgid "Monday"
+msgstr ""
+
+#: pnuserapi.php:67 pnblocks/calendar.php:112 pnuserapi.php:67
+msgid "Tuesday"
+msgstr ""
+
+#: pnuserapi.php:67 pnblocks/calendar.php:112 pnuserapi.php:67
+msgid "Wednesday"
+msgstr ""
+
+#: pnuserapi.php:67 pnblocks/calendar.php:112 pnuserapi.php:67
+msgid "Thursday"
+msgstr ""
+
+#: pnuserapi.php:67 pnblocks/calendar.php:112 pnuserapi.php:67
+msgid "Friday"
+msgstr ""
+
+#: pnuserapi.php:67 pnblocks/calendar.php:112 pnuserapi.php:67
+#: pntemplates/admin/postcalendar_admin_modifyconfig.htm:82
+msgid "Saturday"
+msgstr ""
+
+#: pnversion.php:12 pnversion.php:12
+msgid "PostCalendar"
+msgstr ""
+
+#: pnversion.php:15 pnversion.php:15
+msgid "Zikula Calendar Module"
+msgstr ""
+
+#: pninit.php:28 pninit.php:28
+msgid "Error! Sorry! Table creation failed."
+msgstr ""
+
+#: pninit.php:32 pninit.php:32
+msgid "Default"
+msgstr ""
+
+#: pninit.php:32 pninit.php:32
+msgid "Default Category"
+msgstr ""
+
+#: pninit.php:34 pninit.php:41 pninit.php:34 pninit.php:41
+msgid "Error! Creation attempt failed."
+msgstr ""
+
+#: pninit.php:73 pninit.php:73
+msgid ""
+"This version does not support upgrades from PostCalendar 3.x and lower. "
+"Please download and install at least version 4.0.3 (available from <a href="
+"\"http://code.zikula.org/soundwebdevelopment/downloads\">code.zikula.org/"
+"soundwebdevelopment</a>). Upgrading to PostCalendar %version% is possible "
+"from that version."
+msgstr ""
+
+#: pninit.php:79 pninit.php:79
+msgid "Upgrading tables failed"
+msgstr ""
+
+#: pninit.php:128 pninit.php:128
+msgid "0"
+msgstr ""
+
+#: pninit.php:134 pninit.php:134
+msgid "%b %d, %Y"
+msgstr ""
+
+#: pnadminapi.php:44 pnadminapi.php:44
+msgid "Settings"
+msgstr ""
+
+#: pnadminapi.php:48 pnadminapi.php:48
+#: pntemplates/admin/postcalendar_admin_categories.htm:9
+msgid "Categories"
+msgstr ""
+
+#: pnadminapi.php:51 pnadminapi.php:51
+msgid "Add"
+msgstr ""
+
+#: pnadminapi.php:54 pnadminapi.php:54
+msgid "Approved"
+msgstr ""
+
+#: pnadminapi.php:57 pnadminapi.php:57
+msgid "Hidden"
+msgstr ""
+
+#: pnadminapi.php:60 pnadminapi.php:60
+msgid "Queued"
+msgstr ""
+
+#: pnadminapi.php:63 pnadminapi.php:63
+msgid "Clear Smarty Cache"
+msgstr ""
+
+#: pnadminapi.php:66 pnadminapi.php:66
+msgid "Test System"
+msgstr ""
+
+#: pnadminapi.php:149 pnadminapi.php:149
+msgid "Meeting notify email sent"
+msgstr ""
+
+#: pnadminapi.php:152 pnadminapi.php:152
+msgid "Meeting notify email not sent"
+msgstr ""
+
+#: pnadminapi.php:183 pnadminapi.php:183
+#: pntemplates/email/postcalendar_email_adminnotify.htm:2
+msgid "NOTICE:: PostCalendar Submission/Modification"
+msgstr ""
+
+#: pnadminapi.php:186 pnadminapi.php:186
+msgid "Admin notify email sent"
+msgstr ""
+
+#: pnadminapi.php:189 pnadminapi.php:189
+msgid "Admin notify email not sent"
+msgstr ""
+
+#: pnsearchapi.php:39 pnsearchapi.php:39
+msgid "All Categories"
+msgstr ""
+
+#: pnsearchapi.php:51 pnsearchapi.php:51
+msgid "All Topics"
+msgstr ""
+
+#: pnsearchapi.php:133 pnadmin.php:189 pnadmin.php:214 pnadmin.php:189
+#: pnadmin.php:214 pnsearchapi.php:133
+msgid "Error! Could not load items."
+msgstr ""
+
+#: pnadmin.php:44 pnadmin.php:532 pnadmin.php:565 pnadmin.php:598
+#: pnadmin.php:44 pnadmin.php:532 pnadmin.php:565 pnadmin.php:598
+msgid "Approved Events Administration"
+msgstr ""
+
+#: pnadmin.php:54 pnadmin.php:54
+msgid "Hidden Events Administration"
+msgstr ""
+
+#: pnadmin.php:64 pnadmin.php:64
+msgid "Queued Events Administration"
+msgstr ""
+
+#: pnadmin.php:98 pnadmin.php:98
+msgid "View"
+msgstr ""
+
+#: pnadmin.php:98 pnadmin.php:98
+msgid "Approve"
+msgstr ""
+
+#: pnadmin.php:99 pnadmin.php:99
+msgid "Hide"
+msgstr ""
+
+#: pnadmin.php:100 pnadmin.php:100
+#: pntemplates/admin/postcalendar_admin_categories.htm:15
+#: pntemplates/event/postcalendar_event_deleteeventconfirm.htm:11
+msgid "Delete"
+msgstr ""
+
+#: pnadmin.php:131 pnadmin.php:131
+msgid "Please select an event"
+msgstr ""
+
+#: pnadmin.php:148 pnadmin.php:148
+msgid "Are you sure you want to approve these events?"
+msgstr ""
+
+#: pnadmin.php:152 pnadmin.php:152
+msgid "Are you sure you want to hide these events?"
+msgstr ""
+
+#: pnadmin.php:156 pnadmin.php:156
+#: pntemplates/event/postcalendar_event_deleteeventconfirm.htm:10
+msgid "Are you sure you want to delete this event?"
+msgstr ""
+
+#: pnadmin.php:201 pnadmin.php:201
+msgid "Your PostCalendar configuration has been reset to use defaults."
+msgstr ""
+
+#: pnadmin.php:253 pnadmin.php:253
+msgid "Your PostCalendar configuration has been updated."
+msgstr ""
+
+#: pnadmin.php:401 pnadmin.php:401
+msgid "Smarty Cache has been cleared"
+msgstr ""
+
+#: pnadmin.php:515 pnadmin.php:528 pnadmin.php:548 pnadmin.php:561
+#: pnadmin.php:581 pnadmin.php:594 pnevent.php:59 pnadmin.php:515
+#: pnadmin.php:528 pnadmin.php:548 pnadmin.php:561 pnadmin.php:581
+#: pnadmin.php:594 pnevent.php:59
+msgid "There was an error while processing your request."
+msgstr ""
+
+#: pnadmin.php:526 pnadmin.php:526
+msgid "The event(s) have been approved."
+msgstr ""
+
+#: pnadmin.php:559 pnadmin.php:559
+msgid "The event(s) have been hidden."
+msgstr ""
+
+#: pnadmin.php:592 pnadmin.php:592
+msgid "Your event has been deleted."
+msgstr ""
+
+#: pnevent.php:56 pnevent.php:56
+msgid "You are not allowed to delete this event"
+msgstr ""
+
+#: pnevent.php:240 pnevent.php:240
+msgid "You are not allowed to edit this event"
+msgstr ""
+
+#: pnevent.php:252 pnevent.php:252
+msgid "PM"
+msgstr ""
+
+#: pnevent.php:303 pnevent.php:303
+msgid "is a required field."
+msgstr ""
+
+#: pnevent.php:309 pnevent.php:315 pnevent.php:309 pnevent.php:315
+msgid "Your repeating frequency must be at least 1."
+msgstr ""
+
+#: pnevent.php:311 pnevent.php:317 pnevent.php:311 pnevent.php:317
+msgid "Your repeating frequency must be an integer."
+msgstr ""
+
+#: pnevent.php:337 pnevent.php:337
+msgid "Your start date is greater than your end date"
+msgstr ""
+
+#: pnevent.php:340 pnevent.php:340
+msgid "Your start date is invalid"
+msgstr ""
+
+#: pnevent.php:343 pnevent.php:343
+msgid "Your end date is invalid"
+msgstr ""
+
+#: pnevent.php:361 pnevent.php:361
+msgid "Your submission failed."
+msgstr ""
+
+#: pnevent.php:365 pnevent.php:365
+msgid "Your event has been modified."
+msgstr ""
+
+#: pnevent.php:367 pnevent.php:367
+msgid "Your event has been submitted."
+msgstr ""
+
+#: pntemplates/plugins/function.pc_date_select.php:76
+#: pntemplates/admin/postcalendar_admin_modifyconfig.htm:90
+msgid "Day"
+msgstr ""
+
+#: pntemplates/plugins/function.pc_date_select.php:79
+#: pntemplates/admin/postcalendar_admin_modifyconfig.htm:91
+msgid "Week"
+msgstr ""
+
+#: pntemplates/plugins/function.pc_date_select.php:82
+#: pntemplates/admin/postcalendar_admin_modifyconfig.htm:92
+msgid "Month"
+msgstr ""
+
+#: pntemplates/plugins/function.pc_date_select.php:85
+#: pntemplates/admin/postcalendar_admin_modifyconfig.htm:93
+msgid "Year"
+msgstr ""
+
+#: pntemplates/plugins/function.pc_date_select.php:88
+msgid "List View"
+msgstr ""
+
+#: pntemplates/plugins/function.pc_date_select.php:92
+msgid "go"
+msgstr ""
+
+#: pntemplates/email/postcalendar_email_adminnotify.htm:5
+msgid "The following calendar event has been modifed"
+msgstr ""
+
+#: pntemplates/email/postcalendar_email_adminnotify.htm:7
+msgid "The following calendar event has been added"
+msgstr ""
+
+#: pntemplates/email/postcalendar_email_meetingnotify.htm:2
+msgid "PostCalendar Meeting Notification"
+msgstr ""
+
+#: pntemplates/email/postcalendar_email_meetingnotify.htm:4
+msgid "Hello"
+msgstr ""
+
+#: pntemplates/email/postcalendar_email_meetingnotify.htm:6
+msgid "The user %pc_author% has created a new meeting event for you:"
+msgstr ""
+
+#: pntemplates/email/postcalendar_email_meetingnotify.htm:8
+#, php-format
+msgid "Event        : %s"
+msgstr ""
+
+#: pntemplates/email/postcalendar_email_meetingnotify.htm:9
+msgid "Description  : "
+msgstr ""
+
+#: pntemplates/email/postcalendar_email_meetingnotify.htm:10
+#, php-format
+msgid "Date         : %s"
+msgstr ""
+
+#: pntemplates/email/postcalendar_email_meetingnotify.htm:11
+#, php-format
+msgid "Time         : %s"
+msgstr ""
+
+#: pntemplates/email/postcalendar_email_meetingnotify.htm:12
+#, php-format
+msgid "Duration     : %1$s:%2$s"
+msgstr ""
+
+#: pntemplates/email/postcalendar_email_meetingnotify.htm:14
+msgid "This event and further details can be viewed under"
+msgstr ""
+
+#: pntemplates/email/postcalendar_email_meetingnotify.htm:14
+msgid "Event"
+msgstr ""
+
+#: pntemplates/search/postcalendar_search_options.htm:4
+#: pntemplates/admin/postcalendar_admin_menu.htm:4
+msgid "Calendar"
+msgstr ""
+
+#: pntemplates/search/postcalendar_search_options.htm:6
+msgid "Topic"
+msgstr ""
+
+#: pntemplates/search/postcalendar_search_options.htm:9
+#: pntemplates/event/postcalendar_event_fileupload.htm:17
+msgid "Event Category"
+msgstr ""
+
+#: pntemplates/admin/postcalendar_admin_categories.htm:16
+msgid "Category Name"
+msgstr ""
+
+#: pntemplates/admin/postcalendar_admin_categories.htm:17
+msgid "Category Description"
+msgstr ""
+
+#: pntemplates/admin/postcalendar_admin_categories.htm:18
+msgid "Category Color"
+msgstr ""
+
+#: pntemplates/admin/postcalendar_admin_categories.htm:33
+msgid "New =>"
+msgstr ""
+
+#: pntemplates/admin/postcalendar_admin_categories.htm:40
+#: pntemplates/admin/postcalendar_admin_modifyconfig.htm:135
+msgid "Commit Changes"
+msgstr ""
+
+#: pntemplates/admin/postcalendar_admin_eventrevue.htm:5
+msgid "Event Review"
+msgstr ""
+
+#: pntemplates/admin/postcalendar_admin_eventrevue.htm:14
+msgid "Yes"
+msgstr ""
+
+#: pntemplates/admin/postcalendar_admin_categoriesconfirm.htm:5
+msgid "Confirm Category change"
+msgstr ""
+
+#: pntemplates/admin/postcalendar_admin_categoriesconfirm.htm:8
+msgid "Are you sure you'd like to continue with these actions?"
+msgstr ""
+
+#: pntemplates/admin/postcalendar_admin_categoriesconfirm.htm:18
+msgid "Add new category : "
+msgstr ""
+
+#: pntemplates/admin/postcalendar_admin_categoriesconfirm.htm:20
+msgid "Make modifications to current categories."
+msgstr ""
+
+#: pntemplates/admin/postcalendar_admin_categoriesconfirm.htm:26
+msgid "YES!"
+msgstr ""
+
+#: pntemplates/admin/postcalendar_admin_showlist.htm:14
+msgid "Select"
+msgstr ""
+
+#: pntemplates/admin/postcalendar_admin_showlist.htm:15
+msgid "Title"
+msgstr ""
+
+#: pntemplates/admin/postcalendar_admin_showlist.htm:16
+msgid "Timestamp (entered on)"
+msgstr ""
+
+#: pntemplates/admin/postcalendar_admin_showlist.htm:29
+msgid "Perform this action"
+msgstr ""
+
+#: pntemplates/admin/postcalendar_admin_showlist.htm:33
+#: pntemplates/admin/postcalendar_admin_showlist.htm:35
+msgid "Prev"
+msgstr ""
+
+#: pntemplates/admin/postcalendar_admin_showlist.htm:33
+#: pntemplates/admin/postcalendar_admin_showlist.htm:39
+msgid "Events"
+msgstr ""
+
+#: pntemplates/admin/postcalendar_admin_showlist.htm:39
+#: pntemplates/admin/postcalendar_admin_showlist.htm:41
+msgid "Next"
+msgstr ""
+
+#: pntemplates/admin/postcalendar_admin_view_event_details.htm:25
+msgid "All Day"
+msgstr ""
+
+#: pntemplates/admin/postcalendar_admin_view_event_details.htm:27
+msgid "Duration"
+msgstr ""
+
+#: pntemplates/admin/postcalendar_admin_view_event_details.htm:39
+msgid "Location"
+msgstr ""
+
+#: pntemplates/admin/postcalendar_admin_view_event_details.htm:61
+msgid "Contact Information"
+msgstr ""
+
+#: pntemplates/admin/postcalendar_admin_view_event_details.htm:77
+msgid "Fee"
+msgstr ""
+
+#: pntemplates/admin/postcalendar_admin_modifyconfig.htm:6
+#: pntemplates/admin/postcalendar_admin_modifyconfig.htm:12
+msgid "PostCalendar Global Settings"
+msgstr ""
+
+#: pntemplates/admin/postcalendar_admin_modifyconfig.htm:13
+#, php-format
+msgid "Reset to Defaults (for language \"%s\")"
+msgstr ""
+
+#: pntemplates/admin/postcalendar_admin_modifyconfig.htm:16
+msgid "Notify Admin About <b>USER</b> Event Submission/Modification"
+msgstr ""
+
+#: pntemplates/admin/postcalendar_admin_modifyconfig.htm:21
+msgid "Notify Admin About <b>ADMIN</b> Event Submission/Modification"
+msgstr ""
+
+#: pntemplates/admin/postcalendar_admin_modifyconfig.htm:26
+msgid "Admin Email Address"
+msgstr ""
+
+#: pntemplates/admin/postcalendar_admin_modifyconfig.htm:30
+msgid "Allow submitted events to be made active instantly"
+msgstr ""
+
+#: pntemplates/admin/postcalendar_admin_modifyconfig.htm:35
+msgid "Allow users to publish Personal Calendars"
+msgstr ""
+
+#: pntemplates/admin/postcalendar_admin_modifyconfig.htm:40
+msgid "Allow users to publish Global Events"
+msgstr ""
+
+#: pntemplates/admin/postcalendar_admin_modifyconfig.htm:45
+msgid "Number of events to list on admin pages"
+msgstr ""
+
+#: pntemplates/admin/postcalendar_admin_modifyconfig.htm:49
+msgid "Use 24 hour time format"
+msgstr ""
+
+#: pntemplates/admin/postcalendar_admin_modifyconfig.htm:54
+msgid "Time Increment for Add (minutes 1-60)"
+msgstr ""
+
+#: pntemplates/admin/postcalendar_admin_modifyconfig.htm:58
+msgid "View events in a popup window"
+msgstr ""
+
+#: pntemplates/admin/postcalendar_admin_modifyconfig.htm:63
+msgid "Use international date style"
+msgstr ""
+
+#: pntemplates/admin/postcalendar_admin_modifyconfig.htm:68
+msgid ""
+"Date Display Format <i>uses php <a href=\"http://php.net/strftime"
+"\">strftime</a> format</i>"
+msgstr ""
+
+#: pntemplates/admin/postcalendar_admin_modifyconfig.htm:72
+msgid "Use topics"
+msgstr ""
+
+#: pntemplates/admin/postcalendar_admin_modifyconfig.htm:77
+msgid "First day of the week"
+msgstr ""
+
+#: pntemplates/admin/postcalendar_admin_modifyconfig.htm:87
+msgid "Default Calendar View"
+msgstr ""
+
+#: pntemplates/admin/postcalendar_admin_modifyconfig.htm:98
+msgid "Show hovering event text on mouseover"
+msgstr ""
+
+#: pntemplates/admin/postcalendar_admin_modifyconfig.htm:103
+msgid "Cache template output?"
+msgstr ""
+
+#: pntemplates/admin/postcalendar_admin_modifyconfig.htm:108
+msgid "Cache Lifetime (in seconds)"
+msgstr ""
+
+#: pntemplates/admin/postcalendar_admin_modifyconfig.htm:112
+msgid "Display repeating options"
+msgstr ""
+
+#: pntemplates/admin/postcalendar_admin_modifyconfig.htm:117
+msgid "Display meeting options"
+msgstr ""
+
+#: pntemplates/admin/postcalendar_admin_modifyconfig.htm:122
+msgid "Allow Users to filter event display by Category/Topic"
+msgstr ""
+
+#: pntemplates/admin/postcalendar_admin_modifyconfig.htm:129
+msgid "Use address book lookup"
+msgstr ""
+
+#: pntemplates/admin/postcalendar_admin_systeminfo.htm:5
+msgid "Zikula & PostCalendar Current System Information"
+msgstr ""
+
+#: pntemplates/admin/postcalendar_admin_systeminfo.htm:9
+msgid "Component"
+msgstr ""
+
+#: pntemplates/admin/postcalendar_admin_systeminfo.htm:10
+msgid "Information"
+msgstr ""
+
+#: pntemplates/event/postcalendar_event_deleteeventconfirm.htm:2
+msgid "Delete Event"
+msgstr ""
+
+#: pntemplates/event/postcalendar_event_deleteeventconfirm.htm:12
+msgid "CANCEL"
+msgstr ""
+
+#: pntemplates/event/postcalendar_event_fileupload.htm:4
+msgid "Upload .ics (iCal) File"
+msgstr ""
+
+#: pntemplates/event/postcalendar_event_fileupload.htm:11
+msgid "File to upload:"
+msgstr ""
+
+#: pntemplates/event/postcalendar_event_fileupload.htm:15
+msgid "Sharing"
+msgstr ""
+
+#: pntemplates/event/postcalendar_event_fileupload.htm:22
+msgid "Cancel"
+msgstr ""
