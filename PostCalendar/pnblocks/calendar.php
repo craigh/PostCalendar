@@ -32,6 +32,7 @@ function postcalendar_calendarblock_info()
  */
 function postcalendar_calendarblock_display($blockinfo)
 {
+    $dom = ZLanguage::getModuleDomain('PostCalendar');
     if (!pnSecAuthAction(0, 'PostCalendar:calendarblock:', "$blockinfo[title]::", ACCESS_OVERVIEW)) {
         return false;
     }
@@ -103,13 +104,13 @@ function postcalendar_calendarblock_display($blockinfo)
     // get the events for the current month view
     //*******************************************************************
     $day_of_week = 1;
-    $pc_month_names = array(_CALJAN, _CALFEB, _CALMAR, _CALAPR, _CALMAY, _CALJUN, _CALJUL, _CALAUG, _CALSEP, _CALOCT, _CALNOV, _CALDEC);
+    $pc_month_names = array(__('January', $dom), __('February', $dom), __('March', $dom), __('April', $dom), __('May', $dom), __('June', $dom), __('July', $dom), __('August', $dom), __('September', $dom), __('October', $dom), __('November', $dom), __('December', $dom));
 
-    $pc_short_day_names = array(_CALSUNDAYSHORT, _CALMONDAYSHORT, _CALTUESDAYSHORT, _CALWEDNESDAYSHORT, _CALTHURSDAYSHORT,
-                    _CALFRIDAYSHORT, _CALSATURDAYSHORT);
+    $pc_short_day_names = array(__('S', $dom), __('M', $dom), __('T', $dom), __('W', $dom), __('T', $dom),
+                    __('F', $dom), __('S', $dom));
 
-    $pc_long_day_names = array(_CALSUNDAY, _CALMONDAY, _CALTUESDAY, _CALWEDNESDAY, _CALTHURSDAY, _CALFRIDAY, _CALSATURDAY);
-    switch (_SETTING_FIRST_DAY_WEEK) {
+    $pc_long_day_names = array(__('Sunday', $dom), __('Monday', $dom), __('Tuesday', $dom), __('Wednesday', $dom), __('Thursday', $dom), __('Friday', $dom), __('Saturday', $dom));
+    switch (_SETTING_FIRST_DAY__('week', $dom)) {
         case _IS_MONDAY:
             $pc_array_pos = 1;
             $first_day = date('w', mktime(0, 0, 0, $the_month, 0, $the_year));

@@ -10,6 +10,7 @@
  */
 function smarty_function_pc_date_select($args, &$smarty)
 {
+    $dom = ZLanguage::getModuleDomain('PostCalendar');
     $print = FormUtil::getPassedValue('print');
     $tplview = FormUtil::getPassedValue('tplview');
     $viewtype = FormUtil::getPassedValue('viewtype');
@@ -72,23 +73,23 @@ function smarty_function_pc_date_select($args, &$smarty)
         $sel_data = array();
         $sel_data[0]['id'] = 'day';
         $sel_data[0]['selected'] = $viewtype == 'day';
-        $sel_data[0]['name'] = _CAL_DAYVIEW;
+        $sel_data[0]['name'] = __('Day', $dom);
         $sel_data[1]['id'] = 'week';
         $sel_data[1]['selected'] = $viewtype == 'week';
-        $sel_data[1]['name'] = _CAL_WEEKVIEW;
+        $sel_data[1]['name'] = __('Week', $dom);
         $sel_data[2]['id'] = 'month';
         $sel_data[2]['selected'] = $viewtype == 'month';
-        $sel_data[2]['name'] = _CAL_MONTHVIEW;
+        $sel_data[2]['name'] = __('Month', $dom);
         $sel_data[3]['id'] = 'year';
         $sel_data[3]['selected'] = $viewtype == 'year';
-        $sel_data[3]['name'] = _CAL_YEARVIEW;
+        $sel_data[3]['name'] = __('Year', $dom);
         $sel_data[4]['id'] = 'list';
         $sel_data[4]['selected'] = $viewtype == 'list';
-        $sel_data[4]['name'] = _CAL_LISTVIEW;
+        $sel_data[4]['name'] = __('List View', $dom);
         $viewselect = pcHtmlUtil::FormSelectMultipleSubmit('viewtype', $sel_data);
     }
 
-    if (!isset($args['label'])) $args['label'] = _PC_JUMP_MENU_SUBMIT;
+    if (!isset($args['label'])) $args['label'] = __('go', $dom);
 
     $jumpsubmit = '<input type="submit" name="submit" value="' . $args['label'] . '" />';
 

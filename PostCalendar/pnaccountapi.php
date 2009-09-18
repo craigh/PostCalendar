@@ -16,6 +16,7 @@
  */
 function PostCalendar_accountapi_getall($args)
 {
+    $dom = ZLanguage::getModuleDomain('PostCalendar');
     // load user language file
     pnModLangLoad('PostCalendar', 'user');
 
@@ -28,7 +29,7 @@ function PostCalendar_accountapi_getall($args)
     }
     if (SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADD)) {
         $items[] = array('url' => pnModURL('PostCalendar', 'user', 'submit'),
-                        'title' => _CALSUBMITEVENT,
+                        'title' => __('Submit', $dom),
                         'icon' => 'admin.gif');
     }
 

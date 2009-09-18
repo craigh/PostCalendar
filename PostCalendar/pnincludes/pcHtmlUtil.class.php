@@ -27,10 +27,11 @@ class pcHtmlUtil extends HtmlUtil
      */
     function getSelector_DatetimeMonth ($selected=0, $name='month', $submit=false, $disabled=false, $multipleSize=1, $text=0)
     {
+        $dom = ZLanguage::getModuleDomain('PostCalendar');
         if (!$name) {
             $name='month';
         }
-        if ($text) $mnames=explode(" ", _MONTH_LONG); array_unshift($mnames, "noval");
+        if ($text) $mnames=explode(" ", __('January February March April May June July August September October November December', $dom)); array_unshift($mnames, "noval");
 
         $id = strtr ($name, '[]', '__');
         $disabled     = $disabled ? 'disabled="disabled"' : '';

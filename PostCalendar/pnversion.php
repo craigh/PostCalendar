@@ -8,10 +8,11 @@
  * @copyright   Copyright (c) 2009, Craig Heydenburg, Sound Web Development
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
  */
-$modversion['name']           = _PC_MODULENAME;
+$dom = ZLanguage::getModuleDomain('PostCalendar');
+$modversion['name']           = __('PostCalendar', $dom);
 $modversion['id']             = '$Revision$'; // svn revision #
 $modversion['version']        = '5.8-dev';
-$modversion['description']    = _PC_MODULEDESCRIPTION;
+$modversion['description']    = __('Zikula Calendar Module', $dom);
 $modversion['credits']        = 'docs/credits.txt';
 $modversion['changelog']      = 'http://code.zikula.org/soundwebdevelopment/';
 $modversion['license']        = 'http://www.gnu.org/copyleft/gpl.html';

@@ -29,6 +29,7 @@ require_once dirname(__FILE__) . '/global.php';
  */
 function postcalendar_eventapi_queryEvents($args)
 {
+    $dom = ZLanguage::getModuleDomain('PostCalendar');
     $end = '0000-00-00';
     extract($args);
 
@@ -132,6 +133,7 @@ function postcalendar_eventapi_queryEvents($args)
  **/
 function postcalendar_eventapi_getEvents($args)
 {
+    $dom = ZLanguage::getModuleDomain('PostCalendar');
     $s_keywords = $s_category = $s_topic = '';
     extract($args);
     //not sure these three lines are needed with call to getDate here
@@ -430,6 +432,7 @@ function postcalendar_eventapi_writeEvent($args)
  */
 function postcalendar_eventapi_buildSubmitForm($args)
 {
+    $dom = ZLanguage::getModuleDomain('PostCalendar');
     if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADD)) {
         return LogUtil::registerPermissionError();
     }
@@ -586,7 +589,7 @@ function postcalendar_eventapi_buildSubmitForm($args)
 
     $tpl->assign('ValueEventDesc', DataUtil::formatForDisplay($event_desc));
 
-    $eventHTMLorText = array('text' => _PC_SUBMIT_TEXT, 'html' => _PC_SUBMIT_HTML);
+    $eventHTMLorText = array('text' => __('Plain Text', $dom), 'html' => __('HTML', $dom));
     $tpl->assign('EventHTMLorText', $eventHTMLorText);
     $tpl->assign('EventHTMLorTextVal', $pc_html_or_text);
 
@@ -628,14 +631,14 @@ function postcalendar_eventapi_buildSubmitForm($args)
     //=================================================================
     $data = array();
     if (_SETTING_ALLOW_USER_CAL) {
-        $data[SHARING_PRIVATE]=_PC_SHARE_PRIVATE;
-        $data[SHARING_PUBLIC]=_PC_SHARE_PUBLIC;
-        $data[SHARING_BUSY]=_PC_SHARE_SHOWBUSY;
+        $data[SHARING_PRIVATE]=__('Private', $dom);
+        $data[SHARING_PUBLIC]=__('Public', $dom);
+        $data[SHARING_BUSY]=__('Show as Busy', $dom);
     }
 
     if (pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN) || _SETTING_ALLOW_GLOBAL || !_SETTING_ALLOW_USER_CAL) {
-        $data[SHARING_GLOBAL]=_PC_SHARE_GLOBAL;
-        $data[SHARING_HIDEDESC]=_PC_SHARE_HIDEDESC;
+        $data[SHARING_GLOBAL]=__('Global', $dom);
+        $data[SHARING_HIDEDESC]=__('Global, description private', $dom);
     }
     $tpl->assign('sharingselect', $data);
 
@@ -666,7 +669,7 @@ function postcalendar_eventapi_buildSubmitForm($args)
     $tpl->assign('SelectedRepeat', (int) $event_repeat == 1 ? 'checked' : '');
 
     unset($in);
-    $in = array(_PC_EVERY, _PC_EVERY_OTHER, _PC_EVERY_THIRD, _PC_EVERY_FOURTH);
+    $in = array(__('Every', $dom), __('Every Other', $dom), __('Every Third', $dom), __('Every Fourth', $dom));
     $keys = array(REPEAT_EVERY, REPEAT_EVERY_OTHER, REPEAT_EVERY_THIRD, REPEAT_EVERY_FOURTH);
     $repeat_freq = array();
     foreach ($in as $k => $v)
@@ -677,8 +680,8 @@ function postcalendar_eventapi_buildSubmitForm($args)
     $tpl->assign('repeat_freq', $repeat_freq);
 
     unset($in);
-    $in = array(_PC_EVERY_DAY, _PC_EVERY_WEEK, _PC_EVERY_MONTH, _PC_EVERY_YEAR);
-    $keys = array(REPEAT_EVERY_DAY, REPEAT_EVERY_WEEK, REPEAT_EVERY_MONTH, REPEAT_EVERY_YEAR);
+    $in = array(__('Day(s)', $dom), __('Week(s)', $dom), __('Month(s)', $dom), __('Year(s)', $dom));
+    $keys = array(REPEAT_EVERY__('day', $dom), REPEAT_EVERY_WEEK, REPEAT_EVERY_MONTH, REPEAT_EVERY_YEAR);
     $repeat_freq_type = array();
     foreach ($in as $k => $v)
         array_push($repeat_freq_type, array('value' => $keys[$k], 'selected' => ($keys[$k] == $event_repeat_freq_type ? 'selected' : ''), 'name' => $v));
@@ -687,7 +690,7 @@ function postcalendar_eventapi_buildSubmitForm($args)
     $tpl->assign('SelectedRepeatOn', (int) $event_repeat == 2 ? 'checked' : '');
 
     unset($in);
-    $in = array(_PC_EVERY_1ST, _PC_EVERY_2ND, _PC_EVERY_3RD, _PC_EVERY_4TH, _PC_EVERY_LAST);
+    $in = array(__('First', $dom), __('Second', $dom), __('Third', $dom), __('Fourth', $dom), __('Last', $dom));
     $keys = array(REPEAT_ON_1ST, REPEAT_ON_2ND, REPEAT_ON_3RD, REPEAT_ON_4TH, REPEAT_ON_LAST);
     $repeat_on_num = array();
     foreach ($in as $k => $v)
@@ -696,7 +699,7 @@ function postcalendar_eventapi_buildSubmitForm($args)
     $tpl->assign('repeat_on_num', $repeat_on_num);
 
     unset($in);
-    $in = array(_PC_EVERY_SUN, _PC_EVERY_MON, _PC_EVERY_TUE, _PC_EVERY_WED, _PC_EVERY_THU, _PC_EVERY_FRI, _PC_EVERY_SAT);
+    $in = array(__('Sun', $dom), __('Mon', $dom), __('Tue', $dom), __('Wed', $dom), __('Thu', $dom), __('Fri', $dom), __('Sat', $dom));
     $keys = array(REPEAT_ON_SUN, REPEAT_ON_MON, REPEAT_ON_TUE, REPEAT_ON_WED, REPEAT_ON_THU, REPEAT_ON_FRI, REPEAT_ON_SAT);
     $repeat_on_day = array();
     foreach ($in as $k => $v)
@@ -705,8 +708,8 @@ function postcalendar_eventapi_buildSubmitForm($args)
     $tpl->assign('repeat_on_day', $repeat_on_day);
 
     unset($in);
-    $in = array(_PC_OF_EVERY_MONTH, _PC_OF_EVERY_2MONTH, _PC_OF_EVERY_3MONTH, _PC_OF_EVERY_4MONTH, _PC_OF_EVERY_6MONTH, _PC_OF_EVERY_YEAR);
-    $keys = array(REPEAT_ON_MONTH, REPEAT_ON_2MONTH, REPEAT_ON_3MONTH, REPEAT_ON_4MONTH, REPEAT_ON_6MONTH, REPEAT_ON_YEAR);
+    $in = array(__('month', $dom), __('other month', $dom), __('3 months', $dom), __('4 months', $dom), __('6 months', $dom), __('year', $dom));
+    $keys = array(REPEAT_ON__('month', $dom), REPEAT_ON_2MONTH, REPEAT_ON_3MONTH, REPEAT_ON_4MONTH, REPEAT_ON_6MONTH, REPEAT_ON_YEAR);
     $repeat_on_freq = array();
     foreach ($in as $k => $v)
         array_push($repeat_on_freq, array('value' => $keys[$k], 'selected' => ($keys[$k] == $event_repeat_on_freq ? 'selected' : ''), 'name' => $v));
@@ -737,6 +740,7 @@ function postcalendar_eventapi_buildSubmitForm($args)
 
 function postcalendar_eventapi_fixEventDetails($event)
 {
+    $dom = ZLanguage::getModuleDomain('PostCalendar');
     // there has to be a more intelligent way to do this
     @list($event['duration_hours'], $dmin) = @explode('.', ($event['duration'] / 60 / 60));
     $event['duration_minutes'] = substr(sprintf('%.2f', '.' . 60 * ($dmin / 100)), 2, 2);
@@ -752,9 +756,9 @@ function postcalendar_eventapi_fixEventDetails($event)
         return false;
     } elseif ($event['sharing'] == SHARING_BUSY && $euid != $suid) {
         // make it not display any information
-        $event['title'] = _USER_BUSY_TITLE;
-        $event['hometext'] = _USER_BUSY_MESSAGE;
-        $event['desc'] = _USER_BUSY_MESSAGE;
+        $event['title'] = __('Busy', $dom);
+        $event['hometext'] = __('I am busy during this time.', $dom);
+        $event['desc'] = __('I am busy during this time.', $dom);
 
         $fields = array('event_location', 'conttel', 'contname', 'contemail', 'website', 'fee', 'event_street1',
                         'event_street2', 'event_city',

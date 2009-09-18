@@ -37,33 +37,37 @@ function postcalendar_admin_modifyconfig()
 
 function postcalendar_admin_listapproved()
 {
+    $dom = ZLanguage::getModuleDomain('PostCalendar');
     $args = array();
     $args['type']     = _EVENT_APPROVED;
     $args['function'] = 'listapproved';
-    $args['title']    = _PC_APPROVED_ADMIN;
+    $args['title']    = __('Approved Events Administration', $dom);
     return postcalendar_admin_showlist($args);
 }
 
 function postcalendar_admin_listhidden()
 {
+    $dom = ZLanguage::getModuleDomain('PostCalendar');
     $args = array();
     $args['type']     = _EVENT_HIDDEN;
     $args['function'] = 'listhidden';
-    $args['title']    = _PC_HIDDEN_ADMIN;
+    $args['title']    = __('Hidden Events Administration', $dom);
     return postcalendar_admin_showlist($args);
 }
 
 function postcalendar_admin_listqueued()
 {
+    $dom = ZLanguage::getModuleDomain('PostCalendar');
     $args = array();
     $args['type']     = _EVENT_QUEUED;
     $args['function'] = 'listqueued';
-    $args['title']    = _PC_QUEUED_ADMIN;
+    $args['title']    = __('Queued Events Administration', $dom);
     return postcalendar_admin_showlist($args);
 }
 
 function postcalendar_admin_showlist($args)
 {
+    $dom = ZLanguage::getModuleDomain('PostCalendar');
     if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
         return LogUtil::registerPermissionError();
     }
@@ -91,10 +95,10 @@ function postcalendar_admin_showlist($args)
     $pnRender->assign('events', $events);
     $pnRender->assign('title_sort_url', pnModUrl('PostCalendar', 'admin', $args['function'], array('sort' => 'title', 'sdir' => $sdir)));
     $pnRender->assign('time_sort_url', pnModUrl('PostCalendar', 'admin', $args['function'], array('sort' => 'time', 'sdir' => $sdir)));
-    $pnRender->assign('formactions', array(_ADMIN_ACTION_VIEW => _PC_ADMIN_ACTION_VIEW, _ADMIN_ACTION_APPROVE => _PC_ADMIN_ACTION_APPROVE,
-                        _ADMIN_ACTION_HIDE => _PC_ADMIN_ACTION_HIDE,
-                        _ADMIN_ACTION_DELETE => _PC_ADMIN_ACTION_DELETE));
-    $pnRender->assign('actionselected', _ADMIN_ACTION_VIEW);
+    $pnRender->assign('formactions', array(_ADMIN_ACTION_VIEW => __('View', $dom), _ADMIN_ACTION_APPROVE => __('Approve', $dom),
+                        _ADMIN_ACTION_HIDE => __('Hide', $dom),
+                        _ADMIN_ACTION_DELETE => __('Delete', $dom)));
+    $pnRender->assign('actionselected', _ADMIN_ACTION__('View', $dom));
     if ($offset > 1) {
         $prevlink = pnModUrl('PostCalendar', 'admin', $args['function'], array('offset' => $offset - $offset_increment, 'sort' => $sort, 'sdir' => $original_sdir));
     } else {
@@ -114,6 +118,7 @@ function postcalendar_admin_showlist($args)
 
 function postcalendar_admin_adminevents()
 {
+    $dom = ZLanguage::getModuleDomain('PostCalendar');
     if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
         return LogUtil::registerPermissionError();
     }
@@ -123,7 +128,7 @@ function postcalendar_admin_adminevents()
     $thelist     = FormUtil::getPassedValue('thelist');
 
     if (!isset($events)) {
-        LogUtil::registerError(_PC_NO_EVENT_SELECTED);
+        LogUtil::registerError(__('Please select an event', $dom));
 
         // return to where we came from
         switch ($thelist) {
@@ -140,15 +145,15 @@ function postcalendar_admin_adminevents()
     switch ($action) {
         case _ADMIN_ACTION_APPROVE:
             $function = 'approveevents';
-            $are_you_sure_text = _PC_APPROVE_ARE_YOU_SURE;
+            $are_you_sure_text = __('Are you sure you want to approve these events?', $dom);
             break;
         case _ADMIN_ACTION_HIDE:
             $function = 'hideevents';
-            $are_you_sure_text = _PC_HIDE_ARE_YOU_SURE;
+            $are_you_sure_text = __('Are you sure you want to hide these events?', $dom);
             break;
         case _ADMIN_ACTION_DELETE:
             $function = 'deleteevents';
-            $are_you_sure_text = _PC_DELETE_ARE_YOU_SURE;
+            $are_you_sure_text = __('Are you sure you want to delete this event?', $dom);
             break;
     }
 
@@ -174,13 +179,14 @@ function postcalendar_admin_adminevents()
 
 function postcalendar_admin_resetDefaults()
 {
+    $dom = ZLanguage::getModuleDomain('PostCalendar');
     if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
         return LogUtil::registerPermissionError();
     }
 
     $defaults = pnModFunc('PostCalendar', 'init', 'getdefaults');
     if (!count($defaults)) {
-        return LogUtil::registerError(_GETFAILED);
+        return LogUtil::registerError(__('Error! Could not load items.', $dom));
     }
 
     // delete all the old vars
@@ -192,19 +198,20 @@ function postcalendar_admin_resetDefaults()
     // clear the cache
     pnModAPIFunc('PostCalendar', 'admin', 'clearCache');
 
-    LogUtil::registerStatus(_PC_UPDATED_DEFAULTS);
+    LogUtil::registerStatus(__('Your PostCalendar configuration has been reset to use defaults.', $dom));
     return postcalendar_admin_modifyconfig();
 }
 
 function postcalendar_admin_updateconfig()
 {
+    $dom = ZLanguage::getModuleDomain('PostCalendar');
     if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
         return LogUtil::registerPermissionError();
     }
 
     $defaults = pnModFunc('PostCalendar', 'init', 'getdefaults');
     if (!count($defaults)) {
-        return LogUtil::registerError(_GETFAILED);
+        return LogUtil::registerError(__('Error! Could not load items.', $dom));
     }
 
     $settings = array(
@@ -243,12 +250,13 @@ function postcalendar_admin_updateconfig()
     // clear the cache
     pnModAPIFunc('PostCalendar', 'admin', 'clearCache');
 
-    LogUtil::registerStatus(_PC_UPDATED);
+    LogUtil::registerStatus(__('Your PostCalendar configuration has been updated.', $dom));
     return postcalendar_admin_modifyconfig();
 }
 
 function postcalendar_admin_categories()
 {
+    $dom = ZLanguage::getModuleDomain('PostCalendar');
     if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
         return LogUtil::registerPermissionError();
     }
@@ -298,6 +306,7 @@ function postcalendar_admin_categoriesConfirm()
 
 function postcalendar_admin_categoriesUpdate()
 {
+    $dom = ZLanguage::getModuleDomain('PostCalendar');
     if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
         return LogUtil::registerPermissionError();
     }
@@ -383,12 +392,13 @@ function postcalendar_admin_categoriesUpdate()
 
 function postcalendar_admin_manualClearCache()
 {
+    $dom = ZLanguage::getModuleDomain('PostCalendar');
     if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
         return LogUtil::registerPermissionError();
     }
     $clear = pnModAPIFunc('PostCalendar', 'admin', 'clearCache');
     if ($clear) {
-        LogUtil::registerStatus(_PC_CACHE_CLEARED);
+        LogUtil::registerStatus(__('Smarty Cache has been cleared', $dom));
         return postcalendar_admin_modifyconfig();
     }
     LogUtil::registerStatus(_PC_CACHE_NOTCLEARED);
@@ -397,6 +407,7 @@ function postcalendar_admin_manualClearCache()
 
 function postcalendar_admin_testSystem()
 {
+    $dom = ZLanguage::getModuleDomain('PostCalendar');
     if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
         return LogUtil::registerPermissionError();
     }
@@ -495,12 +506,13 @@ function postcalendar_admin_testSystem()
  */
 function postcalendar_admin_approveevents()
 {
+    $dom = ZLanguage::getModuleDomain('PostCalendar');
     if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADD)) {
         return LogUtil::registerPermissionError();
     }
 
     $pc_eid = FormUtil::getPassedValue('pc_eid');
-    if (!is_array($pc_eid)) return _PC_ADMIN_EVENT_ERROR;
+    if (!is_array($pc_eid)) return __('There was an error while processing your request.', $dom);
 
     // structure array for DB interaction
     $eventarray = array();
@@ -511,13 +523,13 @@ function postcalendar_admin_approveevents()
     // update the DB
     $res = pnModAPIFunc('PostCalendar', 'event', 'update', $eventarray);
     if ($res) {
-        LogUtil::registerStatus(_PC_ADMIN_EVENTS_APPROVED);
+        LogUtil::registerStatus(__('The event(s) have been approved.', $dom));
     } else {
-        LogUtil::registerError(_PC_ADMIN_EVENT_ERROR);
+        LogUtil::registerError(__('There was an error while processing your request.', $dom));
     }
 
     pnModAPIFunc('PostCalendar', 'admin', 'clearCache');
-    return pnModFunc('PostCalendar', 'admin', 'showlist', array('type' => _EVENT_APPROVED, 'function' => 'listapproved', 'title' => _PC_APPROVED_ADMIN));
+    return pnModFunc('PostCalendar', 'admin', 'showlist', array('type' => _EVENT_APPROVED, 'function' => 'listapproved', 'title' => __('Approved Events Administration', $dom)));
 }
 
 /*
@@ -527,12 +539,13 @@ function postcalendar_admin_approveevents()
  */
 function postcalendar_admin_hideevents()
 {
+    $dom = ZLanguage::getModuleDomain('PostCalendar');
     if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_EDIT)) {
         return LogUtil::registerPermissionError();
     }
 
     $pc_eid = FormUtil::getPassedValue('pc_eid');
-    if (!is_array($pc_eid)) return _PC_ADMIN_EVENT_ERROR;
+    if (!is_array($pc_eid)) return __('There was an error while processing your request.', $dom);
 
     // structure array for DB interaction
     $eventarray = array();
@@ -543,13 +556,13 @@ function postcalendar_admin_hideevents()
     // update the DB
     $res = pnModAPIFunc('PostCalendar', 'event', 'update', $eventarray);
     if ($res) {
-        LogUtil::registerStatus(_PC_ADMIN_EVENTS_HIDDEN);
+        LogUtil::registerStatus(__('The event(s) have been hidden.', $dom));
     } else {
-        LogUtil::registerError(_PC_ADMIN_EVENT_ERROR);
+        LogUtil::registerError(__('There was an error while processing your request.', $dom));
     }
 
     pnModAPIFunc('PostCalendar', 'admin', 'clearCache');
-    return pnModFunc('PostCalendar', 'admin', 'showlist', array('type' => _EVENT_APPROVED, 'function' => 'listapproved', 'title' => _PC_APPROVED_ADMIN));
+    return pnModFunc('PostCalendar', 'admin', 'showlist', array('type' => _EVENT_APPROVED, 'function' => 'listapproved', 'title' => __('Approved Events Administration', $dom)));
 }
 
 /*
@@ -559,12 +572,13 @@ function postcalendar_admin_hideevents()
  */
 function postcalendar_admin_deleteevents()
 {
+    $dom = ZLanguage::getModuleDomain('PostCalendar');
     if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_DELETE)) {
         return LogUtil::registerPermissionError();
     }
 
     $pc_eid = FormUtil::getPassedValue('pc_eid');
-    if (!is_array($pc_eid)) return _PC_ADMIN_EVENT_ERROR;
+    if (!is_array($pc_eid)) return __('There was an error while processing your request.', $dom);
 
     // structure array for DB interaction
     $eventarray = array();
@@ -575,13 +589,13 @@ function postcalendar_admin_deleteevents()
     // update the DB
     $res = pnModAPIFunc('PostCalendar', 'event', 'deleteeventarray', $eventarray);
     if ($res) {
-        LogUtil::registerStatus(_PC_ADMIN_EVENTS_DELETED);
+        LogUtil::registerStatus(__('Your event has been deleted.', $dom));
     } else {
-        LogUtil::registerError(_PC_ADMIN_EVENT_ERROR);
+        LogUtil::registerError(__('There was an error while processing your request.', $dom));
     }
 
     pnModAPIFunc('PostCalendar', 'admin', 'clearCache');
-    return pnModFunc('PostCalendar', 'admin', 'showlist', array('type' => _EVENT_APPROVED, 'function' => 'listapproved', 'title' => _PC_APPROVED_ADMIN));
+    return pnModFunc('PostCalendar', 'admin', 'showlist', array('type' => _EVENT_APPROVED, 'function' => 'listapproved', 'title' => __('Approved Events Administration', $dom)));
 }
 /****************************************************
  * The functions below are moved to eventapi

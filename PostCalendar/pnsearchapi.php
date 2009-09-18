@@ -14,7 +14,7 @@
  **/
 function postcalendar_searchapi_info()
 {
-    return array('title' => 'PostCalendar', 
+    return array('title' => 'PostCalendar',
                  'functions' => array('PostCalendar' => 'search'));
 }
 
@@ -23,6 +23,7 @@ function postcalendar_searchapi_info()
  **/
 function postcalendar_searchapi_options($args)
 {
+    $dom = ZLanguage::getModuleDomain('PostCalendar');
     if (SecurityUtil::checkPermission('PostCalendar::', ':*', ACCESS_OVERVIEW)) {
         // Create output object - this object will store all of our output so that
         // we can return it easily when required
@@ -35,7 +36,7 @@ function postcalendar_searchapi_options($args)
         foreach ($all_categories as $category) {
             $categories[$category['catid']] = $category['catname'];
         }
-        $categories[0] = _PC_FILTER_CATEGORY;
+        $categories[0] = __('All Categories', $dom);
         ksort($categories);
         $renderer->assign('categories', $categories);
 
@@ -47,7 +48,7 @@ function postcalendar_searchapi_options($args)
             foreach ($a_topics as $topic) {
                 $topics[$topic['topicid']] = $topic['topictext'];
             }
-            $topics[0] = _PC_FILTER_TOPIC;
+            $topics[0] = __('All Topics', $dom);
             ksort($topics);
             $renderer->assign('topics', $topics);
         }
@@ -72,6 +73,7 @@ function postcalendar_searchapi_options($args)
  **/
 function postcalendar_searchapi_search($args)
 {
+    $dom = ZLanguage::getModuleDomain('PostCalendar');
     if (!SecurityUtil::checkPermission('PostCalendar::', ':*', ACCESS_OVERVIEW)) {
         return true;
     }
@@ -128,7 +130,7 @@ function postcalendar_searchapi_search($args)
             }
             $insertResult = DBUtil::executeSQL($sql);
             if (!$insertResult) {
-                return LogUtil::registerError (_GETFAILED);
+                return LogUtil::registerError (__('Error! Could not load items.', $dom));
             }
         }
     }

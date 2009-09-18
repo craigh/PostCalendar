@@ -21,6 +21,7 @@ require_once dirname(__FILE__) . '/global.php';
  */
 function postcalendar_userapi_buildView($args)
 {
+    $dom = ZLanguage::getModuleDomain('PostCalendar');
     $Date = $args['Date'];
     $viewtype = $args['viewtype'];
 
@@ -58,12 +59,12 @@ function postcalendar_userapi_buildView($args)
     // (may be adding more here soon - based on need)
     //=================================================================
     $pc_month_names = array(
-                    _CALJAN, _CALFEB, _CALMAR, _CALAPR, _CALMAY,
-                    _CALJUN, _CALJUL, _CALAUG, _CALSEP, _CALOCT,
-                    _CALNOV, _CALDEC);
-    $pc_short_day_names = array(_CALSUNDAYSHORT, _CALMONDAYSHORT, _CALTUESDAYSHORT, _CALWEDNESDAYSHORT, _CALTHURSDAYSHORT,
-                    _CALFRIDAYSHORT, _CALSATURDAYSHORT);
-    $pc_long_day_names = array(_CALSUNDAY, _CALMONDAY, _CALTUESDAY, _CALWEDNESDAY, _CALTHURSDAY, _CALFRIDAY, _CALSATURDAY);
+                    __('January', $dom), __('February', $dom), __('March', $dom), __('April', $dom), __('May', $dom),
+                    __('June', $dom), __('July', $dom), __('August', $dom), __('September', $dom), __('October', $dom),
+                    __('November', $dom), __('December', $dom));
+    $pc_short_day_names = array(__('S', $dom), __('M', $dom), __('T', $dom), __('W', $dom), __('T', $dom),
+                    __('F', $dom), __('S', $dom));
+    $pc_long_day_names = array(__('Sunday', $dom), __('Monday', $dom), __('Tuesday', $dom), __('Wednesday', $dom), __('Thursday', $dom), __('Friday', $dom), __('Saturday', $dom));
     //=================================================================
     // set up some information for later variable creation.
     // This helps establish the correct date ranges for each view.
@@ -281,6 +282,7 @@ function postcalendar_userapi_buildView($args)
  */
 function postcalendar_userapi_eventPreview($args)
 {
+    $dom = ZLanguage::getModuleDomain('PostCalendar');
     // Argument check - make sure that all required arguments are present,
     // if not then set an appropriate error message and return
     if (!isset($args['event_starttimeh']) ||
@@ -451,12 +453,13 @@ function postcalendar_userapi_getDate($args)
  */
 function postcalendar_userapi_getmonthname($args)
 {
+    $dom = ZLanguage::getModuleDomain('PostCalendar');
     if (!isset($args['Date'])) return LogUtil::registerError(_MODARGSERROR . ' in postcalendar_userapi_getmonthname');
 
-    $month_name = array('01' => _CALJAN, '02' => _CALFEB, '03' => _CALMAR,
-                    '04' => _CALAPR, '05' => _CALMAY, '06' => _CALJUN,
-                    '07' => _CALJUL, '08' => _CALAUG, '09' => _CALSEP,
-                    '10' => _CALOCT, '11' => _CALNOV, '12' => _CALDEC);
+    $month_name = array('01' => __('January', $dom), '02' => __('February', $dom), '03' => __('March', $dom),
+                    '04' => __('April', $dom), '05' => __('May', $dom), '06' => __('June', $dom),
+                    '07' => __('July', $dom), '08' => __('August', $dom), '09' => __('September', $dom),
+                    '10' => __('October', $dom), '11' => __('November', $dom), '12' => __('December', $dom));
     return $month_name[date('m', $args['Date'])];
 }
 

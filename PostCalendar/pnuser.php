@@ -149,13 +149,13 @@ class postcalendar_user_fileuploadHandler extends pnFormHandler
         // event_sharing_block
         $data = array();
         if (_SETTING_ALLOW_USER_CAL) {
-            $data[]=array('text'=>_PC_SHARE_PRIVATE, 'value'=>SHARING_PRIVATE);
-            $data[]=array('text'=>_PC_SHARE_PUBLIC, 'value'=>SHARING_PUBLIC);
-            $data[]=array('text'=>_PC_SHARE_SHOWBUSY, 'value'=>SHARING_BUSY);
+            $data[]=array('text'=>__('Private', $dom), 'value'=>SHARING_PRIVATE);
+            $data[]=array('text'=>__('Public', $dom), 'value'=>SHARING_PUBLIC);
+            $data[]=array('text'=>__('Show as Busy', $dom), 'value'=>SHARING_BUSY);
         }
         if (pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN) || _SETTING_ALLOW_GLOBAL || !_SETTING_ALLOW_USER_CAL) {
-            $data[]=array('text'=>_PC_SHARE_GLOBAL, 'value'=>SHARING_GLOBAL);
-            $data[]=array('text'=>_PC_SHARE_HIDEDESC, 'value'=>SHARING_HIDEDESC);
+            $data[]=array('text'=>__('Global', $dom), 'value'=>SHARING_GLOBAL);
+            $data[]=array('text'=>__('Global, description private', $dom), 'value'=>SHARING_HIDEDESC);
         }
         $render->assign('sharingselect', $data);
         if (!isset($event_sharing)) $event_sharing = SHARING_PUBLIC;

@@ -21,6 +21,7 @@ require_once dirname(__FILE__) . '/global.php';
  */
 function postcalendar_adminapi_getlinks()
 {
+    $dom = ZLanguage::getModuleDomain('PostCalendar');
     // Define an empty array to hold the list of admin links
     $links = array();
 
@@ -40,29 +41,29 @@ function postcalendar_adminapi_getlinks()
     // Check the users permissions to each avaiable action within the admin panel
     // and populate the links array if the user has permission
     if (pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
-        $links[] = array('url' => pnModURL('PostCalendar', 'admin', 'modifyconfig'), 'text' => _EDIT_PC_CONFIG_GLOBAL);
+        $links[] = array('url' => pnModURL('PostCalendar', 'admin', 'modifyconfig'), 'text' => __('Settings', $dom));
     }
     if (pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
         $links[] = array('url' => pnModURL('PostCalendar', 'admin', 'categories'),
-                        'text' => _EDIT_PC_CONFIG_CATEGORIES);
+                        'text' => __('Categories', $dom));
     }
     if (pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADD)) {
-        $links[] = array('url' => pnModURL('PostCalendar', 'event', 'new'), 'text' => _PC_CREATE_EVENT);
+        $links[] = array('url' => pnModURL('PostCalendar', 'event', 'new'), 'text' => __('Add', $dom));
     }
     if (pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
-        $links[] = array('url' => pnModURL('PostCalendar', 'admin', 'listapproved'), 'text' => _PC_VIEW_APPROVED);
+        $links[] = array('url' => pnModURL('PostCalendar', 'admin', 'listapproved'), 'text' => __('Approved', $dom));
     }
     if (pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
-        $links[] = array('url' => pnModURL('PostCalendar', 'admin', 'listhidden'), 'text' => _PC_VIEW_HIDDEN);
+        $links[] = array('url' => pnModURL('PostCalendar', 'admin', 'listhidden'), 'text' => __('Hidden', $dom));
     }
     if (pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
-        $links[] = array('url' => pnModURL('PostCalendar', 'admin', 'listqueued'), 'text' => _PC_VIEW_QUEUED);
+        $links[] = array('url' => pnModURL('PostCalendar', 'admin', 'listqueued'), 'text' => __('Queued', $dom));
     }
     if (pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
-        $links[] = array('url' => pnModURL('PostCalendar', 'admin', 'manualClearCache'), 'text' => _PC_CLEAR_CACHE);
+        $links[] = array('url' => pnModURL('PostCalendar', 'admin', 'manualClearCache'), 'text' => __('Clear Smarty Cache', $dom));
     }
     if (pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
-        $links[] = array('url' => pnModURL('PostCalendar', 'admin', 'testSystem'), 'text' => _PC_TEST_SYSTEM);
+        $links[] = array('url' => pnModURL('PostCalendar', 'admin', 'testSystem'), 'text' => __('Test System', $dom));
     }
 
     // Return the links array back to the calling function
@@ -100,6 +101,7 @@ function postcalendar_adminapi_clearCache()
  */
 function postcalendar_adminapi_meeting_mailparticipants($args)
 {
+    $dom = ZLanguage::getModuleDomain('PostCalendar');
     //TODO: if ($is_update) send appropriate message...
     extract($args);
     /* expected: $event_subject,$event_duration,$event_desc,$startDate,$startTime,$uname,$eid,$pc_mail_users,$is_update */
@@ -128,7 +130,7 @@ function postcalendar_adminapi_meeting_mailparticipants($args)
     $pnRender->assign('pc_author', DataUtil::formatForDisplay($pc_author));
 
 	$pc_URL = pnModURL('PostCalendar', 'user', 'view', array('viewtype' => 'details', 'eid' => $eid), null, null, true);
-    $pnRender->assign('pc_URL', DataUtil::formatForOS($pc_URL));
+    $pnRender->assign('pc_URL', DataUtil::formatForOS($pc__('URL', $dom)));
 
     $modinfo = pnModGetInfo(pnModGetIDFromName('PostCalendar'));
     $modversion = DataUtil::formatForOS($modinfo['version']);
@@ -144,10 +146,10 @@ function postcalendar_adminapi_meeting_mailparticipants($args)
     $messagesent = pnModAPIFunc('Mailer', 'user', 'sendmessage', array('toaddress' => $toaddress, 'subject' => $subject, 'body' => $message, 'html' => true));
 
     if ($messagesent) {
-        LogUtil::registerStatus(_POSTCALENDAR_MEETINGEMAILSENT);
+        LogUtil::registerStatus(__('Meeting notify email sent', $dom));
         return true;
     } else {
-        LogUtil::registerError(_POSTCALENDAR_MEETINGEMAILNOT);
+        LogUtil::registerError(__('Meeting notify email not sent', $dom));
         return false;
     }
 }
@@ -160,6 +162,7 @@ function postcalendar_adminapi_meeting_mailparticipants($args)
  */
 function postcalendar_adminapi_notify($args)
 {
+    $dom = ZLanguage::getModuleDomain('PostCalendar');
     extract($args);
 
     if (!(bool) _SETTING_NOTIFY_ADMIN) return true;
@@ -174,16 +177,16 @@ function postcalendar_adminapi_notify($args)
     $pnRender->assign('is_update', $is_update);
     $pnRender->assign('modversion', $modversion);
     $pnRender->assign('eid', $eid);
-    $pnRender->assign('link', pnModURL('PostCalendar', 'admin', 'adminevents', array('events' => $eid, 'action' => _ADMIN_ACTION_VIEW), null, null, true));
+    $pnRender->assign('link', pnModURL('PostCalendar', 'admin', 'adminevents', array('events' => $eid, 'action' => _ADMIN_ACTION__('View', $dom)), null, null, true));
     $message = $pnRender->fetch('email/postcalendar_email_adminnotify.htm');
 
-    $messagesent = pnModAPIFunc('Mailer', 'user', 'sendmessage', array('toaddress' => _SETTING_NOTIFY_EMAIL, 'subject' => _PC_NOTIFY_SUBJECT, 'body' => $message, 'html' => true));
+    $messagesent = pnModAPIFunc('Mailer', 'user', 'sendmessage', array('toaddress' => _SETTING_NOTIFY__('E-mail address', $dom), 'subject' => __('NOTICE:: PostCalendar Submission/Modification', $dom), 'body' => $message, 'html' => true));
 
     if ($messagesent) {
-        LogUtil::registerStatus(_POSTCALENDAR_NOTIFYEMAILSENT);
+        LogUtil::registerStatus(__('Admin notify email sent', $dom));
         return true;
     } else {
-        LogUtil::registerError(_POSTCALENDAR_NOTIFYEMAILNOT);
+        LogUtil::registerError(__('Admin notify email not sent', $dom));
         return false;
     }
 }

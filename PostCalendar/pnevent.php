@@ -29,6 +29,7 @@ class postcalendar_event_editHandler extends pnFormHandler
 
     function handleCommand(&$render, &$args)
     {
+        $dom = ZLanguage::getModuleDomain('PostCalendar');
         $url = null;
 
         // Fetch event data
@@ -52,10 +53,10 @@ class postcalendar_event_editHandler extends pnFormHandler
         } else if ($args['commandName'] == 'delete') {
             $uname = pnUserGetVar('uname');
             if (($uname != $event['informant']) and (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN))) {
-                return $render->pnFormSetErrorMsg(_PC_CAN_NOT_DELETE);
+                return $render->pnFormSetErrorMsg(__('You are not allowed to delete this event', $dom));
             }
             $result = pnModAPIFunc('PostCalendar', 'event', 'deleteevent', array('eid' => $this->eid));
-            if ($result === false) return $render->pnFormSetErrorMsg(_PC_ADMIN_EVENT_ERROR);
+            if ($result === false) return $render->pnFormSetErrorMsg(__('There was an error while processing your request.', $dom));
 
             $redir = pnModUrl('PostCalendar', 'user', 'view', array('viewtype' => pnModGetVar('PostCalendar', 'pcDefaultView')));
             return $render->pnFormRedirect($redir);
@@ -105,6 +106,7 @@ function postcalendar_event_edit($args)
  */
 function postcalendar_event_new($args)
 {
+    $dom = ZLanguage::getModuleDomain('PostCalendar');
     // We need at least ADD permission to submit an event
     if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADD)) {
         return LogUtil::registerPermissionError();
@@ -235,7 +237,7 @@ function postcalendar_event_new($args)
     } else { // we are editing an existing event or copying an exisiting event
         $event = pnModAPIFunc('PostCalendar', 'event', 'getEventDetails', $eid);
         if (($uname != $event['informant']) and (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN))) {
-            return _PC_CAN_NOT_EDIT; // need to change this to logutil
+            return __('You are not allowed to edit this event', $dom); // need to change this to logutil
         }
         $eventdata['event_subject'] = $event['title'];
         $eventdata['event_desc'] = $event['hometext'];
@@ -247,7 +249,7 @@ function postcalendar_event_new($args)
         $eventdata['event_startyear'] = substr($event['eventDate'], 0, 4);
         $eventdata['event_starttimeh'] = substr($event['startTime'], 0, 2);
         $eventdata['event_starttimem'] = substr($event['startTime'], 3, 2);
-        $eventdata['event_startampm'] = $eventdata['event_starttimeh'] < 12 ? _PC_AM : _PC_PM;
+        $eventdata['event_startampm'] = $eventdata['event_starttimeh'] < 12 ? _PC_AM : __('PM', $dom);
         $eventdata['event_endmonth'] = substr($event['endDate'], 5, 2);
         $eventdata['event_endday'] = substr($event['endDate'], 8, 2);
         $eventdata['event_endyear'] = substr($event['endDate'], 0, 4);
@@ -298,21 +300,21 @@ function postcalendar_event_new($args)
     // ERROR CHECKING IF ACTION IS PREVIEW OR COMMIT
     //================================================================
     if (($form_action == 'preview') OR ($form_action == 'commit')) {
-        if (empty($event_subject)) LogUtil::registerError('<b>event subject</b>'._PC_SUBMIT_ERROR4.'<br />');
+        if (empty($event_subject)) LogUtil::registerError('<b>event subject</b>'.__('is a required field.', $dom).'<br />');
         // if this truly is empty and we are committing, it should abort!
 
         // check repeating frequencies
         if ($event_repeat == REPEAT) {
             if (!isset($event_repeat_freq) || $event_repeat_freq < 1 || empty($event_repeat_freq)) {
-                LogUtil::registerError(_PC_SUBMIT_ERROR5);
+                LogUtil::registerError(__('Your repeating frequency must be at least 1.', $dom));
             } elseif (!is_numeric($event_repeat_freq)) {
-                LogUtil::registerError(_PC_SUBMIT_ERROR6);
+                LogUtil::registerError(__('Your repeating frequency must be an integer.', $dom));
             }
         } elseif ($event_repeat == REPEAT_ON) {
             if (!isset($event_repeat_on_freq) || $event_repeat_on_freq < 1 || empty($event_repeat_on_freq)) {
-                LogUtil::registerError(_PC_SUBMIT_ERROR5);
+                LogUtil::registerError(__('Your repeating frequency must be at least 1.', $dom));
             } elseif (!is_numeric($event_repeat_on_freq)) {
-                LogUtil::registerError(_PC_SUBMIT_ERROR6);
+                LogUtil::registerError(__('Your repeating frequency must be an integer.', $dom));
             }
         }
         // check date validity
@@ -332,13 +334,13 @@ function postcalendar_event_new($args)
         $tdate = strtotime(date('Y-m-d'));
 
         if ($edate < $sdate && $event_endtype == 1) {
-            LogUtil::registerError(_PC_SUBMIT_ERROR1);
+            LogUtil::registerError(__('Your start date is greater than your end date', $dom));
         }
         if (!checkdate($event_startmonth, $event_startday, $event_startyear)) {
-            LogUtil::registerError(_PC_SUBMIT_ERROR2);
+            LogUtil::registerError(__('Your start date is invalid', $dom));
         }
         if (!checkdate($event_endmonth, $event_endday, $event_endyear)) {
-            LogUtil::registerError(_PC_SUBMIT_ERROR3);
+            LogUtil::registerError(__('Your end date is invalid', $dom));
         }
     } // end if form_action = preview/commit
     //================================================================
@@ -356,13 +358,13 @@ function postcalendar_event_new($args)
         if (!SecurityUtil::confirmAuthKey()) return LogUtil::registerAuthidError(pnModURL('postcalendar', 'admin', 'main'));
 
         if (!pnModAPIFunc('PostCalendar', 'event', 'writeEvent', $eventdata)) {
-            LogUtil::registerError(_PC_EVENT_SUBMISSION_FAILED);
+            LogUtil::registerError(__('Your submission failed.', $dom));
         } else {
             pnModAPIFunc('PostCalendar', 'admin', 'clearCache');
             if ($is_update) {
-                LogUtil::registerStatus(_PC_EVENT_EDIT_SUCCESS);
+                LogUtil::registerStatus(__('Your event has been modified.', $dom));
             } else {
-                LogUtil::registerStatus(_PC_EVENT_SUBMISSION_SUCCESS);
+                LogUtil::registerStatus(__('Your event has been submitted.', $dom));
             }
 
             // save the start date, before the vars are cleared (needed for the redirect on success)
