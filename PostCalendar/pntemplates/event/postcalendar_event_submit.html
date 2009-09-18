@@ -54,45 +54,24 @@
                     <tr>
                         <td valign="top" align="left"><input type="radio" name="event_allday" value="0" <!--[ $SelectedTimed ]--> /></td>
                         <td valign="top" align="left"><!--[pnml name='_PC_TIMED_EVENT']--></td>
-                        <td valign="top" align="left"><!--[html_select_time time=$SelectedTime display_seconds=false use_24_hours=$24HOUR_TIME minute_interval=$minute_interval prefix="event_starttime"]--></td>
+                        <td valign="top" align="left">
+                            <!--[html_select_time time=$SelectedTime display_seconds=false use_24_hours=$24HOUR_TIME minute_interval=$minute_interval prefix="event_starttime"]-->
+                        </td>
                     </tr>
                     <tr>
                         <td valign="top" align="left">&nbsp;</td>
                         <td valign="top" align="left"><!--[pnml name='_PC_TIMED_DURATION']--></td>
-                        <td valign="top" align="left"><!--[html_select_time time=$event_duration display_seconds=false display_minutes=false display_meridian=false use_24_hours=true prefix="event_dur_"]-->
-                        <!--[*
-                        <!--[ strip ]-->
-                            <select name="event_dur_Hours">
-                            <!--[ foreach item=time from=$TimedDurationHours ]-->
-                                <option value="<!--[ $time.value ]-->" <!--[ $time.selected ]-->><!--[ $time.name ]--></option>
-                            <!--[ /foreach ]-->
-                            </select>
-                        <!--[ /strip ]-->
-                        *]-->
-                        <!--[pnml name='_PC_TIMED_DURATION_HOURS']-->
-
-                        <!--[html_select_time time=$event_duration display_seconds=false display_hours=false display_meridian=false minute_interval=$minute_interval prefix="event_dur_"]-->
-                        <!--[*
-                        <!--[ strip ]-->
-                        <select name="event_dur_Minutes">
-                            <!--[ foreach item=time from=$TimedDurationMinutes ]-->
-                                <option value="<!--[ $time.value ]-->" <!--[ $time.selected ]-->><!--[ $time.name ]--></option>
-                            <!--[ /foreach ]-->
-                        </select>
-                        <!--[ /strip ]-->
-                        *]-->
-                        <!--[pnml name='_PC_TIMED_DURATION_MINUTES']-->
+                        <td valign="top" align="left">
+                            <!--[html_select_time time=$event_duration display_seconds=false display_minutes=false display_meridian=false use_24_hours=true prefix="event_dur_"]-->
+                            <!--[pnml name='_PC_TIMED_DURATION_HOURS']-->
+                            <!--[html_select_time time=$event_duration display_seconds=false display_hours=false display_meridian=false minute_interval=$minute_interval prefix="event_dur_"]-->
+                            <!--[pnml name='_PC_TIMED_DURATION_MINUTES']-->
                         </td>
                     </tr>
                 </table>
 		        <br/ >
                 <!--[pnml name='_PC_EVENT_DESC']--><br />
 		        <textarea id="description" name="event_desc" wrap="virtual" rows="5" cols="40"><!--[ $ValueEventDesc ]--></textarea>
-    			<!-- V4B SB 2nd Submitarea START -->
-	    		<table width=70% border=0 align=middle><tr><td>
-				<!--[ $FormSubmit ]-->
-		    	</td></tr></table>
-			    <!-- V4B SB END -->
         		</td>
 
                 <td align="left" valign="top" width="50%">
