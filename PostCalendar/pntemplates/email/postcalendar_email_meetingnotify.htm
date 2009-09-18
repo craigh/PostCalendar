@@ -1,17 +1,17 @@
 <!--[* $Id$ *]-->
-<h2><!--[pnml name="_POSTCALENDAR_MAILGREET_NOTIFICATION"]--></h2>
+<h2><!--[gt text="PostCalendar Meeting Notification"]--></h2>
 
-<p><!--[pnml name="_POSTCALENDAR_MAILGREET"]-->,</p>
+<p><!--[gt text="Hello"]-->,</p>
 
-<p><!--[pnml name="_POSTCALENDAR_MAILOPEN" pc_author=$pc_author]--></p>
+<p><!--[gt text="The user %pc_author% has created a new meeting event for you:" pc_author=$pc_author]--></p>
 
-<p><!--[pnml name="_POSTCALENDAR_MAILEVENTDETAILS_SUB" event_subject=$event_subject]--><br />
-<!--[pnml name="_POSTCALENDAR_MAILEVENTDETAILS_DES"]--><!--[$pc_description]--><br />
-<!--[pnml name="_POSTCALENDAR_MAILEVENTDETAILS_DAT" startDate=$startDate]--><br />
-<!--[pnml name="_POSTCALENDAR_MAILEVENTDETAILS_TIM" pc_start_time=$pc_start_time]--><br />
-<!--[pnml name="_POSTCALENDAR_MAILEVENTDETAILS_DUR" pc_dur_hours=$pc_dur_hours pc_dur_minutes=$pc_dur_minutes]--></p>
+<p><!--[gt text="Event        : %s" tag1=$event_subject]--><br />
+<!--[gt text="Description  : "]--><!--[$pc_description]--><br />
+<!--[gt text="Date         : %s" tag1=$startDate]--><br />
+<!--[gt text="Time         : %s" tag1=$pc_start_time]--><br />
+<!--[gt text='Duration     : %1$s:%2$s' tag1=$pc_dur_hours tag2=$pc_dur_minutes]--></p>
 
-<p><!--[pnml name="_POSTCALENDAR_MAILFOOT"]--> <a href="<!--[ $pc_URL ]-->">Event #<!--[$eid]--></a></p>
+<p><!--[gt text="This event and further details can be viewed under"]--> <a href="<!--[$pcURL]-->"><!--[gt text="Event"]--> #<!--[$eid]--></a></p>
 
 <hr />
 <p>A Message from your PostCalendar <!--[$modversion]--><br />

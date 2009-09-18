@@ -5,17 +5,17 @@
 <!--[pnpageaddvar name="javascript" value="modules/PostCalendar/pnjavascript/ColorPicker2.js"]-->
 <!--[pnpageaddvar name="javascript" value="modules/PostCalendar/pnjavascript/postcalendar_colorpicker_setup.js"]-->
 <div class="pn-admincontainer">
-<div class="pn-adminpageicon"><!--[pnimg modname=PostCalendar src=admin.gif altml=true]--></div>
-<h2><!--[pnml name="_EDIT_PC_CONFIG_CATEGORIES"]--></h2>
+<div class="pn-adminpageicon"><!--[pnimg modname='PostCalendar' src='admin.gif']--></div>
+<h2><!--[gt text="Categories"]--></h2>
 
 <form class="pn-adminform" name="cats" action="<!--[pnmodurl modname="PostCalendar" type="admin" func="categoriesConfirm"]-->" method="post" enctype="application/x-www-form-urlencoded">
 	<input type="hidden" name="authid" value="<!--[pnsecgenauthkey module="PostCalendar"]-->">
 	<table class="pn-admintable">
 		<tr>
-			<th><!--[pnml name='_PC_CAT_DELETE']--></th>
-			<th><!--[pnml name='_PC_CAT_NAME']--></th>
-			<th><!--[pnml name='_PC_CAT_DESC']--></th>
-			<th><!--[pnml name='_PC_CAT_COLOR']--></th>
+			<th><!--[gt text='Delete']--></th>
+			<th><!--[gt text='Category Name']--></th>
+			<th><!--[gt text='Category Description']--></th>
+			<th><!--[gt text='Category Color']--></th>
 		</tr>
 		<!--[assign var="i" value=1]-->
 		<!--[section name=cats loop=$cats]-->  
@@ -30,13 +30,13 @@
 			<!--[assign var="i" value="`$i+5`"]-->
 		<!--[/section]-->
 			<tr>
-				<td><!--[pnml name='_PC_CAT_NEW']--></td>
+				<td><!--[gt text='New =>']--></td>
 				<td><input type="text" size="20" value="" id="newname" name="newname"/></td>
 				<td><textarea id="newdesc" cols="20" rows="3" name="newdesc"></textarea></td>
 				<td><input id="newcolor" type="text" maxlength="64" size="10" value="" name="newcolor"/>
 					[<a href="javascript:void(0);" onClick="pick('pick','newcolor'); return false;" name="pick" id="pick">pick</a>]</td>
 			</tr>
 	</table>
-	<input type="submit" value="<!--[pnml name="_PC_ADMIN_SUBMIT"]-->"/>
+	<input type="submit" value="<!--[gt text="Commit Changes"]-->"/>
 </form>
 </div><!-- /pn-admincontainer -->

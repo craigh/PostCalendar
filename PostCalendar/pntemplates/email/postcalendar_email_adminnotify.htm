@@ -1,10 +1,10 @@
 <!--[* $Id$ *]-->
-<h2><!--[pnml name="_PC_NOTIFY_SUBJECT"]--></h2>
+<h2><!--[gt text="NOTICE:: PostCalendar Submission/Modification"]--></h2>
 
 <!--[if $is_update eq true]-->
-	<p><!--[pnml name="_PC_NOTIFY_UPDATE_MSG"]--></p>
+	<p><!--[gt text="The following calendar event has been modifed"]--></p>
 <!--[else]-->
-	<p><!--[pnml name="_PC_NOTIFY_NEW_MSG"]--></p>
+	<p><!--[gt text="The following calendar event has been added"]--></p>
 <!--[/if]-->
 
 <p><a href='<!--[$link|pnvarprephtmldisplay]-->'>Event #<!--[$eid]--></a></p>

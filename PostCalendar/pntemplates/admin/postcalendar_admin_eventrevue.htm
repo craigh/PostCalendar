@@ -1,17 +1,17 @@
 <!--[*  $Id$  *]-->
 <!--[include file="admin/postcalendar_admin_menu.htm"]-->
 <div class="pn-admincontainer">
-<div class="pn-adminpageicon"><!--[pnimg modname=PostCalendar src=admin.gif altml=true]--></div>
-<h2><!--[pnml name="_PC_EVENTREVUE"]--></h2>
-<!--[if (!empty($function)) ]-->
-	<form action="<!--[pnmodurl modname="PostCalendar" type="admin" func=$function ]-->" method="post">
+<div class="pn-adminpageicon"><!--[pnimg modname='PostCalendar' src='admin.gif']--></div>
+<h2><!--[gt text="Event Review"]--></h2>
+<!--[if (!empty($function))]-->
+	<form action="<!--[pnmodurl modname="PostCalendar" type="admin" func=$function]-->" method="post">
 <!--[/if]-->
-<!--[foreach from=$alleventinfo key=eid item=A_EVENT ]-->
+<!--[foreach from=$alleventinfo key=eid item=A_EVENT]-->
 	<!--[include file="admin/postcalendar_admin_view_event_details.htm"]-->
 	<input type="hidden" name="pc_eid[]" value="<!--[$eid]-->" />
 <!--[/foreach]-->
-<!--[if (!empty($function)) ]-->
-	<!--[$areyousure]-->&nbsp;&nbsp;<input type="submit" name="submit" value="<!--[pnml name='_PC_ADMIN_YES']-->" />
+<!--[if (!empty($function))]-->
+	<!--[$areyousure]-->&nbsp;&nbsp;<input type="submit" name="submit" value="<!--[gt text='Yes']-->" />
 	</form>
 <!--[/if]-->
 </div><!-- /pn-admincontainer -->

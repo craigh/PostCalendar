@@ -1,11 +1,11 @@
 <!--[*  $Id$  *]-->
 <div>
 	<input type="checkbox" id="active_postcalendar" name="active[PostCalendar]" value="1"<!--[if $active]--> checked="checked"<!--[/if]--> />
-	<label for="active_postcalendar"><!--[pnml name="_POSTCALENDAR"]--></label>
-    <!--[ if $displayTopics eq 1 ]-->
-        <label for="modvar_postcalendar_topic"><!--[pnml name='_PC_EVENT_TOPIC']--></label>
+	<label for="active_postcalendar"><!--[gt text="Calendar"]--></label>
+    <!--[if $displayTopics eq 1]-->
+        <label for="modvar_postcalendar_topic"><!--[gt text='Topic']--></label>
         <!--[html_options name=modvar[PostCalendar][topic] options=$topics id=modvar_postcalendar_topic]-->
-    <!--[ /if ]-->
-    <label for="modvar_postcalendar_category"><!--[pnml name='_PC_EVENT_CATEGORY']--></label>
+    <!--[/if]-->
+    <label for="modvar_postcalendar_category"><!--[gt text='Event Category']--></label>
     <!--[html_options name=modvar[PostCalendar][category] options=$categories id=modvar_postcalendar_category]-->
 </div>

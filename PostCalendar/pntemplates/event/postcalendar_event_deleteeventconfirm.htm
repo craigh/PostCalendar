@@ -1,14 +1,14 @@
 <!--[*  $Id$  *]-->
-<h2><!--[pnml name=_DELETEEVENT]--></h2>
+<h2><!--[gt text="Delete Event"]--></h2>
 
 <!--[pnform]-->
 
 	<div class="row">
-		<!--[ $eventdetails.title|pnvarprephtmldisplay ]-->
+		<!--[$eventdetails.title|pnvarprephtmldisplay]-->
 	</div>
 	
-	<!--[pnml name=_PC_DELETE_ARE_YOU_SURE]-->
-	<!--[pnformbutton commandName="delete" text="_DELETE"]--><!--[* could include in pnformbutton call confirmMessage="_DELETE" *]-->
-	<!--[pnformbutton commandName="cancel" text="CANCEL"]-->
+	<!--[gt text="Are you sure you want to delete this event?"]-->
+	<!--[pnformbutton commandname="delete" __text="Delete"]--><!--[* could include in pnformbutton call __confirmMessage="Delete" *]-->
+	<!--[pnformbutton commandname="cancel" __text="CANCEL"]-->
 
 <!--[/pnform]-->

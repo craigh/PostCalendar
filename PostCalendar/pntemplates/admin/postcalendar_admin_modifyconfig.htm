@@ -2,136 +2,136 @@
 <!--[include file="admin/postcalendar_admin_menu.htm"]-->
 <!--[pnconfiggetvar name='language' assign=defaultlang]-->
 <div class="pn-admincontainer">
-<div class="pn-adminpageicon"><!--[pnimg modname=PostCalendar src=admin.gif altml=true]--></div>
-<h2><!--[pnml name="_PC_ADMIN_GLOBAL_SETTINGS"]--></h2>
+<div class="pn-adminpageicon"><!--[pnimg modname='PostCalendar' src='admin.gif']--></div>
+<h2><!--[gt text="PostCalendar Global Settings"]--></h2>
 
 <form class="pn-adminform" name="pcConfig" action="<!--[pnmodurl modname="PostCalendar" type="admin" func="updateconfig"]-->" method="post" enctype="application/x-www-form-urlencoded">
 	<input type="hidden" name="authid" value="<!--[pnsecgenauthkey module="PostCalendar"]-->">
 	<table class="pn-admintable">
 		<tr class='pn-even'>
-			<td><!--[pnml name='_PC_ADMIN_GLOBAL_SETTINGS']--></td>
-			<td><a href='<!--[pnmodurl modname="PostCalendar" type="admin" func="resetDefaults"]-->'><!--[pnml name='_EDIT_PC_CONFIG_DEFAULT' defaultlang=$defaultlang]--></a></td>
+			<td><!--[gt text='PostCalendar Global Settings']--></td>
+			<td><a href='<!--[pnmodurl modname="PostCalendar" type="admin" func="resetDefaults"]-->'><!--[gt text='Reset to Defaults (for language "%s")' tag1=$defaultlang]--></a></td>
 		</tr>
 		<tr class='pn-odd'>
-			<td><!--[pnml name='_PC_NOTIFY_ADMIN' html=1]--></td>
+			<td><!--[gt text='Notify Admin About <b>USER</b> Event Submission/Modification']--></td>
 			<!--[pnmodgetvar module="PostCalendar" name="pcNotifyAdmin" assign="pcNA"]-->
 			<td><input type="checkbox" value="1" id="pcNotifyAdmin" name="pcNotifyAdmin"<!--[if $pcNA eq true]--> checked="checked"<!--[/if]-->/></td>
 		</tr>
 		<tr class='pn-even'>
-			<td><!--[pnml name='_PC_NOTIFY_ADMIN2ADMIN' html=1]--></td>
+			<td><!--[gt text='Notify Admin About <b>ADMIN</b> Event Submission/Modification']--></td>
 			<!--[pnmodgetvar module="PostCalendar" name="pcNotifyAdmin2Admin" assign="pcNA2A"]-->
 			<td><input type="checkbox" value="1" id="pcNotifyAdmin2Admin" name="pcNotifyAdmin2Admin"<!--[if $pcNA2A eq true]--> checked="checked"<!--[/if]-->/></td>
 		</tr>
 		<tr class='pn-odd'>
-			<td><!--[pnml name='_PC_NOTIFY_EMAIL']--></td>
+			<td><!--[gt text='Admin Email Address']--></td>
 			<td><input type="text" size="20" value="<!--[pnmodgetvar module="PostCalendar" name="pcNotifyEmail"]-->" id="pcNotifyEmail" name="pcNotifyEmail"/></td>
 		</tr>
 		<tr class='pn-even'>
-			<td><!--[pnml name='_PC_ALLOW_DIRECT_SUBMIT']--></td>
+			<td><!--[gt text='Allow submitted events to be made active instantly']--></td>
 			<!--[pnmodgetvar module="PostCalendar" name="pcAllowDirectSubmit" assign="pcADS"]-->
 			<td><input type="checkbox" value="1" id="pcAllowDirectSubmit" name="pcAllowDirectSubmit"<!--[if $pcADS eq true]--> checked="checked"<!--[/if]-->/></td>
 		</tr>
 		<tr class='pn-odd'>
-			<td><!--[pnml name='_PC_ALLOW_USER_CALENDAR']--></td>
+			<td><!--[gt text='Allow users to publish Personal Calendars']--></td>
 			<!--[pnmodgetvar module="PostCalendar" name="pcAllowUserCalendar" assign="pcAUC"]-->
 			<td><input type="checkbox" value="1" id="pcAllowUserCalendar" name="pcAllowUserCalendar"<!--[if $pcAUC eq true]--> checked="checked"<!--[/if]-->/></td>
 		</tr>
 		<tr class='pn-even'>
-			<td><!--[pnml name='_PC_ALLOW_SITEWIDE_SUBMIT']--></td>
+			<td><!--[gt text='Allow users to publish Global Events']--></td>
 			<!--[pnmodgetvar module="PostCalendar" name="pcAllowSiteWide" assign="pcASW"]-->
 			<td><input type="checkbox" value="1" id="pcAllowSiteWide" name="pcAllowSiteWide"<!--[if $pcASW eq true]--> checked="checked"<!--[/if]-->/></td>
 		</tr>
 		<tr class='pn-odd'>
-			<td><!--[pnml name='_PC_LIST_HOW_MANY']--></td>
+			<td><!--[gt text='Number of events to list on admin pages']--></td>
 			<td><input type="text" size="5" value="<!--[pnmodgetvar module="PostCalendar" name="pcListHowManyEvents"]-->" id="pcListHowManyEvents" name="pcListHowManyEvents"/></td>
 		</tr>
 		<tr class='pn-even'>
-			<td><!--[pnml name='_PC_TIME24HOURS']--></td>
+			<td><!--[gt text='Use 24 hour time format']--></td>
 			<!--[pnmodgetvar module="PostCalendar" name="pcTime24Hours" assign="pcT24H"]-->
 			<td><input type="checkbox" value="1" id="pcTime24Hours" name="pcTime24Hours"<!--[if $pcT24H eq true]--> checked="checked"<!--[/if]-->/></td>
 		</tr>
 		<tr class='pn-odd'>
-			<td><!--[pnml name='_PC_TIME_INCREMENT']--></td>
+			<td><!--[gt text='Time Increment for Add (minutes 1-60)']--></td>
 			<td><input type="text" size="5" value="<!--[pnmodgetvar module="PostCalendar" name="pcTimeIncrement"]-->" id="pcTimeIncrement" name="pcTimeIncrement"/></td>
 		</tr>
 		<tr class='pn-even'>
-			<td><!--[pnml name='_PC_EVENTS_IN_NEW_WINDOW']--></td>
+			<td><!--[gt text='View events in a popup window']--></td>
 			<!--[pnmodgetvar module="PostCalendar" name="pcEventsOpenInNewWindow" assign="pcEOINW"]-->
 			<td><input type="checkbox" value="1" id="pcEventsOpenInNewWindow" name="pcEventsOpenInNewWindow"<!--[if $pcEOINW eq true]--> checked="checked"<!--[/if]-->/></td>
 		</tr>
 		<tr class='pn-odd'>
-			<td><!--[pnml name='_PC_INTERNATIONAL_DATES']--></td>
+			<td><!--[gt text='Use international date style']--></td>
 			<!--[pnmodgetvar module="PostCalendar" name="pcUseInternationalDates" assign="pcUID"]-->
 			<td><input type="checkbox" value="1" id="pcUseInternationalDates" name="pcUseInternationalDates"<!--[if $pcUID eq true]--> checked="checked"<!--[/if]-->/></td>
 		</tr>
 		<tr class='pn-even'>
-			<td><!--[pnml name='_PC_EVENT_DATE_FORMAT' html=1]--></td>
+			<td><!--[gt text='Date Display Format <i>uses php <a href="http://php.net/strftime">strftime</a> format</i>']--></td>
 			<td><input type="text" size="20" value="<!--[pnmodgetvar module="PostCalendar" name="pcEventDateFormat"]-->" id="pcEventDateFormat" name="pcEventDateFormat"/></td>
 		</tr>
 		<tr class='pn-odd'>
-			<td><!--[pnml name='_PC_DISPLAY_TOPICS']--></td>
+			<td><!--[gt text='Use topics']--></td>
 			<!--[pnmodgetvar module="PostCalendar" name="pcDisplayTopics" assign="pcDT"]-->
 			<td><input type="checkbox" value="1" id="pcDisplayTopics" name="pcDisplayTopics"<!--[if $pcDT eq true]--> checked="checked"<!--[/if]-->/></td>
 		</tr>
 		<tr class='pn-even'>
-			<td><!--[pnml name='_PC_FIRST_DAY_OF_WEEK']--></td>
+			<td><!--[gt text='First day of the week']--></td>
 			<!--[pnmodgetvar module="PostCalendar" name="pcFirstDayOfWeek" assign="firstDay"]-->
 			<td><select size="1" id="pcFirstDayOfWeek" name="pcFirstDayOfWeek">
-				<option value="0"<!--[if $firstDay eq 0]--> selected="selected"<!--[/if]-->><!--[pnml name='_PC_SUNDAY']--></option>
-				<option value="1"<!--[if $firstDay eq 1]--> selected="selected"<!--[/if]-->><!--[pnml name='_PC_MONDAY']--></option>
-				<option value="6"<!--[if $firstDay eq 6]--> selected="selected"<!--[/if]-->><!--[pnml name='_PC_SATURDAY']--></option>
+				<option value="0"<!--[if $firstDay eq 0]--> selected="selected"<!--[/if]-->><!--[gt text='Sunday']--></option>
+				<option value="1"<!--[if $firstDay eq 1]--> selected="selected"<!--[/if]-->><!--[gt text='Monday']--></option>
+				<option value="6"<!--[if $firstDay eq 6]--> selected="selected"<!--[/if]-->><!--[gt text='Saturday']--></option>
 				</select>
 			</td>
 		</tr>
 		<tr class='pn-odd'>
-			<td><!--[pnml name='_PC_DEFAULT_VIEW']--></td>
+			<td><!--[gt text='Default Calendar View']--></td>
 			<!--[pnmodgetvar module="PostCalendar" name="pcDefaultView" assign="defView"]-->
 			<td><select size="1" id="pcDefaultView" name="pcDefaultView">
-				<option value="day"<!--[if $defView eq "day"]--> selected="selected"<!--[/if]-->><!--[pnml name='_CAL_DAYVIEW']--></option>
-				<option value="week"<!--[if $defView eq "week"]--> selected="selected"<!--[/if]-->><!--[pnml name='_CAL_WEEKVIEW']--></option>
-				<option value="month"<!--[if $defView eq "month"]--> selected="selected"<!--[/if]-->><!--[pnml name='_CAL_MONTHVIEW']--></option>
-				<option value="year"<!--[if $defView eq "year"]--> selected="selected"<!--[/if]-->><!--[pnml name='_CAL_YEARVIEW']--></option>
+				<option value="day"<!--[if $defView eq "day"]--> selected="selected"<!--[/if]-->><!--[gt text='Day']--></option>
+				<option value="week"<!--[if $defView eq "week"]--> selected="selected"<!--[/if]-->><!--[gt text='Week']--></option>
+				<option value="month"<!--[if $defView eq "month"]--> selected="selected"<!--[/if]-->><!--[gt text='Month']--></option>
+				<option value="year"<!--[if $defView eq "year"]--> selected="selected"<!--[/if]-->><!--[gt text='Year']--></option>
 				</select>
 			</td>
 		</tr>
 		<tr class='pn-even'>
-			<td><!--[pnml name='_PC_USE_JS_POPUPS']--></td>
+			<td><!--[gt text='Show hovering event text on mouseover']--></td>
 			<!--[pnmodgetvar module="PostCalendar" name="pcUsePopups" assign="pcUP"]-->
 			<td><input type="checkbox" value="1" id="pcUsePopups" name="pcUsePopups"<!--[if $pcUP eq true]--> checked="checked"<!--[/if]-->/></td>
 		</tr>
 		<tr class='pn-odd'>
-			<td><!--[pnml name='_PC_USE_CACHE']--></td>
+			<td><!--[gt text='Cache template output?']--></td>
 			<!--[pnmodgetvar module="PostCalendar" name="pcUseCache" assign="pcUC"]-->
 			<td><input type="checkbox" value="1" id="pcUseCache" name="pcUseCache"<!--[if $pcUC eq true]--> checked="checked"<!--[/if]-->/></td>
 		</tr>
 		<tr class='pn-even'>
-			<td><!--[pnml name='_PC_CACHE_LIFETIME']--></td>
+			<td><!--[gt text='Cache Lifetime (in seconds)']--></td>
 			<td><input type="text" size="20" value="<!--[pnmodgetvar module="PostCalendar" name="pcCacheLifetime"]-->" id="pcCacheLifetime" name="pcCacheLifetime"/></td>
 		</tr>
 		<tr class='pn-odd'>
-			<td><!--[pnml name='_PC_DISPLAY_REPEATING']--></td>
+			<td><!--[gt text='Display repeating options']--></td>
 			<!--[pnmodgetvar module="PostCalendar" name="pcRepeating" assign="pcR"]-->
 			<td><input type="checkbox" value="1" id="pcRepeating" name="pcRepeating"<!--[if $pcR eq true]--> checked="checked"<!--[/if]-->/></td>
 		</tr>
 		<tr class='pn-even'>
-			<td><!--[pnml name='_PC_DISPLAY_MEETING']--></td>
+			<td><!--[gt text='Display meeting options']--></td>
 			<!--[pnmodgetvar module="PostCalendar" name="pcMeeting" assign="pcM"]-->
 			<td><input type="checkbox" value="1" id="pcMeeting" name="pcMeeting"<!--[if $pcM eq true]--> checked="checked"<!--[/if]-->/></td>
 		</tr>
         <tr class='pn-odd'>
-			<td><!--[pnml name='_PC_ALLOW_USER_CAT_FILTERING']--></td>
+			<td><!--[gt text='Allow Users to filter event display by Category/Topic']--></td>
 			<!--[pnmodgetvar module="PostCalendar" name="pcAllowCatFilter" assign="pcACF"]-->
 			<td><input type="checkbox" value="1" id="pcAllowCatFilter" name="pcAllowCatFilter"<!--[if $pcACF eq true]--> checked="checked"<!--[/if]-->/></td>
 		</tr>
-<!--[ pnmodavailable modname="v4bAddressBook" assign="addressAvailable" ]-->
-<!--[ if $addressAvailable ]-->
+<!--[pnmodavailable modname="v4bAddressBook" assign="addressAvailable"]-->
+<!--[if $addressAvailable]-->
 		<tr class='pn-even'>
-			<td><!--[pnml name='_PC_USE_ADDRESSBOOK']--></td>
+			<td><!--[gt text='Use address book lookup']--></td>
 			<!--[pnmodgetvar module="PostCalendar" name="pcAddressbook" assign="pcA"]-->
 			<td><input type="checkbox" value="1" id="pcAddressbook" name="pcAddressbook"<!--[if $pcA eq true]--> checked="checked"<!--[/if]-->/></td>
 		</tr>
-<!--[ /if ]-->
+<!--[/if]-->
 	</table>
-	<input type="submit" value="<!--[pnml name="_PC_ADMIN_SUBMIT"]-->"/>
+	<input type="submit" value="<!--[gt text="Commit Changes"]-->"/>
 </form>
 </div><!-- /pn-admincontainer -->

@@ -1,19 +1,19 @@
 <!--[*  $Id$  *]-->
-<!--[ include file="admin/postcalendar_admin_menu.htm" ]-->
+<!--[include file="admin/postcalendar_admin_menu.htm"]-->
 <div class="pn-admincontainer">
-<div class="pn-adminpageicon"><!--[pnimg modname=PostCalendar src=admin.gif altml=true]--></div>
-<h2><!--[pnml name=$title]--></h2>
-<!--[if empty($events) ]-->
-	<!--[assign var="e" value=_PC_NO_EVENTS]-->
+<div class="pn-adminpageicon"><!--[pnimg modname='PostCalendar' src='admin.gif']--></div>
+<h2><!--[gt text="$title"]--></h2>
+<!--[if empty($events)]-->
+	<!--[assign var="e" value=No Events]-->
 <!--[else]-->
 	<form class="pn-adminform" name="listevents" action="<!--[pnmodurl modname="PostCalendar" type="admin" func="adminEvents"]-->" method="post" enctype="application/x-www-form-urlencoded">
 		<div>
 			<input type="hidden" name="authid" value="<!--[pnsecgenauthkey module="PostCalendar"]-->">
 			<table class="pn-admintable">
 				<tr>
-					<td><b><!--[pnml name='_CALSELECT']--></b></td>
-					<td><b><a href='<!--[$title_sort_url]-->'><!--[pnml name='_TITLE']--></a></b></td>
-					<td><b><a href='<!--[$time_sort_url]-->'><!--[pnml name='_CALTIMESTAMP']--></a></b></td>
+					<td><b><!--[gt text='Select']--></b></td>
+					<td><b><a href='<!--[$title_sort_url]-->'><!--[gt text='Title']--></a></b></td>
+					<td><b><a href='<!--[$time_sort_url]-->'><!--[gt text='Timestamp (entered on)']--></a></b></td>
 				</tr>
 				<!--[section name=event loop=$events]-->
 					<tr class="<!--[cycle values="pn-odd,pn-even"]-->">
@@ -26,19 +26,19 @@
 			<div style='text-align: left;'>
 				<!--[html_options name=action options=$formactions selected=$actionselected]-->
 				<input type="hidden" name="thelist" value="<!--[$function]-->">
-				<input type="submit" value="<!--[pnml name="_PC_PERFORM_ACTION"]-->"/>
+				<input type="submit" value="<!--[gt text="Perform this action"]-->"/>
 			</div>
 			<div id="listmanipulator" style='text-align: center; background-color:#cccccc; padding:.5em; margin-top:.5em;'>
-				<!--[if !empty($prevlink) ]-->
-					<< <a href="<!--[$prevlink]-->"><!--[pnml name="_PC_PREV"]--> <!--[$offset_increment]--> <!--[pnml name="_CALEVENTS"]--></a>
+				<!--[if !empty($prevlink)]-->
+					<< <a href="<!--[$prevlink]-->"><!--[gt text="Prev"]--> <!--[$offset_increment]--> <!--[gt text="Events"]--></a>
 				<!--[else]-->
-					<!--[pnml name="_PC_PREV"]-->
+					<!--[gt text="Prev"]-->
 				<!--[/if]-->
 				&nbsp;|&nbsp;
-				<!--[if !empty($nextlink) ]-->
-					<a href="<!--[$nextlink]-->"><!--[pnml name="_PC_NEXT"]--> <!--[$offset_increment]--> <!--[pnml name="_CALEVENTS"]--></a> >>
+				<!--[if !empty($nextlink)]-->
+					<a href="<!--[$nextlink]-->"><!--[gt text="Next"]--> <!--[$offset_increment]--> <!--[gt text="Events"]--></a> >>
 				<!--[else]-->
-					<!--[pnml name="_PC_NEXT"]-->
+					<!--[gt text="Next"]-->
 				<!--[/if]-->
 			</div>
 		</div>
