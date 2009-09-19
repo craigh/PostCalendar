@@ -22,12 +22,13 @@
  */
 function smarty_function_pc_filter($args, &$smarty)
 {
+    $dom = ZLanguage::getModuleDomain('PostCalendar');
     if (empty($args['type'])) {
         $smarty->trigger_error("pc_filter: missing 'type' parameter");
         return;
     }
     $class = isset($args['class']) ? 'class="'.$args['class'].'"' : '';
-    $label = isset($args['label']) ? $args['label'] : _PC_TPL_VIEW_SUBMIT;
+    $label = isset($args['label']) ? $args['label'] : __('change', $dom);
     $order = isset($args['order']) ? $args['order'] : null;
 
     $jumpday   = FormUtil::getPassedValue('jumpday');
@@ -54,9 +55,9 @@ function smarty_function_pc_filter($args, &$smarty)
            $users = DBUtil::selectFieldArray('postcalendar_events', 'informant', null, null, true, 'aid'); 
    
            $useroptions = "<select name=\"pc_username\" $class>";
-           $useroptions .= "<option value=\"\" $class>" . _PC_FILTER_USERS . "</option>";
+           $useroptions .= "<option value=\"\" $class>" . __('Default/Global', $dom) . "</option>";
            $selected = ($pc_username == '__PC_ALL__' ? 'selected="selected"' : '');
-           $useroptions .= "<option value=\"__PC_ALL__\" $class $selected>" . _PC_FILTER_USERS_ALL . "</option>";
+           $useroptions .= "<option value=\"__PC_ALL__\" $class $selected>" . __('All Users', $dom) . "</option>";
            foreach ($users as $k => $v) {
                $sel = ($pc_username == $v ? 'selected="selected"' : '');
                $useroptions .= "<option value=\"$v\" $sel $class>$v</option>";
@@ -76,7 +77,7 @@ function smarty_function_pc_filter($args, &$smarty)
         $category = FormUtil::getPassedValue('pc_category');
         $categories = pnModAPIFunc('PostCalendar', 'user', 'getCategories');
         $catoptions = "<select name=\"pc_category\" $class>";
-        $catoptions .= "<option value=\"\" $class>" . _PC_FILTER_CATEGORY . "</option>";
+        $catoptions .= "<option value=\"\" $class>" . __('All Categories', $dom) . "</option>";
         foreach ($categories as $c) {
             $sel = ($category == $c['catid'] ? 'selected="selected"' : '');
             $catoptions .= "<option value=\"$c[catid]\" $sel $class>$c[catname]</option>";
@@ -96,7 +97,7 @@ function smarty_function_pc_filter($args, &$smarty)
         $topic = FormUtil::getPassedValue('pc_topic');
         $topics = pnModAPIFunc('PostCalendar', 'user', 'getTopics');
         $topoptions = "<select name=\"pc_topic\" $class>";
-        $topoptions .= "<option value=\"\" $class>" . _PC_FILTER_TOPIC . "</option>";
+        $topoptions .= "<option value=\"\" $class>" . __('All Topics', $dom) . "</option>";
         foreach ($topics as $t) {
             $sel = ($topic == $t['topicid'] ? 'selected="selected"' : '');
             $topoptions .= "<option value=\"$t[topicid]\" $sel $class>$t[topictext]</option>";

@@ -10,10 +10,11 @@
  */
 function smarty_function_pc_get_category($args, &$smarty)
 {
+    $dom = ZLanguage::getModuleDomain('PostCalendar');
     $category = FormUtil::getPassedValue('pc_category');
     $categories = pnModAPIFunc('PostCalendar', 'user', 'getCategories');
     $catoptions = "<select name=\"pc_category\">";
-    $catoptions .= "<option value=\"\">" . _PC_FILTER_CATEGORY . "</option>";
+    $catoptions .= "<option value=\"\">" . __('All Categories', $dom) . "</option>";
     $name = '';
     foreach ($categories as $c) {
         if ($category == $c['catid']) {
