@@ -22,9 +22,9 @@
 			<!--[ /if ]-->
 
 			<!--[ if $A_EVENT.alldayevent ]-->
-				<!--[pnml name="_CALALLDAY"]-->
+				<!--[gt text="All Day"]-->
 			<!--[ else ]-->
-				<!--[pnml name="_PC_TIMED_DURATION"]-->: <!--[ $A_EVENT.duration_hours ]-->:<!--[ $A_EVENT.duration_minutes ]-->
+				<!--[gt text="Duration"]-->: <!--[ $A_EVENT.duration_hours ]-->:<!--[ $A_EVENT.duration_minutes ]-->
 			<!--[ /if ]-->
 		</td>
 	</tr>
@@ -36,7 +36,7 @@
 		</td>
 		<td valign="top" align="left" nowrap="nowrap">
 			<!--[ if $LOCATION_INFO ]-->
-				<p><b><!--[pnml name="_CALLOCATION"]-->:</b><br />
+				<p><b><!--[gt text="Location"]-->:</b><br />
 				<!--[ if $A_EVENT.location != '' ]-->
 					<!--[ $A_EVENT.location ]--><br />
 				<!--[ /if ]-->
@@ -58,7 +58,7 @@
 				</p>
 			<!--[ /if ]-->
 			<!--[ if $CONTACT_INFO ]-->
-				<p><b><!--[pnml name="_PC_EVENT_CONTTEL"]-->:</b><br />
+				<p><b><!--[gt text="Contact Phone Number"]-->:</b><br />
 				<!--[ if $A_EVENT.contname ]-->
 					<!--[ $A_EVENT.contname ]--><br />
 				<!--[ /if ]-->
@@ -74,7 +74,7 @@
 				</p>
 			<!--[ /if ]-->
 			<!--[ if $A_EVENT.fee != '' ]-->
-				<br /><!--[pnml name="_PC_EVENT_FEE"]-->: <!--[ $A_EVENT.fee ]-->
+				<br /><!--[gt text="Event Fee"]-->: <!--[ $A_EVENT.fee ]-->
 			<!--[ /if ]-->
 		</td>
 	</tr>

@@ -43,22 +43,22 @@
 			<div id="bnav">
 				<ul>
 					<li><a href="<!--[ pc_url action='day' ]-->">
-						<!--[pnimg src=$day_src altml=true titleml=true alt="_CAL_DAYVIEW" title="_CAL_DAYVIEW" ]--></a></li>
+						<!--[pnimg src=$day_src __alt="Day View" __title="Day View" ]--></a></li>
 					<li><a href="<!--[ pc_url action='week' ]-->">
-						<!--[pnimg src=$week_src altml=true titleml=true alt="_CAL_WEEKVIEW" title="_CAL_WEEKVIEW" ]--></a></li>
+						<!--[pnimg src=$week_src __alt="Week View" __title="Week View" ]--></a></li>
 					<li><a href="<!--[ pc_url action='month' ]-->">
-						<!--[pnimg src=$month_src altml=true titleml=true alt="_CAL_MONTHVIEW" title="_CAL_MONTHVIEW" ]--></a></li>
+						<!--[pnimg src=$month_src __alt="Month View" __title="Month View" ]--></a></li>
 					<li><a href="<!--[ pc_url action='year' ]-->">
-						<!--[pnimg src=$year_src altml=true titleml=true alt="_CAL_YEARVIEW" title="_CAL_YEARVIEW" ]--></a></li>
+						<!--[pnimg src=$year_src __alt="Year View" __title="Year View" ]--></a></li>
 					<li><a href="<!--[ pc_url action='list' ]-->">
-						<!--[pnimg src=$list_src altml=true titleml=true alt="_CAL_LISTVIEW" title="_CAL_LISTVIEW" ]--></a></li>
+						<!--[pnimg src=$list_src __alt="List View" __title="List View" ]--></a></li>
 					<!--[ if $ACCESS_ADD eq true ]-->
 						<li><a href="<!--[ pc_url action='submit' ]-->">
-							<!--[pnimg src=$add_src altml=true titleml=true alt="_PC_CREATE_EVENT" title="_PC_CREATE_EVENT" ]--></a></li>
+							<!--[pnimg src=$add_src __alt="Add Event" __title="Add Event" ]--></a></li>
 					<!--[ /if ]-->
 					<li><a href="<!--[ pnmodurl modname='Search' ]-->">
-						<!--[pnimg src=$search_src altml=true titleml=true alt="_CALSEARCHEVENT" title="_CALSEARCHEVENT" ]--></a></li>
-					<li><a href="<!--[pngetcurrenturl]-->&amp;theme=Printer"><img src="images/icons/small/printer1.gif" alt="print" title="Print View" /></a></li>
+						<!--[pnimg src=$search_src __alt="Search" __title="Search" ]--></a></li>
+					<li><a href="<!--[pngetcurrenturl]-->&amp;theme=Printer"><img src="images/icons/small/printer1.gif" __alt="<!--[gt text='Print']-->" __title="<!--[gt text='Print View']-->" /></a></li>
 				</ul>
 			</div>
 		</td>
