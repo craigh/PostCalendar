@@ -24,7 +24,7 @@
  * http://www.gnu.org/copyleft/gpl.html
  *
  */
-
+/*
 define('_GETFAILED',            'Items load failed');
 define('_CALAPPOINTMENTS',      'Appointments');
 define('_CALEVENTS',            'Events');
@@ -53,3 +53,4 @@ define('_PC_DUR_HOURS',         'h');
 define('_PC_DUR_MINUTES',       'm');
 define('_PC_OL_CLOSE',          'Close');
 define('_PC_CLICK_FOR_MORE',    'click for more');
+*/

@@ -12,7 +12,7 @@ Loader::requireOnce('includes/pnForm.php');
 //don't think I'll need the next line anymore...
 // UPDATE: in order to not use the APIload below, the functions all have to have standard names
 // and be called with pnModFunc (or API)
-pnModAPILoad('PostCalendar', 'user');
+//pnModAPILoad('PostCalendar', 'user');
 
 function postcalendar_user_main()
 {

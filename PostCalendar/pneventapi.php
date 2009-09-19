@@ -84,7 +84,7 @@ function postcalendar_eventapi_queryEvents($args)
     if (!empty($topic))      $where .= "AND (tbl.pc_topic = '" . DataUtil::formatForStore($topic) . "') ";
     // End Search functionality
 
-    $sort .= "ORDER BY pc_meeting_id";
+    $sort = "ORDER BY pc_meeting_id";
 
     // FIXME !!!
     $joinInfo = array();
@@ -681,7 +681,7 @@ function postcalendar_eventapi_buildSubmitForm($args)
 
     unset($in);
     $in = array(__('Day(s)', $dom), __('Week(s)', $dom), __('Month(s)', $dom), __('Year(s)', $dom));
-    $keys = array(REPEAT_EVERY__('day', $dom), REPEAT_EVERY_WEEK, REPEAT_EVERY_MONTH, REPEAT_EVERY_YEAR);
+    $keys = array(REPEAT_EVERY_DAY, REPEAT_EVERY_WEEK, REPEAT_EVERY_MONTH, REPEAT_EVERY_YEAR);
     $repeat_freq_type = array();
     foreach ($in as $k => $v)
         array_push($repeat_freq_type, array('value' => $keys[$k], 'selected' => ($keys[$k] == $event_repeat_freq_type ? 'selected' : ''), 'name' => $v));
@@ -709,7 +709,7 @@ function postcalendar_eventapi_buildSubmitForm($args)
 
     unset($in);
     $in = array(__('month', $dom), __('other month', $dom), __('3 months', $dom), __('4 months', $dom), __('6 months', $dom), __('year', $dom));
-    $keys = array(REPEAT_ON__('month', $dom), REPEAT_ON_2MONTH, REPEAT_ON_3MONTH, REPEAT_ON_4MONTH, REPEAT_ON_6MONTH, REPEAT_ON_YEAR);
+    $keys = array(REPEAT_ON_MONTH, REPEAT_ON_2MONTH, REPEAT_ON_3MONTH, REPEAT_ON_4MONTH, REPEAT_ON_6MONTH, REPEAT_ON_YEAR);
     $repeat_on_freq = array();
     foreach ($in as $k => $v)
         array_push($repeat_on_freq, array('value' => $keys[$k], 'selected' => ($keys[$k] == $event_repeat_on_freq ? 'selected' : ''), 'name' => $v));

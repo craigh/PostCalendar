@@ -90,15 +90,13 @@ function postcalendar_calendarblock_display($blockinfo)
     $next_month = Date_Calc::beginOfNextMonth(1, $the_month, $the_year, '%Y%m%d');
     $last_day = Date_Calc::daysInMonth($the_month, $the_year);
     $pc_prev = pnModURL('PostCalendar', 'user', 'view',
-        array('tplview' => $template_view, 'viewtype' => 'month', 'Date' => $prev_month));
+        array('viewtype' => 'month', 'Date' => $prev_month));
     $pc_next = pnModURL('PostCalendar', 'user', 'view',
-        array('tplview' => $template_view, 'viewtype' => 'month', 'Date' => $next_month));
+        array('viewtype' => 'month', 'Date' => $next_month));
     $pc_month_name = pnModAPIFunc('PostCalendar', 'user', 'getmonthname',
         array('Date' => mktime(0, 0, 0, $the_month, $the_day, $the_year)));
     $month_link_url = pnModURL('PostCalendar', 'user', 'view',
-        array('tplview' => $template_view, 'viewtype' => 'month',
-                        'Date' => date('Ymd',
-                            mktime(0, 0, 0, $the_month, 1, $the_year))));
+        array('viewtype' => 'month', 'Date' => date('Ymd', mktime(0, 0, 0, $the_month, 1, $the_year))));
     $month_link_text = $pc_month_name . ' ' . $the_year;
     //*******************************************************************
     // get the events for the current month view
@@ -110,7 +108,7 @@ function postcalendar_calendarblock_display($blockinfo)
                     __('F', $dom), __('S', $dom));
 
     $pc_long_day_names = array(__('Sunday', $dom), __('Monday', $dom), __('Tuesday', $dom), __('Wednesday', $dom), __('Thursday', $dom), __('Friday', $dom), __('Saturday', $dom));
-    switch (_SETTING_FIRST_DAY__('week', $dom)) {
+    switch (_SETTING_FIRST_DAY_WEEK) {
         case _IS_MONDAY:
             $pc_array_pos = 1;
             $first_day = date('w', mktime(0, 0, 0, $the_month, 0, $the_year));
