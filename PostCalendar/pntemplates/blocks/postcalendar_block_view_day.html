@@ -9,7 +9,7 @@
 <!--[ /if ]-->
 <div class="postcalendar_block_view_day">
 <!--[ if $SHOW_TITLE eq 1 ]-->
-	<h2 class='postcalendar_block_innertitle'><!--[pnml name='_PC_TODAYS_EVENTS']--></h2>
+	<h2 class='postcalendar_block_innertitle'><!--[gt text="Today's Events"]--></h2>
 <!--[ /if ]-->
 <!--[ pc_sort_events var="S_EVENTS" sort="time" order="asc" value=$A_EVENTS ]-->
 <!--[ foreach name=dates item=events key=date from=$S_EVENTS ]-->
@@ -44,14 +44,14 @@
 						caption=$event.title 
 						text=$event.hometext|truncate:255:"..." ]-->><!--[ $timestamp ]--> <!--[ $event.title|strip_tags ]-->
 							<!--[ if $event.alldayevent != true ]-->
-								(<!--[ $event.duration_hours ]-->:<!--[ $event.duration_minutes ]--> <!--[pnml name='_PC_BLOCK_LONG']-->)
+								(<!--[ $event.duration_hours ]-->:<!--[ $event.duration_minutes ]--> <!--[gt text='Long']-->)
 							<!--[ /if ]-->
 							</a>
         			</li>
     		<!--[ /if ]-->
 		<!--[ foreachelse ]-->
 				<!--[ assign var="eventtotal" value="0" ]-->
-            		<li class="pc_blockevent"><!--[pnml name='_PC_BLOCK_NO_EVENTS']--></li>
+            		<li class="pc_blockevent"><!--[gt text='No Events']--></li>
 		<!--[ /foreach ]-->
 		</ul>
     <!--[ /if ]-->

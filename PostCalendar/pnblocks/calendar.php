@@ -243,9 +243,9 @@ function postcalendar_calendarblock_display($blockinfo)
         $search_event_url = DataUtil::formatForDisplay($search_event_url);
         $output .= '<div class="pc_centerblocksubmitlinks">';
         if (PC_ACCESS_ADD) {
-            $output .= '[<a href="' . $submit_event_url . '">' . _PC_SUBMIT_EVENT . '</a>] ';
+            $output .= '[<a href="' . $submit_event_url . '">' . __('Submit', $dom) . '</a>] ';
         }
-        $output .= '[<a href="' . $search_event_url . '">' . _PC_SEARCH_EVENT . '</a>]';
+        $output .= '[<a href="' . $search_event_url . '">' . __('Search', $dom) . '</a>]';
         $output .= '</div>';
     }
 

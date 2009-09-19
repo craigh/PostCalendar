@@ -9,7 +9,7 @@
 <!--[ /if ]-->
 <div class="postcalendar_block_view_upcoming">
 <!--[ if $SHOW_TITLE eq 1 ]-->
-<h2 class='postcalendar_block_innertitle'><!--[pnml name='_PC_UPCOMING_EVENTS']--></h2>
+<h2 class='postcalendar_block_innertitle'><!--[gt text='Upcoming Events']--></h2>
 <!--[ /if ]-->
 
 <!--[ counter start=0 assign=eventcount ]-->
@@ -46,7 +46,7 @@
 											caption=$event.title 
 											text=$event.hometext|truncate:255:"..." ]-->><!--[ $timestamp ]--> <!--[ $event.title|strip_tags ]-->
 						<!--[ if $event.alldayevent != true ]-->
-							(<!--[ $event.duration_hours ]-->:<!--[ $event.duration_minutes ]--> <!--[pnml name='_PC_BLOCK_LONG']-->)
+							(<!--[ $event.duration_hours ]-->:<!--[ $event.duration_minutes ]--> <!--[gt text='Long']-->)
 						<!--[ /if ]-->
 						</a>
         			</li>
@@ -58,6 +58,6 @@
 <!--[ /foreach ]-->
 
 <!--[ if $eventcount == 0 ]-->
-	<!--[pnml name='_PC_BLOCK_NO_EVENTS']-->
+	<!--[gt text='No Events Today']-->
 <!--[ /if ]-->
 </div>
