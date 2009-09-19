@@ -61,6 +61,7 @@ define('_CALLONGFOURTHDAY',             'Wednesday');
 define('_CALLONGFIFTHDAY',              'Thurdsay');
 define('_CALLONGSIXTHDAY',              'Friday');
 define('_CALLONGSEVENTHDAY',            'Saturday');
+/*
 define('_CALMONDAYSHORT',               'M');
 define('_CALTUESDAYSHORT',              'T');
 define('_CALWEDNESDAYSHORT',            'W');
@@ -68,6 +69,7 @@ define('_CALTHURSDAYSHORT',             'T');
 define('_CALFRIDAYSHORT',               'F');
 define('_CALSATURDAYSHORT',             'S');
 define('_CALSUNDAYSHORT',               'S');
+*/
 define('_CALSUNDAY',                    'Sunday');
 define('_CALMONDAY',                    'Monday');
 define('_CALTUESDAY',                   'Tuesday');

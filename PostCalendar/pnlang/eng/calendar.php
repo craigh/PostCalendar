@@ -24,10 +24,10 @@
  * http://www.gnu.org/copyleft/gpl.html
  *
  */
+/*
 @define('_CALSUBMITEVENT', 'Submit');
 @define('_CALSEARCHEVENT', 'Search');
 @define('_EVENTS_OPEN_IN_NEW_WINDOW', 'Events open in new window');
-
 @define('_CALMONDAYSHORT',   'M');
 @define('_CALTUESDAYSHORT',  'T');
 @define('_CALWEDNESDAYSHORT','W');
@@ -54,3 +54,4 @@
 @define('_PC_SEARCH_EVENT','Search');
 @define('_PC_AM','AM');
 @define('_PC_PM','PM');
+*/
