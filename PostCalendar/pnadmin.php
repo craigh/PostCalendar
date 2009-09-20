@@ -98,7 +98,7 @@ function postcalendar_admin_showlist($args)
     $pnRender->assign('formactions', array(_ADMIN_ACTION_VIEW => __('View', $dom), _ADMIN_ACTION_APPROVE => __('Approve', $dom),
                         _ADMIN_ACTION_HIDE => __('Hide', $dom),
                         _ADMIN_ACTION_DELETE => __('Delete', $dom)));
-    $pnRender->assign('actionselected', _ADMIN_ACTION__('View', $dom));
+    $pnRender->assign('actionselected', _ADMIN_ACTION_VIEW);
     if ($offset > 1) {
         $prevlink = pnModUrl('PostCalendar', 'admin', $args['function'], array('offset' => $offset - $offset_increment, 'sort' => $sort, 'sdir' => $original_sdir));
     } else {
@@ -434,7 +434,7 @@ function postcalendar_admin_testSystem()
         $pnVersion = pnConfigGetVar('Version_Num');
     }
 
-    array_push($infos, array('CMS Version', $pnVersion));
+    array_push($infos, array('Zikula Version', $pnVersion));
     array_push($infos, array('Sitename', pnConfigGetVar('sitename')));
     array_push($infos, array('url', pnGetBaseURL()));
     array_push($infos, array('PHP Version', phpversion()));
