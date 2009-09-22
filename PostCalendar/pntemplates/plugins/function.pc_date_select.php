@@ -52,21 +52,16 @@ function smarty_function_pc_date_select($args, &$smarty)
     }
 
     $dayselect = $monthselect = $yearselect = $viewselect = '';
-    // note: pcHtmlUtil is an extension of the core HtmlUtil class
-    //       it was extended to provide month names (text)
-    //       a patch for core was supplied to Zikula and may appear in v1.2
-    //       at which time, this should be reverted to HtmlUtil
-    Loader::loadClass('pcHtmlUtil',
-        'modules/PostCalendar/pnincludes');
+    Loader::loadClass('HtmlUtil');
     if ($args['day'] === true) {
-        $dayselect = pcHtmlUtil::getSelector_DatetimeDay($d, 'jumpday');
+        $dayselect = HtmlUtil::getSelector_DatetimeDay($d, 'jumpday');
     }
     if ($args['month'] === true) {
 
-        $monthselect = pcHtmlUtil::getSelector_DatetimeMonth($m, 'jumpmonth', false, false, 1, true);
+        $monthselect = HtmlUtil::getSelector_DatetimeMonth($m, 'jumpmonth', false, false, 1, true);
     }
     if ($args['year'] === true) {
-        $yearselect = pcHtmlUtil::getSelector_DatetimeYear($y, 'jumpyear', date('Y') - 10, date('Y') + 10);
+        $yearselect = HtmlUtil::getSelector_DatetimeYear($y, 'jumpyear', date('Y') - 10, date('Y') + 10);
     }
 
     if ($args['view'] === true) {
@@ -86,7 +81,7 @@ function smarty_function_pc_date_select($args, &$smarty)
         $sel_data[4]['id'] = 'list';
         $sel_data[4]['selected'] = $viewtype == 'list';
         $sel_data[4]['name'] = __('List View', $dom);
-        $viewselect = pcHtmlUtil::FormSelectMultipleSubmit('viewtype', $sel_data);
+        $viewselect = HtmlUtil::FormSelectMultipleSubmit('viewtype', $sel_data);
     }
 
     if (!isset($args['label'])) $args['label'] = __('go', $dom);
