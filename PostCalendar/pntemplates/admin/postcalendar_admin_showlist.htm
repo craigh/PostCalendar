@@ -4,7 +4,7 @@
 <div class="pn-adminpageicon"><!--[pnimg modname='PostCalendar' src='admin.gif']--></div>
 <h2><!--[gt text="$title"]--></h2>
 <!--[if empty($events)]-->
-	<!--[assign var="e" value=No Events]-->
+    <!--[gt text='Title' assign='e']-->
 <!--[else]-->
 	<form class="pn-adminform" name="listevents" action="<!--[pnmodurl modname="PostCalendar" type="admin" func="adminEvents"]-->" method="post" enctype="application/x-www-form-urlencoded">
 		<div>
