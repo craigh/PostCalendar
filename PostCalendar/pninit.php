@@ -102,6 +102,8 @@ function postcalendar_upgrade($oldversion)
         case '5.5.2':
         case '5.5.3':
             pnModSetVar('PostCalendar', 'pcAllowCatFilter', '1');
+            pnModDelVar('PostCalendar', 'pcDayHighlightColor');
+            pnModDelVar('PostCalendar', 'pcAllowSiteWide');
         //case '5.8.0':
     }
 
@@ -126,7 +128,6 @@ function postcalendar_init_getdefaults()
     'pcEventsOpenInNewWindow' => '0',
     'pcUseInternationalDates' => '0',
     'pcFirstDayOfWeek'        => __('0', $dom),
-    'pcDayHighlightColor'     => '#FF0000',
     'pcUsePopups'             => '1',
     'pcAllowDirectSubmit'     => '0',
     'pcListHowManyEvents'     => '15',
@@ -135,7 +136,6 @@ function postcalendar_init_getdefaults()
     'pcRepeating'             => '0',
     'pcMeeting'               => '0',
     'pcAddressbook'           => pnModAvailable('v4bAddressBook') ? '1' : '0',
-    'pcAllowSiteWide'         => '0',
     'pcAllowUserCalendar'     => '1',
     'pcTimeIncrement'         => '15',
     'pcDefaultView'           => 'month',
