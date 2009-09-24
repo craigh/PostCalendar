@@ -409,6 +409,18 @@ if (!function_exists('makeValidURL')) {
     }
 }
 
+/**
+ * postcalendar_userapi_getDate
+ *
+ * get the correct day, format it and return
+ * @param string format
+ * @param string Date
+ * @param string jumpday
+ * @param string jumpmonth
+ * @param string jumpyear
+ * @return string formatted date string
+ * @access public
+ */
 function postcalendar_userapi_getDate($args)
 {
     if (!is_array($args)) {
@@ -424,7 +436,6 @@ function postcalendar_userapi_getDate($args)
         $jumpmonth = $args['jumpmonth'];
         $jumpyear  = $args['jumpyear'];
     }
-    //if(empty($format)) $format = '%Y%m%d%H%M%S'; // default format
 
     if (empty($Date)) {
         // if we still don't have a date then calculate it
@@ -462,11 +473,25 @@ function postcalendar_userapi_getmonthname($args)
     return $month_name[date('m', $args['Date'])];
 }
 
+/**
+ * postcalendar_userapi_getCategories()
+ *
+ * Returns array of PostCalendar category names, sorted by name
+ *
+ * @return array PostCalendar Category names
+ */
 function postcalendar_userapi_getCategories()
 {
     return DBUtil::selectObjectArray('postcalendar_categories', '', 'catname');
 }
 
+/**
+ * postcalendar_userapi_getTopics()
+ *
+ * Returns array of topic names, sorted by name
+ * function appears to account for permissions
+ * @return array Topic of names
+ */
 function postcalendar_userapi_getTopics()
 {
     $permFilter = array();
@@ -482,6 +507,15 @@ function postcalendar_userapi_getTopics()
 
     return DBUtil::selectObjectArray('topics', '', 'topictext', -1, -1, '', $permFilter);
 }
+
+/**
+ * postcalendar_userapi_SmartySetup()
+ *
+ * legacy function to make sure certain data is available in templates.
+ * This should eventually be eliminated and specific data should be added
+ * to each template as required.
+ * @return assigns settings to template
+ */
 function postcalendar_userapi_SmartySetup(&$smarty)
 {
     if (!is_object($smarty)) return LogUtil::registerError(_MODARGSERROR . ' in postcalendar_userapi_SmartySetup');

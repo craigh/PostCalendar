@@ -9,11 +9,13 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
  */
 Loader::requireOnce('includes/pnForm.php');
-//don't think I'll need the next line anymore...
-// UPDATE: in order to not use the APIload below, the functions all have to have standard names
-// and be called with pnModFunc (or API)
-//pnModAPILoad('PostCalendar', 'user');
 
+/**
+ * postcalendar_user_main
+ *
+ * main view functino for end user
+ * @access public
+ */
 function postcalendar_user_main()
 {
     // check the authorization
@@ -201,12 +203,25 @@ class postcalendar_user_fileuploadHandler extends pnFormHandler
     }
 }
 
+/**
+ * postcalendar_user_upload
+ *
+ * displays form to upload iCal (.ics) files
+ * 
+ * @return
+ */
 function postcalendar_user_upload()
 {
     $render = & FormUtil::newpnForm('PostCalendar');
     return $render->pnFormExecute('event/postcalendar_event_fileupload.htm', new postcalendar_user_fileuploadHandler());
 }
 
+/**
+ * postcalendar_user_splitdate
+ *
+ * @param $args string      expected to be a string of integers YYYYMMDD
+ * @return array              date split with keys
+ */
 function postcalendar_user_splitdate($args)
 {
     $splitdate = array();
@@ -216,7 +231,13 @@ function postcalendar_user_splitdate($args)
     return $splitdate;
 }
 
-// The function is made for GMT+1 with DaySaveTime Set to enabled
+/**
+ * postcalendar_user_splittime
+ * The function is made for GMT+1 with DaySaveTime Set to enabled
+ *
+ * @param $args string      expected to be a string of integers HHMMSS
+ * @return array              time split with keys
+ */
 function postcalendar_user_splittime($args)
 {
     $splittime = array();
@@ -227,6 +248,13 @@ function postcalendar_user_splittime($args)
     return $splittime;
 }
 
+/**
+ * postcalendar_user_export
+ * export rss or ical file to user (rss may not be functional)
+ * directs browser to correct function
+ *
+ * @return
+ */
 function postcalendar_user_export()
 {
     # control whether debug and extendedinfo flags are allowed
@@ -305,6 +333,12 @@ function postcalendar_user_export()
     }
 }
 
+/**
+ * postcalendar_user_export_rss
+ * export rss (may not be functional)
+ *
+ * @return
+ */
 function postcalendar_user_export_rss($sevents, $start, $end)
 {
     $eid = FormUtil::getPassedValue('eid');
@@ -401,16 +435,28 @@ function postcalendar_user_export_rss($sevents, $start, $end)
     return true;
 }
 
-###############################################################################
-
+/**
+ * eventdatecmp
+ * compare dates/times ??
+ *
+ * @param a array
+ * @param b array
+ * @return 1/-1
+ * @access private
+ */
 function eventdatecmp($a, $b)
 {
     if ($a[startTime] < $b[startTime]) return -1;
     elseif ($a[startTime] > $b[startTime]) return 1;
 }
 
-###############################################################################
-
+/**
+ * postcalendar_user_findContact
+ * legacy function - possibly related to address book usage
+ * not currently in use
+ * @return outputs contact form
+ * @access public
+ */
 function postcalendar_user_findContact()
 {
 
