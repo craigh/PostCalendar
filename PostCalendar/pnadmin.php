@@ -595,14 +595,3 @@ function postcalendar_admin_deleteevents()
     pnModAPIFunc('PostCalendar', 'admin', 'clearCache');
     return pnModFunc('PostCalendar', 'admin', 'showlist', array('type' => _EVENT_APPROVED, 'function' => 'listapproved', 'title' => __('Approved Events Administration', $dom)));
 }
-/****************************************************
- * The functions below are moved to eventapi
- ****************************************************/
-function postcalendar_admin_edit($args)
-{
-    return pnModFunc('PostCalendar', 'event', 'new', $args);
-}
-function postcalendar_admin_submit($args)
-{
-    return pnModFunc('PostCalendar', 'event', 'new', $args);
-}

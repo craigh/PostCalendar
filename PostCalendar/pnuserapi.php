@@ -58,13 +58,9 @@ function postcalendar_userapi_buildView($args)
     // as translated in the language files for template
     // (may be adding more here soon - based on need)
     //=================================================================
-    $pc_month_names = array(
-                    __('January', $dom), __('February', $dom), __('March', $dom), __('April', $dom), __('May', $dom),
-                    __('June', $dom), __('July', $dom), __('August', $dom), __('September', $dom), __('October', $dom),
-                    __('November', $dom), __('December', $dom));
-    $pc_short_day_names = array(__('S', $dom), __('M', $dom), __('T', $dom), __('W', $dom), __('T', $dom),
-                    __('F', $dom), __('S', $dom));
-    $pc_long_day_names = array(__('Sunday', $dom), __('Monday', $dom), __('Tuesday', $dom), __('Wednesday', $dom), __('Thursday', $dom), __('Friday', $dom), __('Saturday', $dom));
+    $pc_month_names = explode(" ", __('January February March April May June July August September October November December', $dom));
+    $pc_short_day_names = explode (" ", __(/*!First Letter of each Day of week*/'S M T W T F S', $dom));
+    $pc_long_day_names = explode (" ", __('Sunday Monday Tuesday Wednesday Thursday Friday Saturday', $dom));
     //=================================================================
     // set up some information for later variable creation.
     // This helps establish the correct date ranges for each view.
@@ -459,7 +455,6 @@ function postcalendar_userapi_getmonthname($args)
 {
     $dom = ZLanguage::getModuleDomain('PostCalendar');
     if (!isset($args['Date'])) return LogUtil::registerError(_MODARGSERROR . ' in postcalendar_userapi_getmonthname');
-
     $month_name = array('01' => __('January', $dom), '02' => __('February', $dom), '03' => __('March', $dom),
                     '04' => __('April', $dom), '05' => __('May', $dom), '06' => __('June', $dom),
                     '07' => __('July', $dom), '08' => __('August', $dom), '09' => __('September', $dom),
@@ -496,43 +491,6 @@ function postcalendar_userapi_SmartySetup(&$smarty)
     $smarty->assign('USE_INT_DATES', _SETTING_USE_INT_DATES);
     $smarty->assign('OPEN_NEW_WINDOW', _SETTING_OPEN_NEW_WINDOW);
     $smarty->assign('EVENT_DATE_FORMAT', _SETTING_DATE_FORMAT);
-    $smarty->assign('HIGHLIGHT_COLOR', _SETTING_DAY_HICOLOR);
     $smarty->assign('24HOUR_TIME', _SETTING_TIME_24HOUR);
     return true;
-}
-
-/****************************************************
- * The functions below are moved to eventapi
- ****************************************************/
-function postcalendar_userapi_pcGetEvents($args)
-{
-    return pnModAPIFunc('PostCalendar', 'event', 'getEvents', $args);
-}
-function postcalendar_userapi_pcQueryEvents($args)
-{
-    return pnModAPIFunc('PostCalendar', 'event', 'queryEvents', $args);
-}
-function postcalendar_userapi_deleteevents($args)
-{
-    return pnModAPIFunc('PostCalendar', 'event', 'deleteevent', $args);
-}
-function postcalendar_userapi_submitEvent($args)
-{
-    return pnModAPIFunc('PostCalendar', 'event', 'writeEvent', $args);
-}
-function postcalendar_userapi_buildSubmitForm($args)
-{
-    return pnModAPIFunc('PostCalendar', 'event', 'buildSubmitForm', $args);
-}
-function postcalendar_userapi_pcFixEventDetails($args)
-{
-    return pnModAPIFunc('PostCalendar', 'event', 'fixEventDetails', $args);
-}
-function postcalendar_userapi_pcGetEventDetails($args)
-{
-    return pnModAPIFunc('PostCalendar', 'event', 'getEventDetails', $args);
-}
-function postcalendar_userapi_eventDetail($args)
-{
-    return pnModAPIFunc('PostCalendar', 'event', 'eventDetail', $args);
 }

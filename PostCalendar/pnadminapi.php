@@ -130,7 +130,7 @@ function postcalendar_adminapi_meeting_mailparticipants($args)
     $pnRender->assign('pc_author', DataUtil::formatForDisplay($pc_author));
 
 	$pc_URL = pnModURL('PostCalendar', 'user', 'view', array('viewtype' => 'details', 'eid' => $eid), null, null, true);
-    $pnRender->assign('pc_URL', DataUtil::formatForOS($pc__('URL', $dom)));
+    $pnRender->assign('pc_URL', DataUtil::formatForOS($pc_URL));
 
     $modinfo = pnModGetInfo(pnModGetIDFromName('PostCalendar'));
     $modversion = DataUtil::formatForOS($modinfo['version']);
@@ -189,21 +189,4 @@ function postcalendar_adminapi_notify($args)
         LogUtil::registerError(__('Admin notify email not sent', $dom));
         return false;
     }
-}
-/****************************************************
- * The functions below are moved to eventapi
- ****************************************************/
-function postcalendar_adminapi_submitEvent($args)
-{
-    return pnModAPIFunc('PostCalendar', 'event', 'writeEvent', $args);
-}
-function postcalendar_adminapi_buildSubmitForm($args)
-{
-    $args['admin'] = true;
-    return pnModAPIFunc('PostCalendar', 'event', 'buildSubmitForm', $args);
-}
-function postcalendar_adminapi_eventDetail($args)
-{
-    $args['admin'] = true;
-    return pnModAPIFunc('PostCalendar', 'event', 'eventDetail', $args);
 }

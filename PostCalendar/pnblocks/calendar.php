@@ -102,12 +102,9 @@ function postcalendar_calendarblock_display($blockinfo)
     // get the events for the current month view
     //*******************************************************************
     $day_of_week = 1;
-    $pc_month_names = array(__('January', $dom), __('February', $dom), __('March', $dom), __('April', $dom), __('May', $dom), __('June', $dom), __('July', $dom), __('August', $dom), __('September', $dom), __('October', $dom), __('November', $dom), __('December', $dom));
-
-    $pc_short_day_names = array(__('S', $dom), __('M', $dom), __('T', $dom), __('W', $dom), __('T', $dom),
-                    __('F', $dom), __('S', $dom));
-
-    $pc_long_day_names = array(__('Sunday', $dom), __('Monday', $dom), __('Tuesday', $dom), __('Wednesday', $dom), __('Thursday', $dom), __('Friday', $dom), __('Saturday', $dom));
+    $pc_month_names = explode (" ", __('January February March April May June July August September October November December', $dom));
+    $pc_short_day_names = explode (" ", __(/*!First Letter of each Day of week*/'S M T W T F S', $dom));
+    $pc_long_day_names = explode (" ", __('Sunday Monday Tuesday Wednesday Thursday Friday Saturday', $dom));
     switch (_SETTING_FIRST_DAY_WEEK) {
         case _IS_MONDAY:
             $pc_array_pos = 1;

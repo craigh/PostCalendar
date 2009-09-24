@@ -479,19 +479,3 @@ function parsefilename($delim, $str, $lim = 1)
 
     return array_merge(array(implode($delim, $out[0])), $out[1]);
 }
-
-/****************************************************
- * The functions below are moved to event
- ****************************************************/
-function postcalendar_user_delete($args)
-{
-    return pnModFunc('PostCalendar', 'event', 'delete', $args);
-}
-function postcalendar_user_submit($args)
-{
-    return pnModFunc('PostCalendar', 'event', 'new', $args);
-}
-function postcalendar_user_edit($args)
-{
-    return pnModFunc('PostCalendar', 'event', 'edit', $args);
-}

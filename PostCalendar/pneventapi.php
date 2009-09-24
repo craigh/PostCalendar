@@ -669,7 +669,7 @@ function postcalendar_eventapi_buildSubmitForm($args)
     $tpl->assign('SelectedRepeat', (int) $event_repeat == 1 ? 'checked' : '');
 
     unset($in);
-    $in = array(__('Every', $dom), __('Every Other', $dom), __('Every Third', $dom), __('Every Fourth', $dom));
+    $in = explode ("/", __('Every/Every Other/Every Third/Every Fourth', $dom));
     $keys = array(REPEAT_EVERY, REPEAT_EVERY_OTHER, REPEAT_EVERY_THIRD, REPEAT_EVERY_FOURTH);
     $repeat_freq = array();
     foreach ($in as $k => $v)
@@ -680,7 +680,7 @@ function postcalendar_eventapi_buildSubmitForm($args)
     $tpl->assign('repeat_freq', $repeat_freq);
 
     unset($in);
-    $in = array(__('Day(s)', $dom), __('Week(s)', $dom), __('Month(s)', $dom), __('Year(s)', $dom));
+    $in = explode ("/", __('Day(s)/Week(s)/Month(s)/Year(s)', $dom));
     $keys = array(REPEAT_EVERY_DAY, REPEAT_EVERY_WEEK, REPEAT_EVERY_MONTH, REPEAT_EVERY_YEAR);
     $repeat_freq_type = array();
     foreach ($in as $k => $v)
@@ -690,7 +690,7 @@ function postcalendar_eventapi_buildSubmitForm($args)
     $tpl->assign('SelectedRepeatOn', (int) $event_repeat == 2 ? 'checked' : '');
 
     unset($in);
-    $in = array(__('First', $dom), __('Second', $dom), __('Third', $dom), __('Fourth', $dom), __('Last', $dom));
+    $in = explode ("/", __('First/Second/Third/Fourth/Last', $dom));
     $keys = array(REPEAT_ON_1ST, REPEAT_ON_2ND, REPEAT_ON_3RD, REPEAT_ON_4TH, REPEAT_ON_LAST);
     $repeat_on_num = array();
     foreach ($in as $k => $v)
@@ -699,7 +699,7 @@ function postcalendar_eventapi_buildSubmitForm($args)
     $tpl->assign('repeat_on_num', $repeat_on_num);
 
     unset($in);
-    $in = array(__('Sun', $dom), __('Mon', $dom), __('Tue', $dom), __('Wed', $dom), __('Thu', $dom), __('Fri', $dom), __('Sat', $dom));
+    $in = explode (" ", __('Sun Mon Tue Wed Thu Fri Sat', $dom));
     $keys = array(REPEAT_ON_SUN, REPEAT_ON_MON, REPEAT_ON_TUE, REPEAT_ON_WED, REPEAT_ON_THU, REPEAT_ON_FRI, REPEAT_ON_SAT);
     $repeat_on_day = array();
     foreach ($in as $k => $v)
@@ -708,7 +708,7 @@ function postcalendar_eventapi_buildSubmitForm($args)
     $tpl->assign('repeat_on_day', $repeat_on_day);
 
     unset($in);
-    $in = array(__('month', $dom), __('other month', $dom), __('3 months', $dom), __('4 months', $dom), __('6 months', $dom), __('year', $dom));
+    $in = explode ("/", __('month/other month/3 months/4 months/6 months/year', $dom));
     $keys = array(REPEAT_ON_MONTH, REPEAT_ON_2MONTH, REPEAT_ON_3MONTH, REPEAT_ON_4MONTH, REPEAT_ON_6MONTH, REPEAT_ON_YEAR);
     $repeat_on_freq = array();
     foreach ($in as $k => $v)

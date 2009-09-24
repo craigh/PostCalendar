@@ -249,7 +249,7 @@ function postcalendar_event_new($args)
         $eventdata['event_startyear'] = substr($event['eventDate'], 0, 4);
         $eventdata['event_starttimeh'] = substr($event['startTime'], 0, 2);
         $eventdata['event_starttimem'] = substr($event['startTime'], 3, 2);
-        $eventdata['event_startampm'] = $eventdata['event_starttimeh'] < 12 ? _PC_AM : __('PM', $dom);
+        $eventdata['event_startampm'] = $eventdata['event_starttimeh'] < 12 ? __('AM', $dom) : __('PM', $dom);
         $eventdata['event_endmonth'] = substr($event['endDate'], 5, 2);
         $eventdata['event_endday'] = substr($event['endDate'], 8, 2);
         $eventdata['event_endyear'] = substr($event['endDate'], 0, 4);
