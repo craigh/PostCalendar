@@ -735,6 +735,10 @@ function postcalendar_eventapi_buildSubmitForm($args)
 
     $tpl->assign('preview', $preview);
 
+    // Assign the content format
+    $formattedcontent = pnModAPIFunc('PostCalendar', 'event', 'isformatted', array('func' => 'new'));
+    $tpl->assign('formattedcontent', $formattedcontent);
+
     return $tpl->fetch("event/postcalendar_event_submit.html");
 }
 
@@ -869,10 +873,9 @@ function postcalendar_eventapi_eventDetail($args)
     $display_type = substr($event['hometext'], 0, 6);
     $event['hometext'] = substr($event['hometext'], 6);
     if ($display_type==":text:") {
-        $event['hometext']  = DataUtil::formatForDisplay($event['hometext']);
-    } else { // type = :html:
-        $event['hometext']  = DataUtil::formatForDisplayHTML($event['hometext']);
+        $event['hometext']  = nl2br(strip_tags($event['hometext']));
     }
+    $event['hometext']  = DataUtil::formatForDisplayHTML($event['hometext']);
     $event['desc']      = $event['hometext'];
     $event['title']     = DataUtil::formatForDisplay($event['title']);
     $event['conttel']   = DataUtil::formatForDisplay($event['conttel']);
@@ -1035,4 +1038,36 @@ function dateIncrement($d, $m, $y, $f, $t)
     } elseif ($t == REPEAT_EVERY_YEAR) {
         return date('Y-m-d', mktime(0, 0, 0, $m, $d, ($y + $f)));
     }
+}
+
+/**
+ * postcalendar_eventapi_isformatted
+ * This function is copied directly from the News module
+ * credits to Jorn Wildt, Mark West, Philipp Niethammer or whoever wrote it
+ *
+ * @purpose analize if the module has an Scribite! editor assigned
+ * @param string func the function to check
+ * @return bool
+ * @access public
+ */
+function postcalendar_eventapi_isformatted($args)
+{
+    if (!isset($args['func'])) {
+        $args['func'] = 'all';
+    }
+
+    if (pnModAvailable('scribite')) {
+        $modinfo = pnModGetInfo(pnModGetIDFromName('scribite'));
+        if (version_compare($modinfo['version'], '2.2', '>=')) {
+            $apiargs = array('modulename' => 'PostCalendar'); // parameter handling corrected in 2.2
+        } else {
+            $apiargs = 'PostCalendar'; // old direct parameter
+        }
+
+        $modconfig = pnModAPIFunc('scribite', 'user', 'getModuleConfig', $apiargs);
+        if (in_array($args['func'], (array)$modconfig['modfuncs']) && $modconfig['modeditor'] != '-') {
+            return true;
+        }
+    }
+    return false;
 }

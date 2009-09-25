@@ -37,10 +37,10 @@
     <!-- EVENT INFO ROWS -->
         <tr>
             <td align="left" valign="top" width="50%">
-                <!--[gt text='Event Title']-->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!--[gt text='*Required']--><br />
-                <input type="text" name="event_subject" value="<!--[ $ValueEventTitle ]-->" /><br />
+                <!--[gt text='Event Title']-->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style='color:red;'>*<!--[gt text='Required']--></span><br />
+                <input type="text" name="event_subject" value="<!--[ $ValueEventTitle ]-->" size="40" /><br />
 
-		        <!--[gt text='For User']-->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!--[gt text='*Required']--><br />
+		        <!--[gt text='For User']-->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style='color:red;'>*<!--[gt text='Required']--></span><br />
 		        <!--[html_options name=event_for_userid options=$users selected=$user_selected]--><br /><br />
 
 		        <!--[gt text='Event Date']-->&nbsp;&nbsp;&nbsp;
@@ -71,7 +71,15 @@
                 </table>
 		        <br/ >
                 <!--[gt text='Event Description']--><br />
-		        <textarea id="description" name="event_desc" wrap="virtual" rows="5" cols="40"><!--[ $ValueEventDesc ]--></textarea>
+		        <textarea id="description" name="event_desc" wrap="virtual" rows="5" cols="40"><!--[ $ValueEventDesc ]--></textarea><br />
+                <!--[if $formattedcontent eq 0]-->
+                    <b style='color:red;'>SCRIBITE NOT IN USE</b><br />
+                    <!--[html_options name=pc_html_or_text options=$EventHTMLorText selected=$EventHTMLorTextVal]-->
+                    <div class="pn-warningmsg" id="html_warning"><b><!--[gt text='Permitted tags if using HTML']--></b><br /><!--[allowedhtml]--></div>
+                <!--[else]-->
+                    <b style='color:green;'>SCRIBITE IN USE</b><br />
+                    <input type="hidden" name="pc_html_or_text" value="html" />
+                <!--[/if]-->
         		</td>
 
                 <td align="left" valign="top" width="50%">
@@ -243,10 +251,11 @@
 </div>
 </div>
 <!--[ /if ]-->
-<!--[html_options name=pc_html_or_text options=$EventHTMLorText selected=$EventHTMLorTextVal]-->
 <input type="hidden" name="is_update" value="<!--[$is_update]-->">
 <input type="hidden" name="eid" value="<!--[$eid]-->">
 <!--[if !empty($data_loaded) ]--> <input type="hidden" name="data_loaded" value="<!--[$data_loaded]-->"><!--[/if]-->
+
+<hr />
 <select name="form_action">
 	<option value="preview"><!--[gt text='Preview']--></option>
 	<option value="commit" selected><!--[gt text='Submit']--></option>
