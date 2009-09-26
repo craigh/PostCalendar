@@ -466,7 +466,7 @@ function postcalendar_user_findContact()
     /* Trim as needed */
     $func = FormUtil::getPassedValue('func');
     $template_view = FormUtil::getPassedValue('tplview');
-    if (!$template_view) $template_view = 'month';
+    if (!$template_view) $template_view = _SETTING_DEFAULT_VIEW;
     $tpl_contact->assign('FUNCTION', $func);
     $tpl_contact->assign('TPL_VIEW', $template_view);
     /* end */

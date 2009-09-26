@@ -186,7 +186,7 @@ function smarty_function_pc_popup($args, &$smarty)
 
 /**
  * pc_clean
- * @param s string text to clean
+ * @param s string text to clean to prepare as javascript string.
  * @return string cleaned up text
  */
 function pc_clean($s)
@@ -195,9 +195,12 @@ function pc_clean($s)
 
     if ($display_type == ':text:') {
         $s = substr($s, 6);
+        $s = nl2br(strip_tags($s));
     } elseif ($display_type == ':html:') {
         $s = substr($s, 6);
     }
+
+    $s = DataUtil::formatForDisplayHTML($s);
 
     unset($display_type);
     $s = preg_replace('/[\r|\n]/i', '', $s);

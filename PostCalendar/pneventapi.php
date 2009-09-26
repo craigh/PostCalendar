@@ -771,14 +771,16 @@ function postcalendar_eventapi_fixEventDetails($event)
             $event[$field] = '';
     } else {
         // FIXME: this entire thing should be a sub-array
-        $location = unserialize($event['location']);
-        $event['event_location'] = $location['event_location'];
-        $event['event_street1'] = $location['event_street1'];
-        $event['event_street2'] = $location['event_street2'];
-        $event['event_city'] = $location['event_city'];
-        $event['event_state'] = $location['event_state'];
-        $event['event_postal'] = $location['event_postal'];
-        //$event['date'] = str_replace('-','',$Date);
+        if (!empty($location)) {
+           $location = unserialize($event['location']);
+           $event['event_location'] = $location['event_location'];
+           $event['event_street1'] = $location['event_street1'];
+           $event['event_street2'] = $location['event_street2'];
+           $event['event_city'] = $location['event_city'];
+           $event['event_state'] = $location['event_state'];
+           $event['event_postal'] = $location['event_postal'];
+           //$event['date'] = str_replace('-','',$Date);
+        }
     }
 
     return $event;
@@ -875,7 +877,6 @@ function postcalendar_eventapi_eventDetail($args)
     if ($display_type==":text:") {
         $event['hometext']  = nl2br(strip_tags($event['hometext']));
     }
-    $event['hometext']  = DataUtil::formatForDisplayHTML($event['hometext']);
     $event['desc']      = $event['hometext'];
     $event['title']     = DataUtil::formatForDisplay($event['title']);
     $event['conttel']   = DataUtil::formatForDisplay($event['conttel']);

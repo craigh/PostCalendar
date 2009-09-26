@@ -241,7 +241,7 @@ function postcalendar_userapi_buildView($args)
 
     $func = FormUtil::getPassedValue('func');
     $template_view = FormUtil::getPassedValue('tplview');
-    if (!$template_view) $template_view = 'month';
+    if (!$template_view) $template_view = _SETTING_DEFAULT_VIEW;
     $function_out['FUNCTION']          = $func;
     $function_out['TPL_VIEW']          = $template_view;
     $function_out['VIEW_TYPE']         = $viewtype;
@@ -303,7 +303,7 @@ function postcalendar_userapi_eventPreview($args)
     /* Trim as needed */
     $func = FormUtil::getPassedValue('func');
     $template_view = FormUtil::getPassedValue('tplview');
-    if (!$template_view) $template_view = 'month';
+    if (!$template_view) $template_view = _SETTING_DEFAULT_VIEW;
     $tpl->assign('FUNCTION', $func);
     $tpl->assign('TPL_VIEW', $template_view);
     /* end */
