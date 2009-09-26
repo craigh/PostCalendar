@@ -9,20 +9,21 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
  */
 
-/*
-This api utilizes iCalcreator class to manipulate uploaded files
-and create downloadable event files
-*/
+/**
+ * This api utilizes iCalcreator class to manipulate uploaded files
+ * and create downloadable event files
+ */
 Loader::requireOnce(dirname(__FILE__) . '/pnincludes/iCalcreator.class.php');
 
-// process uploaded .ics file
-// store to PC database
-// args expected:
-/*    Fileparts
-            array([0]        =>pathname
-                  [1]        =>filename
-                  [delimiter]=>delimiter)
-*/
+/**
+ * process uploaded .ics file
+ * store to PC database
+ * args expected:
+ *    Fileparts
+ *      array([0]        =>pathname
+ *            [1]        =>filename
+ *            [delimiter]=>delimiter)
+ */
 function postcalendar_icalapi_processupload($data)
 {
     /* echo "<pre>";print_r($data);echo"</pre>";die; */
@@ -62,8 +63,10 @@ function postcalendar_icalapi_processupload($data)
     return true; //return true if all events written
 }
 
-//write event to DB
-// argument expect: $ve array of ONE event info
+/**
+ * write event to DB
+ * argument expect: $ve array of ONE event info
+ */
 function postcalendar_icalapi_writeicalevent($ve)
 {
     // divide ical arrays into date/time arrays
@@ -76,7 +79,7 @@ function postcalendar_icalapi_writeicalevent($ve)
     if (empty($ve['starttime']['min'])) $ve['starttime']['min'] = "00";
     if (empty($ve['starttime']['sec'])) $ve['starttime']['sec'] = "00";
     if ((!$ve['dtend']) and ($ve['duration'])) {
-        $ve['dtend'] = convert_dtend($ve['dtend'], $ve['duration']);
+        $ve['dtend'] = convert_dtend($ve['dtend'], $ve['duration']); //should that be dtstart?
         // automatically adds duration to dtstart if
     }
     $ve['enddate'] = array_slice($ve['dtend'], 0, 3, true);
@@ -123,7 +126,7 @@ function postcalendar_icalapi_writeicalevent($ve)
     $pc_startTime = $ve['starttime']['hour'] . ":" . $ve['starttime']['min'] . ":" . $ve['starttime']['sec'];
     $pc_timestamp = $ve['stdate']['year'] . "-" . $ve['stdate']['month'] . "-" . $ve['stdate']['day'] . " " . $ve['sttime']['hour'] . ":" . $ve['sttime']['min'] . ":" . $ve['sttime']['sec'];
 
-    $adddescitems = postcalendar_icalap_parsedesc($ve['description']);
+    $adddescitems = postcalendar_icalapi_parsedesc($ve['description']);
     foreach ($adddescitems as $key => $val) // should be using array_merge here?
     {
         if (empty($key)) $key = "description"; // overwrites old extended version
@@ -204,7 +207,9 @@ function postcalendar_icalapi_writeicalevent($ve)
     }
 }
 
-//export ical event from provided event info
+/**
+ * export ical event from provided event info
+ */
 function postcalendar_icalapi_export_ical($sevents)
 {
     $eid = FormUtil::getPassedValue('eid');
@@ -353,7 +358,11 @@ function postcalendar_icalapi_export_ical($sevents)
     $v->returnCalendar();
     return true;
 }
-
+/**
+ * @function    postcalendar_icalapi_getTZ
+ * @description get timezone
+ * @return      array
+ */
 function postcalendar_icalapi_getTZ()
 {
     $tzinfo = pnConfigGetVar('timezone_info');
@@ -364,7 +373,12 @@ function postcalendar_icalapi_getTZ()
     }
     return array($tzid, $timezones[$tzid]);
 }
-
+/**
+ * @function    parseicalfield
+ * @description parse an ical field into associative array
+ * @params      text    field   
+ * @return      array
+ */
 function parseicalfield($field)
 {
     $items = array(); // array to hold parsed items
@@ -378,12 +392,22 @@ function parseicalfield($field)
     }
     return $items;
 }
-
-function postcalendar_icalap_parsedesc($desc)
+/**
+ * @function    postcalendar_icalapi_parsedesc
+ * @description parse an ical description into associative array
+ * @params      text    desc   
+ * @return      array
+ */
+function postcalendar_icalapi_parseloc($desc)
 {
     return parseicalfield($desc);
 }
-
+/**
+ * @function    postcalendar_icalapi_parseloc
+ * @description parse an ical location into associative array
+ * @params      text    loc   
+ * @return      array
+ */
 function postcalendar_icalapi_parseloc($loc)
 {
     $locitems = parseicalfield($loc);
@@ -399,7 +423,12 @@ function postcalendar_icalapi_parseloc($loc)
                     'event_postal' => $locitems['zip']);
     return $event_location_data;
 }
-
+/**
+ * @function    postcalendar_icalapi_parsecats
+ * @description determine a category ID if available from name
+ * @params      text    category   
+ * @return      array
+ */
 function postcalendar_icalapi_parsecats($category)
 {
     $cat_id = DBUtil::selectFieldByID('postcalendar_categories', 'catid', $category, 'catname');
@@ -407,7 +436,15 @@ function postcalendar_icalapi_parsecats($category)
     if (!$cat_id) $cat_id = 1;
     return $cat_id;
 }
-
+/**
+ * @function    convert_dtend
+ * @description automatically adds duration to dtstart
+ *                  WONDERING IF THIS IS WORKING AS EXPECTED?
+ * @params      array    end    end datetime
+ * @params      array    dur    duration
+ * @return      array   new endtime
+ * @access      private
+ */
 function convert_dtend($end, $dur)
 {
     extract($end);

@@ -741,7 +741,12 @@ function postcalendar_eventapi_buildSubmitForm($args)
 
     return $tpl->fetch("event/postcalendar_event_submit.html");
 }
-
+/**
+ * @function postcalendar_eventapi_fixEventDetails
+ * @description modify the way some of the event details are displayed based on other variables
+ * @param array event   array of event data
+ * @return array event  modified array of event data
+ */
 function postcalendar_eventapi_fixEventDetails($event)
 {
     $dom = ZLanguage::getModuleDomain('PostCalendar');
@@ -786,7 +791,12 @@ function postcalendar_eventapi_fixEventDetails($event)
     return $event;
 }
 
-//function postcalendar_userapi_pcGetEventDetails($eid)
+/**
+ * @function postcalendar_eventapi_getEventDetails
+ * @description 
+ * @param int eid   event id
+ * @return array event  array of event data
+ */
 function postcalendar_eventapi_getEventDetails($eid)
 {
     if (!isset($eid)) return false;
@@ -1046,7 +1056,7 @@ function dateIncrement($d, $m, $y, $f, $t)
  * This function is copied directly from the News module
  * credits to Jorn Wildt, Mark West, Philipp Niethammer or whoever wrote it
  *
- * @purpose analize if the module has an Scribite! editor assigned
+ * @purpose analyze if the module has an Scribite! editor assigned
  * @param string func the function to check
  * @return bool
  * @access public

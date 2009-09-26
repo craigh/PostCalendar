@@ -27,16 +27,10 @@ function postcalendar_adminapi_getlinks()
 
     // Load the admin language file
     // This allows this API to be called outside of the module
+    //contains gettext-type code in the function, so maybe z1.2 appropriate...
+    // but is it duplicate functionality to getModuleDomain() above?
     pnModLangLoad('PostCalendar', 'admin');
 
-    /**********************************************************************************/
-    @define('_AM_VAL', 1);
-    @define('_PM_VAL', 2);
-
-    @define('_EVENT_APPROVED', 1);
-    @define('_EVENT_QUEUED', 0);
-    @define('_EVENT_HIDDEN', -1);
-    /**********************************************************************************/
 
     // Check the users permissions to each avaiable action within the admin panel
     // and populate the links array if the user has permission
@@ -70,6 +64,16 @@ function postcalendar_adminapi_getlinks()
     return $links;
 }
 
+/**
+ * @function    postcalendar_adminapi_getAdminListEvents
+ * @param       int    type             event type
+ * @param       string sort             field to sort by
+ * @param       int    sdir             sort direction
+ * @param       int    offset
+ * @param       int    offset_increment
+ *
+ * @return array array of events sorted and incremented as requested
+ */
 function postcalendar_adminapi_getAdminListEvents($args)
 {
     extract($args);
@@ -83,6 +87,11 @@ function postcalendar_adminapi_getAdminListEvents($args)
     return DBUtil::selectObjectArray('postcalendar_events', $where, $sort, $offset, $offset_increment, false);
 }
 
+/**
+ * @function    postcalendar_adminapi_clearCache
+ *
+ * @return bool clear the pnRender cache
+ */
 function postcalendar_adminapi_clearCache()
 {
     $pnRender = pnRender::getInstance('PostCalendar'); // PostCalendarSmartySetup not needed
@@ -92,7 +101,8 @@ function postcalendar_adminapi_clearCache()
 }
 
 /**
- * Send email to participants of a meeting
+ * @function postcalendar_adminapi_meeting_mailparticipants
+ * @purpose Send email to participants of a meeting
  *
  * @param array $args array with arguments. Expected:
  *                    event_duration, event_desc, event_subject, $pc_description,
@@ -104,7 +114,6 @@ function postcalendar_adminapi_meeting_mailparticipants($args)
     $dom = ZLanguage::getModuleDomain('PostCalendar');
     //TODO: if ($is_update) send appropriate message...
     extract($args);
-    /* expected: $event_subject,$event_duration,$event_desc,$startDate,$startTime,$uname,$eid,$pc_mail_users,$is_update */
 
     $pnRender = pnRender::getInstance('PostCalendar');
     $pnRender->assign('eid', $eid);
@@ -117,6 +126,7 @@ function postcalendar_adminapi_meeting_mailparticipants($args)
     $pnRender->assign('pc_dur_minutes', DataUtil::formatForDisplay($pc_dur_minutes));
 
 	$pc_description = substr($event_desc, 6);
+    if (substr($event_desc, 0, 6) == ":text:") $pc_description = nl2br(strip_tags($pc_description));
     $pnRender->assign('pc_description', DataUtil::formatForDisplayHTML(substr($event_desc, 6)));
 
     // need to investigate all day event?
@@ -155,7 +165,8 @@ function postcalendar_adminapi_meeting_mailparticipants($args)
 }
 
 /**
- * Send an email to admin on new event submission
+ * @function postcalendar_adminapi_notify
+ * @purpose Send an email to admin on new event submission
  *
  * @param array $args array with arguments. Expected keys: is_update, eid
  * @return bool True if successfull, False otherwise
