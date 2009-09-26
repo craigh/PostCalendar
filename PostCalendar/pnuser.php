@@ -133,7 +133,8 @@ class postcalendar_user_fileuploadHandler extends pnFormHandler
 {
     function initialize(&$render)
     {
-        if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADD)) return $render->pnFormSetErrorMsg(_NOTAUTHORIZED);
+        $dom = ZLanguage::getModuleDomain('PostCalendar');
+        if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADD)) return $render->pnFormSetErrorMsg(__('You are not authorized.', $dom));
 
         //=================================================================
         // select_event_type_block
@@ -175,6 +176,7 @@ class postcalendar_user_fileuploadHandler extends pnFormHandler
      */
     function handleCommand(&$render, $args)
     {
+        $dom = ZLanguage::getModuleDomain('PostCalendar');
         if ($args['commandName'] == 'submit') {
             // Do forms validation. This call forces the framework to check all validators on the page
             // to validate their input. If anyone fails then pnFormIsValid() returns false, and so
@@ -186,7 +188,7 @@ class postcalendar_user_fileuploadHandler extends pnFormHandler
 
             $result = pnModAPIFunc('PostCalendar', 'ical', 'processupload', $data);
 
-            if ($result != true) return $render->pnFormSetErrorMsg(_PC_COULDNOTPROCESSFILEUPLOAD);
+            if ($result != true) return $render->pnFormSetErrorMsg(__('Could not process file upload.', $dom));
 
             $url = pnModUrl('PostCalendar', 'user', 'view',
                 array('viewtype' => pnModGetVar('PostCalendar', 'pcDefaultView')));
@@ -197,7 +199,7 @@ class postcalendar_user_fileuploadHandler extends pnFormHandler
                 array('viewtype' => pnModGetVar('PostCalendar', 'pcDefaultView')));
             return $render->pnFormRedirect($redir);
         }
-        echo "no command found";
+        $render->pnFormSetErrorMsg(__('No command found.', $dom));
         $data = $render->pnFormGetValues();
         return true;
     }

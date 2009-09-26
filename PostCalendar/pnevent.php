@@ -20,7 +20,8 @@ class postcalendar_event_editHandler extends pnFormHandler
 
     function initialize(&$render)
     {
-        if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADD)) return $render->pnFormSetErrorMsg(_NOTAUTHORIZED);
+        $dom = ZLanguage::getModuleDomain('PostCalendar');
+        if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADD)) return $render->pnFormSetErrorMsg(__('You are not authorized.', $dom));
 
         $this->eid = FormUtil::getPassedValue('eid');
 
@@ -34,7 +35,7 @@ class postcalendar_event_editHandler extends pnFormHandler
 
         // Fetch event data
         $event = pnModAPIFunc('PostCalendar', 'event', 'getEventDetails', $this->eid);
-        if (count($event) == 0) return $render->pnFormSetErrorMsg(_NOEVENTSFROMID);
+        if (count($event) == 0) return $render->pnFormSetErrorMsg(__('There are no events with id '.$this->eid.'.', $dom));
 
         if ($args['commandName'] == 'update') {
             /*
