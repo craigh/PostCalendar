@@ -212,6 +212,8 @@ function postcalendar_icalapi_writeicalevent($ve)
  */
 function postcalendar_icalapi_export_ical($sevents)
 {
+    /* echo "<pre>"; print_r($sevents); echo "</pre>"; die; */
+
     $eid = FormUtil::getPassedValue('eid');
     $category = FormUtil::getPassedValue('category');
     $sitename = getenv('SERVER_NAME');
@@ -284,7 +286,7 @@ function postcalendar_icalapi_export_ical($sevents)
                 $args['Date'] = date("Ymd", strtotime($cdate));
                 $args['viewtype'] = 'details';
                 $args['eid'] = $peid;
-                $url = pnModURL('PostCalendar', 'user', 'view', $args);
+                $url = pnModURL('PostCalendar', 'user', 'view', $args); // need to prepend http://www.websitename.tld/?subdir?/
 
                 # output the vCard/iCal VEVENT object
                 $vevent = new vevent();
@@ -302,43 +304,46 @@ function postcalendar_icalapi_export_ical($sevents)
                 $vevent->setProperty('LOCATION', $location);
                 $vevent->setProperty('TRANSP', 'OPAQUE');
                 $vevent->setProperty('CLASS', 'CONFIDENTIAL');
-                $vevent->setProperty('DTSTAMP', gmdate("Ymd") . "T" . gmdate("His") . "Z");
+                $vevent->setProperty('DTSTAMP', date("Ymd") . "T" . date("His") . "Z");
                 if ($allday) {
-                    $item['startTime'] = "00:00:00"; // midnight
-                    $duration = 86400; // one day
+                    list($year, $month, $day) = explode("-", $item['eventDate']);
+                    $vevent->setProperty("dtstart", array( 'year'=>$year, 'month'=>$month, 'day'=>$day), array('VALUE'=>'DATE'));
+                    // add one day
+                    list($year, $month, $day)=explode ("^", date("Y^m^d", (strtotime($item['eventDate']) + 86400)));
+                    $vevent->setProperty("dtend", array('year'=>$year, 'month'=>$month, 'day'=>$day), array('VALUE'=>'DATE'));
+                } else {
+                   # format up the date/time into ical format for output
+                   # build the normal date/time string ...
+                   $evtstr = $item['eventDate'] . " " . $item['startTime'];
+                   # convert it to unix time ...
+                   $evttime = strtotime($evtstr);
+                   # add duration to get the end time ...
+                   $evtend = $evttime + $duration; //duration is already expressed in seconds (e.g. 3600 = one hour)
+   
+                   # format it for output
+                   $startdate = date("Y^m^d^H^i^s", $evttime); //should we be using date or gmdate?
+                   list($year, $month, $day, $hour, $min, $sec) = explode("^", $startdate);
+                   $vevent->setProperty('dtstart',
+                       array('year' => $year, 'month' => $month,
+                                       'day' => $day,
+                                       'hour' => $hour,
+                                       'min' => $min,
+                                       'sec' => $sec));
+   
+                   $enddate = date("Y^m^d^H^i^s", $evtend); //should we be using date or gmdate?
+                   list($year, $month, $day, $hour, $min, $sec) = explode("^", $enddate);
+                   $vevent->setProperty('dtend',
+                       array('year' => $year, 'month' => $month,
+                                       'day' => $day,
+                                       'hour' => $hour,
+                                       'min' => $min,
+                                       'sec' => $sec));
                 }
-
-                # format up the date/time into ical format for output
-                # build the normal date/time string ...
-                $evtstr = $item['eventDate'] . " " . $item['startTime'];
-                # convert it to unix time ...
-                $evttime = strtotime($evtstr);
-                # add duration to get the end time ...
-                $evtend = $evttime + $duration; //duration is already expressed in seconds (e.g. 3600 = one hour)
-
-                # format it for output
-                $startdate = gmdate("Y^m^d^H^i^s", $evttime);
-                list($year, $month, $day, $hour, $min, $sec) = explode("^", $startdate);
-                $vevent->setProperty('dtstart',
-                    array('year' => $year, 'month' => $month,
-                                    'day' => $day,
-                                    'hour' => $hour,
-                                    'min' => $min,
-                                    'sec' => $sec));
-
-                $enddate = gmdate("Y^m^d^H^i^s", $evtend);
-                list($year, $month, $day, $hour, $min, $sec) = explode("^", $enddate);
-                $vevent->setProperty('dtend',
-                    array('year' => $year, 'month' => $month,
-                                    'day' => $day,
-                                    'hour' => $hour,
-                                    'min' => $min,
-                                    'sec' => $sec));
 
                 # bury a serialized php structure in the COMMENT field.
                 if (($extendedinfo == 1) && ($extendedinfoallowed == 1)) {
                     $extinfo['url'] = $url;
-                    $extinfo['date'] = gmdate("Ymd", $evttime);
+                    $extinfo['date'] = date("Ymd", $evttime);
                     $extinfo['eid'] = $peid;
                     $extinfo['eventtime'] = $evttime;
                     $extinfo['icallink'] = "http://$sitename/modules/PostCalendar/ical.php?eid=$peid&date=" . date("Ymd", strtotime($item['eventDate']));
@@ -398,7 +403,7 @@ function parseicalfield($field)
  * @params      text    desc   
  * @return      array
  */
-function postcalendar_icalapi_parseloc($desc)
+function postcalendar_icalapi_parsedesc($desc)
 {
     return parseicalfield($desc);
 }
@@ -452,7 +457,7 @@ function convert_dtend($end, $dur)
     extract($dur);
     $dursecs = 3600 * $hour + 60 * $min + $sec;
     $newendsecs = $endsecs + $dursecs;
-    $datetime = gmdate("Y^m^d^H^i^s", $newendsecs);
+    $datetime = date("Y^m^d^H^i^s", $newendsecs);
     list($year, $month, $day, $hour, $min, $sec) = explode("^", $datetime);
     return compact("year", "month", "day", "hour", "min", "sec");
 }

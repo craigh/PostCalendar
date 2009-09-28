@@ -177,7 +177,7 @@ class postcalendar_user_fileuploadHandler extends pnFormHandler
     function handleCommand(&$render, $args)
     {
         $dom = ZLanguage::getModuleDomain('PostCalendar');
-        if ($args['commandName'] == 'submit') {
+        if ($args['commandname'] == 'submit') {
             // Do forms validation. This call forces the framework to check all validators on the page
             // to validate their input. If anyone fails then pnFormIsValid() returns false, and so
             // should your command event also do.
@@ -194,7 +194,7 @@ class postcalendar_user_fileuploadHandler extends pnFormHandler
                 array('viewtype' => pnModGetVar('PostCalendar', 'pcDefaultView')));
 
             return $render->pnFormRedirect($url);
-        } else if ($args['commandName'] == 'cancel') {
+        } else if ($args['commandname'] == 'cancel') {
             $redir = pnModUrl('PostCalendar', 'user', 'view',
                 array('viewtype' => pnModGetVar('PostCalendar', 'pcDefaultView')));
             return $render->pnFormRedirect($redir);
