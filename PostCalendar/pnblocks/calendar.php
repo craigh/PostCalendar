@@ -78,9 +78,9 @@ function postcalendar_calendarblock_display($blockinfo)
         }
     }
     if ($templates_cached) {
-        $blockinfo['content'] = $pnRender->fetch('blocks/postcalendar_block_view_month.html');
-        $blockinfo['content'] .= $pnRender->fetch('blocks/postcalendar_block_view_day.html');
-        $blockinfo['content'] .= $pnRender->fetch('blocks/postcalendar_block_view_upcoming.html');
+        $blockinfo['content'] = $tpl->fetch('blocks/postcalendar_block_view_month.html');
+        $blockinfo['content'] .= $tpl->fetch('blocks/postcalendar_block_view_day.html');
+        $blockinfo['content'] .= $tpl->fetch('blocks/postcalendar_block_view_upcoming.html');
         return pnBlockThemeBlock($blockinfo);
     }
     // end cache return
@@ -274,7 +274,7 @@ function postcalendar_calendarblock_modify($blockinfo)
 
     // clear the block cache
     $pnRender = pnRender::getInstance('PostCalendar');
-    // do I need the blocks/ here?
+
     $pnRender->clear_cache('blocks/postcalendar_block_view_day.html');
     $pnRender->clear_cache('blocks/postcalendar_block_view_month.html');
     $pnRender->clear_cache('blocks/postcalendar_block_view_upcoming.html');
@@ -312,7 +312,7 @@ function postcalendar_calendarblock_update($blockinfo)
     if (empty($vars['pcbshowsslinks'])) $vars['pcbshowsslinks'] = 0;
 
     $pnRender = pnRender::getInstance('PostCalendar'); // PostCalendarSmartySetup not needed
-    // do I need the blocks/ here?
+
     $pnRender->clear_cache('blocks/postcalendar_block_view_day.html');
     $pnRender->clear_cache('blocks/postcalendar_block_view_month.html');
     $pnRender->clear_cache('blocks/postcalendar_block_view_upcoming.html');
