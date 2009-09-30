@@ -147,7 +147,8 @@ function postcalendar_calendarblock_display($blockinfo)
     $starting_date = date('m/d/Y', mktime(0, 0, 0, $the_month, 1 - $first_day, $the_year));
     $ending_date = date('m/t/Y', mktime(0, 0, 0, $the_month + $pcbeventsrange, 1, $the_year));
 
-    // this grabs more events that required and could slow down the process.
+    // this grabs more events that required and could slow down the process. RNG
+    // suggest addming $limit paramter to getEvents() to reduce load CAH Sept 29, 2009
     $eventsByDate = pnModAPIFunc('PostCalendar', 'event', 'getEvents', array('start' => $starting_date, 'end' => $ending_date));
     $calendarView = Date_Calc::getCalendarMonth($the_month, $the_year, '%Y-%m-%d');
 
@@ -293,23 +294,15 @@ function postcalendar_calendarblock_update($blockinfo)
     }
 
     // Get current content
-    $vars = pnBlockVarsFromContent($blockinfo['content']);
+    $vars = pnBlockVarsFromContent($blockinfo['content']); //unneeded? see below.
 
-    $vars = array();
-    $vars['pcbshowcalendar'] = FormUtil::getPassedValue('pcbshowcalendar');
-    $vars['pcbeventslimit'] = FormUtil::getPassedValue('pcbeventslimit');
-    $vars['pcbeventoverview'] = FormUtil::getPassedValue('pcbeventoverview');
-    $vars['pcbnextevents'] = FormUtil::getPassedValue('pcbnextevents');
-    $vars['pcbeventsrange'] = FormUtil::getPassedValue('pcbeventsrange');
-    $vars['pcbshowsslinks'] = FormUtil::getPassedValue('pcbshowsslinks');
-
-    // Defaults
-    if (empty($vars['pcbshowcalendar'])) $vars['pcbshowcalendar'] = 0;
-    if (empty($vars['pcbeventslimit'])) $vars['pcbeventslimit'] = 5;
-    if (empty($vars['pcbeventoverview'])) $vars['pcbeventoverview'] = 0;
-    if (empty($vars['pcbnextevents'])) $vars['pcbnextevents'] = 0;
-    if (empty($vars['pcbeventsrange'])) $vars['pcbeventsrange'] = 6;
-    if (empty($vars['pcbshowsslinks'])) $vars['pcbshowsslinks'] = 0;
+    $vars = array(); //seems to delete the value just set above...
+    $vars['pcbshowcalendar'] = FormUtil::getPassedValue('pcbshowcalendar', 0);
+    $vars['pcbeventslimit'] = FormUtil::getPassedValue('pcbeventslimit', 5);
+    $vars['pcbeventoverview'] = FormUtil::getPassedValue('pcbeventoverview', 0);
+    $vars['pcbnextevents'] = FormUtil::getPassedValue('pcbnextevents', 0);
+    $vars['pcbeventsrange'] = FormUtil::getPassedValue('pcbeventsrange', 6);
+    $vars['pcbshowsslinks'] = FormUtil::getPassedValue('pcbshowsslinks', 0);
 
     $pnRender = pnRender::getInstance('PostCalendar'); // PostCalendarSmartySetup not needed
 

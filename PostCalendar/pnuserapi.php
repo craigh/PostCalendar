@@ -289,7 +289,7 @@ function postcalendar_userapi_eventPreview($args)
         !isset($args['event_endmonth']) ||
         !isset($args['event_startampm']) ||
         !isset($args['event_endmonth'])) {
-        return LogUtil::registerError(_MODARGSERROR . ' in postcalendar_userapi_eventPreview');
+        return LogUtil::registerError(__('Required arguments not present in '.__FUNCTION__, $dom));
     }
 
     extract($args);
@@ -465,7 +465,7 @@ function postcalendar_userapi_getDate($args)
 function postcalendar_userapi_getmonthname($args)
 {
     $dom = ZLanguage::getModuleDomain('PostCalendar');
-    if (!isset($args['Date'])) return LogUtil::registerError(_MODARGSERROR . ' in postcalendar_userapi_getmonthname');
+    if (!isset($args['Date'])) return LogUtil::registerError(__('Required arguments not present in '.__FUNCTION__, $dom));
     $month_name = array('01' => __('January', $dom), '02' => __('February', $dom), '03' => __('March', $dom),
                     '04' => __('April', $dom), '05' => __('May', $dom), '06' => __('June', $dom),
                     '07' => __('July', $dom), '08' => __('August', $dom), '09' => __('September', $dom),
@@ -518,7 +518,8 @@ function postcalendar_userapi_getTopics()
  */
 function postcalendar_userapi_SmartySetup(&$smarty)
 {
-    if (!is_object($smarty)) return LogUtil::registerError(_MODARGSERROR . ' in postcalendar_userapi_SmartySetup');
+    $dom = ZLanguage::getModuleDomain('PostCalendar');
+    if (!is_object($smarty)) return LogUtil::registerError(__('Required arguments not present in '.__FUNCTION__, $dom));
 
     $smarty->assign('USE_POPUPS', _SETTING_USE_POPUPS);
     $smarty->assign('USE_TOPICS', _SETTING_DISPLAY_TOPICS);

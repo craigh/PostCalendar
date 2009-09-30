@@ -179,8 +179,8 @@ function postcalendar_init_reset_scribite()
 
         // Error tracking
         if ($mid === false) {
-            pnModLangLoad('scribite', 'user');
-            LogUtil::registerStatus (_EDITORNOCONFCHANGE);
+            //pnModLangLoad('scribite', 'user');
+            LogUtil::registerStatus (__('Configuration not updated', $dom));
         }
     }
 }

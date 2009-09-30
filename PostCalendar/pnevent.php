@@ -238,7 +238,7 @@ function postcalendar_event_new($args)
     } else { // we are editing an existing event or copying an exisiting event
         $event = pnModAPIFunc('PostCalendar', 'event', 'getEventDetails', $eid);
         if (($uname != $event['informant']) and (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN))) {
-            return __('You are not allowed to edit this event', $dom); // need to change this to logutil
+            return LogUtil::registerError(__('You are not allowed to edit this event', $dom));
         }
         $eventdata['event_subject'] = $event['title'];
         $eventdata['event_desc'] = $event['hometext'];

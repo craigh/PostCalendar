@@ -56,6 +56,8 @@ function postcalendar_user_view()
  */
 function postcalendar_user_display($args)
 {
+    $dom = ZLanguage::getModuleDomain('PostCalendar');
+
     $eid = FormUtil::getPassedValue('eid');
     $Date = FormUtil::getPassedValue('Date');
     $pc_category = FormUtil::getPassedValue('pc_category');
@@ -65,7 +67,7 @@ function postcalendar_user_display($args)
 
     extract($args);
     if (empty($Date) && empty($viewtype)) {
-        return LogUtil::registerError(_MODARGSERROR . ' in postcalendar_user_display');
+        return LogUtil::registerError(__('Required arguments not present in '.__FUNCTION__, $dom));
         return false;
     }
 
