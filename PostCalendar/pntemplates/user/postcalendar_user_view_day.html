@@ -51,7 +51,7 @@
                     <!--[ else ]-->
                         <!--[ assign var="timestamp" value=$event.startTime|date_format:'%I:%M %p']-->
                     <!--[ /if ]-->
-                    <!--[ assign var="title" value=$event.title|strip_tags|pc_cleanVar ]-->
+                    <!--[ assign var="title" value=$event.title|strip_tags ]-->
                     <!--[ $event.uname ]-->
                     <li class="eventslistitems">
                         <div style="padding: 1px 4px; display: inline; background: <!--[ $event.catcolor ]-->;"><!--[ if $event.meeting_id ]--><!--[ pnimg src='meeting.gif' altml=true alt='_PC_THEME_MEETING' titleml=true title='_PC_THEME_MEETING' style='float: left;']--><!--[ /if ]--><!--[ $event.catname ]--></div>

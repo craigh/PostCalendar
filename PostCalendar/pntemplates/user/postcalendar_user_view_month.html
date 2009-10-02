@@ -93,15 +93,15 @@
 								<!--[ assign var="timestamp" value=$event.startTime|date_format:'%l:%M %p']-->
 							<!--[ /if ]-->
 							<!--[ *assign var="title" value=$event.title|truncate:15:"...":true* ]-->
-							<!--[ assign var="title" value=$event.title|strip_tags|pc_cleanVar ]-->
+							<!--[ assign var="title" value=$event.title|strip_tags ]-->
 						<!--[ else ]-->
 							<!--[ assign var="timestamp" value="" ]-->
 							<!--[ *assign var="title" value=$event.title|truncate:30:"...":true* ]-->
-							<!--[ assign var="title" value=$event.title|strip_tags|pc_cleanVar ]-->
+							<!--[ assign var="title" value=$event.title|strip_tags ]-->
 						<!--[ /if ]-->
 
 						<!--[ $event.uname ]--> <!-- // V4B SB Inseted Username to get a better overview -->
-						<!--[ assign var="desc" value=$event.hometext|truncate:255:"..."|pc_cleanVar ]-->
+						<!--[ assign var="desc" value=$event.hometext|truncate:255:"..." ]-->
 						<!--[ * Here we start the actual display of the event * ]-->
 						<a style="font-size: 7pt; text-decoration: none;" href="<!--[ pc_url action=detail eid=$event.eid date=$date ]-->"<!--[ pc_popup delay="500"
 						             bgcolor=`$event.catcolor`
