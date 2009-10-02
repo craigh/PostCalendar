@@ -372,34 +372,34 @@ function postcalendar_eventapi_writeEvent($args)
 
     foreach ($participants as $part) { // V4B SB LOOP to insert events for every participant
         $eventarray = array(
-                        'title' => DataUtil::formatForStore($event_subject),
-                        'hometext' => DataUtil::formatForStore($event_desc),
-                        'topic' => (int) DataUtil::formatForStore($event_topic),
-                        'eventDate' => DataUtil::formatForStore($startDate),
-                        'endDate' => DataUtil::formatForStore($endDate),
-                        'recurrtype' => (int) DataUtil::formatForStore($event_repeat),
-                        'startTime' => DataUtil::formatForStore($startTime),
-                        'alldayevent' => (int) DataUtil::formatForStore($event_allday),
-                        'catid' => (int) DataUtil::formatForStore($event_category),
+                        'title' => $event_subject,
+                        'hometext' => $event_desc,
+                        'topic' => (int) $event_topic,
+                        'eventDate' => $startDate,
+                        'endDate' => $endDate,
+                        'recurrtype' => (int) $event_repeat,
+                        'startTime' => $startTime,
+                        'alldayevent' => (int) $event_allday,
+                        'catid' => (int) $event_category,
                         'location' => $event_location_info,                       // Serialized, already formatted for storage
-                        'conttel' => DataUtil::formatForStore($event_conttel),
-                        'contname' => DataUtil::formatForStore($event_contname),
-                        'contemail' => DataUtil::formatForStore($event_contemail),
-                        'website' => DataUtil::formatForStore($event_website),
-                        'fee' => DataUtil::formatForStore($event_fee),
-                        'eventstatus' => (int) DataUtil::formatForStore($event_status),
+                        'conttel' => $event_conttel,
+                        'contname' => $event_contname,
+                        'contemail' => $event_contemail,
+                        'website' => $event_website,
+                        'fee' => $event_fee,
+                        'eventstatus' => (int) $event_status,
                         'recurrspec' => $event_recurrspec,                        // Serialized, already formatted for storage
-                        'duration' => (int) DataUtil::formatForStore($event_duration),
-                        'sharing' => (int) DataUtil::formatForStore($event_sharing),
-                        'aid' => DataUtil::formatForStore($part));
+                        'duration' => (int) $event_duration,
+                        'sharing' => (int) $event_sharing,
+                        'aid' => $part);
         if ($is_update) {
-            $eventarray['eid'] = DataUtil::formatForStore($eid);
+            $eventarray['eid'] = $eid;
             $result = pnModAPIFunc('postcalendar', 'event', 'update', array($eid => $eventarray));
         } else { //new event
             unset ($eventarray['eid']); //be sure that eid is not set on insert op to autoincrement value
-            $eventarray['time'] = DataUtil::formatForStore(date("Y-m-d H:i:s")); //current date
-            $eventarray['informant'] = DataUtil::formatForStore($uname);
-            $eventarray['meeting_id'] = DataUtil::formatForStore($pc_meeting_id);
+            $eventarray['time'] = date("Y-m-d H:i:s"); //current date
+            $eventarray['informant'] = $uname;
+            $eventarray['meeting_id'] = $pc_meeting_id;
 
             $result = pnModAPIFunc('postcalendar', 'event', 'create', $eventarray);
             if (pnUserGetVar('uname', $part) != $uname) {
