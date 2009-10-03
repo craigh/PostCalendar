@@ -55,7 +55,7 @@ function postcalendar_icalapi_processupload($data)
         //}
         $ve['event_sharing'] = $data['event_sharing'];
         $ve['catid'] = $data['event_category'];
-      echo "<pre>"; print_r($ve); echo "</pre>"; die();
+      //echo "<pre>"; print_r($ve); echo "</pre>"; die();
         $eventwritten[$uid] = postcalendar_icalapi_writeicalevent($ve);
     }
     //if (in_array(false,$eventwritten) return false;    //is this the better way than below?
@@ -81,7 +81,7 @@ function postcalendar_icalapi_writeicalevent($ve)
     if (empty($ve['starttime']['min'])) $ve['starttime']['min'] = "00";
     if (empty($ve['starttime']['sec'])) $ve['starttime']['sec'] = "00";
     if ((!$ve['dtend']) and ($ve['duration'])) {
-        $ve['dtend'] = convert_dtend($ve['dtend'], $ve['duration']); //should that be dtstart?
+        $ve['dtend'] = convert_dtend($ve['dstart'], $ve['duration']);
         // automatically adds duration to dtstart if
     }
     $ve['enddate'] = array_slice($ve['dtend'], 0, 3, true);
@@ -145,16 +145,13 @@ function postcalendar_icalapi_writeicalevent($ve)
     //}
     if (empty($ve['catid'])) $ve['catid'] = 1;
 
-    //CAH I wonder why this appears all hardcoded... not accepting recurring events?
-    //$event_repeat_data = array('event_reqeat_freq' => "1", 'event_reqeat_freq_type' => "0",
-    //                'event_reqeat_on_num' => "1",
-    //                'event_reqeat_on_day' => "0",
-    //                'event_reqeat_on_freq' => "1");
+    // attempt to interpret recur information in ical event
     $event_repeat_data = postcalendar_icalapi_icaltopostcalendar($ve['recur']);
     $ve['pc_recurrtype'] = $event_repeat_data['event_repeat']; unset($event_repeat_data['event_repeat']);
-    $ve['pc_recurrspec'] = serialize($event_repeat_data);
+    if ($event_repeat_data['warning']) LogUtil::registerError($event_repeat_data['warning']); unset($event_repeat_data['warning']);
+    $ve['pc_recurrspec'] = serialize($event_repeat_data); // serialize the data for db storage
 
-    $ve = DataUtil::formatForStore($ve);
+    //$ve = DataUtil::formatForStore($ve);
 
     // check to see if an event already exists that is exactly the same...
     // seems like there should be an easier way to check...
@@ -480,53 +477,65 @@ function postcalendar_icalapi_postcalendartoical($params)
  * @function        postcalendar_icalapi_icaltopostcalendar
  * @description     convert iCal repeated events to postcalendar format
  *
- * @params          EMPTY or Array ( [FREQ] => YEARLY [INTERVAL] => 1 [BYMONTH] => 9 )
+ * @params          EMPTY or e.g. Array ( [FREQ] => YEARLY [INTERVAL] => 1 [BYMONTH] => 9 )
  * @return          Array
  * @access          private
  */
 function postcalendar_icalapi_icaltopostcalendar($params)
 {
+    $dom = ZLanguage::getModuleDomain('PostCalendar');
+
     $defaults = array(
-            'event_repeat'           => NO_REPEAT,
-            'event_reqeat_freq'      => 1,
-            'event_reqeat_freq_type' => REPEAT_EVERY_DAY,
-            'event_reqeat_on_num'    => REPEAT_ON_1ST,
-            'event_reqeat_on_day'    => REPEAT_ON_SUN,
-            'event_reqeat_on_freq'   => 1);
+            'event_repeat'           => (string) NO_REPEAT,
+            'event_repeat_freq'      => "1",
+            'event_repeat_freq_type' => (string) REPEAT_EVERY_DAY,
+            'event_repeat_on_num'    => (string) REPEAT_ON_1ST,
+            'event_repeat_on_day'    => (string) REPEAT_ON_SUN,
+            'event_repeat_on_freq'   => "1");
     if (!$params) return $defaults;
 
     $dom = ZLanguage::getModuleDomain('PostCalendar');
 
     if (!is_array($params)) return LogUtil::registerError(__('Incorrect parameter passed to '. __FUNCTION__, $dom));
 
-    $rrule = postcalendar_icalapi_parserrule($params);
-    $spec = $defaults; //resultant array
-    $spec['event_repeat'] = REPEAT;
+    //$rrule = postcalendar_icalapi_parserrule($params);
+    $spec = $defaults; //begin resultant array with default values
+    $spec['event_repeat'] = (string) REPEAT;
 
     // recur type
     $freq_type = array("YEARLY"=>REPEAT_EVERY_YEAR, "MONTHLY"=>REPEAT_EVERY_MONTH, "WEEKLY"=>REPEAT_EVERY_WEEK, "DAILY"=>REPEAT_EVERY_DAY);
         /* we will not consider HOURLY, MINUTELY, SECONDLY cases */
-    if (array_key_exists($rrule['freq'],$freq_type)  { $spec['event_repeat_freq_type'] = $freq_type($rrule['freq']);
-    } else { $spec['event_repeat_freq_type'] = REPEAT_EVERY_DAY; } // default to daily
+    if (array_key_exists($rrule['freq'],$freq_type))  {
+        $spec['event_repeat_freq_type'] = (string) $freq_type($rrule['freq']);
+    } else { 
+        $spec['event_repeat_freq_type'] = (string) REPEAT_EVERY_DAY;
+    } // default to daily
     unset($rrule['freq']);
 
     // recur interval (how often)
-    if (!empty($rrule['interval'])) $spec['event_repeat_freq'] = $rrule['interval'];
+    if (!empty($rrule['interval'])) $spec['event_repeat_freq'] = (string) $rrule['interval'];
     unset($rrule['interval']);
 
     if (empty($rrule)) return $spec; // checking for remaining array values
 
     if (array_key_exists('byday',$rrule)) {
-        //do something
+        if (strpos(",", $rrule['byday']) === true) break; // can't handle more than one
+        $spec['event_repeat'] = (string) REPEAT_ON;
+        $day = substr($rrule['byday'], -2);
+        $days = array("SU"=>REPEAT_ON_SUN, "MO"=>REPEAT_ON_MON, "TU"=>REPEAT_ON_MON, "WE"=>REPEAT_ON_WED, "TH"=>REPEAT_ON_THU, "FR"=>REPEAT_ON_FRI, "SA"=>REPEAT_ON_SAT);
+        $spec['event_repeat_on_day'] = (string) $days($day);
+        $num = substr($rrule['byday'], 0, -2);
+        $nums = array("1"=>REPEAT_ON_1ST, "2"=>REPEAT_ON_2ND, "3"=>REPEAT_ON_3RD, "4"=>REPEAT_ON_4TH, "-1"=>REPEAT_ON_LAST);
+        $spec['event_repeat_on_num'] = (string) $nums($num);
+
+        $spec['event_repeat_on_freq'] = $spec['event_repeat_freq']; // copy interval to monthly recur
+
         unset($rrule['byday']);
     }
     if (empty($rrule)) return $spec; // checking for remaining array values
 
-    if (array_key_exists('bymonth',$rrule)) {
-        //do something
-        unset($rrule['bymonth']);
-    }
-    if (empty($rrule)) return $spec; // checking for remaining array values
+    $spec['warning'] = __('The iCal event was imported, but contained recurring options that cannot be interpreted. Please edit your event to configure the event appropriately.', $dom);
+    return $spec;
 
 }
 // $event_repeat
@@ -576,8 +585,9 @@ function postcalendar_icalapi_parserrule($array)
 {
     if ((!is_array($array)) or (empty($array))) return false;
     $newarray=array();
-    foreach ($array as $k=>$v) {
-        $newarray[strtolower(substr($k, 1, -1))]=$v;
-    }
+/*    foreach ($array as $k=>$v) {
+        $nk = strtolower($k); // for some reason, there is a problem with this line...
+        $newarray[$nk] = $v;
+    } */
     return $newarray;
 }
