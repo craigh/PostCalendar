@@ -22,7 +22,6 @@
 <!--[ assign var="day" value=$DATE|date_format:"%d"|string_format:"%1d" ]-->
 <!--[ assign var="month" value=$DATE|date_format:"%m"|string_format:"%1d" ]-->
 <!--[ assign var="year" value=$DATE|date_format:"%Y"|string_format:"%4d" ]-->
-<!--[ assign var="icaldate" value=$DATE|date_format:"%Y-%m-%d" ]-->
 <h2 class="postcalendar_header">
     <!--[ if $PRINT_VIEW eq false ]--><a href="<!--[ $PREV_DAY_URL ]-->">&lt;&lt;</a><!--[/if]-->
     <!--[ if $USE_INT_DATES eq true ]-->
@@ -62,7 +61,6 @@
                         <!--[ else ]-->
                             (<!--[gt text='All day event']-->)
                         <!--[/if]-->
-                        <a href="<!--[pnmodurl modname="PostCalendar" type="user" func="export" eid=$event.eid date=$date]-->"><!--[ pnimg src='icaldown.gif' alt="Add this event to my calendar" ]--></a>
                     </li>
                 <!--[ foreachelse ]-->
                     <li><b><!--[gt text='No Events']--></b></li>

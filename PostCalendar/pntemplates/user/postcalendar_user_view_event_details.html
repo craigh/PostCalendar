@@ -36,12 +36,6 @@
 			<!--[ else ]-->
 				<!--[gt text='Event Duration']-->: <!--[ $A_EVENT.duration_hours ]-->:<!--[ $A_EVENT.duration_minutes ]-->
 			<!--[ /if ]-->
-			
-			<!--[ if $PRINT_VIEW eq false ]-->
-				<a href='<!--[pnmodurl modname="PostCalendar" type="user" func="export" eid=$A_EVENT.eid date=$A_EVENT.eventDate ]-->'>
-				<!--[ pnimg src='icaldown.gif' __alt="ical_download" __title="Download .ics (iCal) file" ]-->
-				</a>
-			<!--[/if]-->
 </div>
 <div class="eventdetails">
 		<div>

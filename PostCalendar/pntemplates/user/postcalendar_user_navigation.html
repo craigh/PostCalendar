@@ -6,28 +6,17 @@
 <!--[ assign var='list_src' value='list.gif' ]-->
 <!--[ assign var='add_src' value='add.gif' ]-->
 <!--[ assign var='search_src' value='search.gif' ]-->
-<!--[ pc_get_category assign='category' ]-->
-<!--[ assign var="icaldate" value=$DATE|date_format:"%Y-%m-%d" ]-->
-
 <!--[ if $VIEW_TYPE eq "day" ]-->
 	<!--[ assign var='day_src' value='day_on.gif' ]-->
-	<!--[ pnmodurl modname="PostCalendar" type="user" func="export" date=$icaldate format="attach" category=$category assign='viplink']-->
 <!--[ elseif $VIEW_TYPE eq "week" ]-->
 	<!--[ assign var='week_src' value='week_on.gif' ]-->
-	<!--[ pc_week_start date=$DATE format='%B %d %Y' assign='weekstart' ]-->
-	<!--[ pc_week_end date=$DATE format='%B %d %Y' assign='weekend' ]-->
-	<!--[ pnmodurl modname="PostCalendar" type="user" func="export" start=$weekstart end=$weekend format="attach" category=$category assign='viplink']-->
 <!--[ elseif $VIEW_TYPE eq "month" ]-->
 	<!--[ assign var='month_src' value='month_on.gif' ]-->
-	<!--[ pnmodurl modname="PostCalendar" type="user" func="export" start=$MONTH_START_DATE end=$MONTH_END_DATE format="attach" category=$category assign='viplink']-->
 <!--[ elseif $VIEW_TYPE eq "year" ]-->
 	<!--[ assign var='year_src' value='year_on.gif' ]-->
-	<!--[ pnmodurl modname="PostCalendar" type="user" func="export" start=$DATE|date_format:'%Y-01-01' end=$DATE|date_format:'%Y-12-31' format="attach" category=$category assign='viplink']-->
 <!--[ elseif $VIEW_TYPE eq "list" ]-->
 	<!--[ assign var='list_src' value='list_on.gif' ]-->
-	<!--[ pnmodurl modname="PostCalendar" type="user" func="export" start=$MONTH_START_DATE end=$MONTH_END_DATE format="attach" category=$category assign='viplink']-->
 <!--[/if]-->
-
 <!--[ if $FUNCTION eq "submit" ]-->
 	<!--[ assign var='add_src' value='add_on.gif' ]-->
 <!--[ elseif $FUNCTION eq "search" ]-->
@@ -50,12 +39,6 @@
 		<td width="100%" valign="bottom" align="right">
 			<div id="bnav">
 				<ul>
-					<li><a href="<!--[$viplink|pnvarprepfordisplay]-->">
-						<!--[pnimg src="icaldown.gif" __alt='Download .ics (iCal) file' __title='Download .ics (iCal) file' ]--></a></li>
-					<!--[ if $ACCESS_ADD eq true ]-->
-					<li><a href="<!--[ pnmodurl modname='PostCalendar' type='user' func='upload' ]-->">
-						<!--[pnimg src="icalup.gif" __alt='Upload .ics (iCal) file' __title='Upload .ics (iCal) file' ]--></a></li>
-                    <!--[/if]-->
 					<!--[ if $DATE|truncate:8:"" ne $TODAY_DATE|replace:'-':'' ]-->
 						<li><a href="<!--[ pc_url action='today' ]-->"><!--[pnimg src='today.gif' __alt="Today" __title="Jump to Today" ]--></a></li>
 					<!--[/if]-->
