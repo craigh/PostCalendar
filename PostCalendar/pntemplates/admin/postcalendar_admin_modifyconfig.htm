@@ -113,14 +113,6 @@
 			<!--[pnmodgetvar module="PostCalendar" name="pcAllowCatFilter" assign="pcACF"]-->
 			<td><input type="checkbox" value="1" id="pcAllowCatFilter" name="pcAllowCatFilter"<!--[if $pcACF eq true]--> checked="checked"<!--[/if]-->/></td>
 		</tr>
-<!--[pnmodavailable modname="v4bAddressBook" assign="addressAvailable"]-->
-<!--[if $addressAvailable]-->
-		<tr class='pn-even'>
-			<td><!--[gt text='Use address book lookup']--></td>
-			<!--[pnmodgetvar module="PostCalendar" name="pcAddressbook" assign="pcA"]-->
-			<td><input type="checkbox" value="1" id="pcAddressbook" name="pcAddressbook"<!--[if $pcA eq true]--> checked="checked"<!--[/if]-->/></td>
-		</tr>
-<!--[/if]-->
 	</table>
     <table class="pn-admintable">
         <thead>

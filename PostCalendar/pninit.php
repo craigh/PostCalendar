@@ -104,6 +104,7 @@ function postcalendar_upgrade($oldversion)
             pnModSetVar('PostCalendar', 'pcAllowCatFilter', '1');
             pnModDelVar('PostCalendar', 'pcDayHighlightColor');
             pnModDelVar('PostCalendar', 'pcAllowSiteWide');
+            pnModDelVar('PostCalendar', 'pcAddressbook');
         //case '5.8.0':
     }
 
@@ -135,7 +136,6 @@ function postcalendar_init_getdefaults()
     'pcEventDateFormat'       => __('%b %d, %Y', $dom),
     'pcRepeating'             => '0',
     'pcMeeting'               => '0',
-    'pcAddressbook'           => pnModAvailable('v4bAddressBook') ? '1' : '0',
     'pcAllowUserCalendar'     => '1',
     'pcTimeIncrement'         => '15',
     'pcDefaultView'           => 'month',

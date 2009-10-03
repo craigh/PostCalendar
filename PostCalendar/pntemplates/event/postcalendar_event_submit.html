@@ -8,11 +8,6 @@
 
 <!--[pnpageaddvar name="javascript" value="modules/PostCalendar/pnjavascript/postcalendar_submit_validate.js"]-->
 
-<!--[ pnmodgetvar module="PostCalendar" name="pcAddressbook"|pnvarprepfordisplay assign="pcAddressbook" ]-->
-<!--[ if ($pcAddressbook) ]-->
-    <!--[ pnmodavailable modname="v4bAddressBook" assign="addressAvailable" ]-->
-<!--[ /if ]-->
-<!-- V4B end -->
 <!--[pnsecauthaction realm="0" comp="PostCalendar::" inst=".*" level="ACCESS_ADMIN" assign="auth"]-->
 <!--[ if $auth ]-->
 <!--[ /if ]-->
@@ -107,7 +102,6 @@
                         <table border="0" align="left" cellpadding="0" cellspacing="0">
                             <tr>
                                 <td><input size="40" type="text" name="event_location"  value="<!--[ $ValueLocation ]-->" /></td>
-				<td>&nbsp;&nbsp;<!--[ if ($pcAddressbook && $addressAvailable) ]--><a href="javascript:postcalendarFindContact();"><img src="modules/PostCalendar/pnimages/addressbook.gif" border="0" /></a><!--[ /if ]--></td>
                             </tr>
                         </table>
                     </td>
