@@ -8,7 +8,7 @@
  * @copyright   Copyright (c) 2009, Craig Heydenburg, Sound Web Development
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
  */
-Loader::requireOnce('includes/pnForm.php');
+require_once dirname(__FILE__) . '/global.php';
 
 /**
  * postcalendar_user_main
@@ -173,65 +173,6 @@ function eventdatecmp($a, $b)
 {
     if ($a[startTime] < $b[startTime]) return -1;
     elseif ($a[startTime] > $b[startTime]) return 1;
-}
-
-/**
- * postcalendar_user_findContact
- * legacy function - possibly related to address book usage
- * not currently in use
- * @return outputs contact form
- * @access public
- */
-function postcalendar_user_findContact()
-{
-
-    //$tpl_contact = new pnRender();
-    $tpl_contact = pnRender::getInstance('PostCalendar');
-    pnModAPIFunc('PostCalendar','user','SmartySetup', $tpl_contact);
-    /* Trim as needed */
-    $func = FormUtil::getPassedValue('func');
-    $template_view = FormUtil::getPassedValue('tplview');
-    if (!$template_view) $template_view = _SETTING_DEFAULT_VIEW;
-    $tpl_contact->assign('FUNCTION', $func);
-    $tpl_contact->assign('TPL_VIEW', $template_view);
-    /* end */
-
-    $tpl_contact->caching = false;
-
-    pnModDBInfoLoad('v4bAddressBook');
-    $cid = FormUtil::getPassedValue('cid');
-    $bid = FormUtil::getPassedValue('bid');
-    $contact_id = FormUtil::getPassedValue('contact_id');
-
-    // v4bAddressBook compatability layer
-    if ($cid) $company = DBUtil::selectObjectByID('v4b_addressbook_company', $cid);
-
-    if ($bid) $branch = DBUtil::selectObjectByID('v4b_addressbook_company_branch', $bid);
-
-    if ($contact_id) $contact = DBUtil::selectObjectByID('v4b_addressbook_contact', $contact_id);
-    // v4bAddressBook compatability layer
-
-    $contact_phone = $contact['addr_phone1'];
-    $contact_mail = $contact['addr_email1'];
-    $contact_www = $contact['homepage'];
-
-    $location = $company['name'];
-    if ($branch['name']) $location .= " / " . $branch['name'];
-
-    // assign the values
-    $tpl_contact->assign('cid', $cid);
-    $tpl_contact->assign('bid', $bid);
-    $tpl_contact->assign('contact_id', $contact_id);
-    $tpl_contact->assign('contact', $contact);
-    $tpl_contact->assign('location', $location);
-    $tpl_contact->assign('contact_phone', $contact_phone);
-    $tpl_contact->assign('contact_mail', $contact_mail);
-    $tpl_contact->assign('contact_www', $contact_www);
-
-    $output = $tpl_contact->fetch("findContact.html");
-    echo $output;
-
-    return true;
 }
 
 // parsefilename returns an array
