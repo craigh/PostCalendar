@@ -1,11 +1,5 @@
 <!--[ pc_calendar_init ]-->
 
-<!--[* THIS PART LOOKS BAD IN FF/ hence commented out -CAH *]-->
-<!--[*pnpageaddvar name="stylesheet" value="javascript/tabnavigation/winxp.css"*]-->
-<!--[*pnpageaddvar name="javascript" value="javascript/tabnavigation/listener.js"*]-->
-<!--[*pnpageaddvar name="javascript" value="javascript/tabnavigation/tabs.js"*]-->
-<!--[*pnpageaddvar name="javascript" value="javascript/tabnavigation/winxp.css"*]-->
-
 <!--[pnpageaddvar name="javascript" value="modules/PostCalendar/pnjavascript/postcalendar_submit_validate.js"]-->
 
 <!--[pnsecauthaction realm="0" comp="PostCalendar::" inst=".*" level="ACCESS_ADMIN" assign="auth"]-->
@@ -23,10 +17,9 @@
 	<input type="hidden" name="authid" value="<!--[pnsecgenauthkey module="PostCalendar"]-->">
 
 <div style='border-color:#CCCCCC;border-style:solid;border-width:0 1px 1px;color:inherit;margin-bottom:1.25em;padding:0 1% 5px;width:auto;'>
-<div style='float:right; padding-top:5px;'><!--[pnimg modname=PostCalendar src=admin.gif altml=true]--></div>
+<div style='float:right; padding-top:5px;'><!--[pnimg modname=PostCalendar src=admin.gif __alt="PostCalendar Rocks!"]--></div>
 <h2 style='border-bottom:1px solid #CCCCCC;margin-top:1em;text-align:left;'><!--[gt text='Add New Calendar Event']--></h2>
-<div class="tabsystem" style="padding-top:16px;">
-<div class="tabpage tdefault">
+<div style="padding-top:16px;">
 <h2 style='border-bottom:1px solid #CCCCCC;margin-top:0;text-align:left;'><!--[gt text='Event']--></h2>
     <table width="100%" border="0" cellpadding="2" cellspacing="0">
     <!-- EVENT INFO ROWS -->
@@ -38,7 +31,7 @@
 		        <!--[gt text='For User']-->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style='color:red;'>*<!--[gt text='Required']--></span><br />
 		        <!--[html_options name=event_for_userid options=$users selected=$user_selected]--><br /><br />
 
-		        <!--[gt text='Event Date']-->&nbsp;&nbsp;&nbsp;
+		        <b><!--[gt text='Event Start Date']-->:</b>&nbsp;&nbsp;&nbsp;
 		        <!--[ pc_calendar_build_input_box htmlName="meetingdate_start" dateFormat="%d-%m-%Y" defaultString=$startvalue defaultDate=$startdate ]-->
 		        <br/ ><br />
                 <table border="0" cellpadding="0" cellspacing="1">
@@ -68,16 +61,16 @@
                 <!--[gt text='Event Description']--><br />
 		        <textarea id="description" name="event_desc" wrap="virtual" rows="5" cols="40"><!--[ $ValueEventDesc ]--></textarea><br />
                 <!--[if $formattedcontent eq 0]-->
-                    <b style='color:red;'>SCRIBITE NOT IN USE</b><br />
+                    <!--[* SCRIBITE NOT IN USE *]-->
                     <!--[html_options name=pc_html_or_text options=$EventHTMLorText selected=$EventHTMLorTextVal]-->
                     <div class="pn-warningmsg" id="html_warning"><b><!--[gt text='Permitted tags if using HTML']--></b><br /><!--[allowedhtml]--></div>
                 <!--[else]-->
-                    <b style='color:green;'>SCRIBITE IN USE</b><br />
+                    <!--[* SCRIBITE IN USE *]-->
                     <input type="hidden" name="pc_html_or_text" value="html" />
                 <!--[/if]-->
-        		</td>
+            </td>
 
-                <td align="left" valign="top" width="50%">
+            <td align="left" valign="top" width="50%" style='padding-left:2em;'>
                 <!--[ if $displayTopics eq 1 ]-->
                     <!--[gt text='Topic']--><br />
                     <!--[ strip ]-->
@@ -142,7 +135,7 @@
 <!-- REPEATING ROWS -->
 <!--[pnmodgetvar module="PostCalendar" name="pcRepeating"|pnvarprepfordisplay assign="pcDisplayRepeating"]-->
 <!--[ if $pcDisplayRepeating ]-->
-<div class="tabpage">
+<div>
 <h2 style='border-bottom:1px solid #CCCCCC;margin-top:1em;text-align:left;'><!--[gt text='Repeating Options']--></h2>
     <table width="100%" border="0" cellpadding="2" cellspacing="0">
         <tr>
@@ -191,7 +184,7 @@
 				-->
                 <br /><br />
 
-                <!--[gt text='End Date']--><br />
+                <b><!--[gt text='End Date']-->:</b><br />
                 <input type="radio" name="event_endtype" value="1" <!--[ $SelectedEndOn ]--> />&nbsp;
 		<!--[ if $startdate > $endDate ]-->
                 	<!--[ pc_calendar_build_input_box htmlName="meetingdate_end" dateFormat="%d-%m-%Y" defaultString=$startvalue defaultDate=$startdate ]--><br />
@@ -219,7 +212,7 @@
 
 <!--[pnmodgetvar module="PostCalendar" name="pcMeeting"|pnvarprepfordisplay assign="pcDisplayMeeting"]-->
 <!--[ if $pcDisplayMeeting ]-->
-<div class="tabpage">
+<div>
 <h2 style='border-bottom:1px solid #CCCCCC;margin-top:1em;text-align:left;'><!--[gt text='Participants']--></h2>
     <table width="100%" border="0" cellpadding="2" cellspacing="0">
         <tr>
@@ -242,7 +235,6 @@
             </td>
         </tr>
     </table>
-</div>
 </div>
 <!--[ /if ]-->
 <input type="hidden" name="is_update" value="<!--[$is_update]-->">

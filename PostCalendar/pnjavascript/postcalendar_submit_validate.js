@@ -86,8 +86,3 @@ function check_form() {
 
     return selectItems();
     }
-
-function postcalendarFindContact()
-{
-  window.open("index.php?module=PostCalendar&func=findContact", "", "width=500,height=340,resizable");
-}
