@@ -122,26 +122,25 @@ function postcalendar_upgrade($oldversion)
  */
 function postcalendar_init_getdefaults()
 {
-    $dom = ZLanguage::getModuleDomain('PostCalendar');
     // PostCalendar Default Settings
     $defaults = array(
     'pcTime24Hours'           => _TIMEFORMAT == 24 ? '1' : '0',
     'pcEventsOpenInNewWindow' => '0',
     'pcUseInternationalDates' => '0',
-    'pcFirstDayOfWeek'        => __('0', $dom),
-    'pcUsePopups'             => '1',
+    'pcFirstDayOfWeek'        => '0', /* Sunday */
+    'pcUsePopups'             => '0',
     'pcAllowDirectSubmit'     => '0',
     'pcListHowManyEvents'     => '15',
     'pcDisplayTopics'         => '0',
-    'pcEventDateFormat'       => __('%b %d, %Y', $dom),
-    'pcRepeating'             => '0',
+    'pcEventDateFormat'       => '%b %d, %Y', /* American */
+    'pcRepeating'             => '1', /* display repeating options */
     'pcMeeting'               => '0',
-    'pcAllowUserCalendar'     => '1',
+    'pcAllowUserCalendar'     => '0',
     'pcTimeIncrement'         => '15',
     'pcDefaultView'           => 'month',
-    'pcUseCache'              => '1',
+    'pcUseCache'              => '0',
     'pcCacheLifetime'         => '3600',
-    'pcNotifyAdmin'           => '0',
+    'pcNotifyAdmin'           => '1',
     'pcNotifyEmail'           => pnConfigGetVar('adminmail'),
     'pcNotifyAdmin2Admin'     => '0',
     'pcAllowCatFilter'        => '1',
