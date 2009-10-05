@@ -302,9 +302,10 @@ function postcalendar_event_new($args)
     //================================================================
     $abort = false;
     if (($form_action == 'preview') OR ($form_action == 'commit')) {
-        if (empty($event_subject)) LogUtil::registerError('<b>event subject</b> '.__('is a required field.', $dom).'<br />');
-        // if this truly is empty and we are committing, it should abort!
-        $abort = true;
+        if (empty($event_subject)) {
+            LogUtil::registerError('<b>event subject</b> '.__('is a required field.', $dom).'<br />');
+            $abort = true;
+        }
 
         // check repeating frequencies
         if ($event_repeat == REPEAT) {
@@ -354,7 +355,7 @@ function postcalendar_event_new($args)
         }
     } // end if form_action = preview/commit
 
-    if ($abort) $form_action = 'preview'; // data not sufficient for commit. preview and correct.
+    if ($abort) $form_action = 'preview'; // data not sufficient for commit. force preview and correct.
     //================================================================
     // Preview the event
     //================================================================
