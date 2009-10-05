@@ -25,5 +25,5 @@ function check_form() {
 		return false;
     }
 
-    return selectItems();
+    return true;
 }

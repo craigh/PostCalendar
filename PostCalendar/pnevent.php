@@ -300,22 +300,28 @@ function postcalendar_event_new($args)
     //================================================================
     // ERROR CHECKING IF ACTION IS PREVIEW OR COMMIT
     //================================================================
+    $abort = false;
     if (($form_action == 'preview') OR ($form_action == 'commit')) {
-        if (empty($event_subject)) LogUtil::registerError('<b>event subject</b>'.__('is a required field.', $dom).'<br />');
+        if (empty($event_subject)) LogUtil::registerError('<b>event subject</b> '.__('is a required field.', $dom).'<br />');
         // if this truly is empty and we are committing, it should abort!
+        $abort = true;
 
         // check repeating frequencies
         if ($event_repeat == REPEAT) {
             if (!isset($event_repeat_freq) || $event_repeat_freq < 1 || empty($event_repeat_freq)) {
                 LogUtil::registerError(__('Your repeating frequency must be at least 1.', $dom));
+                $abort = true;
             } elseif (!is_numeric($event_repeat_freq)) {
                 LogUtil::registerError(__('Your repeating frequency must be an integer.', $dom));
+                $abort = true;
             }
         } elseif ($event_repeat == REPEAT_ON) {
             if (!isset($event_repeat_on_freq) || $event_repeat_on_freq < 1 || empty($event_repeat_on_freq)) {
                 LogUtil::registerError(__('Your repeating frequency must be at least 1.', $dom));
+                $abort = true;
             } elseif (!is_numeric($event_repeat_on_freq)) {
                 LogUtil::registerError(__('Your repeating frequency must be an integer.', $dom));
+                $abort = true;
             }
         }
         // check date validity
@@ -336,14 +342,19 @@ function postcalendar_event_new($args)
 
         if ($edate < $sdate && $event_endtype == 1) {
             LogUtil::registerError(__('Your start date is greater than your end date', $dom));
+            $abort = true;
         }
         if (!checkdate($event_startmonth, $event_startday, $event_startyear)) {
             LogUtil::registerError(__('Your start date is invalid', $dom));
+            $abort = true;
         }
         if (!checkdate($event_endmonth, $event_endday, $event_endyear)) {
             LogUtil::registerError(__('Your end date is invalid', $dom));
+            $abort = true;
         }
     } // end if form_action = preview/commit
+
+    if ($abort) $form_action = 'preview'; // data not sufficient for commit. preview and correct.
     //================================================================
     // Preview the event
     //================================================================
