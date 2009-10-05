@@ -103,12 +103,7 @@
 			<!--[pnmodgetvar module="PostCalendar" name="pcRepeating" assign="pcR"]-->
 			<td><input type="checkbox" value="1" id="pcRepeating" name="pcRepeating"<!--[if $pcR eq true]--> checked="checked"<!--[/if]-->/></td>
 		</tr>
-		<tr class='pn-even'>
-			<td><!--[gt text='Display meeting options']--></td>
-			<!--[pnmodgetvar module="PostCalendar" name="pcMeeting" assign="pcM"]-->
-			<td><input type="checkbox" value="1" id="pcMeeting" name="pcMeeting"<!--[if $pcM eq true]--> checked="checked"<!--[/if]-->/></td>
-		</tr>
-        <tr class='pn-odd'>
+        <tr class='pn-even'>
 			<td><!--[gt text='Allow Users to filter event display by Category/Topic']--></td>
 			<!--[pnmodgetvar module="PostCalendar" name="pcAllowCatFilter" assign="pcACF"]-->
 			<td><input type="checkbox" value="1" id="pcAllowCatFilter" name="pcAllowCatFilter"<!--[if $pcACF eq true]--> checked="checked"<!--[/if]-->/></td>
@@ -129,7 +124,7 @@
 			<td><input type="checkbox" value="1" id="pcNotifyAdmin2Admin" name="pcNotifyAdmin2Admin"<!--[if $pcNA2A eq true]--> checked="checked"<!--[/if]-->/></td>
 		</tr>
 		<tr class='pn-odd'>
-			<td><!--[gt text='Admin Email Address']--></td>
+			<td><!--[gt text='Notification Email Address']--></td>
 			<td><input type="text" size="20" value="<!--[pnmodgetvar module="PostCalendar" name="pcNotifyEmail"]-->" id="pcNotifyEmail" name="pcNotifyEmail"/></td>
 		</tr>
     </table>

@@ -34,9 +34,9 @@ function postcalendar_pntables()
                     'eventDate'   => 'pc_eventDate',        // YYYY-MM-DD event start date
                     'duration'    => 'pc_duration',         // event duration (in seconds)
                     'endDate'     => 'pc_endDate',          // YYYY-MM-DD event end date (optional)
-                    'recurrtype'  => 'pc_recurrtype',       
+                    'recurrtype'  => 'pc_recurrtype',       // type of recurrance (0,1,2)
                     'recurrspec'  => 'pc_recurrspec',       // (serialized)
-                    'recurrfreq'  => 'pc_recurrfreq',
+                    'recurrfreq'  => 'pc_recurrfreq',       // UNUSED?
                     'startTime'   => 'pc_startTime',        // HH:MM:SS event start time
                     'endTime'     => 'pc_endTime',          // HH:MM:SS event end time (optional)
                     'alldayevent' => 'pc_alldayevent',      // bool event all day or not

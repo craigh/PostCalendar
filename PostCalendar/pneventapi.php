@@ -111,6 +111,7 @@ function postcalendar_eventapi_queryEvents($args)
     //$topicNames = DBUtil::selectFieldArray('topics', 'topicname', '', '', false, 'topicid');
 
     // this prevents duplicate display of same event for different participants
+    // in PC v5.8, I think to leave this in, but should remove in v6
     $old_m_id = "NULL";
     foreach ($events as $key => $evt) {
         $new_m_id = $evt['meeting_id'];
@@ -355,14 +356,8 @@ function postcalendar_eventapi_writeEvent($args)
         $event_desc = ':' . $pc_html_or_text . ':' . $event_desc; // inserts :text:/:html: before actual content
     }
 
-    // Start defining pc_meeting_id
-    if ($_POST['participants']) {
-        $participants = $_POST['participants'];
-        $pc_meeting_id = (int) DBUtil::selectFieldMax('postcalendar_events', 'meeting_id');
-        $pc_meeting_id++;
-    } else {
-        $pc_meeting_id = 0;
-    }
+    $pc_meeting_id = 0; // can pull this out in the column in the DB is removed.
+
     if (!in_array($event_for_userid, $participants)) $participants[] = $event_for_userid;
 
     if (!isset($is_update)) $is_update = false;
@@ -417,11 +412,6 @@ function postcalendar_eventapi_writeEvent($args)
     $eid = $result['eid']; // set eid to last event submitted
 
     pnModAPIFunc('PostCalendar','admin','notify',compact('eid','is_update')); //notify admin and informant
-
-    if ($pc_meeting_id) { //notify meeting participants
-        pnModAPIFunc('PostCalendar','admin','meeting_mailparticipants',
-            compact('event_subject','event_duration','event_desc','startDate','startTime','pc_mail_users','eid','uname','is_update'));
-    }
 
     return true;
 }
@@ -511,23 +501,10 @@ function postcalendar_eventapi_buildSubmitForm($args)
     // this should be configurable by admin to allow/deny
     // if denied, selected user should default to submittor
     //================================================================
-    if (true) { // change this to only perform if displaymeetingoptions & useaddressbook?
+    if (true) { // change this to only perform if allowed by admin
         $users = DBUtil::selectFieldArray('users', 'uname', null, null, true, 'uid');
     }
 
-    //================================================================
-    // build the participants select box
-    //================================================================
-    if ($meeting_id) { //means a meeting is established (i.e. not 0)
-        $participants = array();
-        $where = 'WHERE pc_meeting_id=' . DataUtil::formatForStore($meeting_id);
-        $attendees = DBUtil::selectFieldArray('postcalendar_events', 'aid', $where);
-        foreach ($attendees as $uid) {
-            $participants[$uid] = $users[$uid];
-            unset($users[$uid]);
-        }
-        $tpl->assign('ParticipantsSelected', $participants);
-    }
     $tpl->assign('UserListSelectorOptions', $users);
 
     $all_categories = pnModAPIFunc('PostCalendar', 'user', 'getCategories');
@@ -913,25 +890,6 @@ function postcalendar_eventapi_eventDetail($args)
     } else {
         $function_out['CONTACT_INFO'] = false;
     }
-    // determine meeting participants
-    $participants = array();
-    if ($event['meeting_id']) {
-        $where = 'WHERE pc_meeting_id=' . DataUtil::formatForStore($event['meeting_id']);
-        $attendees = DBUtil::selectFieldArray('postcalendar_events', 'aid', $where);
-
-        // FIXME: do we need this here? Just to do a lookup?
-        // CAH June20, 2009 This should be a lookup of ONLY the attendees...
-        // take a look at edit/new event code
-        $users = DBUtil::selectObjectArray( 'users', '', '', -1, -1, 'uid', null, $ca);
-
-        foreach ($attendees as $uid) {
-            $participants[] = $users[$uid]['uname'];
-        }
-
-        sort($participants);
-    }
-    $function_out['participants'] = $participants;
-
 
     if (pnUserLoggedIn()) {
         $logged_in_uid = pnUserGetVar('uid');

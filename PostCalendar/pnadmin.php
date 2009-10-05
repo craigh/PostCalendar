@@ -266,7 +266,6 @@ function postcalendar_admin_updateconfig()
     'pcDisplayTopics'         => FormUtil::getPassedValue('pcDisplayTopics', 0),
     'pcEventDateFormat'       => FormUtil::getPassedValue('pcEventDateFormat', $defaults['pcEventDateFormat']),
     'pcRepeating'             => FormUtil::getPassedValue('pcRepeating', 0),
-    'pcMeeting'               => FormUtil::getPassedValue('pcMeeting', 0),
     'pcAllowUserCalendar'     => FormUtil::getPassedValue('pcAllowUserCalendar', 0),
     'pcTimeIncrement'         => FormUtil::getPassedValue('pcTimeIncrement', $defaults['pcTimeIncrement']),
     'pcUseCache'              => FormUtil::getPassedValue('pcUseCache', 0),

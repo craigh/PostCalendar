@@ -208,35 +208,7 @@
     <input type="hidden" name="meetingdate_end" value="<!--[ $endDate ]-->" >
     <input type="hidden" name="event_endtype" value="0">
 <!--[ /if ]-->
-<!-- REPEATING ROWS -->
 
-<!--[pnmodgetvar module="PostCalendar" name="pcMeeting"|pnvarprepfordisplay assign="pcDisplayMeeting"]-->
-<!--[ if $pcDisplayMeeting ]-->
-<div>
-<h2 style='border-bottom:1px solid #CCCCCC;margin-top:1em;text-align:left;'><!--[gt text='Participants']--></h2>
-    <table width="100%" border="0" cellpadding="2" cellspacing="0">
-        <tr>
-		    <td colspan="2" valign="top" width="270">
-	            <table>
-		            <tr>
-    		            <td>
-	                		 <!--[gt text='Available Participants']--><br>
-		                     <select name="tn[]" multiple size="5"><!--[html_options options=$UserListSelectorOptions ]--></select><br>
-                             <input class="submit" onclick="MoveOption('tn','participants');" type="button" value="Add >>" name="Add">
-                        </td>
-		                <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                        <td valign="top">
-                            <!--[gt text='Selected Participants']--><br>
-                            <select class="select" multiple size="5"  name="participants[]"><!--[html_options options=$ParticipantsSelected ]--></select><br>
-                            <input class="submit" onclick="MoveOption('participants','tn');" type="button" value="<< Remove" name="Remove">
-                        </td>
-	                </tr>
-	            </table>
-            </td>
-        </tr>
-    </table>
-</div>
-<!--[ /if ]-->
 <input type="hidden" name="is_update" value="<!--[$is_update]-->">
 <input type="hidden" name="eid" value="<!--[$eid]-->">
 <!--[if !empty($data_loaded) ]--> <input type="hidden" name="data_loaded" value="<!--[$data_loaded]-->"><!--[/if]-->

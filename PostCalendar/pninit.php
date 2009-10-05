@@ -105,6 +105,7 @@ function postcalendar_upgrade($oldversion)
             pnModDelVar('PostCalendar', 'pcDayHighlightColor');
             pnModDelVar('PostCalendar', 'pcAllowSiteWide');
             pnModDelVar('PostCalendar', 'pcAddressbook');
+            pnModDelVar('PostCalendar', 'pcMeeting');
         //case '5.8.0':
     }
 
@@ -134,7 +135,6 @@ function postcalendar_init_getdefaults()
     'pcDisplayTopics'         => '0',
     'pcEventDateFormat'       => '%b %d, %Y', /* American */
     'pcRepeating'             => '1', /* display repeating options */
-    'pcMeeting'               => '0',
     'pcAllowUserCalendar'     => '0',
     'pcTimeIncrement'         => '15',
     'pcDefaultView'           => 'month',
