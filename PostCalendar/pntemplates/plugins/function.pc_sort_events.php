@@ -10,18 +10,19 @@
  */
 function smarty_function_pc_sort_events($params, &$smarty)
 {
+    $dom = ZLanguage::getModuleDomain('PostCalendar');
     if (!array_key_exists('var', $params) || empty($params['var'])) {
-        $smarty->trigger_error("pc_sort_events: missing or empty 'var' parameter");
+        $smarty->trigger_error(__("pc_sort_events: missing or empty 'var' parameter", $dom));
         return;
     }
 
     if (!array_key_exists('value', $params) || !is_array($params['value'])) {
-        $smarty->trigger_error("pc_sort_events: missing or invalid 'value' parameter");
+        $smarty->trigger_error(__("pc_sort_events: missing or invalid 'value' parameter", $dom));
         return;
     }
 
     if (!array_key_exists('sort', $params)) {
-        $smarty->trigger_error("pc_sort_events: missing 'sort' parameter");
+        $smarty->trigger_error(__("pc_sort_events: missing 'sort' parameter", $dom));
         return;
     }
 
