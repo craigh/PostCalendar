@@ -89,7 +89,7 @@ function smarty_function_pc_url($args, &$smarty)
         case 'detail':
             if (isset($args['eid'])) {
                 if (_SETTING_OPEN_NEW_WINDOW && !$popup) {
-                    $link = "javascript:opencal({$args['eid']},'$date');";
+                    $link = "javascript:opencal('{$args['eid']}','$date');";
                 } else {
                     $link = pnModURL('PostCalendar', 'user', 'view',
                         array('Date' => $date,
