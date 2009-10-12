@@ -265,5 +265,11 @@ li.pc_blockevent {
 div.pc_centerblocksubmitlinks {
 	text-align: center;
 	padding: 1em 0 0 0;
-	
+}
+div#overDiv {
+    /* this should correct issues with themes changing all divs 
+    It only is a very generic view, but better than nothing */
+    background: white;
+    color: black;
+    text-align: center;
 }
