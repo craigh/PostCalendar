@@ -43,7 +43,8 @@ function smarty_function_pc_filter($args, &$smarty)
 
     $tplview = FormUtil::getPassedValue('tplview');
     $viewtype = FormUtil::getPassedValue('viewtype', _SETTING_DEFAULT_VIEW);
-    $pc_username = FormUtil::getPassedValue('pc_username', _PC_FILTER_GLOBAL);
+    if (pnModGetVar('PostCalendar', 'pcAllowUserCalendar')) { $filterdefault = _PC_FILTER_ALL; } else { $filterdefault = _PC_FILTER_GLOBAL; }
+    $pc_username = FormUtil::getPassedValue('pc_username', $filterdefault);
     $types = explode(',', $args['type']);
 
     //================================================================
@@ -54,13 +55,22 @@ function smarty_function_pc_filter($args, &$smarty)
             @define('_PC_FORM_USERNAME', true);
             //define array of filter options
             $filteroptions = array(
-                _PC_FILTER_GLOBAL  => __('Global Events', $dom),
+                _PC_FILTER_GLOBAL  => __('Global Events', $dom) ." ". __('Only', $dom),
                 _PC_FILTER_PRIVATE => __('My Events', $dom) ." ". __('Only', $dom),
                 _PC_FILTER_ALL     => __('Global Events', $dom) ." + ". __('My Events', $dom),
             );
             // if user is admin, add list of users with private events
             if (pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
-                $users = DBUtil::selectFieldArray('postcalendar_events', 'informant', null, null, true, 'aid');
+                //compile users that have submitted calendar events based on informant or aid... this is a hack.
+                // in the future will use one or the other...
+                //$users_by_informant = DBUtil::selectFieldArray('postcalendar_events', 'informant', null, null, true);
+                //foreach ($users_by_informant as $k=>$v) {
+                //    if (pnUserGetIDFromName($v)) $users[pnUserGetIDFromName($v)] = $v;
+                //}
+                $users_by_aid = DBUtil::selectFieldArray('postcalendar_events', 'aid', null, null, true);
+                foreach ($users_by_aid as $k=>$v) {
+                    if (pnUserGetVar('uname', $v)) $users[$v] = pnUserGetVar('uname', $v);
+                }
                     // if informant is converted to userid, then this area should be checked.
                 $filteroptions = $filteroptions + $users;
             }

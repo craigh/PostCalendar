@@ -34,7 +34,8 @@ function postcalendar_eventapi_queryEvents($args)
     extract($args);
 
     //CAH we should not be getting form values in an API function
-    $pc_username = FormUtil::getPassedValue('pc_username', _PC_FILTER_GLOBAL); // poorly named var now because actually an int userid/constant
+    if (pnModGetVar('PostCalendar', 'pcAllowUserCalendar')) { $filterdefault = _PC_FILTER_ALL; } else { $filterdefault = _PC_FILTER_GLOBAL; }
+    $pc_username = FormUtil::getPassedValue('pc_username', $filterdefault); // poorly named var now because actually an int userid/constant
     if (!pnUserLoggedIn()) $pc_username = _PC_FILTER_GLOBAL;
     $topic       = FormUtil::getPassedValue('pc_topic');
     $category    = FormUtil::getPassedValue('pc_category');
@@ -76,8 +77,7 @@ function postcalendar_eventapi_queryEvents($args)
     switch ($pc_username) {
         case _PC_FILTER_PRIVATE:
             $where .= "AND pc_aid = $ruserid ";
-            $where .= "AND (pc_sharing = '" . SHARING_PRIVATE . "' ";
-            $where .= "OR pc_sharing = '" . SHARING_BUSY . "') ";
+            $where .= "AND pc_sharing = '" . SHARING_PRIVATE . "' ";
             break;
         case _PC_FILTER_ALL:
             $where .= "AND (pc_aid = $userid ";
