@@ -148,7 +148,7 @@ function postcalendar_event_new($args)
     $event_starttimeh = FormUtil::getPassedValue('event_starttimeHour');
     $event_starttimem = FormUtil::getPassedValue('event_starttimeMinute');
     $event_startMer   = FormUtil::getPassedValue('event_starttimeMeridian');
-    $event_startampm  = ($event_startMer == "am" ? 1 : 2); // reformat to old way
+    $event_startampm  = ($event_startMer == "am") ? _AM_VAL : _PM_VAL; // reformat to old way
 
     // event end information
     $event_meetingdate_end = FormUtil::getPassedValue('meetingdate_end');
@@ -180,7 +180,6 @@ function postcalendar_event_new($args)
     $event_state     = FormUtil::getPassedValue('event_state');
     $event_postal    = FormUtil::getPassedValue('event_postal');
     $event_location_info = compact('event_location', 'event_street1', 'event_street2', 'event_city', 'event_state', 'event_postal');
-    foreach ($event_location_info as $key => $litmp) $event_location[$key] = DataUtil::formatForStore($litmp);
     $event_location_info = serialize($event_location_info);
     // contact data
     $event_contname  = FormUtil::getPassedValue('event_contname');
@@ -199,7 +198,6 @@ function postcalendar_event_new($args)
     $event_repeat_on_day    = FormUtil::getPassedValue('event_repeat_on_day');
     $event_repeat_on_freq   = FormUtil::getPassedValue('event_repeat_on_freq');
     $event_recurrspec = compact('event_repeat_freq', 'event_repeat_freq_type', 'event_repeat_on_num', 'event_repeat_on_day', 'event_repeat_on_freq');
-    foreach ($event_recurrspec as $key => $rctmp) $event_recurrspec[$key] = DataUtil::formatForStore($rctmp);
     $event_recurrspec = serialize($event_recurrspec);
 
     $form_action        = FormUtil::getPassedValue('form_action');
@@ -209,7 +207,6 @@ function postcalendar_event_new($args)
     $is_update          = FormUtil::getPassedValue('is_update');
     $authid             = FormUtil::getPassedValue('authid');
     $event_for_userid   = FormUtil::getPassedValue('event_for_userid');
-    $event_participants = FormUtil::getPassedValue('participants');
 
     if (pnUserLoggedIn()) {
         $uname = pnUserGetVar('uname');
@@ -234,7 +231,6 @@ function postcalendar_event_new($args)
         $eventdata['data_loaded'] = true;
         $eventdata['event_for_userid'] = $event_for_userid;
 
-        $event_participants = FormUtil::getPassedValue('participants');
     } else { // we are editing an existing event or copying an exisiting event
         $event = pnModAPIFunc('PostCalendar', 'event', 'getEventDetails', $eid);
         if (($uname != $event['informant']) and (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN))) {
@@ -278,7 +274,6 @@ function postcalendar_event_new($args)
 
         $eventdata['event_for_userid'] = $event_for_userid;
         $eventdata['meeting_id'] = $event['meeting_id'];
-        $eventdata['participants'] = $event_participants;
 
         $loc_data = unserialize($event['location']);
         $rspecs = unserialize($event['recurrspec']);
@@ -331,9 +326,9 @@ function postcalendar_event_new($args)
             $endTime = $event_endtimeh . ':' . $event_endtimem;
         } else {
             if ($event_startampm == _AM_VAL) {
-                $event_starttimeh = $event_starttimeh == 12 ? '00' : $event_starttimeh;
+                $event_starttimeh = ($event_starttimeh == 12) ? '00' : $event_starttimeh;
             } else {
-                $event_starttimeh = $event_starttimeh != 12 ? $event_starttimeh += 12 : $event_starttimeh;
+                $event_starttimeh = ($event_starttimeh != 12) ? $event_starttimeh += 12 : $event_starttimeh;
             }
             $startTime = $event_starttimeh . ':' . $event_starttimem;
         }

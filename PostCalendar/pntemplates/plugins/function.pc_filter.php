@@ -27,7 +27,7 @@ function smarty_function_pc_filter($args, &$smarty)
         $smarty->trigger_error("pc_filter: missing 'type' parameter");
         return;
     }
-    $class = isset($args['class']) ? 'class="'.$args['class'].'"' : '';
+    $class = isset($args['class']) ? ' class="'.$args['class'].'"' : '';
     $label = isset($args['label']) ? $args['label'] : __('change', $dom);
     $order = isset($args['order']) ? $args['order'] : null;
 
@@ -43,27 +43,35 @@ function smarty_function_pc_filter($args, &$smarty)
 
     $tplview = FormUtil::getPassedValue('tplview');
     $viewtype = FormUtil::getPassedValue('viewtype', _SETTING_DEFAULT_VIEW);
-    $pc_username = FormUtil::getPassedValue('pc_username');
+    $pc_username = FormUtil::getPassedValue('pc_username', _PC_FILTER_GLOBAL);
     $types = explode(',', $args['type']);
 
     //================================================================
     // build the username filter pulldown
     //================================================================
     if (pnModGetVar('PostCalendar', 'pcAllowUserCalendar')) { // do not show if users not allowed personal calendar
-       if (in_array('user', $types)) {
-           @define('_PC_FORM_USERNAME', true);
-           $users = DBUtil::selectFieldArray('postcalendar_events', 'informant', null, null, true, 'aid'); 
-   
-           $useroptions = "<select name=\"pc_username\" $class>";
-           $useroptions .= "<option value=\"\" $class>" . __('Default/Global', $dom) . "</option>";
-           $selected = ($pc_username == '__PC_ALL__' ? 'selected="selected"' : '');
-           $useroptions .= "<option value=\"__PC_ALL__\" $class $selected>" . __('All Users', $dom) . "</option>";
-           foreach ($users as $k => $v) {
-               $sel = ($pc_username == $v ? 'selected="selected"' : '');
-               $useroptions .= "<option value=\"$v\" $sel $class>$v</option>";
-           }
-           $useroptions .= '</select>';
-       }
+        if (in_array('user', $types)) {
+            @define('_PC_FORM_USERNAME', true);
+            //define array of filter options
+            $filteroptions = array(
+                _PC_FILTER_GLOBAL  => __('Global Events', $dom),
+                _PC_FILTER_PRIVATE => __('My Events', $dom) ." ". __('Only', $dom),
+                _PC_FILTER_ALL     => __('Global Events', $dom) ." + ". __('My Events', $dom),
+            );
+            // if user is admin, add list of users with private events
+            if (pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
+                $users = DBUtil::selectFieldArray('postcalendar_events', 'informant', null, null, true, 'aid');
+                    // if informant is converted to userid, then this area should be checked.
+                $filteroptions = $filteroptions + $users;
+            }
+            // generate html for selectbox - should move this to the template...
+            $useroptions = "<select name='pc_username' $class>";
+            foreach ($filteroptions as $k => $v) {
+                $sel = ($pc_username == $k ? ' selected="selected"' : '');
+                $useroptions .= "<option value='$k'$sel$class>$v</option>";
+            }
+            $useroptions .= '</select>';
+        }
     } else {
         // remove user from types array to force hidden input display below
         $key = array_search('user',$types);

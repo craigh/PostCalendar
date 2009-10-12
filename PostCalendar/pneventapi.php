@@ -33,19 +33,27 @@ function postcalendar_eventapi_queryEvents($args)
     $end = '0000-00-00';
     extract($args);
 
-    //CAH we should not be get form values in an API function
-    $pc_username = FormUtil::getPassedValue('pc_username');
+    //CAH we should not be getting form values in an API function
+    $pc_username = FormUtil::getPassedValue('pc_username', _PC_FILTER_GLOBAL); // poorly named var now because actually an int userid/constant
+    if (!pnUserLoggedIn()) $pc_username = _PC_FILTER_GLOBAL;
     $topic       = FormUtil::getPassedValue('pc_topic');
     $category    = FormUtil::getPassedValue('pc_category');
 
     $userid = pnUserGetVar('uid');
+    unset($ruserid);
 
-    if (!empty($pc_username) && (strtolower($pc_username) != 'anonymous')) {
-        if ($pc_username == '__PC_ALL__') {
-            $ruserid = -1;
-        } else {
-            $ruserid = pnUserGetIDFromName(strtolower($pc_username));
-        }
+    // convert $pc_username to useable information
+    if ($pc_username > 0) {
+        // possible values: a user id - only an admin can use this
+        $ruserid = $pc_username; // keep the id
+        $pc_username = _PC_FILTER_PRIVATE;
+    } else {
+        /* possible values:
+            _PC_FILTER_GLOBAL (0)   = all public events
+            _PC_FILTER_ALL (-1)     = all public events + my events
+            _PC_FILTER_PRIVATE (-2) = just my private events
+        */
+        $ruserid = $userid; // use current user's ID
     }
 
     if (!isset($eventstatus) || ((int) $eventstatus < -1 || (int) $eventstatus > 1)) $eventstatus = 1;
@@ -57,23 +65,30 @@ function postcalendar_eventapi_queryEvents($args)
               AND (pc_endDate>='$start' OR (pc_endDate='0000-00-00' AND pc_recurrtype<>'0') OR pc_eventDate>='$start')
               AND pc_eventDate<='$end' ";
 
-    if (isset($ruserid)) {
-        // get all events for the specified username
-        if ($ruserid == -1) {
-            $where .= "AND (pc_sharing = '" . SHARING_BUSY . "' ";
-            $where .= "OR pc_sharing = '" . SHARING_PUBLIC . "') ";
-        } else {
-            // v4b TS start - always see the records of the logged in user too | disabled on 2004-10-18
+    // filter event display based on selection
+    /* possible event sharing values @v5.8
+    define('SHARING_PRIVATE',       0);
+    define('SHARING_PUBLIC',        1); //remove in v6.0 - convert to SHARING_GLOBAL
+    define('SHARING_BUSY',          2); //remove in v6.0 - convert to SHARING_PRIVATE
+    define('SHARING_GLOBAL',        3);
+    define('SHARING_HIDEDESC',      4); //remove in v6.0 - convert to SHARING_GLOBAL, delete description
+    */
+    switch ($pc_username) {
+        case _PC_FILTER_PRIVATE:
             $where .= "AND pc_aid = $ruserid ";
-            //$where .= "AND (pc_aid = $ruserid OR pc_aid = $userid) ";
-        }
-    } else if (!pnUserLoggedIn()) {
-        // get all events for anonymous users
-        $where .= "AND (pc_sharing = '" . SHARING_GLOBAL . "' ";
-        $where .= "OR pc_sharing = '" . SHARING_HIDEDESC . "') ";
-    } else {
-        // get all events for logged in user plus global events
-        $where .= "AND (pc_aid = $userid OR pc_sharing = '" . SHARING_GLOBAL . "' OR pc_sharing = '" . SHARING_HIDEDESC . "') ";
+            $where .= "AND (pc_sharing = '" . SHARING_PRIVATE . "' ";
+            $where .= "OR pc_sharing = '" . SHARING_BUSY . "') ";
+            break;
+        case _PC_FILTER_ALL:
+            $where .= "AND (pc_aid = $userid ";
+            $where .= "OR pc_sharing = '" . SHARING_GLOBAL . "' ";
+            $where .= "OR pc_sharing = '" . SHARING_HIDEDESC . "') ";
+            break;
+        case _PC_FILTER_GLOBAL:
+        default:
+            $where .= "AND (pc_sharing = '" . SHARING_GLOBAL . "' ";
+            $where .= "OR pc_sharing = '" . SHARING_PUBLIC . "' ";
+            $where .= "OR pc_sharing = '" . SHARING_HIDEDESC . "') ";
     }
 
     // Start Search functionality
@@ -112,6 +127,7 @@ function postcalendar_eventapi_queryEvents($args)
 
     // this prevents duplicate display of same event for different participants
     // in PC v5.8, I think to leave this in, but should remove in v6
+    // when removing, will have to remove duplicate events in table
     $old_m_id = "NULL";
     foreach ($events as $key => $evt) {
         $new_m_id = $evt['meeting_id'];
@@ -356,58 +372,53 @@ function postcalendar_eventapi_writeEvent($args)
         $event_desc = ':' . $pc_html_or_text . ':' . $event_desc; // inserts :text:/:html: before actual content
     }
 
-    $pc_meeting_id = 0; // can pull this out in the column in the DB is removed.
-
-    if (!in_array($event_for_userid, $participants)) $participants[] = $event_for_userid;
+    $pc_meeting_id = 0; // can pull this out if the column in the DB is removed.
 
     if (!isset($is_update)) $is_update = false;
 
     // build an array of users for mail notification
     $pc_mail_users = array();
 
-    foreach ($participants as $part) { // V4B SB LOOP to insert events for every participant
-        $eventarray = array(
-                        'title' => $event_subject,
-                        'hometext' => $event_desc,
-                        'topic' => (int) $event_topic,
-                        'eventDate' => $startDate,
-                        'endDate' => $endDate,
-                        'recurrtype' => (int) $event_repeat,
-                        'startTime' => $startTime,
-                        'alldayevent' => (int) $event_allday,
-                        'catid' => (int) $event_category,
-                        'location' => $event_location_info,                       // Serialized, already formatted for storage
-                        'conttel' => $event_conttel,
-                        'contname' => $event_contname,
-                        'contemail' => $event_contemail,
-                        'website' => $event_website,
-                        'fee' => $event_fee,
-                        'eventstatus' => (int) $event_status,
-                        'recurrspec' => $event_recurrspec,                        // Serialized, already formatted for storage
-                        'duration' => (int) $event_duration,
-                        'sharing' => (int) $event_sharing,
-                        'aid' => $part);
-        if ($is_update) {
-            $eventarray['eid'] = $eid;
-            $result = pnModAPIFunc('postcalendar', 'event', 'update', array($eid => $eventarray));
-        } else { //new event
-            unset ($eventarray['eid']); //be sure that eid is not set on insert op to autoincrement value
-            $eventarray['time'] = date("Y-m-d H:i:s"); //current date
-            $eventarray['informant'] = $uname;
-            $eventarray['meeting_id'] = $pc_meeting_id;
-
-            $result = pnModAPIFunc('postcalendar', 'event', 'create', $eventarray);
-            if (pnUserGetVar('uname', $part) != $uname) {
-                $pc_mail_users[] = $part;
-                $pc_mail_events[] = $result['eid'];
-            }
+    $eventarray = array(
+        'title' => $event_subject,
+        'hometext' => $event_desc,
+        'topic' => (int) $event_topic,
+        'eventDate' => $startDate,
+        'endDate' => $endDate,
+        'recurrtype' => (int) $event_repeat,
+        'startTime' => $startTime,
+        'alldayevent' => (int) $event_allday,
+        'catid' => (int) $event_category,
+        'location' => $event_location_info,
+        'conttel' => $event_conttel,
+        'contname' => $event_contname,
+        'contemail' => $event_contemail,
+        'website' => $event_website,
+        'fee' => $event_fee,
+        'eventstatus' => (int) $event_status,
+        'recurrspec' => $event_recurrspec,
+        'duration' => (int) $event_duration,
+        'sharing' => (int) $event_sharing,
+        'aid' => $event_for_userid,
+    );
+    if ($is_update) {
+        $eventarray['eid'] = $eid;
+        $result = pnModAPIFunc('postcalendar', 'event', 'update', array($eid => $eventarray));
+    } else { //new event
+        unset ($eventarray['eid']); //be sure that eid is not set on insert op to autoincrement value
+        $eventarray['time'] = date("Y-m-d H:i:s"); //current date
+        $eventarray['informant'] = $uname; // @v6.0 change this to uid
+        $eventarray['meeting_id'] = $pc_meeting_id;
+        $result = pnModAPIFunc('postcalendar', 'event', 'create', $eventarray);
+        if (pnUserGetVar('uname', $event_for_userid) != $uname) {
+            $pc_mail_users[] = $event_for_userid; // add intended user to notify list
+            $pc_mail_events[] = $result['eid'];
         }
-        if ($result === false) {
-            // post some kind of error message...
-            return false;
-        }
-
-    } // V4B SB Foreach End
+    }
+    if ($result === false) {
+        // post some kind of error message...
+        return false;
+    }
 
     $eid = $result['eid']; // set eid to last event submitted
 
@@ -418,6 +429,7 @@ function postcalendar_eventapi_writeEvent($args)
 
 /**
  * postcalendar_eventapi_buildSubmitForm()
+ * this is also used on a preview of event function, so $eventdata is passed from that if 'loaded'
  * create event submit form
  */
 function postcalendar_eventapi_buildSubmitForm($args)
@@ -437,29 +449,6 @@ function postcalendar_eventapi_buildSubmitForm($args)
     $tpl->caching = false;
 
     // V4B RNG start
-    //================================================================
-    // build the username filter pulldown
-    //================================================================
-    if (true) // if why?
-    {
-        $event_for_userid = (int) DBUtil::selectFieldByID('postcalendar_events', 'aid', $eid, 'eid');
-
-        $uid = pnUserGetVar('uid');
-        $uname = pnUserGetVar('uname');
-        $idsel = ($event_for_userid ? $event_for_userid : $uid);
-        $namesel = "";
-
-        @define('_PC_FORM_USERNAME', true);
-
-        //get users that have submitted events previously
-        //$users = DBUtil::selectFieldArray('postcalendar_events', 'informant', null, null, true, 'aid');
-        $users = DBUtil::selectFieldArray('users', 'uname', null, null, null, 'uid');
-        //if (!array_key_exists($idsel, $users)) {
-        //    $users[$uid] = $uname; // add current user to userlist if not already there
-        //}
-        $tpl->assign('users', $users);
-        $tpl->assign('user_selected', $idsel);
-    }
 
     $endDate = $event_endyear . $event_endmonth . $event_endday;
     //not sure these three lines are needed with call to getDate here
@@ -494,20 +483,27 @@ function postcalendar_eventapi_buildSubmitForm($args)
     }
     $tpl->assign('startvalue', $startvalue);
     $tpl->assign('startdate', $startdate);
-    // V4B SB END // JAVASCRIPT CALENDAR
+
     //================================================================
     // build the userlist select box
     // the purpose of this box is to allow user to create a private event for another user
     // this should be configurable by admin to allow/deny
     // if denied, selected user should default to submittor
     //================================================================
-    if (true) { // change this to only perform if allowed by admin
-        $users = DBUtil::selectFieldArray('users', 'uname', null, null, true, 'uid');
+
+    $event_for_userid = (int) DBUtil::selectFieldByID('postcalendar_events', 'aid', $eid, 'eid');
+    $uid = pnUserGetVar('uid');
+    $uname = pnUserGetVar('uname');
+    $idsel = ($event_for_userid ? $event_for_userid : $uid);
+
+    if (pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) 
+    {
+        @define('_PC_FORM_USERNAME', true); // this is used in pc_form_nav_close plugin, but don't know why
+        $users = DBUtil::selectFieldArray('users', 'uname', null, null, null, 'uid');
+        $tpl->assign('users', $users);
     }
-
-    $tpl->assign('UserListSelectorOptions', $users);
-
-    $all_categories = pnModAPIFunc('PostCalendar', 'user', 'getCategories');
+    $tpl->assign('username_selected', pnUsergetVar('uname', $idsel));
+    $tpl->assign('user_selected', $idsel);
 
     //=================================================================
     // PARSE MAIN
@@ -516,6 +512,8 @@ function postcalendar_eventapi_buildSubmitForm($args)
     $tpl->assign('FUNCTION', FormUtil::getPassedValue('func'));
     $tpl->assign('ModuleName', $modname);
     $tpl->assign('ModuleDirectory', $modir);
+
+    $all_categories = pnModAPIFunc('PostCalendar', 'user', 'getCategories');
     $tpl->assign('category', $all_categories);
 
     //=================================================================
@@ -536,7 +534,9 @@ function postcalendar_eventapi_buildSubmitForm($args)
     if (empty($event_starttimeh)) {
         $event_starttimeh = "01";
         $event_starttimem = "00";
+        $event_startampm = _AM_VAL;
     }
+    if ((!empty($event_startampm)) && ($event_startampm == _PM_VAL)) $event_starttimeh = $event_starttimeh + 12;
     $tpl->assign('SelectedTime', $event_starttimeh . ":" . $event_starttimem);
 
     //=================================================================
@@ -609,17 +609,17 @@ function postcalendar_eventapi_buildSubmitForm($args)
     $data = array();
     if (_SETTING_ALLOW_USER_CAL) {
         $data[SHARING_PRIVATE]=__('Private', $dom);
-        $data[SHARING_PUBLIC]=__('Public', $dom);
-        $data[SHARING_BUSY]=__('Show as Busy', $dom);
+        //$data[SHARING_PUBLIC]=__('Public', $dom);
+        //$data[SHARING_BUSY]=__('Show as Busy', $dom);
     }
 
     if (pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN) || _SETTING_ALLOW_GLOBAL || !_SETTING_ALLOW_USER_CAL) {
         $data[SHARING_GLOBAL]=__('Global', $dom);
-        $data[SHARING_HIDEDESC]=__('Global, description private', $dom);
+        //$data[SHARING_HIDEDESC]=__('Global, description private', $dom);
     }
     $tpl->assign('sharingselect', $data);
 
-    if (!isset($event_sharing)) $event_sharing = SHARING_PUBLIC;
+    if (!isset($event_sharing)) $event_sharing = SHARING_GLOBAL;
     $tpl->assign('event_sharing', $event_sharing);
 
     //=================================================================

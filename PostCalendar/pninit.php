@@ -107,6 +107,8 @@ function postcalendar_upgrade($oldversion)
             pnModDelVar('PostCalendar', 'pcAddressbook');
             pnModDelVar('PostCalendar', 'pcMeeting');
         //case '5.8.0':
+            // modify table to remove cols: pc_comments, pc_counter, pc_recurrfreq, pc_meeting_id, pc_topic?
+            // remove postcalendar_categories table entirely?
     }
 
     // if we get this far - clear the cache

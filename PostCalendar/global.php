@@ -59,10 +59,14 @@ define('REPEAT_ON_6MONTH',      6);
 define('REPEAT_ON_YEAR',        12);
 // event sharing values
 define('SHARING_PRIVATE',       0);
-define('SHARING_PUBLIC',        1);
-define('SHARING_BUSY',          2);
+define('SHARING_PUBLIC',        1); //remove in v6.0
+define('SHARING_BUSY',          2); //remove in v6.0
 define('SHARING_GLOBAL',        3);
-define('SHARING_HIDEDESC',      4);
+define('SHARING_HIDEDESC',      4); //remove in v6.0
+// filter display values
+define('_PC_FILTER_GLOBAL',     0);
+define('_PC_FILTER_ALL',        -1);
+define('_PC_FILTER_PRIVATE',    -2);
 // admin defines
 define('_ADMIN_ACTION_APPROVE', 0);
 define('_ADMIN_ACTION_HIDE',    1);
