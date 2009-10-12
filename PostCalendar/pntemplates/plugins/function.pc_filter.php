@@ -45,12 +45,13 @@ function smarty_function_pc_filter($args, &$smarty)
     $viewtype = FormUtil::getPassedValue('viewtype', _SETTING_DEFAULT_VIEW);
     if (pnModGetVar('PostCalendar', 'pcAllowUserCalendar')) { $filterdefault = _PC_FILTER_ALL; } else { $filterdefault = _PC_FILTER_GLOBAL; }
     $pc_username = FormUtil::getPassedValue('pc_username', $filterdefault);
+    if (!pnUserLoggedIn()) $pc_username = _PC_FILTER_GLOBAL;
     $types = explode(',', $args['type']);
 
     //================================================================
     // build the username filter pulldown
     //================================================================
-    if (pnModGetVar('PostCalendar', 'pcAllowUserCalendar')) { // do not show if users not allowed personal calendar
+    if ((pnModGetVar('PostCalendar', 'pcAllowUserCalendar')) AND (pnUserLoggedIn())) { // do not show if users not allowed personal calendar or not logged in
         if (in_array('user', $types)) {
             @define('_PC_FORM_USERNAME', true);
             //define array of filter options

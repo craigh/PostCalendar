@@ -63,7 +63,10 @@ function postcalendar_eventapi_queryEvents($args)
     list($sy, $sm, $sd) = explode('-', $start);
 
     $where = "WHERE pc_eventstatus=$eventstatus
-              AND (pc_endDate>='$start' OR (pc_endDate='0000-00-00' AND pc_recurrtype<>'0') OR pc_eventDate>='$start')
+              AND (pc_endDate>='$start' 
+              OR (pc_endDate='0000-00-00' 
+              AND pc_recurrtype<>'0') 
+              OR pc_eventDate>='$start')
               AND pc_eventDate<='$end' ";
 
     // filter event display based on selection
@@ -80,7 +83,7 @@ function postcalendar_eventapi_queryEvents($args)
             $where .= "AND pc_sharing = '" . SHARING_PRIVATE . "' ";
             break;
         case _PC_FILTER_ALL:
-            $where .= "AND (pc_aid = $userid ";
+            $where .= "AND (pc_aid = $ruserid ";
             $where .= "OR pc_sharing = '" . SHARING_GLOBAL . "' ";
             $where .= "OR pc_sharing = '" . SHARING_HIDEDESC . "') ";
             break;
@@ -101,7 +104,7 @@ function postcalendar_eventapi_queryEvents($args)
 
     $sort = "ORDER BY pc_meeting_id";
 
-    // FIXME !!!
+    // FIXME !!! < pre v5.0
     $joinInfo = array();
     $joinInfo[] = array(
                     'join_table' => 'postcalendar_categories',
@@ -123,7 +126,6 @@ function postcalendar_eventapi_queryEvents($args)
                     'compare_field_join' => 'catid');
 
     $events = DBUtil::selectExpandedObjectArray('postcalendar_events', $joinInfo, $where, $sort);
-    //$topicNames = DBUtil::selectFieldArray('topics', 'topicname', '', '', false, 'topicid');
 
     // this prevents duplicate display of same event for different participants
     // in PC v5.8, I think to leave this in, but should remove in v6
@@ -211,9 +213,9 @@ function postcalendar_eventapi_getEvents($args)
 
     foreach ($events as $event) {
         // get the name of the topic
-        $topicname = DBUtil::selectFieldByID('topics', 'topicname', $event['topic'], 'topicid');
+        if (!empty($event['topic'])) $topicname = DBUtil::selectFieldByID('topics', 'topicname', $event['topic'], 'topicid');
         // get the user id of event's author
-        $cuserid = pnUserGetIDFromName( strtolower($event['informant']));
+        $cuserid = pnUserGetIDFromName( strtolower($event['informant'])); // change this to aid? for v6.0?
 
         // check the current event's permissions
         // the user does not have permission to view this event
@@ -735,12 +737,14 @@ function postcalendar_eventapi_fixEventDetails($event)
     $suid = pnUserGetVar('uid');
     // $euid = DBUtil::selectFieldByID ('users', 'uid', $event['uname'], 'uname');
     $euid = $event['aid'];
+    $IS_ADMIN = pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN);
 
+    // with v6.0 this whole section below should be reworked - private events are handled differently
     // is this a public event to be shown as busy?
-    if ($event['sharing'] == SHARING_PRIVATE && $euid != $suid) {
+    if ($event['sharing'] == SHARING_PRIVATE && $euid != $suid && !$IS_ADMIN) {
         // they are not supposed to see this
         return false;
-    } elseif ($event['sharing'] == SHARING_BUSY && $euid != $suid) {
+    } elseif ($event['sharing'] == SHARING_BUSY && $euid != $suid && !$IS_ADMIN) {
         // make it not display any information
         $event['title'] = __('Busy', $dom);
         $event['hometext'] = __('I am busy during this time.', $dom);
