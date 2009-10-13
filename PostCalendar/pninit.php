@@ -112,8 +112,7 @@ function postcalendar_upgrade($oldversion)
     }
 
     // if we get this far - clear the cache
-    $pnRender = pnRender::getInstance('PostCalendar');
-    $pnRender->clear_all_cache();
+    pnModAPIFunc('PostCalendar', 'admin', 'clearCache');
 
     return true;
 }

@@ -84,7 +84,7 @@ function postcalendar_event_delete()
         return LogUtil::registerPermissionError();
     }
     $render = FormUtil::newpnForm('PostCalendar');
-    $eventdetails = pnModAPIFunc('PostCalendar', 'event', 'eventDetail', array('eid' => $eid, 'cacheid' => '', 'Date' => ''));
+    $eventdetails = pnModAPIFunc('PostCalendar', 'event', 'eventDetail', array('eid' => $eid, 'Date' => ''));
     $render->assign('eventdetails', $eventdetails['A_EVENT']);
     return $render->pnFormExecute('event/postcalendar_event_deleteeventconfirm.htm', new postcalendar_event_editHandler());
 }

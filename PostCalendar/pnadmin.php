@@ -35,7 +35,8 @@ function postcalendar_admin_modifyconfig()
         return LogUtil::registerPermissionError();
     }
 
-    $pnRender = pnRender::getInstance('PostCalendar');
+    // Turn off template caching here
+    $pnRender = pnRender::getInstance('PostCalendar', false);
 
     return $pnRender->fetch('admin/postcalendar_admin_modifyconfig.htm');
 }
@@ -101,7 +102,8 @@ function postcalendar_admin_showlist($args)
     // $args should be array with keys 'type', 'function', 'title'
     if (!isset($args['type']) or empty($args['function'])) return false; // $title not required, type can be 1, 0, -1
 
-    $pnRender = pnRender::getInstance('PostCalendar');
+    // Turn off template caching here
+    $pnRender = pnRender::getInstance('PostCalendar', false);
 
     $offset_increment = _SETTING_HOW_MANY_EVENTS;
     if (empty($offset_increment)) $offset_increment = 15;
@@ -188,7 +190,8 @@ function postcalendar_admin_adminevents()
             break;
     }
 
-    $pnRender = pnRender::getInstance('PostCalendar');
+    // Turn off template caching here
+    $pnRender = pnRender::getInstance('PostCalendar', false);
     pnModAPIFunc('PostCalendar','user','SmartySetup', $pnRender);
 
     $pnRender->assign('function', $function);
@@ -303,7 +306,8 @@ function postcalendar_admin_categories()
         return LogUtil::registerPermissionError();
     }
 
-    $pnRender = pnRender::getInstance('PostCalendar');
+    // Turn off template caching here
+    $pnRender = pnRender::getInstance('PostCalendar', false);
 
     $cats = pnModAPIFunc('PostCalendar', 'user', 'getCategories');
     $pnRender->assign('cats', $cats);
@@ -324,7 +328,8 @@ function postcalendar_admin_categoriesConfirm()
         return LogUtil::registerPermissionError();
     }
 
-    $pnRender = pnRender::getInstance('PostCalendar');
+    // Turn off template caching here
+    $pnRender = pnRender::getInstance('PostCalendar', false);
 
     $id       = FormUtil::getPassedValue('id');
     $del      = FormUtil::getPassedValue('del');
@@ -460,8 +465,7 @@ function postcalendar_admin_manualClearCache()
         LogUtil::registerStatus(__('Smarty Cache has been cleared', $dom));
         return postcalendar_admin_modifyconfig();
     }
-    LogUtil::registerError(__('Smarty Cache was not cleared', $dom));
-    return postcalendar_admin_modifyconfig();
+    return LogUtil::registerError(__('Smarty Cache was not cleared', $dom), null, pnModURL('PostCalendar', 'admin', 'modifyconfig'));
 }
 
 /**
@@ -480,7 +484,8 @@ function postcalendar_admin_testSystem()
     $version = $modinfo['version'];
     unset($modinfo);
 
-    $tpl = pnRender::getInstance('PostCalendar'); // PostCalendarSmartySetup not needed
+    // Turn off template caching here
+    $tpl = pnRender::getInstance('PostCalendar', false);
     $infos = array();
 
     if (phpversion() >= '4.1.0') {

@@ -28,7 +28,8 @@ function postcalendar_searchapi_options($args)
         // Create output object - this object will store all of our output so that
         // we can return it easily when required
         $renderer = pnRender::getInstance('PostCalendar');
-        $renderer->assign('active',(isset($args['active'])&&isset($args['active']['PostCalendar']))||(!isset($args['active'])));
+        $active = (isset($args['active']) && isset($args['active']['PostCalendar'])) || !isset($args['active']);
+        $renderer->assign('active', $active);
 
         // assign category info
         $all_categories = pnModAPIFunc('PostCalendar', 'user', 'getCategories');

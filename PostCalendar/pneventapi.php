@@ -446,9 +446,9 @@ function postcalendar_eventapi_buildSubmitForm($args)
 
     if (!$admin) $admin = false; //reset default value
 
-    $tpl = pnRender::getInstance('PostCalendar');
+    // Turn off template caching here
+    $tpl = pnRender::getInstance('PostCalendar', false);
     pnModAPIFunc('PostCalendar','user','SmartySetup', $tpl);
-    $tpl->caching = false;
 
     // V4B RNG start
 
@@ -830,13 +830,10 @@ function postcalendar_eventapi_eventDetail($args)
     extract($args);
     unset($args);
 
-    if (!isset($cacheid)) $cacheid = null;
     if (!isset($eid)) return false;
     if (!isset($nopop)) $nopop = false;
     $uid = pnUserGetVar('uid');
 
-    //$tpl = pnRender::getInstance('PostCalendar');
-    //PostCalendarSmartySetup($tpl);
     /* Trim as needed */
     $func = FormUtil::getPassedValue('func');
     $template_view = FormUtil::getPassedValue('tplview');

@@ -297,9 +297,8 @@ function postcalendar_userapi_eventPreview($args)
     //=================================================================
     // Setup Render Template Engine
     //=================================================================
-    $tpl = pnRender::getInstance('PostCalendar');
+    $tpl = pnRender::getInstance('PostCalendar', false);
     pnModAPIFunc('PostCalendar','user','SmartySetup', $tpl);
-    $tpl->caching = false;
     /* Trim as needed */
     $func = FormUtil::getPassedValue('func');
     $template_view = FormUtil::getPassedValue('tplview');

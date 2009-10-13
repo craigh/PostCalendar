@@ -304,8 +304,7 @@ function postcalendar_calendarblock_update($blockinfo)
     $vars['pcbeventsrange'] = FormUtil::getPassedValue('pcbeventsrange', 6);
     $vars['pcbshowsslinks'] = FormUtil::getPassedValue('pcbshowsslinks', 0);
 
-    $pnRender = pnRender::getInstance('PostCalendar'); // PostCalendarSmartySetup not needed
-
+    $pnRender = pnRender::getInstance('PostCalendar');
     $pnRender->clear_cache('blocks/postcalendar_block_view_day.html');
     $pnRender->clear_cache('blocks/postcalendar_block_view_month.html');
     $pnRender->clear_cache('blocks/postcalendar_block_view_upcoming.html');

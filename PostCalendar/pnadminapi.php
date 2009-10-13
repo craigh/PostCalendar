@@ -94,10 +94,9 @@ function postcalendar_adminapi_getAdminListEvents($args)
  */
 function postcalendar_adminapi_clearCache()
 {
-    $pnRender = pnRender::getInstance('PostCalendar'); // PostCalendarSmartySetup not needed
-    $res = $pnRender->clear_all_cache();
-
-    return $res;
+    $pnRender = pnRender::getInstance('PostCalendar');
+    // Do not call clear_all_cache, but only clear the cache of this module
+    return $pnRender->clear_cache();
 }
 
 /**
@@ -115,7 +114,8 @@ function postcalendar_adminapi_meeting_mailparticipants($args)
     //TODO: if ($is_update) send appropriate message...
     extract($args);
 
-    $pnRender = pnRender::getInstance('PostCalendar');
+    // Turn off template caching here
+    $pnRender = pnRender::getInstance('PostCalendar', false);
     $pnRender->assign('eid', $eid);
     $pnRender->assign('event_subject', DataUtil::formatForDisplay($event_subject));
 
@@ -184,7 +184,8 @@ function postcalendar_adminapi_notify($args)
     $modinfo = pnModGetInfo(pnModGetIDFromName('PostCalendar'));
     $modversion = DataUtil::formatForOS($modinfo['version']);
 
-    $pnRender = pnRender::getInstance('PostCalendar');
+    // Turn off template caching here
+    $pnRender = pnRender::getInstance('PostCalendar', false);
     $pnRender->assign('is_update', $is_update);
     $pnRender->assign('modversion', $modversion);
     $pnRender->assign('eid', $eid);
