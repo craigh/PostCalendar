@@ -106,6 +106,7 @@ function postcalendar_upgrade($oldversion)
             pnModDelVar('PostCalendar', 'pcAllowSiteWide');
             pnModDelVar('PostCalendar', 'pcAddressbook');
             pnModDelVar('PostCalendar', 'pcMeeting');
+            pnModDelVar('PostCalendar', 'pcUseInternationalDates');
         //case '5.8.0':
             // modify table to remove cols: pc_comments, pc_counter, pc_recurrfreq, pc_meeting_id, pc_topic?
             // remove postcalendar_categories table entirely?
@@ -128,7 +129,6 @@ function postcalendar_init_getdefaults()
     $defaults = array(
     'pcTime24Hours'           => _TIMEFORMAT == 24 ? '1' : '0',
     'pcEventsOpenInNewWindow' => '0',
-    'pcUseInternationalDates' => '0',
     'pcFirstDayOfWeek'        => '0', /* Sunday */
     'pcUsePopups'             => '0',
     'pcAllowDirectSubmit'     => '0',

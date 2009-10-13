@@ -64,15 +64,10 @@
 			<td><input type="checkbox" value="1" id="pcEventsOpenInNewWindow" name="pcEventsOpenInNewWindow"<!--[if $pcEOINW eq true]--> checked="checked"<!--[/if]-->/></td>
 		</tr>
 		<tr class='pn-even'>
-			<td><!--[gt text='Use international date style']--></td>
-			<!--[pnmodgetvar module="PostCalendar" name="pcUseInternationalDates" assign="pcUID"]-->
-			<td><input type="checkbox" value="1" id="pcUseInternationalDates" name="pcUseInternationalDates"<!--[if $pcUID eq true]--> checked="checked"<!--[/if]-->/></td>
-		</tr>
-		<tr class='pn-odd'>
 			<td><!--[gt text='Date Display Format <i>uses php <a href="http://php.net/strftime">strftime</a> format</i>']--></td>
 			<td><input type="text" size="20" value="<!--[pnmodgetvar module="PostCalendar" name="pcEventDateFormat"]-->" id="pcEventDateFormat" name="pcEventDateFormat"/></td>
 		</tr>
-		<tr class='pn-even'>
+		<tr class='pn-odd'>
 			<td><!--[gt text='First day of the week']--></td>
 			<!--[pnmodgetvar module="PostCalendar" name="pcFirstDayOfWeek" assign="firstDay"]-->
 			<td><select size="1" id="pcFirstDayOfWeek" name="pcFirstDayOfWeek">
@@ -82,7 +77,7 @@
 				</select>
 			</td>
 		</tr>
-		<tr class='pn-odd'>
+		<tr class='pn-even'>
 			<td><!--[gt text='Default Calendar View']--></td>
 			<!--[pnmodgetvar module="PostCalendar" name="pcDefaultView" assign="defView"]-->
 			<td><select size="1" id="pcDefaultView" name="pcDefaultView">
@@ -93,17 +88,17 @@
 				</select>
 			</td>
 		</tr>
-		<tr class='pn-even'>
+		<tr class='pn-odd'>
 			<td><!--[gt text='Show hovering event text on mouseover']--></td>
 			<!--[pnmodgetvar module="PostCalendar" name="pcUsePopups" assign="pcUP"]-->
 			<td><input type="checkbox" value="1" id="pcUsePopups" name="pcUsePopups"<!--[if $pcUP eq true]--> checked="checked"<!--[/if]-->/></td>
 		</tr>
-		<tr class='pn-odd'>
+		<tr class='pn-even'>
 			<td><!--[gt text='Display repeating options']--></td>
 			<!--[pnmodgetvar module="PostCalendar" name="pcRepeating" assign="pcR"]-->
 			<td><input type="checkbox" value="1" id="pcRepeating" name="pcRepeating"<!--[if $pcR eq true]--> checked="checked"<!--[/if]-->/></td>
 		</tr>
-        <tr class='pn-even'>
+        <tr class='pn-odd'>
 			<td><!--[gt text='Allow Users to filter event display by Category/Topic']--></td>
 			<!--[pnmodgetvar module="PostCalendar" name="pcAllowCatFilter" assign="pcACF"]-->
 			<td><input type="checkbox" value="1" id="pcAllowCatFilter" name="pcAllowCatFilter"<!--[if $pcACF eq true]--> checked="checked"<!--[/if]-->/></td>

@@ -24,11 +24,7 @@
 <!--[ assign var="year" value=$DATE|date_format:"%Y"|string_format:"%4d" ]-->
 <h2 class="postcalendar_header">
     <!--[ if $PRINT_VIEW eq false ]--><a href="<!--[ $PREV_DAY_URL ]-->">&lt;&lt;</a><!--[/if]-->
-    <!--[ if $USE_INT_DATES eq true ]-->
-        <!--[ pc_date_format date=$DATE format='%A, %d %B %Y']-->
-    <!--[ else ]-->
-        <!--[ pc_date_format date=$DATE format='%A, %B %d %Y']-->
-    <!--[ /if ]-->
+    <!--[ $DATE|pc_date_format]-->
     <!--[ if $PRINT_VIEW eq false ]--><a href="<!--[ $NEXT_DAY_URL ]-->">&gt;&gt;</a><!--[/if]-->
 </h2>
 

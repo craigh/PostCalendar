@@ -261,7 +261,6 @@ function postcalendar_admin_updateconfig()
     $settings = array(
     'pcTime24Hours'           => FormUtil::getPassedValue('pcTime24Hours', 0),
     'pcEventsOpenInNewWindow' => FormUtil::getPassedValue('pcEventsOpenInNewWindow', 0),
-    'pcUseInternationalDates' => FormUtil::getPassedValue('pcUseInternationalDates', 0),
     'pcFirstDayOfWeek'        => FormUtil::getPassedValue('pcFirstDayOfWeek', $defaults['pcFirstDayOfWeek']),
     'pcUsePopups'             => FormUtil::getPassedValue('pcUsePopups', 0),
     'pcAllowDirectSubmit'     => FormUtil::getPassedValue('pcAllowDirectSubmit', 0),

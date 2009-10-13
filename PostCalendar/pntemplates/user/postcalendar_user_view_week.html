@@ -34,13 +34,7 @@
         <!--[ assign var="month" value=$month-1 ]-->
         <!--[ assign var="year" value=$cdate|date_format:"%Y"|string_format:"%4d" ]-->
         <h3 class="dayheader">
-            <a href="<!--[ pc_url action=day date=$cdate ]-->">
-                <!--[ if $USE_INT_DATES eq true ]-->
-                    <!--[ pc_date_format date=$cdate format='%A, %d %B %Y']-->
-                <!--[ else ]--> 
-                    <!--[ pc_date_format date=$cdate format='%A, %B %e, %Y']-->
-                <!--[ /if ]-->
-            </a>
+            <a href="<!--[ pc_url action=day date=$cdate ]-->"><!--[ $cdate|pc_date_format]--></a>
         </h3>
         <!--[ * Loop through the events for this day and display the event data * ]-->
         <ul class="eventslist">
@@ -62,7 +56,7 @@
                     <!--[ /if ]-->
                     <!--[ $event.uname ]-->
                     <!--[ assign var="catcolor" value = $event.catcolor ]-->
-                    <a href="<!--[ pc_url action=detail eid=$event.eid date=$date ]-->" 
+                    <a href="<!--[ pc_url action=detail eid=$event.eid date=$date ]-->"
                         <!--[ pc_popup delay="500" bgcolor=$catcolor caption=$event.title text=$event.hometext ]-->>
                         <!--[ $event.title|strip_tags ]--></a>
                     <!--[ if $event.alldayevent != true ]-->

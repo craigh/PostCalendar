@@ -78,26 +78,25 @@ define('_ADMIN_ACTION_DELETE',  4);
 // Get the global PostCalendar config settings
 // This will save us a lot of time and DB queries later
 //=================================================================
-define('_SETTING_USE_POPUPS',      pnModGetVar('PostCalendar', 'pcUsePopups'));
-define('_SETTING_USE_INT_DATES',   pnModGetVar('PostCalendar', 'pcUseInternationalDates'));
-define('_SETTING_OPEN_NEW_WINDOW', pnModGetVar('PostCalendar', 'pcEventsOpenInNewWindow'));
-define('_SETTING_FIRST_DAY_WEEK',  pnModGetVar('PostCalendar', 'pcFirstDayOfWeek'));
-define('_SETTING_DATE_FORMAT',     pnModGetVar('PostCalendar', 'pcEventDateFormat'));
-define('_SETTING_TIME_24HOUR',     pnModGetVar('PostCalendar', 'pcTime24Hours'));
-define('_SETTING_DIRECT_SUBMIT',   pnModGetVar('PostCalendar', 'pcAllowDirectSubmit'));
-define('_SETTING_DISPLAY_TOPICS',  pnModGetVar('PostCalendar', 'pcDisplayTopics'));
-define('_SETTING_ALLOW_USER_CAL',  pnModGetVar('PostCalendar', 'pcAllowUserCalendar'));
-define('_SETTING_TIME_INCREMENT',  pnModGetVar('PostCalendar', 'pcTimeIncrement'));
-define('_SETTING_HOW_MANY_EVENTS', pnModGetVar('PostCalendar', 'pcListHowManyEvents'));
-define('_SETTING_TEMPLATE',        pnModGetVar('PostCalendar', 'pcTemplate'));
-define('_SETTING_EVENTS_IN_YEAR',  pnModGetVar('PostCalendar', 'pcShowEventsInYear'));
-define('_SETTING_USE_CACHE',       pnModGetVar('PostCalendar', 'pcUseCache'));
-define('_SETTING_CACHE_LIFETIME',  pnModGetVar('PostCalendar', 'pcCacheLifetime'));
-define('_SETTING_DEFAULT_VIEW',    pnModGetVar('PostCalendar', 'pcDefaultView'));
-define('_SETTING_SAFE_MODE',       pnModGetVar('PostCalendar', 'pcSafeMode'));
-define('_SETTING_NOTIFY_ADMIN',    pnModGetVar('PostCalendar', 'pcNotifyAdmin'));
-define('_SETTING_NOTIFY_EMAIL',    pnModGetVar('PostCalendar', 'pcNotifyEmail'));
-define('_SETTING_ALLOW_CAT_FILTER',    pnModGetVar('PostCalendar', 'pcAllowCatFilter'));
+define('_SETTING_USE_POPUPS',       pnModGetVar('PostCalendar', 'pcUsePopups'));
+define('_SETTING_OPEN_NEW_WINDOW',  pnModGetVar('PostCalendar', 'pcEventsOpenInNewWindow'));
+define('_SETTING_FIRST_DAY_WEEK',   pnModGetVar('PostCalendar', 'pcFirstDayOfWeek'));
+define('_SETTING_DATE_FORMAT',      pnModGetVar('PostCalendar', 'pcEventDateFormat'));
+define('_SETTING_TIME_24HOUR',      pnModGetVar('PostCalendar', 'pcTime24Hours'));
+define('_SETTING_DIRECT_SUBMIT',    pnModGetVar('PostCalendar', 'pcAllowDirectSubmit'));
+define('_SETTING_DISPLAY_TOPICS',   pnModGetVar('PostCalendar', 'pcDisplayTopics'));
+define('_SETTING_ALLOW_USER_CAL',   pnModGetVar('PostCalendar', 'pcAllowUserCalendar'));
+define('_SETTING_TIME_INCREMENT',   pnModGetVar('PostCalendar', 'pcTimeIncrement'));
+define('_SETTING_HOW_MANY_EVENTS',  pnModGetVar('PostCalendar', 'pcListHowManyEvents'));
+define('_SETTING_TEMPLATE',         pnModGetVar('PostCalendar', 'pcTemplate'));
+define('_SETTING_EVENTS_IN_YEAR',   pnModGetVar('PostCalendar', 'pcShowEventsInYear'));
+define('_SETTING_USE_CACHE',        pnModGetVar('PostCalendar', 'pcUseCache'));
+define('_SETTING_CACHE_LIFETIME',   pnModGetVar('PostCalendar', 'pcCacheLifetime'));
+define('_SETTING_DEFAULT_VIEW',     pnModGetVar('PostCalendar', 'pcDefaultView'));
+define('_SETTING_SAFE_MODE',        pnModGetVar('PostCalendar', 'pcSafeMode'));
+define('_SETTING_NOTIFY_ADMIN',     pnModGetVar('PostCalendar', 'pcNotifyAdmin'));
+define('_SETTING_NOTIFY_EMAIL',     pnModGetVar('PostCalendar', 'pcNotifyEmail'));
+define('_SETTING_ALLOW_CAT_FILTER', pnModGetVar('PostCalendar', 'pcAllowCatFilter'));
 
 
 //  Require and Setup utility classes and functions

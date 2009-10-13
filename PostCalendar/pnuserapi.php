@@ -522,7 +522,6 @@ function postcalendar_userapi_SmartySetup(&$smarty)
 
     $smarty->assign('USE_POPUPS', _SETTING_USE_POPUPS);
     $smarty->assign('USE_TOPICS', _SETTING_DISPLAY_TOPICS);
-    $smarty->assign('USE_INT_DATES', _SETTING_USE_INT_DATES);
     $smarty->assign('OPEN_NEW_WINDOW', _SETTING_OPEN_NEW_WINDOW);
     $smarty->assign('EVENT_DATE_FORMAT', _SETTING_DATE_FORMAT);
     $smarty->assign('24HOUR_TIME', _SETTING_TIME_24HOUR);
