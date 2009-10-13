@@ -43,7 +43,7 @@ function postcalendar_searchapi_options($args)
 
         // assign topics info
         $renderer->assign('displayTopics', _SETTING_DISPLAY_TOPICS);
-        if ((bool) _SETTING_DISPLAY_TOPICS) {
+        if ((bool) _SETTING_DISPLAY_TOPICS && _SETTING_TOPICSAVAILABLE) {
             $a_topics = pnModAPIFunc('PostCalendar', 'user', 'getTopics');
             $topics = array();
             foreach ($a_topics as $topic) {

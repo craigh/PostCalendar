@@ -367,7 +367,7 @@ function postcalendar_userapi_eventPreview($args)
     //=================================================================
     // get event's topic information
     //=================================================================
-    if (_SETTING_DISPLAY_TOPICS) {
+    if (_SETTING_DISPLAY_TOPICS && _SETTING_TOPICSAVAILABLE) {
         $topic = DBUtil::selectObjectByID('topics', $event['topic'], 'topicid');
         $event['topictext'] = $topic['topictext'];
         $event['topicimage'] = $topic['topicimage'];
@@ -493,6 +493,7 @@ function postcalendar_userapi_getCategories()
  */
 function postcalendar_userapi_getTopics()
 {
+    if (!_SETTING_TOPICSAVAILABLE) return false;
     $permFilter = array();
     $permFilter[] = array(
                     'realm'            => 0,

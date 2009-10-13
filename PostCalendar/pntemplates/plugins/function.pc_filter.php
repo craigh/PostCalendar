@@ -111,7 +111,7 @@ function smarty_function_pc_filter($args, &$smarty)
     //================================================================
     // build the topic filter pulldown
     //================================================================
-    if (in_array('topic', $types) && _SETTING_DISPLAY_TOPICS && _SETTING_ALLOW_CAT_FILTER) {
+    if (in_array('topic', $types) && _SETTING_TOPICSAVAILABLE && _SETTING_DISPLAY_TOPICS && _SETTING_ALLOW_CAT_FILTER) {
         @define('_PC_FORM_TOPIC', true);
         $topic = FormUtil::getPassedValue('pc_topic');
         $topics = pnModAPIFunc('PostCalendar', 'user', 'getTopics');

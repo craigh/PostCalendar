@@ -1,6 +1,7 @@
 <!--[*  $Id$  *]-->
 <!--[include file="admin/postcalendar_admin_menu.htm"]-->
 <!--[pnconfiggetvar name='language' assign=defaultlang]-->
+<!--[pnmodavailable modname="Topics" assign="topicsavailable"]-->
 <div class="pn-admincontainer">
 <div class="pn-adminpageicon"><!--[pnimg modname='PostCalendar' src='admin.gif']--></div>
 <h2><!--[gt text="PostCalendar Global Settings"]--></h2>
@@ -27,19 +28,21 @@
 			<td><input type="checkbox" value="1" id="pcAllowUserCalendar" name="pcAllowUserCalendar"<!--[if $pcAUC eq true]--> checked="checked"<!--[/if]-->/></td>
 		</tr>
 		<tr class='pn-even'>
-			<td><!--[gt text='Use topics']--></td>
-			<!--[pnmodgetvar module="PostCalendar" name="pcDisplayTopics" assign="pcDT"]-->
-			<td><input type="checkbox" value="1" id="pcDisplayTopics" name="pcDisplayTopics"<!--[if $pcDT eq true]--> checked="checked"<!--[/if]-->/></td>
-		</tr>
-		<tr class='pn-odd'>
 			<td><!--[gt text='Cache template output?']--></td>
 			<!--[pnmodgetvar module="PostCalendar" name="pcUseCache" assign="pcUC"]-->
 			<td><input type="checkbox" value="1" id="pcUseCache" name="pcUseCache"<!--[if $pcUC eq true]--> checked="checked"<!--[/if]-->/></td>
 		</tr>
-		<tr class='pn-even'>
+		<tr class='pn-odd'>
 			<td><!--[gt text='Cache Lifetime (in seconds)']--></td>
 			<td><input type="text" size="20" value="<!--[pnmodgetvar module="PostCalendar" name="pcCacheLifetime"]-->" id="pcCacheLifetime" name="pcCacheLifetime"/></td>
 		</tr>
+        <!--[if $topicsavailable]-->
+		<tr class='pn-even'>
+			<td><!--[gt text='Use topics from Topics module (deprecated)']--></td>
+			<!--[pnmodgetvar module="PostCalendar" name="pcDisplayTopics" assign="pcDT"]-->
+			<td><input type="checkbox" value="1" id="pcDisplayTopics" name="pcDisplayTopics"<!--[if $pcDT eq true]--> checked="checked"<!--[/if]-->/></td>
+		</tr>
+        <!--[/if]-->
     </table>
 	<table class="pn-admintable">
         <thead>

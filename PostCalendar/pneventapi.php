@@ -213,7 +213,7 @@ function postcalendar_eventapi_getEvents($args)
 
     foreach ($events as $event) {
         // get the name of the topic
-        if (!empty($event['topic'])) $topicname = DBUtil::selectFieldByID('topics', 'topicname', $event['topic'], 'topicid');
+        if (_SETTING_TOPICSAVAILABLE && !empty($event['topic'])) $topicname = DBUtil::selectFieldByID('topics', 'topicname', $event['topic'], 'topicid');
         // get the user id of event's author
         $cuserid = pnUserGetIDFromName( strtolower($event['informant'])); // change this to aid? for v6.0?
 
@@ -576,7 +576,7 @@ function postcalendar_eventapi_buildSubmitForm($args)
     // PARSE select_event_topic_block
     //=================================================================
     $tpl->assign('displayTopics', _SETTING_DISPLAY_TOPICS);
-    if ((bool) _SETTING_DISPLAY_TOPICS) {
+    if ((bool) _SETTING_DISPLAY_TOPICS && _SETTING_TOPICSAVAILABLE) {
         $a_topics = pnModAPIFunc('PostCalendar', 'user', 'getTopics');
         $topics = array();
         foreach ($a_topics as $topic) {
