@@ -134,7 +134,7 @@ function postcalendar_init_getdefaults()
     'pcAllowDirectSubmit'     => '0',
     'pcListHowManyEvents'     => '15',
     'pcDisplayTopics'         => '0',
-    'pcEventDateFormat'       => '%b %d, %Y', /* American */
+    'pcEventDateFormat'       => '%B %d, %Y', /* American: e.g. July 4, 2010 */
     'pcRepeating'             => '1', /* display repeating options */
     'pcAllowUserCalendar'     => '0',
     'pcTimeIncrement'         => '15',
