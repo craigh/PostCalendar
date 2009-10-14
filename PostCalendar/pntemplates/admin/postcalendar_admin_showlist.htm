@@ -18,7 +18,7 @@
 				<!--[section name=event loop=$events]-->
 					<tr class="<!--[cycle values="pn-odd,pn-even"]-->">
 						<td><input type="checkbox" value="<!--[$events[event].eid]-->" id="events[]" name="events[]"/></td>
-						<td><a href='<!--[pnmodurl modname="PostCalendar" type="admin" func="edit" eid=$events[event].eid]-->' ><!--[$events[event].title|pc_cleanVar]--></a></td>
+						<td><a href='<!--[pnmodurl modname="PostCalendar" type="admin" func="edit" eid=$events[event].eid]-->' ><!--[$events[event].title]--></a></td>
 						<td><!--[$events[event].time]--></td>
 					</tr>
 				<!--[/section]-->
