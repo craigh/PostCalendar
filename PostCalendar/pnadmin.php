@@ -293,7 +293,7 @@ function postcalendar_admin_updateconfig()
 }
 
 /**
- * @decrecated
+ * @deprecated
  * @function    postcalendar_admin_categories
  * @description display list of PostCalendar categories
  * @return      categories template
@@ -315,7 +315,7 @@ function postcalendar_admin_categories()
 }
 
 /**
- * @decrecated
+ * @deprecated
  * @function    postcalendar_admin_categoriesConfirm
  * @description present review of changes to categories
  * @return      categoriesconfirm template
@@ -341,7 +341,7 @@ function postcalendar_admin_categoriesConfirm()
 
     if (is_array($del)) {
         $dels = implode(',', $del);
-        $pnRender->assign('delText', __('Delete Categories?', $dom) . $dels . '.');
+        $pnRender->assign('delText', __('Delete Categories', $dom) .": ". $dels );
         $pnRender->assign('dels', $dels);
     }
     $pnRender->assign('id', serialize($id));
@@ -357,7 +357,7 @@ function postcalendar_admin_categoriesConfirm()
 }
 
 /**
- * @decrecated
+ * @deprecated
  * @function    postcalendar_admin_categoriesUpdate
  * @description modify categories (add/delete/edit)
  * @return      status/error -> return to categories display
