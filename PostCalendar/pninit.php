@@ -70,7 +70,7 @@ function postcalendar_upgrade($oldversion)
         require dirname(__FILE__) . '/pnversion.php';
 
         // Inform user about error, and how he can upgrade to $modversion['version']
-        return LogUtil::registerError(__f('Notice: This version does not support upgrades from PostCalendar 3.x and earlier. Please download and install version 4.0.3  (available from <a href=\"http://code.zikula.org/soundwebdevelopment/downloads\">code.zikula.org/soundwebdevelopment</a>). After upgrading, you can install PostCalendar %version% and perform this upgrade.', $modversion, $dom));
+        return LogUtil::registerError(__f('Notice: This version does not support upgrades from PostCalendar 3.x and earlier. Please download and install version 4.0.3  (available from <a href="http://code.zikula.org/soundwebdevelopment/downloads">code.zikula.org/soundwebdevelopment</a>). After upgrading, you can install PostCalendar %version% and perform this upgrade.', $modversion, $dom));
     }
 
     // change the database. DBUtil + ADODB detect the changes on their own

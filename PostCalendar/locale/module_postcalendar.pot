@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Zikula 1.2.x\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-10-14 00:31+0000\n"
+"POT-Creation-Date: 2009-10-24 18:35+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #: pnadmin.php:55 pnadmin.php:599 pnadmin.php:632 pnadmin.php:665
-msgid "Approved Events Administration"
+msgid "Approved events administration"
 msgstr ""
 
 #: pnadmin.php:70
@@ -25,11 +25,11 @@ msgid "Hidden Events Administration"
 msgstr ""
 
 #: pnadmin.php:85
-msgid "Queued Events Administration"
+msgid "Queued events administration"
 msgstr ""
 
 #: pnadmin.php:126
-msgid "View"
+msgid "List"
 msgstr ""
 
 #: pnadmin.php:126
@@ -47,20 +47,20 @@ msgid "Delete"
 msgstr ""
 
 #: pnadmin.php:164
-msgid "Please select an event"
+msgid "Please select an event."
 msgstr ""
 
 #: pnadmin.php:181
-msgid "Are you sure you want to approve these events?"
+msgid "Do you really want to approve these events?"
 msgstr ""
 
 #: pnadmin.php:185
-msgid "Are you sure you want to hide these events?"
+msgid "Do you really want to hide these events?"
 msgstr ""
 
 #: pnadmin.php:189
 #: pntemplates/event/postcalendar_event_deleteeventconfirm.htm:10
-msgid "Are you sure you want to delete this event?"
+msgid "Do you really want to delete this event?"
 msgstr ""
 
 #: pnadmin.php:228 pnadmin.php:258
@@ -68,47 +68,48 @@ msgid "Error! Could not load default values."
 msgstr ""
 
 #: pnadmin.php:240
-msgid "Your PostCalendar configuration has been reset to use defaults."
+msgid "Done! PostCalendar configuration reset to use default values."
 msgstr ""
 
 #: pnadmin.php:291
-msgid "Your PostCalendar configuration has been updated."
+msgid "Done! Updated the PostCalendar configuration."
 msgstr ""
 
 #: pnadmin.php:344
-msgid "Delete Categories?"
+#, php-format
+msgid "Delete Categories: %s"
 msgstr ""
 
 #: pnadmin.php:420
-msgid "Categories update failed."
+msgid "Error! Could not update the categories."
 msgstr ""
 
 #: pnadmin.php:429
-msgid "Category delete failed."
+msgid "Error! Could not delete the category."
 msgstr ""
 
 #: pnadmin.php:442
-msgid "New category creation failed."
+msgid "Error! Could not create the category."
 msgstr ""
 
 #: pnadmin.php:447
-msgid "Category modified as requested."
+msgid "Done! Updated the category."
 msgstr ""
 
 #: pnadmin.php:464
-msgid "Smarty Cache has been cleared"
+msgid "Done! Cleared Smarty cache."
 msgstr ""
 
 #: pnadmin.php:467
-msgid "Smarty Cache was not cleared"
+msgid "Error! Could not clear Smarty cache."
 msgstr ""
 
 #: pnadmin.php:505
-msgid "Zikula Version"
+msgid "Zikula version"
 msgstr ""
 
 #: pnadmin.php:506
-msgid "Sitename"
+msgid "Site name"
 msgstr ""
 
 #: pnadmin.php:507
@@ -116,32 +117,32 @@ msgid "URL"
 msgstr ""
 
 #: pnadmin.php:508
-msgid "PHP Version"
+msgid "PHP version"
 msgstr ""
 
 #: pnadmin.php:510 pnadmin.php:516
-msgid "ON"
+msgid "On"
 msgstr ""
 
 #: pnadmin.php:512 pnadmin.php:518
-msgid "OFF"
+msgid "Off"
 msgstr ""
 
 #: pnadmin.php:527
-msgid "PHP open_basedir"
+msgid "PHP 'open_basedir'"
 msgstr ""
 
 #: pnadmin.php:530
-msgid "WebServer"
+msgid "Web server"
 msgstr ""
 
 #: pnadmin.php:531
-msgid "Module dir"
+msgid "Module directory"
 msgstr ""
 
 #: pnadmin.php:537
 #, php-format
-msgid "New version %s installed but not updated!"
+msgid "Warning! New version %s installed but not updated."
 msgstr ""
 
 #: pnadmin.php:539
@@ -157,52 +158,52 @@ msgid "Smarty location"
 msgstr ""
 
 #: pnadmin.php:542
-msgid "Smarty template dir"
+msgid "Smarty template directory"
 msgstr ""
 
 #: pnadmin.php:546
 #, php-format
-msgid "Compile dir doesn't exist! [%s]"
+msgid "Error! Could not find compilation directory '%s'."
 msgstr ""
 
 #: pnadmin.php:550
 #, php-format
-msgid "Compile dir not writeable! [%s]"
+msgid "Error! The compilation directory '%s' is not writeable."
 msgstr ""
 
 #: pnadmin.php:553
-msgid "Smarty compile dir"
+msgid "Smarty compilation directory"
 msgstr ""
 
 #: pnadmin.php:557
 #, php-format
-msgid "Cache dir doesn't exist! [%s]"
+msgid "Error! Could not find cache directory '%s'."
 msgstr ""
 
 #: pnadmin.php:561
 #, php-format
-msgid "Cache dir not writeable! [%s]"
+msgid "Error! The cache directory '%s' is not writeable."
 msgstr ""
 
 #: pnadmin.php:564
-msgid "Smarty cache dir"
+msgid "Smarty cache directory"
 msgstr ""
 
 #: pnadmin.php:582 pnadmin.php:595 pnadmin.php:615 pnadmin.php:628
 #: pnadmin.php:648 pnadmin.php:661 pnevent.php:60
-msgid "There was an error while processing your request."
+msgid "Error! An 'unidentified error' occurred."
 msgstr ""
 
 #: pnadmin.php:593
-msgid "The event(s) have been approved."
+msgid "Done! Approved the event(s)."
 msgstr ""
 
 #: pnadmin.php:626
-msgid "The event(s) have been hidden."
+msgid "Done! Hid the event(s)."
 msgstr ""
 
 #: pnadmin.php:659
-msgid "Your event has been deleted."
+msgid "Done! Deleted the event."
 msgstr ""
 
 #: pnversion.php:12
@@ -237,11 +238,11 @@ msgid "My Events"
 msgstr ""
 
 #: pntemplates/plugins/function.pc_filter.php:99
-#: pntemplates/plugins/function.pc_get_category.php:17 pnsearchapi.php:40
+#: pntemplates/plugins/function.pc_get_category.php:17
 msgid "All Categories"
 msgstr ""
 
-#: pntemplates/plugins/function.pc_filter.php:119 pnsearchapi.php:52
+#: pntemplates/plugins/function.pc_filter.php:119
 msgid "All Topics"
 msgstr ""
 
@@ -287,6 +288,14 @@ msgstr ""
 msgid "go"
 msgstr ""
 
+#: pnsearchapi.php:40
+msgid "All categories"
+msgstr ""
+
+#: pnsearchapi.php:52
+msgid "All topics"
+msgstr ""
+
 #: pnsearchapi.php:134
 msgid "Error! Could not load items."
 msgstr ""
@@ -307,7 +316,7 @@ msgid "Sunday Monday Tuesday Wednesday Thursday Friday Saturday"
 msgstr ""
 
 #: pnuserapi.php:292 pnuserapi.php:467 pnuserapi.php:522 pnuser.php:70
-msgid "Required arguments not present in "
+msgid "Error! Required arguments not present."
 msgstr ""
 
 #: pnuserapi.php:468
@@ -370,19 +379,20 @@ msgid "Search"
 msgstr ""
 
 #: pnevent.php:24
-msgid "You are not authorized."
+msgid "Sorry! Authorization has not been granted."
 msgstr ""
 
 #: pnevent.php:38
-msgid "There are no events with id "
+#, php-format
+msgid "Error! There are no events with ID %s."
 msgstr ""
 
 #: pnevent.php:57
-msgid "You are not allowed to delete this event"
+msgid "Sorry! You do not have authorization to delete this event."
 msgstr ""
 
 #: pnevent.php:237
-msgid "You are not allowed to edit this event"
+msgid "Sorry! You do not have authorization to edit this event."
 msgstr ""
 
 #: pnevent.php:249
@@ -393,48 +403,49 @@ msgstr ""
 msgid "PM"
 msgstr ""
 
+#. !This is the field name from pntemplates/event/postcalendar_event_submit.html:31
 #: pnevent.php:301
-msgid "is a required field."
+msgid "'Title' is a required field."
 msgstr ""
 
 #: pnevent.php:308 pnevent.php:316
-msgid "Your repeating frequency must be at least 1."
+msgid "Error! The repetition frequency must be at least 1."
 msgstr ""
 
 #: pnevent.php:311 pnevent.php:319
-msgid "Your repeating frequency must be an integer."
+msgid "Error! The repetition frequency must be an integer."
 msgstr ""
 
 #: pnevent.php:340
-msgid "Your start date is greater than your end date"
+msgid "Error! The selected start date falls after the selected end date."
 msgstr ""
 
 #: pnevent.php:344
-msgid "Your start date is invalid"
+msgid "Error! Invalid start date."
 msgstr ""
 
 #: pnevent.php:348
-msgid "Your end date is invalid"
+msgid "Error! Invalid end date."
 msgstr ""
 
 #: pnevent.php:369
-msgid "Your submission failed."
+msgid "Error! Submission failed."
 msgstr ""
 
 #: pnevent.php:373
-msgid "Your event has been modified."
+msgid "Done! Updated the event."
 msgstr ""
 
 #: pnevent.php:375
-msgid "Your event has been submitted."
+msgid "Done! Submitted the event."
 msgstr ""
 
 #: pneventapi.php:571
-msgid "Plain Text"
+msgid "Plain text"
 msgstr ""
 
 #: pneventapi.php:571
-msgid "HTML"
+msgid "HTML-formatted"
 msgstr ""
 
 #: pneventapi.php:613
@@ -482,7 +493,7 @@ msgid "Categories"
 msgstr ""
 
 #: pnadminapi.php:45
-msgid "Add"
+msgid "Create new event"
 msgstr ""
 
 #: pnadminapi.php:48
@@ -498,35 +509,35 @@ msgid "Queued"
 msgstr ""
 
 #: pnadminapi.php:57
-msgid "Clear Smarty Cache"
+msgid "Clear Smarty cache"
 msgstr ""
 
 #: pnadminapi.php:60
-msgid "Test System"
+msgid "Test system"
 msgstr ""
 
 #: pnadminapi.php:159
-msgid "Meeting notify email sent"
+msgid "Done! Sent meeting-notification e-mail message."
 msgstr ""
 
 #: pnadminapi.php:162
-msgid "Meeting notify email not sent"
+msgid "Error! Could not send meeting-notification e-mail message."
 msgstr ""
 
 #: pnadminapi.php:195 pntemplates/email/postcalendar_email_adminnotify.htm:2
-msgid "NOTICE:: PostCalendar Submission/Modification"
+msgid "Notice: PostCalendar submission/change"
 msgstr ""
 
 #: pnadminapi.php:198
-msgid "Admin notify email sent"
+msgid "Done! Sent administrator notification e-mail message."
 msgstr ""
 
 #: pnadminapi.php:201
-msgid "Admin notify email not sent"
+msgid "Error! Could not send administrator notification e-mail message."
 msgstr ""
 
 #: pninit.php:28
-msgid "Error! Sorry! Table creation failed."
+msgid "Error! Could not create the table."
 msgstr ""
 
 #: pninit.php:32
@@ -534,36 +545,40 @@ msgid "Default"
 msgstr ""
 
 #: pninit.php:32
-msgid "Default Category"
+msgid "Default category"
 msgstr ""
 
-#: pninit.php:34 pninit.php:41
-msgid "Error! Creation attempt failed."
+#: pninit.php:34
+msgid "Error! Could not create the new default category."
+msgstr ""
+
+#: pninit.php:41
+msgid "Error! Could not set the default settings for PostCalendar."
 msgstr ""
 
 #: pninit.php:73
 msgid ""
-"This version does not support upgrades from PostCalendar 3.x and lower. "
-"Please download and install at least version 4.0.3 (available from <a href="
+"Notice: This version does not support upgrades from PostCalendar 3.x and "
+"earlier. Please download and install version 4.0.3  (available from <a href="
 "\"http://code.zikula.org/soundwebdevelopment/downloads\">code.zikula.org/"
-"soundwebdevelopment</a>). Upgrading to PostCalendar %version% is possible "
-"from that version."
+"soundwebdevelopment</a>). After upgrading, you can install PostCalendar %"
+"version% and perform this upgrade."
 msgstr ""
 
 #: pninit.php:79
-msgid "Upgrading tables failed"
+msgid "Error! Could not upgrade the tables."
 msgstr ""
 
-#: pninit.php:183
-msgid "Configuration not updated"
+#: pninit.php:185
+msgid "Error! Could not update the configuration."
 msgstr ""
 
 #: pntemplates/admin/postcalendar_admin_modifyconfig.htm:7
-msgid "PostCalendar Global Settings"
+msgid "PostCalendar settings"
 msgstr ""
 
 #: pntemplates/admin/postcalendar_admin_modifyconfig.htm:13
-msgid "General Settings"
+msgid "General settings"
 msgstr ""
 
 #: pntemplates/admin/postcalendar_admin_modifyconfig.htm:17
@@ -572,19 +587,19 @@ msgid "Reset ALL Settings to Defaults (for language \"%s\")"
 msgstr ""
 
 #: pntemplates/admin/postcalendar_admin_modifyconfig.htm:21
-msgid "Allow submitted events to be made active instantly"
+msgid "Allow submitted events to be activated without review"
 msgstr ""
 
 #: pntemplates/admin/postcalendar_admin_modifyconfig.htm:26
-msgid "Allow users to publish Personal Calendars"
+msgid "Allow users to publish personal calendars"
 msgstr ""
 
 #: pntemplates/admin/postcalendar_admin_modifyconfig.htm:31
-msgid "Cache template output?"
+msgid "Cache template output"
 msgstr ""
 
 #: pntemplates/admin/postcalendar_admin_modifyconfig.htm:36
-msgid "Cache Lifetime (in seconds)"
+msgid "Cache lifetime (in seconds)"
 msgstr ""
 
 #: pntemplates/admin/postcalendar_admin_modifyconfig.htm:41
@@ -592,23 +607,23 @@ msgid "Use topics from Topics module (deprecated)"
 msgstr ""
 
 #: pntemplates/admin/postcalendar_admin_modifyconfig.htm:49
-msgid "Display Settings"
+msgid "Display settings"
 msgstr ""
 
 #: pntemplates/admin/postcalendar_admin_modifyconfig.htm:52
-msgid "Number of events to list on admin pages"
+msgid "Number of events to list on administration pages"
 msgstr ""
 
 #: pntemplates/admin/postcalendar_admin_modifyconfig.htm:56
-msgid "Use 24 hour time format"
+msgid "Use 24-hour time format"
 msgstr ""
 
 #: pntemplates/admin/postcalendar_admin_modifyconfig.htm:61
-msgid "Time Increment for Add (minutes 1-60)"
+msgid "Time increment for new creation (1-60 minutes)"
 msgstr ""
 
 #: pntemplates/admin/postcalendar_admin_modifyconfig.htm:65
-msgid "View events in a popup window"
+msgid "View events in a pop-up window"
 msgstr ""
 
 #: pntemplates/admin/postcalendar_admin_modifyconfig.htm:70
@@ -634,44 +649,44 @@ msgid "Saturday"
 msgstr ""
 
 #: pntemplates/admin/postcalendar_admin_modifyconfig.htm:84
-msgid "Default Calendar View"
+msgid "Default calendar view"
 msgstr ""
 
 #: pntemplates/admin/postcalendar_admin_modifyconfig.htm:95
-msgid "Show hovering event text on mouseover"
+msgid "Show 'hover' event text during 'mouseover'"
 msgstr ""
 
 #: pntemplates/admin/postcalendar_admin_modifyconfig.htm:100
-msgid "Display repeating options"
+msgid "Show repetition settings"
 msgstr ""
 
 #: pntemplates/admin/postcalendar_admin_modifyconfig.htm:105
-msgid "Allow Users to filter event display by Category/Topic"
+msgid "Allow users to filter event display by category/topic"
 msgstr ""
 
 #: pntemplates/admin/postcalendar_admin_modifyconfig.htm:112
-msgid "Notification Settings"
+msgid "Notification settings"
 msgstr ""
 
 #: pntemplates/admin/postcalendar_admin_modifyconfig.htm:115
-msgid "Notify Admin About <b>USER</b> Event Submission/Modification"
+msgid "Notify administrator about user event submission/change"
 msgstr ""
 
 #: pntemplates/admin/postcalendar_admin_modifyconfig.htm:120
-msgid "Notify Admin About <b>ADMIN</b> Event Submission/Modification"
+msgid "Notify administrator about administrator event submission/change"
 msgstr ""
 
 #: pntemplates/admin/postcalendar_admin_modifyconfig.htm:125
-msgid "Notification Email Address"
+msgid "E-mail address to send notifications"
 msgstr ""
 
 #: pntemplates/admin/postcalendar_admin_modifyconfig.htm:129
 #: pntemplates/admin/postcalendar_admin_categories.htm:40
-msgid "Commit Changes"
+msgid "Update"
 msgstr ""
 
 #: pntemplates/admin/postcalendar_admin_eventrevue.htm:5
-msgid "Event Review"
+msgid "Event review"
 msgstr ""
 
 #: pntemplates/admin/postcalendar_admin_eventrevue.htm:14
@@ -682,16 +697,19 @@ msgstr ""
 #: pntemplates/user/postcalendar_user_view_popup.html:29
 #: pntemplates/user/postcalendar_user_view_event_preview.html:21
 #: pntemplates/user/postcalendar_user_view_event_details.html:31
-msgid "All Day"
+msgid "All day"
 msgstr ""
 
 #: pntemplates/admin/postcalendar_admin_view_event_details.htm:23
 #: pntemplates/event/postcalendar_event_submit.html:59
+#: pntemplates/user/postcalendar_user_view_popup.html:31
 #: pntemplates/user/postcalendar_user_view_event_preview.html:23
+#: pntemplates/user/postcalendar_user_view_event_details.html:33
 msgid "Duration"
 msgstr ""
 
 #: pntemplates/admin/postcalendar_admin_view_event_details.htm:35
+#: pntemplates/event/postcalendar_event_submit.html:106
 #: pntemplates/user/postcalendar_user_view_popup.html:40
 #: pntemplates/user/postcalendar_user_view_event_preview.html:35
 #: pntemplates/user/postcalendar_user_view_event_details.html:42
@@ -701,10 +719,14 @@ msgstr ""
 #: pntemplates/admin/postcalendar_admin_view_event_details.htm:57
 #: pntemplates/user/postcalendar_user_view_event_preview.html:57
 #: pntemplates/user/postcalendar_user_view_event_details.html:64
-msgid "Contact Information"
+msgid "Contact information"
 msgstr ""
 
 #: pntemplates/admin/postcalendar_admin_view_event_details.htm:73
+#: pntemplates/event/postcalendar_event_submit.html:139
+#: pntemplates/user/postcalendar_user_view_popup.html:78
+#: pntemplates/user/postcalendar_user_view_event_preview.html:73
+#: pntemplates/user/postcalendar_user_view_event_details.html:80
 msgid "Fee"
 msgstr ""
 
@@ -715,6 +737,7 @@ msgstr ""
 
 #: pntemplates/admin/postcalendar_admin_showlist.htm:7
 #: pntemplates/admin/postcalendar_admin_showlist.htm:15
+#: pntemplates/event/postcalendar_event_submit.html:31
 msgid "Title"
 msgstr ""
 
@@ -723,7 +746,7 @@ msgid "Select"
 msgstr ""
 
 #: pntemplates/admin/postcalendar_admin_showlist.htm:16
-msgid "Timestamp (entered on)"
+msgid "Time stamp"
 msgstr ""
 
 #: pntemplates/admin/postcalendar_admin_showlist.htm:29
@@ -732,7 +755,7 @@ msgstr ""
 
 #: pntemplates/admin/postcalendar_admin_showlist.htm:33
 #: pntemplates/admin/postcalendar_admin_showlist.htm:35
-msgid "Prev"
+msgid "Previous"
 msgstr ""
 
 #: pntemplates/admin/postcalendar_admin_showlist.htm:33
@@ -746,15 +769,16 @@ msgid "Next"
 msgstr ""
 
 #: pntemplates/admin/postcalendar_admin_categories.htm:16
-msgid "Category Name"
+msgid "Name"
 msgstr ""
 
 #: pntemplates/admin/postcalendar_admin_categories.htm:17
-msgid "Category Description"
+#: pntemplates/event/postcalendar_event_submit.html:69
+msgid "Description"
 msgstr ""
 
 #: pntemplates/admin/postcalendar_admin_categories.htm:18
-msgid "Category Color"
+msgid "Color"
 msgstr ""
 
 #: pntemplates/admin/postcalendar_admin_categories.htm:33
@@ -762,27 +786,27 @@ msgid "New =>"
 msgstr ""
 
 #: pntemplates/admin/postcalendar_admin_categoriesconfirm.htm:5
-msgid "Confirm Category change"
+msgid "Confirmation prompt"
 msgstr ""
 
 #: pntemplates/admin/postcalendar_admin_categoriesconfirm.htm:8
-msgid "Are you sure you'd like to continue with these actions?"
+msgid "Do you really want to perform these actions?"
 msgstr ""
 
 #: pntemplates/admin/postcalendar_admin_categoriesconfirm.htm:18
-msgid "Add new category : "
+msgid "Create a new category: "
 msgstr ""
 
 #: pntemplates/admin/postcalendar_admin_categoriesconfirm.htm:20
-msgid "Make modifications to current categories."
+msgid "Apply changes to existing categories."
 msgstr ""
 
 #: pntemplates/admin/postcalendar_admin_categoriesconfirm.htm:26
-msgid "YES!"
+msgid "Accept"
 msgstr ""
 
 #: pntemplates/admin/postcalendar_admin_systeminfo.htm:5
-msgid "Zikula & PostCalendar Current System Information"
+msgid "PostCalendar and Zikula system information"
 msgstr ""
 
 #: pntemplates/admin/postcalendar_admin_systeminfo.htm:9
@@ -794,7 +818,7 @@ msgid "Information"
 msgstr ""
 
 #: pntemplates/event/postcalendar_event_deleteeventconfirm.htm:2
-msgid "Delete Event"
+msgid "Delete event"
 msgstr ""
 
 #: pntemplates/event/postcalendar_event_deleteeventconfirm.htm:12
@@ -802,7 +826,7 @@ msgid "CANCEL"
 msgstr ""
 
 #: pntemplates/event/postcalendar_event_submit.html:15
-msgid "Event Preview"
+msgid "Event preview"
 msgstr ""
 
 #: pntemplates/event/postcalendar_event_submit.html:23
@@ -810,16 +834,12 @@ msgid "PostCalendar Rocks!"
 msgstr ""
 
 #: pntemplates/event/postcalendar_event_submit.html:24
-msgid "Add New Calendar Event"
+msgid "Create new calendar event"
 msgstr ""
 
 #: pntemplates/event/postcalendar_event_submit.html:26
 #: pntemplates/email/postcalendar_email_meetingnotify.htm:14
 msgid "Event"
-msgstr ""
-
-#: pntemplates/event/postcalendar_event_submit.html:31
-msgid "Event Title"
 msgstr ""
 
 #: pntemplates/event/postcalendar_event_submit.html:31
@@ -829,16 +849,18 @@ msgstr ""
 
 #: pntemplates/event/postcalendar_event_submit.html:35
 #: pntemplates/event/postcalendar_event_submit.html:38
-msgid "For User"
+msgid "For user"
 msgstr ""
 
 #: pntemplates/event/postcalendar_event_submit.html:42
-msgid "Event Start Date"
+msgid "Start date"
 msgstr ""
 
 #: pntemplates/event/postcalendar_event_submit.html:48
+#: pntemplates/user/postcalendar_user_view_week.html:65
 #: pntemplates/user/postcalendar_user_view_day.html:58
-msgid "All day event"
+#: pntemplates/user/postcalendar_user_view_list.html:64
+msgid "All-day event"
 msgstr ""
 
 #: pntemplates/event/postcalendar_event_submit.html:52
@@ -853,12 +875,8 @@ msgstr ""
 msgid "Minutes"
 msgstr ""
 
-#: pntemplates/event/postcalendar_event_submit.html:69
-msgid "Event Description"
-msgstr ""
-
 #: pntemplates/event/postcalendar_event_submit.html:74
-msgid "Permitted tags if using HTML"
+msgid "Permitted HTML tags"
 msgstr ""
 
 #: pntemplates/event/postcalendar_event_submit.html:83
@@ -872,11 +890,7 @@ msgstr ""
 
 #: pntemplates/event/postcalendar_event_submit.html:100
 #: pntemplates/search/postcalendar_search_options.htm:11
-msgid "Event Category"
-msgstr ""
-
-#: pntemplates/event/postcalendar_event_submit.html:106
-msgid "Event Location"
+msgid "Category"
 msgstr ""
 
 #: pntemplates/event/postcalendar_event_submit.html:116
@@ -892,7 +906,7 @@ msgid "State"
 msgstr ""
 
 #: pntemplates/event/postcalendar_event_submit.html:122
-msgid "Postal/Zip Code"
+msgid "Zipcode"
 msgstr ""
 
 #: pntemplates/event/postcalendar_event_submit.html:131
@@ -901,54 +915,47 @@ msgid "Contact"
 msgstr ""
 
 #: pntemplates/event/postcalendar_event_submit.html:133
-msgid "Contact Phone"
+msgid "Phone number"
 msgstr ""
 
 #: pntemplates/event/postcalendar_event_submit.html:135
-msgid "Contact Email"
+msgid "E-mail address"
 msgstr ""
 
 #: pntemplates/event/postcalendar_event_submit.html:137
-msgid "Event Website"
-msgstr ""
-
-#: pntemplates/event/postcalendar_event_submit.html:139
-#: pntemplates/user/postcalendar_user_view_popup.html:78
-#: pntemplates/user/postcalendar_user_view_event_preview.html:73
-#: pntemplates/user/postcalendar_user_view_event_details.html:80
-msgid "Event Fee"
+msgid "Web site"
 msgstr ""
 
 #: pntemplates/event/postcalendar_event_submit.html:151
-msgid "Repeating Options"
+msgid "Repetition settings"
 msgstr ""
 
 #: pntemplates/event/postcalendar_event_submit.html:156
-msgid "does not repeat"
+msgid "One-time event"
 msgstr ""
 
 #: pntemplates/event/postcalendar_event_submit.html:159
-msgid "event repeats every"
+msgid "Repeats every"
 msgstr ""
 
 #: pntemplates/event/postcalendar_event_submit.html:176
-msgid "event repeats on"
+msgid "Repeats on"
 msgstr ""
 
 #: pntemplates/event/postcalendar_event_submit.html:187
-msgid "of the month every"
+msgid "of the month, every"
 msgstr ""
 
 #: pntemplates/event/postcalendar_event_submit.html:189
-msgid "Month(s)"
+msgid "month(s)"
 msgstr ""
 
 #: pntemplates/event/postcalendar_event_submit.html:199
-msgid "End Date"
+msgid "End date"
 msgstr ""
 
 #: pntemplates/event/postcalendar_event_submit.html:207
-msgid "no end date"
+msgid "No end date"
 msgstr ""
 
 #: pntemplates/event/postcalendar_event_submit.html:230
@@ -956,15 +963,15 @@ msgid "Preview"
 msgstr ""
 
 #: pntemplates/email/postcalendar_email_meetingnotify.htm:2
-msgid "PostCalendar Meeting Notification"
+msgid "PostCalendar meeting notification"
 msgstr ""
 
 #: pntemplates/email/postcalendar_email_meetingnotify.htm:4
-msgid "Hello"
+msgid "Hello!"
 msgstr ""
 
 #: pntemplates/email/postcalendar_email_meetingnotify.htm:6
-msgid "The user %pc_author% has created a new meeting event for you:"
+msgid "You're invited to a new meeting created by %pc_author%:"
 msgstr ""
 
 #: pntemplates/email/postcalendar_email_meetingnotify.htm:8
@@ -992,15 +999,15 @@ msgid "Duration     : %1$s:%2$s"
 msgstr ""
 
 #: pntemplates/email/postcalendar_email_meetingnotify.htm:14
-msgid "This event and further details can be viewed under"
+msgid "Further details can be viewed here:"
 msgstr ""
 
 #: pntemplates/email/postcalendar_email_adminnotify.htm:5
-msgid "The following calendar event has been modifed"
+msgid "The following calendar event has been changed:"
 msgstr ""
 
 #: pntemplates/email/postcalendar_email_adminnotify.htm:7
-msgid "The following calendar event has been added"
+msgid "The following calendar event has been added:"
 msgstr ""
 
 #: pntemplates/user/postcalendar_user_view_month.html:55
@@ -1013,12 +1020,7 @@ msgstr ""
 #: pntemplates/user/postcalendar_user_view_year.html:101
 #: pntemplates/user/postcalendar_user_view_event_details.html:100
 #: pntemplates/user/postcalendar_user_view_list.html:79
-msgid "Return'"
-msgstr ""
-
-#: pntemplates/user/postcalendar_user_view_week.html:65
-#: pntemplates/user/postcalendar_user_view_list.html:64
-msgid "All day Event"
+msgid "Return"
 msgstr ""
 
 #: pntemplates/user/postcalendar_user_navigation_small.html:40
@@ -1053,17 +1055,12 @@ msgstr ""
 
 #: pntemplates/user/postcalendar_user_navigation_small.html:55
 #: pntemplates/user/postcalendar_user_navigation.html:56
-msgid "Print View"
-msgstr ""
-
-#: pntemplates/user/postcalendar_user_view_popup.html:31
-#: pntemplates/user/postcalendar_user_view_event_details.html:33
-msgid "Event Duration"
+msgid "Print view"
 msgstr ""
 
 #: pntemplates/user/postcalendar_user_view_day.html:62
 #: pntemplates/blocks/postcalendar_block_view_day.html:45
-msgid "No Events"
+msgid "No events scheduled."
 msgstr ""
 
 #: pntemplates/user/postcalendar_user_navigation.html:38
@@ -1083,11 +1080,11 @@ msgid "Copy"
 msgstr ""
 
 #: pntemplates/user/postcalendar_user_view_list.html:21
-msgid "Month List View"
+msgid "Month list view"
 msgstr ""
 
 #: pntemplates/blocks/postcalendar_block_view_upcoming.html:12
-msgid "Upcoming Events"
+msgid "Upcoming events"
 msgstr ""
 
 #: pntemplates/blocks/postcalendar_block_view_upcoming.html:40
@@ -1096,33 +1093,33 @@ msgid "Long"
 msgstr ""
 
 #: pntemplates/blocks/postcalendar_block_view_upcoming.html:52
-msgid "No Events Today"
+msgid "No events today."
 msgstr ""
 
 #: pntemplates/blocks/postcalendar_block_view_day.html:12
-msgid "Today's Events"
+msgid "Today's events"
 msgstr ""
 
 #: pntemplates/blocks/postcalendar_block_calendar_modify.html:3
-msgid "Display the calendar?"
+msgid "Display the calendar"
 msgstr ""
 
 #: pntemplates/blocks/postcalendar_block_calendar_modify.html:7
-msgid "Display today's events in the block?"
+msgid "Display today's events in the block"
 msgstr ""
 
 #: pntemplates/blocks/postcalendar_block_calendar_modify.html:11
-msgid "Display upcoming events in block?"
+msgid "Display upcoming events in the block"
 msgstr ""
 
 #: pntemplates/blocks/postcalendar_block_calendar_modify.html:15
-msgid "Show search/submit links in block?"
+msgid "Display search/submit links in the block"
 msgstr ""
 
 #: pntemplates/blocks/postcalendar_block_calendar_modify.html:19
-msgid "Display how many events?"
+msgid "Number of events to display"
 msgstr ""
 
 #: pntemplates/blocks/postcalendar_block_calendar_modify.html:23
-msgid "How many months ahead to query for upcoming events?"
+msgid "Number of months ahead to query for upcoming events"
 msgstr ""
