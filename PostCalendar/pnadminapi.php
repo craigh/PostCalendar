@@ -42,7 +42,7 @@ function postcalendar_adminapi_getlinks()
                         'text' => __('Categories', $dom));
     }
     if (pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADD)) {
-        $links[] = array('url' => pnModURL('PostCalendar', 'event', 'new'), 'text' => __('Add', $dom));
+        $links[] = array('url' => pnModURL('PostCalendar', 'event', 'new'), 'text' => __('Create new event', $dom));
     }
     if (pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
         $links[] = array('url' => pnModURL('PostCalendar', 'admin', 'listapproved'), 'text' => __('Approved', $dom));
@@ -54,10 +54,10 @@ function postcalendar_adminapi_getlinks()
         $links[] = array('url' => pnModURL('PostCalendar', 'admin', 'listqueued'), 'text' => __('Queued', $dom));
     }
     if (pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
-        $links[] = array('url' => pnModURL('PostCalendar', 'admin', 'manualClearCache'), 'text' => __('Clear Smarty Cache', $dom));
+        $links[] = array('url' => pnModURL('PostCalendar', 'admin', 'manualClearCache'), 'text' => __('Clear Smarty cache', $dom));
     }
     if (pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
-        $links[] = array('url' => pnModURL('PostCalendar', 'admin', 'testSystem'), 'text' => __('Test System', $dom));
+        $links[] = array('url' => pnModURL('PostCalendar', 'admin', 'testSystem'), 'text' => __('Test system', $dom));
     }
 
     // Return the links array back to the calling function
@@ -156,10 +156,10 @@ function postcalendar_adminapi_meeting_mailparticipants($args)
     $messagesent = pnModAPIFunc('Mailer', 'user', 'sendmessage', array('toaddress' => $toaddress, 'subject' => $subject, 'body' => $message, 'html' => true));
 
     if ($messagesent) {
-        LogUtil::registerStatus(__('Meeting notify email sent', $dom));
+        LogUtil::registerStatus(__('Done! Sent meeting-notification e-mail message.', $dom));
         return true;
     } else {
-        LogUtil::registerError(__('Meeting notify email not sent', $dom));
+        LogUtil::registerError(__('Error! Could not send meeting-notification e-mail message.', $dom));
         return false;
     }
 }
@@ -192,13 +192,13 @@ function postcalendar_adminapi_notify($args)
     $pnRender->assign('link', pnModURL('PostCalendar', 'admin', 'adminevents', array('events' => $eid, 'action' => _ADMIN_ACTION_VIEW), null, null, true));
     $message = $pnRender->fetch('email/postcalendar_email_adminnotify.htm');
 
-    $messagesent = pnModAPIFunc('Mailer', 'user', 'sendmessage', array('toaddress' => _SETTING_NOTIFY_EMAIL, 'subject' => __('NOTICE:: PostCalendar Submission/Modification', $dom), 'body' => $message, 'html' => true));
+    $messagesent = pnModAPIFunc('Mailer', 'user', 'sendmessage', array('toaddress' => _SETTING_NOTIFY_EMAIL, 'subject' => __('Notice: PostCalendar submission/change', $dom), 'body' => $message, 'html' => true));
 
     if ($messagesent) {
-        LogUtil::registerStatus(__('Admin notify email sent', $dom));
+        LogUtil::registerStatus(__('Done! Sent administrator notification e-mail message.', $dom));
         return true;
     } else {
-        LogUtil::registerError(__('Admin notify email not sent', $dom));
+        LogUtil::registerError(__('Error! Could not send administrator notification e-mail message.', $dom));
         return false;
     }
 }

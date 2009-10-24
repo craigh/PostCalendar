@@ -2,10 +2,10 @@
 <!--[include file="admin/postcalendar_admin_menu.htm"]-->
 <div class="pn-admincontainer">
 <div class="pn-adminpageicon"><!--[pnimg modname='PostCalendar' src='admin.gif']--></div>
-<h2><!--[gt text="Confirm Category change"]--></h2>
+<h2><!--[gt text="Confirmation prompt"]--></h2>
 <form class="pn-adminform" action="<!--[pnmodurl modname="PostCalendar" type="admin" func="categoriesUpdate"]-->" method="post" enctype="application/x-www-form-urlencoded">
 	<input type="hidden" name="authid" value="<!--[pnsecgenauthkey module="PostCalendar"]-->">
-	<!--[gt text="Are you sure you'd like to continue with these actions?"]-->
+	<!--[gt text="Do you really want to perform these actions?"]-->
 	<br /><br />
 	<!--[if !empty($delText)]-->
 		<input type="hidden" name="dels" value="<!--[$dels|pnvarprepfordisplay]-->">
@@ -15,14 +15,14 @@
 		<input type="hidden" name="newname" value="<!--[$newname|pnvarprepfordisplay]-->">
 		<input type="hidden" name="newdesc" value="<!--[$newdesc|pnvarprepfordisplay]-->">
 		<input type="hidden" name="newcolor" value="<!--[$newcolor|pnvarprepfordisplay]-->">
-		<!--[gt text="Add new category : "]--><!--[$newname]-->.<br />
+		<!--[gt text="Create a new category: "]--><!--[$newname]-->.<br />
 	<!--[/if]-->
-	<!--[gt text="Make modifications to current categories."]--><br />
+	<!--[gt text="Apply changes to existing categories."]--><br />
 	<input type="hidden" name="id" value="<!--[$id|pnvarprepfordisplay]-->">
 	<input type="hidden" name="del" value="<!--[$del|pnvarprepfordisplay]-->">
 	<input type="hidden" name="name" value="<!--[$name|pnvarprepfordisplay]-->">
 	<input type="hidden" name="desc" value="<!--[$desc|pnvarprepfordisplay]-->">
 	<input type="hidden" name="color" value="<!--[$color|pnvarprepfordisplay]-->">
-	<input type="submit" value="<!--[gt text="YES!"]-->"/>
+	<input type="submit" value="<!--[gt text="Accept"]-->"/>
 </form>
 </div><!-- /pn-admincontainer -->

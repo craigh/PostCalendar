@@ -28,9 +28,9 @@
             <br />
 
             <!--[ if $A_EVENT.alldayevent ]-->
-                <!--[gt text='All Day']-->
+                <!--[gt text='All day']-->
             <!--[ else ]-->
-                <!--[gt text='Event Duration']-->: <!--[ $A_EVENT.duration_hours ]-->:<!--[ $A_EVENT.duration_minutes ]-->
+                <!--[gt text='Duration']-->: <!--[ $A_EVENT.duration_hours ]-->:<!--[ $A_EVENT.duration_minutes ]-->
             <!--[ /if ]-->
 </div>
 <div class="eventdetails">
@@ -61,7 +61,7 @@
                 </p>
             <!--[ /if ]-->
             <!--[ if $CONTACT_INFO ]-->
-                <p><b><!--[gt text='Contact Information']-->:</b><br />
+                <p><b><!--[gt text='Contact information']-->:</b><br />
                 <!--[ if $A_EVENT.contname ]-->
                     <!--[ $A_EVENT.contname ]--><br />
                 <!--[ /if ]-->
@@ -77,7 +77,7 @@
                 </p>
             <!--[ /if ]-->
             <!--[ if $A_EVENT.fee != '' ]-->
-                <br /><!--[gt text='Event Fee']-->: <!--[ $A_EVENT.fee ]-->
+                <br /><!--[gt text='Fee']-->: <!--[ $A_EVENT.fee ]-->
             <!--[ /if ]-->
         </div>
 </div>

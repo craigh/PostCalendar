@@ -25,20 +25,20 @@ function postcalendar_init()
     $dom = ZLanguage::getModuleDomain('PostCalendar');
     // create tables
     if (!DBUtil::createTable('postcalendar_events') || !DBUtil::createTable('postcalendar_categories')) {
-        return LogUtil::registerError(__('Error! Sorry! Table creation failed.', $dom));
+        return LogUtil::registerError(__('Error! Could not create the table.', $dom));
     }
 
     // insert default category
-    $defaultcat = array('catname' => __('Default', $dom), 'catdesc' => __('Default Category', $dom));
+    $defaultcat = array('catname' => __('Default', $dom), 'catdesc' => __('Default category', $dom));
     if (!DBUtil::insertObject($defaultcat, 'postcalendar_categories', 'catid')) {
-        return LogUtil::registerError(__('Error! Creation attempt failed.', $dom));
+        return LogUtil::registerError(__('Error! Could not create the new default category.', $dom));
     }
 
     // PostCalendar Default Settings
     $defaultsettings = postcalendar_init_getdefaults();
     $result = pnModSetVars('PostCalendar', $defaultsettings);
     if (!$result) {
-        return LogUtil::registerError(__('Error! Creation attempt failed.', $dom));
+        return LogUtil::registerError(__('Error! Could not set the default settings for PostCalendar.', $dom));
     }
 
     postcalendar_init_reset_scribite();
@@ -70,13 +70,13 @@ function postcalendar_upgrade($oldversion)
         require dirname(__FILE__) . '/pnversion.php';
 
         // Inform user about error, and how he can upgrade to $modversion['version']
-        return LogUtil::registerError(__f('This version does not support upgrades from PostCalendar 3.x and lower. Please download and install at least version 4.0.3 (available from <a href="http://code.zikula.org/soundwebdevelopment/downloads">code.zikula.org/soundwebdevelopment</a>). Upgrading to PostCalendar %version% is possible from that version.', $modversion, $dom));
+        return LogUtil::registerError(__f('Notice: This version does not support upgrades from PostCalendar 3.x and earlier. Please download and install version 4.0.3  (available from <a href=\"http://code.zikula.org/soundwebdevelopment/downloads\">code.zikula.org/soundwebdevelopment</a>). After upgrading, you can install PostCalendar %version% and perform this upgrade.', $modversion, $dom));
     }
 
     // change the database. DBUtil + ADODB detect the changes on their own
     // and perform all necessary steps without help from the module author
     if (!DBUtil::changeTable('postcalendar_events') || !DBUtil::changeTable('postcalendar_categories')) {
-        return LogUtil::registerError(__('Upgrading tables failed', $dom));
+        return LogUtil::registerError(__('Error! Could not upgrade the tables.', $dom));
     }
 
     switch ($oldversion) {
@@ -107,7 +107,9 @@ function postcalendar_upgrade($oldversion)
             pnModDelVar('PostCalendar', 'pcAddressbook');
             pnModDelVar('PostCalendar', 'pcMeeting');
             pnModDelVar('PostCalendar', 'pcUseInternationalDates');
-        //case '5.8.0':
+        case '5.8.1':
+            // no changes
+        //case '5.8.1':
             // modify table to remove cols: pc_comments, pc_counter, pc_recurrfreq, pc_meeting_id, pc_topic?
             // remove postcalendar_categories table entirely?
     }
@@ -180,7 +182,7 @@ function postcalendar_init_reset_scribite()
         // Error tracking
         if ($mid === false) {
             //pnModLangLoad('scribite', 'user');
-            LogUtil::registerStatus (__('Configuration not updated', $dom));
+            LogUtil::registerStatus (__('Error! Could not update the configuration.', $dom));
         }
     }
 }

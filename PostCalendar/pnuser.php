@@ -67,7 +67,7 @@ function postcalendar_user_display($args)
 
     extract($args);
     if (empty($Date) && empty($viewtype)) {
-        return LogUtil::registerError(__('Required arguments not present in '.__FUNCTION__, $dom));
+        return LogUtil::registerError(__('Error! Required arguments not present.', $dom));
         return false;
     }
 

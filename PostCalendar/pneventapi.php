@@ -568,7 +568,7 @@ function postcalendar_eventapi_buildSubmitForm($args)
 
     $tpl->assign('ValueEventDesc', DataUtil::formatForDisplay($event_desc));
 
-    $eventHTMLorText = array('text' => __('Plain Text', $dom), 'html' => __('HTML', $dom));
+    $eventHTMLorText = array('text' => __('Plain text', $dom), 'html' => __('HTML-formatted', $dom));
     $tpl->assign('EventHTMLorText', $eventHTMLorText);
     $tpl->assign('EventHTMLorTextVal', $pc_html_or_text);
 

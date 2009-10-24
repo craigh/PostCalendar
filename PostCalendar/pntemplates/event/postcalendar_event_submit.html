@@ -12,7 +12,7 @@
 
 <!--[if !empty($preview)]-->
     <div style='background-color:#CCCCCC; border: 2px solid #999999; margin: 2em; padding: 1em;'>
-        <h3 style='border-bottom: 1px solid #999999;'><!--[gt text='Event Preview']--></h3>
+        <h3 style='border-bottom: 1px solid #999999;'><!--[gt text='Event preview']--></h3>
         <!--[$preview]-->
     </div>
 <!--[/if]-->
@@ -21,31 +21,31 @@
 
 <div style='border-color:#CCCCCC;border-style:solid;border-width:0 1px 1px;color:inherit;margin-bottom:1.25em;padding:0 1% 5px;width:auto;'>
 <div style='float:right; padding-top:5px;'><!--[pnimg modname=PostCalendar src=admin.gif __alt="PostCalendar Rocks!"]--></div>
-<h2 style='border-bottom:1px solid #CCCCCC;margin-top:1em;text-align:left;'><!--[gt text='Add New Calendar Event']--></h2>
+<h2 style='border-bottom:1px solid #CCCCCC;margin-top:1em;text-align:left;'><!--[gt text='Create new calendar event']--></h2>
 <div style="padding-top:16px;">
 <h2 style='border-bottom:1px solid #CCCCCC;margin-top:0;text-align:left;'><!--[gt text='Event']--></h2>
     <table width="100%" border="0" cellpadding="2" cellspacing="0">
     <!-- EVENT INFO ROWS -->
         <tr>
             <td align="left" valign="top" width="50%">
-                <!--[gt text='Event Title']-->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style='color:red;'>*<!--[gt text='Required']--></span><br />
+                <!--[gt text='Title']-->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style='color:red;'>*<!--[gt text='Required']--></span><br />
                 <input type="text" name="event_subject" value="<!--[ $ValueEventTitle ]-->" size="40" /><br />
 		        
                 <!--[if ((is_array($users)) AND ($pcAllowUserCalendar)) ]-->
-                    <!--[gt text='For User']-->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style='color:red;'>*<!--[gt text='Required']--></span><br />
+                    <!--[gt text='For user']-->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style='color:red;'>*<!--[gt text='Required']--></span><br />
 		            <!--[html_options name=event_for_userid options=$users selected=$user_selected]-->
                 <!--[else]-->
-                    <br /><i><!--[gt text='For User']-->: <!--[$username_selected]--></i>
+                    <br /><i><!--[gt text='For user']-->: <!--[$username_selected]--></i>
                     <input type="hidden" name="event_for_userid" value="<!--[$user_selected]-->">          
                 <!--[/if]--><br /><br />
 
-		        <b><!--[gt text='Event Start Date']-->:</b>&nbsp;&nbsp;&nbsp;
+		        <b><!--[gt text='Start date']-->:</b>&nbsp;&nbsp;&nbsp;
 		        <!--[ pc_calendar_build_input_box htmlName="meetingdate_start" dateFormat="%d-%m-%Y" defaultString=$startvalue defaultDate=$startdate ]-->
 		        <br/ ><br />
                 <table border="0" cellpadding="0" cellspacing="1">
                     <tr>
                         <td valign="top" align="left"><input type="radio" name="event_allday" value="1" <!--[ $SelectedAllday ]--> /></td>
-                        <td valign="top" align="left"><!--[gt text='All day event']--></td>
+                        <td valign="top" align="left"><!--[gt text='All-day event']--></td>
                     </tr>
                     <tr>
                         <td valign="top" align="left"><input type="radio" name="event_allday" value="0" <!--[ $SelectedTimed ]--> /></td>
@@ -66,12 +66,12 @@
                     </tr>
                 </table>
 		        <br/ >
-                <!--[gt text='Event Description']--><br />
+                <!--[gt text='Description']--><br />
 		        <textarea id="description" name="event_desc" wrap="virtual" rows="5" cols="40"><!--[ $ValueEventDesc ]--></textarea><br />
                 <!--[if $formattedcontent eq 0]-->
                     <!--[* SCRIBITE NOT IN USE *]-->
                     <!--[html_options name=pc_html_or_text options=$EventHTMLorText selected=$EventHTMLorTextVal]-->
-                    <div class="pn-warningmsg" id="html_warning"><b><!--[gt text='Permitted tags if using HTML']--></b><br /><!--[allowedhtml]--></div>
+                    <div class="pn-warningmsg" id="html_warning"><b><!--[gt text='Permitted HTML tags']--></b><br /><!--[allowedhtml]--></div>
                 <!--[else]-->
                     <!--[* SCRIBITE IN USE *]-->
                     <input type="hidden" name="pc_html_or_text" value="html" />
@@ -97,13 +97,13 @@
                     <span style='padding-left:3em;'><i><!--[gt text='Global']--></i><input type="hidden" name="event_sharing" value="3"></span><br />
                 <!--[/if]-->
                 <br />
-                <!--[gt text='Event Category']--><br />
+                <!--[gt text='Category']--><br />
                 <!--[html_options name=event_category options=$categories selected=$event_category]-->
                 <br />
                 <table border="0" cellpadding="0" cellspacing="2">
                 <tr>
                     <td colspan="3" valign="middle">
-                        <!--[gt text='Event Location']--><br />
+                        <!--[gt text='Location']--><br />
                         <table border="0" align="left" cellpadding="0" cellspacing="0">
                             <tr>
                                 <td><input size="40" type="text" name="event_location"  value="<!--[ $ValueLocation ]-->" /></td>
@@ -119,7 +119,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td><!--[gt text='City']--></td><td><!--[gt text='State']--></td><td><!--[gt text='Postal/Zip Code']--></td>
+                    <td><!--[gt text='City']--></td><td><!--[gt text='State']--></td><td><!--[gt text='Zipcode']--></td>
                 </tr>
                 <tr>
                     <td><input size="10" type="text" name="event_city"  value="<!--[ $ValueCity ]-->" /></td>
@@ -130,13 +130,13 @@
                 <br />
                 <!--[gt text='Contact']--><br />
                 <input type="text" name="event_contname" value="<!--[ $ValueContact ]-->" /><br />
-                <!--[gt text='Contact Phone']--><br />
+                <!--[gt text='Phone number']--><br />
                 <input type="text" name="event_conttel" value="<!--[ $ValuePhone ]-->" /><br />
-                <!--[gt text='Contact Email']--><br />
+                <!--[gt text='E-mail address']--><br />
                 <input type="text" name="event_contemail" value="<!--[ $ValueEmail ]-->" /><br />
-                <!--[gt text='Event Website']--><br />
+                <!--[gt text='Web site']--><br />
                 <input type="text" name="event_website" value="<!--[ $ValueWebsite ]-->" /><br />
-                <!--[gt text='Event Fee']--><br />
+                <!--[gt text='Fee']--><br />
                 <input type="text" name="event_fee" value="<!--[ $ValueFee ]-->" /><br />
             </td>
         </tr>
@@ -148,15 +148,15 @@
 <!--[pnmodgetvar module="PostCalendar" name="pcRepeating"|pnvarprepfordisplay assign="pcDisplayRepeating"]-->
 <!--[ if $pcDisplayRepeating ]-->
 <div>
-<h2 style='border-bottom:1px solid #CCCCCC;margin-top:1em;text-align:left;'><!--[gt text='Repeating Options']--></h2>
+<h2 style='border-bottom:1px solid #CCCCCC;margin-top:1em;text-align:left;'><!--[gt text='Repetition settings']--></h2>
     <table width="100%" border="0" cellpadding="2" cellspacing="0">
         <tr>
             <td colspan="2" align="left" valign="middle" width="100%">
                 <input type="radio" name="event_repeat" value="0" <!--[ $SelectedNoRepeat ]--> />
-                <!--[gt text='does not repeat']--><br />
+                <!--[gt text='One-time event']--><br />
 
                 <input type="radio" name="event_repeat" value="1" <!--[ $SelectedRepeat ]--> />
-                <!--[gt text='event repeats every']-->
+                <!--[gt text='Repeats every']-->
                 <input type="text" name="event_repeat_freq" value="<!--[ $InputRepeatFreqVal ]-->" size="4" />
 				<!--
 				<select name="event_repeat_freq">
@@ -173,7 +173,7 @@
                 <br />
 
                 <input type="radio" name="event_repeat" value="2" <!--[ $SelectedRepeatOn ]--> />
-                <!--[gt text='event repeats on']-->
+                <!--[gt text='Repeats on']-->
                 <select name="event_repeat_on_num">
                 <!--[ foreach item=repeat from=$repeat_on_num ]-->
                     <option value="<!--[ $repeat.value ]-->" <!--[ $repeat.selected ]-->><!--[ $repeat.name ]--></option>
@@ -184,9 +184,9 @@
                     <option value="<!--[ $repeat.value ]-->" <!--[ $repeat.selected ]-->><!--[ $repeat.name ]--></option>
                 <!--[ /foreach ]-->
                 </select>&nbsp;
-                <!--[gt text='of the month every']-->&nbsp;
+                <!--[gt text='of the month, every']-->&nbsp;
 				<input type="text" name="event_repeat_on_freq" value="<!--[ $InputRepeatOnFreqVal ]-->" size="4" />
-				<!--[gt text='Month(s)']-->.
+				<!--[gt text='month(s)']-->.
 				<!--
                 <select name="event_repeat_on_freq">
                 <!--[ foreach item=repeat from=$repeat_on_freq ]-->
@@ -196,7 +196,7 @@
 				-->
                 <br /><br />
 
-                <b><!--[gt text='End Date']-->:</b><br />
+                <b><!--[gt text='End date']-->:</b><br />
                 <input type="radio" name="event_endtype" value="1" <!--[ $SelectedEndOn ]--> />&nbsp;
 		<!--[ if $startdate > $endDate ]-->
                 	<!--[ pc_calendar_build_input_box htmlName="meetingdate_end" dateFormat="%d-%m-%Y" defaultString=$startvalue defaultDate=$startdate ]--><br />
@@ -204,7 +204,7 @@
                 	<!--[ pc_calendar_build_input_box htmlName="meetingdate_end" dateFormat="%d-%m-%Y" defaultString=$endvalue defaultDate=$endDate ]--><br />
                 <!--[ /if ]-->
                 <input type="radio" name="event_endtype" value="0" <!--[ $SelectedNoEnd ]--> />&nbsp;
-                <!--[gt text='no end date']-->
+                <!--[gt text='No end date']-->
             </td>
         </tr>
     </table>

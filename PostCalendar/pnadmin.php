@@ -52,7 +52,7 @@ function postcalendar_admin_listapproved()
     $args = array();
     $args['type']     = _EVENT_APPROVED;
     $args['function'] = 'listapproved';
-    $args['title']    = __('Approved Events Administration', $dom);
+    $args['title']    = __('Approved events administration', $dom);
     return postcalendar_admin_showlist($args);
 }
 
@@ -82,7 +82,7 @@ function postcalendar_admin_listqueued()
     $args = array();
     $args['type']     = _EVENT_QUEUED;
     $args['function'] = 'listqueued';
-    $args['title']    = __('Queued Events Administration', $dom);
+    $args['title']    = __('Queued events administration', $dom);
     return postcalendar_admin_showlist($args);
 }
 
@@ -123,7 +123,7 @@ function postcalendar_admin_showlist($args)
     $pnRender->assign('events', $events);
     $pnRender->assign('title_sort_url', pnModUrl('PostCalendar', 'admin', $args['function'], array('sort' => 'title', 'sdir' => $sdir)));
     $pnRender->assign('time_sort_url', pnModUrl('PostCalendar', 'admin', $args['function'], array('sort' => 'time', 'sdir' => $sdir)));
-    $pnRender->assign('formactions', array(_ADMIN_ACTION_VIEW => __('View', $dom), _ADMIN_ACTION_APPROVE => __('Approve', $dom),
+    $pnRender->assign('formactions', array(_ADMIN_ACTION_VIEW => __('List', $dom), _ADMIN_ACTION_APPROVE => __('Approve', $dom),
                         _ADMIN_ACTION_HIDE => __('Hide', $dom),
                         _ADMIN_ACTION_DELETE => __('Delete', $dom)));
     $pnRender->assign('actionselected', _ADMIN_ACTION_VIEW);
@@ -161,7 +161,7 @@ function postcalendar_admin_adminevents()
     $thelist     = FormUtil::getPassedValue('thelist');
 
     if (!isset($events)) {
-        LogUtil::registerError(__('Please select an event', $dom));
+        LogUtil::registerError(__('Please select an event.', $dom));
 
         // return to where we came from
         switch ($thelist) {
@@ -178,15 +178,15 @@ function postcalendar_admin_adminevents()
     switch ($action) {
         case _ADMIN_ACTION_APPROVE:
             $function = 'approveevents';
-            $are_you_sure_text = __('Are you sure you want to approve these events?', $dom);
+            $are_you_sure_text = __('Do you really want to approve these events?', $dom);
             break;
         case _ADMIN_ACTION_HIDE:
             $function = 'hideevents';
-            $are_you_sure_text = __('Are you sure you want to hide these events?', $dom);
+            $are_you_sure_text = __('Do you really want to hide these events?', $dom);
             break;
         case _ADMIN_ACTION_DELETE:
             $function = 'deleteevents';
-            $are_you_sure_text = __('Are you sure you want to delete this event?', $dom);
+            $are_you_sure_text = __('Do you really want to delete this event?', $dom);
             break;
     }
 
@@ -237,7 +237,7 @@ function postcalendar_admin_resetDefaults()
     // clear the cache
     pnModAPIFunc('PostCalendar', 'admin', 'clearCache');
 
-    LogUtil::registerStatus(__('Your PostCalendar configuration has been reset to use defaults.', $dom));
+    LogUtil::registerStatus(__('Done! PostCalendar configuration reset to use default values.', $dom));
     return postcalendar_admin_modifyconfig();
 }
 
@@ -288,7 +288,7 @@ function postcalendar_admin_updateconfig()
     // clear the cache
     pnModAPIFunc('PostCalendar', 'admin', 'clearCache');
 
-    LogUtil::registerStatus(__('Your PostCalendar configuration has been updated.', $dom));
+    LogUtil::registerStatus(__('Done! Updated the PostCalendar configuration.', $dom));
     return postcalendar_admin_modifyconfig();
 }
 
@@ -341,7 +341,7 @@ function postcalendar_admin_categoriesConfirm()
 
     if (is_array($del)) {
         $dels = implode(',', $del);
-        $pnRender->assign('delText', __('Delete Categories', $dom) .": ". $dels );
+        $pnRender->assign('delText', __f('Delete Categories: %s', $dels, $dom));
         $pnRender->assign('dels', $dels);
     }
     $pnRender->assign('id', serialize($id));
@@ -417,7 +417,7 @@ function postcalendar_admin_categoriesUpdate()
         $obj['catcolor'] = $modColor[$k];
         $res = DBUtil::updateObject($obj, 'postcalendar_categories', '', 'catid');
         if (!$res) {
-            LogUtil::registerError(__('Categories update failed.', $dom));
+            LogUtil::registerError(__('Error! Could not update the categories.', $dom));
             $action_status = false;
         }
     }
@@ -426,7 +426,7 @@ function postcalendar_admin_categoriesUpdate()
     if (isset($dels) && $dels) {
         $res = DBUtil::deleteObjectsFromKeyArray(array_flip($del), 'postcalendar_categories', 'catid');
         if (!$res) {
-            LogUtil::registerError(__('Category delete failed.', $dom));
+            LogUtil::registerError(__('Error! Could not delete the category.', $dom));
             $action_status = false;
         }
     }
@@ -439,12 +439,12 @@ function postcalendar_admin_categoriesUpdate()
         $obj['catcolor'] = $newcolor;
         $res = DBUtil::insertObject($obj, 'postcalendar_categories', false, 'catid');
         if (!$res) {
-            LogUtil::registerError(__('New category creation failed.', $dom));
+            LogUtil::registerError(__('Error! Could not create the category.', $dom));
             $action_status = false;
         }
     }
 
-    if ($action_status) LogUtil::registerStatus(__('Category modified as requested.', $dom)); // category updated/deleted/added
+    if ($action_status) LogUtil::registerStatus(__('Done! Updated the category.', $dom)); // category updated/deleted/added
     return postcalendar_admin_categories();
 }
 
@@ -461,10 +461,10 @@ function postcalendar_admin_manualClearCache()
     }
     $clear = pnModAPIFunc('PostCalendar', 'admin', 'clearCache');
     if ($clear) {
-        LogUtil::registerStatus(__('Smarty Cache has been cleared', $dom));
+        LogUtil::registerStatus(__('Done! Cleared Smarty cache.', $dom));
         return postcalendar_admin_modifyconfig();
     }
-    return LogUtil::registerError(__('Smarty Cache was not cleared', $dom), null, pnModURL('PostCalendar', 'admin', 'modifyconfig'));
+    return LogUtil::registerError(__('Error! Could not clear Smarty cache.', $dom), null, pnModURL('PostCalendar', 'admin', 'modifyconfig'));
 }
 
 /**
@@ -502,20 +502,20 @@ function postcalendar_admin_testSystem()
         $pnVersion = pnConfigGetVar('Version_Num');
     }
 
-    array_push($infos, array(__('Zikula Version', $dom), $pnVersion));
-    array_push($infos, array(__('Sitename', $dom), pnConfigGetVar('sitename')));
+    array_push($infos, array(__('Zikula version', $dom), $pnVersion));
+    array_push($infos, array(__('Site name', $dom), pnConfigGetVar('sitename')));
     array_push($infos, array(__('URL', $dom), pnGetBaseURL()));
-    array_push($infos, array(__('PHP Version', $dom), phpversion()));
+    array_push($infos, array(__('PHP version', $dom), phpversion()));
     if ((bool) ini_get('safe_mode')) {
-        $safe_mode = __('ON', $dom);
+        $safe_mode = __('On', $dom);
     } else {
-        $safe_mode = __('OFF', $dom);
+        $safe_mode = __('Off', $dom);
     }
     array_push($infos, array('PHP safe_mode', $safe_mode));
     if ((bool) ini_get('safe_mode_gid')) {
-        $safe_mode_gid = __('ON', $dom);
+        $safe_mode_gid = __('On', $dom);
     } else {
-        $safe_mode_gid = __('OFF', $dom);
+        $safe_mode_gid = __('Off', $dom);
     }
     array_push($infos, array('PHP safe_mode_gid', $safe_mode_gid));
     $base_dir = ini_get('open_basedir');
@@ -524,44 +524,44 @@ function postcalendar_admin_testSystem()
     } else {
         $open_basedir = "NULL";
     }
-    array_push($infos, array(__('PHP open_basedir', $dom), $open_basedir));
+    array_push($infos, array(__('PHP \'open_basedir\'', $dom), $open_basedir));
     array_push($infos, array('SAPI', php_sapi_name()));
     array_push($infos, array('OS', php_uname()));
-    array_push($infos, array(__('WebServer', $dom), $__SERVER['SERVER_SOFTWARE']));
-    array_push($infos, array(__('Module dir', $dom), dirname(__FILE__)));
+    array_push($infos, array(__('Web server', $dom), $__SERVER['SERVER_SOFTWARE']));
+    array_push($infos, array(__('Module directory', $dom), dirname(__FILE__)));
 
     $modversion = array();
     include dirname(__FILE__) . '/pnversion.php';
 
     if ($modversion['version'] != $version) {
-        LogUtil::registerError(__('New version %s installed but not updated!', $modversion[version], $dom));
+        LogUtil::registerError(__('Warning! New version %s installed but not updated.', $modversion[version], $dom));
     }
     array_push($infos, array(__('Module version', $dom), $version));
     array_push($infos, array(__('Smarty version', $dom), $tpl->_version));
     array_push($infos, array(__('Smarty location', $dom), SMARTY_DIR));
-    array_push($infos, array(__('Smarty template dir', $dom), $tpl->template_dir));
+    array_push($infos, array(__('Smarty template directory', $dom), $tpl->template_dir));
 
     $info = $tpl->compile_dir;
     if (!file_exists($tpl->compile_dir)) {
-        LogUtil::registerError(__('Compile dir doesn\'t exist! [%s]', $tpl->compile_dir, $dom));
+        LogUtil::registerError(__('Error! Could not find compilation directory \'%s\'.', $tpl->compile_dir, $dom));
     } else {
         // dir exists -> check if it's writeable
         if (!is_writeable($tpl->compile_dir)) {
-            LogUtil::registerError(__('Compile dir not writeable! [%s]', $tpl->compile_dir, $dom));
+            LogUtil::registerError(__('Error! The compilation directory \'%s\' is not writeable.', $tpl->compile_dir, $dom));
         }
     }
-    array_push($infos, array(__('Smarty compile dir', $dom), $tpl->compile_dir));
+    array_push($infos, array(__('Smarty compilation directory', $dom), $tpl->compile_dir));
 
     $info = $tpl->cache_dir;
     if (!file_exists($tpl->cache_dir)) {
-        LogUtil::registerError(__('Cache dir doesn\'t exist! [%s]', $tpl->cache_dir, $dom));
+        LogUtil::registerError(__('Error! Could not find cache directory \'%s\'.', $tpl->cache_dir, $dom));
     } else {
         // dir exists -> check if it's writeable
         if (!is_writeable($tpl->cache_dir)) {
-            LogUtil::registerError(__('Cache dir not writeable! [%s]', $tpl->cache_dir, $dom));
+            LogUtil::registerError(__('Error! The cache directory \'%s\' is not writeable.', $tpl->cache_dir, $dom));
         }
     }
-    array_push($infos, array(__('Smarty cache dir', $dom), $tpl->cache_dir));
+    array_push($infos, array(__('Smarty cache directory', $dom), $tpl->cache_dir));
 
     $tpl->assign('infos', $infos);
     return $tpl->fetch('admin/postcalendar_admin_systeminfo.htm');
@@ -579,7 +579,7 @@ function postcalendar_admin_approveevents()
     }
 
     $pc_eid = FormUtil::getPassedValue('pc_eid');
-    if (!is_array($pc_eid)) return __('There was an error while processing your request.', $dom);
+    if (!is_array($pc_eid)) return __('Error! An \'unidentified error\' occurred.', $dom);
 
     // structure array for DB interaction
     $eventarray = array();
@@ -590,13 +590,13 @@ function postcalendar_admin_approveevents()
     // update the DB
     $res = pnModAPIFunc('PostCalendar', 'event', 'update', $eventarray);
     if ($res) {
-        LogUtil::registerStatus(__('The event(s) have been approved.', $dom));
+        LogUtil::registerStatus(__('Done! Approved the event(s).', $dom));
     } else {
-        LogUtil::registerError(__('There was an error while processing your request.', $dom));
+        LogUtil::registerError(__('Error! An \'unidentified error\' occurred.', $dom));
     }
 
     pnModAPIFunc('PostCalendar', 'admin', 'clearCache');
-    return pnModFunc('PostCalendar', 'admin', 'showlist', array('type' => _EVENT_APPROVED, 'function' => 'listapproved', 'title' => __('Approved Events Administration', $dom)));
+    return pnModFunc('PostCalendar', 'admin', 'showlist', array('type' => _EVENT_APPROVED, 'function' => 'listapproved', 'title' => __('Approved events administration', $dom)));
 }
 
 /*
@@ -612,7 +612,7 @@ function postcalendar_admin_hideevents()
     }
 
     $pc_eid = FormUtil::getPassedValue('pc_eid');
-    if (!is_array($pc_eid)) return __('There was an error while processing your request.', $dom);
+    if (!is_array($pc_eid)) return __('Error! An \'unidentified error\' occurred.', $dom);
 
     // structure array for DB interaction
     $eventarray = array();
@@ -623,13 +623,13 @@ function postcalendar_admin_hideevents()
     // update the DB
     $res = pnModAPIFunc('PostCalendar', 'event', 'update', $eventarray);
     if ($res) {
-        LogUtil::registerStatus(__('The event(s) have been hidden.', $dom));
+        LogUtil::registerStatus(__('Done! Hid the event(s).', $dom));
     } else {
-        LogUtil::registerError(__('There was an error while processing your request.', $dom));
+        LogUtil::registerError(__('Error! An \'unidentified error\' occurred.', $dom));
     }
 
     pnModAPIFunc('PostCalendar', 'admin', 'clearCache');
-    return pnModFunc('PostCalendar', 'admin', 'showlist', array('type' => _EVENT_APPROVED, 'function' => 'listapproved', 'title' => __('Approved Events Administration', $dom)));
+    return pnModFunc('PostCalendar', 'admin', 'showlist', array('type' => _EVENT_APPROVED, 'function' => 'listapproved', 'title' => __('Approved events administration', $dom)));
 }
 
 /*
@@ -645,7 +645,7 @@ function postcalendar_admin_deleteevents()
     }
 
     $pc_eid = FormUtil::getPassedValue('pc_eid');
-    if (!is_array($pc_eid)) return __('There was an error while processing your request.', $dom);
+    if (!is_array($pc_eid)) return __('Error! An \'unidentified error\' occurred.', $dom);
 
     // structure array for DB interaction
     $eventarray = array();
@@ -656,11 +656,11 @@ function postcalendar_admin_deleteevents()
     // update the DB
     $res = pnModAPIFunc('PostCalendar', 'event', 'deleteeventarray', $eventarray);
     if ($res) {
-        LogUtil::registerStatus(__('Your event has been deleted.', $dom));
+        LogUtil::registerStatus(__('Done! Deleted the event.', $dom));
     } else {
-        LogUtil::registerError(__('There was an error while processing your request.', $dom));
+        LogUtil::registerError(__('Error! An \'unidentified error\' occurred.', $dom));
     }
 
     pnModAPIFunc('PostCalendar', 'admin', 'clearCache');
-    return pnModFunc('PostCalendar', 'admin', 'showlist', array('type' => _EVENT_APPROVED, 'function' => 'listapproved', 'title' => __('Approved Events Administration', $dom)));
+    return pnModFunc('PostCalendar', 'admin', 'showlist', array('type' => _EVENT_APPROVED, 'function' => 'listapproved', 'title' => __('Approved events administration', $dom)));
 }

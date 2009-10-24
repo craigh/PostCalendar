@@ -21,7 +21,7 @@ class postcalendar_event_editHandler extends pnFormHandler
     function initialize(&$render)
     {
         $dom = ZLanguage::getModuleDomain('PostCalendar');
-        if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADD)) return $render->pnFormSetErrorMsg(__('You are not authorized.', $dom));
+        if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADD)) return $render->pnFormSetErrorMsg(__('Sorry! Authorization has not been granted.', $dom));
 
         $this->eid = FormUtil::getPassedValue('eid');
 
@@ -35,7 +35,7 @@ class postcalendar_event_editHandler extends pnFormHandler
 
         // Fetch event data
         $event = pnModAPIFunc('PostCalendar', 'event', 'getEventDetails', $this->eid);
-        if (count($event) == 0) return $render->pnFormSetErrorMsg(__('There are no events with id '.$this->eid.'.', $dom));
+        if (count($event) == 0) return $render->pnFormSetErrorMsg(__f('Error! There are no events with ID %s.',$this->eid, $dom));
 
         if ($args['commandName'] == 'update') {
             /*
@@ -54,10 +54,10 @@ class postcalendar_event_editHandler extends pnFormHandler
         } else if ($args['commandName'] == 'delete') {
             $uname = pnUserGetVar('uname');
             if (($uname != $event['informant']) and (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN))) {
-                return $render->pnFormSetErrorMsg(__('You are not allowed to delete this event', $dom));
+                return $render->pnFormSetErrorMsg(__('Sorry! You do not have authorization to delete this event.', $dom));
             }
             $result = pnModAPIFunc('PostCalendar', 'event', 'deleteevent', array('eid' => $this->eid));
-            if ($result === false) return $render->pnFormSetErrorMsg(__('There was an error while processing your request.', $dom));
+            if ($result === false) return $render->pnFormSetErrorMsg(__('Error! An \'unidentified error\' occurred.', $dom));
 
             $redir = pnModUrl('PostCalendar', 'user', 'view', array('viewtype' => pnModGetVar('PostCalendar', 'pcDefaultView')));
             return $render->pnFormRedirect($redir);
@@ -234,7 +234,7 @@ function postcalendar_event_new($args)
     } else { // we are editing an existing event or copying an exisiting event
         $event = pnModAPIFunc('PostCalendar', 'event', 'getEventDetails', $eid);
         if (($uname != $event['informant']) and (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN))) {
-            return LogUtil::registerError(__('You are not allowed to edit this event', $dom));
+            return LogUtil::registerError(__('Sorry! You do not have authorization to edit this event.', $dom));
         }
         $eventdata['event_subject'] = $event['title'];
         $eventdata['event_desc'] = $event['hometext'];
@@ -298,25 +298,25 @@ function postcalendar_event_new($args)
     $abort = false;
     if (($form_action == 'preview') OR ($form_action == 'commit')) {
         if (empty($event_subject)) {
-            LogUtil::registerError('<b>event subject</b> '.__('is a required field.', $dom).'<br />');
+            LogUtil::registerError(__(/*!This is the field name from pntemplates/event/postcalendar_event_submit.html:31*/'\'Title\' is a required field.', $dom).'<br />');
             $abort = true;
         }
 
         // check repeating frequencies
         if ($event_repeat == REPEAT) {
             if (!isset($event_repeat_freq) || $event_repeat_freq < 1 || empty($event_repeat_freq)) {
-                LogUtil::registerError(__('Your repeating frequency must be at least 1.', $dom));
+                LogUtil::registerError(__('Error! The repetition frequency must be at least 1.', $dom));
                 $abort = true;
             } elseif (!is_numeric($event_repeat_freq)) {
-                LogUtil::registerError(__('Your repeating frequency must be an integer.', $dom));
+                LogUtil::registerError(__('Error! The repetition frequency must be an integer.', $dom));
                 $abort = true;
             }
         } elseif ($event_repeat == REPEAT_ON) {
             if (!isset($event_repeat_on_freq) || $event_repeat_on_freq < 1 || empty($event_repeat_on_freq)) {
-                LogUtil::registerError(__('Your repeating frequency must be at least 1.', $dom));
+                LogUtil::registerError(__('Error! The repetition frequency must be at least 1.', $dom));
                 $abort = true;
             } elseif (!is_numeric($event_repeat_on_freq)) {
-                LogUtil::registerError(__('Your repeating frequency must be an integer.', $dom));
+                LogUtil::registerError(__('Error! The repetition frequency must be an integer.', $dom));
                 $abort = true;
             }
         }
@@ -337,15 +337,15 @@ function postcalendar_event_new($args)
         $tdate = strtotime(date('Y-m-d'));
 
         if ($edate < $sdate && $event_endtype == 1) {
-            LogUtil::registerError(__('Your start date is greater than your end date', $dom));
+            LogUtil::registerError(__('Error! The selected start date falls after the selected end date.', $dom));
             $abort = true;
         }
         if (!checkdate($event_startmonth, $event_startday, $event_startyear)) {
-            LogUtil::registerError(__('Your start date is invalid', $dom));
+            LogUtil::registerError(__('Error! Invalid start date.', $dom));
             $abort = true;
         }
         if (!checkdate($event_endmonth, $event_endday, $event_endyear)) {
-            LogUtil::registerError(__('Your end date is invalid', $dom));
+            LogUtil::registerError(__('Error! Invalid end date.', $dom));
             $abort = true;
         }
     } // end if form_action = preview/commit
@@ -366,13 +366,13 @@ function postcalendar_event_new($args)
         if (!SecurityUtil::confirmAuthKey()) return LogUtil::registerAuthidError(pnModURL('postcalendar', 'admin', 'main'));
 
         if (!pnModAPIFunc('PostCalendar', 'event', 'writeEvent', $eventdata)) {
-            LogUtil::registerError(__('Your submission failed.', $dom));
+            LogUtil::registerError(__('Error! Submission failed.', $dom));
         } else {
             pnModAPIFunc('PostCalendar', 'admin', 'clearCache');
             if ($is_update) {
-                LogUtil::registerStatus(__('Your event has been modified.', $dom));
+                LogUtil::registerStatus(__('Done! Updated the event.', $dom));
             } else {
-                LogUtil::registerStatus(__('Your event has been submitted.', $dom));
+                LogUtil::registerStatus(__('Done! Submitted the event.', $dom));
             }
 
             // save the start date, before the vars are cleared (needed for the redirect on success)

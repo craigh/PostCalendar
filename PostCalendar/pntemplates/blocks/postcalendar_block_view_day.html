@@ -9,7 +9,7 @@
 <!--[ /if ]-->
 <div class="postcalendar_block_view_day">
 <!--[ if $SHOW_TITLE eq 1 ]-->
-    <h2 class='postcalendar_block_innertitle'><!--[gt text="Today's Events"]--></h2>
+    <h2 class='postcalendar_block_innertitle'><!--[gt text="Today's events"]--></h2>
 <!--[ /if ]-->
 <!--[ pc_sort_events var="S_EVENTS" sort="time" order="asc" value=$A_EVENTS ]-->
 <!--[ foreach name=dates item=events key=date from=$S_EVENTS ]-->
@@ -46,7 +46,7 @@
             <!--[ /if ]-->
         <!--[ foreachelse ]-->
                 <!--[ assign var="eventtotal" value="0" ]-->
-                    <li class="pc_blockevent"><!--[gt text='No Events']--></li>
+                    <li class="pc_blockevent"><!--[gt text='No events scheduled.']--></li>
         <!--[ /foreach ]-->
         </ul>
     <!--[ /if ]-->

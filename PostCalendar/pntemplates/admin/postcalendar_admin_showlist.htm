@@ -13,7 +13,7 @@
 				<tr>
 					<td><b><!--[gt text='Select']--></b></td>
 					<td><b><a href='<!--[$title_sort_url]-->'><!--[gt text='Title']--></a></b></td>
-					<td><b><a href='<!--[$time_sort_url]-->'><!--[gt text='Timestamp (entered on)']--></a></b></td>
+					<td><b><a href='<!--[$time_sort_url]-->'><!--[gt text='Time stamp']--></a></b></td>
 				</tr>
 				<!--[section name=event loop=$events]-->
 					<tr class="<!--[cycle values="pn-odd,pn-even"]-->">
@@ -30,9 +30,9 @@
 			</div>
 			<div id="listmanipulator" style='text-align: center; background-color:#cccccc; padding:.5em; margin-top:.5em;'>
 				<!--[if !empty($prevlink)]-->
-					<< <a href="<!--[$prevlink]-->"><!--[gt text="Prev"]--> <!--[$offset_increment]--> <!--[gt text="Events"]--></a>
+					<< <a href="<!--[$prevlink]-->"><!--[gt text="Previous"]--> <!--[$offset_increment]--> <!--[gt text="Events"]--></a>
 				<!--[else]-->
-					<!--[gt text="Prev"]-->
+					<!--[gt text="Previous"]-->
 				<!--[/if]-->
 				&nbsp;|&nbsp;
 				<!--[if !empty($nextlink)]-->

@@ -37,7 +37,7 @@ function postcalendar_searchapi_options($args)
         foreach ($all_categories as $category) {
             $categories[$category['catid']] = $category['catname'];
         }
-        $categories[0] = __('All Categories', $dom);
+        $categories[0] = __('All categories', $dom);
         ksort($categories);
         $renderer->assign('categories', $categories);
 
@@ -49,7 +49,7 @@ function postcalendar_searchapi_options($args)
             foreach ($a_topics as $topic) {
                 $topics[$topic['topicid']] = $topic['topictext'];
             }
-            $topics[0] = __('All Topics', $dom);
+            $topics[0] = __('All topics', $dom);
             ksort($topics);
             $renderer->assign('topics', $topics);
         }

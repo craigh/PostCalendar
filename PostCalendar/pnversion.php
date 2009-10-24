@@ -11,7 +11,7 @@
 $dom = ZLanguage::getModuleDomain('PostCalendar');
 $modversion['name']           = __('PostCalendar', $dom);
 $modversion['id']             = '$Revision$'; // svn revision #
-$modversion['version']        = '5.8';
+$modversion['version']        = '6.0.0-dev';
 $modversion['description']    = __('Calendar for Zikula', $dom);
 $modversion['credits']        = 'docs/credits.txt';
 $modversion['changelog']      = 'http://code.zikula.org/soundwebdevelopment/';

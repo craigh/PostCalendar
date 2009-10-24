@@ -1,9 +1,9 @@
 <!--[* $Id$ *]-->
-<h2><!--[gt text="PostCalendar Meeting Notification"]--></h2>
+<h2><!--[gt text="PostCalendar meeting notification"]--></h2>
 
-<p><!--[gt text="Hello"]-->,</p>
+<p><!--[gt text="Hello!"]-->,</p>
 
-<p><!--[gt text="The user %pc_author% has created a new meeting event for you:" pc_author=$pc_author]--></p>
+<p><!--[gt text="You're invited to a new meeting created by %pc_author%:" pc_author=$pc_author]--></p>
 
 <p><!--[gt text="Event        : %s" tag1=$event_subject]--><br />
 <!--[gt text="Description  : "]--><!--[$pc_description]--><br />
@@ -11,7 +11,7 @@
 <!--[gt text="Time         : %s" tag1=$pc_start_time]--><br />
 <!--[gt text='Duration     : %1$s:%2$s' tag1=$pc_dur_hours tag2=$pc_dur_minutes]--></p>
 
-<p><!--[gt text="This event and further details can be viewed under"]--> <a href="<!--[$pcURL]-->"><!--[gt text="Event"]--> #<!--[$eid]--></a></p>
+<p><!--[gt text="Further details can be viewed here:"]--> <a href="<!--[$pcURL]-->"><!--[gt text="Event"]--> #<!--[$eid]--></a></p>
 
 <hr />
 <p>A Message from your PostCalendar <!--[$modversion]--><br />
