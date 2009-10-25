@@ -14,7 +14,7 @@
  *
  * @param array  $args   array with arguments. Used values:
  *                       'type'  comma separated list of filter types;
- *                               can be one or more of 'user', 'category', 'topic' (required)
+ *                               can be one or both of 'user' or 'category' (required)
  *                       'class' the classname(s) (optional, default no class)
  *                       'label' the label on the submit button (optional, default _PC_TPL_VIEW_SUBMIT)
  *                       'order' comma separated list of arguments to sort on (optional)
@@ -108,33 +108,12 @@ function smarty_function_pc_filter($args, &$smarty)
         unset($types[$key]);
     }
 
-    //================================================================
-    // build the topic filter pulldown
-    //================================================================
-    if (in_array('topic', $types) && _SETTING_TOPICSAVAILABLE && _SETTING_DISPLAY_TOPICS && _SETTING_ALLOW_CAT_FILTER) {
-        @define('_PC_FORM_TOPIC', true);
-        $topic = FormUtil::getPassedValue('pc_topic');
-        $topics = pnModAPIFunc('PostCalendar', 'user', 'getTopics');
-        $topoptions = "<select name=\"pc_topic\" $class>";
-        $topoptions .= "<option value=\"\" $class>" . __('All Topics', $dom) . "</option>";
-        foreach ($topics as $t) {
-            $sel = ($topic == $t['topicid'] ? 'selected="selected"' : '');
-            $topoptions .= "<option value=\"$t[topicid]\" $sel $class>$t[topictext]</option>";
-        }
-        $topoptions .= '</select>';
-    } else {
-        $topoptions = '';
-        $key = array_search('topic',$types);
-        unset($types[$key]);
-    }
-
-
     if (!empty($types)) {
         //================================================================
         // build it in the correct order
         //================================================================
         $submit = "<input type=\"submit\" name=\"submit\" value=\"$label\" $class />";
-        $orderArray = array('user' => $useroptions, 'category' => $catoptions, 'topic' => $topoptions, 'jump' => $submit);
+        $orderArray = array('user' => $useroptions, 'category' => $catoptions, 'jump' => $submit);
     
         if (!is_null($order)) {
             $newOrder = array();

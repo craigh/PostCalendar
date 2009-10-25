@@ -131,7 +131,6 @@ function postcalendar_event_new($args)
     $event_desc     = FormUtil::getPassedValue('event_desc');
     $event_sharing  = FormUtil::getPassedValue('event_sharing');
     $event_category = FormUtil::getPassedValue('event_category');
-    $event_topic    = FormUtil::getPassedValue('event_topic');
 
     // event start information
     $event_meetingdate_start = FormUtil::getPassedValue('meetingdate_start');
@@ -217,7 +216,7 @@ function postcalendar_event_new($args)
     if (!isset($eid) || empty($eid) || $data_loaded) { // this is a new event
         // wrap all the data into array for passing to commit and preview functions
         $eventdata = compact('event_subject', 'event_desc', 'event_sharing',
-            'event_category', 'event_topic', 'event_startmonth', 'event_startday', 'event_startyear',
+            'event_category', 'event_startmonth', 'event_startday', 'event_startyear',
             'event_starttimeh', 'event_starttimem', 'event_startampm', 'event_endmonth',
             'event_endday', 'event_endyear', 'event_endtype', 'event_dur_hours', 'event_dur_minutes',
             'event_duration', 'event_allday', 'event_location', 'event_street1', 'event_street2',
@@ -240,7 +239,6 @@ function postcalendar_event_new($args)
         $eventdata['event_desc'] = $event['hometext'];
         $eventdata['event_sharing'] = $event['sharing'];
         $eventdata['event_category'] = $event['catid'];
-        $eventdata['event_topic'] = $event['topic'];
         $eventdata['event_startmonth'] = substr($event['eventDate'], 5, 2);
         $eventdata['event_startday'] = substr($event['eventDate'], 8, 2);
         $eventdata['event_startyear'] = substr($event['eventDate'], 0, 4);

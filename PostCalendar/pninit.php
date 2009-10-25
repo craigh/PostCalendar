@@ -107,9 +107,10 @@ function postcalendar_upgrade($oldversion)
             pnModDelVar('PostCalendar', 'pcAddressbook');
             pnModDelVar('PostCalendar', 'pcMeeting');
             pnModDelVar('PostCalendar', 'pcUseInternationalDates');
-        case '5.8.1':
+        case '5.8.0':
             // no changes
-        //case '5.8.1':
+        case '5.8.1':
+            pnModDelVar('PostCalendar', 'pcDisplayTopics');
             // modify table to remove cols: pc_comments, pc_counter, pc_recurrfreq, pc_meeting_id, pc_topic?
             // remove postcalendar_categories table entirely?
     }

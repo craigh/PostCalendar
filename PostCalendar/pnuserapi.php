@@ -29,7 +29,6 @@ function postcalendar_userapi_buildView($args)
     // grab the post variables
     $pc_username = FormUtil::getPassedValue('pc_username');
     $category = FormUtil::getPassedValue('pc_category');
-    $topic = FormUtil::getPassedValue('pc_topic');
     //=================================================================
     // set the correct date
     $jumpday   = FormUtil::getPassedValue('jumpday');
@@ -197,27 +196,27 @@ function postcalendar_userapi_buildView($args)
     // Prepare links for template
     //=================================================================
     $pc_prev = pnModURL('PostCalendar', 'user', 'view',
-        array('viewtype' => $viewtype, 'Date' => $prev_month, 'pc_username' => $pc_username, 'pc_category' => $category, 'pc_topic' => $topic));
+        array('viewtype' => $viewtype, 'Date' => $prev_month, 'pc_username' => $pc_username, 'pc_category' => $category));
     $pc_next = pnModURL('PostCalendar', 'user', 'view',
-        array('viewtype' => $viewtype, 'Date' => $next_month, 'pc_username' => $pc_username, 'pc_category' => $category, 'pc_topic' => $topic));
+        array('viewtype' => $viewtype, 'Date' => $next_month, 'pc_username' => $pc_username, 'pc_category' => $category));
     $prev_day = Date_Calc::prevDay($the_day, $the_month, $the_year, '%Y%m%d');
     $next_day = Date_Calc::nextDay($the_day, $the_month, $the_year, '%Y%m%d');
     $pc_prev_day = pnModURL('PostCalendar', 'user', 'view',
-        array('viewtype' => 'day', 'Date' => $prev_day, 'pc_username' => $pc_username, 'pc_category' => $category, 'pc_topic' => $topic));
+        array('viewtype' => 'day', 'Date' => $prev_day, 'pc_username' => $pc_username, 'pc_category' => $category));
     $pc_next_day = pnModURL('PostCalendar', 'user', 'view',
-        array('viewtype' => 'day', 'Date' => $next_day, 'pc_username' => $pc_username, 'pc_category' => $category, 'pc_topic' => $topic));
+        array('viewtype' => 'day', 'Date' => $next_day, 'pc_username' => $pc_username, 'pc_category' => $category));
     $prev_week = date('Ymd', mktime(0, 0, 0, $week_first_day_month, $week_first_day_date - 7, $week_first_day_year));
     $next_week = date('Ymd', mktime(0, 0, 0, $week_last_day_month, $week_last_day_date + 1, $week_last_day_year));
     $pc_prev_week = pnModURL('PostCalendar', 'user', 'view',
-        array('viewtype' => 'week', 'Date' => $prev_week, 'pc_username' => $pc_username, 'pc_category' => $category, 'pc_topic' => $topic));
+        array('viewtype' => 'week', 'Date' => $prev_week, 'pc_username' => $pc_username, 'pc_category' => $category));
     $pc_next_week = pnModURL('PostCalendar', 'user', 'view',
-        array('viewtype' => 'week', 'Date' => $next_week, 'pc_username' => $pc_username, 'pc_category' => $category, 'pc_topic' => $topic));
+        array('viewtype' => 'week', 'Date' => $next_week, 'pc_username' => $pc_username, 'pc_category' => $category,));
     $prev_year = date('Ymd', mktime(0, 0, 0, 1, 1, $the_year - 1));
     $next_year = date('Ymd', mktime(0, 0, 0, 1, 1, $the_year + 1));
     $pc_prev_year = pnModURL('PostCalendar', 'user', 'view',
-        array('viewtype' => 'year', 'Date' => $prev_year, 'pc_username' => $pc_username, 'pc_category' => $category, 'pc_topic' => $topic));
+        array('viewtype' => 'year', 'Date' => $prev_year, 'pc_username' => $pc_username, 'pc_category' => $category));
     $pc_next_year = pnModURL('PostCalendar', 'user', 'view',
-        array('viewtype' => 'year', 'Date' => $next_year, 'pc_username' => $pc_username, 'pc_category' => $category, 'pc_topic' => $topic));
+        array('viewtype' => 'year', 'Date' => $next_year, 'pc_username' => $pc_username, 'pc_category' => $category));
 
     //=================================================================
     // Populate the template
@@ -349,7 +348,6 @@ function postcalendar_userapi_eventPreview($args)
     $event['recurrtype'] = '';
     $event['recurrfreq'] = '';
     $event['recurrspec'] = $event_recurrspec;
-    $event['topic'] = $event_topic;
     $event['alldayevent'] = $event_allday;
     $event['conttel'] = DataUtil::formatForDisplay($event_conttel);
     $event['contname'] = DataUtil::formatForDisplay($event_contname);
@@ -364,14 +362,6 @@ function postcalendar_userapi_eventPreview($args)
     $event['postal'] = DataUtil::formatForDisplay($event_postal);
 
     $event['meetingdate_start'] = $meetingdate_start;
-    //=================================================================
-    // get event's topic information
-    //=================================================================
-    if (_SETTING_DISPLAY_TOPICS && _SETTING_TOPICSAVAILABLE) {
-        $topic = DBUtil::selectObjectByID('topics', $event['topic'], 'topicid');
-        $event['topictext'] = $topic['topictext'];
-        $event['topicimage'] = $topic['topicimage'];
-    }
 
     //=================================================================
     // populate the template
@@ -485,30 +475,6 @@ function postcalendar_userapi_getCategories()
 }
 
 /**
- * postcalendar_userapi_getTopics()
- *
- * Returns array of topic names, sorted by name
- * function appears to account for permissions
- * @return array Topic of names
- */
-function postcalendar_userapi_getTopics()
-{
-    if (!_SETTING_TOPICSAVAILABLE) return false;
-    $permFilter = array();
-    $permFilter[] = array(
-                    'realm'            => 0,
-                    'component_left'   => 'PostCalendar',
-                    'component_middle' => '',
-                    'component_right'  => 'Topic',
-                    'instance_left'    => 'topicid',
-                    'instance_middle'  => '',
-                    'instance_right'   => 'topicname',
-                    'level'        => ACCESS_OVERVIEW);
-
-    return DBUtil::selectObjectArray('topics', '', 'topictext', -1, -1, '', $permFilter);
-}
-
-/**
  * postcalendar_userapi_SmartySetup()
  *
  * legacy function to make sure certain data is available in templates.
@@ -522,7 +488,6 @@ function postcalendar_userapi_SmartySetup(&$smarty)
     if (!is_object($smarty)) return LogUtil::registerError(__('Error! Required arguments not present.', $dom));
 
     $smarty->assign('USE_POPUPS', _SETTING_USE_POPUPS);
-    $smarty->assign('USE_TOPICS', _SETTING_DISPLAY_TOPICS);
     $smarty->assign('OPEN_NEW_WINDOW', _SETTING_OPEN_NEW_WINDOW);
     $smarty->assign('EVENT_DATE_FORMAT', _SETTING_DATE_FORMAT);
     $smarty->assign('24HOUR_TIME', _SETTING_TIME_24HOUR);

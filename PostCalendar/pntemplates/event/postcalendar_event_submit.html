@@ -1,8 +1,6 @@
 <!--[*  $Id$  *]-->
 <!--[ pc_calendar_init ]-->
 <!--[pnmodgetvar module="PostCalendar" name="pcAllowUserCalendar"|pnvarprepfordisplay assign="pcAllowUserCalendar"]-->
-<!--[pnmodavailable modname="Topics" assign="topicsavailable"]-->
-
 <!--[pnpageaddvar name="javascript" value="modules/PostCalendar/pnjavascript/postcalendar_submit_validate.js"]-->
 
 <!--[pnsecauthaction realm="0" comp="PostCalendar::" inst=".*" level="ACCESS_ADMIN" assign="auth"]-->
@@ -79,17 +77,6 @@
             </td>
 
             <td align="left" valign="top" width="50%" style='padding-left:2em;'>
-                <!--[ if (($displayTopics eq 1) and ($topicsavailable)) ]-->
-                    <!--[gt text='Topic']--><br />
-                    <!--[ strip ]-->
-                    <select name="event_topic">
-                    <!--[ foreach item=topic from=$topics ]-->
-                        <option value="<!--[ $topic.value ]-->" <!--[ $topic.selected ]-->><!--[ $topic.name ]--></option>
-                    <!--[ /foreach ]-->
-                    </select>
-                    <!--[ /strip ]-->
-                    <br />
-                <!--[ /if ]-->
                 <!--[gt text='Sharing']--><br />
                 <!--[if $pcAllowUserCalendar ]-->
                     <!--[html_options name=event_sharing options=$sharingselect selected=$event_sharing]-->

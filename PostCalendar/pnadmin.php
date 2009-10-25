@@ -265,7 +265,6 @@ function postcalendar_admin_updateconfig()
     'pcUsePopups'             => FormUtil::getPassedValue('pcUsePopups', 0),
     'pcAllowDirectSubmit'     => FormUtil::getPassedValue('pcAllowDirectSubmit', 0),
     'pcListHowManyEvents'     => FormUtil::getPassedValue('pcListHowManyEvents', $defaults['pcListHowManyEvents']),
-    'pcDisplayTopics'         => FormUtil::getPassedValue('pcDisplayTopics', 0),
     'pcEventDateFormat'       => FormUtil::getPassedValue('pcEventDateFormat', $defaults['pcEventDateFormat']),
     'pcRepeating'             => FormUtil::getPassedValue('pcRepeating', 0),
     'pcAllowUserCalendar'     => FormUtil::getPassedValue('pcAllowUserCalendar', 0),
@@ -534,7 +533,7 @@ function postcalendar_admin_testSystem()
     include dirname(__FILE__) . '/pnversion.php';
 
     if ($modversion['version'] != $version) {
-        LogUtil::registerError(__('Warning! New version %s installed but not updated.', $modversion[version], $dom));
+        LogUtil::registerError(__f('Warning! New version %s installed but not updated.', $modversion[version], $dom));
     }
     array_push($infos, array(__('Module version', $dom), $version));
     array_push($infos, array(__('Smarty version', $dom), $tpl->_version));
@@ -543,22 +542,22 @@ function postcalendar_admin_testSystem()
 
     $info = $tpl->compile_dir;
     if (!file_exists($tpl->compile_dir)) {
-        LogUtil::registerError(__('Error! Could not find compilation directory \'%s\'.', $tpl->compile_dir, $dom));
+        LogUtil::registerError(__f('Error! Could not find compilation directory \'%s\'.', $tpl->compile_dir, $dom));
     } else {
         // dir exists -> check if it's writeable
         if (!is_writeable($tpl->compile_dir)) {
-            LogUtil::registerError(__('Error! The compilation directory \'%s\' is not writeable.', $tpl->compile_dir, $dom));
+            LogUtil::registerError(__f('Error! The compilation directory \'%s\' is not writeable.', $tpl->compile_dir, $dom));
         }
     }
     array_push($infos, array(__('Smarty compilation directory', $dom), $tpl->compile_dir));
 
     $info = $tpl->cache_dir;
     if (!file_exists($tpl->cache_dir)) {
-        LogUtil::registerError(__('Error! Could not find cache directory \'%s\'.', $tpl->cache_dir, $dom));
+        LogUtil::registerError(__f('Error! Could not find cache directory \'%s\'.', $tpl->cache_dir, $dom));
     } else {
         // dir exists -> check if it's writeable
         if (!is_writeable($tpl->cache_dir)) {
-            LogUtil::registerError(__('Error! The cache directory \'%s\' is not writeable.', $tpl->cache_dir, $dom));
+            LogUtil::registerError(__f('Error! The cache directory \'%s\' is not writeable.', $tpl->cache_dir, $dom));
         }
     }
     array_push($infos, array(__('Smarty cache directory', $dom), $tpl->cache_dir));

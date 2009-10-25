@@ -41,19 +41,6 @@ function postcalendar_searchapi_options($args)
         ksort($categories);
         $renderer->assign('categories', $categories);
 
-        // assign topics info
-        $renderer->assign('displayTopics', _SETTING_DISPLAY_TOPICS);
-        if ((bool) _SETTING_DISPLAY_TOPICS && _SETTING_TOPICSAVAILABLE) {
-            $a_topics = pnModAPIFunc('PostCalendar', 'user', 'getTopics');
-            $topics = array();
-            foreach ($a_topics as $topic) {
-                $topics[$topic['topicid']] = $topic['topictext'];
-            }
-            $topics[0] = __('All topics', $dom);
-            ksort($topics);
-            $renderer->assign('topics', $topics);
-        }
-
         return $renderer->fetch('search/postcalendar_search_options.htm');
     }
 
@@ -69,7 +56,6 @@ function postcalendar_searchapi_options($args)
     $args[numlimit] (result limit)
     $args[page]
     $args[startnum]
-    $args[topic] (postcalendar specific)
     $args[category] (postcalendar specific)
  **/
 function postcalendar_searchapi_search($args)
@@ -82,10 +68,6 @@ function postcalendar_searchapi_search($args)
     $searchargs = array();
     if (!empty($args[category])) {
         $searchargs['s_category'] = "tbl.pc_catid = '".$args[category]."'";
-    }
-
-    if (!empty($args[topic])) {
-        $searchargs['s_topic'] = "pc_topic = '".$args[topic]."'";
     }
 
     pnModDBInfoLoad('Search');

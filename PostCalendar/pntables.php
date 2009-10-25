@@ -29,7 +29,7 @@ function postcalendar_pntables()
                     'hometext'    => 'pc_hometext',         // event description
                     'comments'    => 'pc_comments',         // UNUSED?
                     'counter'     => 'pc_counter',          // UNUSED?
-                    'topic'       => 'pc_topic',            // assigned topic ID (optional)
+                    'topic'       => 'pc_topic',            // assigned topic ID (optional) removed version 6.0
                     'informant'   => 'pc_informant',        // uname of event submittor
                     'eventDate'   => 'pc_eventDate',        // YYYY-MM-DD event start date
                     'duration'    => 'pc_duration',         // event duration (in seconds)
@@ -87,8 +87,7 @@ function postcalendar_pntables()
                                     'eventDate',
                                     'endDate',
                                     'eventstatus',
-                                    'sharing',
-                                    'topic'));
+                                    'sharing'));
 
     // @since version 3.1
     // new category table
@@ -105,27 +104,6 @@ function postcalendar_pntables()
                     'catcolor' => 'C(50) NOTNULL DEFAULT \'#FF0000\'',    // varchar(50) NOT NULL default '#FF0000'
                     'catdesc'  => 'X');                                   //  text default ''
     $pntable['postcalendar_categories_column_idx'] = array('basic_cat' => array('catname', 'catcolor'));
-
-    // INSERTED FOR VERSION 5.0.1 C HEYDENBURG
-    // this is for compatibility with the old Topics Module which has been superceeded
-    // in Zikula by the Categories module....
-    // This is needed for upgraded sites (from PN 764 -> ZK1+)
-    if (pnModAvailable("Topics")) { //added version 5.8
-        // this is a nasty hack, probably wont work with DBUtil,
-        // so for future reference, remove the 'tid' line or maybe if this
-        // module is updated to use DBUtil, change references to the id to be tid rather
-        // than topicid (better idea) - drak
-        $pntable['topics'] = pnConfigGetVar('prefix') . '_topics';
-        $pntable['topics_column'] = array(
-                        'topicid' => 'pn_topicid',
-                        'tid' => 'pn_topicid',
-                        'topicname' => 'pn_topicname',
-                        'topicimage' => 'pn_topicimage',
-                        'topictext' => 'pn_topictext',
-                        'counter' => 'pn_counter');
-        $pntable['related'] = pnConfigGetVar('prefix') . '_related';
-        $pntable['related_column'] = array('rid' => 'pn_rid', 'tid' => 'pn_tid', 'name' => 'pn_name', 'url' => 'pn_url');
-    }
 
     return $pntable;
 }

@@ -61,7 +61,6 @@ function postcalendar_user_display($args)
     $eid = FormUtil::getPassedValue('eid');
     $Date = FormUtil::getPassedValue('Date');
     $pc_category = FormUtil::getPassedValue('pc_category');
-    $pc_topic = FormUtil::getPassedValue('pc_topic');
     $pc_username = FormUtil::getPassedValue('pc_username');
     $popup = FormUtil::getPassedValue('popup');
 
@@ -73,7 +72,7 @@ function postcalendar_user_display($args)
 
     $uid = pnUserGetVar('uid');
     $theme = pnUserGetTheme();
-    $cacheid = md5($Date . $viewtype . _SETTING_TEMPLATE . $eid . $uid . 'u' . $pc_username . $theme . 'c' . $category . 't' . $topic);
+    $cacheid = md5($Date . $viewtype . _SETTING_TEMPLATE . $eid . $uid . 'u' . $pc_username . $theme . 'c' . $category);
     $tpl = pnRender::getInstance('PostCalendar');
     
     switch ($viewtype) {

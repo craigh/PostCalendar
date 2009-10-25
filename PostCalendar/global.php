@@ -84,7 +84,6 @@ define('_SETTING_FIRST_DAY_WEEK',   pnModGetVar('PostCalendar', 'pcFirstDayOfWee
 define('_SETTING_DATE_FORMAT',      pnModGetVar('PostCalendar', 'pcEventDateFormat'));
 define('_SETTING_TIME_24HOUR',      pnModGetVar('PostCalendar', 'pcTime24Hours'));
 define('_SETTING_DIRECT_SUBMIT',    pnModGetVar('PostCalendar', 'pcAllowDirectSubmit'));
-define('_SETTING_DISPLAY_TOPICS',   pnModGetVar('PostCalendar', 'pcDisplayTopics'));
 define('_SETTING_ALLOW_USER_CAL',   pnModGetVar('PostCalendar', 'pcAllowUserCalendar'));
 define('_SETTING_TIME_INCREMENT',   pnModGetVar('PostCalendar', 'pcTimeIncrement'));
 define('_SETTING_HOW_MANY_EVENTS',  pnModGetVar('PostCalendar', 'pcListHowManyEvents'));
@@ -97,7 +96,6 @@ define('_SETTING_SAFE_MODE',        pnModGetVar('PostCalendar', 'pcSafeMode'));
 define('_SETTING_NOTIFY_ADMIN',     pnModGetVar('PostCalendar', 'pcNotifyAdmin'));
 define('_SETTING_NOTIFY_EMAIL',     pnModGetVar('PostCalendar', 'pcNotifyEmail'));
 define('_SETTING_ALLOW_CAT_FILTER', pnModGetVar('PostCalendar', 'pcAllowCatFilter'));
-define('_SETTING_TOPICSAVAILABLE',  pnModAvailable('Topics'));
 
 
 //  Require and Setup utility classes and functions

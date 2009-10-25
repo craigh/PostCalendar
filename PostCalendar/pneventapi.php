@@ -24,7 +24,6 @@ require_once dirname(__FILE__) . '/global.php';
  *              end: Events end_date (default 000-00-00)
  *              s_keywords: search info
  *              s_category: search info
- *              s_topic: search info
  * @return array The events
  */
 function postcalendar_eventapi_queryEvents($args)
@@ -37,7 +36,6 @@ function postcalendar_eventapi_queryEvents($args)
     if (pnModGetVar('PostCalendar', 'pcAllowUserCalendar')) { $filterdefault = _PC_FILTER_ALL; } else { $filterdefault = _PC_FILTER_GLOBAL; }
     $pc_username = FormUtil::getPassedValue('pc_username', $filterdefault); // poorly named var now because actually an int userid/constant
     if (!pnUserLoggedIn()) $pc_username = _PC_FILTER_GLOBAL;
-    $topic       = FormUtil::getPassedValue('pc_topic');
     $category    = FormUtil::getPassedValue('pc_category');
 
     $userid = pnUserGetVar('uid');
@@ -97,9 +95,7 @@ function postcalendar_eventapi_queryEvents($args)
     // Start Search functionality
     if (!empty($s_keywords)) $where .= "AND ($s_keywords) ";
     if (!empty($s_category)) $where .= "AND ($s_category) ";
-    if (!empty($s_topic))    $where .= "AND ($s_topic) ";
     if (!empty($category))   $where .= "AND (tbl.pc_catid = '" . DataUtil::formatForStore($category) . "') ";
-    if (!empty($topic))      $where .= "AND (tbl.pc_topic = '" . DataUtil::formatForStore($topic) . "') ";
     // End Search functionality
 
     $sort = "ORDER BY pc_meeting_id";
@@ -147,13 +143,13 @@ function postcalendar_eventapi_queryEvents($args)
  * I believe this function returns an array of events sorted by date
  * expected args (from postcalendar_userapi_buildView): start, end
  *    if either is present, both must be present. else uses today's/jumped date.
- * expected args (from pnsearch/postcalendar.php/search_postcalendar): s_keywords, s_category, s_topic
+ * expected args (from pnsearch/postcalendar.php/search_postcalendar): s_keywords, s_category
  * same ^^^ in (postcalendar_user_search)
  **/
 function postcalendar_eventapi_getEvents($args)
 {
     $dom = ZLanguage::getModuleDomain('PostCalendar');
-    $s_keywords = $s_category = $s_topic = '';
+    $s_keywords = $s_category = '';
     extract($args);
     //not sure these three lines are needed with call to getDate here
     // don't like getPassedValue in api function
@@ -191,7 +187,7 @@ function postcalendar_eventapi_getEvents($args)
     }
     if (!isset($events)) { // why would $events have a value?
         if (!isset($s_keywords)) $s_keywords = '';
-        $a = array('start' => $start_date, 'end' => $end_date, 's_keywords' => $s_keywords, 's_category' => $s_category, 's_topic' => $s_topic);
+        $a = array('start' => $start_date, 'end' => $end_date, 's_keywords' => $s_keywords, 's_category' => $s_category);
         $events = pnModAPIFunc('PostCalendar', 'event', 'queryEvents', $a);
     }
 
@@ -212,8 +208,6 @@ function postcalendar_eventapi_getEvents($args)
     }
 
     foreach ($events as $event) {
-        // get the name of the topic
-        if (_SETTING_TOPICSAVAILABLE && !empty($event['topic'])) $topicname = DBUtil::selectFieldByID('topics', 'topicname', $event['topic'], 'topicid');
         // get the user id of event's author
         $cuserid = pnUserGetIDFromName( strtolower($event['informant'])); // change this to aid? for v6.0?
 
@@ -225,8 +219,6 @@ function postcalendar_eventapi_getEvents($args)
         } elseif (!pnSecAuthAction(0, 'PostCalendar::Category', "$event[catname]::$event[catid]", ACCESS_OVERVIEW)) {
             continue;
         } elseif (!pnSecAuthAction(0, 'PostCalendar::User', "$event[uname]::$cuserid", ACCESS_OVERVIEW)) {
-            continue;
-        } elseif (!pnSecAuthAction(0, 'PostCalendar::Topic', "$topicname::$event[topic]", ACCESS_OVERVIEW)) {
             continue;
         }
         // parse the event start date
@@ -384,7 +376,6 @@ function postcalendar_eventapi_writeEvent($args)
     $eventarray = array(
         'title' => $event_subject,
         'hometext' => $event_desc,
-        'topic' => (int) $event_topic,
         'eventDate' => $startDate,
         'endDate' => $endDate,
         'recurrtype' => (int) $event_repeat,
@@ -412,10 +403,6 @@ function postcalendar_eventapi_writeEvent($args)
         $eventarray['informant'] = $uname; // @v6.0 change this to uid
         $eventarray['meeting_id'] = $pc_meeting_id;
         $result = pnModAPIFunc('postcalendar', 'event', 'create', $eventarray);
-        if (pnUserGetVar('uname', $event_for_userid) != $uname) {
-            $pc_mail_users[] = $event_for_userid; // add intended user to notify list
-            $pc_mail_events[] = $result['eid'];
-        }
     }
     if ($result === false) {
         // post some kind of error message...
@@ -571,26 +558,6 @@ function postcalendar_eventapi_buildSubmitForm($args)
     $eventHTMLorText = array('text' => __('Plain text', $dom), 'html' => __('HTML-formatted', $dom));
     $tpl->assign('EventHTMLorText', $eventHTMLorText);
     $tpl->assign('EventHTMLorTextVal', $pc_html_or_text);
-
-    //=================================================================
-    // PARSE select_event_topic_block
-    //=================================================================
-    $tpl->assign('displayTopics', _SETTING_DISPLAY_TOPICS);
-    if ((bool) _SETTING_DISPLAY_TOPICS && _SETTING_TOPICSAVAILABLE) {
-        $a_topics = pnModAPIFunc('PostCalendar', 'user', 'getTopics');
-        $topics = array();
-        foreach ($a_topics as $topic) {
-            array_push($topics,
-                array('value' => $topic['topicid'],
-                                'selected' => ($topic['topicid'] == $event_topic ? 'selected' : ''),
-                                'name' => $topic['topictext']));
-        }
-        unset($a_topics);
-        // only show this if we have topics to show
-        if (count($topics) > 0) {
-            $tpl->assign('topics', $topics);
-        }
-    }
 
     //=================================================================
     // PARSE select_event_type_block
@@ -802,12 +769,7 @@ function postcalendar_eventapi_getEventDetails($eid)
                     'object_field_name' => 'catcolor',
                     'compare_field_table' => 'catid',
                     'compare_field_join' => 'catid');
-    // FIXME!!!!!!
-    //$joinInfo[] = array (      'join_table'            =>    'topics',
-    //'join_field'            =>    'topictext',
-    //'object_field_name'    =>    'topictext',
-    //'compare_field_table' =>    'topicid',
-    //'compare_field_join'    =>    'topic');
+
     $event = DBUtil::selectExpandedObjectByID('postcalendar_events', $joinInfo, $eid, 'eid');
     $event = pnModAPIFunc('PostCalendar', 'event', 'fixEventDetails', $event);
     return $event;
