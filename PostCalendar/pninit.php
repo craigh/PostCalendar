@@ -118,6 +118,14 @@ function postcalendar_upgrade($oldversion)
             if (!_postcalendar_migratecategories()) {
                 return LogUtil::registerError (__('Error: Could not migrate categories.', $dom));
             }
+            if (!pnModGetVar('PostCalendar', 'pcDisplayTopics')) {
+                // apparently this install not utilizing Topics anyway just drop the col and move on
+                DBUtil::dropColumn('postcalendar_events', 'pc_topic');
+            } else {
+                if (!_postcalendar_migratetopics()) {
+                    return LogUtil::registerError (__('Error: Could not migrate topics.', $dom));
+                }
+            }
             pnModDelVar('PostCalendar', 'pcDisplayTopics');
             DBUtil::dropColumn('postcalendar_events', 'pc_comments');
             DBUtil::dropColumn('postcalendar_events', 'pc_counter');
@@ -240,9 +248,6 @@ function _postcalendar_migratecategories()
 {
     $dom = ZLanguage::getModuleDomain('PostCalendar');
 
-    // determine if Topics has already been migrated
-    $topicsidmap = _postcalendar_gettopicsmap(); // returns false if not previously migrated
-
     // pull all data from the old tables
     $tables = pnDBGetTables();
     $sql = "SELECT pc_catid, pc_catname, pc_catcolor, pc_catdesc FROM {$tables[postcalendar_categories]}";
@@ -251,15 +256,6 @@ function _postcalendar_migratecategories()
     $categories = array();
     for (; !$result->EOF; $result->MoveNext()) {
         $categories[] = $result->fields;
-    }
-
-    if ((pnModAvailable('Topics')) AND (!$topicsidmap)) {
-        $sql = "SELECT pn_topicid, pn_topicname, pn_topicimage, pn_topictext FROM {$tables[topics]}";
-        $result = DBUtil::executeSQL($sql);
-        $topics = array();
-        for (; !$result->EOF; $result->MoveNext()) {
-            $topics[] = $result->fields;
-        }
     }
 
     // load necessary classes
@@ -272,11 +268,6 @@ function _postcalendar_migratecategories()
 
     // create the Main category and entry in the categories registry
     _postcalendar_createdefaultcategory('/__SYSTEM__/Modules/PostCalendar');
-
-    // create the Topics category and entry in the categories registry
-    if ((pnModAvailable('Topics')) AND (!$topicsidmap)) {
-        _postcalendar_createtopicscategory('/__SYSTEM__/Modules/Topics');
-    }
 
     // get the category path for which we're going to insert our upgraded PostCalendar categories
     $rootcat = CategoryUtil::getCategoryByPath('/__SYSTEM__/Modules/PostCalendar');
@@ -300,7 +291,63 @@ function _postcalendar_migratecategories()
         $categorymap[$category[0]] = $cat->getDataField('id');
     }
 
+    // migrate event category assignments
+    $sql = "SELECT pc_eid, pc_catid FROM {$tables[postcalendar_events]}";
+    $result = DBUtil::executeSQL($sql);
+    $events = array();
+    for (; !$result->EOF; $result->MoveNext()) {
+        $events[] = array('eid' => $result->fields[0],
+                         '__CATEGORIES__' => array('Default' => $categorymap[$result->fields[1]]),
+                         '__META__' => array('module' => 'PostCalendar'));
+    }
+    foreach ($events as $event) {
+        if (!DBUtil::updateObject($event, 'postcalendar_events', '', 'eid')) {
+            return LogUtil::registerError (__('Error! Table update failed.', $dom));
+        }
+    }
+
+    // drop old table
+    DBUtil::dropTable('postcalendar_categories');
+
+    // drop the id column
+    DBUtil::dropColumn('postcalendar_events', 'pc_catid');
+
+    return true;
+}
+
+/**
+ * copied and adapted from News module
+ * @author  Mark West?
+ * migrate old local topics to the categories module
+ */
+function _postcalendar_migratetopics()
+{
+    $dom = ZLanguage::getModuleDomain('PostCalendar');
+
+    // determine if Topics module has already been migrated
+    $topicsidmap = _postcalendar_gettopicsmap(); // returns false if not previously migrated
+
     if ((pnModAvailable('Topics')) AND (!$topicsidmap)) {
+        // if the Topics module is available and topics have not already been moved to categories
+        // migrate existing topics to categories
+        $sql = "SELECT pn_topicid, pn_topicname, pn_topicimage, pn_topictext FROM {$tables[topics]}";
+        $result = DBUtil::executeSQL($sql);
+        $topics = array();
+        for (; !$result->EOF; $result->MoveNext()) {
+            $topics[] = $result->fields;
+        }
+
+        // load necessary classes
+        Loader::loadClass('CategoryUtil');
+        Loader::loadClassFromModule('Categories', 'Category');
+        Loader::loadClassFromModule('Categories', 'CategoryRegistry');
+    
+        // get the language file
+        $lang = ZLanguage::getLanguageCode();
+    
+        // create the Topics category and entry in the categories registry
+        _postcalendar_createtopicscategory('/__SYSTEM__/Modules/Topics');
+
         // get the category path for which we're going to insert our upgraded Topics categories
         $rootcat = CategoryUtil::getCategoryByPath('/__SYSTEM__/Modules/Topics');
     
@@ -325,19 +372,18 @@ function _postcalendar_migratecategories()
         }
     
         // After an upgrade we want the legacy topic template variables to point to the Topic property
-        pnModSetVar('PostsCalendar', 'topicproperty', 'Topic');
-    }
+        pnModSetVar('PostCalendar', 'topicproperty', 'Topic');
+    } else {
+        $topicsmap = $topicsidmap; // use previously migrated topics
+    } // end if ((pnModAvailable('Topics')) AND (!$topicsidmap))
 
-    if  ($topicsidmap !== false) $topicsmap = $topicsidmap; // use previously migrated topics
-
-    // migrate page category assignments
-    $sql = "SELECT pc_eid, pc_catid, pc_topic FROM {$tables[postcalendar_events]}";
+    // migrate event topic assignments
+    $sql = "SELECT pc_eid, pc_topic FROM {$tables[postcalendar_events]}";
     $result = DBUtil::executeSQL($sql);
     $events = array();
     for (; !$result->EOF; $result->MoveNext()) {
-        $events[] = array('sid' => $result->fields[0],
-                         '__CATEGORIES__' => array('Default' => $categorymap[$result->fields[1]],
-                                                   'Topic' => $topicsmap[$result->fields[2]]),
+        $events[] = array('eid' => $result->fields[0],
+                         '__CATEGORIES__' => array('Topic' => $topicsmap[$result->fields[1]]),
                          '__META__' => array('module' => 'PostCalendar'));
     }
     foreach ($events as $event) {
@@ -346,12 +392,9 @@ function _postcalendar_migratecategories()
         }
     }
 
-    // drop old table
-    DBUtil::dropTable('postcalendar_categories');
-    // we don't drop the topics table - this is the job of the topics module
+    // don't drop the topics table - this is the job of the topics module
 
-    // finally drop the secid column
-    DBUtil::dropColumn('postcalendar_events', 'pc_catid');
+    // drop the topicid column
     DBUtil::dropColumn('postcalendar_events', 'pc_topic');
 
     return true;
@@ -371,7 +414,7 @@ function _postcalendar_createdefaultcategory($regpath = '/__SYSTEM__/Modules/Glo
     Loader::loadClassFromModule('Categories', 'Category');
     Loader::loadClassFromModule('Categories', 'CategoryRegistry');
 
-    // get the language file
+    // get the language
     $lang = ZLanguage::getLanguageCode();
 
     // get the category path for which we're going to insert our place holder category
@@ -460,10 +503,10 @@ function _postcalendar_createtopicscategory($regpath = '/__SYSTEM__/Modules/Topi
     return true;
 }
 /**
- * @author  Craig Heydenburg
  * discover if the Topics information is already available in categories
  * if so, return map of old topic id => new category id
  * if not return false
+ * @author  Craig Heydenburg
  */
 function _postcalendar_gettopicsmap($topicspath = '/__SYSTEM__/Modules/Topics')
 {
@@ -491,7 +534,7 @@ function _postcalendar_gettopicsmap($topicspath = '/__SYSTEM__/Modules/Topics')
     foreach ($topics as $id => $name) {
         $foundkey = array_search($name, $n_cats);
         if ($foundkey !== false) {
-            $topicidmap[$id] = $foundkey; // $topicidmap[oldkey]=newcatid
+            $topicidmap[$id] = $foundkey; // $topicidmap[old_topics_id]=new_cat_id
             unset ($topics[$id]); //remove from array
         }
     }
