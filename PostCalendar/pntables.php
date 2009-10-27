@@ -88,22 +88,8 @@ function postcalendar_pntables()
                                     'endDate',
                                     'eventstatus',
                                     'sharing'));
-
-    // @since version 3.1
-    // new category table
-    $pc_categories = DBUtil::getLimitedTablename('postcalendar_categories');
-    $pntable['postcalendar_categories'] = $pc_categories;
-    $pntable['postcalendar_categories_column'] = array(
-                    'catid'    => 'pc_catid',
-                    'catname'  => 'pc_catname',
-                    'catcolor' => 'pc_catcolor',
-                    'catdesc'  => 'pc_catdesc');
-    $pntable['postcalendar_categories_column_def'] = array(
-                    'catid'    => 'I(11) UNSIGNED AUTO PRIMARY',          // int(11) unsigned NOT NULL auto_increment
-                    'catname'  => 'C(100) NOTNULL DEFAULT \'Undefined\'', // varchar(100) NOT NULL default 'Undefined'
-                    'catcolor' => 'C(50) NOTNULL DEFAULT \'#FF0000\'',    // varchar(50) NOT NULL default '#FF0000'
-                    'catdesc'  => 'X');                                   //  text default ''
-    $pntable['postcalendar_categories_column_idx'] = array('basic_cat' => array('catname', 'catcolor'));
+    $pntable['postcalendar_events_db_extra_enable_categorization'] = true;
+    $pntable['postcalendar_events_primary_key_column'] = 'eid';
 
     return $pntable;
 }

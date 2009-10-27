@@ -16,6 +16,7 @@
  * It is accessed via the Zikula Admin interface and should
  * not be called directly.
  *
+ * @author  Arjen Tebbenhof
  * @return  boolean    true/false
  * @access  public
  */
@@ -51,8 +52,9 @@ function postcalendar_init()
  * of PostCalendar.  It is accessed via the Zikula
  * Admin interface and should not be called directly.
  *
- * @return boolean    true/false
- * @param  string    $oldversion Version we're upgrading
+ * @author  Arjen Tebbenhof
+ * @return  boolean    true/false
+ * @param   string    $oldversion Version we're upgrading
  * @access  public
  * @copyright    The PostCalendar Team 2009
  */
@@ -112,6 +114,10 @@ function postcalendar_upgrade($oldversion)
         case '5.8.0':
             // no changes
         case '5.8.1':
+            pnModSetVar('PostCalendar', 'enablecategorization', true);
+            if (!_postcalendar_migratecategories()) {
+                return LogUtil::registerError (__('Error: Could not migrate categories.', $dom));
+            }
             pnModDelVar('PostCalendar', 'pcDisplayTopics');
             DBUtil::dropColumn('postcalendar_events', 'pc_comments');
             DBUtil::dropColumn('postcalendar_events', 'pc_counter');
@@ -133,6 +139,7 @@ function postcalendar_upgrade($oldversion)
 /**
  * PostCalendar Default Module Settings
  *
+ * @author Arjen Tebbenhof
  * @return array An associated array with key=>value pairs of the default module settings
  */
 function postcalendar_init_getdefaults()
@@ -165,6 +172,7 @@ function postcalendar_init_getdefaults()
 /**
  * Reset scribite config for PostCalendar module.
  *
+ * @author Arjen Tebbenhof
  * Since we updated the functionname for creating / editing a new event from func=submit to func=new,
  * scribite doesn't load any editor. If we force it to our new function.
  */
@@ -204,6 +212,7 @@ function postcalendar_init_reset_scribite()
  * Zikula install and should be accessed via
  * the Zikula Admin interface
  *
+ * @author Arjen Tebbenhof
  * @return  boolean    true/false
  * @access  public
  * @copyright    The PostCalendar Team 2009
@@ -224,7 +233,7 @@ function postcalendar_delete()
 
 /**
  * copied and adapted from News module
- * @author  Mark West
+ * @author  Mark West?
  * migrate old local categories to the categories module
  */
 function _postcalendar_migratecategories()
@@ -256,7 +265,7 @@ function _postcalendar_migratecategories()
     Loader::loadClassFromModule('Categories', 'CategoryRegistry');
 
     // get the language file
-    $lang = pnUserGetLang();
+    $lang = ZLanguage::getLanguageCode();
 
     // create the Main category and entry in the categories registry
     _postcalendar_createdefaultcategory('/__SYSTEM__/Modules/PostCalendar');
@@ -319,16 +328,16 @@ function _postcalendar_migratecategories()
     // migrate page category assignments
     $sql = "SELECT pc_eid, pc_catid, pc_topic FROM {$tables[postcalendar_events]}";
     $result = DBUtil::executeSQL($sql);
-    $pages = array();
+    $events = array();
     for (; !$result->EOF; $result->MoveNext()) {
-        $pages[] = array('sid' => $result->fields[0],
-                         '__CATEGORIES__' => array('Main' => $categorymap[$result->fields[1]],
+        $events[] = array('sid' => $result->fields[0],
+                         '__CATEGORIES__' => array('Default' => $categorymap[$result->fields[1]],
                                                    'Topic' => $topicsmap[$result->fields[2]]),
                          '__META__' => array('module' => 'PostCalendar'));
     }
-    foreach ($pages as $page) {
-        if (!DBUtil::updateObject($page, 'postcalendar_events', '', 'eid')) {
-            return LogUtil::registerError (__('Table update failed.', $dom));
+    foreach ($events as $event) {
+        if (!DBUtil::updateObject($event, 'postcalendar_events', '', 'eid')) {
+            return LogUtil::registerError (__('Error! Table update failed.', $dom));
         }
     }
 
@@ -345,7 +354,7 @@ function _postcalendar_migratecategories()
 
 /**
  * copied and adapted from News module
- * @author  Mark West
+ * @author  Mark West?
  * create the default category tree
  */
 function _postcalendar_createdefaultcategory($regpath = '/__SYSTEM__/Modules/Global')
@@ -358,7 +367,7 @@ function _postcalendar_createdefaultcategory($regpath = '/__SYSTEM__/Modules/Glo
     Loader::loadClassFromModule('Categories', 'CategoryRegistry');
 
     // get the language file
-    $lang = pnUserGetLang();
+    $lang = ZLanguage::getLanguageCode();
 
     // get the category path for which we're going to insert our place holder category
     $rootcat = CategoryUtil::getCategoryByPath('/__SYSTEM__/Modules');
@@ -397,7 +406,7 @@ function _postcalendar_createdefaultcategory($regpath = '/__SYSTEM__/Modules/Glo
 
 /**
  * copied and adapted from News module
- * @author  Mark West
+ * @author  Mark West?
  * create the Topics category tree
  */
 function _postcalendar_createtopicscategory($regpath = '/__SYSTEM__/Modules/Topics')
