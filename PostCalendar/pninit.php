@@ -239,7 +239,10 @@ function postcalendar_delete()
 function _postcalendar_migratecategories()
 {
     $dom = ZLanguage::getModuleDomain('PostCalendar');
-    // load the admin language file
+
+    // determine if Topics has already been migrated
+    $topicsidmap = _postcalendar_gettopicsmap(); // returns false if not previously migrated
+
     // pull all data from the old tables
     $tables = pnDBGetTables();
     $sql = "SELECT pc_catid, pc_catname, pc_catcolor, pc_catdesc FROM {$tables[postcalendar_categories]}";
@@ -250,7 +253,7 @@ function _postcalendar_migratecategories()
         $categories[] = $result->fields;
     }
 
-    if (pnModAvailable('Topics')) {
+    if ((pnModAvailable('Topics')) AND (!$topicsidmap)) {
         $sql = "SELECT pn_topicid, pn_topicname, pn_topicimage, pn_topictext FROM {$tables[topics]}";
         $result = DBUtil::executeSQL($sql);
         $topics = array();
@@ -271,7 +274,7 @@ function _postcalendar_migratecategories()
     _postcalendar_createdefaultcategory('/__SYSTEM__/Modules/PostCalendar');
 
     // create the Topics category and entry in the categories registry
-    if (pnModAvailable('Topics')) {
+    if ((pnModAvailable('Topics')) AND (!$topicsidmap)) {
         _postcalendar_createtopicscategory('/__SYSTEM__/Modules/Topics');
     }
 
@@ -297,7 +300,7 @@ function _postcalendar_migratecategories()
         $categorymap[$category[0]] = $cat->getDataField('id');
     }
 
-    if (pnModAvailable('Topics')) {
+    if ((pnModAvailable('Topics')) AND (!$topicsidmap)) {
         // get the category path for which we're going to insert our upgraded Topics categories
         $rootcat = CategoryUtil::getCategoryByPath('/__SYSTEM__/Modules/Topics');
     
@@ -324,6 +327,8 @@ function _postcalendar_migratecategories()
         // After an upgrade we want the legacy topic template variables to point to the Topic property
         pnModSetVar('PostsCalendar', 'topicproperty', 'Topic');
     }
+
+    if  ($topicsidmap !== false) $topicsmap = $topicsidmap; // use previously migrated topics
 
     // migrate page category assignments
     $sql = "SELECT pc_eid, pc_catid, pc_topic FROM {$tables[postcalendar_events]}";
@@ -453,4 +458,47 @@ function _postcalendar_createtopicscategory($regpath = '/__SYSTEM__/Modules/Topi
     }
 
     return true;
+}
+/**
+ * @author  Craig Heydenburg
+ * discover if the Topics information is already available in categories
+ * if so, return map of old topic id => new category id
+ * if not return false
+ */
+function _postcalendar_gettopicsmap($topicspath = '/__SYSTEM__/Modules/Topics')
+{
+    Loader::loadClass('CategoryUtil');
+    $cat = CategoryUtil::getCategoryByPath($topicspath);
+    // if category path doesn't exist or Topics mod not available (can't map)  
+    if ((empty($cat)) OR (!pnModAvailable('Topics'))) return false;
+
+    // get the categories in Topics as an array
+    $categories = CategoryUtil::getSubCategoriesForCategory($cat);
+    foreach ($categories as $category) {
+        $n_cats[{$category['id']}] = $category['name'];
+    }
+
+    // get the topics information into an array 
+    $sql = "SELECT pn_topicid, pn_topicname FROM {$tables[topics]}";
+    $result = DBUtil::executeSQL($sql);
+    $topics = array();
+    for (; !$result->EOF; $result->MoveNext()) {
+        $topics[$result->fields[0]] = $result->fields[1]; // $topics[id] = name
+    }
+
+    // map the old topic id to the new topic id
+    $topicidmap = array();
+    foreach ($topics as $id => $name) {
+        $foundkey = array_search($name, $n_cats);
+        if ($foundkey !== false) {
+            $topicidmap[$id] = $foundkey; // $topicidmap[oldkey]=newcatid
+            unset ($topics[$id]); //remove from array
+        }
+    }
+
+    // if the $topics array is not empty, then all the topics were not found in the categories
+    if (!empty($topics)) return false;
+
+    // return array map
+    return $topicidmap;
 }
