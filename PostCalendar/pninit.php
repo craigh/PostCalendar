@@ -24,7 +24,7 @@ function postcalendar_init()
 {
     $dom = ZLanguage::getModuleDomain('PostCalendar');
     // create tables
-    if (!DBUtil::createTable('postcalendar_events') || !DBUtil::createTable('postcalendar_categories')) {
+    if (!DBUtil::createTable('postcalendar_events')) {
         return LogUtil::registerError(__('Error! Could not create the table.', $dom));
     }
 
@@ -79,7 +79,7 @@ function postcalendar_upgrade($oldversion)
 
     // change the database. DBUtil + ADODB detect the changes on their own
     // and perform all necessary steps without help from the module author
-    if (!DBUtil::changeTable('postcalendar_events') || !DBUtil::changeTable('postcalendar_categories')) {
+    if (!DBUtil::changeTable('postcalendar_events')) {
         return LogUtil::registerError(__('Error! Could not upgrade the tables.', $dom));
     }
 
@@ -250,7 +250,9 @@ function _postcalendar_migratecategories()
 
     // pull all data from the old tables
     $tables = pnDBGetTables();
-    $sql = "SELECT pc_catid, pc_catname, pc_catcolor, pc_catdesc FROM {$tables[postcalendar_categories]}";
+
+    $prefix = pnConfigGetVar('prefix');
+    $sql = "SELECT pc_catid, pc_catname, pc_catcolor, pc_catdesc FROM {$prefix}_postcalendar_categories";
 
     $result = DBUtil::executeSQL($sql);
     $categories = array();
@@ -297,7 +299,7 @@ function _postcalendar_migratecategories()
     $events = array();
     for (; !$result->EOF; $result->MoveNext()) {
         $events[] = array('eid' => $result->fields[0],
-                         '__CATEGORIES__' => array('Default' => $categorymap[$result->fields[1]]),
+                         '__CATEGORIES__' => array('Main' => $categorymap[$result->fields[1]]),
                          '__META__' => array('module' => 'PostCalendar'));
     }
     foreach ($events as $event) {
@@ -324,13 +326,17 @@ function _postcalendar_migratetopics()
 {
     $dom = ZLanguage::getModuleDomain('PostCalendar');
 
+    // pull all data from the old tables
+    $tables = pnDBGetTables();
+
     // determine if Topics module has already been migrated
     $topicsidmap = _postcalendar_gettopicsmap(); // returns false if not previously migrated
 
     if ((pnModAvailable('Topics')) AND (!$topicsidmap)) {
         // if the Topics module is available and topics have not already been moved to categories
         // migrate existing topics to categories
-        $sql = "SELECT pn_topicid, pn_topicname, pn_topicimage, pn_topictext FROM {$tables[topics]}";
+        $prefix = pnConfigGetVar('prefix');
+        $sql = "SELECT pn_topicid, pn_topicname, pn_topicimage, pn_topictext FROM {$prefix}_topics";
         $result = DBUtil::executeSQL($sql);
         $topics = array();
         for (; !$result->EOF; $result->MoveNext()) {
@@ -438,11 +444,11 @@ function _postcalendar_createdefaultcategory($regpath = '/__SYSTEM__/Modules/Glo
     // get the category path for which we're going to insert our upgraded PostCalendar categories
     $rootcat = CategoryUtil::getCategoryByPath($regpath);
     if ($rootcat) {
-        // create an entry in the categories registry to the Default property
+        // create an entry in the categories registry to the Main property
         $registry = new PNCategoryRegistry();
         $registry->setDataField('modname', 'PostCalendar');
         $registry->setDataField('table', 'postcalendar_events');
-        $registry->setDataField('property', __('Default', $dom));
+        $registry->setDataField('property', __('Main', $dom));
         $registry->setDataField('category_id', $rootcat['id']);
         $registry->insert();
     } else {
@@ -518,7 +524,8 @@ function _postcalendar_gettopicsmap($topicspath = '/__SYSTEM__/Modules/Topics')
     // get the categories in Topics as an array
     $categories = CategoryUtil::getSubCategoriesForCategory($cat);
     foreach ($categories as $category) {
-        $n_cats[{$category['id']}] = $category['name'];
+        $thisid = $category['id'];
+        $n_cats[$thisid] = $category['name'];
     }
 
     // get the topics information into an array 

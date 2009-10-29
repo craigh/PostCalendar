@@ -91,5 +91,12 @@ function postcalendar_pntables()
     $pntable['postcalendar_events_db_extra_enable_categorization'] = true;
     $pntable['postcalendar_events_primary_key_column'] = 'eid';
 
+    // add standard data fields
+    ObjectUtil::addStandardFieldsToTableDefinition ($pntable['postcalendar_events_column'], 'pc_');
+    ObjectUtil::addStandardFieldsToTableDataDefinition($pntable['postcalendar_events_column_def']);
+
+    // old tables for upgrade/renaming purposes
+    $pntable['postcalendar_categories'] = DBUtil::getLimitedTablename('postcalendar_categories');
+
     return $pntable;
 }
