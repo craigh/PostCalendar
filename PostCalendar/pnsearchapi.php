@@ -32,7 +32,7 @@ function postcalendar_searchapi_options($args)
         $renderer->assign('active', $active);
 
         // assign category info
-        $all_categories = pnModAPIFunc('PostCalendar', 'user', 'getCategories');
+        //$all_categories = pnModAPIFunc('PostCalendar', 'user', 'getCategories');
         $categories = array();
         foreach ($all_categories as $category) {
             $categories[$category['catid']] = $category['catname'];

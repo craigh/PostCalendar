@@ -37,10 +37,6 @@ function postcalendar_adminapi_getlinks()
     if (pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
         $links[] = array('url' => pnModURL('PostCalendar', 'admin', 'modifyconfig'), 'text' => __('Settings', $dom));
     }
-    if (pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
-        $links[] = array('url' => pnModURL('PostCalendar', 'admin', 'categories'),
-                        'text' => __('Categories', $dom));
-    }
     if (pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADD)) {
         $links[] = array('url' => pnModURL('PostCalendar', 'event', 'new'), 'text' => __('Create new event', $dom));
     }

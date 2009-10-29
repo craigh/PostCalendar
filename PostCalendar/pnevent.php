@@ -288,8 +288,6 @@ function postcalendar_event_new($args)
         $eventdata['data_loaded'] = false;
     }
 
-    $categories = pnModAPIFunc('PostCalendar', 'user', 'getCategories');
-
     //================================================================
     // ERROR CHECKING IF ACTION IS PREVIEW OR COMMIT
     //================================================================

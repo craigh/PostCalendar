@@ -130,7 +130,7 @@ function postcalendar_upgrade($oldversion)
             DBUtil::dropColumn('postcalendar_events', 'pc_comments');
             DBUtil::dropColumn('postcalendar_events', 'pc_counter');
             DBUtil::dropColumn('postcalendar_events', 'pc_recurrfreq');
-            DBUtil::dropColumn('postcalendar_events', 'pc_meeting_id');
+            // DBUtil::dropColumn('postcalendar_events', 'pc_meeting_id'); //before dropping, must remove dup events with same meeting_id
             DBUtil::dropColumn('postcalendar_events', 'pc_language');
             // pc_topic and pc_catid columns are dropped in the migration process
             // postcalendar_categories table is dropped in the migration process
@@ -249,7 +249,7 @@ function _postcalendar_migratecategories()
     $dom = ZLanguage::getModuleDomain('PostCalendar');
 
     // pull all data from the old tables
-    $tables = pnDBGetTables();
+    //$tables = pnDBGetTables();
 
     $prefix = pnConfigGetVar('prefix');
     $sql = "SELECT pc_catid, pc_catname, pc_catcolor, pc_catdesc FROM {$prefix}_postcalendar_categories";
@@ -294,7 +294,7 @@ function _postcalendar_migratecategories()
     }
 
     // migrate event category assignments
-    $sql = "SELECT pc_eid, pc_catid FROM {$tables[postcalendar_events]}";
+    $sql = "SELECT pc_eid, pc_catid FROM {$prefix}_postcalendar_events";
     $result = DBUtil::executeSQL($sql);
     $events = array();
     for (; !$result->EOF; $result->MoveNext()) {
@@ -327,7 +327,8 @@ function _postcalendar_migratetopics()
     $dom = ZLanguage::getModuleDomain('PostCalendar');
 
     // pull all data from the old tables
-    $tables = pnDBGetTables();
+    //$tables = pnDBGetTables();
+    $prefix = pnConfigGetVar('prefix');
 
     // determine if Topics module has already been migrated
     $topicsidmap = _postcalendar_gettopicsmap(); // returns false if not previously migrated
@@ -335,7 +336,6 @@ function _postcalendar_migratetopics()
     if ((pnModAvailable('Topics')) AND (!$topicsidmap)) {
         // if the Topics module is available and topics have not already been moved to categories
         // migrate existing topics to categories
-        $prefix = pnConfigGetVar('prefix');
         $sql = "SELECT pn_topicid, pn_topicname, pn_topicimage, pn_topictext FROM {$prefix}_topics";
         $result = DBUtil::executeSQL($sql);
         $topics = array();
@@ -384,7 +384,7 @@ function _postcalendar_migratetopics()
     } // end if ((pnModAvailable('Topics')) AND (!$topicsidmap))
 
     // migrate event topic assignments
-    $sql = "SELECT pc_eid, pc_topic FROM {$tables[postcalendar_events]}";
+    $sql = "SELECT pc_eid, pc_topic FROM {$prefix}_postcalendar_events";
     $result = DBUtil::executeSQL($sql);
     $events = array();
     for (; !$result->EOF; $result->MoveNext()) {
@@ -529,7 +529,8 @@ function _postcalendar_gettopicsmap($topicspath = '/__SYSTEM__/Modules/Topics')
     }
 
     // get the topics information into an array 
-    $sql = "SELECT pn_topicid, pn_topicname FROM {$tables[topics]}";
+    $prefix = pnConfigGetVar('prefix');
+    $sql = "SELECT pn_topicid, pn_topicname FROM {$prefix}_topics";
     $result = DBUtil::executeSQL($sql);
     $topics = array();
     for (; !$result->EOF; $result->MoveNext()) {

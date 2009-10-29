@@ -463,18 +463,6 @@ function postcalendar_userapi_getmonthname($args)
 }
 
 /**
- * postcalendar_userapi_getCategories()
- *
- * Returns array of PostCalendar category names, sorted by name
- *
- * @return array PostCalendar Category names
- */
-function postcalendar_userapi_getCategories()
-{
-    return DBUtil::selectObjectArray('postcalendar_categories', '', 'catname');
-}
-
-/**
  * postcalendar_userapi_SmartySetup()
  *
  * legacy function to make sure certain data is available in templates.

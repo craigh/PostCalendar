@@ -101,6 +101,7 @@ function postcalendar_eventapi_queryEvents($args)
     $sort = "ORDER BY pc_meeting_id";
 
     // FIXME !!! < pre v5.0
+    /*
     $joinInfo = array();
     $joinInfo[] = array(
                     'join_table' => 'postcalendar_categories',
@@ -120,7 +121,7 @@ function postcalendar_eventapi_queryEvents($args)
                     'object_field_name' => 'catcolor',
                     'compare_field_table' => 'catid',
                     'compare_field_join' => 'catid');
-
+*/
     $events = DBUtil::selectExpandedObjectArray('postcalendar_events', $joinInfo, $where, $sort);
 
     // this prevents duplicate display of same event for different participants
@@ -502,8 +503,15 @@ function postcalendar_eventapi_buildSubmitForm($args)
     $tpl->assign('ModuleName', $modname);
     $tpl->assign('ModuleDirectory', $modir);
 
-    $all_categories = pnModAPIFunc('PostCalendar', 'user', 'getCategories');
-    $tpl->assign('category', $all_categories);
+    //$all_categories = pnModAPIFunc('PostCalendar', 'user', 'getCategories');
+    //$tpl->assign('category', $all_categories);
+
+    // load the category registry util
+    if (!Loader::loadClass('CategoryRegistryUtil')) {
+        pn_exit(__f('Error! Unable to load class [%s%]', 'CategoryRegistryUtil'));
+    }
+    $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
+    $tpl->assign('catregistry', $catregistry);
 
     //=================================================================
     // PARSE INPUT_EVENT_TITLE
@@ -562,6 +570,7 @@ function postcalendar_eventapi_buildSubmitForm($args)
     //=================================================================
     // PARSE select_event_type_block
     //=================================================================
+    /*
     $categories = array();
     foreach ($all_categories as $category) {
         $categories[$category['catid']] = $category['catname'];
@@ -569,6 +578,7 @@ function postcalendar_eventapi_buildSubmitForm($args)
     if (count($categories) > 0) {
         $tpl->assign('categories', $categories);
     }
+    */
     //$event_category is selected category id
     $tpl->assign('event_category', $event_category);
 
@@ -750,6 +760,7 @@ function postcalendar_eventapi_getEventDetails($eid)
     if (!isset($eid)) return false;
 
     // FIXME !!!
+    /*
     $joinInfo = array();
     $joinInfo[] = array(
                     'join_table' => 'postcalendar_categories',
@@ -769,6 +780,7 @@ function postcalendar_eventapi_getEventDetails($eid)
                     'object_field_name' => 'catcolor',
                     'compare_field_table' => 'catid',
                     'compare_field_join' => 'catid');
+*/
 
     $event = DBUtil::selectExpandedObjectByID('postcalendar_events', $joinInfo, $eid, 'eid');
     $event = pnModAPIFunc('PostCalendar', 'event', 'fixEventDetails', $event);
