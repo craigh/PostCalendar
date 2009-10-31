@@ -100,28 +100,6 @@ function postcalendar_eventapi_queryEvents($args)
 
     $sort = "ORDER BY pc_meeting_id";
 
-    // FIXME !!! < pre v5.0
-    /*
-    $joinInfo = array();
-    $joinInfo[] = array(
-                    'join_table' => 'postcalendar_categories',
-                    'join_field' => 'catname',
-                    'object_field_name' => 'catname',
-                    'compare_field_table' => 'catid',
-                    'compare_field_join' => 'catid');
-    $joinInfo[] = array(
-                    'join_table' => 'postcalendar_categories',
-                    'join_field' => 'catdesc',
-                    'object_field_name' => 'catdesc',
-                    'compare_field_table' => 'catid',
-                    'compare_field_join' => 'catid');
-    $joinInfo[] = array(
-                    'join_table' => 'postcalendar_categories',
-                    'join_field' => 'catcolor',
-                    'object_field_name' => 'catcolor',
-                    'compare_field_table' => 'catid',
-                    'compare_field_join' => 'catid');
-*/
     $events = DBUtil::selectExpandedObjectArray('postcalendar_events', $joinInfo, $where, $sort);
 
     // this prevents duplicate display of same event for different participants
@@ -745,8 +723,11 @@ function postcalendar_eventapi_fixEventDetails($event)
            //$event['date'] = str_replace('-','',$Date);
         }
     }
-    $event['catname']  = $event['__CATEGORIES__']['Main']['display_name']['en']; // note replace 'en' with lang code
-    $event['catcolor'] = $event['__CATEGORIES__']['Main']['__ATTRIBUTES__']['color']; // note replace 'en' with lang code
+
+    // compensate for changeover to new categories system
+    $lang = ZLanguage::getLanguageCode();
+    $event['catname']  = $event['__CATEGORIES__']['Main']['display_name'][$lang];
+    $event['catcolor'] = $event['__CATEGORIES__']['Main']['__ATTRIBUTES__']['color'];
 
     return $event;
 }
@@ -760,29 +741,6 @@ function postcalendar_eventapi_fixEventDetails($event)
 function postcalendar_eventapi_getEventDetails($eid)
 {
     if (!isset($eid)) return false;
-
-    // FIXME !!!
-    /*
-    $joinInfo = array();
-    $joinInfo[] = array(
-                    'join_table' => 'postcalendar_categories',
-                    'join_field' => 'catname',
-                    'object_field_name' => 'catname',
-                    'compare_field_table' => 'catid',
-                    'compare_field_join' => 'catid');
-    $joinInfo[] = array(
-                    'join_table' => 'postcalendar_categories',
-                    'join_field' => 'catdesc', '
-                    object_field_name' => 'catdesc',
-                    'compare_field_table' => 'catid',
-                    'compare_field_join' => 'catid');
-    $joinInfo[] = array(
-                    'join_table' => 'postcalendar_categories',
-                    'join_field' => 'catcolor',
-                    'object_field_name' => 'catcolor',
-                    'compare_field_table' => 'catid',
-                    'compare_field_join' => 'catid');
-*/
 
     $event = DBUtil::selectExpandedObjectByID('postcalendar_events', $joinInfo, $eid, 'eid');
     $event = pnModAPIFunc('PostCalendar', 'event', 'fixEventDetails', $event);
