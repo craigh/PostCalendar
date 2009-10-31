@@ -114,6 +114,8 @@ function postcalendar_upgrade($oldversion)
         case '5.8.0':
             // no changes
         case '5.8.1':
+            // DBUtil::dropColumn('postcalendar_events', 'pc_meeting_id'); //before dropping, must remove dup events with same meeting_id
+
             if (!$categorymap = _postcalendar_migratecategories()) {
                 // attempt to migrate local categories
                 return LogUtil::registerError (__('Error: Could not migrate categories.', $dom));
@@ -133,7 +135,6 @@ function postcalendar_upgrade($oldversion)
             DBUtil::dropColumn('postcalendar_events', 'pc_comments');
             DBUtil::dropColumn('postcalendar_events', 'pc_counter');
             DBUtil::dropColumn('postcalendar_events', 'pc_recurrfreq');
-            // DBUtil::dropColumn('postcalendar_events', 'pc_meeting_id'); //before dropping, must remove dup events with same meeting_id
             DBUtil::dropColumn('postcalendar_events', 'pc_language');
             // pc_topic and pc_catid columns are dropped in the migration process
             // postcalendar_categories table is dropped in the migration process

@@ -36,7 +36,7 @@ function postcalendar_eventapi_queryEvents($args)
     if (pnModGetVar('PostCalendar', 'pcAllowUserCalendar')) { $filterdefault = _PC_FILTER_ALL; } else { $filterdefault = _PC_FILTER_GLOBAL; }
     $pc_username = FormUtil::getPassedValue('pc_username', $filterdefault); // poorly named var now because actually an int userid/constant
     if (!pnUserLoggedIn()) $pc_username = _PC_FILTER_GLOBAL;
-    $category    = FormUtil::getPassedValue('pc_category');
+    //$category    = FormUtil::getPassedValue('pc_category');
 
     $userid = pnUserGetVar('uid');
     unset($ruserid);
@@ -94,8 +94,8 @@ function postcalendar_eventapi_queryEvents($args)
 
     // Start Search functionality
     if (!empty($s_keywords)) $where .= "AND ($s_keywords) ";
-    if (!empty($s_category)) $where .= "AND ($s_category) ";
-    if (!empty($category))   $where .= "AND (tbl.pc_catid = '" . DataUtil::formatForStore($category) . "') ";
+    //if (!empty($s_category)) $where .= "AND ($s_category) ";
+    //if (!empty($category))   $where .= "AND (tbl.pc_catid = '" . DataUtil::formatForStore($category) . "') ";
     // End Search functionality
 
     $sort = "ORDER BY pc_meeting_id";
@@ -733,7 +733,7 @@ function postcalendar_eventapi_fixEventDetails($event)
         foreach ($fields as $field)
             $event[$field] = '';
     } else {
-        // FIXME: this entire thing should be a sub-array
+        // FIXME: this entire thing should be a sub-array RNG < v5.0.0
         if (!empty($location)) {
            $location = unserialize($event['location']);
            $event['event_location'] = $location['event_location'];
@@ -745,6 +745,8 @@ function postcalendar_eventapi_fixEventDetails($event)
            //$event['date'] = str_replace('-','',$Date);
         }
     }
+    $event['catname']  = $event['__CATEGORIES__']['Main']['display_name']['en']; // note replace 'en' with lang code
+    $event['catcolor'] = $event['__CATEGORIES__']['Main']['__ATTRIBUTES__']['color']; // note replace 'en' with lang code
 
     return $event;
 }

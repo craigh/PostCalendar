@@ -163,6 +163,8 @@ function postcalendar_userapi_buildView($args)
     $eventsByDate = & pnModAPIFunc('PostCalendar', 'event', 'getEvents',
         array('start' => $starting_date, 'end' => $ending_date));
 
+    //echo "<pre>"; print_r($eventsByDate); echo "</pre>";
+
     //=================================================================
     // Create an array with the day names in the correct order
     //=================================================================
@@ -221,6 +223,7 @@ function postcalendar_userapi_buildView($args)
     //=================================================================
     // Populate the template
     //=================================================================
+    /*
     $all_categories = pnModAPIFunc('PostCalendar', 'user', 'getCategories');
     $categories = array();
     foreach ($all_categories as $category) {
@@ -235,6 +238,7 @@ function postcalendar_userapi_buildView($args)
                         'color' => $category['catcolor'],
                         'desc' => $category['catdesc']);
     }
+    */
 
     if (isset($calendarView)) $function_out['CAL_FORMAT'] = $calendarView;
 
@@ -250,7 +254,7 @@ function postcalendar_userapi_buildView($args)
     $function_out['S_LONG_DAY_NAMES']  = $daynames;
     $function_out['S_SHORT_DAY_NAMES'] = $sdaynames;
     $function_out['A_EVENTS']          = $eventsByDate;
-    $function_out['A_CATEGORY']        = $categories;
+    //$function_out['A_CATEGORY']        = $categories;
     $function_out['PREV_MONTH_URL']    = DataUtil::formatForDisplay($pc_prev);
     $function_out['NEXT_MONTH_URL']    = DataUtil::formatForDisplay($pc_next);
     $function_out['PREV_DAY_URL']      = DataUtil::formatForDisplay($pc_prev_day);

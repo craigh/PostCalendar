@@ -38,6 +38,9 @@ function postcalendar_admin_modifyconfig()
     // Turn off template caching here
     $pnRender = pnRender::getInstance('PostCalendar', false);
 
+    $modinfo = pnModGetInfo(pnModGetIDFromName('PostCalendar'));
+    $pnRender->assign('postcalendarversion', $modinfo['version']);
+
     return $pnRender->fetch('admin/postcalendar_admin_modifyconfig.htm');
 }
 
@@ -310,105 +313,6 @@ function postcalendar_admin_manualClearCache()
     return LogUtil::registerError(__('Error! Could not clear Smarty cache.', $dom), null, pnModURL('PostCalendar', 'admin', 'modifyconfig'));
 }
 
-/**
- * @function    postcalendar_admin_testSystem
- * @description show list of information to admin regarding server environment
- * @return      status/error -> return to admin config
- */
-function postcalendar_admin_testSystem()
-{
-    $dom = ZLanguage::getModuleDomain('PostCalendar');
-    if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
-        return LogUtil::registerPermissionError();
-    }
-
-    $modinfo = pnModGetInfo(pnModGetIDFromName('PostCalendar'));
-    $version = $modinfo['version'];
-    unset($modinfo);
-
-    // Turn off template caching here
-    $tpl = pnRender::getInstance('PostCalendar', false);
-    $infos = array();
-
-    if (phpversion() >= '4.1.0') {
-        $__SERVER = $_SERVER;
-        $__ENV    = $_ENV;
-    } else {
-        global $HTTP_SERVER_VARS, $HTTP_ENV_VARS;
-        $__SERVER = $HTTP_SERVER_VARS;
-        $__ENV    = $HTTP_ENV_VARS;
-    }
-
-    if (defined('_PN_VERSION_NUM')) {
-        $pnVersion = _PN_VERSION_NUM;
-    } else {
-        $pnVersion = pnConfigGetVar('Version_Num');
-    }
-
-    array_push($infos, array(__('Zikula version', $dom), $pnVersion));
-    array_push($infos, array(__('Site name', $dom), pnConfigGetVar('sitename')));
-    array_push($infos, array(__('URL', $dom), pnGetBaseURL()));
-    array_push($infos, array(__('PHP version', $dom), phpversion()));
-    if ((bool) ini_get('safe_mode')) {
-        $safe_mode = __('On', $dom);
-    } else {
-        $safe_mode = __('Off', $dom);
-    }
-    array_push($infos, array('PHP safe_mode', $safe_mode));
-    if ((bool) ini_get('safe_mode_gid')) {
-        $safe_mode_gid = __('On', $dom);
-    } else {
-        $safe_mode_gid = __('Off', $dom);
-    }
-    array_push($infos, array('PHP safe_mode_gid', $safe_mode_gid));
-    $base_dir = ini_get('open_basedir');
-    if (!empty($base_dir)) {
-        $open_basedir = "$base_dir";
-    } else {
-        $open_basedir = "NULL";
-    }
-    array_push($infos, array(__('PHP \'open_basedir\'', $dom), $open_basedir));
-    array_push($infos, array('SAPI', php_sapi_name()));
-    array_push($infos, array('OS', php_uname()));
-    array_push($infos, array(__('Web server', $dom), $__SERVER['SERVER_SOFTWARE']));
-    array_push($infos, array(__('Module directory', $dom), dirname(__FILE__)));
-
-    $modversion = array();
-    include dirname(__FILE__) . '/pnversion.php';
-
-    if ($modversion['version'] != $version) {
-        LogUtil::registerError(__f('Warning! New version %s installed but not updated.', $modversion[version], $dom));
-    }
-    array_push($infos, array(__('Module version', $dom), $version));
-    array_push($infos, array(__('Smarty version', $dom), $tpl->_version));
-    array_push($infos, array(__('Smarty location', $dom), SMARTY_DIR));
-    array_push($infos, array(__('Smarty template directory', $dom), $tpl->template_dir));
-
-    $info = $tpl->compile_dir;
-    if (!file_exists($tpl->compile_dir)) {
-        LogUtil::registerError(__f('Error! Could not find compilation directory \'%s\'.', $tpl->compile_dir, $dom));
-    } else {
-        // dir exists -> check if it's writeable
-        if (!is_writeable($tpl->compile_dir)) {
-            LogUtil::registerError(__f('Error! The compilation directory \'%s\' is not writeable.', $tpl->compile_dir, $dom));
-        }
-    }
-    array_push($infos, array(__('Smarty compilation directory', $dom), $tpl->compile_dir));
-
-    $info = $tpl->cache_dir;
-    if (!file_exists($tpl->cache_dir)) {
-        LogUtil::registerError(__f('Error! Could not find cache directory \'%s\'.', $tpl->cache_dir, $dom));
-    } else {
-        // dir exists -> check if it's writeable
-        if (!is_writeable($tpl->cache_dir)) {
-            LogUtil::registerError(__f('Error! The cache directory \'%s\' is not writeable.', $tpl->cache_dir, $dom));
-        }
-    }
-    array_push($infos, array(__('Smarty cache directory', $dom), $tpl->cache_dir));
-
-    $tpl->assign('infos', $infos);
-    return $tpl->fetch('admin/postcalendar_admin_systeminfo.htm');
-}
 /*
  * postcalendar_admin_approveevents
  * update status of events so that they are viewable by users

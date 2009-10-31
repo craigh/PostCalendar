@@ -52,9 +52,6 @@ function postcalendar_adminapi_getlinks()
     if (pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
         $links[] = array('url' => pnModURL('PostCalendar', 'admin', 'manualClearCache'), 'text' => __('Clear Smarty cache', $dom));
     }
-    if (pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
-        $links[] = array('url' => pnModURL('PostCalendar', 'admin', 'testSystem'), 'text' => __('Test system', $dom));
-    }
 
     // Return the links array back to the calling function
     return $links;
