@@ -114,20 +114,22 @@ function postcalendar_upgrade($oldversion)
         case '5.8.0':
             // no changes
         case '5.8.1':
-            pnModSetVar('PostCalendar', 'enablecategorization', true);
             if (!$categorymap = _postcalendar_migratecategories()) {
+                // attempt to migrate local categories
                 return LogUtil::registerError (__('Error: Could not migrate categories.', $dom));
             }
             if (pnModGetVar('PostCalendar', 'pcDisplayTopics')) {
-                // apparently this install not utilizing Topics anyway just drop the col and move on
+                // if currently using Topics module, attempt to migrate
                 if (!$topicmap = _postcalendar_migratetopics()) {
                     return LogUtil::registerError (__('Error: Could not migrate topics.', $dom));
                 }
             }
+            // change structure of data to reassociate events with new categories
             if (!_postcalendar_transcode_ids($categorymap, $topicmap)) {
                 return LogUtil::registerError (__('Error: Could not transcode category and/or topic IDs.', $dom));
             }
             pnModDelVar('PostCalendar', 'pcDisplayTopics');
+            pnModSetVar('PostCalendar', 'enablecategorization', true);
             DBUtil::dropColumn('postcalendar_events', 'pc_comments');
             DBUtil::dropColumn('postcalendar_events', 'pc_counter');
             DBUtil::dropColumn('postcalendar_events', 'pc_recurrfreq');
