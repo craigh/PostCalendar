@@ -146,6 +146,32 @@ function postcalendar_upgrade($oldversion)
 }
 
 /**
+ * Deletes an install of PostCalendar
+ *
+ * This function removes PostCalendar from you
+ * Zikula install and should be accessed via
+ * the Zikula Admin interface
+ *
+ * @author Arjen Tebbenhof
+ * @return  boolean    true/false
+ * @access  public
+ * @copyright    The PostCalendar Team 2009
+ */
+function postcalendar_delete()
+{
+    $result = DBUtil::dropTable('postcalendar_events');
+    $result = $result && pnModDelVar('PostCalendar');
+
+    // Delete entries from category registry
+    pnModDBInfoLoad ('Categories');
+    Loader::loadArrayClassFromModule('Categories', 'CategoryRegistry');
+    $registry = new PNCategoryRegistryArray();
+    $registry->deleteWhere ('crg_modname=\'PostCalendar\'');
+
+    return $result;
+}
+
+/**
  * PostCalendar Default Module Settings
  *
  * @author Arjen Tebbenhof
@@ -212,32 +238,6 @@ function postcalendar_init_reset_scribite()
             LogUtil::registerStatus (__('Error! Could not update the configuration.', $dom));
         }
     }
-}
-
-/**
- * Deletes an install of PostCalendar
- *
- * This function removes PostCalendar from you
- * Zikula install and should be accessed via
- * the Zikula Admin interface
- *
- * @author Arjen Tebbenhof
- * @return  boolean    true/false
- * @access  public
- * @copyright    The PostCalendar Team 2009
- */
-function postcalendar_delete()
-{
-    $result = DBUtil::dropTable('postcalendar_events');
-    $result = $result && pnModDelVar('PostCalendar');
-
-    // Delete entries from category registry
-    pnModDBInfoLoad ('Categories');
-    Loader::loadArrayClassFromModule('Categories', 'CategoryRegistry');
-    $registry = new PNCategoryRegistryArray();
-    $registry->deleteWhere ('crg_modname=\'PostCalendar\'');
-
-    return $result;
 }
 
 /**
@@ -467,6 +467,11 @@ function _postcalendar_createtopicscategory($regpath = '/__SYSTEM__/Modules/Topi
     // get the language file
     $lang = pnUserGetLang();
 
+    // load necessary classes
+    Loader::loadClass('CategoryUtil');
+    Loader::loadClassFromModule('Categories', 'Category');
+    Loader::loadClassFromModule('Categories', 'CategoryRegistry');
+
     // get the category path for which we're going to insert our place holder category
     $rootcat = CategoryUtil::getCategoryByPath('/__SYSTEM__/Modules');
 
@@ -493,18 +498,35 @@ function _postcalendar_createtopicscategory($regpath = '/__SYSTEM__/Modules/Topi
     $rootcat = CategoryUtil::getCategoryByPath($regpath);
     if ($rootcat) {
         // create an entry in the categories registry to the Topic property
-        $registry = new PNCategoryRegistry();
-        $registry->setDataField('modname', 'PostCalendar');
-        $registry->setDataField('table', 'postcalendar_events');
-        $registry->setDataField('property', 'Topic');
-        $registry->setDataField('category_id', $rootcat['id']);
-        $registry->insert();
+        _postcalendar_create_regentry_fortopics($rootcat);
     } else {
         return false;
     }
 
     return true;
 }
+
+/**
+ * @author Craig Heydenburg
+ * create an entry in the categories registry to the Topic property
+ */
+function _postcalendar_create_regentry_fortopics($rootcat)
+{
+    // load necessary classes
+    Loader::loadClass('CategoryUtil');
+    Loader::loadClassFromModule('Categories', 'Category');
+    Loader::loadClassFromModule('Categories', 'CategoryRegistry');
+
+    $registry = new PNCategoryRegistry();
+    $registry->setDataField('modname', 'PostCalendar');
+    $registry->setDataField('table', 'postcalendar_events');
+    $registry->setDataField('property', 'Topic');
+    $registry->setDataField('category_id', $rootcat['id']);
+    $registry->insert();
+
+    return true;
+}
+
 /**
  * discover if the Topics information is already available in categories
  * if so, return map of old topic id => new category id
@@ -546,6 +568,9 @@ function _postcalendar_gettopicsmap($topicspath = '/__SYSTEM__/Modules/Topics')
 
     // if the $topics array is not empty, then all the topics were not found in the categories
     if (!empty($topics)) return false;
+
+    // create an entry in the categories registry to the Topic property
+    _postcalendar_create_regentry_fortopics($cat);
 
     // return array map
     return $topicidmap;
