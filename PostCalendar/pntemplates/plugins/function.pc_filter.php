@@ -94,14 +94,15 @@ function smarty_function_pc_filter($args, &$smarty)
     if (in_array('category', $types) && _SETTING_ALLOW_CAT_FILTER) {
         @define('_PC_FORM_CATEGORY', true);
         $category = FormUtil::getPassedValue('pc_category');
-        $categories = pnModAPIFunc('PostCalendar', 'user', 'getCategories');
-        $catoptions = "<select name=\"pc_category\" $class>";
-        $catoptions .= "<option value=\"\" $class>" . __('All Categories', $dom) . "</option>";
-        foreach ($categories as $c) {
-            $sel = ($category == $c['catid'] ? 'selected="selected"' : '');
-            $catoptions .= "<option value=\"$c[catid]\" $sel $class>$c[catname]</option>";
+
+        // load the category registry util
+        if (!Loader::loadClass('CategoryRegistryUtil')) {
+            pn_exit(__f('Error! Unable to load class [%s%]', 'CategoryRegistryUtil'));
         }
-        $catoptions .= '</select>';
+        $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
+        $smarty->assign('catregistry', $catregistry);
+        $catoptions = $smarty->fetch('event/postcalendar_event_filtercats.htm');
+
     } else {
         $catoptions = '';
         $key = array_search('category',$types);

@@ -32,14 +32,12 @@ function postcalendar_searchapi_options($args)
         $renderer->assign('active', $active);
 
         // assign category info
-        //$all_categories = pnModAPIFunc('PostCalendar', 'user', 'getCategories');
-        $categories = array();
-        foreach ($all_categories as $category) {
-            $categories[$category['catid']] = $category['catname'];
+        // load the category registry util
+        if (!Loader::loadClass('CategoryRegistryUtil')) {
+            pn_exit(__f('Error! Unable to load class [%s%]', 'CategoryRegistryUtil'));
         }
-        $categories[0] = __('All categories', $dom);
-        ksort($categories);
-        $renderer->assign('categories', $categories);
+        $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
+        $renderer->assign('catregistry', $catregistry);
 
         return $renderer->fetch('search/postcalendar_search_options.htm');
     }

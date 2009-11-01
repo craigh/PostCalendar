@@ -90,7 +90,7 @@
                     <ul>
                     <!--[foreach from=$catregistry key=property item=category]-->
                         <!--[array_field_isset assign="selectedValue" array=$__CATEGORIES__ field=$property returnValue=1]-->
-                        <li><!--[selector_category category=$category name="TABLENAME[__CATEGORIES__][$property]" field="id" selectedValue=$selectedValue defaultValue="0"]--></li>
+                        <li><!--[selector_category category=$category name="postcalendar_events[__CATEGORIES__][$property]" field="id" selectedValue=$selectedValue defaultValue="0"]--></li>
                     <!--[/foreach]-->
                     </ul>
                     <!--[/nocache]-->
