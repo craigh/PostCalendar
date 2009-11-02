@@ -21,26 +21,14 @@ require_once dirname(__FILE__) . '/global.php';
  */
 function postcalendar_userapi_buildView($args)
 {
-    $dom = ZLanguage::getModuleDomain('PostCalendar');
-    $Date = $args['Date'];
-    $viewtype = $args['viewtype'];
-
-    //=================================================================
-    // grab the post variables
-    $pc_username = FormUtil::getPassedValue('pc_username');
-    $category = FormUtil::getPassedValue('pc_category');
-    //=================================================================
-    // set the correct date
-    $jumpday   = FormUtil::getPassedValue('jumpday');
-    $jumpmonth = FormUtil::getPassedValue('jumpmonth');
-    $jumpyear  = FormUtil::getPassedValue('jumpyear');
-    if (!$Date) $Date = pnModAPIFunc('PostCalendar','user','getDate',compact('jumpday','jumpmonth','jumpyear')); // if not explicit arg, get from input
+    $dom         = ZLanguage::getModuleDomain('PostCalendar');
+    $Date        = $args['Date'];
+    $viewtype    = $args['viewtype'];
+    $pc_username = $args['pc_username'];
+    $filtercats  = $args['filtercats'];
+    $func        = $args['func'];
 
     if (strlen($Date) == 8 && is_numeric($Date)) $Date .= '000000'; // 20060101 + 000000
-
-    //=================================================================
-    // set viewtype to default if not provided.
-    if (!isset($viewtype)) $viewtype = _SETTING_DEFAULT_VIEW;
 
     //=================================================================
     // set the Template to use
@@ -161,7 +149,7 @@ function postcalendar_userapi_buildView($args)
     // Load the events
     //=================================================================
     $eventsByDate = & pnModAPIFunc('PostCalendar', 'event', 'getEvents',
-        array('start' => $starting_date, 'end' => $ending_date));
+        array('start'=>$starting_date, 'end'=>$ending_date, 'filtercats'=>$filtercats, 'Date'=>$Date, 'pc_username'=>$pc_username));
 
     //echo "<pre>"; print_r($eventsByDate); echo "</pre>";
 
@@ -198,55 +186,35 @@ function postcalendar_userapi_buildView($args)
     // Prepare links for template
     //=================================================================
     $pc_prev = pnModURL('PostCalendar', 'user', 'view',
-        array('viewtype' => $viewtype, 'Date' => $prev_month, 'pc_username' => $pc_username, 'pc_category' => $category));
+        array('viewtype' => $viewtype, 'Date' => $prev_month, 'pc_username' => $pc_username, 'filtercats' => $filtercats));
     $pc_next = pnModURL('PostCalendar', 'user', 'view',
-        array('viewtype' => $viewtype, 'Date' => $next_month, 'pc_username' => $pc_username, 'pc_category' => $category));
+        array('viewtype' => $viewtype, 'Date' => $next_month, 'pc_username' => $pc_username, 'filtercats' => $filtercats));
     $prev_day = Date_Calc::prevDay($the_day, $the_month, $the_year, '%Y%m%d');
     $next_day = Date_Calc::nextDay($the_day, $the_month, $the_year, '%Y%m%d');
     $pc_prev_day = pnModURL('PostCalendar', 'user', 'view',
-        array('viewtype' => 'day', 'Date' => $prev_day, 'pc_username' => $pc_username, 'pc_category' => $category));
+        array('viewtype' => 'day', 'Date' => $prev_day, 'pc_username' => $pc_username, 'filtercats' => $filtercats));
     $pc_next_day = pnModURL('PostCalendar', 'user', 'view',
-        array('viewtype' => 'day', 'Date' => $next_day, 'pc_username' => $pc_username, 'pc_category' => $category));
+        array('viewtype' => 'day', 'Date' => $next_day, 'pc_username' => $pc_username, 'filtercats' => $filtercats));
     $prev_week = date('Ymd', mktime(0, 0, 0, $week_first_day_month, $week_first_day_date - 7, $week_first_day_year));
     $next_week = date('Ymd', mktime(0, 0, 0, $week_last_day_month, $week_last_day_date + 1, $week_last_day_year));
     $pc_prev_week = pnModURL('PostCalendar', 'user', 'view',
-        array('viewtype' => 'week', 'Date' => $prev_week, 'pc_username' => $pc_username, 'pc_category' => $category));
+        array('viewtype' => 'week', 'Date' => $prev_week, 'pc_username' => $pc_username, 'filtercats' => $filtercats));
     $pc_next_week = pnModURL('PostCalendar', 'user', 'view',
-        array('viewtype' => 'week', 'Date' => $next_week, 'pc_username' => $pc_username, 'pc_category' => $category,));
+        array('viewtype' => 'week', 'Date' => $next_week, 'pc_username' => $pc_username, 'filtercats' => $filtercats));
     $prev_year = date('Ymd', mktime(0, 0, 0, 1, 1, $the_year - 1));
     $next_year = date('Ymd', mktime(0, 0, 0, 1, 1, $the_year + 1));
     $pc_prev_year = pnModURL('PostCalendar', 'user', 'view',
-        array('viewtype' => 'year', 'Date' => $prev_year, 'pc_username' => $pc_username, 'pc_category' => $category));
+        array('viewtype' => 'year', 'Date' => $prev_year, 'pc_username' => $pc_username, 'filtercats' => $filtercats));
     $pc_next_year = pnModURL('PostCalendar', 'user', 'view',
-        array('viewtype' => 'year', 'Date' => $next_year, 'pc_username' => $pc_username, 'pc_category' => $category));
+        array('viewtype' => 'year', 'Date' => $next_year, 'pc_username' => $pc_username, 'filtercats' => $filtercats));
 
     //=================================================================
     // Populate the template
     //=================================================================
-    /*
-    $all_categories = pnModAPIFunc('PostCalendar', 'user', 'getCategories');
-    $categories = array();
-    foreach ($all_categories as $category) {
-        // compensate for empty category - set to first avail cat
-        // this doesn't actually correct the problem in the DB
-        // if (!array_key_exists($event_category, $all_categories)) $event_category = $category['catid'];
-        // FIXME !!!!!
-        $categories[] = array(
-                        'value' => $category['catid'],
-                        'selected' => ($category['catid'] == $event_category ? 'selected' : ''),
-                        'name' => $category['catname'],
-                        'color' => $category['catcolor'],
-                        'desc' => $category['catdesc']);
-    }
-    */
 
     if (isset($calendarView)) $function_out['CAL_FORMAT'] = $calendarView;
 
-    $func = FormUtil::getPassedValue('func');
-    $template_view = FormUtil::getPassedValue('tplview');
-    if (!$template_view) $template_view = _SETTING_DEFAULT_VIEW;
     $function_out['FUNCTION']          = $func;
-    $function_out['TPL_VIEW']          = $template_view;
     $function_out['VIEW_TYPE']         = $viewtype;
     $function_out['A_MONTH_NAMES']     = $pc_month_names;
     $function_out['A_LONG_DAY_NAMES']  = $pc_long_day_names;
@@ -302,13 +270,6 @@ function postcalendar_userapi_eventPreview($args)
     //=================================================================
     $tpl = pnRender::getInstance('PostCalendar', false);
     pnModAPIFunc('PostCalendar','user','SmartySetup', $tpl);
-    /* Trim as needed */
-    $func = FormUtil::getPassedValue('func');
-    $template_view = FormUtil::getPassedValue('tplview');
-    if (!$template_view) $template_view = _SETTING_DEFAULT_VIEW;
-    $tpl->assign('FUNCTION', $func);
-    $tpl->assign('TPL_VIEW', $template_view);
-    /* end */
 
     // add preceding zeros
     $event_starttimeh = sprintf('%02d', $args['event_starttimeh']);

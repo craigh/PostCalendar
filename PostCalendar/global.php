@@ -87,7 +87,6 @@ define('_SETTING_DIRECT_SUBMIT',    pnModGetVar('PostCalendar', 'pcAllowDirectSu
 define('_SETTING_ALLOW_USER_CAL',   pnModGetVar('PostCalendar', 'pcAllowUserCalendar'));
 define('_SETTING_TIME_INCREMENT',   pnModGetVar('PostCalendar', 'pcTimeIncrement'));
 define('_SETTING_HOW_MANY_EVENTS',  pnModGetVar('PostCalendar', 'pcListHowManyEvents'));
-define('_SETTING_TEMPLATE',         pnModGetVar('PostCalendar', 'pcTemplate'));
 define('_SETTING_EVENTS_IN_YEAR',   pnModGetVar('PostCalendar', 'pcShowEventsInYear'));
 define('_SETTING_USE_CACHE',        pnModGetVar('PostCalendar', 'pcUseCache'));
 define('_SETTING_CACHE_LIFETIME',   pnModGetVar('PostCalendar', 'pcCacheLifetime'));

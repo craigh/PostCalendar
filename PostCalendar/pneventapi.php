@@ -30,13 +30,15 @@ function postcalendar_eventapi_queryEvents($args)
 {
     $dom = ZLanguage::getModuleDomain('PostCalendar');
     $end = '0000-00-00';
-    extract($args);
+    extract($args); //start, end, s_keywords, s_category, filtercats, pc_username
 
-    //CAH we should not be getting form values in an API function
-    if (pnModGetVar('PostCalendar', 'pcAllowUserCalendar')) { $filterdefault = _PC_FILTER_ALL; } else { $filterdefault = _PC_FILTER_GLOBAL; }
-    $pc_username = FormUtil::getPassedValue('pc_username', $filterdefault); // poorly named var now because actually an int userid/constant
+    if (pnModGetVar('PostCalendar', 'pcAllowUserCalendar')) { 
+        $filterdefault = _PC_FILTER_ALL; 
+    } else { 
+        $filterdefault = _PC_FILTER_GLOBAL;
+    }
+    if (empty($pc_username)) $pc_username = $filterdefault;
     if (!pnUserLoggedIn()) $pc_username = _PC_FILTER_GLOBAL;
-    //$category    = FormUtil::getPassedValue('pc_category');
 
     $userid = pnUserGetVar('uid');
     unset($ruserid);
@@ -100,7 +102,8 @@ function postcalendar_eventapi_queryEvents($args)
 
     $sort = "ORDER BY pc_meeting_id";
 
-    $events = DBUtil::selectExpandedObjectArray('postcalendar_events', $joinInfo, $where, $sort);
+    // need to define filtereventsby according to selected categories.
+    $events = DBUtil::selectExpandedObjectArray('postcalendar_events', null, $where, $sort, null, null, null, null, $filtereventsby);
 
     // this prevents duplicate display of same event for different participants
     // in PC v5.8, I think to leave this in, but should remove in v6
@@ -128,15 +131,10 @@ function postcalendar_eventapi_queryEvents($args)
 function postcalendar_eventapi_getEvents($args)
 {
     $dom = ZLanguage::getModuleDomain('PostCalendar');
-    $s_keywords = $s_category = '';
-    extract($args);
-    //not sure these three lines are needed with call to getDate here
-    // don't like getPassedValue in api function
-    $jumpday   = FormUtil::getPassedValue('jumpday');
-    $jumpmonth = FormUtil::getPassedValue('jumpmonth');
-    $jumpyear  = FormUtil::getPassedValue('jumpyear');
-    $Date  = FormUtil::getPassedValue('Date');
-    $date  = pnModAPIFunc('PostCalendar','user','getDate',compact('Date','jumpday','jumpmonth','jumpyear'));
+    $s_keywords = $s_category = ''; // search stuff
+    extract($args); //start, end, filtercats, Date, s_keywords, s_category, pc_username
+
+    $date  = pnModAPIFunc('PostCalendar','user','getDate',array('Date'=>$args['Date'])); //formats date
 
     $cy = substr($date, 0, 4);
     $cm = substr($date, 4, 2);
@@ -166,8 +164,9 @@ function postcalendar_eventapi_getEvents($args)
     }
     if (!isset($events)) { // why would $events have a value?
         if (!isset($s_keywords)) $s_keywords = '';
-        $a = array('start' => $start_date, 'end' => $end_date, 's_keywords' => $s_keywords, 's_category' => $s_category);
-        $events = pnModAPIFunc('PostCalendar', 'event', 'queryEvents', $a);
+        $events = pnModAPIFunc('PostCalendar', 'event', 'queryEvents', 
+            array('start'=>$start_date, 'end'=>$end_date, 's_keywords'=>$s_keywords, 
+                  's_category'=>$s_category, 'filtercats'=>$filtercats, 'pc_username'=>$pc_username));
     }
 
     //==============================================================
@@ -298,12 +297,10 @@ function postcalendar_eventapi_getEvents($args)
  */
 function postcalendar_eventapi_writeEvent($args)
 {
-    //TODO: remove use of $_POST vars
+    //TODO:
     // remove multiple event inserts based on participants (ticket filed)
 
-    $event_for_userid = $_POST['event_for_userid']; // gets the value out of the event_for_userid dropdown :: becomes aid?
-
-    extract($args);
+    extract($args); //'eventdata','Date','event_for_userid'
     unset($args);
 
     define('PC_ACCESS_ADMIN', pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN));
@@ -336,8 +333,6 @@ function postcalendar_eventapi_writeEvent($args)
     }
 
     $startTime = sprintf('%02d', $event_starttimeh) . ':' . sprintf('%02d', $event_starttimem) . ':00';
-
-    $event_userid = $event_for_userid;
 
     if (empty($event_desc)) {
         $event_desc .= 'n/a'; // default description
@@ -407,7 +402,7 @@ function postcalendar_eventapi_buildSubmitForm($args)
         return LogUtil::registerPermissionError();
     }
 
-    extract($args);
+    extract($args); //'eventdata','Date','func'
     unset($args);
 
     if (!$admin) $admin = false; //reset default value
@@ -416,16 +411,9 @@ function postcalendar_eventapi_buildSubmitForm($args)
     $tpl = pnRender::getInstance('PostCalendar', false);
     pnModAPIFunc('PostCalendar','user','SmartySetup', $tpl);
 
-    // V4B RNG start
-
     $endDate = $event_endyear . $event_endmonth . $event_endday;
-    //not sure these three lines are needed with call to getDate here
-    // don't like getPassedValue in api function
-    $jumpday   = FormUtil::getPassedValue('jumpday');
-    $jumpmonth = FormUtil::getPassedValue('jumpmonth');
-    $jumpyear  = FormUtil::getPassedValue('jumpyear');
-    $Date  = FormUtil::getPassedValue('Date');
-    $today  = pnModAPIFunc('PostCalendar','user','getDate',compact('Date','jumpday','jumpmonth','jumpyear'));
+    $today  = pnModAPIFunc('PostCalendar','user','getDate',array('Date'=>$Date));
+
     if (($endDate == '') || ($endDate == '00000000')) {
         $endvalue = substr($today, 6, 2) . '-' . substr($today, 4, 2) . '-' . substr($today, 0, 4);
         // V4B RNG: build other date format for JS cal
@@ -476,8 +464,7 @@ function postcalendar_eventapi_buildSubmitForm($args)
     //=================================================================
     // PARSE MAIN
     //=================================================================
-    $tpl->assign('VIEW_TYPE', ''); // E_ALL Fix
-    $tpl->assign('FUNCTION', FormUtil::getPassedValue('func'));
+    $tpl->assign('FUNCTION', $func);
     $tpl->assign('ModuleName', $modname);
     $tpl->assign('ModuleDirectory', $modir);
 
@@ -742,7 +729,7 @@ function postcalendar_eventapi_getEventDetails($eid)
 {
     if (!isset($eid)) return false;
 
-    $event = DBUtil::selectExpandedObjectByID('postcalendar_events', $joinInfo, $eid, 'eid');
+    $event = DBUtil::selectExpandedObjectByID('postcalendar_events', null, $eid, 'eid');
     $event = pnModAPIFunc('PostCalendar', 'event', 'fixEventDetails', $event);
     return $event;
 }
@@ -761,20 +748,13 @@ function postcalendar_eventapi_eventDetail($args)
         return LogUtil::registerPermissionError();
     }
 
-    extract($args);
+    extract($args); //eid, Date, func
     unset($args);
 
     if (!isset($eid)) return false;
-    if (!isset($nopop)) $nopop = false;
     $uid = pnUserGetVar('uid');
 
-    /* Trim as needed */
-    $func = FormUtil::getPassedValue('func');
-    $template_view = FormUtil::getPassedValue('tplview');
-    if (!$template_view) $template_view = 'month';
     $function_out['FUNCTION'] = $func;
-    $function_out['TPL_VIEW'] = $template_view;
-    /* end */
 
     // get the DB information
     $event = pnModAPIFunc('PostCalendar', 'event', 'getEventDetails', $eid);
@@ -792,7 +772,6 @@ function postcalendar_eventapi_eventDetail($args)
         $event['eventDate'] = "$y-$m-$d";
     }
 
-    // populate the template
     // prep the vars for output
     $display_type = substr($event['hometext'], 0, 6);
     $event['hometext'] = substr($event['hometext'], 6);
@@ -832,19 +811,11 @@ function postcalendar_eventapi_eventDetail($args)
         $logged_in_uid = 1;
     }
 
-    $user_edit_url = $user_delete_url = $user_copy_url = '';
-    $can_edit = false;
+    $function_out['EVENT_CAN_EDIT'] = false;
     if ((pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADD) && $logged_in_uid == $event['aid'])
         || pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
-        $user_edit_url = pnModURL('PostCalendar', 'event', 'edit', array('eid' => $eid));
-        $user_delete_url = pnModURL('PostCalendar', 'event', 'delete', array('eid' => $eid));
-        $user_copy_url = pnModURL('PostCalendar', 'event', 'new', array('eid' => $eid, 'form_action' => 'copy'));
-        $can_edit = true;
+        $function_out['EVENT_CAN_EDIT'] = true;
     }
-    $function_out['EVENT_COPY'] = $user_copy_url;
-    $function_out['EVENT_EDIT'] = $user_edit_url;
-    $function_out['EVENT_DELETE'] = $user_delete_url;
-    $function_out['EVENT_CAN_EDIT'] = $can_edit;
 
     return $function_out;
 }

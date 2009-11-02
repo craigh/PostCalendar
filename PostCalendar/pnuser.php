@@ -37,43 +37,35 @@ function postcalendar_user_view()
     }
 
     // get the vars that were passed in
-    $Date = FormUtil::getPassedValue('Date');
-    $viewtype = FormUtil::getPassedValue('viewtype');
-    $jumpday = FormUtil::getPassedValue('jumpday');
-    $jumpmonth = FormUtil::getPassedValue('jumpmonth');
-    $jumpyear = FormUtil::getPassedValue('jumpyear');
+    $popup       = FormUtil::getPassedValue('popup');
+    $pc_username = FormUtil::getPassedValue('pc_username');
+    $eid         = FormUtil::getPassedValue('eid');
+    $viewtype    = FormUtil::getPassedValue('viewtype', _SETTING_DEFAULT_VIEW);
+    $jumpday     = FormUtil::getPassedValue('jumpday');
+    $jumpmonth   = FormUtil::getPassedValue('jumpmonth');
+    $jumpyear    = FormUtil::getPassedValue('jumpyear');
+    $Date        = FormUtil::getPassedValue('Date', pnModAPIFunc('PostCalendar','user','getDate',compact('jumpday','jumpmonth','jumpyear')));
+    $filtercats  = FormUtil::getPassedValue('postcalendar_events');
+    $func        = FormUtil::getPassedValue('func');
 
-    if (empty($Date)) $Date = pnModAPIFunc('PostCalendar','user','getDate',compact('jumpday','jumpmonth','jumpyear'));
-    if (!isset($viewtype)) $viewtype = _SETTING_DEFAULT_VIEW;
-
-    return postcalendar_user_display(array('viewtype' => $viewtype, 'Date' => $Date));
+    return postcalendar_user_display(compact('viewtype','Date','filtercats','pc_username','popup','eid','func'));
 }
 
 /**
- * display item
- * This is a standard function to provide detailed information on a single item
- * available from the module.
+ * display item available from the module.
  */
 function postcalendar_user_display($args)
 {
-    $dom = ZLanguage::getModuleDomain('PostCalendar');
-
-    $eid = FormUtil::getPassedValue('eid');
-    $Date = FormUtil::getPassedValue('Date');
-    $pc_category = FormUtil::getPassedValue('pc_category');
-    $pc_username = FormUtil::getPassedValue('pc_username');
-    $popup = FormUtil::getPassedValue('popup');
-
     extract($args);
     if (empty($Date) && empty($viewtype)) {
         return LogUtil::registerError(__('Error! Required arguments not present.', $dom));
-        return false;
     }
 
-    $uid = pnUserGetVar('uid');
-    $theme = pnUserGetTheme();
-    $cacheid = md5($Date . $viewtype . _SETTING_TEMPLATE . $eid . $uid . 'u' . $pc_username . $theme . 'c' . $category);
-    $tpl = pnRender::getInstance('PostCalendar');
+    $dom     = ZLanguage::getModuleDomain('PostCalendar');
+    $uid     = pnUserGetVar('uid');
+    $theme   = pnUserGetTheme();
+    $cacheid = md5($Date . $viewtype . $eid . $uid . 'u' . $pc_username . $theme);
+    $tpl     = pnRender::getInstance('PostCalendar');
     
     switch ($viewtype) {
         case 'details':
@@ -83,11 +75,11 @@ function postcalendar_user_display($args)
 
             // build template and fetch:
             pnModAPIFunc('PostCalendar','user','SmartySetup', $tpl);
-            if ($tpl->is_cached($detailstemplate, $cacheid)) {
+            if ($tpl->is_cached('user/postcalendar_user_view_event_details.html', $cacheid)) {
                 // use cached version
-                return $tpl->fetch($detailstemplate, $cacheid);
+                return $tpl->fetch('user/postcalendar_user_view_event_details.html', $cacheid);
             } else {
-                $out = pnModAPIFunc('PostCalendar', 'event', 'eventDetail', array('eid' => $eid, 'Date' => $Date));
+                $out = pnModAPIFunc('PostCalendar', 'event', 'eventDetail', compact('eid','Date','func'));
                 if ($out === false) {
                     pnRedirect(pnModURL('PostCalendar', 'user'));
                 }
@@ -108,7 +100,8 @@ function postcalendar_user_display($args)
                 return LogUtil::registerPermissionError();
             }
             //now function just returns an array of information to pass to template 5/9/09 CAH
-            $out = pnModAPIFunc('PostCalendar', 'user', 'buildView', array('Date' => $Date, 'viewtype' => $viewtype));
+            $out = pnModAPIFunc('PostCalendar', 'user', 'buildView', 
+                compact('Date','viewtype','pc_username','filtercats','func'));
             // build template and fetch:
             pnModAPIFunc('PostCalendar','user','SmartySetup', $tpl);
             if ($tpl->is_cached($out['template'], $cacheid)) {
@@ -169,21 +162,4 @@ function eventdatecmp($a, $b)
 {
     if ($a[startTime] < $b[startTime]) return -1;
     elseif ($a[startTime] > $b[startTime]) return 1;
-}
-
-// parsefilename returns an array
-// ([0]=>pathname, [1]=>filename)
-// could be used to parse many strings
-// is an extension of the explode function
-function parsefilename($delim, $str, $lim = 1)
-{
-    if ($lim > -2) return explode($delim, $str, abs($lim));
-
-    $lim = -$lim;
-    $out = explode($delim, $str);
-    if ($lim >= count($out)) return $out;
-
-    $out = array_chunk($out, count($out) - $lim + 1);
-
-    return array_merge(array(implode($delim, $out[0])), $out[1]);
 }

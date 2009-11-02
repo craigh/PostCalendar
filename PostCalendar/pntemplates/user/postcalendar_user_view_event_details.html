@@ -86,9 +86,9 @@
 <!--[ if $PRINT_VIEW eq false ]-->
     <!--[ if $EVENT_CAN_EDIT ]-->
         <div>
-            <a href="<!--[ $EVENT_EDIT ]-->"><!--[gt text='Edit']--></a> |
-        <a href="<!--[ $EVENT_COPY ]-->"><!--[gt text='Copy']--></a> |
-            <a href="<!--[ $EVENT_DELETE ]-->"><!--[gt text='Delete']--></a>
+            <a href="<!--[pnmodurl modname="postCalendar" type="event" func="edit" eid=$A_EVENT.eid]-->"><!--[gt text='Edit']--></a> |
+        <a href="<!--[pnmodurl modname="postCalendar" type="event" func="new" form_action="copy" eid=$A_EVENT.eid]-->"><!--[gt text='Copy']--></a> |
+            <a href="<!--[pnmodurl modname="postCalendar" type="event" func="delete" eid=$A_EVENT.eid]-->"><!--[gt text='Delete']--></a>
         </div>
     <!--[ /if ]-->
 <!--[ else ]-->

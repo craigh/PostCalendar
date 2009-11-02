@@ -115,12 +115,13 @@ function postcalendar_event_new($args)
 
     extract($args); //if there are args, does that mean were are editing an event?
 
-    //not sure these three lines are needed with call to getDate here
+    // these items come on brand new view of this function
+    $func      = FormUtil::getPassedValue('func');
     $jumpday   = FormUtil::getPassedValue('jumpday');
     $jumpmonth = FormUtil::getPassedValue('jumpmonth');
     $jumpyear  = FormUtil::getPassedValue('jumpyear');
+    $Date      = FormUtil::getPassedValue('Date');
 
-    $Date  = FormUtil::getPassedValue('Date');
     $Date  = pnModAPIFunc('PostCalendar','user','getDate',compact('Date','jumpday','jumpmonth','jumpyear'));
     $year  = substr($Date, 0, 4);
     $month = substr($Date, 4, 2);
@@ -361,7 +362,7 @@ function postcalendar_event_new($args)
     if ($form_action == 'commit') {
         if (!SecurityUtil::confirmAuthKey()) return LogUtil::registerAuthidError(pnModURL('postcalendar', 'admin', 'main'));
 
-        if (!pnModAPIFunc('PostCalendar', 'event', 'writeEvent', $eventdata)) {
+        if (!pnModAPIFunc('PostCalendar', 'event', 'writeEvent', compact('eventdata','Date','event_for_userid'))) {
             LogUtil::registerError(__('Error! Submission failed.', $dom));
         } else {
             pnModAPIFunc('PostCalendar', 'admin', 'clearCache');
@@ -379,5 +380,5 @@ function postcalendar_event_new($args)
         return true;
     }
 
-    return pnModAPIFunc('PostCalendar', 'event', 'buildSubmitForm', $eventdata);
+    return pnModAPIFunc('PostCalendar', 'event', 'buildSubmitForm', compact('eventdata','Date','func'));
 }
