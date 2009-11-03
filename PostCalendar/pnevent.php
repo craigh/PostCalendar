@@ -59,7 +59,7 @@ class postcalendar_event_editHandler extends pnFormHandler
             $result = pnModAPIFunc('PostCalendar', 'event', 'deleteevent', array('eid' => $this->eid));
             if ($result === false) return $render->pnFormSetErrorMsg(__('Error! An \'unidentified error\' occurred.', $dom));
 
-            $redir = pnModUrl('PostCalendar', 'user', 'view', array('viewtype' => pnModGetVar('PostCalendar', 'pcDefaultView')));
+            $redir = pnModUrl('PostCalendar', 'user', 'view', array('viewtype' => _SETTING_DEFAULT_VIEW));
             return $render->pnFormRedirect($redir);
         } else if ($args['commandName'] == 'cancel') {
             $url = pnModUrl('PostCalendar', 'user', 'view', array('eid' => $this->eid, 'viewtype' => 'details', 'Date' => $event['Date']));
@@ -214,7 +214,7 @@ function postcalendar_event_new($args)
         $uname = pnConfigGetVar('anonymous');
     }
 
-    if (!isset($eid) || empty($eid) || $data_loaded) { // this is a new event
+    if (!isset($eid) || empty($eid) || $data_loaded) { // this is a new event (possibly previewed)
         // wrap all the data into array for passing to commit and preview functions
         $eventdata = compact('event_subject', 'event_desc', 'event_sharing',
             'event_category', 'event_startmonth', 'event_startday', 'event_startyear',
@@ -226,7 +226,7 @@ function postcalendar_event_new($args)
             'event_repeat', 'event_repeat_freq', 'event_repeat_freq_type', 'event_repeat_on_num',
             'event_repeat_on_day', 'event_repeat_on_freq', 'event_recurrspec', 'uname', 'Date', 'year',
             'month', 'day', 'pc_html_or_text');
-        $eventdata['is_update'] = $is_update;
+        $eventdata['is_update'] = $is_update; //this should be false on new event, no?
         $eventdata['eid'] = $eid;
         $eventdata['data_loaded'] = true;
         $eventdata['event_for_userid'] = $event_for_userid;
@@ -362,7 +362,7 @@ function postcalendar_event_new($args)
     if ($form_action == 'commit') {
         if (!SecurityUtil::confirmAuthKey()) return LogUtil::registerAuthidError(pnModURL('postcalendar', 'admin', 'main'));
 
-        if (!pnModAPIFunc('PostCalendar', 'event', 'writeEvent', compact('eventdata','Date','event_for_userid'))) {
+        if (!$eid = pnModAPIFunc('PostCalendar', 'event', 'writeEvent', compact('eventdata','Date','event_for_userid'))) {
             LogUtil::registerError(__('Error! Submission failed.', $dom));
         } else {
             pnModAPIFunc('PostCalendar', 'admin', 'clearCache');
@@ -372,11 +372,13 @@ function postcalendar_event_new($args)
                 LogUtil::registerStatus(__('Done! Submitted the event.', $dom));
             }
 
+            pnModAPIFunc('PostCalendar','admin','notify',compact('eid','is_update')); //notify admin
+
             // save the start date, before the vars are cleared (needed for the redirect on success)
             $url_date = $event_startyear . $event_startmonth . $event_startday;
         }
 
-        pnRedirect(pnModURL('PostCalendar', 'user', 'view', array('viewtype' => 'month', 'Date' => $url_date))); // change to default view or previous
+        pnRedirect(pnModURL('PostCalendar', 'user', 'view', array('viewtype' => _SETTING_DEFAULT_VIEW, 'Date' => $url_date)));
         return true;
     }
 

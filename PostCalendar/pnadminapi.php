@@ -102,7 +102,7 @@ function postcalendar_adminapi_clearCache()
 function postcalendar_adminapi_notify($args)
 {
     $dom = ZLanguage::getModuleDomain('PostCalendar');
-    extract($args);
+    extract($args); //'eid','is_update'
 
     if (!(bool) _SETTING_NOTIFY_ADMIN) return true;
     $isadmin = SecurityUtil::checkPermission('PostCalendar::', 'null::null', ACCESS_ADMIN);

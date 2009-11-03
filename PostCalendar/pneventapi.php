@@ -286,9 +286,7 @@ function postcalendar_eventapi_getEvents($args)
  */
 function postcalendar_eventapi_writeEvent($args)
 {
-    //TODO:
-    // remove multiple event inserts based on participants (ticket filed)
-
+    $dom = ZLanguage::getModuleDomain('PostCalendar');
     extract($args); //'eventdata','Date','event_for_userid'
     unset($args);
 
@@ -324,17 +322,12 @@ function postcalendar_eventapi_writeEvent($args)
     $startTime = sprintf('%02d', $event_starttimeh) . ':' . sprintf('%02d', $event_starttimem) . ':00';
 
     if (empty($event_desc)) {
-        $event_desc .= 'n/a'; // default description
+        $event_desc = __(/*!(abbr) not applicable or not available*/'n/a', $dom); // default description
     } else {
         $event_desc = ':' . $pc_html_or_text . ':' . $event_desc; // inserts :text:/:html: before actual content
     }
 
-    $pc_meeting_id = 0; // can pull this out if the column in the DB is removed.
-
     if (!isset($is_update)) $is_update = false;
-
-    // build an array of users for mail notification
-    $pc_mail_users = array();
 
     $eventarray = array(
         'title' => $event_subject,
@@ -344,7 +337,6 @@ function postcalendar_eventapi_writeEvent($args)
         'recurrtype' => (int) $event_repeat,
         'startTime' => $startTime,
         'alldayevent' => (int) $event_allday,
-        'catid' => (int) $event_category,
         'location' => $event_location_info,
         'conttel' => $event_conttel,
         'contname' => $event_contname,
@@ -364,19 +356,11 @@ function postcalendar_eventapi_writeEvent($args)
         unset ($eventarray['eid']); //be sure that eid is not set on insert op to autoincrement value
         $eventarray['time'] = date("Y-m-d H:i:s"); //current date
         $eventarray['informant'] = $uname; // @v6.0 change this to uid
-        $eventarray['meeting_id'] = $pc_meeting_id;
         $result = pnModAPIFunc('postcalendar', 'event', 'create', $eventarray);
     }
-    if ($result === false) {
-        // post some kind of error message...
-        return false;
-    }
+    if ($result === false) return false;
 
-    $eid = $result['eid']; // set eid to last event submitted
-
-    pnModAPIFunc('PostCalendar','admin','notify',compact('eid','is_update')); //notify admin and informant
-
-    return true;
+    return $result['eid'];
 }
 
 /**
