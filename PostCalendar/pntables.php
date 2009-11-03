@@ -42,8 +42,7 @@ function postcalendar_pntables()
                     'website'     => 'pc_website',          // event website
                     'fee'         => 'pc_fee',              // event fee
                     'eventstatus' => 'pc_eventstatus',      // event status (approved, pending)
-                    'sharing'     => 'pc_sharing',          // event sharing (global, private, etc)
-                    'meeting_id'  => 'pc_meeting_id');      // event meeting ID
+                    'sharing'     => 'pc_sharing');         // event sharing (global, private, etc)
     $pntable['postcalendar_events_column_def'] = array(
                     'eid'         => 'I(11) UNSIGNED AUTO PRIMARY',      // int(11) unsigned NOT NULL auto_increment
                     'aid'         => 'C(30) NOTNULL DEFAULT \'\'',       // varchar(30) NOT NULL default ''
@@ -66,8 +65,7 @@ function postcalendar_pntables()
                     'website'     => 'C(255) DEFAULT \'\'',              // varchar(255) default ''
                     'fee'         => 'C(50) DEFAULT \'\'',               // varchar(50) default ''
                     'eventstatus' => 'I NOTNULL DEFAULT 0',              // int(11) NOT NULL default 0
-                    'sharing'     => 'I NOTNULL DEFAULT 0',              // int(11) NOT NULL default 0
-                    'meeting_id'  => 'I DEFAULT 0');                     // int(11) NULL default 0
+                    'sharing'     => 'I NOTNULL DEFAULT 0');             // int(11) NOT NULL default 0
     $pntable['postcalendar_events_column_idx'] = array(
                     'basic_event' => array(
                                     'aid',

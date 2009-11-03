@@ -114,8 +114,9 @@ function postcalendar_upgrade($oldversion)
         case '5.8.0':
             // no changes
         case '5.8.1':
-            // DBUtil::dropColumn('postcalendar_events', 'pc_meeting_id'); //before dropping, must remove dup events with same meeting_id
-
+            if (!_postcalendar_cull_meetings()) {
+                return LogUtil::registerError (__('Error: Could not cull meetings.', $dom));
+            }
             if (!$categorymap = _postcalendar_migratecategories()) {
                 // attempt to migrate local categories
                 return LogUtil::registerError (__('Error: Could not migrate categories.', $dom));
@@ -125,6 +126,8 @@ function postcalendar_upgrade($oldversion)
                 if (!$topicmap = _postcalendar_migratetopics()) {
                     return LogUtil::registerError (__('Error: Could not migrate topics.', $dom));
                 }
+            } else {
+                LogUtil::registerStatus (__('PostCalendar: Topics ignored in upgrade.', $dom));
             }
             // change structure of data to reassociate events with new categories
             if (!_postcalendar_transcode_ids($categorymap, $topicmap)) {
@@ -136,8 +139,6 @@ function postcalendar_upgrade($oldversion)
             DBUtil::dropColumn('postcalendar_events', 'pc_counter');
             DBUtil::dropColumn('postcalendar_events', 'pc_recurrfreq');
             DBUtil::dropColumn('postcalendar_events', 'pc_language');
-            // pc_topic and pc_catid columns are dropped in the migration process
-            // postcalendar_categories table is dropped in the migration process
         //case '6.0.0':
             //placeholder :-)
     }
@@ -238,7 +239,7 @@ function postcalendar_init_reset_scribite()
         // Error tracking
         if ($mid === false) {
             //pnModLangLoad('scribite', 'user');
-            LogUtil::registerStatus (__('Error! Could not update the configuration.', $dom));
+            LogUtil::registerError (__('Error! Could not update the configuration.', $dom));
         }
     }
 }
@@ -296,6 +297,7 @@ function _postcalendar_migratecategories()
     // drop old table
     DBUtil::dropTable('postcalendar_categories');
 
+    LogUtil::registerStatus (__('PostCalendar: Categories successfully migrated.', $dom));
     return $categorymap;
 }
 
@@ -364,6 +366,8 @@ function _postcalendar_migratetopics()
 
     // don't drop the topics table - this is the job of the topics module
 
+    LogUtil::registerStatus (__('PostCalendar: Topics successfully migrated.', $dom));
+
     return $topicsmap;
 }
 
@@ -402,6 +406,8 @@ function _postcalendar_transcode_ids($categorymap, $topicsmap)
     // drop unneeded columns
     DBUtil::dropColumn('postcalendar_events', 'pc_topic');
     DBUtil::dropColumn('postcalendar_events', 'pc_catid');
+
+    LogUtil::registerStatus (__('PostCalendar: Category and/or Topic IDs converted.', $dom));
 
     return true;
 }
@@ -577,4 +583,28 @@ function _postcalendar_gettopicsmap($topicspath = '/__SYSTEM__/Modules/Topics')
 
     // return array map
     return $topicidmap;
+}
+
+/**
+ * remove duplicate copies of same event with different eid and aid but same meeting_id
+ * @author  Craig Heydenburg
+ */
+function _postcalendar_cull_meetings()
+{
+    $events = DBUtil::selectExpandedObjectArray('postcalendar_events', null, 'WHERE pc_meeting_id > 0', 'ORDER BY pc_meeting_id, pc_eid');
+
+    $old_m_id = "NULL";
+    foreach ($events as $key => $evt) {
+        $new_m_id = $evt['meeting_id'];
+        if (($old_m_id) && ($old_m_id != "NULL") && ($new_m_id > 0) && ($old_m_id == $new_m_id)) {
+            $old_m_id = $new_m_id;
+            DBUtil::deleteObjectByID('postcalendar_events', $evt['eid'], 'eid'); // delete dup event
+        }
+        $old_m_id = $evt['meeting_id'];
+    }
+
+    DBUtil::dropColumn('postcalendar_events', 'pc_meeting_id');
+    LogUtil::registerStatus (__f('PostCalendar: Meetings culled. %s column dropped', 'pc_meeting_id', $dom));
+
+    return true;
 }

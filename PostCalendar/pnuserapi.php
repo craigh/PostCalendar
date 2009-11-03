@@ -151,8 +151,6 @@ function postcalendar_userapi_buildView($args)
     $eventsByDate = & pnModAPIFunc('PostCalendar', 'event', 'getEvents',
         array('start'=>$starting_date, 'end'=>$ending_date, 'filtercats'=>$filtercats, 'Date'=>$Date, 'pc_username'=>$pc_username));
 
-    //echo "<pre>"; print_r($eventsByDate); echo "</pre>";
-
     //=================================================================
     // Create an array with the day names in the correct order
     //=================================================================

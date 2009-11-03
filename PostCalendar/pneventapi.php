@@ -100,24 +100,13 @@ function postcalendar_eventapi_queryEvents($args)
     //if (!empty($category))   $where .= "AND (tbl.pc_catid = '" . DataUtil::formatForStore($category) . "') ";
     // End Search functionality
 
-    $sort = "ORDER BY pc_meeting_id";
-
     // need to define filtereventsby according to selected categories.
-    $events = DBUtil::selectExpandedObjectArray('postcalendar_events', null, $where, $sort, null, null, null, null, $filtereventsby);
+    $events = DBUtil::selectExpandedObjectArray('postcalendar_events', null, $where, null, null, null, null, null, $filtereventsby);
 
-    // this prevents duplicate display of same event for different participants
-    // in PC v5.8, I think to leave this in, but should remove in v6
-    // when removing, will have to remove duplicate events in table
-    $old_m_id = "NULL";
     foreach ($events as $key => $evt) {
-        $new_m_id = $evt['meeting_id'];
-        if (($old_m_id) && ($old_m_id != "NULL") && ($new_m_id > 0) && ($old_m_id == $new_m_id)) {
-            $old_m_id = $new_m_id;
-            unset($events[$key]);
-        }
         $events[$key] = pnModAPIFunc('PostCalendar', 'event', 'fixEventDetails', $events[$key]);
-        $old_m_id = $evt['meeting_id'];
     }
+
     return $events;
 }
 
