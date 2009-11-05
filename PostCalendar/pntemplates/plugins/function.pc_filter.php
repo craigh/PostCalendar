@@ -24,7 +24,7 @@ function smarty_function_pc_filter($args, &$smarty)
 {
     $dom = ZLanguage::getModuleDomain('PostCalendar');
     if (empty($args['type'])) {
-        $smarty->trigger_error(__("pc_filter: missing 'type' parameter", $dom));
+        $smarty->trigger_error(__("%s: missing '%s' parameter", array('Plugin:pc_filter', 'type'), $dom));
         return;
     }
     $class = isset($args['class']) ? ' class="'.$args['class'].'"' : '';
@@ -41,7 +41,6 @@ function smarty_function_pc_filter($args, &$smarty)
     if (!isset($m)) $m = substr($Date, 4, 2);
     if (!isset($d)) $d = substr($Date, 6, 2);
 
-    $tplview = FormUtil::getPassedValue('tplview');
     $viewtype = FormUtil::getPassedValue('viewtype', _SETTING_DEFAULT_VIEW);
     if (pnModGetVar('PostCalendar', 'pcAllowUserCalendar')) { $filterdefault = _PC_FILTER_ALL; } else { $filterdefault = _PC_FILTER_GLOBAL; }
     $pc_username = FormUtil::getPassedValue('pc_username', $filterdefault);
@@ -91,16 +90,18 @@ function smarty_function_pc_filter($args, &$smarty)
     //================================================================
     // build the category filter pulldown
     //================================================================
-    if (in_array('category', $types) && _SETTING_ALLOW_CAT_FILTER) {
+    if (in_array('category', $types) && _SETTING_ALLOW_CAT_FILTER && _SETTING_ENABLECATS) {
         @define('_PC_FORM_CATEGORY', true);
-        $category = FormUtil::getPassedValue('pc_category');
 
         // load the category registry util
         if (!Loader::loadClass('CategoryRegistryUtil')) {
-            pn_exit(__f('Error! Unable to load class [%s%]', 'CategoryRegistryUtil'));
+            pn_exit (__f('Error! Unable to load class [%s]', 'CategoryRegistryUtil'));
         }
-        $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
+        $catregistry  = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
+
+        $smarty->assign('enablecategorization', $modvars['enablecategorization']);
         $smarty->assign('catregistry', $catregistry);
+
         $catoptions = $smarty->fetch('event/postcalendar_event_filtercats.htm');
 
     } else {

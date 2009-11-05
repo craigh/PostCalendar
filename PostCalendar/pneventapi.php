@@ -23,14 +23,14 @@ require_once dirname(__FILE__) . '/global.php';
  *              start: Events start date (default today)
  *              end: Events end_date (default 000-00-00)
  *              s_keywords: search info
- *              s_category: search info
+                filtercats: categories to query events from
  * @return array The events
  */
 function postcalendar_eventapi_queryEvents($args)
 {
     $dom = ZLanguage::getModuleDomain('PostCalendar');
     $end = '0000-00-00';
-    extract($args); //start, end, s_keywords, s_category, filtercats, pc_username
+    extract($args); //start, end, s_keywords, filtercats, pc_username
 
     if (pnModGetVar('PostCalendar', 'pcAllowUserCalendar')) { 
         $filterdefault = _PC_FILTER_ALL; 
@@ -94,14 +94,15 @@ function postcalendar_eventapi_queryEvents($args)
             $where .= "OR pc_sharing = '" . SHARING_HIDEDESC . "') ";
     }
 
-    // Start Search functionality
     if (!empty($s_keywords)) $where .= "AND ($s_keywords) ";
-    //if (!empty($s_category)) $where .= "AND ($s_category) ";
-    //if (!empty($category))   $where .= "AND (tbl.pc_catid = '" . DataUtil::formatForStore($category) . "') ";
-    // End Search functionality
 
-    // need to define filtereventsby according to selected categories.
-    $events = DBUtil::selectExpandedObjectArray('postcalendar_events', null, $where, null, null, null, null, null, $filtereventsby);
+    // convert categories array to proper filter info
+    $catsarray = $filtercats['__CATEGORIES__'];
+    foreach ($catsarray as $propname => $propid) {
+        if ($propid <= 0) unset($catsarray[$propname]); // removes categories set to 'all'
+    }
+
+    $events = DBUtil::selectExpandedObjectArray('postcalendar_events', null, $where, null, null, null, null, null, $catsarray);
 
     foreach ($events as $key => $evt) {
         $events[$key] = pnModAPIFunc('PostCalendar', 'event', 'fixEventDetails', $events[$key]);

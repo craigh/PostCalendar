@@ -26,17 +26,11 @@ function smarty_function_pc_form_nav_close($args, &$smarty)
     if (!defined('_PC_FORM_VIEW_TYPE')) {
         $ret_val .= '<input type="hidden" name="viewtype" value="' . FormUtil::getPassedValue('viewtype') . '" />';
     }
-    if (!defined('_PC_FORM_TEMPLATE')) {
-        $ret_val .= '<input type="hidden" name="tplview" value="' . FormUtil::getPassedValue('tplview') . '" />';
-    }
     if (!defined('_PC_FORM_USERNAME')) {
         $ret_val .= '<input type="hidden" name="pc_username" value="' . FormUtil::getPassedValue('pc_username') . '" />';
     }
     if (!defined('_PC_FORM_CATEGORY')) {
         $ret_val .= '<input type="hidden" name="pc_category" value="' . FormUtil::getPassedValue('pc_category') . '" />';
-    }
-    if (!defined('_PC_FORM_TOPIC')) {
-        $ret_val .= '<input type="hidden" name="pc_topic" value="' . FormUtil::getPassedValue('pc_topic') . '" />';
     }
 
     $ret_val .= '</form>';

@@ -64,8 +64,8 @@ function postcalendar_searchapi_search($args)
     }
 
     $searchargs = array();
-    if (!empty($args[category])) {
-        $searchargs['s_category'] = "tbl.pc_catid = '".$args[category]."'";
+    if (!empty($args['postcalendar_events'])) {
+        $searchargs['filtercats'] = $args['postcalendar_events'];
     }
 
     pnModDBInfoLoad('Search');

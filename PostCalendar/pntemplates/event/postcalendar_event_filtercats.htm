@@ -1,8 +1,7 @@
 <!--[gt text="All These Categories" assign="allText"]-->
 <!--[nocache]-->
-
 <!--[foreach from=$catregistry key=property item=category]-->
-    <!--[array_field_isset assign="selectedValue" array=$__CATEGORIES__ field=$property returnValue=1]-->
+    <!--[array_field_isset assign="selectedValue" array=$selectedcategories field=$property returnValue=1]-->
     <span><!--[selector_category 
     editLink=0 
     category=$category 
@@ -12,8 +11,6 @@
     defaultValue="0"
     all=1
     allText=$allText
-    allValue=-1
-    defaultValue=-1]--></span>
+    allValue=0]--></span>
 <!--[/foreach]-->
-
 <!--[/nocache]-->

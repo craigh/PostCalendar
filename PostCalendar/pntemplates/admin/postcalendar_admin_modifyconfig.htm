@@ -1,6 +1,6 @@
 <!--[*  $Id$  *]-->
 <!--[include file="admin/postcalendar_admin_menu.htm"]-->
-<!--[pnconfiggetvar name='language' assign=defaultlang]-->
+<!--[pnconfiggetvar name='language_i18n' assign=defaultlang]-->
 <div class="pn-admincontainer">
 <div class="pn-adminpageicon"><!--[pnimg modname='PostCalendar' src='admin.gif']--></div>
 <h2><!--[gt text="PostCalendar settings"]-->&nbsp;(<!--[gt text="version"]-->&nbsp;<!--[$postcalendarversion]-->)</h2>
@@ -22,16 +22,21 @@
 			<td><input type="checkbox" value="1" id="pcAllowDirectSubmit" name="pcAllowDirectSubmit"<!--[if $pcADS eq true]--> checked="checked"<!--[/if]-->/></td>
 		</tr>
 		<tr class='pn-odd'>
+			<td><!--[gt text='Enable categorization of events']--></td>
+			<!--[pnmodgetvar module="PostCalendar" name="enablecategorization" assign="pcEC"]-->
+			<td><input type="checkbox" value="1" id="enablecategorization" name="enablecategorization"<!--[if $pcEC eq true]--> checked="checked"<!--[/if]-->/></td>
+		</tr>
+		<tr class='pn-even'>
 			<td><!--[gt text='Allow users to publish personal calendars']--></td>
 			<!--[pnmodgetvar module="PostCalendar" name="pcAllowUserCalendar" assign="pcAUC"]-->
 			<td><input type="checkbox" value="1" id="pcAllowUserCalendar" name="pcAllowUserCalendar"<!--[if $pcAUC eq true]--> checked="checked"<!--[/if]-->/></td>
 		</tr>
-		<tr class='pn-even'>
+		<tr class='pn-odd'>
 			<td><!--[gt text='Cache template output']--></td>
 			<!--[pnmodgetvar module="PostCalendar" name="pcUseCache" assign="pcUC"]-->
 			<td><input type="checkbox" value="1" id="pcUseCache" name="pcUseCache"<!--[if $pcUC eq true]--> checked="checked"<!--[/if]-->/></td>
 		</tr>
-		<tr class='pn-odd'>
+		<tr class='pn-even'>
 			<td><!--[gt text='Cache lifetime (in seconds)']--></td>
 			<td><input type="text" size="20" value="<!--[pnmodgetvar module="PostCalendar" name="pcCacheLifetime"]-->" id="pcCacheLifetime" name="pcCacheLifetime"/></td>
 		</tr>

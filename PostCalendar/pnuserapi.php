@@ -211,6 +211,11 @@ function postcalendar_userapi_buildView($args)
     //=================================================================
 
     if (isset($calendarView)) $function_out['CAL_FORMAT'] = $calendarView;
+    // convert categories array to proper filter info
+    $catsarray = $filtercats['__CATEGORIES__'];
+    foreach ($catsarray as $propname => $propid) {
+        if ($propid <= 0) unset($catsarray[$propname]); // removes categories set to 'all'
+    }
 
     $function_out['FUNCTION']          = $func;
     $function_out['VIEW_TYPE']         = $viewtype;
@@ -220,7 +225,7 @@ function postcalendar_userapi_buildView($args)
     $function_out['S_LONG_DAY_NAMES']  = $daynames;
     $function_out['S_SHORT_DAY_NAMES'] = $sdaynames;
     $function_out['A_EVENTS']          = $eventsByDate;
-    //$function_out['A_CATEGORY']        = $categories;
+    $function_out['selectedcategories']= $catsarray;
     $function_out['PREV_MONTH_URL']    = DataUtil::formatForDisplay($pc_prev);
     $function_out['NEXT_MONTH_URL']    = DataUtil::formatForDisplay($pc_next);
     $function_out['PREV_DAY_URL']      = DataUtil::formatForDisplay($pc_prev_day);

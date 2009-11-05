@@ -1,6 +1,7 @@
 <!--[*  $Id$  *]-->
 <!--[ pc_calendar_init ]-->
 <!--[pnmodgetvar module="PostCalendar" name="pcAllowUserCalendar"|pnvarprepfordisplay assign="pcAllowUserCalendar"]-->
+<!--[pnmodgetvar module="PostCalendar" name="enablecategorization" assign="enablecats"]-->
 <!--[pnpageaddvar name="javascript" value="modules/PostCalendar/pnjavascript/postcalendar_submit_validate.js"]-->
 
 <!--[pnsecauthaction realm="0" comp="PostCalendar::" inst=".*" level="ACCESS_ADMIN" assign="auth"]-->
@@ -84,18 +85,20 @@
                     <span style='padding-left:3em;'><i><!--[gt text='Global']--></i><input type="hidden" name="event_sharing" value="3"></span><br />
                 <!--[/if]-->
                 <br />
-                <div class="pn-formrow">
-                    <!--[gt text='Category']-->
-                    <!--[nocache]-->
-                    <ul>
-                    <!--[foreach from=$catregistry key=property item=category]-->
-                        <!--[array_field_isset assign="selectedValue" array=$__CATEGORIES__ field=$property returnValue=1]-->
-                        <li><!--[selector_category category=$category name="postcalendar_events[__CATEGORIES__][$property]" field="id" selectedValue=$selectedValue defaultValue="0"]--></li>
-                    <!--[/foreach]-->
-                    </ul>
-                    <!--[/nocache]-->
-                </div>
-                <br />
+                <!--[if $enablecats]-->
+                    <div class="pn-formrow">
+                        <!--[gt text='Category']-->
+                        <!--[nocache]-->
+                        <ul>
+                        <!--[foreach from=$catregistry key=property item=category]-->
+                            <!--[array_field_isset assign="selectedValue" array=$__CATEGORIES__ field=$property returnValue=1]-->
+                            <li><!--[selector_category category=$category name="postcalendar_events[__CATEGORIES__][$property]" field="id" selectedValue=$selectedValue defaultValue="0"]--></li>
+                        <!--[/foreach]-->
+                        </ul>
+                        <!--[/nocache]-->
+                    </div>
+                    <br />
+                <!--[/if]-->
                 <table border="0" cellpadding="0" cellspacing="2">
                 <tr>
                     <td colspan="3" valign="middle">

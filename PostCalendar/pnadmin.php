@@ -279,6 +279,7 @@ function postcalendar_admin_updateconfig()
     'pcNotifyEmail'           => FormUtil::getPassedValue('pcNotifyEmail', $defaults['pcNotifyEmail']),
     'pcNotifyAdmin2Admin'     => FormUtil::getPassedValue('pcNotifyAdmin2Admin', 0),
     'pcAllowCatFilter'        => FormUtil::getPassedValue('pcAllowCatFilter', 0),
+    'enablecategorization'    => FormUtil::getPassedValue('enablecategorization', 0),
     );
 
     // delete all the old vars

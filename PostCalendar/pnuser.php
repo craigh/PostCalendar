@@ -56,7 +56,7 @@ function postcalendar_user_view()
  */
 function postcalendar_user_display($args)
 {
-    extract($args);
+    extract($args); // 'viewtype','Date','filtercats','pc_username','popup','eid','func'
     if (empty($Date) && empty($viewtype)) {
         return LogUtil::registerError(__('Error! Required arguments not present.', $dom));
     }
