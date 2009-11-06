@@ -32,6 +32,8 @@ function postcalendar_eventapi_queryEvents($args)
     $end = '0000-00-00';
     extract($args); //start, end, s_keywords, filtercats, pc_username
 
+    echo "<pre>"; print_r($filtercats); echo "</pre>"; //temp
+
     if (pnModGetVar('PostCalendar', 'pcAllowUserCalendar')) { 
         $filterdefault = _PC_FILTER_ALL; 
     } else { 
@@ -94,7 +96,10 @@ function postcalendar_eventapi_queryEvents($args)
             $where .= "OR pc_sharing = '" . SHARING_HIDEDESC . "') ";
     }
 
-    if (!empty($s_keywords)) $where .= "AND ($s_keywords) ";
+    if (!empty($s_keywords)) {
+        $where .= "AND ($s_keywords) ";
+        $catwhere = DBUtil::generateCategoryFilterWhere('postcalendar_events', $where, $filtercats);
+    }
 
     // convert categories array to proper filter info
     $catsarray = $filtercats['__CATEGORIES__'];
@@ -102,7 +107,10 @@ function postcalendar_eventapi_queryEvents($args)
         if ($propid <= 0) unset($catsarray[$propname]); // removes categories set to 'all'
     }
 
-    $events = DBUtil::selectExpandedObjectArray('postcalendar_events', null, $where, null, null, null, null, null, $catsarray);
+    echo $where.'<br /><br />'; //temp
+    echo $catwhere; //temp
+
+    $events = DBUtil::selectObjectArray('postcalendar_events', $where, null, null, null, null, null, $catsarray);
 
     foreach ($events as $key => $evt) {
         $events[$key] = pnModAPIFunc('PostCalendar', 'event', 'fixEventDetails', $events[$key]);
@@ -115,16 +123,18 @@ function postcalendar_eventapi_queryEvents($args)
  * I believe this function returns an array of events sorted by date
  * expected args (from postcalendar_userapi_buildView): start, end
  *    if either is present, both must be present. else uses today's/jumped date.
- * expected args (from pnsearch/postcalendar.php/search_postcalendar): s_keywords, s_category
+ * expected args (from pnsearch/postcalendar.php/search_postcalendar): s_keywords, filtercats
  * same ^^^ in (postcalendar_user_search)
  **/
 function postcalendar_eventapi_getEvents($args)
 {
     $dom = ZLanguage::getModuleDomain('PostCalendar');
-    $s_keywords = $s_category = ''; // search stuff
-    extract($args); //start, end, filtercats, Date, s_keywords, s_category, pc_username
+    $s_keywords = ''; // search stuff
+    extract($args); //start, end, filtercats, Date, s_keywords, pc_username
 
     $date  = pnModAPIFunc('PostCalendar','user','getDate',array('Date'=>$args['Date'])); //formats date
+
+    if (!empty($s_keywords)) { unset($start); unset($end); } // clear start and end dates for search
 
     $cy = substr($date, 0, 4);
     $cm = substr($date, 4, 2);
@@ -156,7 +166,7 @@ function postcalendar_eventapi_getEvents($args)
         if (!isset($s_keywords)) $s_keywords = '';
         $events = pnModAPIFunc('PostCalendar', 'event', 'queryEvents', 
             array('start'=>$start_date, 'end'=>$end_date, 's_keywords'=>$s_keywords, 
-                  's_category'=>$s_category, 'filtercats'=>$filtercats, 'pc_username'=>$pc_username));
+                  'filtercats'=>$filtercats, 'pc_username'=>$pc_username));
     }
 
     //==============================================================

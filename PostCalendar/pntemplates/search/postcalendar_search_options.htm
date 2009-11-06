@@ -3,5 +3,20 @@
 	<input type="checkbox" id="active_postcalendar" name="active[PostCalendar]" value="1"<!--[if $active]--> checked="checked"<!--[/if]--> />
 	<label for="active_postcalendar"><!--[gt text="Calendar"]--></label>
     <label for="modvar_postcalendar_category">&nbsp;<!--[gt text='in Categories']-->:&nbsp;</label>
-    <!--[ include file="event/postcalendar_event_filtercats.htm" ]-->
+    <!--[gt text="All These Categories" assign="allText"]-->
+    <!--[nocache]-->
+    <!--[foreach from=$catregistry key=property item=category]-->
+        <!--[array_field_isset assign="selectedValue" array=$selectedcategories field=$property returnValue=1]-->
+        <span><!--[selector_category 
+        editLink=0 
+        category=$category 
+        name="modvar[PostCalendar][__CATEGORIES__][$property]" 
+        field="id" 
+        selectedValue=$selectedValue 
+        defaultValue="0"
+        all=1
+        allText=$allText
+        allValue=0]--></span>
+    <!--[/foreach]-->
+    <!--[/nocache]-->
 </div>

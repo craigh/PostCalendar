@@ -64,8 +64,8 @@ function postcalendar_searchapi_search($args)
     }
 
     $searchargs = array();
-    if (!empty($args['postcalendar_events'])) {
-        $searchargs['filtercats'] = $args['postcalendar_events'];
+    if (!empty($args['__CATEGORIES__'])) {
+        $searchargs['filtercats']['__CATEGORIES__'] = $args['__CATEGORIES__'];
     }
 
     pnModDBInfoLoad('Search');
