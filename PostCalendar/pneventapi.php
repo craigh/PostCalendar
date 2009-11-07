@@ -32,8 +32,6 @@ function postcalendar_eventapi_queryEvents($args)
     $end = '0000-00-00';
     extract($args); //start, end, s_keywords, filtercats, pc_username
 
-    echo "<pre>"; print_r($filtercats); echo "</pre>"; //temp
-
     if (pnModGetVar('PostCalendar', 'pcAllowUserCalendar')) { 
         $filterdefault = _PC_FILTER_ALL; 
     } else { 
@@ -96,19 +94,14 @@ function postcalendar_eventapi_queryEvents($args)
             $where .= "OR pc_sharing = '" . SHARING_HIDEDESC . "') ";
     }
 
-    if (!empty($s_keywords)) {
-        $where .= "AND ($s_keywords) ";
-        $catwhere = DBUtil::generateCategoryFilterWhere('postcalendar_events', $where, $filtercats);
-    }
 
     // convert categories array to proper filter info
     $catsarray = $filtercats['__CATEGORIES__'];
     foreach ($catsarray as $propname => $propid) {
-        if ($propid <= 0) unset($catsarray[$propname]); // removes categories set to 'all'
+        if ($propid <= 0) unset($catsarray[$propname]); // removes categories set to 'all' (0)
     }
 
-    echo $where.'<br /><br />'; //temp
-    echo $catwhere; //temp
+    if (!empty($s_keywords)) $where .= "AND $s_keywords";
 
     $events = DBUtil::selectObjectArray('postcalendar_events', $where, null, null, null, null, null, $catsarray);
 
