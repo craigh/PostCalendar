@@ -25,13 +25,6 @@ function postcalendar_adminapi_getlinks()
     // Define an empty array to hold the list of admin links
     $links = array();
 
-    // Load the admin language file
-    // This allows this API to be called outside of the module
-    //contains gettext-type code in the function, so maybe z1.2 appropriate...
-    // but is it duplicate functionality to getModuleDomain() above?
-    pnModLangLoad('PostCalendar', 'admin');
-
-
     // Check the users permissions to each avaiable action within the admin panel
     // and populate the links array if the user has permission
     if (pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {

@@ -17,11 +17,8 @@
 function PostCalendar_accountapi_getall($args)
 {
     $dom = ZLanguage::getModuleDomain('PostCalendar');
-    // load user language file
-    pnModLangLoad('PostCalendar', 'user');
 
     $items = array();
-
     // show link for users only
     if (!pnUserLoggedIn()) {
         // not logged in
