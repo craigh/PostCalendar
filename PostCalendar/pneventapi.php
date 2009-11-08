@@ -30,9 +30,9 @@ function postcalendar_eventapi_queryEvents($args)
 {
     $dom = ZLanguage::getModuleDomain('PostCalendar');
     $end = '0000-00-00';
-    extract($args); //start, end, s_keywords, filtercats, pc_username
+    extract($args); //start, end, s_keywords, filtercats, pc_username, eventstatus
 
-    if (pnModGetVar('PostCalendar', 'pcAllowUserCalendar')) { 
+    if (_SETTING_ALLOW_USER_CAL) { 
         $filterdefault = _PC_FILTER_ALL; 
     } else { 
         $filterdefault = _PC_FILTER_GLOBAL;

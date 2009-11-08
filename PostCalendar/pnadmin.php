@@ -280,6 +280,7 @@ function postcalendar_admin_updateconfig()
     'pcNotifyAdmin2Admin'     => FormUtil::getPassedValue('pcNotifyAdmin2Admin', 0),
     'pcAllowCatFilter'        => FormUtil::getPassedValue('pcAllowCatFilter', 0),
     'enablecategorization'    => FormUtil::getPassedValue('enablecategorization', 0),
+    'enablenavimages'         => FormUtil::getPassedValue('enablenavimages', 0),
     );
 
     // delete all the old vars

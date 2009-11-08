@@ -135,6 +135,7 @@ function postcalendar_upgrade($oldversion)
             }
             pnModDelVar('PostCalendar', 'pcDisplayTopics');
             pnModSetVar('PostCalendar', 'enablecategorization', true);
+            pnModSetVar('PostCalendar', 'enablenavimages', true);
             DBUtil::dropColumn('postcalendar_events', 'pc_comments');
             DBUtil::dropColumn('postcalendar_events', 'pc_counter');
             DBUtil::dropColumn('postcalendar_events', 'pc_recurrfreq');
@@ -191,7 +192,6 @@ function postcalendar_init_getdefaults()
     'pcUsePopups'             => '0',
     'pcAllowDirectSubmit'     => '0',
     'pcListHowManyEvents'     => '15',
-    'pcDisplayTopics'         => '0',
     'pcEventDateFormat'       => '%B %d, %Y', /* American: e.g. July 4, 2010 */
     'pcRepeating'             => '1', /* display repeating options */
     'pcAllowUserCalendar'     => '0',
@@ -203,6 +203,8 @@ function postcalendar_init_getdefaults()
     'pcNotifyEmail'           => pnConfigGetVar('adminmail'),
     'pcNotifyAdmin2Admin'     => '0',
     'pcAllowCatFilter'        => '1',
+    'enablecategorization'    => '1',
+    'enablenavimages'         => '1',
     );
 
     return $defaults;
