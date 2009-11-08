@@ -88,8 +88,6 @@ define('_SETTING_ALLOW_USER_CAL',   pnModGetVar('PostCalendar', 'pcAllowUserCale
 define('_SETTING_TIME_INCREMENT',   pnModGetVar('PostCalendar', 'pcTimeIncrement'));
 define('_SETTING_HOW_MANY_EVENTS',  pnModGetVar('PostCalendar', 'pcListHowManyEvents'));
 define('_SETTING_EVENTS_IN_YEAR',   pnModGetVar('PostCalendar', 'pcShowEventsInYear'));
-define('_SETTING_USE_CACHE',        pnModGetVar('PostCalendar', 'pcUseCache'));
-define('_SETTING_CACHE_LIFETIME',   pnModGetVar('PostCalendar', 'pcCacheLifetime'));
 define('_SETTING_DEFAULT_VIEW',     pnModGetVar('PostCalendar', 'pcDefaultView'));
 define('_SETTING_SAFE_MODE',        pnModGetVar('PostCalendar', 'pcSafeMode'));
 define('_SETTING_NOTIFY_ADMIN',     pnModGetVar('PostCalendar', 'pcNotifyAdmin'));

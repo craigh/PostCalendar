@@ -272,8 +272,6 @@ function postcalendar_admin_updateconfig()
     'pcRepeating'             => FormUtil::getPassedValue('pcRepeating', 0),
     'pcAllowUserCalendar'     => FormUtil::getPassedValue('pcAllowUserCalendar', 0),
     'pcTimeIncrement'         => FormUtil::getPassedValue('pcTimeIncrement', $defaults['pcTimeIncrement']),
-    'pcUseCache'              => FormUtil::getPassedValue('pcUseCache', 0),
-    'pcCacheLifetime'         => FormUtil::getPassedValue('pcCacheLifetime', $defaults['pcCacheLifetime']),
     'pcDefaultView'           => FormUtil::getPassedValue('pcDefaultView', $defaults['pcDefaultView']),
     'pcNotifyAdmin'           => FormUtil::getPassedValue('pcNotifyAdmin', 0),
     'pcNotifyEmail'           => FormUtil::getPassedValue('pcNotifyEmail', $defaults['pcNotifyEmail']),

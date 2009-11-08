@@ -134,6 +134,8 @@ function postcalendar_upgrade($oldversion)
                 return LogUtil::registerError (__('Error: Could not transcode category and/or topic IDs.', $dom));
             }
             pnModDelVar('PostCalendar', 'pcDisplayTopics');
+            pnModDelVar('PostCalendar', 'pcUseCache');
+            pnModDelVar('PostCalendar', 'pcCacheLifetime');
             pnModSetVar('PostCalendar', 'enablecategorization', true);
             pnModSetVar('PostCalendar', 'enablenavimages', true);
             DBUtil::dropColumn('postcalendar_events', 'pc_comments');
@@ -197,8 +199,6 @@ function postcalendar_init_getdefaults()
     'pcAllowUserCalendar'     => '0',
     'pcTimeIncrement'         => '15',
     'pcDefaultView'           => 'month',
-    'pcUseCache'              => '0',
-    'pcCacheLifetime'         => '3600',
     'pcNotifyAdmin'           => '1',
     'pcNotifyEmail'           => pnConfigGetVar('adminmail'),
     'pcNotifyAdmin2Admin'     => '0',

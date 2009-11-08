@@ -31,15 +31,6 @@
 			<!--[pnmodgetvar module="PostCalendar" name="pcAllowUserCalendar" assign="pcAUC"]-->
 			<td><input type="checkbox" value="1" id="pcAllowUserCalendar" name="pcAllowUserCalendar"<!--[if $pcAUC eq true]--> checked="checked"<!--[/if]-->/></td>
 		</tr>
-		<tr class='pn-odd'>
-			<td><!--[gt text='Cache template output']--></td>
-			<!--[pnmodgetvar module="PostCalendar" name="pcUseCache" assign="pcUC"]-->
-			<td><input type="checkbox" value="1" id="pcUseCache" name="pcUseCache"<!--[if $pcUC eq true]--> checked="checked"<!--[/if]-->/></td>
-		</tr>
-		<tr class='pn-even'>
-			<td><!--[gt text='Cache lifetime (in seconds)']--></td>
-			<td><input type="text" size="20" value="<!--[pnmodgetvar module="PostCalendar" name="pcCacheLifetime"]-->" id="pcCacheLifetime" name="pcCacheLifetime"/></td>
-		</tr>
     </table>
 	<table class="pn-admintable">
         <thead>
