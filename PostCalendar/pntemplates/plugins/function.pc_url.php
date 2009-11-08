@@ -123,6 +123,8 @@ function smarty_function_pc_url($args, &$smarty)
         }
 
         $ret_val = "<a class='$class' href='$link' title='$title'>$display</a>";
+    } else {
+        $ret_val = $link;
     }
 
     if (isset($args['assign'])) {
