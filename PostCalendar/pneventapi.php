@@ -100,6 +100,7 @@ function postcalendar_eventapi_queryEvents($args)
     foreach ($catsarray as $propname => $propid) {
         if ($propid <= 0) unset($catsarray[$propname]); // removes categories set to 'all' (0)
     }
+    if (!empty($catsarray)) $catsarray['__META__']['module']="PostCalendar";
 
     if (!empty($s_keywords)) $where .= "AND $s_keywords";
 
