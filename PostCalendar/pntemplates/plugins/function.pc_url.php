@@ -10,10 +10,13 @@
  */
 function smarty_function_pc_url($args, &$smarty)
 {
-    $action = array_key_exists('action', $args) && isset($args['action']) ? $args['action'] : _SETTING_DEFAULT_VIEW;
-    $print  = array_key_exists('print',  $args) && !empty($args['print']) ? true            : false;
-    $date   = array_key_exists('date',   $args) && !empty($args['date'])  ? $args['date']   : null;
-    $full   = array_key_exists('full',   $args) && !empty($args['full'])  ? true            : false;
+    $action = array_key_exists('action', $args) && isset($args['action']) ? $args['action'] : _SETTING_DEFAULT_VIEW; unset($args['action']);
+    $print  = array_key_exists('print',  $args) && !empty($args['print']) ? true            : false; unset($args['print']);
+    $date   = array_key_exists('date',   $args) && !empty($args['date'])  ? $args['date']   : null; unset($args['date']);
+    $full   = array_key_exists('full',   $args) && !empty($args['full'])  ? true            : false; unset($args['full']);
+    $class  = array_key_exists('class',  $args) && !empty($args['class']) ? $args['class']  : null; unset($args['class']);
+    $eid    = array_key_exists('eid',    $args) && !empty($args['eid'])   ? $args['eid']    : null; unset($args['eid']);
+    $assign = array_key_exists('assign', $args) && !empty($args['assign'])? $args['assign'] : null; unset($args['assign']);
 
     $viewtype    = strtolower(FormUtil::getPassedValue('viewtype', _SETTING_DEFAULT_VIEW));
     if (FormUtil::getPassedValue('func') == 'new') $viewtype='new';
@@ -69,12 +72,12 @@ function smarty_function_pc_url($args, &$smarty)
             $link = pnGetCurrentURL() ."&theme=Printer";
             break;
         case 'detail':
-            if (isset($args['eid'])) {
+            if (isset($eid)) {
                 if (_SETTING_OPEN_NEW_WINDOW && !$popup) {
-                    $link = "javascript:opencal('{$args['eid']}','$date');";
+                    $link = "javascript:opencal('$eid','$date');";
                 } else {
                     $link = pnModURL('PostCalendar', 'user', 'view',
-                        array('Date' => $date, 'viewtype' => 'details', 'eid' => $args['eid']));
+                        array('Date' => $date, 'viewtype' => 'details', 'eid' => $eid));
                 }
             } else {
                 $link = '';
@@ -121,14 +124,22 @@ function smarty_function_pc_url($args, &$smarty)
             $class = ($viewtype==$action) ? 'postcalendar_nav_text_selected' : 'postcalendar_nav_text';
             $title = $labeltexts[$action];
         }
-
-        $ret_val = "<a class='$class' href='$link' title='$title'>$display</a>";
+        // create string of remaining properties and values
+        if (!empty($args)) {
+            $props = "";
+            foreach ($args as $prop=>$val) {
+                $props .= " $prop='$val'";
+            }
+        }
+        if ($class) $class=" class='$class'";
+        if ($title) $title=" title='$title'";
+        $ret_val = "<a href='$link'".$class.$title.$props.$javascript.">$display</a>";
     } else {
         $ret_val = $link;
     }
 
-    if (isset($args['assign'])) {
-        $smarty->assign($args['assign'], $ret_val);
+    if (isset($assign)) {
+        $smarty->assign($assign, $ret_val);
     } else {
         return $ret_val;
     }
