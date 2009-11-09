@@ -1,12 +1,4 @@
-<!--[* add JS to page if needed *]-->
-<!--[ pnmodgetvar module="PostCalendar" name="pcUsePopups" assign="pcUsePopups" ]-->
-<!--[ if $pcUsePopups eq true ]-->
-    <!--[pnpageaddvar name="javascript" value="modules/PostCalendar/pnjavascript/postcalendar_overlibconfig.js"]-->
-<!--[ /if ]-->
-<!--[ pnmodgetvar module="PostCalendar" name="pcEventsOpenInNewWindow" assign="pcEventsOpenInNewWindow" ]-->
-<!--[ if pcEventsOpenInNewWindow eq true ]-->
-    <!--[pnpageaddvar name="javascript" value="modules/PostCalendar/pnjavascript/postcalendar_jspopup.js"]-->
-<!--[ /if ]-->
+<!--[ pc_pagejs_init ]-->
 <div class="postcalendar_block_view_month">
 <h3 class="blockmonthheader">
             <a href="<!--[ $PREV_MONTH_URL|pnvarprepfordisplay ]-->">&lt;&lt;&nbsp;</a>
@@ -62,14 +54,10 @@
                 <!--[ else ]-->
                     <!--[ assign var="classname" value="blockevent-none" ]-->
                 <!--[ /if ]-->
-                <a class="<!--[ $classname ]-->" href="<!--[ pc_url action=day date=$date ]-->"
-                   <!--[ pc_popup delay="500"
-                              timeout="3600"
-                              caption=$date|pc_date_format
-                              text="$titles" ]-->><!--[ $date|date_format:"%d" ]--></a>
+                <!--[ pc_popup bgcolor="#cccccc" caption=$date|pc_date_format text="$titles" assign="javascript"]-->
+                <!--[ pc_url full=true class=$classname action="day-detail" date=$date javascript=$javascript display=$date|date_format:"%d" ]-->
             <!--[ else ]-->
-                <!--[ assign var="classname" value="blockevent-none" ]-->
-                <a class="<!--[ $classname ]-->" href="<!--[ pc_url action=day date=$date ]-->"><!--[ $date|date_format:"%d" ]--></a>
+                <!--[ pc_url full=true class="blockevent-none" action="day-detail" date=$date display=$date|date_format:"%d" ]-->
             <!--[ /if ]-->
         </td>
         <!--[ /foreach ]-->

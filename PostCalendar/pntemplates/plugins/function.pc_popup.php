@@ -160,15 +160,11 @@ function smarty_function_pc_popup($args, &$smarty)
     if (!empty($args['frame'])) {
         $ret_val .= ",FRAME,'{$args['frame']}'";
     }
-    if (isset($args['timeout'])) {
-        $ret_val .= ",TIMEOUT,{$args['timeout']}";
-    }
+    $ret_val .= array_key_exists('timeout', $args) && !empty($args['timeout']) ? ",TIMEOUT,{$args['timeout']}" : ",TIMEOUT,3600";
     if (!empty($args['function'])) {
         $ret_val .= ",FUNCTION,'{$args['function']}'";
     }
-    if (isset($args['delay'])) {
-        $ret_val .= ",DELAY,{$args['delay']}";
-    }
+    $ret_val .= array_key_exists('delay', $args) && !empty($args['delay']) ? ",DELAY,{$args['delay']}" : ",DELAY,500";
     if (!empty($args['hauto'])) {
         $ret_val .= ",HAUTO";
     }

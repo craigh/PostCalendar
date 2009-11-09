@@ -10,19 +10,19 @@
  */
 function smarty_function_pc_url($args, &$smarty)
 {
-    $action = array_key_exists('action', $args) && isset($args['action']) ? $args['action'] : _SETTING_DEFAULT_VIEW; unset($args['action']);
-    $print  = array_key_exists('print',  $args) && !empty($args['print']) ? true            : false; unset($args['print']);
-    $date   = array_key_exists('date',   $args) && !empty($args['date'])  ? $args['date']   : null; unset($args['date']);
-    $full   = array_key_exists('full',   $args) && !empty($args['full'])  ? true            : false; unset($args['full']);
-    $class  = array_key_exists('class',  $args) && !empty($args['class']) ? $args['class']  : null; unset($args['class']);
-    $eid    = array_key_exists('eid',    $args) && !empty($args['eid'])   ? $args['eid']    : null; unset($args['eid']);
-    $assign = array_key_exists('assign', $args) && !empty($args['assign'])? $args['assign'] : null; unset($args['assign']);
+    $action     = array_key_exists('action',     $args) && isset($args['action'])      ? $args['action']     : _SETTING_DEFAULT_VIEW; unset($args['action']);
+    $print      = array_key_exists('print',      $args) && !empty($args['print'])      ? true                : false; unset($args['print']);
+    $date       = array_key_exists('date',       $args) && !empty($args['date'])       ? $args['date']       : null; unset($args['date']);
+    $full       = array_key_exists('full',       $args) && !empty($args['full'])       ? true                : false; unset($args['full']);
+    $class      = array_key_exists('class',      $args) && !empty($args['class'])      ? $args['class']      : null; unset($args['class']);
+    $display    = array_key_exists('display',    $args) && !empty($args['display'])    ? $args['display']    : null; unset($args['display']);
+    $eid        = array_key_exists('eid',        $args) && !empty($args['eid'])        ? $args['eid']        : null; unset($args['eid']);
+    $javascript = array_key_exists('javascript', $args) && !empty($args['javascript']) ? $args['javascript'] : null; unset($args['javascript']);
+    $assign     = array_key_exists('assign',     $args) && !empty($args['assign'])     ? $args['assign']     : null; unset($args['assign']);
 
     $viewtype    = strtolower(FormUtil::getPassedValue('viewtype', _SETTING_DEFAULT_VIEW));
     if (FormUtil::getPassedValue('func') == 'new') $viewtype='new';
     $pc_username = FormUtil::getPassedValue('pc_username');
-    $popup       = FormUtil::getPassedValue('popup');
-    $today       = DateUtil::getDatetime('', '%Y%m%d000000');
 
     if (is_null($date)) {
         //not sure these three lines are needed with call to getDate here
@@ -43,27 +43,16 @@ function smarty_function_pc_url($args, &$smarty)
             break;
         case 'today':
             $link = pnModURL('PostCalendar', 'user', 'view',
-                array('viewtype' => $viewtype, 'Date' => $today, 'pc_username' => $pc_username));
+                array('viewtype' => $viewtype, 'Date' => DateUtil::getDatetime('', '%Y%m%d000000'), 'pc_username' => $pc_username));
             break;
         case 'day':
-            $link = pnModURL('PostCalendar', 'user', 'view',
-                array('viewtype' => 'day', 'Date' => $date, 'pc_username' => $pc_username));
-            break;
+        case 'day-detail':
         case 'week':
-            $link = pnModURL('PostCalendar', 'user', 'view',
-                array('viewtype' => 'week', 'Date' => $date, 'pc_username' => $pc_username));
-            break;
         case 'month':
-            $link = pnModURL('PostCalendar', 'user', 'view',
-                array('viewtype' => 'month', 'Date' => $date, 'pc_username' => $pc_username));
-            break;
         case 'year':
-            $link = pnModURL('PostCalendar', 'user', 'view',
-                array('viewtype' => 'year', 'Date' => $date, 'pc_username' => $pc_username));
-            break;
         case 'list':
             $link = pnModURL('PostCalendar', 'user', 'view',
-                array('viewtype' => 'list', 'Date' => $date, 'pc_username' => $pc_username));
+                array('viewtype' => $action, 'Date' => $date, 'pc_username' => $pc_username));
             break;
         case 'search':
             $link = pnModURL('Search');
@@ -73,8 +62,9 @@ function smarty_function_pc_url($args, &$smarty)
             break;
         case 'detail':
             if (isset($eid)) {
-                if (_SETTING_OPEN_NEW_WINDOW && !$popup) {
-                    $link = "javascript:opencal('$eid','$date');";
+                if (_SETTING_OPEN_NEW_WINDOW && !_SETTING_USE_POPUPS) {
+                    $javascript = " onClick=\"opencal('$eid','$date'); return false;\"";
+                    $link = "#";
                 } else {
                     $link = pnModURL('PostCalendar', 'user', 'view',
                         array('Date' => $date, 'viewtype' => 'details', 'eid' => $eid));
@@ -84,8 +74,6 @@ function smarty_function_pc_url($args, &$smarty)
             }
             break;
     }
-
-    if (_SETTING_OPEN_NEW_WINDOW && $viewtype == 'details') $link .= '" target="csCalendar"';
 
     $link = DataUtil::formatForDisplay($link);
 
@@ -100,29 +88,31 @@ function smarty_function_pc_url($args, &$smarty)
                         'print'  => __('Print View', $dom),
                         );
     if ($full) {
-        if (_SETTING_USENAVIMAGES) {
-            $image_text = $labeltexts[$action];
-            $image_src = ($viewtype==$action) ? $action.'_on.gif' : $action.'.gif';
-            require_once $smarty->_get_plugin_filepath('function', 'pnimg');
-            $pnimg_params = array('src'=>$image_src, 'alt'=>$image_text, 'title'=>$image_text);
-            if ($action == 'print') { $pnimg_params['modname']='core';$pnimg_params['set']='icons/small';$pnimg_params['src']='printer1.gif'; }
-            $display = smarty_function_pnimg($pnimg_params, $smarty);
-            $class = 'postcalendar_nav_img';
-            $title = $image_text;
-        } else {
-            $linkmap = array('today'  => __('Today', $dom), 
-                             'day'    => __('Day', $dom), 
-                             'week'   => __('Week', $dom),
-                             'month'  => __('Month', $dom),
-                             'year'   => __('Year', $dom),
-                             'list'   => __('List', $dom),
-                             'add'    => __('Add', $dom),
-                             'search' => __('Search', $dom),
-                             'print'  => __('Print', $dom),
-                             );
-            $display = $linkmap[$action];
-            $class = ($viewtype==$action) ? 'postcalendar_nav_text_selected' : 'postcalendar_nav_text';
-            $title = $labeltexts[$action];
+        if (array_key_exists($action,$labeltexts)) {
+            if (_SETTING_USENAVIMAGES) {
+                $image_text = $labeltexts[$action];
+                $image_src = ($viewtype==$action) ? $action.'_on.gif' : $action.'.gif';
+                require_once $smarty->_get_plugin_filepath('function', 'pnimg');
+                $pnimg_params = array('src'=>$image_src, 'alt'=>$image_text, 'title'=>$image_text);
+                if ($action == 'print') { $pnimg_params['modname']='core';$pnimg_params['set']='icons/small';$pnimg_params['src']='printer1.gif'; }
+                $display = smarty_function_pnimg($pnimg_params, $smarty);
+                $class = 'postcalendar_nav_img';
+                $title = $image_text;
+            } else {
+                $linkmap = array('today'  => __('Today', $dom), 
+                                 'day'    => __('Day', $dom), 
+                                 'week'   => __('Week', $dom),
+                                 'month'  => __('Month', $dom),
+                                 'year'   => __('Year', $dom),
+                                 'list'   => __('List', $dom),
+                                 'add'    => __('Add', $dom),
+                                 'search' => __('Search', $dom),
+                                 'print'  => __('Print', $dom),
+                                 );
+                $display = $linkmap[$action];
+                $class = ($viewtype==$action) ? 'postcalendar_nav_text_selected' : 'postcalendar_nav_text';
+                $title = $labeltexts[$action];
+            }
         }
         // create string of remaining properties and values
         if (!empty($args)) {

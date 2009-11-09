@@ -1,12 +1,4 @@
-<!--[* add JS to page if needed *]-->
-<!--[ pnmodgetvar module="PostCalendar" name="pcUsePopups" assign="pcUsePopups" ]-->
-<!--[ if $pcUsePopups eq true ]-->
-    <!--[pnpageaddvar name="javascript" value="modules/PostCalendar/pnjavascript/postcalendar_overlibconfig.js"]-->
-<!--[ /if ]-->
-<!--[ pnmodgetvar module="PostCalendar" name="pcEventsOpenInNewWindow" assign="pcEventsOpenInNewWindow" ]-->
-<!--[ if pcEventsOpenInNewWindow eq true ]-->
-    <!--[pnpageaddvar name="javascript" value="modules/PostCalendar/pnjavascript/postcalendar_jspopup.js"]-->
-<!--[ /if ]-->
+<!--[ pc_pagejs_init ]-->
 <div class="postcalendar_block_view_upcoming">
 <!--[ if $SHOW_TITLE eq 1 ]-->
 <h2 class='postcalendar_block_innertitle'><!--[gt text='Upcoming events']--></h2>
@@ -34,16 +26,9 @@
                         </li>
                     <!--[ /if ]-->
                     <li class="pc_blockevent">
-                        <a class="eventlink" href="<!--[ pc_url action=detail eid=$event.eid date=$date ]-->"
-                                 <!--[ pc_popup delay="500"
-                                            timeout="3600"
-                                            bgcolor=$event.catcolor
-                                            caption=$event.title
-                                            text=$event.hometext|truncate:255:"..." ]-->><!--[ $timestamp ]--> <!--[ $event.title|strip_tags ]-->
-                        <!--[ if $event.alldayevent != true ]-->
-                            (<!--[ $event.duration_hours ]-->:<!--[ $event.duration_minutes ]--> <!--[gt text='Long']-->)
-                        <!--[ /if ]-->
-                        </a>
+                        <!--[ pc_popup bgcolor=$event.catcolor caption=$event.title text=$event.hometext|truncate:255:"..." assign="javascript"]-->
+                        <!--[ pc_url full=true class="eventlink" action="detail" eid=$event.eid date=$date javascript=$javascript display="$timestamp `$event.title`"|strip_tags ]-->
+                        <!--[ if $event.alldayevent != true ]-->&nbsp;(<!--[ $event.duration_hours ]-->:<!--[ $event.duration_minutes ]--> <!--[gt text='Long']-->)<!--[ /if ]-->
                     </li>
                 </ul>
             <!--[ /if ]-->

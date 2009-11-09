@@ -49,15 +49,20 @@
 			<td><input type="text" size="5" value="<!--[pnmodgetvar module="PostCalendar" name="pcTimeIncrement"]-->" id="pcTimeIncrement" name="pcTimeIncrement"/></td>
 		</tr>
 		<tr class='pn-odd'>
-			<td><!--[gt text='View events in a pop-up window']--></td>
+			<td><!--[gt text='View event details in a pop-up window']--></td>
 			<!--[pnmodgetvar module="PostCalendar" name="pcEventsOpenInNewWindow" assign="pcEOINW"]-->
 			<td><input type="checkbox" value="1" id="pcEventsOpenInNewWindow" name="pcEventsOpenInNewWindow"<!--[if $pcEOINW eq true]--> checked="checked"<!--[/if]-->/></td>
 		</tr>
-		<tr class='pn-even'>
+		<tr class='pn-event'>
+			<td><!--[gt text="Show event details in 'hover' window during 'mouseover' (overrides pop-up setting)"]--></td>
+			<!--[pnmodgetvar module="PostCalendar" name="pcUsePopups" assign="pcUP"]-->
+			<td><input type="checkbox" value="1" id="pcUsePopups" name="pcUsePopups"<!--[if $pcUP eq true]--> checked="checked"<!--[/if]-->/></td>
+		</tr>
+		<tr class='pn-odd'>
 			<td><!--[gt text='Date Display Format']-->&nbsp;(<i><!--[gt text='uses %s format' tag1='<a href="http://php.net/strftime">php strftime</a>']--></i>)</td>
 			<td><input type="text" size="20" value="<!--[pnmodgetvar module="PostCalendar" name="pcEventDateFormat"]-->" id="pcEventDateFormat" name="pcEventDateFormat"/></td>
 		</tr>
-		<tr class='pn-odd'>
+		<tr class='pn-even'>
 			<td><!--[gt text='First day of the week']--></td>
 			<!--[pnmodgetvar module="PostCalendar" name="pcFirstDayOfWeek" assign="firstDay"]-->
 			<td><select size="1" id="pcFirstDayOfWeek" name="pcFirstDayOfWeek">
@@ -67,7 +72,7 @@
 				</select>
 			</td>
 		</tr>
-		<tr class='pn-even'>
+		<tr class='pn-odd'>
 			<td><!--[gt text='Default calendar view']--></td>
 			<!--[pnmodgetvar module="PostCalendar" name="pcDefaultView" assign="defView"]-->
 			<td><select size="1" id="pcDefaultView" name="pcDefaultView">
@@ -77,11 +82,6 @@
 				<option value="year"<!--[if $defView eq "year"]--> selected="selected"<!--[/if]-->><!--[gt text='Year']--></option>
 				</select>
 			</td>
-		</tr>
-		<tr class='pn-odd'>
-			<td><!--[gt text='Show \'hover\' event text during \'mouseover\'']--></td>
-			<!--[pnmodgetvar module="PostCalendar" name="pcUsePopups" assign="pcUP"]-->
-			<td><input type="checkbox" value="1" id="pcUsePopups" name="pcUsePopups"<!--[if $pcUP eq true]--> checked="checked"<!--[/if]-->/></td>
 		</tr>
 		<tr class='pn-even'>
 			<td><!--[gt text='Show repetition settings']--></td>
