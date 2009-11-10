@@ -177,29 +177,6 @@ function postcalendar_admin_adminevents()
         }
     }
 
-    $function = '';
-    switch ($action) {
-        case _ADMIN_ACTION_APPROVE:
-            $function = 'approveevents';
-            $are_you_sure_text = __('Do you really want to approve these events?', $dom);
-            break;
-        case _ADMIN_ACTION_HIDE:
-            $function = 'hideevents';
-            $are_you_sure_text = __('Do you really want to hide these events?', $dom);
-            break;
-        case _ADMIN_ACTION_DELETE:
-            $function = 'deleteevents';
-            $are_you_sure_text = __('Do you really want to delete this event?', $dom);
-            break;
-    }
-
-    // Turn off template caching here
-    $pnRender = pnRender::getInstance('PostCalendar', false);
-    pnModAPIFunc('PostCalendar','user','SmartySetup', $pnRender);
-
-    $pnRender->assign('function', $function);
-    $pnRender->assign('areyousure', $are_you_sure_text);
-
     if (!is_array($events)) {
         $events = array($events);
     } //create array if not already
@@ -209,6 +186,30 @@ function postcalendar_admin_adminevents()
         $eventitems = pnModAPIFunc('PostCalendar', 'event', 'eventDetail', array('eid' => $eid, 'nopop' => true));
         $alleventinfo[$eid] = $eventitems['A_EVENT'];
     }
+
+    $count = count($events);
+    $function = '';
+    switch ($action) {
+        case _ADMIN_ACTION_APPROVE:
+            $function = 'approveevents';
+            $are_you_sure_text = _n('Do you really want to approve this event?', 'Do you really want to approve these events?', $count, $dom);
+            break;
+        case _ADMIN_ACTION_HIDE:
+            $function = 'hideevents';
+            $are_you_sure_text = _n('Do you really want to hide this event?', 'Do you really want to hide these events?', $count, $dom);
+            break;
+        case _ADMIN_ACTION_DELETE:
+            $function = 'deleteevents';
+            $are_you_sure_text = _n('Do you really want to delete this event?', 'Do you really want to delete these events?', $count, $dom);
+            break;
+    }
+
+    // Turn off template caching here
+    $pnRender = pnRender::getInstance('PostCalendar', false);
+    pnModAPIFunc('PostCalendar','user','SmartySetup', $pnRender);
+
+    $pnRender->assign('function', $function);
+    $pnRender->assign('areyousure', $are_you_sure_text);
     $pnRender->assign('alleventinfo', $alleventinfo);
 
     return $pnRender->fetch("admin/postcalendar_admin_eventrevue.htm");
@@ -326,20 +327,21 @@ function postcalendar_admin_approveevents()
     }
 
     $pc_eid = FormUtil::getPassedValue('pc_eid');
-    if (!is_array($pc_eid)) return __('Error! An \'unidentified error\' occurred.', $dom);
+    if (!is_array($pc_eid)) return __("Error! An 'unidentified error' occurred.", $dom);
 
     // structure array for DB interaction
     $eventarray = array();
     foreach ($pc_eid as $eid) {
         $eventarray[$eid] = array('eid' => $eid, 'eventstatus' => _EVENT_APPROVED);
     }
+    $count = count($pc_eid);
 
     // update the DB
     $res = pnModAPIFunc('PostCalendar', 'event', 'update', $eventarray);
     if ($res) {
-        LogUtil::registerStatus(__('Done! Approved the event(s).', $dom));
+        LogUtil::registerStatus(_fn('Done! %s event approved.', 'Done! %s events approved.', $count, $count, $dom));
     } else {
-        LogUtil::registerError(__('Error! An \'unidentified error\' occurred.', $dom));
+        LogUtil::registerError(__("Error! An 'unidentified error' occurred.", $dom));
     }
 
     pnModAPIFunc('PostCalendar', 'admin', 'clearCache');
@@ -359,20 +361,21 @@ function postcalendar_admin_hideevents()
     }
 
     $pc_eid = FormUtil::getPassedValue('pc_eid');
-    if (!is_array($pc_eid)) return __('Error! An \'unidentified error\' occurred.', $dom);
+    if (!is_array($pc_eid)) return __("Error! An 'unidentified error' occurred.", $dom);
 
     // structure array for DB interaction
     $eventarray = array();
     foreach ($pc_eid as $eid) {
         $eventarray[$eid] = array('eid' => $eid, 'eventstatus' => _EVENT_HIDDEN);
     }
+    $count=count($pc_eid);
 
     // update the DB
     $res = pnModAPIFunc('PostCalendar', 'event', 'update', $eventarray);
     if ($res) {
-        LogUtil::registerStatus(__('Done! Hid the event(s).', $dom));
+        LogUtil::registerStatus(_fn('Done! %s event was hidden.', 'Done! %s events were hidden.', $count, $count, $dom));
     } else {
-        LogUtil::registerError(__('Error! An \'unidentified error\' occurred.', $dom));
+        LogUtil::registerError(__("Error! An 'unidentified error' occurred.", $dom));
     }
 
     pnModAPIFunc('PostCalendar', 'admin', 'clearCache');
@@ -392,20 +395,21 @@ function postcalendar_admin_deleteevents()
     }
 
     $pc_eid = FormUtil::getPassedValue('pc_eid');
-    if (!is_array($pc_eid)) return __('Error! An \'unidentified error\' occurred.', $dom);
+    if (!is_array($pc_eid)) return __("Error! An 'unidentified error' occurred.", $dom);
 
     // structure array for DB interaction
     $eventarray = array();
     foreach ($pc_eid as $eid) {
         $eventarray[$eid] = $eid;
     }
+    $count = count($pc_eid);
 
     // update the DB
     $res = pnModAPIFunc('PostCalendar', 'event', 'deleteeventarray', $eventarray);
     if ($res) {
-        LogUtil::registerStatus(__('Done! Deleted the event.', $dom));
+        LogUtil::registerStatus(_fn('Done! %s event deleted.', 'Done! %s events deleted.', $count, $count, $dom));
     } else {
-        LogUtil::registerError(__('Error! An \'unidentified error\' occurred.', $dom));
+        LogUtil::registerError(__("Error! An 'unidentified error' occurred.", $dom));
     }
 
     pnModAPIFunc('PostCalendar', 'admin', 'clearCache');

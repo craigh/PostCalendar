@@ -57,7 +57,7 @@ class postcalendar_event_editHandler extends pnFormHandler
                 return $render->pnFormSetErrorMsg(__('Sorry! You do not have authorization to delete this event.', $dom));
             }
             $result = pnModAPIFunc('PostCalendar', 'event', 'deleteevent', array('eid' => $this->eid));
-            if ($result === false) return $render->pnFormSetErrorMsg(__('Error! An \'unidentified error\' occurred.', $dom));
+            if ($result === false) return $render->pnFormSetErrorMsg(__("Error! An 'unidentified error' occurred.", $dom));
 
             $redir = pnModUrl('PostCalendar', 'user', 'view', array('viewtype' => _SETTING_DEFAULT_VIEW));
             return $render->pnFormRedirect($redir);
@@ -295,7 +295,7 @@ function postcalendar_event_new($args)
     $abort = false;
     if (($form_action == 'preview') OR ($form_action == 'commit')) {
         if (empty($event_subject)) {
-            LogUtil::registerError(__(/*!This is the field name from pntemplates/event/postcalendar_event_submit.html:31*/'\'Title\' is a required field.', $dom).'<br />');
+            LogUtil::registerError(__(/*!This is the field name from pntemplates/event/postcalendar_event_submit.html:31*/"'Title' is a required field.", $dom).'<br />');
             $abort = true;
         }
 
@@ -365,9 +365,10 @@ function postcalendar_event_new($args)
         if (!$eid = pnModAPIFunc('PostCalendar', 'event', 'writeEvent', compact('eventdata','Date','event_for_userid'))) {
             LogUtil::registerError(__('Error! Submission failed.', $dom));
         } else {
+            if ((!_SETTING_DIRECT_SUBMIT) && (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN))) $tag = __('The event has been queued for administrator approval.', $dom);
             pnModAPIFunc('PostCalendar', 'admin', 'clearCache');
             if ($is_update) {
-                LogUtil::registerStatus(__('Done! Updated the event.', $dom));
+                LogUtil::registerStatus(__('Done! Updated the event.', $dom).$tag);
             } else {
                 LogUtil::registerStatus(__('Done! Submitted the event.', $dom));
             }
