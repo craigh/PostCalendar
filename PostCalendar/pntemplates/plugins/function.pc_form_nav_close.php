@@ -11,8 +11,6 @@
 function smarty_function_pc_form_nav_close($args, &$smarty)
 {
     $ret_val = "";
-    // if (_SETTING_OPEN_NEW_WINDOW || isset($args['print'])) $target = 'target="csCalendar"';
-    // else $target = '';
 
     if (!defined('_PC_FORM_DATE')) {
         //not sure these three lines are needed with call to getDate here

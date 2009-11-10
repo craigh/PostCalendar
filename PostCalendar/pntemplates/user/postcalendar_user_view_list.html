@@ -8,15 +8,7 @@
 <!--[ include file="user/postcalendar_user_navigation.html" ]-->
 <!--[ /if ]-->
 
-<!--[* add JS to page if needed *]-->
-<!--[ pnmodgetvar module="PostCalendar" name="pcUsePopups" assign="pcUsePopups" ]-->
-<!--[ if $pcUsePopups eq true ]-->
-    <!--[pnpageaddvar name="javascript" value="modules/PostCalendar/pnjavascript/postcalendar_overlibconfig.js"]-->
-<!--[ /if ]-->
-<!--[ pnmodgetvar module="PostCalendar" name="pcEventsOpenInNewWindow" assign="pcEventsOpenInNewWindow" ]-->
-<!--[ if pcEventsOpenInNewWindow eq true ]-->
-    <!--[pnpageaddvar name="javascript" value="modules/PostCalendar/pnjavascript/postcalendar_jspopup.js"]-->
-<!--[ /if ]-->
+<!--[ pc_pagejs_init ]-->
 
 <h2><!--[gt text='Month list view']--></h2>
 
@@ -59,7 +51,7 @@
                 <li class="eventslistitems">
                     <div style="padding: 1px 4px; display: inline; background: <!--[ $event.catcolor ]-->;"><!--[ $event.catname ]--></div>
                     <!--[ $timestamp ]-->&nbsp;
-                    <a style="text-decoration: none;" href="<!--[ pc_url action=detail eid=$event.eid date=$date ]-->"><!--[ $title ]--></a>
+                    <!--[ pc_url full=true action=detail eid=$event.eid date=$date style="text-decoration: none;" display=$title]-->
                     <!--[ if $event.alldayevent != true ]-->
                         (<!--[ $event.duration_hours ]-->:<!--[ $event.duration_minutes ]-->)
                     <!--[ else ]-->

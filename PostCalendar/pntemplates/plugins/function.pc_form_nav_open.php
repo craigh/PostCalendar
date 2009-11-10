@@ -10,16 +10,9 @@
  */
 function smarty_function_pc_form_nav_open($args, &$smarty)
 {
-    $viewtype = strtolower(FormUtil::getPassedValue('viewtype'));
-
-    if (_SETTING_OPEN_NEW_WINDOW && $viewtype == 'details') {
-        $target = 'target="csCalendar"';
-    } else {
-        $target = '';
-    }
     $formaction = pnModURL('PostCalendar', 'user', 'view');
     $formaction = DataUtil::formatForDisplay($formaction);
-    $ret_val = '<form action="' . $formaction . '"' . ' method="post"' . ' enctype="application/x-www-form-urlencoded" ' . $target . '>';
+    $ret_val = '<form action="' . $formaction . '"' . ' method="post"' . ' enctype="application/x-www-form-urlencoded">';
 
     if (isset($args['assign'])) {
         $smarty->assign($args['assign'], $ret_val);
