@@ -19,6 +19,7 @@ function smarty_function_pc_url($args, &$smarty)
     $eid        = array_key_exists('eid',        $args) && !empty($args['eid'])        ? $args['eid']        : null; unset($args['eid']);
     $javascript = array_key_exists('javascript', $args) && !empty($args['javascript']) ? $args['javascript'] : null; unset($args['javascript']);
     $assign     = array_key_exists('assign',     $args) && !empty($args['assign'])     ? $args['assign']     : null; unset($args['assign']);
+    $navlink    = array_key_exists('navlink',    $args) && !empty($args['navlink'])    ? true                : false; unset($args['navlink']);
 
     $viewtype    = strtolower(FormUtil::getPassedValue('viewtype', _SETTING_DEFAULT_VIEW));
     if (FormUtil::getPassedValue('func') == 'new') $viewtype='new';
@@ -46,7 +47,6 @@ function smarty_function_pc_url($args, &$smarty)
                 array('viewtype' => $viewtype, 'Date' => DateUtil::getDatetime('', '%Y%m%d000000'), 'pc_username' => $pc_username));
             break;
         case 'day':
-        case 'day-detail':
         case 'week':
         case 'month':
         case 'year':
@@ -88,7 +88,7 @@ function smarty_function_pc_url($args, &$smarty)
                         'print'  => __('Print View', $dom),
                         );
     if ($full) {
-        if (array_key_exists($action,$labeltexts)) {
+        if ($navlink) {
             if (_SETTING_USENAVIMAGES) {
                 $image_text = $labeltexts[$action];
                 $image_src = ($viewtype==$action) ? $action.'_on.gif' : $action.'.gif';
