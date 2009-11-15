@@ -4,9 +4,6 @@
 <!--[pnmodgetvar module="PostCalendar" name="enablecategorization" assign="enablecats"]-->
 <!--[pnpageaddvar name="javascript" value="modules/PostCalendar/pnjavascript/postcalendar_submit_validate.js"]-->
 
-<!--[pnsecauthaction realm="0" comp="PostCalendar::" inst=".*" level="ACCESS_ADMIN" assign="auth"]-->
-<!--[ if $auth ]-->
-<!--[ /if ]-->
 <!--[ include file="user/postcalendar_user_navigation_small.html" ]-->
 
 <!--[if !empty($preview)]-->
@@ -28,61 +25,61 @@
         <tr>
             <td align="left" valign="top" width="50%">
                 <!--[gt text='Title']-->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style='color:red;'>*<!--[gt text='Required']--></span><br />
-                <input type="text" name="event_subject" value="<!--[ $ValueEventTitle ]-->" size="40" /><br />
+                <input type="text" name="postcalendar_events[title]" value="<!--[ $loaded_event.title ]-->" size="40" /><br />
 		        
                 <!--[if ((is_array($users)) AND ($pcAllowUserCalendar)) ]-->
                     <!--[gt text='For user']-->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style='color:red;'>*<!--[gt text='Required']--></span><br />
-		            <!--[html_options name=event_for_userid options=$users selected=$user_selected]-->
+		            <!--[html_options name=postcalendar_events[aid] options=$users selected=$loaded_event.aid]-->
                 <!--[else]-->
                     <br /><i><!--[gt text='For user']-->: <!--[$username_selected]--></i>
-                    <input type="hidden" name="event_for_userid" value="<!--[$user_selected]-->">          
+                    <input type="hidden" name="postcalendar_events[aid]" value="<!--[$loaded_event.aid]-->">          
                 <!--[/if]--><br /><br />
 
 		        <b><!--[gt text='Start date']-->:</b>&nbsp;&nbsp;&nbsp;
-		        <!--[ pc_calendar_build_input_box htmlName="meetingdate_start" dateFormat="%d-%m-%Y" defaultString=$startvalue defaultDate=$startdate ]-->
+		        <!--[ pc_calendar_build_input_box objectName="postcalendar_events" htmlName="eventDate" dateFormat="%d-%m-%Y" defaultString=$loaded_event.eventDatevalue defaultDate=$loaded_event.eventDate ]-->
 		        <br/ ><br />
                 <table border="0" cellpadding="0" cellspacing="1">
                     <tr>
-                        <td valign="top" align="left"><input type="radio" name="event_allday" value="1" <!--[ $SelectedAllday ]--> /></td>
+                        <td valign="top" align="left"><input type="radio" name="postcalendar_events[alldayevent]" value="1"<!--[$SelectedAllday]--> /></td>
                         <td valign="top" align="left"><!--[gt text='All-day event']--></td>
                     </tr>
                     <tr>
-                        <td valign="top" align="left"><input type="radio" name="event_allday" value="0" <!--[ $SelectedTimed ]--> /></td>
+                        <td valign="top" align="left"><input type="radio" name="postcalendar_events[alldayevent]" value="0"<!--[$SelectedTimed]--> /></td>
                         <td valign="top" align="left"><!--[gt text='Timed event']--></td>
                         <td valign="top" align="left">
-                            <!--[html_select_time time=$SelectedTime display_seconds=false use_24_hours=$24HOUR_TIME minute_interval=$minute_interval prefix="event_starttime"]-->
+                            <!--[html_select_time time=`$loaded_event.startTime` display_seconds=false use_24_hours=$24HOUR_TIME minute_interval=$minute_interval field_array="postcalendar_events[startTime]" prefix=""]-->
                         </td>
                     </tr>
                     <tr>
                         <td valign="top" align="left">&nbsp;</td>
                         <td valign="top" align="left"><!--[gt text='Duration']--></td>
                         <td valign="top" align="left">
-                            <!--[html_select_time time=$event_duration display_seconds=false display_minutes=false display_meridian=false use_24_hours=true prefix="event_dur_"]-->
+                            <!--[html_select_time time=`$loaded_event.duration` display_seconds=false display_minutes=false display_meridian=false use_24_hours=true field_array="postcalendar_events[duration]" prefix=""]-->
                             <!--[gt text='Hours']-->
-                            <!--[html_select_time time=$event_duration display_seconds=false display_hours=false display_meridian=false minute_interval=$minute_interval prefix="event_dur_"]-->
+                            <!--[html_select_time time=`$loaded_event.duration` display_seconds=false display_hours=false display_meridian=false minute_interval=$minute_interval field_array="postcalendar_events[duration]" prefix=""]-->
                             <!--[gt text='Minutes']-->
                         </td>
                     </tr>
                 </table>
 		        <br/ >
                 <!--[gt text='Description']--><br />
-		        <textarea id="description" name="event_desc" wrap="virtual" rows="5" cols="40"><!--[ $ValueEventDesc ]--></textarea><br />
+		        <textarea id="description" name="postcalendar_events[hometext]" wrap="virtual" rows="5" cols="40"><!--[ $loaded_event.hometext ]--></textarea><br />
                 <!--[if $formattedcontent eq 0]-->
                     <!--[* SCRIBITE NOT IN USE *]-->
-                    <!--[html_options name=pc_html_or_text options=$EventHTMLorText selected=$EventHTMLorTextVal]-->
-                    <div class="pn-warningmsg" id="html_warning"><b><!--[gt text='Permitted HTML tags']--></b><br /><!--[allowedhtml]--></div>
+                    <!--[html_options name="postcalendar_events[html_or_text]" options=$EventHTMLorText selected=$loaded_event.HTMLorTextVal]-->
+                    <div class="z-warningmsg" id="html_warning"><b><!--[gt text='Permitted HTML tags']--></b><br /><!--[allowedhtml]--></div>
                 <!--[else]-->
                     <!--[* SCRIBITE IN USE *]-->
-                    <input type="hidden" name="pc_html_or_text" value="html" />
+                    <input type="hidden" name="postcalendar_events[html_or_text]" value="html" />
                 <!--[/if]-->
             </td>
 
             <td align="left" valign="top" width="50%" style='padding-left:2em;'>
                 <!--[gt text='Sharing']--><br />
                 <!--[if $pcAllowUserCalendar ]-->
-                    <!--[html_options name=event_sharing options=$sharingselect selected=$event_sharing]-->
+                    <!--[html_options name="postcalendar_events[sharing] options=$sharingselect selected=$loaded_event.sharing]-->
                 <!--[else]-->
-                    <span style='padding-left:3em;'><i><!--[gt text='Global']--></i><input type="hidden" name="event_sharing" value="3"></span><br />
+                    <span style='padding-left:3em;'><i><!--[gt text='Global']--></i><input type="hidden" name="postcalendar_events[sharing]" value="3"></span><br />
                 <!--[/if]-->
                 <br />
                 <!--[if $enablecats]-->
@@ -91,7 +88,7 @@
                         <!--[nocache]-->
                         <ul>
                         <!--[foreach from=$catregistry key=property item=category]-->
-                            <!--[array_field_isset assign="selectedValue" array=$__CATEGORIES__ field=$property returnValue=1]-->
+                            <!--[array_field_isset assign="selectedValue" array=$loaded_event.__CATEGORIES__ field=$property returnValue=1]-->
                             <li><!--[selector_category category=$category name="postcalendar_events[__CATEGORIES__][$property]" field="id" selectedValue=$selectedValue defaultValue="0"]--></li>
                         <!--[/foreach]-->
                         </ul>
@@ -105,7 +102,7 @@
                         <!--[gt text='Location']--><br />
                         <table border="0" align="left" cellpadding="0" cellspacing="0">
                             <tr>
-                                <td><input size="40" type="text" name="event_location"  value="<!--[ $ValueLocation ]-->" /></td>
+                                <td><input size="40" type="text" name="postcalendar_events[location][event_location]"  value="<!--[ $loaded_event.location_info.event_location ]-->" /></td>
                             </tr>
                         </table>
                     </td>
@@ -113,30 +110,30 @@
                 <tr>
                     <td colspan="3">
                         <!--[gt text='Street']--><br />
-                        <input size="40" type="text" name="event_street1"  value="<!--[ $ValueStreet1 ]-->" /><br />
-                        <input size="40" type="text" name="event_street2"  value="<!--[ $ValueStreet2 ]-->" />
+                        <input size="40" type="text" name="postcalendar_events[location][event_street1]"  value="<!--[ $loaded_event.location_info.event_street1 ]-->" /><br />
+                        <input size="40" type="text" name="postcalendar_events[location][event_street2]"  value="<!--[ $loaded_event.location_info.event_street2 ]-->" />
                     </td>
                 </tr>
                 <tr>
                     <td><!--[gt text='City']--></td><td><!--[gt text='State']--></td><td><!--[gt text='Zipcode']--></td>
                 </tr>
                 <tr>
-                    <td><input size="10" type="text" name="event_city"  value="<!--[ $ValueCity ]-->" /></td>
-                    <td><input size="10" type="text" name="event_state"  value="<!--[ $ValueState ]-->" /></td>
-                    <td><input size="10" type="text" name="event_postal"  value="<!--[ $ValuePostal ]-->" /></td>
+                    <td><input size="10" type="text" name="postcalendar_events[location][event_city]"  value="<!--[ $loaded_event.location_info.event_city ]-->" /></td>
+                    <td><input size="10" type="text" name="postcalendar_events[location][event_state]"  value="<!--[ $loaded_event.location_info.event_state ]-->" /></td>
+                    <td><input size="10" type="text" name="postcalendar_events[location][event_postal]"  value="<!--[ $loaded_event.location_info.event_postal ]-->" /></td>
                 </tr>
                 </table>
                 <br />
                 <!--[gt text='Contact']--><br />
-                <input type="text" name="event_contname" value="<!--[ $ValueContact ]-->" /><br />
+                <input type="text" name="postcalendar_events[contname]" value="<!--[ $loaded_event.contname ]-->" /><br />
                 <!--[gt text='Phone number']--><br />
-                <input type="text" name="event_conttel" value="<!--[ $ValuePhone ]-->" /><br />
+                <input type="text" name="postcalendar_events[conttel]" value="<!--[ $loaded_event.conttel ]-->" /><br />
                 <!--[gt text='E-mail address']--><br />
-                <input type="text" name="event_contemail" value="<!--[ $ValueEmail ]-->" /><br />
+                <input type="text" name="postcalendar_events[contemail]" value="<!--[ $loaded_event.contemail ]-->" /><br />
                 <!--[gt text='Web site']--><br />
-                <input type="text" name="event_website" value="<!--[ $ValueWebsite ]-->" /><br />
+                <input type="text" name="postcalendar_events[website]" value="<!--[ $loaded_event.website ]-->" /><br />
                 <!--[gt text='Fee']--><br />
-                <input type="text" name="event_fee" value="<!--[ $ValueFee ]-->" /><br />
+                <input type="text" name="postcalendar_events[fee]" value="<!--[ $loaded_event.fee ]-->" /><br />
             </td>
         </tr>
     </table>
@@ -151,77 +148,52 @@
     <table width="100%" border="0" cellpadding="2" cellspacing="0">
         <tr>
             <td colspan="2" align="left" valign="middle" width="100%">
-                <input type="radio" name="event_repeat" value="0" <!--[ $SelectedNoRepeat ]--> />
+                <input type="radio" name="postcalendar_events[recurrtype]" value="0" <!--[ $SelectedNoRepeat ]--> />
                 <!--[gt text='One-time event']--><br />
 
-                <input type="radio" name="event_repeat" value="1" <!--[ $SelectedRepeat ]--> />
+                <input type="radio" name="postcalendar_events[recurrtype]" value="1" <!--[ $SelectedRepeat ]--> />
                 <!--[gt text='Repeats every']-->
-                <input type="text" name="event_repeat_freq" value="<!--[ $InputRepeatFreqVal ]-->" size="4" />
-				<!--
-				<select name="event_repeat_freq">
-                <!--[ foreach item=repeat from=$repeat_freq ]-->
-                    <option value="<!--[ $repeat.value ]-->" <!--[ $repeat.selected ]-->><!--[ $repeat.name ]--></option>
-                <!--[ /foreach ]-->
-                </select>
-                -->
-                <select name="event_repeat_freq_type">
-                <!--[ foreach item=repeat from=$repeat_freq_type ]-->
-                    <option value="<!--[ $repeat.value ]-->" <!--[ $repeat.selected ]-->><!--[ $repeat.name ]--></option>
-                <!--[ /foreach ]-->
-                </select>
+                <input type="text" name="postcalendar_events[repeat][event_repeat_freq]" value="<!--[ $loaded_event.repeat.event_repeat_freq ]-->" size="4" />
+                <!--[ html_options name="postcalendar_events[repeat][event_repeat_freq_type]" options=$repeat_freq_type selected=$loaded_event.repeat.event_repeat_freq_type ]-->
                 <br />
 
-                <input type="radio" name="event_repeat" value="2" <!--[ $SelectedRepeatOn ]--> />
+                <input type="radio" name="postcalendar_events[recurrtype]" value="2" <!--[ $SelectedRepeatOn ]--> />
                 <!--[gt text='Repeats on']-->
-                <select name="event_repeat_on_num">
-                <!--[ foreach item=repeat from=$repeat_on_num ]-->
-                    <option value="<!--[ $repeat.value ]-->" <!--[ $repeat.selected ]-->><!--[ $repeat.name ]--></option>
-                <!--[ /foreach ]-->
-                </select>
-                <select name="event_repeat_on_day">
-                <!--[ foreach item=repeat from=$repeat_on_day ]-->
-                    <option value="<!--[ $repeat.value ]-->" <!--[ $repeat.selected ]-->><!--[ $repeat.name ]--></option>
-                <!--[ /foreach ]-->
-                </select>&nbsp;
-                <!--[gt text='of the month, every']-->&nbsp;
-				<input type="text" name="event_repeat_on_freq" value="<!--[ $InputRepeatOnFreqVal ]-->" size="4" />
+                <!--[ html_options name="postcalendar_events[repeat][event_repeat_on_num]" options=$repeat_on_num selected=$loaded_event.repeat.event_repeat_on_num ]-->
+
+                <!--[ html_options name="postcalendar_events[repeat][event_repeat_on_day]" options=$repeat_on_day selected=$loaded_event.repeat.event_repeat_on_day ]-->
+                &nbsp;<!--[gt text='of the month, every']-->&nbsp;
+				<input type="text" name="postcalendar_events[repeat][event_repeat_on_freq]" value="<!--[ $loaded_event.repeat.event_repeat_on_freq ]-->" size="4" />
 				<!--[gt text='month(s)']-->.
-				<!--
-                <select name="event_repeat_on_freq">
-                <!--[ foreach item=repeat from=$repeat_on_freq ]-->
-                    <option value="<!--[ $repeat.value ]-->" <!--[ $repeat.selected ]-->><!--[ $repeat.name ]--></option>
-                <!--[ /foreach ]-->
-                </select>
-				-->
                 <br /><br />
 
                 <b><!--[gt text='End date']-->:</b><br />
-                <input type="radio" name="event_endtype" value="1" <!--[ $SelectedEndOn ]--> />&nbsp;
-		<!--[ if $startdate > $endDate ]-->
-                	<!--[ pc_calendar_build_input_box htmlName="meetingdate_end" dateFormat="%d-%m-%Y" defaultString=$startvalue defaultDate=$startdate ]--><br />
+                <input type="radio" name="postcalendar_events[endtype]" value="1" <!--[ $SelectedEndOn ]--> />&nbsp;
+		        <!--[ if $postcalendar_events.eventDate > $postcalendar_events.endDate ]-->
+                	<!--[ pc_calendar_build_input_box objectName="postcalendar_events" htmlName="endDate" dateFormat="%d-%m-%Y" defaultString=$loaded_event.eventDatevalue defaultDate=$loaded_event.eventDate ]--><br />
                 <!--[ else ]-->
-                	<!--[ pc_calendar_build_input_box htmlName="meetingdate_end" dateFormat="%d-%m-%Y" defaultString=$endvalue defaultDate=$endDate ]--><br />
+                	<!--[ pc_calendar_build_input_box objectName="postcalendar_events" htmlName="endDate" dateFormat="%d-%m-%Y" defaultString=$loaded_event.endvalue defaultDate=$loaded_event.endDate ]--><br />
                 <!--[ /if ]-->
-                <input type="radio" name="event_endtype" value="0" <!--[ $SelectedNoEnd ]--> />&nbsp;
+                <input type="radio" name="postcalendar_events[endtype]" value="0" <!--[ $SelectedNoEnd ]--> />&nbsp;
                 <!--[gt text='No end date']-->
             </td>
         </tr>
     </table>
 </div>
 <!--[ else ]-->
-    <input type="hidden" name="event_repeat" value="1">
-    <input type="hidden" name="event_repeat" value="">
-    <input type="hidden" name="event_repeat_freq" value="<!--[ $InputRepeatFreqVal ]-->">
-    <input type="hidden" name="event_repeat_freq_type" value="1">
-    <input type="hidden" name="event_repeat_on_num" value="1">
-    <input type="hidden" name="event_repeat_on_day" value="1">
-    <input type="hidden" name="event_endtype" value="1">
-    <input type="hidden" name="meetingdate_end" value="<!--[ $endDate ]-->" >
-    <input type="hidden" name="event_endtype" value="0">
+    <input type="hidden" name="postcalendar_events[recurrtype]" value="1">
+    <input type="hidden" name="postcalendar_events[recurrtype]" value="">
+    <input type="hidden" name="postcalendar_events[event_repeat_freq]" value="<!--[ $InputRepeatFreqVal ]-->">
+    <input type="hidden" name="postcalendar_events[event_repeat_freq_type]" value="1">
+    <input type="hidden" name="postcalendar_events[event_repeat_on_num]" value="1">
+    <input type="hidden" name="postcalendar_events[event_repeat_on_day]" value="1">
+    <input type="hidden" name="postcalendar_events[endtype]" value="1">
+    <input type="hidden" name="postcalendar_events[endDate]" value="<!--[ $loaded_event.endDate ]-->" >
+    <input type="hidden" name="postcalendar_events[endtype]" value="0">
 <!--[ /if ]-->
 
-<input type="hidden" name="is_update" value="<!--[$is_update]-->">
-<input type="hidden" name="eid" value="<!--[$eid]-->">
+<input type="hidden" name="is_update" value="<!--[$loaded_event.is_update]-->">
+<input type="hidden" name="postcalendar_events[eid]" value="<!--[$loaded_event.eid]-->">
 <!--[if !empty($data_loaded) ]--> <input type="hidden" name="data_loaded" value="<!--[$data_loaded]-->"><!--[/if]-->
 
 <hr />
@@ -232,3 +204,4 @@
 
 </form>
 </div> <!-- /page container-->
+<!--[ pndebug ]-->
