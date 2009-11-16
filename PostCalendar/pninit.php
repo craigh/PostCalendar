@@ -114,6 +114,8 @@ function postcalendar_upgrade($oldversion)
         case '5.8.0':
             // no changes
         case '5.8.1':
+            postcalendar_init_correctserialization();
+        case '5.8.2':
             if (!_postcalendar_cull_meetings()) {
                 return LogUtil::registerError (__('Error: Could not cull meetings.', $dom));
             }
@@ -243,6 +245,27 @@ function postcalendar_init_reset_scribite()
             LogUtil::registerError (__('Error! Could not update the configuration.', $dom));
         }
     }
+}
+
+/**
+ * this code takes a field, unserialises it mb-safely, then reserialises it
+ * This is only required when the previously serialised data contained 
+ * multi-byte data like German/Spanish characters. 
+ * for postcalendar, only the serialized 'location' field needs correction
+ * the serialized 'recurrspec' field only contains integers for values and the
+ * keys are in english with no special characters.
+ * @author Drak
+ */
+function postcalendar_init_correctserialization()
+{
+    $obj = DBUtil::selectObjectArray('postcalendar_events');
+    foreach ($obj as $event) {
+        $locdata = DataUtil::mb_unserialize($event['location']);
+        $event['location'] = serialize($locdata);
+        DBUtil::updateObject($event, 'postcalendar_events', '', 'eid', true);
+    }
+    LogUtil::registerStatus (__('PostCalendar: Serialized fields corrected.', $dom));
+    return true;
 }
 
 /**
