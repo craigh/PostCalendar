@@ -134,7 +134,8 @@ function postcalendar_event_new($args)
     $is_update        = FormUtil::getPassedValue('is_update');
     $form_action      = FormUtil::getPassedValue('form_action');
     $authid           = FormUtil::getPassedValue('authid');
-    $data_loaded      = FormUtil::getPassedValue('data_loaded');
+    //$data_loaded      = FormUtil::getPassedValue('data_loaded');
+    //echo "<pre style='text-align:left; background-color: yellow;'>passedvalue:<br />"; print_r($submitted_event); echo "</pre>";
 
     /******* REFORMAT SUBMITTED EVENT FOR DB WRITE *********/
     // convert event start information (YYYY-MM-DD)
@@ -156,10 +157,11 @@ function postcalendar_event_new($args)
     }
     /******* END REFORMAT SUBMITTED EVENT FOR  DB WRITE *********/
 
-
-    if (!isset($args['eid']) || empty($args['eid']) || $data_loaded) { // this is a new event (possibly previewed)
+    //echo "<pre style='text-align:left; background-color: orange;'>"; print_r($submitted_event); echo "</pre>";
+    //if (!isset($submitted_event['eid']) || empty($submitted_event['eid']) || $submitted_event['data_loaded']) { // this is a new event (possibly previewed)
+    if ($func == 'new') {
         // wrap all the data into array for passing to commit and preview functions
-        if ($data_loaded) $eventdata = $submitted_event; // data is only loaded if preview was selected
+        if ($submitted_event['data_loaded']) $eventdata = $submitted_event; // data loaded on preview and processing of new event, but not on initial pageload
         $eventdata['is_update'] = $is_update;
         $eventdata['data_loaded'] = true;
 
@@ -178,11 +180,11 @@ function postcalendar_event_new($args)
         $eventdata['day'] = $day;
         $eventdata['is_update'] = true;
         $eventdata['data_loaded'] = true;
-        $loc_data = unserialize($eventdata['location']);
-        $rspecs = unserialize($eventdata['recurrspec']);
-        $eventdata = array_merge($eventdata, $loc_data, $rspecs);
-        $eventdata['location_info'] = $loc_data;
-        $eventdata['recurrspec'] = $rspecs;
+        //$loc_data = unserialize($eventdata['location']);
+        //$rspecs = unserialize($eventdata['recurrspec']);
+        //$eventdata = array_merge($eventdata, $loc_data, $rspecs);
+        $eventdata['location_info'] = unserialize($eventdata['location']);
+        $eventdata['repeat'] = unserialize($eventdata['recurrspec']);
     }
 
     if ($form_action == 'copy') {
@@ -264,7 +266,7 @@ function postcalendar_event_new($args)
     if ($form_action == 'commit') {
         if (!SecurityUtil::confirmAuthKey()) return LogUtil::registerAuthidError(pnModURL('postcalendar', 'admin', 'main'));
 
-        if (!$eid = pnModAPIFunc('PostCalendar', 'event', 'writeEvent', compact('eventdata','Date','event_for_userid'))) {
+        if (!$eid = pnModAPIFunc('PostCalendar', 'event', 'writeEvent', compact('eventdata','Date'))) {
             LogUtil::registerError(__('Error! Submission failed.', $dom));
         } else {
             pnModAPIFunc('PostCalendar', 'admin', 'clearCache');

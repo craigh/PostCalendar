@@ -292,7 +292,7 @@ function postcalendar_eventapi_getEvents($args)
 function postcalendar_eventapi_writeEvent($args)
 {
     $dom = ZLanguage::getModuleDomain('PostCalendar');
-    echo "<div style='text-align:left;'><b>_writeEvent:</b><br /><pre style='background-color:#ffffcc;'>"; print_r($args); echo "</pre></div>";
+    //echo "<div style='text-align:left;'><b>_writeEvent:</b><br /><pre style='background-color:#ffffcc;'>"; print_r($args); echo "</pre></div>";
     //extract($args); //'eventdata','Date','event_for_userid'
     //unset($args);
     $eventdata = $args['eventdata'];
@@ -307,7 +307,7 @@ function postcalendar_eventapi_writeEvent($args)
         $eventdata['eventstatus'] = _EVENT_QUEUED;
     }
 
-    // set up some vars for the insert statement
+    // format some vars for the insert statement
     //$startDate = $event_startyear . '-' . $event_startmonth . '-' . $event_startday;
     $eventdata['eventDate'] = $eventdata['eventDate']['full'];
     if ($eventdata['endtype'] == 1) {
@@ -348,7 +348,7 @@ function postcalendar_eventapi_writeEvent($args)
 
     if (!isset($eventdata['is_update'])) $eventdata['is_update'] = false;
 
-    echo "<div style='text-align:left;'><b>_writeEvent (eventdata before create):</b><br /><pre style='background-color:#ff9911;'>"; print_r($eventdata); echo "</pre></div>"; 
+    echo "<div style='text-align:left;'><b>_writeEvent (eventdata before create):</b><br /><pre style='background-color:#ff9911;'>"; print_r($eventdata); echo "</pre></div>"; //die();
 
     if ($eventdata['is_update']) {
         //$eventdata['eid'] = $eid;
@@ -429,7 +429,7 @@ function postcalendar_eventapi_buildSubmitForm($args)
     // hometext
     if ((empty($eventdata['html_or_text'])) && (!empty($eventdata['hometext']))) {
         $eventdata['html_or_text'] = substr($eventdata['hometext'], 1, 4);
-        $eventdata['hometext'] = substr($event_desc, 6);
+        $eventdata['hometext'] = substr($eventdata['hometext'], 6);
     } else {
         $eventdata['html_or_text'] = 'text'; // default
     }
@@ -469,16 +469,16 @@ function postcalendar_eventapi_buildSubmitForm($args)
     $tpl->assign('repeat_on_day', $selectarray);
 
      // recur defaults
-    if (empty($eventdata['recurrspec']['event_repeat_freq_type']) || $eventdata['recurrspec']['event_repeat_freq_type'] < 1) $eventdata['recurrspec']['event_repeat_freq_type'] = REPEAT_EVERY_DAY;
-    if (empty($eventdata['recurrspec']['event_repeat_on_num']) || $eventdata['recurrspec']['event_repeat_on_num'] < 1) $eventdata['recurrspec']['event_repeat_on_num'] = REPEAT_ON_1ST;
-    if (empty($eventdata['recurrspec']['event_repeat_on_day']) || $eventdata['recurrspec']['event_repeat_on_day'] < 1) $eventdata['recurrspec']['event_repeat_on_day'] = REPEAT_ON_SUN;
+    if (empty($eventdata['repeat']['event_repeat_freq_type']) || $eventdata['repeat']['event_repeat_freq_type'] < 1) $eventdata['repeat']['event_repeat_freq_type'] = REPEAT_EVERY_DAY;
+    if (empty($eventdata['repeat']['event_repeat_on_num']) || $eventdata['repeat']['event_repeat_on_num'] < 1) $eventdata['repeat']['event_repeat_on_num'] = REPEAT_ON_1ST;
+    if (empty($eventdata['repeat']['event_repeat_on_day']) || $eventdata['repeat']['event_repeat_on_day'] < 1) $eventdata['repeat']['event_repeat_on_day'] = REPEAT_ON_SUN;
 
     // endType
     $tpl->assign('SelectedEndOn', (int) $eventdata['endtype'] == 1 ? ' checked' : '');
     $tpl->assign('SelectedNoEnd', (((int) $eventdata['endtype'] == 0) OR (empty($eventdata['endtype']))) ? ' checked' : ''); //default
 
-    $tpl->assign('is_update', $is_update);
-    if (isset($data_loaded)) $tpl->assign('data_loaded', $data_loaded);
+    //$tpl->assign('is_update', $is_update);
+    //if (isset($data_loaded)) $tpl->assign('data_loaded', $data_loaded);
 
     // Assign the content format
     $formattedcontent = pnModAPIFunc('PostCalendar', 'event', 'isformatted', array('func' => 'new'));
@@ -524,6 +524,7 @@ function postcalendar_eventapi_fixEventDetails($event)
             $event[$field] = '';
     } else {
         // FIXME: this entire thing should be a sub-array RNG < v5.0.0
+        /*
         if (!empty($location)) {
            $location = unserialize($event['location']);
            $event['event_location'] = $location['event_location'];
@@ -534,6 +535,7 @@ function postcalendar_eventapi_fixEventDetails($event)
            $event['event_postal'] = $location['event_postal'];
            //$event['date'] = str_replace('-','',$Date);
         }
+        */
     }
 
     // compensate for changeover to new categories system

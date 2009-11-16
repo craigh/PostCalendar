@@ -194,7 +194,7 @@
 
 <input type="hidden" name="is_update" value="<!--[$loaded_event.is_update]-->">
 <input type="hidden" name="postcalendar_events[eid]" value="<!--[$loaded_event.eid]-->">
-<!--[if !empty($data_loaded) ]--> <input type="hidden" name="data_loaded" value="<!--[$data_loaded]-->"><!--[/if]-->
+<!--[if !empty($loaded_event.data_loaded) ]--> <input type="hidden" name="postcalendar_events[data_loaded]" value="<!--[$loaded_event.data_loaded]-->"><!--[/if]-->
 
 <hr />
 <select name="form_action">

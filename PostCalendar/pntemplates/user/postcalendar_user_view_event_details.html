@@ -40,23 +40,23 @@
         <div>
             <!--[ if $LOCATION_INFO ]-->
                 <p><b><!--[gt text='Location']-->:</b><br />
-                <!--[ if $A_EVENT.location != '' ]-->
-                    <!--[ $A_EVENT.location ]--><br />
+                <!--[ if $A_EVENT.location_info.event_location != '' ]-->
+                    <!--[ $A_EVENT.location_info.event_location ]--><br />
                 <!--[ /if ]-->
-                <!--[ if $A_EVENT.street1 != '' ]-->
-                    <!--[ $A_EVENT.street1 ]--><br />
+                <!--[ if $A_EVENT.location_info.event_street1 != '' ]-->
+                    <!--[ $A_EVENT.location_info.event_street1 ]--><br />
                 <!--[ /if ]-->
-                <!--[ if $A_EVENT.street2 != '' ]-->
-                    <!--[ $A_EVENT.street2 ]--><br />
+                <!--[ if $A_EVENT.location_info.event_street2 != '' ]-->
+                    <!--[ $A_EVENT.location_info.event_street2 ]--><br />
                 <!--[ /if ]-->
-                <!--[ if $A_EVENT.city != '' ]-->
-                    <!--[ $A_EVENT.city ]-->
+                <!--[ if $A_EVENT.location_info.event_city != '' ]-->
+                    <!--[ $A_EVENT.location_info.event_city ]-->
                 <!--[ /if ]-->
-                <!--[ if $A_EVENT.state != '' ]-->
-                    <!--[ $A_EVENT.state ]-->
+                <!--[ if $A_EVENT.location_info.event_state != '' ]-->
+                    <!--[ $A_EVENT.location_info.event_state ]-->
                 <!--[ /if ]-->
-                <!--[ if $A_EVENT.postal != '' ]-->
-                    <!--[ $A_EVENT.postal ]-->
+                <!--[ if $A_EVENT.location_info.event_postal != '' ]-->
+                    <!--[ $A_EVENT.location_info.event_postal ]-->
                 <!--[ /if ]-->
                 </p>
             <!--[ /if ]-->
