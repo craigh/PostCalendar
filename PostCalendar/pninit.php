@@ -177,6 +177,8 @@ function postcalendar_delete()
     $registry = new PNCategoryRegistryArray();
     $registry->deleteWhere ('crg_modname=\'PostCalendar\'');
 
+    // this still does not delete all the category information...
+
     return $result;
 }
 
@@ -615,14 +617,15 @@ function _postcalendar_gettopicsmap($topicspath = '/__SYSTEM__/Modules/Topics')
  */
 function _postcalendar_cull_meetings()
 {
-    $events = DBUtil::selectExpandedObjectArray('postcalendar_events', null, 'WHERE pc_meeting_id > 0', 'ORDER BY pc_meeting_id, pc_eid');
-
+    $prefix = pnConfigGetVar('prefix');
+    $sql = "SELECT pc_eid, pc_meeting_id FROM {$prefix}_postcalendar_events WHERE pc_meeting_id > 0 ORDER BY pc_meeting_id, pc_eid";
+    $result = DBUtil::executeSQL($sql);
     $old_m_id = "NULL";
-    foreach ($events as $key => $evt) {
-        $new_m_id = $evt['meeting_id'];
+    for (; !$result->EOF; $result->MoveNext()) {
+        $new_m_id = $result->fields[1];
         if (($old_m_id) && ($old_m_id != "NULL") && ($new_m_id > 0) && ($old_m_id == $new_m_id)) {
             $old_m_id = $new_m_id;
-            DBUtil::deleteObjectByID('postcalendar_events', $evt['eid'], 'eid'); // delete dup event
+            DBUtil::deleteObjectByID('postcalendar_events', $result->fields[0], 'eid'); // delete dup event
         }
         $old_m_id = $evt['meeting_id'];
     }
