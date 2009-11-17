@@ -260,11 +260,24 @@ function postcalendar_init_reset_scribite()
  */
 function postcalendar_init_correctserialization()
 {
+/*
     $obj = DBUtil::selectObjectArray('postcalendar_events');
     foreach ($obj as $event) {
         $locdata = DataUtil::mb_unserialize($event['location']);
         $event['location'] = serialize($locdata);
         DBUtil::updateObject($event, 'postcalendar_events', '', 'eid', true);
+    }
+    LogUtil::registerStatus (__('PostCalendar: Serialized fields corrected.', $dom));
+    return true;
+*/
+    $prefix = pnConfigGetVar('prefix');
+    $Ssql = "SELECT pc_eid, pc_location FROM {$prefix}_postcalendar_events";
+    $result = DBUtil::executeSQL($Ssql);
+    for (; !$result->EOF; $result->MoveNext()) {
+        $oldlocdata = DataUtil::mb_unserialize($result->fields[1]);
+        $newlocdata = serialize($locdata);
+        $Usql = "UPDATE {$prefix}_postcalendar_events SET pc_location='$newlocdata' WHERE pc_eid=".$result->fields[0];
+        DBUtil::executeSQL($Usql);
     }
     LogUtil::registerStatus (__('PostCalendar: Serialized fields corrected.', $dom));
     return true;
