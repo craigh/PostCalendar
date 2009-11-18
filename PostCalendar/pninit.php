@@ -79,9 +79,9 @@ function postcalendar_upgrade($oldversion)
 
     // change the database. DBUtil + ADODB detect the changes on their own
     // and perform all necessary steps without help from the module author
-    if (!DBUtil::changeTable('postcalendar_events')) {
-        return LogUtil::registerError(__('Error! Could not upgrade the tables.', $dom));
-    }
+    //if (!DBUtil::changeTable('postcalendar_events')) {
+    //    return LogUtil::registerError(__('Error! Could not upgrade the tables.', $dom));
+    //}
 
     switch ($oldversion) {
 
@@ -140,10 +140,7 @@ function postcalendar_upgrade($oldversion)
             pnModDelVar('PostCalendar', 'pcCacheLifetime');
             pnModSetVar('PostCalendar', 'enablecategorization', true);
             pnModSetVar('PostCalendar', 'enablenavimages', true);
-            DBUtil::dropColumn('postcalendar_events', 'pc_comments');
-            DBUtil::dropColumn('postcalendar_events', 'pc_counter');
-            DBUtil::dropColumn('postcalendar_events', 'pc_recurrfreq');
-            DBUtil::dropColumn('postcalendar_events', 'pc_language');
+
         //case '6.0.0':
             //placeholder :-)
     }
@@ -427,6 +424,10 @@ function _postcalendar_transcode_ids($categorymap, $topicsmap)
     // first, associate each event with the new category ids
     $sql = "SELECT pc_eid, pc_catid, pc_topic FROM {$prefix}_postcalendar_events";
     $result = DBUtil::executeSQL($sql);
+    // upgrade table structure so categories are usable (this drops all unneeded columns)
+    if (!DBUtil::changeTable('postcalendar_events')) {
+        return LogUtil::registerError(__('Error! Could not upgrade the tables.', $dom));
+    }
     $events = array();
     for (; !$result->EOF; $result->MoveNext()) {
         if (is_array($categorymap)) $catsarray['Main']  = $categorymap[$result->fields[1]];
@@ -441,10 +442,6 @@ function _postcalendar_transcode_ids($categorymap, $topicsmap)
             return LogUtil::registerError (__('Error! Table update failed.', $dom));
         }
     }
-
-    // drop unneeded columns
-    DBUtil::dropColumn('postcalendar_events', 'pc_topic');
-    DBUtil::dropColumn('postcalendar_events', 'pc_catid');
 
     LogUtil::registerStatus (__('PostCalendar: Category and/or Topic IDs converted.', $dom));
 
