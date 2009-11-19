@@ -243,6 +243,7 @@ function postcalendar_userapi_buildView($args)
 }
 
 /**
+ * REMOVE for v6.0.0!
  * postcalendar_userapi_eventPreview
  * Creates the detailed event display and outputs html.
  * Accepts an array of key/value pairs
@@ -250,6 +251,7 @@ function postcalendar_userapi_buildView($args)
  * @return string html output
  * @access public
  */
+/*
 function postcalendar_userapi_eventPreview($args)
 {
     $dom = ZLanguage::getModuleDomain('PostCalendar');
@@ -349,6 +351,7 @@ function postcalendar_userapi_eventPreview($args)
 
     return $tpl->fetch("user/postcalendar_user_view_event_preview.html");
 }
+*/
 
 /**
  * makeValidURL()

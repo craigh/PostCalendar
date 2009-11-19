@@ -6,10 +6,10 @@
 
 <!--[ include file="user/postcalendar_user_navigation_small.html" ]-->
 
-<!--[if !empty($preview)]-->
+<!--[if ($loaded_event.preview eq true)]-->
     <div style='background-color:#CCCCCC; border: 2px solid #999999; margin: 2em; padding: 1em;'>
-        <h3 style='border-bottom: 1px solid #999999;'><!--[gt text='Event preview']--></h3>
-        <!--[$preview]-->
+        <h3 style='border-bottom: 1px solid #999999;'><i><!--[gt text='Event preview']--></i></h3>
+        <!--[ include file="event/postcalendar_event_preview.htm" ]-->
     </div>
 <!--[/if]-->
 <form name="nd" action="<!--[ pc_url action="submit" ]-->" method="post" enctype="application/x-www-form-urlencoded">
@@ -141,8 +141,6 @@
 <!-- EVENT INFO ROWS -->
 
 <!-- REPEATING ROWS -->
-<!--[pnmodgetvar module="PostCalendar" name="pcRepeating"|pnvarprepfordisplay assign="pcDisplayRepeating"]-->
-<!--[ if $pcDisplayRepeating ]-->
 <div>
 <h2 style='border-bottom:1px solid #CCCCCC;margin-top:1em;text-align:left;'><!--[gt text='Repetition settings']--></h2>
     <table width="100%" border="0" cellpadding="2" cellspacing="0">
@@ -180,17 +178,6 @@
         </tr>
     </table>
 </div>
-<!--[ else ]-->
-    <input type="hidden" name="postcalendar_events[recurrtype]" value="1">
-    <input type="hidden" name="postcalendar_events[recurrtype]" value="">
-    <input type="hidden" name="postcalendar_events[event_repeat_freq]" value="<!--[ $InputRepeatFreqVal ]-->">
-    <input type="hidden" name="postcalendar_events[event_repeat_freq_type]" value="1">
-    <input type="hidden" name="postcalendar_events[event_repeat_on_num]" value="1">
-    <input type="hidden" name="postcalendar_events[event_repeat_on_day]" value="1">
-    <input type="hidden" name="postcalendar_events[endtype]" value="1">
-    <input type="hidden" name="postcalendar_events[endDate]" value="<!--[ $loaded_event.endDate ]-->" >
-    <input type="hidden" name="postcalendar_events[endtype]" value="0">
-<!--[ /if ]-->
 
 <input type="hidden" name="is_update" value="<!--[$loaded_event.is_update]-->">
 <input type="hidden" name="postcalendar_events[eid]" value="<!--[$loaded_event.eid]-->">

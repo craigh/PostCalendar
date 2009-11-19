@@ -138,6 +138,7 @@ function postcalendar_upgrade($oldversion)
             pnModDelVar('PostCalendar', 'pcDisplayTopics');
             pnModDelVar('PostCalendar', 'pcUseCache');
             pnModDelVar('PostCalendar', 'pcCacheLifetime');
+            pnModDelVar('PostCalendar', 'pcRepeating');
             pnModSetVar('PostCalendar', 'enablecategorization', true);
             pnModSetVar('PostCalendar', 'enablenavimages', true);
 
@@ -196,7 +197,6 @@ function postcalendar_init_getdefaults()
     'pcAllowDirectSubmit'     => '0',
     'pcListHowManyEvents'     => '15',
     'pcEventDateFormat'       => '%B %d, %Y', /* American: e.g. July 4, 2010 */
-    'pcRepeating'             => '1', /* display repeating options */
     'pcAllowUserCalendar'     => '0',
     'pcTimeIncrement'         => '15',
     'pcDefaultView'           => 'month',
