@@ -270,7 +270,6 @@ function postcalendar_admin_updateconfig()
     'pcAllowDirectSubmit'     => FormUtil::getPassedValue('pcAllowDirectSubmit', 0),
     'pcListHowManyEvents'     => FormUtil::getPassedValue('pcListHowManyEvents', $defaults['pcListHowManyEvents']),
     'pcEventDateFormat'       => FormUtil::getPassedValue('pcEventDateFormat', $defaults['pcEventDateFormat']),
-    'pcRepeating'             => FormUtil::getPassedValue('pcRepeating', 0),
     'pcAllowUserCalendar'     => FormUtil::getPassedValue('pcAllowUserCalendar', 0),
     'pcTimeIncrement'         => FormUtil::getPassedValue('pcTimeIncrement', $defaults['pcTimeIncrement']),
     'pcDefaultView'           => FormUtil::getPassedValue('pcDefaultView', $defaults['pcDefaultView']),
