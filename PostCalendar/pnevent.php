@@ -91,9 +91,17 @@ function postcalendar_event_delete()
 }
 
 /**
- * submit an event
+ * edit an event
  */
 function postcalendar_event_edit($args)
+{
+    $args['eid'] = FormUtil::getPassedValue('eid');
+    return postcalendar_event_new($args);
+}
+/**
+ * copy an event
+ */
+function postcalendar_event_copy($args)
 {
     $args['eid'] = FormUtil::getPassedValue('eid');
     return postcalendar_event_new($args);
@@ -115,7 +123,7 @@ function postcalendar_event_new($args)
         return LogUtil::registerPermissionError();
     }
 
-    extract($args); //if there are args, does that mean were are editing an event?
+    extract($args);
 
     // these items come on brand new view of this function
     $func      = FormUtil::getPassedValue('func');
@@ -125,74 +133,69 @@ function postcalendar_event_new($args)
     $Date      = FormUtil::getPassedValue('Date');
 
     $Date  = pnModAPIFunc('PostCalendar','user','getDate',compact('Date','jumpday','jumpmonth','jumpyear'));
-    $year  = substr($Date, 0, 4);
-    $month = substr($Date, 4, 2);
-    $day   = substr($Date, 6, 2);
 
     // these items come on submission of form
     $submitted_event  = FormUtil::getPassedValue('postcalendar_events');
     $is_update        = FormUtil::getPassedValue('is_update');
     $form_action      = FormUtil::getPassedValue('form_action');
     $authid           = FormUtil::getPassedValue('authid');
-    //$data_loaded      = FormUtil::getPassedValue('data_loaded');
-    //echo "<pre style='text-align:left; background-color: yellow;'>passedvalue:<br />"; print_r($submitted_event); echo "</pre>";
 
-    /******* REFORMAT SUBMITTED EVENT FOR DB WRITE *********/
-    // convert event start information (YYYY-MM-DD)
-    $submitted_event['eventDate'] = postcalendar_event_splitdate($submitted_event['eventDate']);
-    $submitted_event['startTime']['Meridian'] = ($submitted_event['startTime']['Meridian'] == "am") ? _AM_VAL : _PM_VAL; // reformat to old way
-    // convert event end information (YYYY-MM-DD)
-    $submitted_event['endDate'] = postcalendar_event_splitdate($submitted_event['endDate']);
-    if ($submitted_event['endDate']['year'] == '0000') {
-        $submitted_event['endDate']['month'] = $submitted_event['eventDate']['month'];
-        $submitted_event['endDate']['day']   = $submitted_event['eventDate']['day'];
-        $submitted_event['endDate']['year']  = $submitted_event['eventDate']['year'];
-        $submitted_event['endDate']['full']  = $submitted_event['eventDate']['full'];
+    if (substr($submitted_event['endDate']['year'], 0, 4) == '0000') {
+        $submitted_event['endDate'] = $submitted_event['eventDate'];
     }
-    $submitted_event['duration']['full'] = (60 * 60 * $submitted_event['duration']['Hour']) + (60 * $submitted_event['duration']['Minute']);
+    // reformat times from form to 'real' 24-hour format
+    $submitted_event['duration'] = (60 * 60 * $submitted_event['duration']['Hour']) + (60 * $submitted_event['duration']['Minute']);
+    if ((bool) !_SETTING_TIME_24HOUR) {
+        if ($submitted_event['startTime']['Meridian'] == "am") {
+            $submitted_event['startTime']['Hour'] = $submitted_event['startTime']['Hour'] == 12 ? '00' : $submitted_event['startTime']['Hour'];
+        } else {
+            $submitted_event['startTime']['Hour'] = $submitted_event['startTime']['Hour'] != 12 ? $submitted_event['startTime']['Hour'] += 12 : $submitted_event['startTime']['Hour'];
+        }
+    }
+    $startTime = sprintf('%02d', $submitted_event['startTime']['Hour']) .':'. sprintf('%02d', $submitted_event['startTime']['Minute']) .':00';
+    unset($submitted_event['startTime']);
+    $submitted_event['startTime'] = $startTime;
+    // not sure this check is needed here...
     if (pnUserLoggedIn()) {
         $submitted_event['informant'] = pnUserGetVar('uname');
     } else {
         $submitted_event['informant'] = pnConfigGetVar('anonymous');
     }
-    /******* END REFORMAT SUBMITTED EVENT FOR  DB WRITE *********/
+    /******* END REFORMAT SUBMITTED EVENT FOR ... *********/
 
-    //echo "<pre style='text-align:left; background-color: orange;'>"; print_r($submitted_event); echo "</pre>";
-    //if (!isset($submitted_event['eid']) || empty($submitted_event['eid']) || $submitted_event['data_loaded']) { // this is a new event (possibly previewed)
-    if ($func == 'new') {
+    if ($func == 'new') { // triggered on form_action=preview && on brand new load
+        // here we need generate default data for the form
         // wrap all the data into array for passing to commit and preview functions
         if ($submitted_event['data_loaded']) $eventdata = $submitted_event; // data loaded on preview and processing of new event, but not on initial pageload
         $eventdata['is_update'] = $is_update;
         $eventdata['data_loaded'] = true;
 
-    } else { // we are editing an existing event or copying an exisiting event
-        $eventdata = pnModAPIFunc('PostCalendar', 'event', 'getEventDetails', $eid);
+    } else { // we are editing an existing event or copying an existing event (func=edit or func=copy)
+        if ($submitted_event['data_loaded']) {
+            $eventdata = $submitted_event; // reloaded event when editing
+            $eventdata['location_info'] = $eventdata['location'];
+        } else {
+            $eventdata = pnModAPIFunc('PostCalendar', 'event', 'getEventDetails', $args['eid']);
+            // here were need to format the DB data to be able to load it into the form
+            $eventdata['location_info'] = unserialize($eventdata['location']);
+            $eventdata['repeat'] = unserialize($eventdata['recurrspec']) ;
+            $eventdata['endtype'] = $eventdata['endDate'] == '0000-00-00' ? '0' : '1';
+        }
         if (($uname != $eventdata['informant']) and (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN))) {
             return LogUtil::registerError(__('Sorry! You do not have authorization to edit this event.', $dom));
         }
-
         // need to check each of these below to see if truly needed CAH 11/14/09
-        $eventdata['endtype'] = $eventdata['endDate'] == '0000-00-00' ? '0' : '1';
-        $eventdata['uname'] = $uname;
         $eventdata['Date'] = $Date;
-        $eventdata['year'] = $year;
-        $eventdata['month'] = $month;
-        $eventdata['day'] = $day;
         $eventdata['is_update'] = true;
         $eventdata['data_loaded'] = true;
-        //$loc_data = unserialize($eventdata['location']);
-        //$rspecs = unserialize($eventdata['recurrspec']);
-        //$eventdata = array_merge($eventdata, $loc_data, $rspecs);
-        $eventdata['location_info'] = unserialize($eventdata['location']);
-        $eventdata['repeat'] = unserialize($eventdata['recurrspec']);
     }
 
-    if ($form_action == 'copy') {
+    if ($func == 'copy') {
+        // reset some default values that are different from 'edit'
         $form_action = '';
         unset($eid);
-        $eventdata['eid'] = '';
+        unset($eventdata['eid']);
         $eventdata['is_update'] = false;
-        $eventdata['data_loaded'] = false;
     }
 
     //================================================================
@@ -223,18 +226,10 @@ function postcalendar_event_new($args)
                 $abort = true;
             }
         }
+
         // check date validity
-        if (!_SETTING_TIME_24HOUR) {
-            if ($submitted_event['startTime']['Time_Meridian'] == _AM_VAL) {
-                $submitted_event['startTime']['Time_Hour'] = ($submitted_event['startTime']['Time_Hour'] == 12) ? '00' : $submitted_event['startTime']['Time_Hour'];
-            } else {
-                $submitted_event['startTime']['Time_Hour'] = ($submitted_event['startTime']['Time_Hour'] != 12) ? $submitted_event['startTime']['Time_Hour'] += 12 : $submitted_event['startTime']['Time_Hour'];
-            }
-        }
-        $submitted_event['startTime']['full'] = $submitted_event['startTime']['Time_Hour'].":".$submitted_event['startTime']['Time_Minute'];
-        $submitted_event['endTime']['full']   = $submitted_event['endTime']['Time_Hour'].":".$submitted_event['endTime']['Time_Minute'];
-        $sdate = strtotime($submitted_event['startDate']['full']);
-        $edate = strtotime($submitted_event['endDate']['full']);
+        $sdate = strtotime($submitted_event['startDate']);
+        $edate = strtotime($submitted_event['endDate']);
         $tdate = strtotime(date('Y-m-d'));
 
         if ($edate < $sdate && $submitted_event['endtype'] == 1) {
@@ -252,13 +247,9 @@ function postcalendar_event_new($args)
     } // end if form_action = preview/commit
 
     if ($abort) $form_action = 'preview'; // data not sufficient for commit. force preview and correct.
-    //================================================================
+
     // Preview the event
-    //================================================================
-    if ($form_action == 'preview') {
-        if (!SecurityUtil::confirmAuthKey()) return LogUtil::registerAuthidError(pnModURL('postcalendar', 'admin', 'main'));
-        $eventdata['preview'] = pnModAPIFunc('PostCalendar', 'user', 'eventPreview', $eventdata);
-    }
+    if ($form_action == 'preview') $eventdata['preview'] = true;
 
     //================================================================
     // Enter the event into the DB
@@ -290,24 +281,4 @@ function postcalendar_event_new($args)
     }
 
     return pnModAPIFunc('PostCalendar', 'event', 'buildSubmitForm', compact('eventdata','Date','func'));
-}
-
-
-/**
- * postcalendar_event_splitdate
- *
- * @param $args string      expected to be a string of integers YYYYMMDD
- * @return array              date split with keys
- */
-function postcalendar_event_splitdate($date)
-{
-    $splitdate          = array();
-    $splitdate['full']  = $date;
-    $date               = str_replace("-", "", $date); //remove '-' if present
-    $date               = substr($date, 0, 8);
-    $splitdate['short'] = $date;
-    $splitdate['day']   = substr($date, 6, 2);
-    $splitdate['month'] = substr($date, 4, 2);
-    $splitdate['year']  = substr($date, 0, 4);
-    return $splitdate;
 }

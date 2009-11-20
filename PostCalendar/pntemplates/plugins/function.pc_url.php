@@ -20,6 +20,7 @@ function smarty_function_pc_url($args, &$smarty)
     $javascript = array_key_exists('javascript', $args) && !empty($args['javascript']) ? $args['javascript'] : null; unset($args['javascript']);
     $assign     = array_key_exists('assign',     $args) && !empty($args['assign'])     ? $args['assign']     : null; unset($args['assign']);
     $navlink    = array_key_exists('navlink',    $args) && !empty($args['navlink'])    ? true                : false; unset($args['navlink']);
+    $func       = array_key_exists('func',       $args) && !empty($args['func'])       ? $args['func']       : 'new'; unset($args['func']);
 
     $viewtype    = strtolower(FormUtil::getPassedValue('viewtype', _SETTING_DEFAULT_VIEW));
     if (FormUtil::getPassedValue('func') == 'new') $viewtype='new';
@@ -40,7 +41,7 @@ function smarty_function_pc_url($args, &$smarty)
         case 'add':
         case 'submit':
         case 'submit-admin':
-            $link = pnModURL('PostCalendar', 'event', 'new', array('Date' => $date));
+            $link = pnModURL('PostCalendar', 'event', $func, array('Date' => $date));
             break;
         case 'today':
             $link = pnModURL('PostCalendar', 'user', 'view',

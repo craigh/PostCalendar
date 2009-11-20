@@ -12,7 +12,7 @@
         <!--[ include file="event/postcalendar_event_preview.htm" ]-->
     </div>
 <!--[/if]-->
-<form name="nd" action="<!--[ pc_url action="submit" ]-->" method="post" enctype="application/x-www-form-urlencoded">
+<form name="nd" action="<!--[ pc_url action="submit" func=$func]-->" method="post" enctype="application/x-www-form-urlencoded">
 	<input type="hidden" name="authid" value="<!--[pnsecgenauthkey module="PostCalendar"]-->">
 
 <div style='border-color:#CCCCCC;border-style:solid;border-width:0 1px 1px;color:inherit;margin-bottom:1.25em;padding:0 1% 5px;width:auto;'>
@@ -191,4 +191,3 @@
 
 </form>
 </div> <!-- /page container-->
-<!--[ pndebug ]-->

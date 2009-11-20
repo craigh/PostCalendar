@@ -2,83 +2,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-<title><!--[ $A_EVENT.title ]--></title>
+<title><!--[ $loaded_event.title ]--></title>
 <link rel="stylesheet" href="<!--[$stylepath]-->/style.css" type="text/css" />
 <link rel="stylesheet" href="modules/PostCalendar/pnstyle/popupstyle.css" type="text/css" />
 </head>
 <body>
-
-<h2><!--[ $A_EVENT.title ]--></h2>
-
-<div class="container">
-<div class="eventtime">
-            <!--[ if $A_EVENT.alldayevent != true ]-->
-                <!--[ if $24HOUR_TIME ]-->
-                    <!--[ assign var="timestamp" value=$A_EVENT.startTime|date_format:"%H:%M" ]-->
-                <!--[ else ]-->
-                    <!--[ assign var="timestamp" value=$A_EVENT.startTime|date_format:"%l:%M %p" ]-->
-                <!--[ /if ]-->
-                <!--[ $timestamp ]-->
-            <!--[ /if ]-->
-
-            <!--[ $A_EVENT.eventDate|pc_date_format]-->
-
-            <br />
-
-            <!--[ if $A_EVENT.alldayevent ]-->
-                <!--[gt text='All day']-->
-            <!--[ else ]-->
-                <!--[gt text='Duration']-->: <!--[ $A_EVENT.duration_hours ]-->:<!--[ $A_EVENT.duration_minutes ]-->
-            <!--[ /if ]-->
-</div>
-<div class="eventdetails">
-        <div>
-            <!--[ $A_EVENT.hometext ]-->
-        </div>
-        <div>
-            <!--[ if $LOCATION_INFO ]-->
-                <p><b><!--[gt text='Location']-->:</b><br />
-                <!--[ if $A_EVENT.location != '' ]-->
-                    <!--[ $A_EVENT.location ]--><br />
-                <!--[ /if ]-->
-                <!--[ if $A_EVENT.street1 != '' ]-->
-                    <!--[ $A_EVENT.street1 ]--><br />
-                <!--[ /if ]-->
-                <!--[ if $A_EVENT.street2 != '' ]-->
-                    <!--[ $A_EVENT.street2 ]--><br />
-                <!--[ /if ]-->
-                <!--[ if $A_EVENT.city != '' ]-->
-                    <!--[ $A_EVENT.city ]-->
-                <!--[ /if ]-->
-                <!--[ if $A_EVENT.state != '' ]-->
-                    <!--[ $A_EVENT.state ]-->
-                <!--[ /if ]-->
-                <!--[ if $A_EVENT.postal != '' ]-->
-                    <!--[ $A_EVENT.postal ]-->
-                <!--[ /if ]-->
-                </p>
-            <!--[ /if ]-->
-            <!--[ if $CONTACT_INFO ]-->
-                <p><b><!--[gt text='Contact']-->:</b><br />
-                <!--[ if $A_EVENT.contname ]-->
-                    <!--[ $A_EVENT.contname ]--><br />
-                <!--[ /if ]-->
-                <!--[ if $A_EVENT.conttel ]-->
-                    <!--[ $A_EVENT.conttel ]--><br />
-                <!--[ /if ]-->
-                <!--[ if $A_EVENT.contemail ]-->
-                    <a href="mailto:<!--[ $A_EVENT.contemail ]-->"><!--[ $A_EVENT.contemail ]--></a><br />
-                <!--[ /if ]-->
-                <!--[ if $A_EVENT.website ]-->
-                    <a href="<!--[ $A_EVENT.website ]-->" target="_blank"><!--[ $A_EVENT.website ]--></a><br />
-                <!--[ /if ]-->
-                </p>
-            <!--[ /if ]-->
-            <!--[ if $A_EVENT.fee != '' ]-->
-                <br /><!--[gt text='Fee']-->: <!--[ $A_EVENT.fee ]-->
-            <!--[ /if ]-->
-        </div>
-</div>
-</div>
+<!--[include file="event/postcalendar_event_preview.htm" ]-->
 </body>
 </html>

@@ -1,0 +1,63 @@
+<h2 class="postcalendar_header">
+    <!--[ $loaded_event.title|pnvarprephtmldisplay ]-->
+</h2>
+<div class="calcontainer">
+    <div class="eventtime">
+        <!--[ if $loaded_event.alldayevent != true ]-->
+            <!--[ if $24HOUR_TIME ]-->
+                <!--[ assign var="timestamp" value=$loaded_event.startTime|date_format:"%H:%M" ]-->
+            <!--[ else ]-->
+                <!--[ assign var="timestamp" value=$loaded_event.startTime|date_format:"%l:%M %p" ]-->
+            <!--[ /if ]-->
+            <!--[ $timestamp ]-->
+        <!--[ /if ]-->
+        <!--[ $loaded_event.eventDate|pc_date_format]-->
+        <br />
+        <!--[ if $loaded_event.alldayevent ]-->
+            <!--[gt text='All day']-->
+        <!--[ else ]-->
+            <!--[gt text='Duration']-->: <!--[ $loaded_event.duration_hours ]-->:<!--[ $loaded_event.duration_minutes ]-->
+        <!--[ /if ]-->
+    </div>
+    <div class="eventdetails">
+        <div>
+            <h3><!--[gt text='Description']-->:</h3>
+            <!--[ $loaded_event.hometext ]-->
+        </div>
+        <div>
+            <h3><!--[gt text='Location']-->:</h3>
+            <ul>
+                <li><!--[ $loaded_event.location_info.event_location ]--></li>
+                <li><!--[ $loaded_event.location_info.event_street1 ]--></li>
+                <li><!--[ $loaded_event.location_info.event_street2 ]--></li>
+                <li><!--[ $loaded_event.location_info.event_city ]-->&nbsp;<!--[ $loaded_event.location_info.event_state ]-->,&nbsp;<!--[ $loaded_event.location_info.event_postal ]--></li>
+            </ul>
+            <h3><!--[gt text='Contact information']-->:</h3>
+            <ul>
+                <li><!--[ $loaded_event.contname ]--></li>
+                <li><!--[ $loaded_event.conttel ]--></li>
+                <!--[ if $loaded_event.contemail ]-->
+                    <li><a href="mailto:<!--[ $loaded_event.contemail ]-->"><!--[ $loaded_event.contemail ]--></a></li>
+                <!--[ /if ]-->
+                <!--[ if $loaded_event.website ]-->
+                    <li><a href="<!--[ $loaded_event.website ]-->" target="_blank"><!--[ $loaded_event.website ]--></a></li>
+                <!--[ /if ]-->
+            </ul>
+            <!--[gt text='Fee']-->: <!--[ $loaded_event.fee ]-->
+        </div>
+    </div>
+    <div class="postcalendar_event_categoryinfo">
+        <!--[lang assign="lang"]-->
+        <h3><!--[gt text='Categorized in']-->:</h3>
+        <ul>
+            <!--[foreach from=$loaded_event.__CATEGORIES__ key="property" item="attribute" ]-->
+                <li><span style='padding: 0 1em; background-color:<!--[$attribute.__ATTRIBUTES__.color]-->'><!--[$attribute.display_name.$lang]--></span></li>
+            <!--[/foreach]-->
+        <ul>
+    </div>
+    <div class="postcalendar_event_recurrinfo">
+        <h3><!--[gt text='Event recurrance information']-->:</h3>
+        <p><!--[$loaded_event.recurr_sentence]--></p>
+    </div>
+</div>
+<!--[ pndebug ]-->

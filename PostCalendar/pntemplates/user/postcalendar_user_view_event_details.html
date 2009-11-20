@@ -8,87 +8,15 @@
     <!--[ include file="user/postcalendar_user_navigation_small.html" ]-->
 <!--[ /if ]-->
 
-<h2 class="postcalendar_header">
-    <!--[ $A_EVENT.title|pnvarprephtmldisplay ]-->
-</h2>
+<!--[include file="event/postcalendar_event_preview.htm" ]-->
 
-<div class="calcontainer">
-<div class="eventtime">
-            <!--[ if $A_EVENT.alldayevent != true ]-->
-                <!--[ if $24HOUR_TIME ]-->
-                    <!--[ assign var="timestamp" value=$A_EVENT.startTime|date_format:"%H:%M" ]-->
-                <!--[ else ]-->
-                    <!--[ assign var="timestamp" value=$A_EVENT.startTime|date_format:"%l:%M %p" ]-->
-                <!--[ /if ]-->
-                <!--[ $timestamp ]-->
-            <!--[ /if ]-->
-
-            <!--[ $A_EVENT.eventDate|pc_date_format]-->
-
-            <br />
-
-            <!--[ if $A_EVENT.alldayevent ]-->
-                <!--[gt text='All day']-->
-            <!--[ else ]-->
-                <!--[gt text='Duration']-->: <!--[ $A_EVENT.duration_hours ]-->:<!--[ $A_EVENT.duration_minutes ]-->
-            <!--[ /if ]-->
-</div>
-<div class="eventdetails">
-        <div>
-            <!--[ $A_EVENT.hometext ]-->
-        </div>
-        <div>
-            <!--[ if $LOCATION_INFO ]-->
-                <p><b><!--[gt text='Location']-->:</b><br />
-                <!--[ if $A_EVENT.location_info.event_location != '' ]-->
-                    <!--[ $A_EVENT.location_info.event_location ]--><br />
-                <!--[ /if ]-->
-                <!--[ if $A_EVENT.location_info.event_street1 != '' ]-->
-                    <!--[ $A_EVENT.location_info.event_street1 ]--><br />
-                <!--[ /if ]-->
-                <!--[ if $A_EVENT.location_info.event_street2 != '' ]-->
-                    <!--[ $A_EVENT.location_info.event_street2 ]--><br />
-                <!--[ /if ]-->
-                <!--[ if $A_EVENT.location_info.event_city != '' ]-->
-                    <!--[ $A_EVENT.location_info.event_city ]-->
-                <!--[ /if ]-->
-                <!--[ if $A_EVENT.location_info.event_state != '' ]-->
-                    <!--[ $A_EVENT.location_info.event_state ]-->
-                <!--[ /if ]-->
-                <!--[ if $A_EVENT.location_info.event_postal != '' ]-->
-                    <!--[ $A_EVENT.location_info.event_postal ]-->
-                <!--[ /if ]-->
-                </p>
-            <!--[ /if ]-->
-            <!--[ if $CONTACT_INFO ]-->
-                <p><b><!--[gt text='Contact information']-->:</b><br />
-                <!--[ if $A_EVENT.contname ]-->
-                    <!--[ $A_EVENT.contname ]--><br />
-                <!--[ /if ]-->
-                <!--[ if $A_EVENT.conttel ]-->
-                    <!--[ $A_EVENT.conttel ]--><br />
-                <!--[ /if ]-->
-                <!--[ if $A_EVENT.contemail ]-->
-                    <a href="mailto:<!--[ $A_EVENT.contemail ]-->"><!--[ $A_EVENT.contemail ]--></a><br />
-                <!--[ /if ]-->
-                <!--[ if $A_EVENT.website ]-->
-                    <a href="<!--[ $A_EVENT.website ]-->" target="_blank"><!--[ $A_EVENT.website ]--></a><br />
-                <!--[ /if ]-->
-                </p>
-            <!--[ /if ]-->
-            <!--[ if $A_EVENT.fee != '' ]-->
-                <br /><!--[gt text='Fee']-->: <!--[ $A_EVENT.fee ]-->
-            <!--[ /if ]-->
-        </div>
-</div>
-</div>
-<!--[ pnmodcallhooks hookobject=item hookaction=display hookid=$A_EVENT.eid returnurl="index.php?module=PostCalendar&func=view&viewtype=details&eid=$eid" ]-->
+<!--[ pnmodcallhooks hookobject=item hookaction=display hookid=$loaded_event.eid returnurl="index.php?module=PostCalendar&func=view&viewtype=details&eid=`$loaded_event.eid`" ]-->
 <!--[ if $PRINT_VIEW eq false ]-->
     <!--[ if $EVENT_CAN_EDIT ]-->
         <div>
-            <a href="<!--[pnmodurl modname="postCalendar" type="event" func="edit" eid=$A_EVENT.eid]-->"><!--[gt text='Edit']--></a> |
-        <a href="<!--[pnmodurl modname="postCalendar" type="event" func="new" form_action="copy" eid=$A_EVENT.eid]-->"><!--[gt text='Copy']--></a> |
-            <a href="<!--[pnmodurl modname="postCalendar" type="event" func="delete" eid=$A_EVENT.eid]-->"><!--[gt text='Delete']--></a>
+            <a href="<!--[pnmodurl modname="postCalendar" type="event" func="edit" eid=$loaded_event.eid]-->"><!--[gt text='Edit']--></a> |
+        <a href="<!--[pnmodurl modname="postCalendar" type="event" func="copy" eid=$loaded_event.eid]-->"><!--[gt text='Copy']--></a> |
+            <a href="<!--[pnmodurl modname="postCalendar" type="event" func="delete" eid=$loaded_event.eid]-->"><!--[gt text='Delete']--></a>
         </div>
     <!--[ /if ]-->
 <!--[ else ]-->
@@ -97,6 +25,6 @@
         <!--[if ((empty($smarty.get.viewtype)) or (!isset($smarty.get.viewtype)))]-->
             <!--[pnmodgetvar module="PostCalendar" name="pcDefaultView" assign="viewtype" ]-->
         <!--[/if]-->
-        <a href="<!--[pnmodurl modname="PostCalendar" func="view" viewtype=$viewtype Date=$smarty.get.Date eid=$A_EVENT.eid ]-->"><!--[gt text='Return']--></a>
+        <a href="<!--[pnmodurl modname="PostCalendar" func="view" viewtype=$viewtype Date=$smarty.get.Date eid=$loaded_event.eid ]-->"><!--[gt text='Return']--></a>
     </div>
 <!--[/if]-->

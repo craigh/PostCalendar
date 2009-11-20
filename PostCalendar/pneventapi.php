@@ -320,18 +320,6 @@ function postcalendar_eventapi_writeEvent($args)
 
     if (!isset($eventdata['alldayevent'])) $eventdata['alldayevent'] = 0;
 
-    if ((bool) _SETTING_TIME_24HOUR) {
-        $eventdata['startTime'] = $eventdata['startTime']['Hour'] .':'. $eventdata['startTime']['Minute'] .':00';
-    } else {
-        if ($eventdata['startTime']['Meridian'] == _AM_VAL) {
-            $eventdata['startTime']['Hour'] = $eventdata['startTime']['Hour'] == 12 ? '00' : $eventdata['startTime']['Hour'];
-        } else {
-            $eventdata['startTime']['Hour'] = $$eventdata['startTime']['Hour'] != 12 ? $eventdata['startTime']['Hour'] += 12 : $eventdata['startTime']['Hour'];
-        }
-    }
-
-    $eventdata['startTime'] = sprintf('%02d', $eventdata['startTime']['Hour']) .':'. sprintf('%02d', $eventdata['startTime']['Minute']) .':00';
-
     if (empty($eventdata['hometext'])) {
         $eventdata['hometext'] = __(/*!(abbr) not applicable or not available*/'n/a', $dom); // default description
     } else {
@@ -410,7 +398,7 @@ function postcalendar_eventapi_buildSubmitForm($args)
 
     // load the category registry util
     if (!Loader::loadClass('CategoryRegistryUtil')) {
-        pn_exit(__f('Error! Unable to load class [%s%]', 'CategoryRegistryUtil'));
+        pn_exit(__f('Error! Unable to load class [%s]', 'CategoryRegistryUtil'));
     }
     $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
     $tpl->assign('catregistry', $catregistry);
@@ -487,6 +475,9 @@ function postcalendar_eventapi_buildSubmitForm($args)
     // assign loaded data or default values
     $tpl->assign('loaded_event', DataUtil::formatForDisplay($eventdata));
 
+    // assign function in case we were editing
+    $tpl->assign('func', $args['func']);
+
     return $tpl->fetch("event/postcalendar_event_submit.html");
 }
 /**
@@ -522,21 +513,9 @@ function postcalendar_eventapi_fixEventDetails($event)
                         'event_state', 'event_postal');
         foreach ($fields as $field)
             $event[$field] = '';
-    } else {
-        // FIXME: this entire thing should be a sub-array RNG < v5.0.0
-        /*
-        if (!empty($location)) {
-           $location = unserialize($event['location']);
-           $event['event_location'] = $location['event_location'];
-           $event['event_street1'] = $location['event_street1'];
-           $event['event_street2'] = $location['event_street2'];
-           $event['event_city'] = $location['event_city'];
-           $event['event_state'] = $location['event_state'];
-           $event['event_postal'] = $location['event_postal'];
-           //$event['date'] = str_replace('-','',$Date);
-        }
-        */
     }
+    $event['location_info'] = unserialize($event['location']);
+    $event['repeat']        = unserialize($event['recurrspec']);
 
     // compensate for changeover to new categories system
     $lang = ZLanguage::getLanguageCode();
@@ -571,17 +550,16 @@ function postcalendar_eventapi_getEventDetails($eid)
  */
 function postcalendar_eventapi_eventDetail($args)
 {
+    $dom = ZLanguage::getModuleDomain('PostCalendar');
     if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_READ)) {
         return LogUtil::registerPermissionError();
     }
+    if (!isset($args['eid'])) return false;
 
     extract($args); //eid, Date, func
     unset($args);
 
-    if (!isset($eid)) return false;
-    $uid = pnUserGetVar('uid');
-
-    $function_out['FUNCTION'] = $func;
+    //$uid = pnUserGetVar('uid');
 
     // get the DB information
     $event = pnModAPIFunc('PostCalendar', 'event', 'getEventDetails', $eid);
@@ -602,42 +580,32 @@ function postcalendar_eventapi_eventDetail($args)
     // prep the vars for output
     $display_type = substr($event['hometext'], 0, 6);
     $event['hometext'] = substr($event['hometext'], 6);
-    if ($display_type==":text:") {
-        $event['hometext']  = nl2br(strip_tags($event['hometext']));
-    }
-    $event['desc']      = $event['hometext'];
-    $event['title']     = DataUtil::formatForDisplay($event['title']);
-    $event['conttel']   = DataUtil::formatForDisplay($event['conttel']);
-    $event['contname']  = DataUtil::formatForDisplay($event['contname']);
-    $event['contemail'] = DataUtil::formatForDisplay($event['contemail']);
-    $event['website']   = DataUtil::formatForDisplay(makeValidURL($event['website']));
-    $event['fee']       = DataUtil::formatForDisplay($event['fee']);
-    $event['location']  = DataUtil::formatForDisplay($event['event_location']);
-    $event['street1']   = DataUtil::formatForDisplay($event['event_street1']);
-    $event['street2']   = DataUtil::formatForDisplay($event['event_street2']);
-    $event['city']      = DataUtil::formatForDisplay($event['event_city']);
-    $event['state']     = DataUtil::formatForDisplay($event['event_state']);
-    $event['postal']    = DataUtil::formatForDisplay($event['event_postal']);
-    $function_out['A_EVENT'] = $event;
+    if ($display_type==":text:") $event['hometext']  = nl2br(strip_tags($event['hometext']));
 
-    if (!empty($event['location']) || !empty($event['street1']) || !empty($event['street2']) || !empty($event['city']) || !empty(
-        $event['state']) || !empty($event['postal'])) {
-        $function_out['LOCATION_INFO'] = true;
+    //build recurrance sentence
+    $repeat_freq_type = explode ("/", __('Day(s)/Week(s)/Month(s)/Year(s)', $dom));
+    $repeat_on_num    = explode ("/", __('First/Second/Third/Fourth/Last', $dom));
+    $repeat_on_day    = explode (" ", __('Sun Mon Tue Wed Thu Fri Sat', $dom));
+    if ($event['recurrtype'] == 1) {
+        $event['recurr_sentence']= __f("Event recurs every %s", $event['repeat']['event_repeat_freq'], $dom)."&nbsp;".$repeat_freq_type[$event['repeat']['event_repeat_freq_type']];
+    } elseif ($event['recurrtype'] == 2) {
+        $event['recurr_sentence']  = __("Event recurs on", $dom)."&nbsp;".$repeat_on_num[$event['repeat']['event_repeat_on_num']];
+        $event['recurr_sentence'] .= "&nbsp;".$repeat_on_day[$event['repeat']['event_repeat_on_day']];
+        $event['recurr_sentence'] .= "&nbsp;".__("of the month, every % months.", $event['repeat']['event_repeat_on_freq'], $dom);
     } else {
-        $function_out['LOCATION_INFO'] = false;
+        $event['recurr_sentence']  = __("This event does not recur.", $dom);
     }
-    if (!empty($event['contname']) || !empty($event['contemail']) || !empty($event['conttel']) || !empty($event['website'])) {
-        $function_out['CONTACT_INFO'] = true;
-    } else {
-        $function_out['CONTACT_INFO'] = false;
-    }
+
+    $event = DataUtil::formatForDisplay($event);
+    $function_out['loaded_event'] = $event;
 
     if (pnUserLoggedIn()) {
         $logged_in_uid = pnUserGetVar('uid');
     } else {
-        $logged_in_uid = 1;
+        $logged_in_uid = 1; //anonymous
     }
 
+    //$function_out['FUNCTION'] = $func;
     $function_out['EVENT_CAN_EDIT'] = false;
     if ((pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADD) && $logged_in_uid == $event['aid'])
         || pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
