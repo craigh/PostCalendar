@@ -184,7 +184,7 @@ function postcalendar_admin_adminevents()
     foreach ($events as $eid) {
         // get event info
         $eventitems = pnModAPIFunc('PostCalendar', 'event', 'eventDetail', array('eid' => $eid, 'nopop' => true));
-        $alleventinfo[$eid] = $eventitems['A_EVENT'];
+        $alleventinfo[$eid] = $eventitems['loaded_event'];
     }
 
     $count = count($events);

@@ -6,8 +6,9 @@
 <!--[if (!empty($function))]-->
 	<form action="<!--[pnmodurl modname="PostCalendar" type="admin" func=$function]-->" method="post">
 <!--[/if]-->
-<!--[foreach from=$alleventinfo key=eid item=A_EVENT]-->
-	<!--[include file="admin/postcalendar_admin_view_event_details.htm"]-->
+<!--[foreach from=$alleventinfo key=eid item=loaded_event]-->
+	<!--[include file="event/postcalendar_event_preview.htm" ]-->
+    <hr>
 	<input type="hidden" name="pc_eid[]" value="<!--[$eid]-->" />
 <!--[/foreach]-->
 <!--[if (!empty($function))]-->

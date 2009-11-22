@@ -44,16 +44,16 @@ function postcalendar_eventapi_queryEvents($args)
     unset($ruserid);
 
     // convert $pc_username to useable information
+    /* possible values:
+        _PC_FILTER_GLOBAL (-1)  = all public events
+        _PC_FILTER_ALL (-2)     = all public events + my events
+        _PC_FILTER_PRIVATE (-3) = just my private events
+    */
     if ($pc_username > 0) {
         // possible values: a user id - only an admin can use this
         $ruserid = $pc_username; // keep the id
         $pc_username = _PC_FILTER_PRIVATE;
     } else {
-        /* possible values:
-            _PC_FILTER_GLOBAL (0)   = all public events
-            _PC_FILTER_ALL (-1)     = all public events + my events
-            _PC_FILTER_PRIVATE (-2) = just my private events
-        */
         $ruserid = $userid; // use current user's ID
     }
 
@@ -75,23 +75,27 @@ function postcalendar_eventapi_queryEvents($args)
     define('SHARING_PUBLIC',        1); //remove in v6.0 - convert to SHARING_GLOBAL
     define('SHARING_BUSY',          2); //remove in v6.0 - convert to SHARING_PRIVATE
     define('SHARING_GLOBAL',        3);
-    define('SHARING_HIDEDESC',      4); //remove in v6.0 - convert to SHARING_GLOBAL, delete description
+    define('SHARING_HIDEDESC',      4); //remove in v6.0 - convert to SHARING_PRIVATE
     */
     switch ($pc_username) {
-        case _PC_FILTER_PRIVATE:
+        case _PC_FILTER_PRIVATE: // show just private events
             $where .= "AND pc_aid = $ruserid ";
-            $where .= "AND pc_sharing = '" . SHARING_PRIVATE . "' ";
+            $where .= "AND (pc_sharing = '" . SHARING_PRIVATE . "' ";
+            $where .= "OR pc_sharing = '" . SHARING_BUSY . "' "; //deprecated
+            $where .= "OR pc_sharing = '" . SHARING_HIDEDESC . "') "; //deprecated
             break;
-        case _PC_FILTER_ALL:
+        case _PC_FILTER_ALL:  // show all public/global AND private events
             $where .= "AND (pc_aid = $ruserid ";
-            $where .= "OR pc_sharing = '" . SHARING_GLOBAL . "' ";
-            $where .= "OR pc_sharing = '" . SHARING_HIDEDESC . "') ";
+            $where .= "AND (pc_sharing = '" . SHARING_PRIVATE . "' ";
+            $where .= "OR pc_sharing = '" . SHARING_BUSY . "' "; //deprecated
+            $where .= "OR pc_sharing = '" . SHARING_HIDEDESC . "')) "; //deprecated
+            $where .= "OR (pc_sharing = '" . SHARING_GLOBAL . "' ";
+            $where .= "OR pc_sharing = '" . SHARING_PUBLIC . "') "; //deprecated
             break;
-        case _PC_FILTER_GLOBAL:
+        case _PC_FILTER_GLOBAL: // show all public/global events
         default:
             $where .= "AND (pc_sharing = '" . SHARING_GLOBAL . "' ";
-            $where .= "OR pc_sharing = '" . SHARING_PUBLIC . "' ";
-            $where .= "OR pc_sharing = '" . SHARING_HIDEDESC . "') ";
+            $where .= "OR pc_sharing = '" . SHARING_PUBLIC . "') "; //deprecated
     }
 
 
@@ -100,7 +104,7 @@ function postcalendar_eventapi_queryEvents($args)
     foreach ($catsarray as $propname => $propid) {
         if ($propid <= 0) unset($catsarray[$propname]); // removes categories set to 'all' (0)
     }
-    if (!empty($catsarray)) $catsarray['__META__']['module']="PostCalendar";
+    if (!empty($catsarray)) $catsarray['__META__']['module']="PostCalendar"; // required for search operation
 
     if (!empty($s_keywords)) $where .= "AND $s_keywords";
 
@@ -292,9 +296,7 @@ function postcalendar_eventapi_getEvents($args)
 function postcalendar_eventapi_writeEvent($args)
 {
     $dom = ZLanguage::getModuleDomain('PostCalendar');
-    //echo "<div style='text-align:left;'><b>_writeEvent:</b><br /><pre style='background-color:#ffffcc;'>"; print_r($args); echo "</pre></div>";
-    //extract($args); //'eventdata','Date','event_for_userid'
-    //unset($args);
+
     $eventdata = $args['eventdata'];
     $Date      = $args['Date'];
 
@@ -308,14 +310,7 @@ function postcalendar_eventapi_writeEvent($args)
     }
 
     // format some vars for the insert statement
-    //$startDate = $event_startyear . '-' . $event_startmonth . '-' . $event_startday;
-    $eventdata['eventDate'] = $eventdata['eventDate']['full'];
-    if ($eventdata['endtype'] == 1) {
-        //$endDate = $event_endyear . '-' . $event_endmonth . '-' . $event_endday;
-        $eventdata['endDate'] = $eventdata['endDate']['full'];
-    } else {
-        $eventdata['endDate'] = '0000-00-00';
-    }
+    $eventdata['endDate'] = $eventdata['endtype'] == 1 ? $eventdata['endDate'] : '0000-00-00';
     unset($eventdata['endtype']);
 
     if (!isset($eventdata['alldayevent'])) $eventdata['alldayevent'] = 0;
@@ -326,27 +321,21 @@ function postcalendar_eventapi_writeEvent($args)
         $eventdata['hometext'] = ':'. $eventdata['html_or_text'] .':'. $eventdata['hometext']; // inserts :text:/:html: before actual content
     }
 
-    $eventdata['duration'] = $eventdata['duration']['full'];
     $eventdata['location'] = serialize($eventdata['location']);
     if (!isset($eventdata['repeat']['repeatval'])) $eventdata['repeat']['repeatval'] = 0;
     $eventdata['recurrspec'] = serialize($eventdata['repeat']); unset($eventdata['repeat']);
     unset($eventdata['html_or_text']);
     unset($eventdata['data_loaded']);
-    //unset($eventdata['event_for_userid']);
 
     if (!isset($eventdata['is_update'])) $eventdata['is_update'] = false;
 
-    echo "<div style='text-align:left;'><b>_writeEvent (eventdata before create):</b><br /><pre style='background-color:#ff9911;'>"; print_r($eventdata); echo "</pre></div>"; //die();
-
     if ($eventdata['is_update']) {
-        //$eventdata['eid'] = $eid;
         unset($eventdata['is_update']);
         $result = pnModAPIFunc('postcalendar', 'event', 'update', array($eventdata[$eid] => $eventdata));
     } else { //new event
         unset($eventdata['eid']); //be sure that eid is not set on insert op to autoincrement value
         unset($eventdata['is_update']);
         $eventdata['time'] = date("Y-m-d H:i:s"); //current date
-        //$eventdata['informant'] = $uname; // @v6.0 change this to uid
         $result = pnModAPIFunc('postcalendar', 'event', 'create', $eventdata);
     }
     if ($result === false) return false;
@@ -488,32 +477,16 @@ function postcalendar_eventapi_buildSubmitForm($args)
  */
 function postcalendar_eventapi_fixEventDetails($event)
 {
-    $dom = ZLanguage::getModuleDomain('PostCalendar');
-    // this may no longer be needed...
-    list($event['duration_hours'], $event['duration_minutes']) = explode(":", gmdate("H:i", $event['duration']));
+    $event['duration_formatted'] = gmdate("H:i", $event['duration']); // converts seconds to HH:MM
 
-    $suid = pnUserGetVar('uid');
-    // $euid = DBUtil::selectFieldByID ('users', 'uid', $event['uname'], 'uname');
-    $euid = $event['aid'];
-    $IS_ADMIN = pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN);
-
-    // with v6.0 this whole section below should be reworked - private events are handled differently
-    // is this a public event to be shown as busy?
-    if ($event['sharing'] == SHARING_PRIVATE && $euid != $suid && !$IS_ADMIN) {
-        // they are not supposed to see this
+    //remap sharing values to global/private (this sharing map converts pre-6.0 values to 6.0+ values)
+    $sharingmap = array(SHARING_PRIVATE=>SHARING_PRIVATE, SHARING_PUBLIC=>SHARING_GLOBAL, SHARING_BUSY=>SHARING_PRIVATE, SHARING_GLOBAL=>SHARING_GLOBAL, SHARING_HIDEDESC=>SHARING_PRIVATE);
+    $event['sharing'] = $sharingmap[$event['sharing']]; //remap sharing values to global/private
+    if ($event['sharing'] == SHARING_PRIVATE && $event['aid'] != pnUserGetVar('uid') && !pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
+        // if event is PRIVATE and user is not assigned event ID (aid) and user is not Admin event should not be seen
         return false;
-    } elseif ($event['sharing'] == SHARING_BUSY && $euid != $suid && !$IS_ADMIN) {
-        // make it not display any information
-        $event['title'] = __('Busy', $dom);
-        $event['hometext'] = __('I am busy during this time.', $dom);
-        $event['desc'] = __('I am busy during this time.', $dom);
-
-        $fields = array('event_location', 'conttel', 'contname', 'contemail', 'website', 'fee', 'event_street1',
-                        'event_street2', 'event_city',
-                        'event_state', 'event_postal');
-        foreach ($fields as $field)
-            $event[$field] = '';
     }
+    // add unserialized info to array
     $event['location_info'] = unserialize($event['location']);
     $event['repeat']        = unserialize($event['recurrspec']);
 
@@ -521,22 +494,8 @@ function postcalendar_eventapi_fixEventDetails($event)
     $lang = ZLanguage::getLanguageCode();
     $event['catname']  = $event['__CATEGORIES__']['Main']['display_name'][$lang];
     $event['catcolor'] = $event['__CATEGORIES__']['Main']['__ATTRIBUTES__']['color'];
+    $event['cattextcolor'] = postcalendar_eventapi_color_inverse($event['catcolor']);
 
-    return $event;
-}
-
-/**
- * @function postcalendar_eventapi_getEventDetails
- * @description 
- * @param int eid   event id
- * @return array event  array of event data
- */
-function postcalendar_eventapi_getEventDetails($eid)
-{
-    if (!isset($eid)) return false;
-
-    $event = DBUtil::selectExpandedObjectByID('postcalendar_events', null, $eid, 'eid');
-    $event = pnModAPIFunc('PostCalendar', 'event', 'fixEventDetails', $event);
     return $event;
 }
 
@@ -550,19 +509,17 @@ function postcalendar_eventapi_getEventDetails($eid)
  */
 function postcalendar_eventapi_eventDetail($args)
 {
-    $dom = ZLanguage::getModuleDomain('PostCalendar');
     if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_READ)) {
         return LogUtil::registerPermissionError();
     }
     if (!isset($args['eid'])) return false;
 
     extract($args); //eid, Date, func
-    unset($args);
-
-    //$uid = pnUserGetVar('uid');
+    //unset($args);
 
     // get the DB information
-    $event = pnModAPIFunc('PostCalendar', 'event', 'getEventDetails', $eid);
+    $event = DBUtil::selectObjectByID('postcalendar_events', $args['eid'], 'eid');
+    $event = pnModAPIFunc('PostCalendar', 'event', 'formateventarrayfordisplay', $event);
     // if the above is false, it's a private event for another user
     // we should not diplay this - so we just exit gracefully
     if ($event === false) return false;
@@ -571,48 +528,107 @@ function postcalendar_eventapi_eventDetail($args)
     // to ensure that the correct/current date is being displayed (rather than the
     // date on which the recurring booking was executed).
     if ($event['recurrtype']) {
-        $y = substr($Date, 0, 4);
-        $m = substr($Date, 4, 2);
-        $d = substr($Date, 6, 2);
+        $y = substr($args['Date'], 0, 4);
+        $m = substr($args['Date'], 4, 2);
+        $d = substr($args['Date'], 6, 2);
         $event['eventDate'] = "$y-$m-$d";
     }
 
-    // prep the vars for output
+    $function_out['loaded_event'] = $event;
+
+    if ((pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADD) && (pnUserGetVar('uid') == $event['aid']))
+        || pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
+        $function_out['EVENT_CAN_EDIT'] = true;
+    } else {
+        $function_out['EVENT_CAN_EDIT'] = false;
+    }
+
+    return $function_out;
+}
+
+/**
+ * @function    postcalendar_eventapi_formateventarrayfordisplay()
+ * @description This function reformats the information in an event array for proper display in detail
+ * @args        $event (array) event array as pulled from the DB
+ * @author      Craig Heydenburg
+ *
+ * @return      $event (array) modified array for display
+ */
+function postcalendar_eventapi_formateventarrayfordisplay($event)
+{
+    $dom = ZLanguage::getModuleDomain('PostCalendar');
+    if ((empty($event)) or (!is_array($event))) return LogUtil::registerError(__('Required argument not present.', $dom));
+
+    //remap sharing values to global/private (this sharing map converts pre-6.0 values to 6.0+ values)
+    $sharingmap = array(SHARING_PRIVATE=>SHARING_PRIVATE, SHARING_PUBLIC=>SHARING_GLOBAL, SHARING_BUSY=>SHARING_PRIVATE, SHARING_GLOBAL=>SHARING_GLOBAL, SHARING_HIDEDESC=>SHARING_PRIVATE);
+    $event['sharing'] = $sharingmap[$event['sharing']];
+
+    // prep hometext for display
     $display_type = substr($event['hometext'], 0, 6);
     $event['hometext'] = substr($event['hometext'], 6);
     if ($display_type==":text:") $event['hometext']  = nl2br(strip_tags($event['hometext']));
 
-    //build recurrance sentence
+    // add unserialized info to event array
+    $event['location_info'] = unserialize($event['location']);
+    $event['repeat']        = unserialize($event['recurrspec']);
+
+    // build recurrance sentence for display
     $repeat_freq_type = explode ("/", __('Day(s)/Week(s)/Month(s)/Year(s)', $dom));
     $repeat_on_num    = explode ("/", __('First/Second/Third/Fourth/Last', $dom));
     $repeat_on_day    = explode (" ", __('Sun Mon Tue Wed Thu Fri Sat', $dom));
-    if ($event['recurrtype'] == 1) {
-        $event['recurr_sentence']= __f("Event recurs every %s", $event['repeat']['event_repeat_freq'], $dom)."&nbsp;".$repeat_freq_type[$event['repeat']['event_repeat_freq_type']];
-    } elseif ($event['recurrtype'] == 2) {
-        $event['recurr_sentence']  = __("Event recurs on", $dom)."&nbsp;".$repeat_on_num[$event['repeat']['event_repeat_on_num']];
-        $event['recurr_sentence'] .= "&nbsp;".$repeat_on_day[$event['repeat']['event_repeat_on_day']];
-        $event['recurr_sentence'] .= "&nbsp;".__("of the month, every % months.", $event['repeat']['event_repeat_on_freq'], $dom);
+    if ($event['recurrtype'] == REPEAT) {
+        $event['recurr_sentence']  = __f("Event recurs every %s", $event['repeat']['event_repeat_freq'], $dom);
+        $event['recurr_sentence'] .= " ".$repeat_freq_type[$event['repeat']['event_repeat_freq_type']];
+        $event['recurr_sentence'] .= " ".__("until", $dom)." ".$event['endDate'];
+    } elseif ($event['recurrtype'] == REPEAT_ON) {
+        $event['recurr_sentence']  = __("Event recurs on", $dom)." ".$repeat_on_num[$event['repeat']['event_repeat_on_num']];
+        $event['recurr_sentence'] .= " ".$repeat_on_day[$event['repeat']['event_repeat_on_day']];
+        $event['recurr_sentence'] .= " ".__f("of the month, every %s months", $event['repeat']['event_repeat_on_freq'], $dom);
+        $event['recurr_sentence'] .= " ".__("until", $dom)." ".$event['endDate'];
     } else {
         $event['recurr_sentence']  = __("This event does not recur.", $dom);
     }
 
-    $event = DataUtil::formatForDisplay($event);
-    $function_out['loaded_event'] = $event;
+    // build sharing sentence for display
+    $event['sharing_sentence'] = ($event['sharing'] == SHARING_PRIVATE) ? __('This is a private event.', $dom) : __('This is a public event. ', $dom);
 
-    if (pnUserLoggedIn()) {
-        $logged_in_uid = pnUserGetVar('uid');
-    } else {
-        $logged_in_uid = 1; //anonymous
-    }
+    // converts seconds to HH:MM for display
+    $event['duration_formatted'] = gmdate("H:i", $event['duration']);
 
-    //$function_out['FUNCTION'] = $func;
-    $function_out['EVENT_CAN_EDIT'] = false;
-    if ((pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADD) && $logged_in_uid == $event['aid'])
-        || pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
-        $function_out['EVENT_CAN_EDIT'] = true;
-    }
+    // compensate for changeover to new categories system
+    $lang = ZLanguage::getLanguageCode();
+    $event['catname']  = $event['__CATEGORIES__']['Main']['display_name'][$lang];
+    $event['catcolor'] = $event['__CATEGORIES__']['Main']['__ATTRIBUTES__']['color'];
+    $event['cattextcolor'] = postcalendar_eventapi_color_inverse($event['catcolor']);
 
-    return $function_out;
+    // format all the values for display
+    return DataUtil::formatForDisplay($event);
+}
+
+/**
+ * @function    postcalendar_eventapi_formateventarrayforDB()
+ * @description This function reformats the information in an event array for insert/update in DB
+ * @args        $event (array) event array as pulled from the new/edit event form
+ * @author      Craig Heydenburg
+ *
+ * @return      $event (array) modified array for DB insert/update
+ */
+function postcalendar_eventapi_formateventarrayforDB($event)
+{
+    return $event;
+}
+
+/**
+ * @function    postcalendar_eventapi_formateventarrayforedit()
+ * @description This function reformats the information in an event array for proper display in edit/copy event form
+ * @args        $event (array) event array as pulled from the DB
+ * @author      Craig Heydenburg
+ *
+ * @return      $event (array) modified array for edit/copy event form
+ */
+function postcalendar_eventapi_formateventarrayforedit($event)
+{
+    return $event;
 }
 
 /**
@@ -741,3 +757,27 @@ function postcalendar_eventapi_isformatted($args)
     }
     return false;
 }
+
+
+/**
+ * @description generate the inverse color
+ * @author      Jonas John
+ * @link        http://www.jonasjohn.de/snippets/php/color-inverse.htm
+ * @license     public domain
+ * @created     06/13/2006
+ * @params      (string) hex color (e.g. #ffffff)
+ * @return      (string) hex color (e.g. #000000)
+ **/
+function postcalendar_eventapi_color_inverse($color)
+{
+    $color = str_replace('#', '', $color);
+    if (strlen($color) != 6){ return '000000'; }
+    $rgb = '';
+    for ($x=0;$x<3;$x++){
+        $c = 255 - hexdec(substr($color,(2*$x),2));
+        $c = ($c < 0) ? 0 : dechex($c);
+        $rgb .= (strlen($c) < 2) ? '0'.$c : $c;
+    }
+    return '#'.$rgb;
+}
+

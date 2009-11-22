@@ -79,13 +79,34 @@ function postcalendar_user_display($args)
                 // use cached version
                 return $tpl->fetch('user/postcalendar_user_view_event_details.html', $cacheid);
             } else {
-                $out = pnModAPIFunc('PostCalendar', 'event', 'eventDetail', compact('eid','Date','func'));
-                if ($out === false) {
-                    pnRedirect(pnModURL('PostCalendar', 'user'));
+                // get the event from the DB
+                $event = DBUtil::selectObjectByID('postcalendar_events', $args['eid'], 'eid');
+                $event = pnModAPIFunc('PostCalendar', 'event', 'formateventarrayfordisplay', $event);
+
+                // is event allowed for this user?
+                if ($event['sharing'] == SHARING_PRIVATE && $event['aid'] != pnUserGetVar('uid') && !pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
+                    // if event is PRIVATE and user is not assigned event ID (aid) and user is not Admin event should not be seen
+                    return LogUtil::registerError(__('You do not have permission to view this event.', $dom));
                 }
-                foreach ($out as $var => $val) {
-                    $tpl->assign($var, $val);
+            
+                // since recurrevents are dynamically calculcated, we need to change the date
+                // to ensure that the correct/current date is being displayed (rather than the
+                // date on which the recurring booking was executed).
+                if ($event['recurrtype']) {
+                    $y = substr($args['Date'], 0, 4);
+                    $m = substr($args['Date'], 4, 2);
+                    $d = substr($args['Date'], 6, 2);
+                    $event['eventDate'] = "$y-$m-$d";
                 }
+                $tpl->assign('loaded_event', $event);
+            
+                if ((pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADD) && (pnUserGetVar('uid') == $event['aid']))
+                    || pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
+                    $tpl->assign('EVENT_CAN_EDIT', true);
+                } else {
+                    $tpl->assign('EVENT_CAN_EDIT', false);
+                }
+
                 if ($popup == true) {
                     $tpl->display('user/postcalendar_user_view_popup.html', $cacheid);
                     return true; // displays template without theme wrap

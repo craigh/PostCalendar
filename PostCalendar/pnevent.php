@@ -33,8 +33,8 @@ class postcalendar_event_editHandler extends pnFormHandler
         $dom = ZLanguage::getModuleDomain('PostCalendar');
         $url = null;
 
-        // Fetch event data
-        $event = pnModAPIFunc('PostCalendar', 'event', 'getEventDetails', $this->eid);
+        // Fetch event data from DB to confirm event exists
+        $event = DBUtil::selectObjectByID('postcalendar_events', $this->eid, 'eid');
         if (count($event) == 0) return $render->pnFormSetErrorMsg(__f('Error! There are no events with ID %s.',$this->eid, $dom));
 
         if ($args['commandName'] == 'update') {
@@ -86,7 +86,7 @@ function postcalendar_event_delete()
     $eid = FormUtil::getPassedValue('eid'); //  seems like this should be handled by the eventHandler
     $render = FormUtil::newpnForm('PostCalendar');
     $eventdetails = pnModAPIFunc('PostCalendar', 'event', 'eventDetail', array('eid'=>$eid, 'Date' => ''));
-    $render->assign('eventdetails', $eventdetails['A_EVENT']);
+    $render->assign('eventdetails', $eventdetails['loaded_event']);
     return $render->pnFormExecute('event/postcalendar_event_deleteeventconfirm.htm', new postcalendar_event_editHandler());
 }
 
@@ -161,7 +161,6 @@ function postcalendar_event_new($args)
     } else {
         $submitted_event['informant'] = pnConfigGetVar('anonymous');
     }
-    /******* END REFORMAT SUBMITTED EVENT FOR ... *********/
 
     if ($func == 'new') { // triggered on form_action=preview && on brand new load
         // here we need generate default data for the form
@@ -175,8 +174,10 @@ function postcalendar_event_new($args)
             $eventdata = $submitted_event; // reloaded event when editing
             $eventdata['location_info'] = $eventdata['location'];
         } else {
-            $eventdata = pnModAPIFunc('PostCalendar', 'event', 'getEventDetails', $args['eid']);
             // here were need to format the DB data to be able to load it into the form
+            //$eventdata = pnModAPIFunc('PostCalendar', 'event', 'getEventDetails', $args['eid']);
+            $eventdata = DBUtil::selectObjectByID('postcalendar_events', $args['eid'], 'eid');
+            $eventdata = pnModAPIFunc('PostCalendar', 'event', 'fixEventDetails', $eventdata);
             $eventdata['location_info'] = unserialize($eventdata['location']);
             $eventdata['repeat'] = unserialize($eventdata['recurrspec']) ;
             $eventdata['endtype'] = $eventdata['endDate'] == '0000-00-00' ? '0' : '1';
@@ -273,7 +274,7 @@ function postcalendar_event_new($args)
             pnModAPIFunc('PostCalendar','admin','notify',compact('eid','is_update')); //notify admin
 
             // save the start date, before the vars are cleared (needed for the redirect on success)
-            $url_date = $submitted_event['startDate']['short'];
+            $url_date = $submitted_event['startDate']['short']; //need to redo this to reformat date - use $sdate?
         }
 
         pnRedirect(pnModURL('PostCalendar', 'user', 'view', array('viewtype' => _SETTING_DEFAULT_VIEW, 'Date' => $url_date)));

@@ -184,18 +184,12 @@ function postcalendar_calendarblock_display($blockinfo)
         $tpl->assign_by_ref('CAL_FORMAT', $calendarView);
     }
 
-    // V4B RNG Hack ...
+    // format duration for each event
     foreach ($eventsByDate as $k => $v) {
         foreach (array_keys($v) as $kk) {
-            // there has to be a more intelligent way to do this
-            @list($eventsByDate[$k][$kk]['duration_hours'], $dmin) = @explode(
-                '.', ($eventsByDate[$k][$kk]['duration'] / 60 / 60));
-            $eventsByDate[$k][$kk]['duration_minutes'] = substr(
-                sprintf('%.2f', '.' . 60 * ($dmin / 100)), 2, 2);
-            // ---
+            $eventsByDate[$k][$kk]['duration_formatted'] = gmdate("H:i", $eventsByDate[$k][$kk]['duration']);
         }
     }
-    // V4B RNG Hack end ...
 
     $tpl->assign_by_ref('A_MONTH_NAMES', $pc_month_names);
     $tpl->assign_by_ref('A_LONG_DAY_NAMES', $pc_long_day_names);
