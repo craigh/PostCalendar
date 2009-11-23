@@ -181,7 +181,7 @@ a.postcalendar_nav_text_selected:hover {
 
 /********** details **************/
 div.eventtime {
-	font-size: 10pt;
+	font-size: 150%;
 	font-weight: bold;
 }
 div.eventdetails {
