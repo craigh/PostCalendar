@@ -85,8 +85,12 @@ function postcalendar_event_delete()
     }
     $eid = FormUtil::getPassedValue('eid'); //  seems like this should be handled by the eventHandler
     $render = FormUtil::newpnForm('PostCalendar');
-    $eventdetails = pnModAPIFunc('PostCalendar', 'event', 'eventDetail', array('eid'=>$eid, 'Date' => ''));
-    $render->assign('eventdetails', $eventdetails['loaded_event']);
+
+    // get the event from the DB
+    $event = DBUtil::selectObjectByID('postcalendar_events', $eid, 'eid');
+    $event = pnModAPIFunc('PostCalendar', 'event', 'formateventarrayfordisplay', $event);
+
+    $render->assign('loaded_event', $event);
     return $render->pnFormExecute('event/postcalendar_event_deleteeventconfirm.htm', new postcalendar_event_editHandler());
 }
 

@@ -110,10 +110,6 @@ function postcalendar_eventapi_queryEvents($args)
 
     $events = DBUtil::selectObjectArray('postcalendar_events', $where, null, null, null, null, null, $catsarray);
 
-    foreach ($events as $key => $evt) {
-        $events[$key] = pnModAPIFunc('PostCalendar', 'event', 'fixEventDetails', $events[$key]);
-    }
-
     return $events;
 }
 
@@ -183,8 +179,10 @@ function postcalendar_eventapi_getEvents($args)
     }
 
     foreach ($events as $event) {
+        $event = pnModAPIFunc('PostCalendar', 'event', 'fixEventDetails', $event);
+
         // get the user id of event's author
-        $cuserid = pnUserGetIDFromName( strtolower($event['informant'])); // change this to aid? for v6.0?
+        $cuserid = pnUserGetIDFromName(strtolower($event['informant'])); // change this to aid? for v6.0?
 
         // check the current event's permissions
         // the user does not have permission to view this event
@@ -196,10 +194,9 @@ function postcalendar_eventapi_getEvents($args)
         } elseif (!pnSecAuthAction(0, 'PostCalendar::User', "$event[uname]::$cuserid", ACCESS_OVERVIEW)) {
             continue;
         }
-        // parse the event start date
+        // split the event start date
         list($esY, $esM, $esD) = explode('-', $event['eventDate']);
-        // grab the recurring specs for the event
-        $event_recurrspec = unserialize($event['recurrspec']); // <-- this is already done in fixEvent routine
+
         // determine the stop date for this event
         if ($event['endDate'] == '0000-00-00') {
             $stop = $end_date;
@@ -222,8 +219,8 @@ function postcalendar_eventapi_getEvents($args)
             // Day,Week,Month,Year,MWF,TR,M-F,SS
             //==============================================================
             case REPEAT:
-                $rfreq = $event_recurrspec['event_repeat_freq'];
-                $rtype = $event_recurrspec['event_repeat_freq_type'];
+                $rfreq = $event['repeat']['event_repeat_freq'];
+                $rtype = $event['repeat']['event_repeat_freq_type'];
                 // we should bring the event up to date to make this a tad bit faster
                 // any ideas on how to do that, exactly??? dateToDays probably. (RNG <5.0)
                 $nm = $esM;
@@ -249,9 +246,9 @@ function postcalendar_eventapi_getEvents($args)
             //    Every N Months
             //==============================================================
             case REPEAT_ON:
-                $rfreq = $event_recurrspec['event_repeat_on_freq'];
-                $rnum = $event_recurrspec['event_repeat_on_num'];
-                $rday = $event_recurrspec['event_repeat_on_day'];
+                $rfreq = $event['repeat']['event_repeat_on_freq'];
+                $rnum = $event['repeat']['event_repeat_on_num'];
+                $rday = $event['repeat']['event_repeat_on_day'];
                 //==============================================================
                 // Populate - Enter data into the event array
                 //==============================================================
@@ -477,7 +474,7 @@ function postcalendar_eventapi_buildSubmitForm($args)
  */
 function postcalendar_eventapi_fixEventDetails($event)
 {
-    $event['duration_formatted'] = gmdate("G:i", $event['duration']); // converts seconds to HH:MM
+    $event['duration_formatted'] = gmdate("G:i", $event['duration']); // converts seconds to HH:MM (without leading zero)
 
     //remap sharing values to global/private (this sharing map converts pre-6.0 values to 6.0+ values)
     $sharingmap = array(SHARING_PRIVATE=>SHARING_PRIVATE, SHARING_PUBLIC=>SHARING_GLOBAL, SHARING_BUSY=>SHARING_PRIVATE, SHARING_GLOBAL=>SHARING_GLOBAL, SHARING_HIDEDESC=>SHARING_PRIVATE);
@@ -497,53 +494,6 @@ function postcalendar_eventapi_fixEventDetails($event)
     $event['cattextcolor'] = postcalendar_eventapi_color_inverse($event['catcolor']);
 
     return $event;
-}
-
-/**
- * postcalendar_userapi_eventDetail
- * Creates the detailed event display and outputs html.
- * Accepts an array of key/value pairs
- * @param int $eid the id of the event to display
- * @return string html output
- * @access public
- */
-function postcalendar_eventapi_eventDetail($args)
-{
-    if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_READ)) {
-        return LogUtil::registerPermissionError();
-    }
-    if (!isset($args['eid'])) return false;
-
-    extract($args); //eid, Date, func
-    //unset($args);
-
-    // get the DB information
-    $event = DBUtil::selectObjectByID('postcalendar_events', $args['eid'], 'eid');
-    $event = pnModAPIFunc('PostCalendar', 'event', 'formateventarrayfordisplay', $event);
-    // if the above is false, it's a private event for another user
-    // we should not diplay this - so we just exit gracefully
-    if ($event === false) return false;
-
-    // since recurrevents are dynamically calculcated, we need to change the date
-    // to ensure that the correct/current date is being displayed (rather than the
-    // date on which the recurring booking was executed).
-    if ($event['recurrtype']) {
-        $y = substr($args['Date'], 0, 4);
-        $m = substr($args['Date'], 4, 2);
-        $d = substr($args['Date'], 6, 2);
-        $event['eventDate'] = "$y-$m-$d";
-    }
-
-    $function_out['loaded_event'] = $event;
-
-    if ((pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADD) && (pnUserGetVar('uid') == $event['aid']))
-        || pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
-        $function_out['EVENT_CAN_EDIT'] = true;
-    } else {
-        $function_out['EVENT_CAN_EDIT'] = false;
-    }
-
-    return $function_out;
 }
 
 /**

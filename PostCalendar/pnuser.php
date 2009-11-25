@@ -100,17 +100,16 @@ function postcalendar_user_display($args)
                 $tpl->assign('loaded_event', $event);
                 $tpl->assign('24HOUR_TIME', _SETTING_TIME_24HOUR);
          
-                if ((pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADD) && (pnUserGetVar('uid') == $event['aid']))
-                    || pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
-                    $tpl->assign('EVENT_CAN_EDIT', true);
-                } else {
-                    $tpl->assign('EVENT_CAN_EDIT', false);
-                }
-
                 if ($popup == true) {
                     $tpl->display('user/postcalendar_user_view_popup.html', $cacheid);
                     return true; // displays template without theme wrap
                 } else {
+                    if ((pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADD) && (pnUserGetVar('uid') == $event['aid']))
+                        || pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
+                        $tpl->assign('EVENT_CAN_EDIT', true);
+                    } else {
+                        $tpl->assign('EVENT_CAN_EDIT', false);
+                    }
                     return $tpl->fetch('user/postcalendar_user_view_event_details.html', $cacheid);
                 }
             }

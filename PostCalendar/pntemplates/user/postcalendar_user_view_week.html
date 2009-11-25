@@ -34,7 +34,7 @@
                 <!--[ if $24HOUR_TIME ]-->
                     <!--[ assign var="timestamp" value=$event.startTime|date_format:'%H:%M']-->
                 <!--[ else ]-->
-                    <!--[ assign var="timestamp" value=$event.startTime|date_format:'%I:%M %p']-->
+                    <!--[ assign var="timestamp" value=$event.startTime|date_format:'%l:%M %p']-->
                 <!--[ /if ]-->
                 <li class="eventslistitems">
                     <span style="padding: 1px 4px; color: <!--[$event.cattextcolor]-->; background: <!--[ $event.catcolor ]-->;">

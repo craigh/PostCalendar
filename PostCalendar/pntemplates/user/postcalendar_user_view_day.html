@@ -37,7 +37,7 @@
                         <!--[ if $24HOUR_TIME ]-->
                             <!--[ assign var="timestamp" value=$event.startTime|date_format:'%H:%M' ]-->
                         <!--[ else ]-->
-                            <!--[ assign var="timestamp" value=$event.startTime|date_format:'%I:%M %p']-->
+                            <!--[ assign var="timestamp" value=$event.startTime|date_format:'%l:%M %p']-->
                         <!--[ /if ]-->
                     <!--[ else ]-->
                         <!--[ assign var="timestamp" value="" ]-->
