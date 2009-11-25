@@ -16,7 +16,7 @@
             </td>
         </tr>
 		<tr class='pn-even'>
-			<td width="60%"><!--[gt text='Allow submitted events to be activated without review']--></td>
+			<td width="50%"><!--[gt text='Allow submitted events to be activated without review']--></td>
 			<!--[pnmodgetvar module="PostCalendar" name="pcAllowDirectSubmit" assign="pcADS"]-->
 			<td><input type="checkbox" value="1" id="pcAllowDirectSubmit" name="pcAllowDirectSubmit"<!--[if $pcADS eq true]--> checked="checked"<!--[/if]-->/></td>
 		</tr>
@@ -36,7 +36,7 @@
             <tr><th colspan='2'><!--[gt text='Display settings']--></th></tr>
         </thead>
 		<tr class='pn-even'>
-			<td width="60%"><!--[gt text='Number of events to list on administration pages']--></td>
+			<td width="50%"><!--[gt text='Number of events to list on administration pages']--></td>
 			<td><input type="text" size="5" value="<!--[pnmodgetvar module="PostCalendar" name="pcListHowManyEvents"]-->" id="pcListHowManyEvents" name="pcListHowManyEvents"/></td>
 		</tr>
 		<tr class='pn-odd'>
@@ -60,7 +60,12 @@
 		</tr>
 		<tr class='pn-odd'>
 			<td><!--[gt text='Date Display Format']-->&nbsp;(<i><!--[gt text='uses %s format' tag1='<a href="http://php.net/strftime">php strftime</a>']--></i>)</td>
-			<td><input type="text" size="20" value="<!--[pnmodgetvar module="PostCalendar" name="pcEventDateFormat"]-->" id="pcEventDateFormat" name="pcEventDateFormat"/></td>
+			<td>
+                <input type="text" size="20" value="<!--[pnmodgetvar module="PostCalendar" name="pcEventDateFormat"]-->" id="pcEventDateFormat" name="pcEventDateFormat"/>
+                <input type="button" name="format_usa" value="<!--[gt text='Month Day, Year']-->" onClick="document.pcConfig.pcEventDateFormat.value='%B %e, %Y'">
+                <input type="button" name="format_eu" value="<!--[gt text='Day Month Year']-->" onClick="document.pcConfig.pcEventDateFormat.value='%e %B %Y'">
+                <input type="button" name="format_iso8601" value="<!--[gt text='YYYY-MM-DD']-->" onClick="document.pcConfig.pcEventDateFormat.value='%F'">
+            </td>
 		</tr>
 		<tr class='pn-even'>
 			<td><!--[gt text='First day of the week']--></td>
@@ -99,7 +104,7 @@
             <tr><th colspan='2'><!--[gt text='Notification settings']--></th></tr>
         </thead>
 		<tr class='pn-odd'>
-			<td width="60%"><!--[gt text='Notify administrator about user event submission/change']--></td>
+			<td width="50%"><!--[gt text='Notify administrator about user event submission/change']--></td>
 			<!--[pnmodgetvar module="PostCalendar" name="pcNotifyAdmin" assign="pcNA"]-->
 			<td><input type="checkbox" value="1" id="pcNotifyAdmin" name="pcNotifyAdmin"<!--[if $pcNA eq true]--> checked="checked"<!--[/if]-->/></td>
 		</tr>

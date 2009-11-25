@@ -196,7 +196,7 @@ function postcalendar_init_getdefaults()
     'pcUsePopups'             => '0',
     'pcAllowDirectSubmit'     => '0',
     'pcListHowManyEvents'     => '15',
-    'pcEventDateFormat'       => '%B %d, %Y', /* American: e.g. July 4, 2010 */
+    'pcEventDateFormat'       => '%B %e, %Y', /* American: e.g. July 4, 2010 */
     'pcAllowUserCalendar'     => '0',
     'pcTimeIncrement'         => '15',
     'pcDefaultView'           => 'month',
