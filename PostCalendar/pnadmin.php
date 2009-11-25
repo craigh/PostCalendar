@@ -70,7 +70,7 @@ function postcalendar_admin_listhidden()
     $args = array();
     $args['type']     = _EVENT_HIDDEN;
     $args['function'] = 'listhidden';
-    $args['title']    = __('Hidden Events Administration', $dom);
+    $args['title']    = __('Hidden events administration', $dom);
     return postcalendar_admin_showlist($args);
 }
 

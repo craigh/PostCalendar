@@ -52,12 +52,12 @@ class postcalendar_event_editHandler extends pnFormHandler
             $url = pnModUrl('howtopnforms', 'recipe', 'view', array('rid' => $this->recipeId));
             */
         } else if ($args['commandName'] == 'delete') {
-            $uname = pnUserGetVar('uname');
-            if (($uname != $event['informant']) and (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN))) {
+            if ((pnUserGetVar('uname') != $event['informant']) and (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN))) {
                 return $render->pnFormSetErrorMsg(__('Sorry! You do not have authorization to delete this event.', $dom));
             }
             $result = pnModAPIFunc('PostCalendar', 'event', 'deleteevent', array('eid' => $this->eid));
             if ($result === false) return $render->pnFormSetErrorMsg(__("Error! An 'unidentified error' occurred.", $dom));
+            LogUtil::registerStatus(__('Done! The event was deleted.', $dom));
 
             $redir = pnModUrl('PostCalendar', 'user', 'view', array('viewtype' => _SETTING_DEFAULT_VIEW));
             return $render->pnFormRedirect($redir);
@@ -127,15 +127,17 @@ function postcalendar_event_new($args)
 
     // these items come on brand new view of this function
     $func      = FormUtil::getPassedValue('func');
-    $jumpday   = FormUtil::getPassedValue('jumpday');
-    $jumpmonth = FormUtil::getPassedValue('jumpmonth');
-    $jumpyear  = FormUtil::getPassedValue('jumpyear');
-    $Date      = FormUtil::getPassedValue('Date');
+    //$jumpday   = FormUtil::getPassedValue('jumpday');
+    //$jumpmonth = FormUtil::getPassedValue('jumpmonth');
+    //$jumpyear  = FormUtil::getPassedValue('jumpyear');
+    $Date      = FormUtil::getPassedValue('Date'); //typically formatted YYYYMMDD or YYYYMMDD000000
 
-    $Date  = pnModAPIFunc('PostCalendar','user','getDate',compact('Date','jumpday','jumpmonth','jumpyear'));
+    // format to '%Y%m%d%H%M%S'
+    $Date  = pnModAPIFunc('PostCalendar','user','getDate',compact('Date')); //,'jumpday','jumpmonth','jumpyear'));
 
     // these items come on submission of form
     $submitted_event  = FormUtil::getPassedValue('postcalendar_events');
+/* if ($submitted_event) { echo "<pre style='text-align:left; background-color: cyan;'>"; print_r($submitted_event); echo "</pre>"; die(); } */
     $is_update        = FormUtil::getPassedValue('is_update');
     $form_action      = FormUtil::getPassedValue('form_action');
     $authid           = FormUtil::getPassedValue('authid');
@@ -143,7 +145,7 @@ function postcalendar_event_new($args)
     if (substr($submitted_event['endDate']['year'], 0, 4) == '0000') {
         $submitted_event['endDate'] = $submitted_event['eventDate'];
     }
-    // reformat times from form to 'real' 24-hour format
+    // reformat times from form to 'real' 24-hour format (for preview and DB-insert)
     $submitted_event['duration'] = (60 * 60 * $submitted_event['duration']['Hour']) + (60 * $submitted_event['duration']['Minute']);
     if ((bool) !_SETTING_TIME_24HOUR) {
         if ($submitted_event['startTime']['Meridian'] == "am") {
@@ -155,9 +157,9 @@ function postcalendar_event_new($args)
     $startTime = sprintf('%02d', $submitted_event['startTime']['Hour']) .':'. sprintf('%02d', $submitted_event['startTime']['Minute']) .':00';
     unset($submitted_event['startTime']);
     $submitted_event['startTime'] = $startTime;
-    // not sure this check is needed here...
+    // if event ADD perms are given to anonymous users...
     if (pnUserLoggedIn()) {
-        $submitted_event['informant'] = pnUserGetVar('uname');
+        $submitted_event['informant'] = pnUserGetVar('uname'); // this is where need to change to uid for v6.0
     } else {
         $submitted_event['informant'] = pnConfigGetVar('anonymous');
     }
@@ -175,14 +177,10 @@ function postcalendar_event_new($args)
             $eventdata['location_info'] = $eventdata['location'];
         } else {
             // here were need to format the DB data to be able to load it into the form
-            //$eventdata = pnModAPIFunc('PostCalendar', 'event', 'getEventDetails', $args['eid']);
             $eventdata = DBUtil::selectObjectByID('postcalendar_events', $args['eid'], 'eid');
-            $eventdata = pnModAPIFunc('PostCalendar', 'event', 'fixEventDetails', $eventdata);
-            $eventdata['location_info'] = unserialize($eventdata['location']);
-            $eventdata['repeat'] = unserialize($eventdata['recurrspec']) ;
-            $eventdata['endtype'] = $eventdata['endDate'] == '0000-00-00' ? '0' : '1';
+            $eventdata = pnModAPIFunc('PostCalendar', 'event', 'formateventarrayfordisplay', $eventdata);
         }
-        if (($uname != $eventdata['informant']) and (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN))) {
+        if ((pnUserGetVar('uname') != $eventdata['informant']) and (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN))) {
             return LogUtil::registerError(__('Sorry! You do not have authorization to edit this event.', $dom));
         }
         // need to check each of these below to see if truly needed CAH 11/14/09
@@ -199,9 +197,7 @@ function postcalendar_event_new($args)
         $eventdata['is_update'] = false;
     }
 
-    //================================================================
-    // ERROR CHECKING IF ACTION IS PREVIEW OR COMMIT
-    //================================================================
+    // VALIDATE DATA ENTRY IF ACTION IS PREVIEW OR COMMIT
     $abort = false;
     if (($form_action == 'preview') OR ($form_action == 'commit')) {
         if (empty($submitted_event['title'])) {
@@ -229,7 +225,7 @@ function postcalendar_event_new($args)
         }
 
         // check date validity
-        $sdate = strtotime($submitted_event['startDate']);
+        $sdate = strtotime($submitted_event['eventDate']);
         $edate = strtotime($submitted_event['endDate']);
         $tdate = strtotime(date('Y-m-d'));
 
@@ -237,6 +233,7 @@ function postcalendar_event_new($args)
             LogUtil::registerError(__('Error! The selected start date falls after the selected end date.', $dom));
             $abort = true;
         }
+        /*
         if (!checkdate($submitted_event['eventDate']['month'], $submitted_event['eventDate']['day'], $submitted_event['eventDate']['year'])) {
             LogUtil::registerError(__('Error! Invalid start date.', $dom));
             $abort = true;
@@ -245,6 +242,7 @@ function postcalendar_event_new($args)
             LogUtil::registerError(__('Error! Invalid end date.', $dom));
             $abort = true;
         }
+        */
     } // end if form_action = preview/commit
 
     if ($abort) $form_action = 'preview'; // data not sufficient for commit. force preview and correct.
@@ -262,10 +260,11 @@ function postcalendar_event_new($args)
             LogUtil::registerError(__('Error! Submission failed.', $dom));
         } else {
             pnModAPIFunc('PostCalendar', 'admin', 'clearCache');
+            $presentation_date = strftime(_SETTING_DATE_FORMAT, $sdate);
             if ($is_update) {
-                LogUtil::registerStatus(__('Done! Updated the event.', $dom));
+                LogUtil::registerStatus(__f('Done! Updated the event. (event date: %s)', $presentation_date, $dom));
             } else {
-                LogUtil::registerStatus(__('Done! Submitted the event.', $dom));
+                LogUtil::registerStatus(__f('Done! Submitted the event. (event date: %s)', $presentation_date, $dom));
             }
             if ((!_SETTING_DIRECT_SUBMIT) && (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN))) {
                  LogUtil::registerStatus(__('The event has been queued for administrator approval.', $dom));
@@ -273,8 +272,8 @@ function postcalendar_event_new($args)
 
             pnModAPIFunc('PostCalendar','admin','notify',compact('eid','is_update')); //notify admin
 
-            // save the start date, before the vars are cleared (needed for the redirect on success)
-            $url_date = $submitted_event['startDate']['short']; //need to redo this to reformat date - use $sdate?
+            // format startdate for redirect on success
+            $url_date = strftime('%Y%m%d', $sdate);
         }
 
         pnRedirect(pnModURL('PostCalendar', 'user', 'view', array('viewtype' => _SETTING_DEFAULT_VIEW, 'Date' => $url_date)));

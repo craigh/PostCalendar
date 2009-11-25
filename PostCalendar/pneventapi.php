@@ -118,16 +118,15 @@ function postcalendar_eventapi_queryEvents($args)
 }
 
 /**
- * I believe this function returns an array of events sorted by date
+ * This function returns an array of events sorted by date
  * expected args (from postcalendar_userapi_buildView): start, end
  *    if either is present, both must be present. else uses today's/jumped date.
- * expected args (from pnsearch/postcalendar.php/search_postcalendar): s_keywords, filtercats
- * same ^^^ in (postcalendar_user_search)
+ * expected args (from search/postcalendar_search_options): s_keywords, filtercats
  **/
 function postcalendar_eventapi_getEvents($args)
 {
     $dom = ZLanguage::getModuleDomain('PostCalendar');
-    $s_keywords = ''; // search stuff
+    $s_keywords = ''; // search WHERE string
     extract($args); //start, end, filtercats, Date, s_keywords, pc_username
 
     $date  = pnModAPIFunc('PostCalendar','user','getDate',array('Date'=>$args['Date'])); //formats date
@@ -200,7 +199,7 @@ function postcalendar_eventapi_getEvents($args)
         // parse the event start date
         list($esY, $esM, $esD) = explode('-', $event['eventDate']);
         // grab the recurring specs for the event
-        $event_recurrspec = unserialize($event['recurrspec']);
+        $event_recurrspec = unserialize($event['recurrspec']); // <-- this is already done in fixEvent routine
         // determine the stop date for this event
         if ($event['endDate'] == '0000-00-00') {
             $stop = $end_date;
@@ -226,7 +225,7 @@ function postcalendar_eventapi_getEvents($args)
                 $rfreq = $event_recurrspec['event_repeat_freq'];
                 $rtype = $event_recurrspec['event_repeat_freq_type'];
                 // we should bring the event up to date to make this a tad bit faster
-                // any ideas on how to do that, exactly??? dateToDays probably.
+                // any ideas on how to do that, exactly??? dateToDays probably. (RNG <5.0)
                 $nm = $esM;
                 $ny = $esY;
                 $nd = $esD;
@@ -353,32 +352,32 @@ function postcalendar_eventapi_buildSubmitForm($args)
     $dom = ZLanguage::getModuleDomain('PostCalendar');
     $tpl = pnRender::getInstance('PostCalendar', false);    // Turn off template caching here
     pnModAPIFunc('PostCalendar','user','SmartySetup', $tpl);
-    $uid = pnUserGetVar('uid');
-    //$uname = pnUserGetVar('uname');
+
     if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADD)) {
         return LogUtil::registerPermissionError();
     }
     //echo "<div style='text-align:left;'><b>_buildSubmitForm:</b><br /><pre style='background-color:#ffffcc;'>"; print_r($args); echo "</pre></div>";
 
-    /***************** SET UP EXISTING VALUES FOR EDITING **********************/
     $eventdata = $args['eventdata']; // contains data for editing if loaded
-    $eventdata['endvalue'] = pnModAPIFunc('PostCalendar','user','getDate',array('Date'=>str_replace('-', '', $eventdata['endDate']), 'format'=>'%d-%m-%Y'));
-    $eventdata['eventDatevalue'] = pnModAPIFunc('PostCalendar','user','getDate',array('Date'=>str_replace('-', '', $eventdata['eventDate']), 'format'=>'%d-%m-%Y'));
 
 
     /***************** SET UP DEFAULT VALUES **********************/
     // format date information 
     if (($eventdata['endDate'] == '') || ($eventdata['endDate'] == '00000000') || ($eventdata['endDate'] == '0000-00-00')) {
-        $eventdata['endvalue'] = pnModAPIFunc('PostCalendar','user','getDate',array('Date'=>$args['Date'], 'format'=>'%d-%m-%Y'));
-        $eventdata['endDate'] = pnModAPIFunc('PostCalendar','user','getDate',array('Date'=>$args['Date'], 'format'=>'%Y-%m-%d')); // format for JS cal
-    } 
-    if ($eventdata['eventDate'] == '') {
-        $eventdata['eventDatevalue'] = pnModAPIFunc('PostCalendar','user','getDate',array('Date'=>$args['Date'], 'format'=>'%d-%m-%Y'));
-        $eventdata['eventDate'] = pnModAPIFunc('PostCalendar','user','getDate',array('Date'=>$args['Date'], 'format'=>'%Y-%m-%d')); // format for JS cal
+        $eventdata['endvalue'] = pnModAPIFunc('PostCalendar','user','getDate',array('Date'=>$args['Date'], 'format'=>_SETTING_DATE_FORMAT));
+        $eventdata['endDate'] = pnModAPIFunc('PostCalendar','user','getDate',array('Date'=>$args['Date'], 'format'=>'%Y-%m-%d')); // format for JS cal & DB
+    }  else {
+        $eventdata['endvalue'] = pnModAPIFunc('PostCalendar','user','getDate',array('Date'=>str_replace('-', '', $eventdata['endDate']), 'format'=>_SETTING_DATE_FORMAT));
     }
-    $eventdata['aid'] = $eventdata['aid'] ? $eventdata['aid'] : $uid; // set value of user-select box
+    if ($eventdata['eventDate'] == '') {
+        $eventdata['eventDatevalue'] = pnModAPIFunc('PostCalendar','user','getDate',array('Date'=>$args['Date'], 'format'=>_SETTING_DATE_FORMAT));
+        $eventdata['eventDate'] = pnModAPIFunc('PostCalendar','user','getDate',array('Date'=>$args['Date'], 'format'=>'%Y-%m-%d')); // format for JS cal & DB
+    } else {
+        $eventdata['eventDatevalue'] = pnModAPIFunc('PostCalendar','user','getDate',array('Date'=>str_replace('-', '', $eventdata['eventDate']), 'format'=>_SETTING_DATE_FORMAT));
+    }
+    $eventdata['aid'] = $eventdata['aid'] ? $eventdata['aid'] : pnUserGetVar('uid'); // set value of user-select box
 
-    if (pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
+    if ((pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) && (_SETTING_ALLOW_USER_CAL)) {
         @define('_PC_FORM_USERNAME', true); // this is used in pc_form_nav_close plugin, but don't know why
         $users = DBUtil::selectFieldArray('users', 'uname', null, null, null, 'uid');
         $tpl->assign('users', $users);
@@ -594,6 +593,9 @@ function postcalendar_eventapi_formateventarrayfordisplay($event)
 
     // converts seconds to HH:MM for display
     $event['duration_formatted'] = gmdate("H:i", $event['duration']);
+
+    // format endtype for form
+    $event['endtype'] = $event['endDate'] == '0000-00-00' ? '0' : '1';
 
     // compensate for changeover to new categories system
     $lang = ZLanguage::getLanguageCode();

@@ -295,3 +295,9 @@ div#overDiv {
     color: black;
     text-align: center;
 }
+.z-calendarimg {
+    background-color: transparent;
+}
+.z-calendarimg:hover {
+    background-color: blue;
+}

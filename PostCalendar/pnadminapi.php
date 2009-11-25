@@ -9,11 +9,7 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
  */
 
-//=========================================================================
-//  Require utility classes
-//=========================================================================
 require_once dirname(__FILE__) . '/global.php';
-
 /**
  * Get available admin panel links
  *

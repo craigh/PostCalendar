@@ -1,5 +1,4 @@
 <!--[*  $Id$  *]-->
-<!--[ pc_calendar_init ]-->
 <!--[pnmodgetvar module="PostCalendar" name="pcAllowUserCalendar"|pnvarprepfordisplay assign="pcAllowUserCalendar"]-->
 <!--[pnmodgetvar module="PostCalendar" name="enablecategorization" assign="enablecats"]-->
 <!--[pnpageaddvar name="javascript" value="modules/PostCalendar/pnjavascript/postcalendar_submit_validate.js"]-->
@@ -36,7 +35,7 @@
                 <!--[/if]--><br /><br />
 
 		        <b><!--[gt text='Start date']-->:</b>&nbsp;&nbsp;&nbsp;
-		        <!--[ pc_calendar_build_input_box objectName="postcalendar_events" htmlName="eventDate" dateFormat="%d-%m-%Y" defaultString=$loaded_event.eventDatevalue defaultDate=$loaded_event.eventDate ]-->
+		        <!--[ pncalendarinput display=true hidden=true objectname="postcalendar_events" htmlname="eventDate" ifformat="%Y-%m-%d" dateformat=$EVENT_DATE_FORMAT defaultstring=$loaded_event.eventDatevalue defaultdate=$loaded_event.eventDate ]-->
 		        <br/ ><br />
                 <table border="0" cellpadding="0" cellspacing="1">
                     <tr>
@@ -168,9 +167,9 @@
                 <b><!--[gt text='End date']-->:</b><br />
                 <input type="radio" name="postcalendar_events[endtype]" value="1" <!--[ $SelectedEndOn ]--> />&nbsp;
 		        <!--[ if $postcalendar_events.eventDate > $postcalendar_events.endDate ]-->
-                	<!--[ pc_calendar_build_input_box objectName="postcalendar_events" htmlName="endDate" dateFormat="%d-%m-%Y" defaultString=$loaded_event.eventDatevalue defaultDate=$loaded_event.eventDate ]--><br />
+                	<!--[ pncalendarinput display=true hidden=true objectname="postcalendar_events" htmlname="endDate" ifformat="%Y-%m-%d" dateformat=$EVENT_DATE_FORMAT defaultstring=$loaded_event.eventDatevalue defaultdate=$loaded_event.eventDate ]--><br />
                 <!--[ else ]-->
-                	<!--[ pc_calendar_build_input_box objectName="postcalendar_events" htmlName="endDate" dateFormat="%d-%m-%Y" defaultString=$loaded_event.endvalue defaultDate=$loaded_event.endDate ]--><br />
+                	<!--[ pncalendarinput display=true hidden=true objectname="postcalendar_events" htmlname="endDate" ifformat="%Y-%m-%d" dateformat=$EVENT_DATE_FORMAT defaultstring=$loaded_event.endvalue defaultdate=$loaded_event.endDate ]--><br />
                 <!--[ /if ]-->
                 <input type="radio" name="postcalendar_events[endtype]" value="0" <!--[ $SelectedNoEnd ]--> />&nbsp;
                 <!--[gt text='No end date']-->

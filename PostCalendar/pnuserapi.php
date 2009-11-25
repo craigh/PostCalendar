@@ -275,11 +275,7 @@ function postcalendar_userapi_getDate($args)
     if (!is_array($args)) {
         $format = $args; //backwards compatibility
     } else {
-        if (!empty($args['format'])) {
-            $format    = $args['format'];
-        } else {
-            $format = '%Y%m%d%H%M%S';
-        }
+        $format    = (!empty($args['format'])) ? $args['format'] : '%Y%m%d%H%M%S';
         $Date      = $args['Date'];
         $jumpday   = $args['jumpday'];
         $jumpmonth = $args['jumpmonth'];
