@@ -127,24 +127,19 @@ function postcalendar_event_new($args)
 
     // these items come on brand new view of this function
     $func      = FormUtil::getPassedValue('func');
-    //$jumpday   = FormUtil::getPassedValue('jumpday');
-    //$jumpmonth = FormUtil::getPassedValue('jumpmonth');
-    //$jumpyear  = FormUtil::getPassedValue('jumpyear');
     $Date      = FormUtil::getPassedValue('Date'); //typically formatted YYYYMMDD or YYYYMMDD000000
 
     // format to '%Y%m%d%H%M%S'
-    $Date  = pnModAPIFunc('PostCalendar','user','getDate',compact('Date')); //,'jumpday','jumpmonth','jumpyear'));
+    $Date  = pnModAPIFunc('PostCalendar','user','getDate',compact('Date'));
 
     // these items come on submission of form
     $submitted_event  = FormUtil::getPassedValue('postcalendar_events');
-/* if ($submitted_event) { echo "<pre style='text-align:left; background-color: cyan;'>"; print_r($submitted_event); echo "</pre>"; die(); } */
     $is_update        = FormUtil::getPassedValue('is_update');
     $form_action      = FormUtil::getPassedValue('form_action');
     $authid           = FormUtil::getPassedValue('authid');
 
-    if (substr($submitted_event['endDate']['year'], 0, 4) == '0000') {
-        $submitted_event['endDate'] = $submitted_event['eventDate'];
-    }
+    if (substr($submitted_event['endDate']['year'], 0, 4) == '0000') $submitted_event['endDate'] = $submitted_event['eventDate'];
+
     // reformat times from form to 'real' 24-hour format (for preview and DB-insert)
     $submitted_event['duration'] = (60 * 60 * $submitted_event['duration']['Hour']) + (60 * $submitted_event['duration']['Minute']);
     if ((bool) !_SETTING_TIME_24HOUR) {
@@ -197,7 +192,7 @@ function postcalendar_event_new($args)
         $eventdata['is_update'] = false;
     }
 
-    // VALIDATE DATA ENTRY IF ACTION IS PREVIEW OR COMMIT
+    // VALIDATE FORM DATA IF ACTION IS PREVIEW OR COMMIT
     $abort = false;
     if (($form_action == 'preview') OR ($form_action == 'commit')) {
         if (empty($submitted_event['title'])) {

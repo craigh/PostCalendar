@@ -351,7 +351,6 @@ function postcalendar_eventapi_buildSubmitForm($args)
 {
     $dom = ZLanguage::getModuleDomain('PostCalendar');
     $tpl = pnRender::getInstance('PostCalendar', false);    // Turn off template caching here
-    pnModAPIFunc('PostCalendar','user','SmartySetup', $tpl);
 
     if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADD)) {
         return LogUtil::registerPermissionError();
@@ -360,8 +359,6 @@ function postcalendar_eventapi_buildSubmitForm($args)
 
     $eventdata = $args['eventdata']; // contains data for editing if loaded
 
-
-    /***************** SET UP DEFAULT VALUES **********************/
     // format date information 
     if (($eventdata['endDate'] == '') || ($eventdata['endDate'] == '00000000') || ($eventdata['endDate'] == '0000-00-00')) {
         $eventdata['endvalue'] = pnModAPIFunc('PostCalendar','user','getDate',array('Date'=>$args['Date'], 'format'=>_SETTING_DATE_FORMAT));
@@ -462,6 +459,10 @@ function postcalendar_eventapi_buildSubmitForm($args)
 
     // assign loaded data or default values
     $tpl->assign('loaded_event', DataUtil::formatForDisplay($eventdata));
+
+    // assign some basic settings
+    $tpl->assign('EVENT_DATE_FORMAT', _SETTING_DATE_FORMAT);
+    $tpl->assign('24HOUR_TIME', _SETTING_TIME_24HOUR);
 
     // assign function in case we were editing
     $tpl->assign('func', $args['func']);

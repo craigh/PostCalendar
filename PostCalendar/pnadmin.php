@@ -206,8 +206,8 @@ function postcalendar_admin_adminevents()
 
     // Turn off template caching here
     $pnRender = pnRender::getInstance('PostCalendar', false);
-    pnModAPIFunc('PostCalendar','user','SmartySetup', $pnRender);
 
+    $pnRender->assign('24HOUR_TIME', _SETTING_TIME_24HOUR);
     $pnRender->assign('function', $function);
     $pnRender->assign('areyousure', $are_you_sure_text);
     $pnRender->assign('alleventinfo', $alleventinfo);

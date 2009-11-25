@@ -74,7 +74,6 @@ function postcalendar_user_display($args)
             }
 
             // build template and fetch:
-            pnModAPIFunc('PostCalendar','user','SmartySetup', $tpl);
             if ($tpl->is_cached('user/postcalendar_user_view_event_details.html', $cacheid)) {
                 // use cached version
                 return $tpl->fetch('user/postcalendar_user_view_event_details.html', $cacheid);
@@ -99,7 +98,8 @@ function postcalendar_user_display($args)
                     $event['eventDate'] = "$y-$m-$d";
                 }
                 $tpl->assign('loaded_event', $event);
-            
+                $tpl->assign('24HOUR_TIME', _SETTING_TIME_24HOUR);
+         
                 if ((pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADD) && (pnUserGetVar('uid') == $event['aid']))
                     || pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
                     $tpl->assign('EVENT_CAN_EDIT', true);
@@ -124,7 +124,6 @@ function postcalendar_user_display($args)
             $out = pnModAPIFunc('PostCalendar', 'user', 'buildView', 
                 compact('Date','viewtype','pc_username','filtercats','func'));
             // build template and fetch:
-            pnModAPIFunc('PostCalendar','user','SmartySetup', $tpl);
             if ($tpl->is_cached($out['template'], $cacheid)) {
                 // use cached version
                 return $tpl->fetch($out['template'], $cacheid);
@@ -132,6 +131,7 @@ function postcalendar_user_display($args)
                 foreach ($out as $var => $val) {
                     $tpl->assign($var, $val);
                 }
+                $tpl->assign('24HOUR_TIME', _SETTING_TIME_24HOUR);
                 return $tpl->fetch($out['template'], $cacheid);
             } // end if/else
             break;

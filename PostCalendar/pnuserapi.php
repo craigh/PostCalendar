@@ -317,23 +317,3 @@ function postcalendar_userapi_getmonthname($args)
                     '10' => __('October', $dom), '11' => __('November', $dom), '12' => __('December', $dom));
     return $month_name[date('m', $args['Date'])];
 }
-
-/**
- * postcalendar_userapi_SmartySetup()
- *
- * legacy function to make sure certain data is available in templates.
- * This should eventually be eliminated and specific data should be added
- * to each template as required.
- * @return assigns settings to template
- */
-function postcalendar_userapi_SmartySetup(&$smarty)
-{
-    $dom = ZLanguage::getModuleDomain('PostCalendar');
-    if (!is_object($smarty)) return LogUtil::registerError(__('Error! Required arguments not present.', $dom));
-
-    $smarty->assign('USE_POPUPS', _SETTING_USE_POPUPS);
-    $smarty->assign('OPEN_NEW_WINDOW', _SETTING_OPEN_NEW_WINDOW);
-    $smarty->assign('EVENT_DATE_FORMAT', _SETTING_DATE_FORMAT);
-    $smarty->assign('24HOUR_TIME', _SETTING_TIME_24HOUR);
-    return true;
-}
