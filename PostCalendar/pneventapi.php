@@ -477,7 +477,7 @@ function postcalendar_eventapi_buildSubmitForm($args)
  */
 function postcalendar_eventapi_fixEventDetails($event)
 {
-    $event['duration_formatted'] = gmdate("H:i", $event['duration']); // converts seconds to HH:MM
+    $event['duration_formatted'] = gmdate("G:i", $event['duration']); // converts seconds to HH:MM
 
     //remap sharing values to global/private (this sharing map converts pre-6.0 values to 6.0+ values)
     $sharingmap = array(SHARING_PRIVATE=>SHARING_PRIVATE, SHARING_PUBLIC=>SHARING_GLOBAL, SHARING_BUSY=>SHARING_PRIVATE, SHARING_GLOBAL=>SHARING_GLOBAL, SHARING_HIDEDESC=>SHARING_PRIVATE);
@@ -593,7 +593,7 @@ function postcalendar_eventapi_formateventarrayfordisplay($event)
     $event['sharing_sentence'] = ($event['sharing'] == SHARING_PRIVATE) ? __('This is a private event.', $dom) : __('This is a public event. ', $dom);
 
     // converts seconds to HH:MM for display
-    $event['duration_formatted'] = gmdate("H:i", $event['duration']);
+    $event['duration_formatted'] = gmdate("G:i", $event['duration']);
 
     // format endtype for form
     $event['endtype'] = $event['endDate'] == '0000-00-00' ? '0' : '1';

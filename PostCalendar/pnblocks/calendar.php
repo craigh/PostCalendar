@@ -186,7 +186,7 @@ function postcalendar_calendarblock_display($blockinfo)
     // format duration for each event
     foreach ($eventsByDate as $k => $v) {
         foreach (array_keys($v) as $kk) {
-            $eventsByDate[$k][$kk]['duration_formatted'] = gmdate("H:i", $eventsByDate[$k][$kk]['duration']);
+            $eventsByDate[$k][$kk]['duration_formatted'] = gmdate("G:i", $eventsByDate[$k][$kk]['duration']);
         }
     }
 
