@@ -105,9 +105,6 @@ function postcalendar_admin_showlist($args)
     // $args should be array with keys 'type', 'function', 'title'
     if (!isset($args['type']) or empty($args['function'])) return false; // $title not required, type can be 1, 0, -1
 
-    // Turn off template caching here
-    $pnRender = pnRender::getInstance('PostCalendar', false);
-
     $offset_increment = _SETTING_HOW_MANY_EVENTS;
     if (empty($offset_increment)) $offset_increment = 15;
 
@@ -116,11 +113,13 @@ function postcalendar_admin_showlist($args)
     $sdir   = FormUtil::getPassedValue('sdir', 1);
     $original_sdir = $sdir;
     $sdir = $sdir ? 0 : 1; //if true change to false, if false change to true
+    if ($sdir == 0) $sort .= ' DESC';
+    if ($sdir == 1) $sort .= ' ASC';
 
-    $events = pnModAPIFunc('PostCalendar', 'admin', 'getAdminListEvents',
-        array('type' => $args['type'], 'sdir' => $sdir, 'sort' => $sort, 'offset' => $offset,
-              'offset_increment' => $offset_increment));
+    $events = DBUtil::selectObjectArray('postcalendar_events', "WHERE pc_eventstatus=".$args['type'], $sort, $offset, $offset_increment, false);
 
+    // Turn off template caching here
+    $pnRender = pnRender::getInstance('PostCalendar', false);
     $pnRender->assign('title', $args['title']);
     $pnRender->assign('function', $args['function']);
     $pnRender->assign('events', $events);
