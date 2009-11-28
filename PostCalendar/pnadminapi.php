@@ -30,13 +30,13 @@ function postcalendar_adminapi_getlinks()
         $links[] = array('url' => pnModURL('PostCalendar', 'event', 'new'), 'text' => __('Create new event', $dom));
     }
     if (pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
-        $links[] = array('url' => pnModURL('PostCalendar', 'admin', 'listapproved'), 'text' => __('Approved', $dom));
+        $links[] = array('url' => pnModURL('PostCalendar', 'admin', 'listapproved'), 'text' => __('Approved events', $dom));
     }
     if (pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
-        $links[] = array('url' => pnModURL('PostCalendar', 'admin', 'listhidden'), 'text' => __('Hidden', $dom));
+        $links[] = array('url' => pnModURL('PostCalendar', 'admin', 'listhidden'), 'text' => __('Hidden events', $dom));
     }
     if (pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
-        $links[] = array('url' => pnModURL('PostCalendar', 'admin', 'listqueued'), 'text' => __('Queued', $dom));
+        $links[] = array('url' => pnModURL('PostCalendar', 'admin', 'listqueued'), 'text' => __('Queued events', $dom));
     }
     if (pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
         $links[] = array('url' => pnModURL('PostCalendar', 'admin', 'manualClearCache'), 'text' => __('Clear Smarty cache', $dom));
