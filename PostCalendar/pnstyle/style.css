@@ -33,7 +33,37 @@ h2.postcalendar_header a {
 	padding-left: 10px;
 	padding-right: 10px;
 }
-
+#postcalendar_addevent_leftcol {
+    width: 49%;
+    float: left;
+}
+#postcalendar_addevent_rightcol {
+    margin-left: 50%;
+}
+#postcalendar_addevent_rightcol fieldset {
+    margin-bottom: 1em;
+    padding: 4px 0 1em 1em;
+    background-color: #eeeeee;
+}
+#postcalendar_addevent_rightcol fieldset legend {
+    background-color: #ffffff;
+    font-weight: bold;
+}
+input.postcal90 {
+    width: 90%;
+}
+#postcalendar_addevent_formaction {
+    padding: 1em;
+    background: #cccccc;
+    border-top: 1px solid #999999;
+    margin-top: 1em;
+}
+#postcalendar_addevent_previewevent {
+    background-color: #CCCCCC;
+    border: 2px solid #999999;
+    margin: 2em;
+    padding: 1em;
+}
 /********** DAY & SEARCH ***************/
 h3.dayheader,
 h3.dayheader a {
