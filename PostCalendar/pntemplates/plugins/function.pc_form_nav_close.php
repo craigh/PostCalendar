@@ -27,9 +27,6 @@ function smarty_function_pc_form_nav_close($args, &$smarty)
     if (!defined('_PC_FORM_USERNAME')) {
         $ret_val .= '<input type="hidden" name="pc_username" value="' . FormUtil::getPassedValue('pc_username') . '" />';
     }
-    if (!defined('_PC_FORM_CATEGORY')) {
-        $ret_val .= '<input type="hidden" name="pc_category" value="' . FormUtil::getPassedValue('pc_category') . '" />';
-    }
 
     $ret_val .= '</form>';
 

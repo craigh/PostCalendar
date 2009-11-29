@@ -15,10 +15,6 @@
 define('_IS_SUNDAY',            0);
 define('_IS_MONDAY',            1);
 define('_IS_SATURDAY',          6);
-define('_AM_VAL',               1);
-define('_PM_VAL',               2);
-define('_ACTION_DELETE',        4);
-define('_ACTION_EDIT',          2);
 define('_EVENT_APPROVED',       1);
 define('_EVENT_QUEUED',         0);
 define('_EVENT_HIDDEN',        -1);
@@ -26,11 +22,6 @@ define('_EVENT_HIDDEN',        -1);
 define('NO_REPEAT',             0);
 define('REPEAT',                1);
 define('REPEAT_ON',             2);
-// $event_repeat_freq
-define('REPEAT_EVERY',          1);
-define('REPEAT_EVERY_OTHER',    2);
-define('REPEAT_EVERY_THIRD',    3);
-define('REPEAT_EVERY_FOURTH',   4);
 // $event_repeat_freq_type
 define('REPEAT_EVERY_DAY',      0);
 define('REPEAT_EVERY_WEEK',     1);
@@ -50,13 +41,6 @@ define('REPEAT_ON_WED',         3);
 define('REPEAT_ON_THU',         4);
 define('REPEAT_ON_FRI',         5);
 define('REPEAT_ON_SAT',         6);
-// $event_repeat_on_freq
-define('REPEAT_ON_MONTH',       1);
-define('REPEAT_ON_2MONTH',      2);
-define('REPEAT_ON_3MONTH',      3);
-define('REPEAT_ON_4MONTH',      4);
-define('REPEAT_ON_6MONTH',      6);
-define('REPEAT_ON_YEAR',        12);
 // event sharing values
 define('SHARING_PRIVATE',       0);
 define('SHARING_PUBLIC',        1); //remove in v6.0
@@ -89,7 +73,6 @@ define('_SETTING_TIME_INCREMENT',   pnModGetVar('PostCalendar', 'pcTimeIncrement
 define('_SETTING_HOW_MANY_EVENTS',  pnModGetVar('PostCalendar', 'pcListHowManyEvents'));
 define('_SETTING_EVENTS_IN_YEAR',   pnModGetVar('PostCalendar', 'pcShowEventsInYear'));
 define('_SETTING_DEFAULT_VIEW',     pnModGetVar('PostCalendar', 'pcDefaultView'));
-define('_SETTING_SAFE_MODE',        pnModGetVar('PostCalendar', 'pcSafeMode'));
 define('_SETTING_NOTIFY_ADMIN',     pnModGetVar('PostCalendar', 'pcNotifyAdmin'));
 define('_SETTING_NOTIFY_EMAIL',     pnModGetVar('PostCalendar', 'pcNotifyEmail'));
 define('_SETTING_ALLOW_CAT_FILTER', pnModGetVar('PostCalendar', 'pcAllowCatFilter'));
