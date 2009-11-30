@@ -178,8 +178,16 @@ function postcalendar_eventapi_getEvents($args)
         $days[$store_date] = array();
     }
 
-    foreach ($events as $event) {
-        $event = pnModAPIFunc('PostCalendar', 'event', 'fixEventDetails', $event);
+    foreach ($events as $key => $event) {
+
+        // should this bit be moved to queryEvents? shouldn't this be accomplished other ways? via DB?
+        if ($event['sharing'] == SHARING_PRIVATE && $event['aid'] != pnUserGetVar('uid') && !pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
+            // if event is PRIVATE and user is not assigned event ID (aid) and user is not Admin event should not be seen
+            unset($events[$key]);
+            continue; // ??
+        }
+
+        $event = pnModAPIFunc('PostCalendar', 'event', 'formateventarrayfordisplay', $event);
 
         // get the user id of event's author
         $cuserid = pnUserGetIDFromName(strtolower($event['informant'])); // change this to aid? for v6.0?
@@ -283,6 +291,7 @@ function postcalendar_eventapi_getEvents($args)
     } // <- end of foreach($events as $event)
     return $days;
 }
+
 /**
  * postcalendar_eventapi_writeEvent()
  * write an event to the DB
@@ -312,7 +321,7 @@ function postcalendar_eventapi_writeEvent($args)
     if (!isset($eventdata['alldayevent'])) $eventdata['alldayevent'] = 0;
 
     if (empty($eventdata['hometext'])) {
-        $eventdata['hometext'] = __(/*!(abbr) not applicable or not available*/'n/a', $dom); // default description
+        $eventdata['hometext'] = ':text:' . __(/*!(abbr) not applicable or not available*/'n/a', $dom); // default description
     } else {
         $eventdata['hometext'] = ':'. $eventdata['html_or_text'] .':'. $eventdata['hometext']; // inserts :text:/:html: before actual content
     }
@@ -352,7 +361,6 @@ function postcalendar_eventapi_buildSubmitForm($args)
     if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADD)) {
         return LogUtil::registerPermissionError();
     }
-    //echo "<div style='text-align:left;'><b>_buildSubmitForm:</b><br /><pre style='background-color:#ffffcc;'>"; print_r($args); echo "</pre></div>";
 
     $eventdata = $args['eventdata']; // contains data for editing if loaded
 
@@ -391,18 +399,13 @@ function postcalendar_eventapi_buildSubmitForm($args)
 
     // StartTime
     $tpl->assign('minute_interval', _SETTING_TIME_INCREMENT);
-    if (empty($eventdata['startTime'])) $eventdata['startTime'] = "01:00:00"; // default to 1:00 AM
+    if (empty($eventdata['startTime'])) $eventdata['startTime'] = '01:00:00'; // default to 1:00 AM
 
     // duration
-    $eventdata['duration'] = (!empty($eventdata['duration'])) ? gmdate("H:i", $eventdata['duration']) : '1:00'; // default to 1:00 hours
+    if (empty($eventdata['duration'])) $eventdata['duration'] = '1:00'; // default to 1:00 hours
 
     // hometext
-    if ((empty($eventdata['html_or_text'])) && (!empty($eventdata['hometext']))) {
-        $eventdata['html_or_text'] = substr($eventdata['hometext'], 1, 4);
-        $eventdata['hometext'] = substr($eventdata['hometext'], 6);
-    } else {
-        $eventdata['html_or_text'] = 'text'; // default
-    }
+    if (empty($eventdata['HTMLorTextVal'])) $eventdata['HTMLorTextVal'] = 'text'; // default to text
 
     // create html/text selectbox
     $eventHTMLorText = array('text' => __('Plain text', $dom), 'html' => __('HTML-formatted', $dom));
@@ -447,9 +450,6 @@ function postcalendar_eventapi_buildSubmitForm($args)
     $tpl->assign('SelectedEndOn', (int) $eventdata['endtype'] == 1 ? ' checked' : '');
     $tpl->assign('SelectedNoEnd', (((int) $eventdata['endtype'] == 0) OR (empty($eventdata['endtype']))) ? ' checked' : ''); //default
 
-    //$tpl->assign('is_update', $is_update);
-    //if (isset($data_loaded)) $tpl->assign('data_loaded', $data_loaded);
-
     // Assign the content format
     $formattedcontent = pnModAPIFunc('PostCalendar', 'event', 'isformatted', array('func' => 'new'));
     $tpl->assign('formattedcontent', $formattedcontent);
@@ -465,35 +465,6 @@ function postcalendar_eventapi_buildSubmitForm($args)
     $tpl->assign('func', $args['func']);
 
     return $tpl->fetch("event/postcalendar_event_submit.html");
-}
-/**
- * @function postcalendar_eventapi_fixEventDetails
- * @description modify the way some of the event details are displayed based on other variables
- * @param array event   array of event data
- * @return array event  modified array of event data
- */
-function postcalendar_eventapi_fixEventDetails($event)
-{
-    $event['duration_formatted'] = gmdate("G:i", $event['duration']); // converts seconds to HH:MM (without leading zero)
-
-    //remap sharing values to global/private (this sharing map converts pre-6.0 values to 6.0+ values)
-    $sharingmap = array(SHARING_PRIVATE=>SHARING_PRIVATE, SHARING_PUBLIC=>SHARING_GLOBAL, SHARING_BUSY=>SHARING_PRIVATE, SHARING_GLOBAL=>SHARING_GLOBAL, SHARING_HIDEDESC=>SHARING_PRIVATE);
-    $event['sharing'] = $sharingmap[$event['sharing']]; //remap sharing values to global/private
-    if ($event['sharing'] == SHARING_PRIVATE && $event['aid'] != pnUserGetVar('uid') && !pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
-        // if event is PRIVATE and user is not assigned event ID (aid) and user is not Admin event should not be seen
-        return false;
-    }
-    // add unserialized info to array
-    $event['location_info'] = unserialize($event['location']);
-    $event['repeat']        = unserialize($event['recurrspec']);
-
-    // compensate for changeover to new categories system
-    $lang = ZLanguage::getLanguageCode();
-    $event['catname']  = $event['__CATEGORIES__']['Main']['display_name'][$lang];
-    $event['catcolor'] = $event['__CATEGORIES__']['Main']['__ATTRIBUTES__']['color'];
-    $event['cattextcolor'] = postcalendar_eventapi_color_inverse($event['catcolor']);
-
-    return $event;
 }
 
 /**
@@ -514,9 +485,10 @@ function postcalendar_eventapi_formateventarrayfordisplay($event)
     $event['sharing'] = $sharingmap[$event['sharing']];
 
     // prep hometext for display
-    $display_type = substr($event['hometext'], 0, 6);
+    if ($event['hometext'] == 'n/a') $event['hometext'] = ':text:n/a'; // compenseate for my bad programming in previous versions CAH
+    $event['HTMLorTextVal'] = substr($event['hometext'], 1, 4); // HTMLorTextVal needed in edit form
     $event['hometext'] = substr($event['hometext'], 6);
-    if ($display_type==":text:") $event['hometext']  = nl2br(strip_tags($event['hometext']));
+    if ($event['HTMLorTextVal'] == "text") $event['hometext']  = nl2br(strip_tags($event['hometext']));
 
     // add unserialized info to event array
     $event['location_info'] = unserialize($event['location']);
@@ -543,9 +515,9 @@ function postcalendar_eventapi_formateventarrayfordisplay($event)
     $event['sharing_sentence'] = ($event['sharing'] == SHARING_PRIVATE) ? __('This is a private event.', $dom) : __('This is a public event. ', $dom);
 
     // converts seconds to HH:MM for display
-    $event['duration_formatted'] = gmdate("G:i", $event['duration']);
+    $event['duration'] = gmdate("G:i", $event['duration']);
 
-    // format endtype for form
+    // format endtype for edit form
     $event['endtype'] = $event['endDate'] == '0000-00-00' ? '0' : '1';
 
     // compensate for changeover to new categories system
@@ -554,8 +526,14 @@ function postcalendar_eventapi_formateventarrayfordisplay($event)
     $event['catcolor'] = $event['__CATEGORIES__']['Main']['__ATTRIBUTES__']['color'];
     $event['cattextcolor'] = postcalendar_eventapi_color_inverse($event['catcolor']);
 
+    // temporarily remove hometext from array
+    $hometext = $event['hometext'];
+    unset ($event['hometext']);
     // format all the values for display
-    return DataUtil::formatForDisplay($event);
+    $event = DataUtil::formatForDisplay($event);
+    $event['hometext'] = DataUtil::formatForDisplayHTML($hometext); //add hometext back into array with HTML formatting
+
+    return $event;
 }
 
 /**
@@ -568,6 +546,27 @@ function postcalendar_eventapi_formateventarrayfordisplay($event)
  */
 function postcalendar_eventapi_formateventarrayforDB($event)
 {
+    if (substr($event['endDate']['year'], 0, 4) == '0000') $event['endDate'] = $event['eventDate'];
+
+    // reformat times from form to 'real' 24-hour format
+    $event['duration'] = (60 * 60 * $event['duration']['Hour']) + (60 * $event['duration']['Minute']);
+    if ((bool) !_SETTING_TIME_24HOUR) {
+        if ($event['startTime']['Meridian'] == "am") {
+            $event['startTime']['Hour'] = $event['startTime']['Hour'] == 12 ? '00' : $event['startTime']['Hour'];
+        } else {
+            $event['startTime']['Hour'] = $event['startTime']['Hour'] != 12 ? $event['startTime']['Hour'] += 12 : $event['startTime']['Hour'];
+        }
+    }
+    $startTime = sprintf('%02d', $event['startTime']['Hour']) .':'. sprintf('%02d', $event['startTime']['Minute']) .':00';
+    unset($event['startTime']); // clears the whole array
+    $event['startTime'] = $startTime;
+    // if event ADD perms are given to anonymous users...
+    if (pnUserLoggedIn()) {
+        $event['informant'] = pnUserGetVar('uname'); // this is where need to change to uid for v6.0
+    } else {
+        $event['informant'] = pnConfigGetVar('anonymous');
+    }
+
     return $event;
 }
 
@@ -582,6 +581,65 @@ function postcalendar_eventapi_formateventarrayforDB($event)
 function postcalendar_eventapi_formateventarrayforedit($event)
 {
     return $event;
+}
+
+/**
+ * @function    postcalendar_eventapi_validateformdata()
+ * @description This function validates the data that has been submitted in the new/edit event form
+ * @args        $submitted_event (array) event array as submitted
+ * @author      Craig Heydenburg
+ *
+ * @return      $abort (bool) default=false. true if data does not validate.
+ */
+function postcalendar_eventapi_validateformdata($submitted_event)
+{
+    $dom = ZLanguage::getModuleDomain('PostCalendar');
+    $abort = false;
+
+    if (empty($submitted_event['title'])) {
+        LogUtil::registerError(__(/*!This is the field name from pntemplates/event/postcalendar_event_submit.html:22*/"'Title' is a required field.", $dom).'<br />');
+        $abort = true;
+    }
+
+    // check repeating frequencies
+    if ($submitted_event['repeat']['repeatval'] == REPEAT) {
+        if (!isset($submitted_event['repeat']['freq']) || $submitted_event['repeat']['freq'] < 1 || empty($submitted_event['repeat']['freq'])) {
+            LogUtil::registerError(__('Error! The repetition frequency must be at least 1.', $dom));
+            $abort = true;
+        } elseif (!is_numeric($submitted_event['repeat']['freq'])) {
+            LogUtil::registerError(__('Error! The repetition frequency must be an integer.', $dom));
+            $abort = true;
+        }
+    } elseif ($submitted_event['repeat']['repeatval'] == REPEAT_ON) {
+        if (!isset($submitted_event['repeat']['on_freq']) || $submitted_event['repeat']['on_freq'] < 1 || empty($submitted_event['repeat']['on_freq'])) {
+            LogUtil::registerError(__('Error! The repetition frequency must be at least 1.', $dom));
+            $abort = true;
+        } elseif (!is_numeric($submitted_event['repeat']['on_freq'])) {
+            LogUtil::registerError(__('Error! The repetition frequency must be an integer.', $dom));
+            $abort = true;
+        }
+    }
+
+    // check date validity
+    $sdate = strtotime($submitted_event['eventDate']);
+    $edate = strtotime($submitted_event['endDate']);
+    $tdate = strtotime(date('Y-m-d'));
+
+    if ($edate < $sdate && $submitted_event['endtype'] == 1) {
+        LogUtil::registerError(__('Error! The selected start date falls after the selected end date.', $dom));
+        $abort = true;
+    }
+    /*
+    if (!checkdate($submitted_event['eventDate']['month'], $submitted_event['eventDate']['day'], $submitted_event['eventDate']['year'])) {
+        LogUtil::registerError(__('Error! Invalid start date.', $dom));
+        $abort = true;
+    }
+    if (!checkdate($submitted_event['endDate']['month'], $submitted_event['endDate']['day'], $submitted_event['endDate']['year'])) {
+        LogUtil::registerError(__('Error! Invalid end date.', $dom));
+        $abort = true;
+    }
+    */
+    return $abort;
 }
 
 /**
@@ -644,6 +702,7 @@ function postcalendar_eventapi_deleteeventarray($args)
     if (!is_array($args)) return false;
     return DBUtil::deleteObjectsFromKeyArray($args, 'postcalendar_events', 'eid');
 }
+
 /**
  * makeValidURL()
  * returns 'improved' url based on input string
@@ -659,6 +718,7 @@ if (!function_exists('makeValidURL')) { // also defined in pnadminapi.php
         return $s;
     }
 }
+
 /**
  * dateIncrement()
  * returns the next valid date for an event based on the
@@ -711,7 +771,6 @@ function postcalendar_eventapi_isformatted($args)
     return false;
 }
 
-
 /**
  * @description generate the inverse color
  * @author      Jonas John
@@ -733,4 +792,3 @@ function postcalendar_eventapi_color_inverse($color)
     }
     return '#'.$rgb;
 }
-

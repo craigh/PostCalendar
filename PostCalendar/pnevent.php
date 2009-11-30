@@ -142,37 +142,16 @@ function postcalendar_event_new($args)
     $form_action      = FormUtil::getPassedValue('form_action');
     $authid           = FormUtil::getPassedValue('authid');
 
-    if (substr($submitted_event['endDate']['year'], 0, 4) == '0000') $submitted_event['endDate'] = $submitted_event['eventDate'];
-
-    // reformat times from form to 'real' 24-hour format (for preview and DB-insert)
-    $submitted_event['duration'] = (60 * 60 * $submitted_event['duration']['Hour']) + (60 * $submitted_event['duration']['Minute']);
-    if ((bool) !_SETTING_TIME_24HOUR) {
-        if ($submitted_event['startTime']['Meridian'] == "am") {
-            $submitted_event['startTime']['Hour'] = $submitted_event['startTime']['Hour'] == 12 ? '00' : $submitted_event['startTime']['Hour'];
-        } else {
-            $submitted_event['startTime']['Hour'] = $submitted_event['startTime']['Hour'] != 12 ? $submitted_event['startTime']['Hour'] += 12 : $submitted_event['startTime']['Hour'];
-        }
-    }
-    $startTime = sprintf('%02d', $submitted_event['startTime']['Hour']) .':'. sprintf('%02d', $submitted_event['startTime']['Minute']) .':00';
-    unset($submitted_event['startTime']);
-    $submitted_event['startTime'] = $startTime;
-    // if event ADD perms are given to anonymous users...
-    if (pnUserLoggedIn()) {
-        $submitted_event['informant'] = pnUserGetVar('uname'); // this is where need to change to uid for v6.0
-    } else {
-        $submitted_event['informant'] = pnConfigGetVar('anonymous');
-    }
-
     if ($func == 'new') { // triggered on form_action=preview && on brand new load
         // here we need generate default data for the form
         // wrap all the data into array for passing to commit and preview functions
-        if ($submitted_event['data_loaded']) $eventdata = $submitted_event; // data loaded on preview and processing of new event, but not on initial pageload
+        if ($submitted_event['data_loaded']) $eventdata = pnModAPIFunc('PostCalendar', 'event', 'formateventarrayforDB', $submitted_event); // data loaded on preview and processing of new event, but not on initial pageload
         $eventdata['is_update'] = $is_update;
         $eventdata['data_loaded'] = true;
 
-    } else { // we are editing an existing event or copying an existing event (func=edit or func=copy)
+    } else { // func=edit or func=copy (we are editing an existing event or copying an existing event)
         if ($submitted_event['data_loaded']) {
-            $eventdata = $submitted_event; // reloaded event when editing
+            $eventdata = pnModAPIFunc('PostCalendar', 'event', 'formateventarrayforDB', $submitted_event); // reloaded event when editing
             $eventdata['location_info'] = $eventdata['location'];
         } else {
             // here were need to format the DB data to be able to load it into the form
@@ -191,58 +170,15 @@ function postcalendar_event_new($args)
     if ($func == 'copy') {
         // reset some default values that are different from 'edit'
         $form_action = '';
+        $func = "new"; // change function so data is processed the second pass
         unset($eid);
         unset($eventdata['eid']);
         $eventdata['is_update'] = false;
+        // need to change informant too ?
     }
 
-    // VALIDATE FORM DATA IF ACTION IS PREVIEW OR COMMIT
-    $abort = false;
-    if (($form_action == 'preview') OR ($form_action == 'commit')) {
-        if (empty($submitted_event['title'])) {
-            LogUtil::registerError(__(/*!This is the field name from pntemplates/event/postcalendar_event_submit.html:31*/"'Title' is a required field.", $dom).'<br />');
-            $abort = true;
-        }
-
-        // check repeating frequencies
-        if ($submitted_event['repeat']['repeatval'] == REPEAT) {
-            if (!isset($submitted_event['repeat']['freq']) || $submitted_event['repeat']['freq'] < 1 || empty($submitted_event['repeat']['freq'])) {
-                LogUtil::registerError(__('Error! The repetition frequency must be at least 1.', $dom));
-                $abort = true;
-            } elseif (!is_numeric($submitted_event['repeat']['freq'])) {
-                LogUtil::registerError(__('Error! The repetition frequency must be an integer.', $dom));
-                $abort = true;
-            }
-        } elseif ($submitted_event['repeat']['repeatval'] == REPEAT_ON) {
-            if (!isset($submitted_event['repeat']['on_freq']) || $submitted_event['repeat']['on_freq'] < 1 || empty($submitted_event['repeat']['on_freq'])) {
-                LogUtil::registerError(__('Error! The repetition frequency must be at least 1.', $dom));
-                $abort = true;
-            } elseif (!is_numeric($submitted_event['repeat']['on_freq'])) {
-                LogUtil::registerError(__('Error! The repetition frequency must be an integer.', $dom));
-                $abort = true;
-            }
-        }
-
-        // check date validity
-        $sdate = strtotime($submitted_event['eventDate']);
-        $edate = strtotime($submitted_event['endDate']);
-        $tdate = strtotime(date('Y-m-d'));
-
-        if ($edate < $sdate && $submitted_event['endtype'] == 1) {
-            LogUtil::registerError(__('Error! The selected start date falls after the selected end date.', $dom));
-            $abort = true;
-        }
-        /*
-        if (!checkdate($submitted_event['eventDate']['month'], $submitted_event['eventDate']['day'], $submitted_event['eventDate']['year'])) {
-            LogUtil::registerError(__('Error! Invalid start date.', $dom));
-            $abort = true;
-        }
-        if (!checkdate($submitted_event['endDate']['month'], $submitted_event['endDate']['day'], $submitted_event['endDate']['year'])) {
-            LogUtil::registerError(__('Error! Invalid end date.', $dom));
-            $abort = true;
-        }
-        */
-    } // end if form_action = preview/commit
+    // validate form data if form action is preview or commit
+    if (($form_action == 'preview') OR ($form_action == 'commit')) $abort = pnModAPIFunc('PostCalendar', 'event', 'validateformdata', $eventdata);
 
     if ($abort) $form_action = 'preview'; // data not sufficient for commit. force preview and correct.
 
@@ -253,6 +189,7 @@ function postcalendar_event_new($args)
     // Enter the event into the DB
     //================================================================
     if ($form_action == 'commit') {
+        $sdate = strtotime($submitted_event['eventDate']);
         if (!SecurityUtil::confirmAuthKey()) return LogUtil::registerAuthidError(pnModURL('postcalendar', 'admin', 'main'));
 
         if (!$eid = pnModAPIFunc('PostCalendar', 'event', 'writeEvent', compact('eventdata','Date'))) {
