@@ -30,6 +30,8 @@ function smarty_function_pc_popup($args, &$smarty)
         $args['text'] = "overlib: attribute 'text' or 'inarray' or 'function' required";
 
     if (empty($args['trigger'])) $args['trigger'] = " onMouseOver";
+
+    if ((empty($args['capcolor'])) && (!empty($args['bgcolor']))) $args['capcolor'] = pnModAPIFunc('PostCalendar', 'event', 'color_inverse', $args['bgcolor']);
     
     $ret_val = "";
 

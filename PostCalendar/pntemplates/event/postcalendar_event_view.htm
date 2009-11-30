@@ -11,7 +11,7 @@
                 <!--[ assign var="timestamp" value=$loaded_event.startTime|date_format:"%l:%M %p" ]-->
             <!--[ /if ]-->
             <!--[ $timestamp ]--><br />
-            <!--[gt text='Duration']-->: <!--[ $loaded_event.duration_formatted ]--> <!--[gt text='hours']-->
+            <!--[gt text='Duration']-->: <!--[ $loaded_event.duration ]--> <!--[gt text='hours']-->
         <!--[ else ]-->
             <!--[gt text='All day event']-->
         <!--[ /if ]-->
