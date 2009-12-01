@@ -127,23 +127,25 @@ function postcalendar_event_new($args)
         return LogUtil::registerPermissionError();
     }
 
-    extract($args);
-
+    extract($args); // eid
     // these items come on brand new view of this function
-    $func      = FormUtil::getPassedValue('func');
+    $func      = FormUtil::getPassedValue('func', NULL);
     $Date      = FormUtil::getPassedValue('Date'); //typically formatted YYYYMMDD or YYYYMMDD000000
-
     // format to '%Y%m%d%H%M%S'
     $Date  = pnModAPIFunc('PostCalendar','user','getDate',compact('Date'));
 
     // these items come on submission of form
-    $submitted_event  = FormUtil::getPassedValue('postcalendar_events');
-    $is_update        = FormUtil::getPassedValue('is_update');
-    $form_action      = FormUtil::getPassedValue('form_action');
+    $submitted_event  = FormUtil::getPassedValue('postcalendar_events', NULL);
+    $is_update        = FormUtil::getPassedValue('is_update', false);
+    $form_action      = FormUtil::getPassedValue('form_action', NULL);
     $authid           = FormUtil::getPassedValue('authid');
+
+    // validate form data if form action is preview or commit
+    if (($form_action == 'preview') OR ($form_action == 'commit')) $abort = pnModAPIFunc('PostCalendar', 'event', 'validateformdata', $submitted_event);
 
     if ($func == 'new') { // triggered on form_action=preview && on brand new load
         // here we need generate default data for the form
+        $eventdata = array();
         // wrap all the data into array for passing to commit and preview functions
         if ($submitted_event['data_loaded']) $eventdata = pnModAPIFunc('PostCalendar', 'event', 'formateventarrayforDB', $submitted_event); // data loaded on preview and processing of new event, but not on initial pageload
         $eventdata['is_update'] = $is_update;
@@ -156,10 +158,10 @@ function postcalendar_event_new($args)
         } else {
             // here were need to format the DB data to be able to load it into the form
             $eventdata = DBUtil::selectObjectByID('postcalendar_events', $args['eid'], 'eid');
+            if ((pnUserGetVar('uname') != $eventdata['informant']) and (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN))) {
+                return LogUtil::registerError(__('Sorry! You do not have authorization to edit this event.', $dom));
+            }
             $eventdata = pnModAPIFunc('PostCalendar', 'event', 'formateventarrayfordisplay', $eventdata);
-        }
-        if ((pnUserGetVar('uname') != $eventdata['informant']) and (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN))) {
-            return LogUtil::registerError(__('Sorry! You do not have authorization to edit this event.', $dom));
         }
         // need to check each of these below to see if truly needed CAH 11/14/09
         $eventdata['Date'] = $Date;
@@ -174,11 +176,8 @@ function postcalendar_event_new($args)
         unset($eid);
         unset($eventdata['eid']);
         $eventdata['is_update'] = false;
-        // need to change informant too ?
+        $eventdata['informant'] = pnUserGetVar('uname'); // change in v6.0 to uid
     }
-
-    // validate form data if form action is preview or commit
-    if (($form_action == 'preview') OR ($form_action == 'commit')) $abort = pnModAPIFunc('PostCalendar', 'event', 'validateformdata', $eventdata);
 
     if ($abort) $form_action = 'preview'; // data not sufficient for commit. force preview and correct.
 
@@ -216,5 +215,18 @@ function postcalendar_event_new($args)
         return true;
     }
 
-    return pnModAPIFunc('PostCalendar', 'event', 'buildSubmitForm', compact('eventdata','Date','func'));
+    $submitformelements = pnModAPIFunc('PostCalendar', 'event', 'buildSubmitForm', compact('eventdata','Date'));
+    $tpl = pnRender::getInstance('PostCalendar', false);    // Turn off template caching here
+    foreach ($submitformelements as $var => $val) {
+        $tpl->assign($var, $val);
+    }
+
+    // assign some basic settings
+    $tpl->assign('EVENT_DATE_FORMAT', _SETTING_DATE_FORMAT);
+    $tpl->assign('24HOUR_TIME', _SETTING_TIME_24HOUR);
+
+    // assign function in case we were editing
+    $tpl->assign('func', $func);
+
+    return $tpl->fetch("event/postcalendar_event_submit.html");
 }

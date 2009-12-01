@@ -60,7 +60,7 @@ function postcalendar_eventapi_queryEvents($args)
     if (!isset($eventstatus) || ((int) $eventstatus < -1 || (int) $eventstatus > 1)) $eventstatus = 1;
 
     if (!isset($start)) $start = Date_Calc::dateNow('%Y-%m-%d');
-    list($sy, $sm, $sd) = explode('-', $start);
+    list($startyear, $startmonth, $startday) = explode('-', $start);
 
     $where = "WHERE pc_eventstatus=$eventstatus
               AND (pc_endDate>='$start' 
@@ -71,11 +71,11 @@ function postcalendar_eventapi_queryEvents($args)
 
     // filter event display based on selection
     /* possible event sharing values @v5.8
-    define('SHARING_PRIVATE',       0);
-    define('SHARING_PUBLIC',        1); //remove in v6.0 - convert to SHARING_GLOBAL
-    define('SHARING_BUSY',          2); //remove in v6.0 - convert to SHARING_PRIVATE
-    define('SHARING_GLOBAL',        3);
-    define('SHARING_HIDEDESC',      4); //remove in v6.0 - convert to SHARING_PRIVATE
+    'SHARING_PRIVATE',       0);
+    'SHARING_PUBLIC',        1); //remove in v6.0 - convert to SHARING_GLOBAL
+    'SHARING_BUSY',          2); //remove in v6.0 - convert to SHARING_PRIVATE
+    'SHARING_GLOBAL',        3);
+    'SHARING_HIDEDESC',      4); //remove in v6.0 - convert to SHARING_PRIVATE
     */
     switch ($pc_username) {
         case _PC_FILTER_PRIVATE: // show just private events
@@ -129,38 +129,38 @@ function postcalendar_eventapi_getEvents($args)
 
     if (!empty($s_keywords)) { unset($start); unset($end); } // clear start and end dates for search
 
-    $cy = substr($date, 0, 4);
-    $cm = substr($date, 4, 2);
-    $cd = substr($date, 6, 2);
+    $currentyear  = substr($date, 0, 4);
+    $currentmonth = substr($date, 4, 2);
+    $currentday   = substr($date, 6, 2);
 
     if (isset($start) && isset($end)) {
         // parse start date
-        list($sm, $sd, $sy) = explode('/', $start);
+        list($startmonth, $startday, $startyear) = explode('/', $start);
         // parse end date
-        list($em, $ed, $ey) = explode('/', $end);
+        list($endmonth, $endday, $endyear) = explode('/', $end);
 
-        $s = (int) "$sy$sm$sd";
+        $s = (int) "$startyear$startmonth$startday";
         if ($s > $date) {
-            $cy = $sy;
-            $cm = $sm;
-            $cd = $sd;
+            $currentyear  = $startyear;
+            $currentmonth = $startmonth;
+            $currentday   = $startday;
         }
-        $start_date = Date_Calc::dateFormat($sd, $sm, $sy, '%Y-%m-%d');
-        $end_date = Date_Calc::dateFormat($ed, $em, $ey, '%Y-%m-%d');
+        $start_date = Date_Calc::dateFormat($startday, $startmonth, $startyear, '%Y-%m-%d');
+        $end_date = Date_Calc::dateFormat($endday, $endmonth, $endyear, '%Y-%m-%d');
     } else {
-        $sm = $em = $cm;
-        $sd = $ed = $cd;
-        $sy = $cy;
-        $ey = $cy + 2;
-        $start_date = $sy . '-' . $sm . '-' . $sd;
-        $end_date = $ey . '-' . $em . '-' . $ed;
+        $startmonth = $endmonth = $currentmonth;
+        $startday = $endday = $currentday;
+        $startyear = $currentyear;
+        $endyear = $currentyear + 2; // defaults to two-year span
+        $start_date = $startyear . '-' . $startmonth . '-' . $startday;
+        $end_date = $endyear . '-' . $endmonth . '-' . $endday;
     }
-    if (!isset($events)) { // why would $events have a value?
-        if (!isset($s_keywords)) $s_keywords = '';
-        $events = pnModAPIFunc('PostCalendar', 'event', 'queryEvents', 
-            array('start'=>$start_date, 'end'=>$end_date, 's_keywords'=>$s_keywords, 
-                  'filtercats'=>$filtercats, 'pc_username'=>$pc_username));
-    }
+    //if (!isset($events)) { // why would $events have a value?
+    if (!isset($s_keywords)) $s_keywords = '';
+    $events = pnModAPIFunc('PostCalendar', 'event', 'queryEvents', 
+        array('start'=>$start_date, 'end'=>$end_date, 's_keywords'=>$s_keywords, 
+              'filtercats'=>$filtercats, 'pc_username'=>$pc_username));
+    //}
 
     //==============================================================
     // Here an array is built consisting of the date ranges
@@ -168,8 +168,8 @@ function postcalendar_eventapi_getEvents($args)
     // used to build the calendar display.
     //==============================================================
     $days = array();
-    $sday = Date_Calc::dateToDays($sd, $sm, $sy);
-    $eday = Date_Calc::dateToDays($ed, $em, $ey);
+    $sday = Date_Calc::dateToDays($startday, $startmonth, $startyear);
+    $eday = Date_Calc::dateToDays($endday, $endmonth, $endyear);
     for ($cday = $sday; $cday <= $eday; $cday++) {
         $d = Date_Calc::daysToDate($cday, '%d');
         $m = Date_Calc::daysToDate($cday, '%m');
@@ -178,12 +178,12 @@ function postcalendar_eventapi_getEvents($args)
         $days[$store_date] = array();
     }
 
-    foreach ($events as $key => $event) {
+    foreach ($events as $event) {
 
         // should this bit be moved to queryEvents? shouldn't this be accomplished other ways? via DB?
         if ($event['sharing'] == SHARING_PRIVATE && $event['aid'] != pnUserGetVar('uid') && !pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
             // if event is PRIVATE and user is not assigned event ID (aid) and user is not Admin event should not be seen
-            unset($events[$key]);
+            //unset($events[$key]);
             continue; // ??
         }
 
@@ -195,6 +195,7 @@ function postcalendar_eventapi_getEvents($args)
         // check the current event's permissions
         // the user does not have permission to view this event
         // if any of the following evaluate as false
+        // can this information be filtered in the DBUtil call? - yes using permFilter see DBUtil CAH 11/30/09
         if (!pnSecAuthAction(0, 'PostCalendar::Event', "{$event['title']}::{$event['eid']}", ACCESS_OVERVIEW)) {
             continue;
         /*} elseif (!pnSecAuthAction(0, 'PostCalendar::Category', "$event[catname]::$event[catid]", ACCESS_OVERVIEW)) {
@@ -213,22 +214,16 @@ function postcalendar_eventapi_getEvents($args)
         }
 
         switch ($event['recurrtype']) {
-            //==============================================================
-            // Events that do not repeat only have a startday
-            //==============================================================
+            // Events that do not repeat only have a startday (eventDate)
             case NO_REPEAT:
                 if (isset($days[$event['eventDate']])) {
-                    array_push($days[$event['eventDate']], $event); //CAH this line has no meaning. it seems backward and pushes the same value
+                    $days[$event['eventDate']][] = $event;
                 }
                 break;
-            //==============================================================
             // Find events that repeat at a certain frequency
-            // Every,Every Other,Every Third,Every Fourth
-            // Day,Week,Month,Year,MWF,TR,M-F,SS
-            //==============================================================
             case REPEAT:
-                $rfreq = $event['repeat']['event_repeat_freq'];
-                $rtype = $event['repeat']['event_repeat_freq_type'];
+                $rfreq = $event['repeat']['event_repeat_freq']; // could be any int
+                $rtype = $event['repeat']['event_repeat_freq_type']; // REPEAT_EVERY_DAY (0), REPEAT_EVERY_WEEK (1), REPEAT_EVERY_MONTH (2), REPEAT_EVERY_YEAR (3)
                 // we should bring the event up to date to make this a tad bit faster
                 // any ideas on how to do that, exactly??? dateToDays probably. (RNG <5.0)
                 $nm = $esM;
@@ -241,49 +236,35 @@ function postcalendar_eventapi_getEvents($args)
                 }
                 while ($occurance <= $stop) {
                     if (isset($days[$occurance])) {
-                        array_push($days[$occurance], $event);
+                        $days[$occurance][] = $event;
                     }
                     $occurance = dateIncrement($nd, $nm, $ny, $rfreq, $rtype);
                     list($ny, $nm, $nd) = explode('-', $occurance);
                 }
                 break;
-            //==============================================================
             // Find events that repeat on certain parameters
-            // On 1st,2nd,3rd,4th,Last
-            // Sun,Mon,Tue,Wed,Thu,Fri,Sat
-            //    Every N Months
-            //==============================================================
             case REPEAT_ON:
-                $rfreq = $event['repeat']['event_repeat_on_freq'];
-                $rnum = $event['repeat']['event_repeat_on_num'];
-                $rday = $event['repeat']['event_repeat_on_day'];
-                //==============================================================
-                // Populate - Enter data into the event array
-                //==============================================================
+                $rfreq = $event['repeat']['event_repeat_on_freq']; // could be any int
+                $rnum = $event['repeat']['event_repeat_on_num']; // REPEAT_ON_1ST (1), REPEAT_ON_2ND (2), REPEAT_ON_3RD (3), REPEAT_ON_4TH (4), REPEAT_ON_LAST(5)
+                $rday = $event['repeat']['event_repeat_on_day']; // REPEAT_ON_SUN (0), REPEAT_ON_MON (1), REPEAT_ON_TUE (2), REPEAT_ON_WED (3), REPEAT_ON_THU(4), REPEAT_ON_FRI (5), REPEAT_ON_SAT (6)
                 $nm = $esM;
                 $ny = $esY;
                 $nd = $esD;
                 // make us current
-                while ($ny < $cy) {
+                while ($ny < $currentyear) {
                     $occurance = date('Y-m-d', mktime(0, 0, 0, $nm + $rfreq, $nd, $ny));
                     list($ny, $nm, $nd) = explode('-', $occurance);
                 }
                 // populate the event array
-                while ($ny <= $cy) {
+                while ($ny <= $currentyear) {
                     $dnum = $rnum; // get day event repeats on
                     do {
-                        $occurance = Date_Calc::NWeekdayOfMonth(
-                            $dnum--,
-                            $rday, $nm,
-                            $ny,
-                            "%Y-%m-%d");
+                        $occurance = Date_Calc::NWeekdayOfMonth($dnum--, $rday, $nm, $ny, "%Y-%m-%d");
                     } while ($occurance === -1);
                     if (isset($days[$occurance]) && $occurance <= $stop) {
-                        array_push($days[$occurance], $event);
+                        $days[$occurance][] = $event;
                     }
-                    $occurance = date('Y-m-d',
-                        mktime(0, 0, 0, $nm + $rfreq,
-                            $nd, $ny));
+                    $occurance = date('Y-m-d', mktime(0, 0, 0, $nm + $rfreq, $nd, $ny));
                     list($ny, $nm, $nd) = explode('-', $occurance);
                 }
                 break;
@@ -300,8 +281,6 @@ function postcalendar_eventapi_getEvents($args)
  */
 function postcalendar_eventapi_writeEvent($args)
 {
-    $dom = ZLanguage::getModuleDomain('PostCalendar');
-
     $eventdata = $args['eventdata'];
     $Date      = $args['Date'];
 
@@ -320,6 +299,7 @@ function postcalendar_eventapi_writeEvent($args)
 
     if (!isset($eventdata['alldayevent'])) $eventdata['alldayevent'] = 0;
 
+    $dom = ZLanguage::getModuleDomain('PostCalendar');
     if (empty($eventdata['hometext'])) {
         $eventdata['hometext'] = ':text:' . __(/*!(abbr) not applicable or not available*/'n/a', $dom); // default description
     } else {
@@ -336,12 +316,14 @@ function postcalendar_eventapi_writeEvent($args)
 
     if ($eventdata['is_update']) {
         unset($eventdata['is_update']);
-        $result = pnModAPIFunc('postcalendar', 'event', 'update', array($eventdata[$eid] => $eventdata));
+        //$result = pnModAPIFunc('postcalendar', 'event', 'update', array($eventdata[$eid] => $eventdata));
+        $result = DBUtil::updateObjectArray(array($eventdata[$eid] => $eventdata), 'postcalendar_events', 'eid');
     } else { //new event
         unset($eventdata['eid']); //be sure that eid is not set on insert op to autoincrement value
         unset($eventdata['is_update']);
         $eventdata['time'] = date("Y-m-d H:i:s"); //current date
-        $result = pnModAPIFunc('postcalendar', 'event', 'create', $eventdata);
+        //$result = pnModAPIFunc('postcalendar', 'event', 'create', $eventdata);
+        $result = DBUtil::insertObject($eventdata, 'postcalendar_events', 'eid');
     }
     if ($result === false) return false;
 
@@ -350,17 +332,14 @@ function postcalendar_eventapi_writeEvent($args)
 
 /**
  * postcalendar_eventapi_buildSubmitForm()
+ * generate information to help build the submit form
  * this is also used on a preview of event function, so $eventdata is passed from that if 'loaded'
- * create event submit form
+ * args: 'eventdata','Date'
+ * @return $form_data (array) key, val pairs to be assigned to the template, including default event data
  */
 function postcalendar_eventapi_buildSubmitForm($args)
 {
     $dom = ZLanguage::getModuleDomain('PostCalendar');
-    $tpl = pnRender::getInstance('PostCalendar', false);    // Turn off template caching here
-
-    if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADD)) {
-        return LogUtil::registerPermissionError();
-    }
 
     $eventdata = $args['eventdata']; // contains data for editing if loaded
 
@@ -377,28 +356,26 @@ function postcalendar_eventapi_buildSubmitForm($args)
     } else {
         $eventdata['eventDatevalue'] = pnModAPIFunc('PostCalendar','user','getDate',array('Date'=>str_replace('-', '', $eventdata['eventDate']), 'format'=>_SETTING_DATE_FORMAT));
     }
-    $eventdata['aid'] = $eventdata['aid'] ? $eventdata['aid'] : pnUserGetVar('uid'); // set value of user-select box
 
     if ((pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) && (_SETTING_ALLOW_USER_CAL)) {
-        @define('_PC_FORM_USERNAME', true); // this is used in pc_form_nav_close plugin, but don't know why
         $users = DBUtil::selectFieldArray('users', 'uname', null, null, null, 'uid');
-        $tpl->assign('users', $users);
+        $form_data['users'] = $users;
     }
-    $tpl->assign('username_selected', pnUsergetVar('uname', $eventdata['aid'])); // for display of username
+    $eventdata['aid'] = $eventdata['aid'] ? $eventdata['aid'] : pnUserGetVar('uid'); // set value of user-select box
+    $form_data['username_selected'] = pnUsergetVar('uname', $eventdata['aid']); // for display of username
 
     // load the category registry util
     if (!Loader::loadClass('CategoryRegistryUtil')) {
         pn_exit(__f('Error! Unable to load class [%s]', 'CategoryRegistryUtil'));
     }
-    $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
-    $tpl->assign('catregistry', $catregistry);
+    $form_data['catregistry'] = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
 
     // All-day event values for radio buttons
-    $tpl->assign('SelectedAllday', $eventdata['alldayevent'] == 1 ? ' checked' : '');
-    $tpl->assign('SelectedTimed', (($eventdata['alldayevent'] == 0) OR (!isset($eventdata['alldayevent']))) ? ' checked' : ''); //default
+    $form_data['SelectedAllday'] = $eventdata['alldayevent'] == 1 ? ' checked' : '';
+    $form_data['SelectedTimed'] = (($eventdata['alldayevent'] == 0) OR (!isset($eventdata['alldayevent']))) ? ' checked' : ''; //default
 
     // StartTime
-    $tpl->assign('minute_interval', _SETTING_TIME_INCREMENT);
+    $form_data['minute_interval'] = _SETTING_TIME_INCREMENT;
     if (empty($eventdata['startTime'])) $eventdata['startTime'] = '01:00:00'; // default to 1:00 AM
 
     // duration
@@ -408,8 +385,7 @@ function postcalendar_eventapi_buildSubmitForm($args)
     if (empty($eventdata['HTMLorTextVal'])) $eventdata['HTMLorTextVal'] = 'text'; // default to text
 
     // create html/text selectbox
-    $eventHTMLorText = array('text' => __('Plain text', $dom), 'html' => __('HTML-formatted', $dom));
-    $tpl->assign('EventHTMLorText', $eventHTMLorText);
+    $form_data['EventHTMLorText'] = array('text' => __('Plain text', $dom), 'html' => __('HTML-formatted', $dom));
 
     // create sharing selectbox
     $data = array();
@@ -417,29 +393,30 @@ function postcalendar_eventapi_buildSubmitForm($args)
     if (pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN) || _SETTING_ALLOW_GLOBAL || !_SETTING_ALLOW_USER_CAL) {
         $data[SHARING_GLOBAL]=__('Global', $dom);
     }
-    $tpl->assign('sharingselect', $data);
+    $form_data['sharingselect'] = $data;
 
     if (!isset($eventdata['sharing'])) $eventdata['sharing'] = SHARING_GLOBAL; //default
 
     // recur type radio selects
-    $tpl->assign('SelectedNoRepeat', (((int) $eventdata['recurrtype'] == 0) OR (empty($eventdata['recurrtype']))) ? ' checked' : ''); //default
-    $tpl->assign('SelectedRepeat', (int) $eventdata['recurrtype'] == 1 ? ' checked' : '');
-    $tpl->assign('SelectedRepeatOn', (int) $eventdata['recurrtype'] == 2 ? ' checked' : '');
+    $form_data['SelectedNoRepeat'] = (((int) $eventdata['recurrtype'] == 0) OR (empty($eventdata['recurrtype']))) ? ' checked' : ''; //default
+    $form_data['SelectedRepeat'] = (int) $eventdata['recurrtype'] == 1 ? ' checked' : '';
+    $form_data['SelectedRepeatOn'] = (int) $eventdata['recurrtype'] == 2 ? ' checked' : '';
 
+    // recur select box arrays
     $in = explode ("/", __('Day(s)/Week(s)/Month(s)/Year(s)', $dom));
     $keys = array(REPEAT_EVERY_DAY, REPEAT_EVERY_WEEK, REPEAT_EVERY_MONTH, REPEAT_EVERY_YEAR);
     $selectarray = array_combine($keys, $in);
-    $tpl->assign('repeat_freq_type', $selectarray);
+    $form_data['repeat_freq_type'] = $selectarray;
 
     $in = explode ("/", __('First/Second/Third/Fourth/Last', $dom));
     $keys = array(REPEAT_ON_1ST, REPEAT_ON_2ND, REPEAT_ON_3RD, REPEAT_ON_4TH, REPEAT_ON_LAST);
     $selectarray = array_combine($keys, $in);
-    $tpl->assign('repeat_on_num', $selectarray);
+    $form_data['repeat_on_num'] = $selectarray;
 
     $in = explode (" ", __('Sun Mon Tue Wed Thu Fri Sat', $dom));
     $keys = array(REPEAT_ON_SUN, REPEAT_ON_MON, REPEAT_ON_TUE, REPEAT_ON_WED, REPEAT_ON_THU, REPEAT_ON_FRI, REPEAT_ON_SAT);
     $selectarray = array_combine($keys, $in);
-    $tpl->assign('repeat_on_day', $selectarray);
+    $form_data['repeat_on_day'] = $selectarray;
 
      // recur defaults
     if (empty($eventdata['repeat']['event_repeat_freq_type']) || $eventdata['repeat']['event_repeat_freq_type'] < 1) $eventdata['repeat']['event_repeat_freq_type'] = REPEAT_EVERY_DAY;
@@ -447,24 +424,16 @@ function postcalendar_eventapi_buildSubmitForm($args)
     if (empty($eventdata['repeat']['event_repeat_on_day']) || $eventdata['repeat']['event_repeat_on_day'] < 1) $eventdata['repeat']['event_repeat_on_day'] = REPEAT_ON_SUN;
 
     // endType
-    $tpl->assign('SelectedEndOn', (int) $eventdata['endtype'] == 1 ? ' checked' : '');
-    $tpl->assign('SelectedNoEnd', (((int) $eventdata['endtype'] == 0) OR (empty($eventdata['endtype']))) ? ' checked' : ''); //default
+    $form_data['SelectedEndOn'] = (int) $eventdata['endtype'] == 1 ? ' checked' : '';
+    $form_data['SelectedNoEnd'] = (((int) $eventdata['endtype'] == 0) OR (empty($eventdata['endtype']))) ? ' checked' : ''; //default
 
-    // Assign the content format
-    $formattedcontent = pnModAPIFunc('PostCalendar', 'event', 'isformatted', array('func' => 'new'));
-    $tpl->assign('formattedcontent', $formattedcontent);
+    // Assign the content format (determines if scribite is in use)
+    $form_data['formattedcontent'] = pnModAPIFunc('PostCalendar', 'event', 'isformatted', array('func' => 'new'));
 
     // assign loaded data or default values
-    $tpl->assign('loaded_event', DataUtil::formatForDisplay($eventdata));
+    $form_data['loaded_event'] = DataUtil::formatForDisplay($eventdata);
 
-    // assign some basic settings
-    $tpl->assign('EVENT_DATE_FORMAT', _SETTING_DATE_FORMAT);
-    $tpl->assign('24HOUR_TIME', _SETTING_TIME_24HOUR);
-
-    // assign function in case we were editing
-    $tpl->assign('func', $args['func']);
-
-    return $tpl->fetch("event/postcalendar_event_submit.html");
+    return $form_data;
 }
 
 /**
@@ -546,7 +515,7 @@ function postcalendar_eventapi_formateventarrayfordisplay($event)
  */
 function postcalendar_eventapi_formateventarrayforDB($event)
 {
-    if (substr($event['endDate']['year'], 0, 4) == '0000') $event['endDate'] = $event['eventDate'];
+    if (substr($event['endDate'], 0, 4) == '0000') $event['endDate'] = $event['eventDate'];
 
     // reformat times from form to 'real' 24-hour format
     $event['duration'] = (60 * 60 * $event['duration']['Hour']) + (60 * $event['duration']['Minute']);
@@ -566,6 +535,39 @@ function postcalendar_eventapi_formateventarrayforDB($event)
     } else {
         $event['informant'] = pnConfigGetVar('anonymous');
     }
+
+    /***** FROM WRITE EVENT FUNCTION *****/
+
+    define('PC_ACCESS_ADMIN', pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN));
+
+    // determine if the event is to be published immediately or not
+    if ((bool) _SETTING_DIRECT_SUBMIT || (bool) PC_ACCESS_ADMIN || ($event_sharing != SHARING_GLOBAL)) {
+        $event['eventstatus'] = _EVENT_APPROVED;
+    } else {
+        $event['eventstatus'] = _EVENT_QUEUED;
+    }
+
+    // format some vars for the insert statement
+    $event['endDate'] = $event['endtype'] == 1 ? $event['endDate'] : '0000-00-00';
+    unset($event['endtype']);
+
+    if (!isset($event['alldayevent'])) $event['alldayevent'] = 0;
+
+    $dom = ZLanguage::getModuleDomain('PostCalendar');
+    if (empty($event['hometext'])) {
+        $event['hometext'] = ':text:' . __(/*!(abbr) not applicable or not available*/'n/a', $dom); // default description
+    } else {
+        $event['hometext'] = ':'. $event['html_or_text'] .':'. $event['hometext']; // inserts :text:/:html: before actual content
+    }
+
+    $event['location'] = serialize($event['location']);
+    if (!isset($event['repeat']['repeatval'])) $event['repeat']['repeatval'] = 0;
+    $event['recurrspec'] = serialize($event['repeat']); unset($event['repeat']);
+    unset($event['html_or_text']);
+    unset($event['data_loaded']);
+
+    /***** END FROM WRITE EVENT FUNCTION *****/
+
 
     return $event;
 }
@@ -625,7 +627,7 @@ function postcalendar_eventapi_validateformdata($submitted_event)
     $edate = strtotime($submitted_event['endDate']);
     $tdate = strtotime(date('Y-m-d'));
 
-    if ($edate < $sdate && $submitted_event['endtype'] == 1) {
+    if (($submitted_event['endtype'] == 1) && ($edate < $sdate)) {
         LogUtil::registerError(__('Error! The selected start date falls after the selected end date.', $dom));
         $abort = true;
     }

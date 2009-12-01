@@ -52,7 +52,6 @@ function smarty_function_pc_filter($args, &$smarty)
     //================================================================
     if ((pnModGetVar('PostCalendar', 'pcAllowUserCalendar')) AND (pnUserLoggedIn())) { // do not show if users not allowed personal calendar or not logged in
         if (in_array('user', $types)) {
-            @define('_PC_FORM_USERNAME', true);
             //define array of filter options
             $filteroptions = array(
                 _PC_FILTER_GLOBAL  => __('Global Events', $dom) ." ". __('Only', $dom),
@@ -91,8 +90,6 @@ function smarty_function_pc_filter($args, &$smarty)
     // build the category filter pulldown
     //================================================================
     if (in_array('category', $types) && _SETTING_ALLOW_CAT_FILTER && _SETTING_ENABLECATS) {
-        @define('_PC_FORM_CATEGORY', true);
-
         // load the category registry util
         if (!Loader::loadClass('CategoryRegistryUtil')) {
             pn_exit (__f('Error! Unable to load class [%s]', 'CategoryRegistryUtil'));
