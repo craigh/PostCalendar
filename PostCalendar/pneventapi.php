@@ -155,6 +155,7 @@ function postcalendar_eventapi_getEvents($args)
         $start_date = $startyear . '-' . $startmonth . '-' . $startday;
         $end_date = $endyear . '-' . $endmonth . '-' . $endday;
     }
+
     //if (!isset($events)) { // why would $events have a value?
     if (!isset($s_keywords)) $s_keywords = '';
     $events = pnModAPIFunc('PostCalendar', 'event', 'queryEvents', 
@@ -179,15 +180,13 @@ function postcalendar_eventapi_getEvents($args)
     }
 
     foreach ($events as $event) {
+        $event = pnModAPIFunc('PostCalendar', 'event', 'formateventarrayfordisplay', $event);
 
         // should this bit be moved to queryEvents? shouldn't this be accomplished other ways? via DB?
         if ($event['sharing'] == SHARING_PRIVATE && $event['aid'] != pnUserGetVar('uid') && !pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
             // if event is PRIVATE and user is not assigned event ID (aid) and user is not Admin event should not be seen
-            //unset($events[$key]);
-            continue; // ??
+            continue;
         }
-
-        $event = pnModAPIFunc('PostCalendar', 'event', 'formateventarrayfordisplay', $event);
 
         // get the user id of event's author
         $cuserid = pnUserGetIDFromName(strtolower($event['informant'])); // change this to aid? for v6.0?
@@ -204,7 +203,7 @@ function postcalendar_eventapi_getEvents($args)
             continue;
         }
         // split the event start date
-        list($esY, $esM, $esD) = explode('-', $event['eventDate']);
+        list($eventstartyear, $eventstartmonth, $eventstartday) = explode('-', $event['eventDate']);
 
         // determine the stop date for this event
         if ($event['endDate'] == '0000-00-00') {
@@ -213,6 +212,7 @@ function postcalendar_eventapi_getEvents($args)
             $stop = $event['endDate'];
         }
 
+        // this switch block fills the $days array with events. It computes recurring events and adds the recurrances to the $days array also
         switch ($event['recurrtype']) {
             // Events that do not repeat only have a startday (eventDate)
             case NO_REPEAT:
@@ -220,52 +220,50 @@ function postcalendar_eventapi_getEvents($args)
                     $days[$event['eventDate']][] = $event;
                 }
                 break;
-            // Find events that repeat at a certain frequency
             case REPEAT:
                 $rfreq = $event['repeat']['event_repeat_freq']; // could be any int
                 $rtype = $event['repeat']['event_repeat_freq_type']; // REPEAT_EVERY_DAY (0), REPEAT_EVERY_WEEK (1), REPEAT_EVERY_MONTH (2), REPEAT_EVERY_YEAR (3)
                 // we should bring the event up to date to make this a tad bit faster
                 // any ideas on how to do that, exactly??? dateToDays probably. (RNG <5.0)
-                $nm = $esM;
-                $ny = $esY;
-                $nd = $esD;
-                $occurance = Date_Calc::dateFormat($nd, $nm, $ny, '%Y-%m-%d');
+                $newyear  = $eventstartyear;
+                $newmonth = $eventstartmonth;
+                $newday   = $eventstartday;
+                $occurance = Date_Calc::dateFormat($newday, $newmonth, $newyear, '%Y-%m-%d');
                 while ($occurance < $start_date) {
-                    $occurance = dateIncrement($nd, $nm, $ny, $rfreq, $rtype);
-                    list($ny, $nm, $nd) = explode('-', $occurance);
+                    $occurance = dateIncrement($newday, $newmonth, $newyear, $rfreq, $rtype);
+                    list($newyear, $newmonth, $newday) = explode('-', $occurance);
                 }
                 while ($occurance <= $stop) {
                     if (isset($days[$occurance])) {
                         $days[$occurance][] = $event;
                     }
-                    $occurance = dateIncrement($nd, $nm, $ny, $rfreq, $rtype);
-                    list($ny, $nm, $nd) = explode('-', $occurance);
+                    $occurance = dateIncrement($newday, $newmonth, $newyear, $rfreq, $rtype);
+                    list($newyear, $newmonth, $newday) = explode('-', $occurance);
                 }
                 break;
-            // Find events that repeat on certain parameters
             case REPEAT_ON:
                 $rfreq = $event['repeat']['event_repeat_on_freq']; // could be any int
-                $rnum = $event['repeat']['event_repeat_on_num']; // REPEAT_ON_1ST (1), REPEAT_ON_2ND (2), REPEAT_ON_3RD (3), REPEAT_ON_4TH (4), REPEAT_ON_LAST(5)
-                $rday = $event['repeat']['event_repeat_on_day']; // REPEAT_ON_SUN (0), REPEAT_ON_MON (1), REPEAT_ON_TUE (2), REPEAT_ON_WED (3), REPEAT_ON_THU(4), REPEAT_ON_FRI (5), REPEAT_ON_SAT (6)
-                $nm = $esM;
-                $ny = $esY;
-                $nd = $esD;
+                $rnum  = $event['repeat']['event_repeat_on_num']; // REPEAT_ON_1ST (1), REPEAT_ON_2ND (2), REPEAT_ON_3RD (3), REPEAT_ON_4TH (4), REPEAT_ON_LAST(5)
+                $rday  = $event['repeat']['event_repeat_on_day']; // REPEAT_ON_SUN (0), REPEAT_ON_MON (1), REPEAT_ON_TUE (2), REPEAT_ON_WED (3), REPEAT_ON_THU(4), REPEAT_ON_FRI (5), REPEAT_ON_SAT (6)
+                $newmonth = $eventstartmonth;
+                $newyear  = $eventstartyear;
+                $newday   = $eventstartday;
                 // make us current
-                while ($ny < $currentyear) {
-                    $occurance = date('Y-m-d', mktime(0, 0, 0, $nm + $rfreq, $nd, $ny));
-                    list($ny, $nm, $nd) = explode('-', $occurance);
+                while ($newyear < $currentyear) {
+                    $occurance = date('Y-m-d', mktime(0, 0, 0, $newmonth + $rfreq, $newday, $newyear));
+                    list($newyear, $newmonth, $newday) = explode('-', $occurance);
                 }
                 // populate the event array
-                while ($ny <= $currentyear) {
+                while ($newyear <= $currentyear) {
                     $dnum = $rnum; // get day event repeats on
                     do {
-                        $occurance = Date_Calc::NWeekdayOfMonth($dnum--, $rday, $nm, $ny, "%Y-%m-%d");
+                        $occurance = Date_Calc::NWeekdayOfMonth($dnum--, $rday, $newmonth, $newyear, "%Y-%m-%d");
                     } while ($occurance === -1);
                     if (isset($days[$occurance]) && $occurance <= $stop) {
                         $days[$occurance][] = $event;
                     }
-                    $occurance = date('Y-m-d', mktime(0, 0, 0, $nm + $rfreq, $nd, $ny));
-                    list($ny, $nm, $nd) = explode('-', $occurance);
+                    $occurance = date('Y-m-d', mktime(0, 0, 0, $newmonth + $rfreq, $newday, $newyear));
+                    list($newyear, $newmonth, $newday) = explode('-', $occurance);
                 }
                 break;
         } // <- end of switch($event['recurrtype'])
@@ -284,6 +282,7 @@ function postcalendar_eventapi_writeEvent($args)
     $eventdata = $args['eventdata'];
     $Date      = $args['Date'];
 
+    /***
     define('PC_ACCESS_ADMIN', pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN));
 
     // determine if the event is to be published immediately or not
@@ -301,28 +300,27 @@ function postcalendar_eventapi_writeEvent($args)
 
     $dom = ZLanguage::getModuleDomain('PostCalendar');
     if (empty($eventdata['hometext'])) {
-        $eventdata['hometext'] = ':text:' . __(/*!(abbr) not applicable or not available*/'n/a', $dom); // default description
+        $eventdata['hometext'] = ':text:' . __(/*!(abbr) not applicable or not available'n/a', $dom); // default description
     } else {
         $eventdata['hometext'] = ':'. $eventdata['html_or_text'] .':'. $eventdata['hometext']; // inserts :text:/:html: before actual content
     }
 
     $eventdata['location'] = serialize($eventdata['location']);
-    if (!isset($eventdata['repeat']['repeatval'])) $eventdata['repeat']['repeatval'] = 0;
+    if (!isset($eventdata['recurrtype'])) $eventdata['recurrtype'] = NO_REPEAT;
     $eventdata['recurrspec'] = serialize($eventdata['repeat']); unset($eventdata['repeat']);
     unset($eventdata['html_or_text']);
     unset($eventdata['data_loaded']);
+    **/
 
     if (!isset($eventdata['is_update'])) $eventdata['is_update'] = false;
 
     if ($eventdata['is_update']) {
         unset($eventdata['is_update']);
-        //$result = pnModAPIFunc('postcalendar', 'event', 'update', array($eventdata[$eid] => $eventdata));
         $result = DBUtil::updateObjectArray(array($eventdata[$eid] => $eventdata), 'postcalendar_events', 'eid');
     } else { //new event
         unset($eventdata['eid']); //be sure that eid is not set on insert op to autoincrement value
         unset($eventdata['is_update']);
         $eventdata['time'] = date("Y-m-d H:i:s"); //current date
-        //$result = pnModAPIFunc('postcalendar', 'event', 'create', $eventdata);
         $result = DBUtil::insertObject($eventdata, 'postcalendar_events', 'eid');
     }
     if ($result === false) return false;
@@ -460,7 +458,7 @@ function postcalendar_eventapi_formateventarrayfordisplay($event)
     if ($event['HTMLorTextVal'] == "text") $event['hometext']  = nl2br(strip_tags($event['hometext']));
 
     // add unserialized info to event array
-    $event['location_info'] = unserialize($event['location']);
+    $event['location_info'] = DataUtil::is_serialized($event['location']) ? unserialize($event['location']) : $event['location']; //on preview of formdata, location is not serialized
     $event['repeat']        = unserialize($event['recurrspec']);
 
     // build recurrance sentence for display
@@ -561,7 +559,7 @@ function postcalendar_eventapi_formateventarrayforDB($event)
     }
 
     $event['location'] = serialize($event['location']);
-    if (!isset($event['repeat']['repeatval'])) $event['repeat']['repeatval'] = 0;
+    if (!isset($event['recurrtype'])) $event['recurrtype'] = NO_REPEAT;
     $event['recurrspec'] = serialize($event['repeat']); unset($event['repeat']);
     unset($event['html_or_text']);
     unset($event['data_loaded']);
@@ -604,19 +602,19 @@ function postcalendar_eventapi_validateformdata($submitted_event)
     }
 
     // check repeating frequencies
-    if ($submitted_event['repeat']['repeatval'] == REPEAT) {
-        if (!isset($submitted_event['repeat']['freq']) || $submitted_event['repeat']['freq'] < 1 || empty($submitted_event['repeat']['freq'])) {
+    if ($submitted_event['recurrtype'] == REPEAT) {
+        if (!isset($submitted_event['repeat']['event_repeat_freq']) || $submitted_event['repeat']['event_repeat_freq'] < 1 || empty($submitted_event['repeat']['event_repeat_freq'])) {
             LogUtil::registerError(__('Error! The repetition frequency must be at least 1.', $dom));
             $abort = true;
-        } elseif (!is_numeric($submitted_event['repeat']['freq'])) {
+        } elseif (!is_numeric($submitted_event['repeat']['event_repeat_freq'])) {
             LogUtil::registerError(__('Error! The repetition frequency must be an integer.', $dom));
             $abort = true;
         }
-    } elseif ($submitted_event['repeat']['repeatval'] == REPEAT_ON) {
-        if (!isset($submitted_event['repeat']['on_freq']) || $submitted_event['repeat']['on_freq'] < 1 || empty($submitted_event['repeat']['on_freq'])) {
+    } elseif ($submitted_event['recurrtype'] == REPEAT_ON) {
+        if (!isset($submitted_event['repeat']['event_repeat_on_freq']) || $submitted_event['repeat']['event_repeat_on_freq'] < 1 || empty($submitted_event['repeat']['event_repeat_on_freq'])) {
             LogUtil::registerError(__('Error! The repetition frequency must be at least 1.', $dom));
             $abort = true;
-        } elseif (!is_numeric($submitted_event['repeat']['on_freq'])) {
+        } elseif (!is_numeric($submitted_event['repeat']['event_repeat_on_freq'])) {
             LogUtil::registerError(__('Error! The repetition frequency must be an integer.', $dom));
             $abort = true;
         }

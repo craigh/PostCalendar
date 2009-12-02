@@ -34,7 +34,7 @@ function postcalendar_searchapi_options($args)
         // assign category info
         // load the category registry util
         if (!Loader::loadClass('CategoryRegistryUtil')) {
-            pn_exit(__f('Error! Unable to load class [%s%]', 'CategoryRegistryUtil'));
+            pn_exit(__f('Error! Unable to load class [%s]', 'CategoryRegistryUtil'));
         }
         $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
         $renderer->assign('catregistry', $catregistry);

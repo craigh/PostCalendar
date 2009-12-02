@@ -113,12 +113,23 @@ function postcalendar_event_copy($args)
 /**
  * @function    postcalendar_event_new
  *
- * @Description    This function is used to generate a form for a new event
- *                 and edit an existing event
- *                 and preview a nearly submitted event
- *                 and copy an existing event
- *                 and process a submitted event
- */
+ *  This form can be loaded in nine states:
+ *  new event (first pass): no previous values, need defaults
+ *      $func=new, data_loaded=false, form_action=NULL
+ *  new event preview (subsequent pass): loaded form values refilled into form w/preview (also triggered if form does not validate - e.g. abort=true)
+ *      $func=new, data_loaded=true, form_action=preview
+ *  new event submit (subsequent pass): loaded form values - write to DB
+ *      $func=new, data_loaded=true, form_action=commit
+ *  edit existing event (first pass): load existing values from DB and fill into form
+ *      $func=edit, data_loaded=true, form_action=NULL
+ *  edit event preview (subsequent pass): loaded form values refilled  into form w/preview (also triggered if form does not validate - e.g. abort=true)
+ *      $func=edit, data_loaded=true, form_action=preview
+ *  edit event commit (subsequent pass): loaded form values - write to DB
+ *      see same for 'new'
+ *  copy existing event (first pass): load existing values from DB and fill into to form
+ *      $func=copy, data_loaded=true, form_action=NULL
+ *  copy becomes 'new' after first pass - see new event preview and new event submit above
+ **/
 function postcalendar_event_new($args)
 {
     $dom = ZLanguage::getModuleDomain('PostCalendar');
@@ -127,9 +138,9 @@ function postcalendar_event_new($args)
         return LogUtil::registerPermissionError();
     }
 
-    extract($args); // eid
+    extract($args); // eid when func=copy or func=edit
     // these items come on brand new view of this function
-    $func      = FormUtil::getPassedValue('func', NULL);
+    $func      = FormUtil::getPassedValue('func', 'new');
     $Date      = FormUtil::getPassedValue('Date'); //typically formatted YYYYMMDD or YYYYMMDD000000
     // format to '%Y%m%d%H%M%S'
     $Date  = pnModAPIFunc('PostCalendar','user','getDate',compact('Date'));
@@ -140,27 +151,25 @@ function postcalendar_event_new($args)
     $form_action      = FormUtil::getPassedValue('form_action', NULL);
     $authid           = FormUtil::getPassedValue('authid');
 
-    // validate form data if form action is preview or commit
+    // VALIDATE form data if form action is preview or commit
     if (($form_action == 'preview') OR ($form_action == 'commit')) $abort = pnModAPIFunc('PostCalendar', 'event', 'validateformdata', $submitted_event);
 
     if ($func == 'new') { // triggered on form_action=preview && on brand new load
-        // here we need generate default data for the form
         $eventdata = array();
         // wrap all the data into array for passing to commit and preview functions
-        if ($submitted_event['data_loaded']) $eventdata = pnModAPIFunc('PostCalendar', 'event', 'formateventarrayforDB', $submitted_event); // data loaded on preview and processing of new event, but not on initial pageload
+        if ($submitted_event['data_loaded']) $eventdata = $submitted_event; // data loaded on preview and processing of new event, but not on initial pageload
         $eventdata['is_update'] = $is_update;
         $eventdata['data_loaded'] = true;
 
     } else { // func=edit or func=copy (we are editing an existing event or copying an existing event)
         if ($submitted_event['data_loaded']) {
-            $eventdata = pnModAPIFunc('PostCalendar', 'event', 'formateventarrayforDB', $submitted_event); // reloaded event when editing
-            $eventdata['location_info'] = $eventdata['location'];
+            $eventdata = $submitted_event; // reloaded event when editing
         } else {
             // here were need to format the DB data to be able to load it into the form
             $eventdata = DBUtil::selectObjectByID('postcalendar_events', $args['eid'], 'eid');
             if ((pnUserGetVar('uname') != $eventdata['informant']) and (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN))) {
                 return LogUtil::registerError(__('Sorry! You do not have authorization to edit this event.', $dom));
-            }
+            } // wonder if this is needed at all... ^^^
             $eventdata = pnModAPIFunc('PostCalendar', 'event', 'formateventarrayfordisplay', $eventdata);
         }
         // need to check each of these below to see if truly needed CAH 11/14/09
@@ -172,7 +181,7 @@ function postcalendar_event_new($args)
     if ($func == 'copy') {
         // reset some default values that are different from 'edit'
         $form_action = '';
-        $func = "new"; // change function so data is processed the second pass
+        $func = "new"; // change function so data is processed as 'new' in subsequent pass
         unset($eid);
         unset($eventdata['eid']);
         $eventdata['is_update'] = false;
@@ -182,14 +191,17 @@ function postcalendar_event_new($args)
     if ($abort) $form_action = 'preview'; // data not sufficient for commit. force preview and correct.
 
     // Preview the event
-    if ($form_action == 'preview') $eventdata['preview'] = true;
+    if ($form_action == 'preview') {
+        $eventdata['preview'] = true;
+        $eventdata = pnModAPIFunc('PostCalendar', 'event', 'formateventarrayfordisplay', $eventdata);
+    }
 
-    //================================================================
     // Enter the event into the DB
-    //================================================================
     if ($form_action == 'commit') {
         $sdate = strtotime($submitted_event['eventDate']);
         if (!SecurityUtil::confirmAuthKey()) return LogUtil::registerAuthidError(pnModURL('postcalendar', 'admin', 'main'));
+
+        $eventdata = pnModAPIFunc('PostCalendar', 'event', 'formateventarrayforDB', $eventdata);
 
         if (!$eid = pnModAPIFunc('PostCalendar', 'event', 'writeEvent', compact('eventdata','Date'))) {
             LogUtil::registerError(__('Error! Submission failed.', $dom));
@@ -215,7 +227,7 @@ function postcalendar_event_new($args)
         return true;
     }
 
-    $submitformelements = pnModAPIFunc('PostCalendar', 'event', 'buildSubmitForm', compact('eventdata','Date'));
+    $submitformelements = pnModAPIFunc('PostCalendar', 'event', 'buildSubmitForm', compact('eventdata','Date')); //sets defaults or builds selected values
     $tpl = pnRender::getInstance('PostCalendar', false);    // Turn off template caching here
     foreach ($submitformelements as $var => $val) {
         $tpl->assign($var, $val);
