@@ -336,7 +336,7 @@ function postcalendar_admin_approveevents()
     $count = count($pc_eid);
 
     // update the DB
-    $res = pnModAPIFunc('PostCalendar', 'event', 'update', $eventarray);
+    $res = DBUtil::updateObjectArray($eventarray, 'postcalendar_events', 'eid');
     if ($res) {
         LogUtil::registerStatus(_fn('Done! %s event approved.', 'Done! %s events approved.', $count, $count, $dom));
     } else {
@@ -370,7 +370,7 @@ function postcalendar_admin_hideevents()
     $count=count($pc_eid);
 
     // update the DB
-    $res = pnModAPIFunc('PostCalendar', 'event', 'update', $eventarray);
+    $res = DBUtil::updateObjectArray($eventarray, 'postcalendar_events', 'eid');
     if ($res) {
         LogUtil::registerStatus(_fn('Done! %s event was hidden.', 'Done! %s events were hidden.', $count, $count, $dom));
     } else {
@@ -404,7 +404,7 @@ function postcalendar_admin_deleteevents()
     $count = count($pc_eid);
 
     // update the DB
-    $res = pnModAPIFunc('PostCalendar', 'event', 'deleteeventarray', $eventarray);
+    $res = DBUtil::deleteObjectsFromKeyArray($eventarray, 'postcalendar_events', 'eid');
     if ($res) {
         LogUtil::registerStatus(_fn('Done! %s event deleted.', 'Done! %s events deleted.', $count, $count, $dom));
     } else {

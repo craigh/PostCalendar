@@ -55,7 +55,7 @@ class postcalendar_event_editHandler extends pnFormHandler
             if ((pnUserGetVar('uname') != $event['informant']) and (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN))) {
                 return $render->pnFormSetErrorMsg(__('Sorry! You do not have authorization to delete this event.', $dom));
             }
-            $result = pnModAPIFunc('PostCalendar', 'event', 'deleteevent', array('eid' => $this->eid));
+            $result = DBUtil::deleteObjectByID('postcalendar_events', $this->eid, 'eid');
             if ($result === false) return $render->pnFormSetErrorMsg(__("Error! An 'unidentified error' occurred.", $dom));
             LogUtil::registerStatus(__('Done! The event was deleted.', $dom));
 
@@ -213,7 +213,7 @@ function postcalendar_event_new($args)
 
         $eventdata = pnModAPIFunc('PostCalendar', 'event', 'formateventarrayforDB', $eventdata);
 
-        if (!$eid = pnModAPIFunc('PostCalendar', 'event', 'writeEvent', compact('eventdata','Date'))) {
+        if (!$eid = pnModAPIFunc('PostCalendar', 'event', 'writeEvent', compact('eventdata'))) {
             LogUtil::registerError(__('Error! Submission failed.', $dom));
         } else {
             pnModAPIFunc('PostCalendar', 'admin', 'clearCache');

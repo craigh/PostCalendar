@@ -156,12 +156,10 @@ function postcalendar_eventapi_getEvents($args)
         $end_date = $endyear . '-' . $endmonth . '-' . $endday;
     }
 
-    //if (!isset($events)) { // why would $events have a value?
     if (!isset($s_keywords)) $s_keywords = '';
     $events = pnModAPIFunc('PostCalendar', 'event', 'queryEvents', 
         array('start'=>$start_date, 'end'=>$end_date, 's_keywords'=>$s_keywords, 
               'filtercats'=>$filtercats, 'pc_username'=>$pc_username));
-    //}
 
     //==============================================================
     // Here an array is built consisting of the date ranges
@@ -280,8 +278,6 @@ function postcalendar_eventapi_getEvents($args)
 function postcalendar_eventapi_writeEvent($args)
 {
     $eventdata = $args['eventdata'];
-    $Date      = $args['Date'];
-
     if (!isset($eventdata['is_update'])) $eventdata['is_update'] = false;
 
     if ($eventdata['is_update']) {
@@ -534,19 +530,6 @@ function postcalendar_eventapi_formateventarrayforDB($event)
 }
 
 /**
- * @function    postcalendar_eventapi_formateventarrayforedit()
- * @description This function reformats the information in an event array for proper display in edit/copy event form
- * @args        $event (array) event array as pulled from the DB
- * @author      Craig Heydenburg
- *
- * @return      $event (array) modified array for edit/copy event form
- */
-function postcalendar_eventapi_formateventarrayforedit($event)
-{
-    return $event;
-}
-
-/**
  * @function    postcalendar_eventapi_validateformdata()
  * @description This function validates the data that has been submitted in the new/edit event form
  * @args        $submitted_event (array) event array as submitted
@@ -603,67 +586,6 @@ function postcalendar_eventapi_validateformdata($submitted_event)
     }
     */
     return $abort;
-}
-
-/**
- * postcalendar_eventapi_create()
- * This function creates a new event row in the DB
- * expected args: obj=array([colname]=>[newval],[colname]=>[newval],[colname]=>[newval], etc...)
- *
- *  returns the created object with updated id field
- */
-function postcalendar_eventapi_create($obj)
-{
-    if (!is_array($obj)) return false;
-    $res = DBUtil::insertObject($obj, 'postcalendar_events', 'eid');
-    if ($res) {
-        return $res;
-    } else {
-        return false;
-    }
-}
-
-/**
- * postcalendar_eventapi_update()
- * This function updates many events at once with any new values...
- * expected args: eventarray=array([id]=>array([id]=>[idval],[colname]=>[newval],
- *     [id2]=>array([id2]=>[idval],[colname]=>[newval])
- *
- *  returns the updated object(s)
- */
-function postcalendar_eventapi_update($eventarray)
-{
-    if (!is_array($eventarray)) return false;
-    $res = DBUtil::updateObjectArray($eventarray, 'postcalendar_events', 'eid');
-    if ($res) {
-        return $res;
-    } else {
-        return false;
-    }
-}
-
-/**
- * postcalendar_eventapi_deleteevent
- * This function deletes one event provided the event ID (eid)
- * expected args: args=array(['eid']=>idval)
- *
- */
-function postcalendar_eventapi_deleteevent($args)
-{
-    return DBUtil::deleteObjectByID('postcalendar_events', $args['eid'], 'eid');
-}
-
-/**
- * postcalendar_eventapi_deleteeventarray
- * This function deletes several events when provided an array of ids
- * expected args: args=array([idval]=>val,[idval2]=>val,[idval3]=>val...)
- * note the vals are not used. just the keys
- *
- */
-function postcalendar_eventapi_deleteeventarray($args)
-{
-    if (!is_array($args)) return false;
-    return DBUtil::deleteObjectsFromKeyArray($args, 'postcalendar_events', 'eid');
 }
 
 /**
