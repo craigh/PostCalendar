@@ -268,13 +268,6 @@ function postcalendar_calendarblock_modify($blockinfo)
 
     $pnRender->assign('vars', $vars);
 
-    // clear the block cache
-    $pnRender = pnRender::getInstance('PostCalendar');
-
-    $pnRender->clear_cache('blocks/postcalendar_block_view_day.html');
-    $pnRender->clear_cache('blocks/postcalendar_block_view_month.html');
-    $pnRender->clear_cache('blocks/postcalendar_block_view_upcoming.html');
-
     return $pnRender->fetch('blocks/postcalendar_block_calendar_modify.html');
 }
 
