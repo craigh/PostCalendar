@@ -193,6 +193,16 @@ function postcalendar_event_new($args)
     // Preview the event
     if ($form_action == 'preview') {
         $eventdata['preview'] = true;
+        // format the data for editing
+        $eventdata = pnModAPIFunc('PostCalendar', 'event', 'formateventarrayforDB', $eventdata);
+        // reformat the category information
+        Loader::loadClass('CategoryUtil');
+        foreach ($eventdata['__CATEGORIES__'] as $name => $id) {
+            $categories[$name] = CategoryUtil::getCategoryByID($id);
+        }
+        unset($eventdata['__CATEGORIES__']);
+        $eventdata['__CATEGORIES__'] = $categories;
+        // format the data for preview
         $eventdata = pnModAPIFunc('PostCalendar', 'event', 'formateventarrayfordisplay', $eventdata);
     }
 

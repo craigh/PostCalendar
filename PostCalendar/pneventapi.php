@@ -282,41 +282,12 @@ function postcalendar_eventapi_writeEvent($args)
     $eventdata = $args['eventdata'];
     $Date      = $args['Date'];
 
-    /***
-    define('PC_ACCESS_ADMIN', pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN));
-
-    // determine if the event is to be published immediately or not
-    if ((bool) _SETTING_DIRECT_SUBMIT || (bool) PC_ACCESS_ADMIN || ($event_sharing != SHARING_GLOBAL)) {
-        $eventdata['eventstatus'] = _EVENT_APPROVED;
-    } else {
-        $eventdata['eventstatus'] = _EVENT_QUEUED;
-    }
-
-    // format some vars for the insert statement
-    $eventdata['endDate'] = $eventdata['endtype'] == 1 ? $eventdata['endDate'] : '0000-00-00';
-    unset($eventdata['endtype']);
-
-    if (!isset($eventdata['alldayevent'])) $eventdata['alldayevent'] = 0;
-
-    $dom = ZLanguage::getModuleDomain('PostCalendar');
-    if (empty($eventdata['hometext'])) {
-        $eventdata['hometext'] = ':text:' . __(/*!(abbr) not applicable or not available'n/a', $dom); // default description
-    } else {
-        $eventdata['hometext'] = ':'. $eventdata['html_or_text'] .':'. $eventdata['hometext']; // inserts :text:/:html: before actual content
-    }
-
-    $eventdata['location'] = serialize($eventdata['location']);
-    if (!isset($eventdata['recurrtype'])) $eventdata['recurrtype'] = NO_REPEAT;
-    $eventdata['recurrspec'] = serialize($eventdata['repeat']); unset($eventdata['repeat']);
-    unset($eventdata['html_or_text']);
-    unset($eventdata['data_loaded']);
-    **/
-
     if (!isset($eventdata['is_update'])) $eventdata['is_update'] = false;
 
     if ($eventdata['is_update']) {
         unset($eventdata['is_update']);
-        $result = DBUtil::updateObjectArray(array($eventdata[$eid] => $eventdata), 'postcalendar_events', 'eid');
+        $obj = array($eventdata['eid'] => $eventdata);
+        $result = DBUtil::updateObjectArray($obj, 'postcalendar_events', 'eid');
     } else { //new event
         unset($eventdata['eid']); //be sure that eid is not set on insert op to autoincrement value
         unset($eventdata['is_update']);
@@ -534,8 +505,6 @@ function postcalendar_eventapi_formateventarrayforDB($event)
         $event['informant'] = pnConfigGetVar('anonymous');
     }
 
-    /***** FROM WRITE EVENT FUNCTION *****/
-
     define('PC_ACCESS_ADMIN', pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN));
 
     // determine if the event is to be published immediately or not
@@ -547,7 +516,6 @@ function postcalendar_eventapi_formateventarrayforDB($event)
 
     // format some vars for the insert statement
     $event['endDate'] = $event['endtype'] == 1 ? $event['endDate'] : '0000-00-00';
-    unset($event['endtype']);
 
     if (!isset($event['alldayevent'])) $event['alldayevent'] = 0;
 
@@ -560,12 +528,7 @@ function postcalendar_eventapi_formateventarrayforDB($event)
 
     $event['location'] = serialize($event['location']);
     if (!isset($event['recurrtype'])) $event['recurrtype'] = NO_REPEAT;
-    $event['recurrspec'] = serialize($event['repeat']); unset($event['repeat']);
-    unset($event['html_or_text']);
-    unset($event['data_loaded']);
-
-    /***** END FROM WRITE EVENT FUNCTION *****/
-
+    $event['recurrspec'] = serialize($event['repeat']);
 
     return $event;
 }

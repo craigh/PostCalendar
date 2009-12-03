@@ -1,13 +1,15 @@
+<!--[ pndebug ]-->
 <!--[*  $Id$  *]-->
 <!--[pnmodgetvar module="PostCalendar" name="pcAllowUserCalendar"|pnvarprepfordisplay assign="pcAllowUserCalendar"]-->
 <!--[pnmodgetvar module="PostCalendar" name="enablecategorization" assign="enablecats"]-->
 <!--[pnpageaddvar name="javascript" value="modules/PostCalendar/pnjavascript/postcalendar_submit_validate.js"]-->
+<!--[if $func eq "edit"]--><!--[gt text='Edit' assign="titletext"]--><!--[else]--><!--[gt text='Create new' assign="titletext"]--><!--[/if]-->
 
 <!--[ include file="user/postcalendar_user_navigation_small.html" ]-->
 
 <!--[if ($loaded_event.preview ne "")]-->
     <div id="postcalendar_addevent_previewevent">
-        <h3 style='border-bottom: 1px solid #999999;'><i><!--[gt text='Event preview']--></i></h3>
+        <h2 id="previewtitle"><!--[gt text='Event preview']--></h2>
         <!--[ include file="event/postcalendar_event_view.htm" ]-->
     </div>
 <!--[/if]-->
@@ -16,7 +18,7 @@
 
 <div style='border-color:#CCCCCC;border-style:solid;border-width:0 1px 1px;color:inherit;margin-bottom:1.25em;padding:0 1% 5px;width:auto;'>
 <span style='float:right;'><!--[pnimg modname=PostCalendar src=admin.gif __alt="PostCalendar Rocks!"]--></span>
-<h2 style='border-bottom:1px solid #CCCCCC;margin:2em 0 1em;text-align:left;'><!--[gt text='Create new calendar event']--></h2>
+<h2 style='border-bottom:1px solid #CCCCCC;margin:2em 0 1em;text-align:left;'><!--[$titletext]-->&nbsp;<!--[gt text='calendar event']--></h2>
 <div style="padding-top:16px;">
     <div id="postcalendar_addevent_leftcol">
         <label for="postcalendar_events_title"><b><!--[gt text='Title']--></b></label><span style='color:red;padding-left:5em;'>*<!--[gt text='Required']--></span><br />
