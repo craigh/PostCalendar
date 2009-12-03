@@ -41,6 +41,8 @@ function postcalendar_init()
     }
 
     postcalendar_init_reset_scribite();
+    _postcalendar_createdefaultsubcategory();
+    _postcalendar_createinstallevent();
 
     return true;
 }
@@ -241,7 +243,7 @@ function postcalendar_init_reset_scribite()
 
         // Error tracking
         if ($mid === false) {
-            LogUtil::registerError (__('Error! Could not update the configuration.', $dom));
+            LogUtil::registerError (__('Error! Could not update the scribite configuration.', $dom));
         }
     }
 }
@@ -510,7 +512,8 @@ function _postcalendar_createtopicscategory($regpath = '/__SYSTEM__/Modules/Topi
     if (!pnModAvailable('Topics')) return false;
 
     // get the language file
-    $lang = pnUserGetLang();
+    $lang = ZLanguage::getLanguageCodeLegacy(); // need old three letter code for Topics
+
 
     // load necessary classes
     Loader::loadClass('CategoryUtil');
@@ -627,6 +630,7 @@ function _postcalendar_gettopicsmap($topicspath = '/__SYSTEM__/Modules/Topics')
  */
 function _postcalendar_cull_meetings()
 {
+    $dom = ZLanguage::getModuleDomain('PostCalendar');
     $prefix = pnConfigGetVar('prefix');
     $sql = "SELECT pc_eid, pc_meeting_id FROM {$prefix}_postcalendar_events WHERE pc_meeting_id > 0 ORDER BY pc_meeting_id, pc_eid";
     $result = DBUtil::executeSQL($sql);
@@ -644,4 +648,75 @@ function _postcalendar_cull_meetings()
     LogUtil::registerStatus (__f('PostCalendar: Meetings culled. %s column dropped', 'pc_meeting_id', $dom));
 
     return true;
+}
+
+/**
+ * create initial calendar event
+ * @author Craig Heydenburg
+ */
+function _postcalendar_createinstallevent()
+{
+    $dom = ZLanguage::getModuleDomain('PostCalendar');
+
+    Loader::loadClass('CategoryUtil');
+    $cat = CategoryUtil::getCategoryByPath('/__SYSTEM__/Modules/PostCalendar/Events');
+
+    $event = array (
+        'title'          => __('PostCalendar Installed', $dom),
+        'hometext'       => __(':text:On this date, the PostCalendar module was installed. Thank you for trying PostCalendar! This event can be safely deleted if you wish.', $dom),
+        'aid'            => pnUserGetVar('uid'),
+        'time'           => date("Y-m-d H:i:s"),
+        'informant'      => pnUserGetVar('uname'), //change this to uid in v6.0?
+        'eventDate'      => pnModAPIFunc('PostCalendar','user','getDate',array('format'=>'%Y-%m-%d')),
+        'duration'       => 3600,
+        'recurrtype'     => 0, //norepeat
+        'recurrspec'     => 'a:5:{s:17:"event_repeat_freq";s:0:"";s:22:"event_repeat_freq_type";s:1:"0";s:19:"event_repeat_on_num";s:1:"1";s:19:"event_repeat_on_day";s:1:"0";s:20:"event_repeat_on_freq";s:0:"";}',
+        'startTime'      => '01:00:00',
+        'alldayevent'    => 1,
+        'location'       => 'a:6:{s:14:"event_location";s:0:"";s:13:"event_street1";s:0:"";s:13:"event_street2";s:0:"";s:10:"event_city";s:0:"";s:11:"event_state";s:0:"";s:12:"event_postal";s:0:"";}',
+        'eventstatus'    => 1, // approved
+        'sharing'        => 3, // global
+        '__CATEGORIES__' => array('Events' => $cat['id']),
+    );
+
+    if (DBUtil::insertObject($event, 'postcalendar_events', 'eid')) return true;
+
+    return LogUtil::registerError(__('Error! Could not create an installation event.', $dom));
+
+}
+
+/**
+ * create initial category on first install
+ * @author Craig Heydenburg
+ */
+function _postcalendar_createdefaultsubcategory()
+{
+    $dom = ZLanguage::getModuleDomain('PostCalendar');
+
+    // load necessary classes
+    Loader::loadClass('CategoryUtil');
+    Loader::loadClassFromModule('Categories', 'Category');
+    Loader::loadClassFromModule('Categories', 'CategoryRegistry');
+
+    // get the language file
+    $lang = ZLanguage::getLanguageCode();
+
+    // get the category path
+    $rootcat = CategoryUtil::getCategoryByPath('/__SYSTEM__/Modules/PostCalendar');
+
+    $cat = new PNCategory ();
+    $data = $cat->getData();
+    $data['parent_id']               = $rootcat['id'];
+    $data['name']                    = __('Events', $dom);
+    $data['display_name']            = array($lang => __('Events', $dom));
+    $data['display_desc']            = array($lang => __('Initial sub-category created on install', $dom));
+    $data['__ATTRIBUTES__']['color'] = '#000000';
+    $cat->setData ($data);
+    if (!$cat->validate('admin')) {
+        return false;
+    }
+    if ($cat->insert()) return true;
+
+    return LogUtil::registerError(__('Error! Could not create an initial sub-category.', $dom));
+    
 }
