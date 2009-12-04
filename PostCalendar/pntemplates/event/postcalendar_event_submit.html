@@ -3,7 +3,13 @@
 <!--[pnmodgetvar module="PostCalendar" name="pcAllowUserCalendar"|pnvarprepfordisplay assign="pcAllowUserCalendar"]-->
 <!--[pnmodgetvar module="PostCalendar" name="enablecategorization" assign="enablecats"]-->
 <!--[pnpageaddvar name="javascript" value="modules/PostCalendar/pnjavascript/postcalendar_submit_validate.js"]-->
-<!--[if $func eq "edit"]--><!--[gt text='Edit' assign="titletext"]--><!--[else]--><!--[gt text='Create new' assign="titletext"]--><!--[/if]-->
+<!--[if $func eq "edit"]-->
+    <!--[gt text='Edit' assign="titletext"]-->
+    <!--[gt text='Update event' assign="submittext"]-->
+<!--[else]-->
+    <!--[gt text='Create new' assign="titletext"]-->
+    <!--[gt text='Submit event' assign="submittext"]-->
+<!--[/if]-->
 
 <!--[ include file="user/postcalendar_user_navigation_small.html" ]-->
 
@@ -157,8 +163,8 @@
 
 <div id="postcalendar_addevent_formaction">
     <select name="form_action">
-    	<option value="preview"><!--[gt text='Preview']--></option>
-    	<option value="commit" selected><!--[gt text='Submit']--></option>
+    	<option value="preview"><!--[gt text='Preview event']--></option>
+    	<option value="commit" selected><!--[$submittext]--></option>
     </select><input type="submit" name="_submit" value="go">
 </div>
 

@@ -29,7 +29,7 @@
                     <li class="pc_blockevent">
                         <!--[ pc_popup bgcolor=$event.catcolor caption=$event.title text=$event.hometext|truncate:255:"..." assign="javascript"]-->
                         <!--[ pc_url full=true class="eventlink" action="detail" eid=$event.eid date=$date javascript=$javascript display="$timestamp `$event.title`"|strip_tags ]-->
-                        <!--[ if $event.alldayevent != true ]-->&nbsp;(<!--[ $event.duration_formatted ]--> <!--[gt text='Long']-->)<!--[ /if ]-->
+                        <!--[ if $event.alldayevent != true ]-->&nbsp;(<!--[ $event.duration ]--> <!--[gt text='Long']-->)<!--[ /if ]-->
                     </li>
                 </ul>
             <!--[ /if ]-->

@@ -183,13 +183,6 @@ function postcalendar_calendarblock_display($blockinfo)
         $tpl->assign_by_ref('CAL_FORMAT', $calendarView);
     }
 
-    // format duration for each event
-    foreach ($eventsByDate as $k => $v) {
-        foreach (array_keys($v) as $kk) {
-            $eventsByDate[$k][$kk]['duration_formatted'] = gmdate("G:i", $eventsByDate[$k][$kk]['duration']);
-        }
-    }
-
     $tpl->assign_by_ref('A_MONTH_NAMES', $pc_month_names);
     $tpl->assign_by_ref('A_LONG_DAY_NAMES', $pc_long_day_names);
     $tpl->assign_by_ref('A_SHORT_DAY_NAMES', $pc_short_day_names);
