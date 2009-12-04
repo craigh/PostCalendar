@@ -48,7 +48,8 @@ function postcalendar_featuredeventblock_display($blockinfo)
 
     // Defaults
     if (empty($vars['eid'])) {
-        $vars['eid'] = ''; // make most recent event?
+        return false;
+        //$vars['eid'] = ''; // make most recent event?
     }
 
     // get the event from the DB
@@ -89,11 +90,11 @@ function postcalendar_featuredeventblock_modify($blockinfo)
 {
     $vars = pnBlockVarsFromContent($blockinfo['content']);
     // Defaults
-    if (empty($vars['eid'])) $vars['eid'] = 0; // make most recent event?
+    if (empty($vars['eid'])) $vars['eid'] = ''; // make most recent event?
 
     $pnRender = new pnRender('PostCalendar', false); // no caching
 
-    $pnRender->assign('vars', $vars);
+    $pnRender->assign('eid', $vars['eid']);
 
     return $pnRender->fetch('blocks/postcalendar_block_featuredevent_modify.htm');
 }
@@ -106,7 +107,7 @@ function postcalendar_featuredeventblock_update($blockinfo)
     $vars = pnBlockVarsFromContent($blockinfo['content']);
 
     // alter the corresponding variable
-    $vars['eid'] = FormUtil::getPassedValue('eid', 0, 'POST'); // make most recent event?
+    $vars['eid'] = FormUtil::getPassedValue('eid', '', 'POST'); // make most recent event?
 
     // write back the new contents
     $blockinfo['content'] = pnBlockVarsToContent($vars);
