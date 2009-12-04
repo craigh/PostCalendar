@@ -19,7 +19,7 @@ require_once dirname(__FILE__) . '/global.php';
 function postcalendar_user_main()
 {
     // check the authorization
-    if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_OVERVIEW)) {
+    if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_OVERVIEW)) {
         return LogUtil::registerPermissionError();
     }
     return postcalendar_user_view();
@@ -32,7 +32,7 @@ function postcalendar_user_main()
  */
 function postcalendar_user_view()
 {
-    if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_OVERVIEW)) {
+    if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_OVERVIEW)) {
         return LogUtil::registerPermissionError();
     }
 
@@ -69,7 +69,7 @@ function postcalendar_user_display($args)
     
     switch ($viewtype) {
         case 'details':
-            if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_READ)) {
+            if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_READ)) {
                 return LogUtil::registerPermissionError();
             }
 
@@ -83,7 +83,7 @@ function postcalendar_user_display($args)
                 $event = pnModAPIFunc('PostCalendar', 'event', 'formateventarrayfordisplay', $event);
 
                 // is event allowed for this user?
-                if ($event['sharing'] == SHARING_PRIVATE && $event['aid'] != pnUserGetVar('uid') && !pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
+                if ($event['sharing'] == SHARING_PRIVATE && $event['aid'] != pnUserGetVar('uid') && !SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
                     // if event is PRIVATE and user is not assigned event ID (aid) and user is not Admin event should not be seen
                     return LogUtil::registerError(__('You do not have permission to view this event.', $dom));
                 }
@@ -104,8 +104,8 @@ function postcalendar_user_display($args)
                     $tpl->display('user/postcalendar_user_view_popup.html', $cacheid);
                     return true; // displays template without theme wrap
                 } else {
-                    if ((pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADD) && (pnUserGetVar('uid') == $event['aid']))
-                        || pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
+                    if ((SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADD) && (pnUserGetVar('uid') == $event['aid']))
+                        || SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
                         $tpl->assign('EVENT_CAN_EDIT', true);
                     } else {
                         $tpl->assign('EVENT_CAN_EDIT', false);
@@ -116,7 +116,7 @@ function postcalendar_user_display($args)
             break;
 
         default:
-            if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_OVERVIEW)) {
+            if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_OVERVIEW)) {
                 return LogUtil::registerPermissionError();
             }
             //now function just returns an array of information to pass to template 5/9/09 CAH

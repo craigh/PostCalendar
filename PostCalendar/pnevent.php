@@ -21,7 +21,7 @@ class postcalendar_event_editHandler extends pnFormHandler
     function initialize(&$render)
     {
         $dom = ZLanguage::getModuleDomain('PostCalendar');
-        if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADD)) return $render->pnFormSetErrorMsg(__('Sorry! Authorization has not been granted.', $dom));
+        if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADD)) return $render->pnFormSetErrorMsg(__('Sorry! Authorization has not been granted.', $dom));
 
         $this->eid = FormUtil::getPassedValue('eid');
 
@@ -52,7 +52,7 @@ class postcalendar_event_editHandler extends pnFormHandler
             $url = pnModUrl('howtopnforms', 'recipe', 'view', array('rid' => $this->recipeId));
             */
         } else if ($args['commandName'] == 'delete') {
-            if ((pnUserGetVar('uname') != $event['informant']) and (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN))) {
+            if ((pnUserGetVar('uname') != $event['informant']) and (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN))) {
                 return $render->pnFormSetErrorMsg(__('Sorry! You do not have authorization to delete this event.', $dom));
             }
             $result = DBUtil::deleteObjectByID('postcalendar_events', $this->eid, 'eid');
@@ -80,7 +80,7 @@ class postcalendar_event_editHandler extends pnFormHandler
  */
 function postcalendar_event_delete()
 {
-    if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADD)) {
+    if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADD)) {
         return LogUtil::registerPermissionError();
     }
     $eid = FormUtil::getPassedValue('eid'); //  seems like this should be handled by the eventHandler
@@ -134,7 +134,7 @@ function postcalendar_event_new($args)
 {
     $dom = ZLanguage::getModuleDomain('PostCalendar');
     // We need at least ADD permission to submit an event
-    if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADD)) {
+    if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADD)) {
         return LogUtil::registerPermissionError();
     }
 
@@ -167,7 +167,7 @@ function postcalendar_event_new($args)
         } else {
             // here were need to format the DB data to be able to load it into the form
             $eventdata = DBUtil::selectObjectByID('postcalendar_events', $args['eid'], 'eid');
-            if ((pnUserGetVar('uname') != $eventdata['informant']) and (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN))) {
+            if ((pnUserGetVar('uname') != $eventdata['informant']) and (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN))) {
                 return LogUtil::registerError(__('Sorry! You do not have authorization to edit this event.', $dom));
             } // wonder if this is needed at all... ^^^
             $eventdata = pnModAPIFunc('PostCalendar', 'event', 'formateventarrayfordisplay', $eventdata);
@@ -223,7 +223,7 @@ function postcalendar_event_new($args)
             } else {
                 LogUtil::registerStatus(__f('Done! Submitted the event. (event date: %s)', $presentation_date, $dom));
             }
-            if ((!_SETTING_DIRECT_SUBMIT) && (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN))) {
+            if ((!_SETTING_DIRECT_SUBMIT) && (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN))) {
                  LogUtil::registerStatus(__('The event has been queued for administrator approval.', $dom));
             }
 

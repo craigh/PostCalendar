@@ -58,7 +58,7 @@ function postcalendar_featuredeventblock_display($blockinfo)
     $event = pnModAPIFunc('PostCalendar', 'event', 'formateventarrayfordisplay', $event);
 
     // is event allowed for this user?
-    if ($event['sharing'] == SHARING_PRIVATE && $event['aid'] != pnUserGetVar('uid') && !pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
+    if ($event['sharing'] == SHARING_PRIVATE && $event['aid'] != pnUserGetVar('uid') && !SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
     // if event is PRIVATE and user is not assigned event ID (aid) and user is not Admin event should not be seen
         return '';
     }

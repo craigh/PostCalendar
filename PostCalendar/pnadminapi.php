@@ -23,22 +23,22 @@ function postcalendar_adminapi_getlinks()
 
     // Check the users permissions to each avaiable action within the admin panel
     // and populate the links array if the user has permission
-    if (pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
+    if (SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
         $links[] = array('url' => pnModURL('PostCalendar', 'admin', 'modifyconfig'), 'text' => __('Settings', $dom));
     }
-    if (pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADD)) {
+    if (SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADD)) {
         $links[] = array('url' => pnModURL('PostCalendar', 'event', 'new'), 'text' => __('Create new event', $dom));
     }
-    if (pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
+    if (SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
         $links[] = array('url' => pnModURL('PostCalendar', 'admin', 'listapproved'), 'text' => __('Approved events', $dom));
     }
-    if (pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
+    if (SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
         $links[] = array('url' => pnModURL('PostCalendar', 'admin', 'listhidden'), 'text' => __('Hidden events', $dom));
     }
-    if (pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
+    if (SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
         $links[] = array('url' => pnModURL('PostCalendar', 'admin', 'listqueued'), 'text' => __('Queued events', $dom));
     }
-    if (pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
+    if (SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
         $links[] = array('url' => pnModURL('PostCalendar', 'admin', 'manualClearCache'), 'text' => __('Clear Smarty cache', $dom));
     }
 

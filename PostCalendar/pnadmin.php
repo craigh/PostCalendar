@@ -18,7 +18,7 @@ require_once dirname(__FILE__) . '/global.php';
  */
 function postcalendar_admin_main()
 {
-    if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
+    if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
         return LogUtil::registerPermissionError();
     }
     return postcalendar_admin_modifyconfig();
@@ -31,7 +31,7 @@ function postcalendar_admin_main()
  */
 function postcalendar_admin_modifyconfig()
 {
-    if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
+    if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
         return LogUtil::registerPermissionError();
     }
 
@@ -98,7 +98,7 @@ function postcalendar_admin_listqueued()
 function postcalendar_admin_showlist($args)
 {
     $dom = ZLanguage::getModuleDomain('PostCalendar');
-    if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
+    if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
         return LogUtil::registerPermissionError();
     }
 
@@ -154,7 +154,7 @@ function postcalendar_admin_showlist($args)
 function postcalendar_admin_adminevents()
 {
     $dom = ZLanguage::getModuleDomain('PostCalendar');
-    if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
+    if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
         return LogUtil::registerPermissionError();
     }
 
@@ -223,7 +223,7 @@ function postcalendar_admin_adminevents()
 function postcalendar_admin_resetDefaults()
 {
     $dom = ZLanguage::getModuleDomain('PostCalendar');
-    if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
+    if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
         return LogUtil::registerPermissionError();
     }
 
@@ -253,7 +253,7 @@ function postcalendar_admin_resetDefaults()
 function postcalendar_admin_updateconfig()
 {
     $dom = ZLanguage::getModuleDomain('PostCalendar');
-    if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
+    if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
         return LogUtil::registerPermissionError();
     }
 
@@ -302,7 +302,7 @@ function postcalendar_admin_updateconfig()
 function postcalendar_admin_manualClearCache()
 {
     $dom = ZLanguage::getModuleDomain('PostCalendar');
-    if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
+    if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
         return LogUtil::registerPermissionError();
     }
     $clear = pnModAPIFunc('PostCalendar', 'admin', 'clearCache');
@@ -321,7 +321,7 @@ function postcalendar_admin_manualClearCache()
 function postcalendar_admin_approveevents()
 {
     $dom = ZLanguage::getModuleDomain('PostCalendar');
-    if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADD)) {
+    if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADD)) {
         return LogUtil::registerPermissionError();
     }
 
@@ -355,7 +355,7 @@ function postcalendar_admin_approveevents()
 function postcalendar_admin_hideevents()
 {
     $dom = ZLanguage::getModuleDomain('PostCalendar');
-    if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_EDIT)) {
+    if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_EDIT)) {
         return LogUtil::registerPermissionError();
     }
 
@@ -389,7 +389,7 @@ function postcalendar_admin_hideevents()
 function postcalendar_admin_deleteevents()
 {
     $dom = ZLanguage::getModuleDomain('PostCalendar');
-    if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_DELETE)) {
+    if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_DELETE)) {
         return LogUtil::registerPermissionError();
     }
 

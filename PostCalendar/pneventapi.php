@@ -181,7 +181,7 @@ function postcalendar_eventapi_getEvents($args)
         $event = pnModAPIFunc('PostCalendar', 'event', 'formateventarrayfordisplay', $event);
 
         // should this bit be moved to queryEvents? shouldn't this be accomplished other ways? via DB?
-        if ($event['sharing'] == SHARING_PRIVATE && $event['aid'] != pnUserGetVar('uid') && !pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
+        if ($event['sharing'] == SHARING_PRIVATE && $event['aid'] != pnUserGetVar('uid') && !SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
             // if event is PRIVATE and user is not assigned event ID (aid) and user is not Admin event should not be seen
             continue;
         }
@@ -193,11 +193,11 @@ function postcalendar_eventapi_getEvents($args)
         // the user does not have permission to view this event
         // if any of the following evaluate as false
         // can this information be filtered in the DBUtil call? - yes using permFilter see DBUtil CAH 11/30/09
-        if (!pnSecAuthAction(0, 'PostCalendar::Event', "{$event['title']}::{$event['eid']}", ACCESS_OVERVIEW)) {
+        if (!SecurityUtil::checkPermission('PostCalendar::Event', "{$event['title']}::{$event['eid']}", ACCESS_OVERVIEW)) {
             continue;
-        /*} elseif (!pnSecAuthAction(0, 'PostCalendar::Category', "$event[catname]::$event[catid]", ACCESS_OVERVIEW)) {
+        /*} elseif (!SecurityUtil::checkPermission('PostCalendar::Category', "$event[catname]::$event[catid]", ACCESS_OVERVIEW)) {
             continue;*/
-        } elseif (!pnSecAuthAction(0, 'PostCalendar::User', "$event[uname]::$cuserid", ACCESS_OVERVIEW)) {
+        } elseif (!SecurityUtil::checkPermission('PostCalendar::User', "$event[uname]::$cuserid", ACCESS_OVERVIEW)) {
             continue;
         }
         // split the event start date
@@ -322,7 +322,7 @@ function postcalendar_eventapi_buildSubmitForm($args)
         $eventdata['eventDatevalue'] = pnModAPIFunc('PostCalendar','user','getDate',array('Date'=>str_replace('-', '', $eventdata['eventDate']), 'format'=>_SETTING_DATE_FORMAT));
     }
 
-    if ((pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) && (_SETTING_ALLOW_USER_CAL)) {
+    if ((SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) && (_SETTING_ALLOW_USER_CAL)) {
         $users = DBUtil::selectFieldArray('users', 'uname', null, null, null, 'uid');
         $form_data['users'] = $users;
     }
@@ -334,6 +334,7 @@ function postcalendar_eventapi_buildSubmitForm($args)
         pn_exit(__f('Error! Unable to load class [%s]', 'CategoryRegistryUtil'));
     }
     $form_data['catregistry'] = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
+    $form_data['cat_count'] = count($form_data['catregistry']);
 
     // All-day event values for radio buttons
     $form_data['SelectedAllday'] = $eventdata['alldayevent'] == 1 ? ' checked' : '';
@@ -355,7 +356,7 @@ function postcalendar_eventapi_buildSubmitForm($args)
     // create sharing selectbox
     $data = array();
     if (_SETTING_ALLOW_USER_CAL) $data[SHARING_PRIVATE]=__('Private', $dom);
-    if (pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN) || _SETTING_ALLOW_GLOBAL || !_SETTING_ALLOW_USER_CAL) {
+    if (SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN) || _SETTING_ALLOW_GLOBAL || !_SETTING_ALLOW_USER_CAL) {
         $data[SHARING_GLOBAL]=__('Global', $dom);
     }
     $form_data['sharingselect'] = $data;
@@ -501,7 +502,7 @@ function postcalendar_eventapi_formateventarrayforDB($event)
         $event['informant'] = pnConfigGetVar('anonymous');
     }
 
-    define('PC_ACCESS_ADMIN', pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN));
+    define('PC_ACCESS_ADMIN', SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN));
 
     // determine if the event is to be published immediately or not
     if ((bool) _SETTING_DIRECT_SUBMIT || (bool) PC_ACCESS_ADMIN || ($event_sharing != SHARING_GLOBAL)) {

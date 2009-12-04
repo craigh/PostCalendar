@@ -59,7 +59,7 @@ function smarty_function_pc_filter($args, &$smarty)
                 _PC_FILTER_ALL     => __('Global Events', $dom) ." + ". __('My Events', $dom),
             );
             // if user is admin, add list of users with private events
-            if (pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
+            if (SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
                 //compile users that have submitted calendar events based on informant or aid... this is a hack.
                 // in the future will use one or the other...
                 //$users_by_informant = DBUtil::selectFieldArray('postcalendar_events', 'informant', null, null, true);

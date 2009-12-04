@@ -14,7 +14,7 @@
  */
 function postcalendar_calendarblock_init()
 {
-    pnSecAddSchema('PostCalendar:calendarblock:', 'Block title::');
+    SecurityUtil::registerPermissionSchema('PostCalendar:calendarblock:', 'Block title::');
 }
 
 /**
@@ -33,7 +33,7 @@ function postcalendar_calendarblock_info()
 function postcalendar_calendarblock_display($blockinfo)
 {
     $dom = ZLanguage::getModuleDomain('PostCalendar');
-    if (!pnSecAuthAction(0, 'PostCalendar:calendarblock:', "$blockinfo[title]::", ACCESS_OVERVIEW)) {
+    if (!SecurityUtil::checkPermission('PostCalendar:calendarblock:', "$blockinfo[title]::", ACCESS_OVERVIEW)) {
         return false;
     }
     if (!pnModLoad('PostCalendar')) return 'Unable to load module [PostCalendar]';
@@ -244,7 +244,7 @@ function postcalendar_calendarblock_display($blockinfo)
  */
 function postcalendar_calendarblock_modify($blockinfo)
 {
-    if (!pnSecAuthAction(0, 'PostCalendar:calendarblock:', "$blockinfo[title]::", ACCESS_ADMIN)) {
+    if (!SecurityUtil::checkPermission('PostCalendar:calendarblock:', "$blockinfo[title]::", ACCESS_ADMIN)) {
         return false;
     }
 
@@ -270,7 +270,7 @@ function postcalendar_calendarblock_modify($blockinfo)
 function postcalendar_calendarblock_update($blockinfo)
 {
     // Security check
-    if (!pnSecAuthAction(0, 'PostCalendar:calendarblock:', "$blockinfo[title]::", ACCESS_ADMIN)) {
+    if (!SecurityUtil::checkPermission('PostCalendar:calendarblock:', "$blockinfo[title]::", ACCESS_ADMIN)) {
         return false;
     }
 

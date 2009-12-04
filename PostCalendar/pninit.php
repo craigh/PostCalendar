@@ -64,7 +64,7 @@ function postcalendar_upgrade($oldversion)
 {
     $dom = ZLanguage::getModuleDomain('PostCalendar');
 
-    if (!pnSecAuthAction(0, 'PostCalendar::', '::', ACCESS_ADMIN)) {
+    if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
         return LogUtil::registerPermissionError();
     }
 
