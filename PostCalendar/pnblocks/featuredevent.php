@@ -95,7 +95,7 @@ function postcalendar_featuredeventblock_modify($blockinfo)
     // Defaults
     if (empty($vars['eid'])) $vars['eid'] = '';
 
-    $pnRender = new pnRender('PostCalendar', false); // no caching
+    $pnRender = pnRender::getInstance('PostCalendar', false); // no caching
 
     $pnRender->assign('vars', $vars);
 
@@ -117,7 +117,7 @@ function postcalendar_featuredeventblock_update($blockinfo)
     $blockinfo['content'] = pnBlockVarsToContent($vars);
 
     // clear the block cache
-    $pnRender = new pnRender('PostCalendar');
+    $pnRender = pnRender::getInstance('PostCalendar');
     $pnRender->clear_cache('PostCalendar_block_featuredevent.htm');
 
     return $blockinfo;
