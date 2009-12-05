@@ -79,23 +79,15 @@ function postcalendar_upgrade($oldversion)
         return LogUtil::registerError(__f('Notice: This version does not support upgrades from PostCalendar 3.x and earlier. Please download and install version 4.0.3  (available from <a href="http://code.zikula.org/soundwebdevelopment/downloads">code.zikula.org/soundwebdevelopment</a>). After upgrading, you can install PostCalendar %version% and perform this upgrade.', $modversion, $dom));
     }
 
-    // change the database. DBUtil + ADODB detect the changes on their own
-    // and perform all necessary steps without help from the module author
-    //if (!DBUtil::changeTable('postcalendar_events')) {
-    //    return LogUtil::registerError(__('Error! Could not upgrade the tables.', $dom));
-    //}
-
     switch ($oldversion) {
 
         case '4.0.0':
         case '4.0.1':
         case '4.0.2':
         case '4.0.3': // Also support upgrades from PostCalendar 4.03a (http://www.krapohl.info)
-            // v4b TS start
             pnModSetVar('PostCalendar', 'pcRepeating', '0');
             pnModSetVar('PostCalendar', 'pcMeeting', '0');
             pnModSetVar('PostCalendar', 'pcAddressbook', '1');
-            // v4b TS end
         case '5.0.0':
             pnModSetVar('PostCalendar', 'pcTemplate', 'default');
         case '5.0.1':
@@ -103,7 +95,9 @@ function postcalendar_upgrade($oldversion)
         case '5.1.0':
             pnModSetVar('PostCalendar', 'pcNotifyAdmin2Admin', '0');
         case '5.5.0':
-            postcalendar_init_reset_scribite();
+            if (!postcalendar_init_reset_scribite()) {
+                return ('5.5.0');
+            }
         case '5.5.1':
         case '5.5.2':
         case '5.5.3':
@@ -114,28 +108,31 @@ function postcalendar_upgrade($oldversion)
             pnModDelVar('PostCalendar', 'pcMeeting');
             pnModDelVar('PostCalendar', 'pcUseInternationalDates');
         case '5.8.0':
-            // no changes
         case '5.8.1':
             postcalendar_init_correctserialization();
         case '5.8.2':
             if (!_postcalendar_cull_meetings()) {
-                return LogUtil::registerError (__('Error: Could not cull meetings.', $dom));
+                LogUtil::registerError (__('Error: Could not cull meetings.', $dom));
+                return ('5.8.2');
             }
             if (!$categorymap = _postcalendar_migratecategories()) {
                 // attempt to migrate local categories
-                return LogUtil::registerError (__('Error: Could not migrate categories.', $dom));
+                LogUtil::registerError (__('Error: Could not migrate categories.', $dom));
+                return ('5.8.2');
             }
             if (pnModGetVar('PostCalendar', 'pcDisplayTopics')) {
                 // if currently using Topics module, attempt to migrate
                 if (!$topicmap = _postcalendar_migratetopics()) {
-                    return LogUtil::registerError (__('Error: Could not migrate topics.', $dom));
+                    LogUtil::registerError (__('Error: Could not migrate topics.', $dom));
+                    return ('5.8.2');
                 }
             } else {
                 LogUtil::registerStatus (__('PostCalendar: Topics ignored in upgrade.', $dom));
             }
             // change structure of data to reassociate events with new categories
             if (!_postcalendar_transcode_ids($categorymap, $topicmap)) {
-                return LogUtil::registerError (__('Error: Could not transcode category and/or topic IDs.', $dom));
+                LogUtil::registerError (__('Error: Could not transcode category and/or topic IDs.', $dom));
+                return ('5.8.2');
             }
             pnModDelVar('PostCalendar', 'pcDisplayTopics');
             pnModDelVar('PostCalendar', 'pcUseCache');
@@ -145,7 +142,7 @@ function postcalendar_upgrade($oldversion)
             pnModSetVar('PostCalendar', 'enablenavimages', true);
 
         //case '6.0.0':
-            //placeholder :-)
+            //placeholder
     }
 
     // if we get this far - clear the cache

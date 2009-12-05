@@ -122,6 +122,7 @@ function postcalendar_admin_showlist($args)
     $pnRender = pnRender::getInstance('PostCalendar', false);
     $pnRender->assign('title', $args['title']);
     $pnRender->assign('function', $args['function']);
+    $pnRender->assign('functionname', substr($args['function'], 4));
     $pnRender->assign('events', $events);
     $pnRender->assign('title_sort_url', pnModUrl('PostCalendar', 'admin', $args['function'], array('sort' => 'title', 'sdir' => $sdir)));
     $pnRender->assign('time_sort_url', pnModUrl('PostCalendar', 'admin', $args['function'], array('sort' => 'time', 'sdir' => $sdir)));
