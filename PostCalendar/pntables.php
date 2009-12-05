@@ -38,7 +38,7 @@ function postcalendar_pntables()
                     'recurrspec'  => 'pc_recurrspec',       // (serialized)
                     //'recurrfreq'  => 'pc_recurrfreq',       // UNUSED
                     'startTime'   => 'pc_startTime',        // HH:MM:SS event start time
-                    'endTime'     => 'pc_endTime',          // HH:MM:SS event end time (optional)
+                    //'endTime'     => 'pc_endTime',          // HH:MM:SS event end time (optional)
                     'alldayevent' => 'pc_alldayevent',      // bool event all day or not
                     'location'    => 'pc_location',         // (serialized) event location
                     'conttel'     => 'pc_conttel',          // event contact phone
@@ -69,7 +69,7 @@ function postcalendar_pntables()
                     'recurrspec'  => 'X DEFAULT \'\'',                   // text default ''
                     //'recurrfreq'  => 'I(3) NOTNULL DEFAULT 0',           // int(3) NOT NULL default 0
                     'startTime'   => 'C(8) DEFAULT \'00:00:00\'',        // time (MySQL only, so now defined as varchar2)
-                    'endTime'     => 'C(8) DEFAULT \'00:00:00\'',        // time (MySQL only, so now defined as varchar2)
+                    //'endTime'     => 'C(8) DEFAULT \'00:00:00\'',        // time (MySQL only, so now defined as varchar2)
                     'alldayevent' => 'I(1) NOTNULL DEFAULT 0',           // int(1) NOT NULL default 0
                     'location'    => 'X',                                // text default ''
                     'conttel'     => 'C(50) DEFAULT \'\'',               // varchar(50) default ''
