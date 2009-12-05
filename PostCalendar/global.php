@@ -81,4 +81,4 @@ define('_SETTING_USENAVIMAGES',     pnModGetVar('PostCalendar', 'enablenavimages
 
 //  Require and Setup utility classes and functions
 define('DATE_CALC_BEGIN_WEEKDAY', _SETTING_FIRST_DAY_WEEK);
-require_once dirname(__FILE__) . '/pnincludes/DateCalc.class.php';
+include dirname(__FILE__) . '/pnincludes/DateCalc.class.php';

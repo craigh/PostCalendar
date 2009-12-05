@@ -9,7 +9,7 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
  */
 Loader::requireOnce('includes/pnForm.php');
-require_once dirname(__FILE__) . '/global.php';
+include dirname(__FILE__) . '/global.php';
 
 /**
  * This is the event handler file
