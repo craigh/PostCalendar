@@ -216,11 +216,11 @@ a.postcalendar_nav_text_selected:hover {
 }
 
 /********** details **************/
-div.eventtime {
+.postcalendar_event_view div.eventtime {
 	font-size: 150%;
 	font-weight: bold;
 }
-div.eventdetails {
+.postcalendar_event_view div.eventdetails {
 	padding: .3em 2em;
 }
 
@@ -302,6 +302,11 @@ a.blockevent-three {
 	font-weight: normal;
 	text-decoration: none;
 }
+.postcalendar_block_view_upcoming ul.pc_blocklist,
+.postcalendar_block_view_day ul.pc_blocklist {
+    padding: 0;
+    margin: 0;
+}
 li.eventlink,
 .eventlink a {
 	font-size: 10px;
@@ -324,6 +329,31 @@ div.pc_centerblocksubmitlinks {
 	text-align: center;
 	padding: 1em 0 0 0;
 }
+/*********** BLOCK STYLES **************/
+div.postcalendar_featuredevent {
+}
+div.postcalendar_featuredevent div.eventcountdown {
+    background: #ffffbb;
+    border: 2px solid #ffff77;
+    text-align: center;
+    margin: 2px 0;
+    padding: 2px;
+}
+div.postcalendar_featuredevent h2.eventheader {
+}
+div.postcalendar_featuredevent div.eventtime {
+    line-height: 1.2;
+    background: #eeeeee;
+    border: 1px solid #cccccc;
+    padding: 2px;
+    margin: 2px;
+}
+div.postcalendar_featuredevent div.eventdetails {
+}
+div.postcalendar_featuredevent div.eventdetails ul {
+    padding-left: 2em;
+}
+/********** last things ************/
 div#overDiv {
     /* this should correct issues with themes changing all divs 
     It only is a very generic view, but better than nothing */

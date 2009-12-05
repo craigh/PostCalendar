@@ -6,7 +6,7 @@
 <!--[ pc_sort_events var="S_EVENTS" sort="time" order="asc" value=$A_EVENTS ]-->
 <!--[ foreach name=dates item=events key=date from=$S_EVENTS ]-->
     <!--[ if $date eq $TODAY_DATE ]-->
-        <ul>
+        <ul class="pc_blocklist">
         <li class="pc_blockdate">
             <!--[ $TODAY_DATE|pc_date_format ]-->
         </li>

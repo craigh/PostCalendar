@@ -275,9 +275,9 @@ function postcalendar_calendarblock_update($blockinfo)
     }
 
     // Get current content
-    $vars = pnBlockVarsFromContent($blockinfo['content']); //unneeded? see below.
+    $vars = pnBlockVarsFromContent($blockinfo['content']);
 
-    $vars = array(); //seems to delete the value just set above...
+    // overwrite with new values
     $vars['pcbshowcalendar'] = FormUtil::getPassedValue('pcbshowcalendar', 0);
     $vars['pcbeventslimit'] = FormUtil::getPassedValue('pcbeventslimit', 5);
     $vars['pcbeventoverview'] = FormUtil::getPassedValue('pcbeventoverview', 0);

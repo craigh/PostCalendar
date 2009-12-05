@@ -1,4 +1,8 @@
 <div class="pn-adminformrow">
     <label for="postcalendar_eid"><!--[gt text="Event ID (eid)"]--></label>
-    <input id="postcalendar_eid" type="text" name="eid" value="<!--[$eid]-->" size="5" />
+    <input id="postcalendar_eid" type="text" name="eid" value="<!--[$vars.eid]-->" size="5" /><br />
+</div>
+<div class="pn-adminformrow">
+    <label for="postcalendar_showcountdown"><!--[gt text="Show countdown (days)"]--></label>
+    <input id="postcalendar_showcountdown" type="checkbox" name="showcountdown" value="1" <!--[if $vars.showcountdown]-->checked="checked"<!--[/if]-->/>
 </div>

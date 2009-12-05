@@ -47,10 +47,8 @@ function postcalendar_featuredeventblock_display($blockinfo)
     $vars = pnBlockVarsFromContent($blockinfo['content']);
 
     // Defaults
-    if (empty($vars['eid'])) {
-        return false;
-        //$vars['eid'] = ''; // make most recent event?
-    }
+    if (empty($vars['eid'])) return false;
+    $vars['showcountdown'] = empty($vars['showcountdown']) ? false : true;
 
     // get the event from the DB
     pnModDBInfoLoad('PostCalendar');
@@ -73,8 +71,13 @@ function postcalendar_featuredeventblock_display($blockinfo)
         $event['eventDate'] = "$y-$m-$d";
     }
 
+    if ($vars['showcountdown']) {
+        $datedifference = DateUtil::getDatetimeDiff_AsField(DateUtil::getDatetime(), $event['eventDate'], 3);
+        $event['datedifference'] = $datedifference > 0 ? round($datedifference) : false ;
+        $event['showcountdown'] = true;
+    }
+
     $pnRender = pnRender::getInstance('PostCalendar');
-    PageUtil::addVar('stylesheet', ThemeUtil::getModuleStylesheet('PostCalendar')); //is this still needed?
 
     $pnRender->assign('loaded_event', $event);
 
@@ -90,11 +93,11 @@ function postcalendar_featuredeventblock_modify($blockinfo)
 {
     $vars = pnBlockVarsFromContent($blockinfo['content']);
     // Defaults
-    if (empty($vars['eid'])) $vars['eid'] = ''; // make most recent event?
+    if (empty($vars['eid'])) $vars['eid'] = '';
 
     $pnRender = new pnRender('PostCalendar', false); // no caching
 
-    $pnRender->assign('eid', $vars['eid']);
+    $pnRender->assign('vars', $vars);
 
     return $pnRender->fetch('blocks/postcalendar_block_featuredevent_modify.htm');
 }
@@ -107,7 +110,8 @@ function postcalendar_featuredeventblock_update($blockinfo)
     $vars = pnBlockVarsFromContent($blockinfo['content']);
 
     // alter the corresponding variable
-    $vars['eid'] = FormUtil::getPassedValue('eid', '', 'POST'); // make most recent event?
+    $vars['eid']           = FormUtil::getPassedValue('eid', '', 'POST');
+    $vars['showcountdown'] = FormUtil::getPassedValue('showcountdown', '', 'POST');
 
     // write back the new contents
     $blockinfo['content'] = pnBlockVarsToContent($vars);
