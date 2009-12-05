@@ -3,9 +3,9 @@
 <!--[if $loaded_event.showcountdown ]-->
 <div class='eventcountdown'>
     <!--[if $loaded_event.datedifference ]-->
-        <!--[gt text='This event will occur in %s days.' tag1=$loaded_event.datedifference]-->
+        <!--[gt text='This event will occur in %s days.' tag1=$loaded_event.datedifference domain="module_postcalendar"]-->
     <!--[else]-->
-        <!--[gt text='This event has already passed.']-->
+        <!--[gt text='This event has already passed.' domain="module_postcalendar"]-->
     <!--[/if]-->
 </div>
 <!--[/if]-->
@@ -21,21 +21,21 @@
             <!--[ assign var="timestamp" value=$loaded_event.startTime|date_format:"%l:%M %p" ]-->
         <!--[ /if ]-->
         <!--[ $timestamp ]--><br />
-        <!--[gt text='Duration']-->: <!--[ $loaded_event.duration ]--> <!--[gt text='hours']-->
+        <!--[gt text='Duration' domain="module_postcalendar"]-->: <!--[ $loaded_event.duration ]--> <!--[gt text='hours' domain="module_postcalendar"]-->
     <!--[ else ]-->
-        <!--[gt text='All day event']-->
+        <!--[gt text='All day event' domain="module_postcalendar"]-->
     <!--[ /if ]-->
 </div>
 <div class="eventdetails">
     <!--[if ($loaded_event.hometext) && ($loaded_event.hometext ne "n/a") ]-->
     <div>
-        <h3><!--[gt text='Description']-->:</h3>
+        <h3><!--[gt text='Description' domain="module_postcalendar"]-->:</h3>
         <!--[ $loaded_event.hometext ]-->
     </div>
     <!--[/if]-->
     <div>
         <!--[ if ($loaded_event.location_info.event_location) OR ($loaded_event.location_info.event_street1) OR ($loaded_event.location_info.event_street2) OR ($loaded_event.location_info.event_city) ]-->
-        <h3><!--[gt text='Location']-->:</h3>
+        <h3><!--[gt text='Location' domain="module_postcalendar"]-->:</h3>
         <ul>
             <!--[ if $loaded_event.location_info.event_location ]--><li><!--[ $loaded_event.location_info.event_location ]--></li><!--[/if]-->
             <!--[ if $loaded_event.location_info.event_street1 ]--><li><!--[ $loaded_event.location_info.event_street1 ]--></li><!--[/if]-->
@@ -44,7 +44,7 @@
         </ul>
         <!--[/if]-->
         <!--[ if ($loaded_event.contname) OR ($loaded_event.conttel) OR ($loaded_event.contemail) OR ($loaded_event.website) ]-->
-        <h3><!--[gt text='Contact information']-->:</h3>
+        <h3><!--[gt text='Contact information' domain="module_postcalendar"]-->:</h3>
         <ul>
             <!--[ if $loaded_event.contname ]--><li><!--[ $loaded_event.contname ]--></li><!--[/if]-->
             <!--[ if $loaded_event.conttel ]--><li><!--[ $loaded_event.conttel ]--></li><!--[/if]-->
@@ -52,7 +52,7 @@
             <!--[ if $loaded_event.website ]--><li><a href="<!--[ $loaded_event.website ]-->" target="_blank"><!--[ $loaded_event.website ]--></a></li><!--[ /if ]-->
         </ul>
         <!--[/if]-->
-        <!--[ if $loaded_event.fee ]--><!--[gt text='Fee']-->: <!--[ $loaded_event.fee ]--><!--[/if]-->
+        <!--[ if $loaded_event.fee ]--><!--[gt text='Fee' domain="module_postcalendar"]-->: <!--[ $loaded_event.fee ]--><!--[/if]-->
     </div>
 </div>
 </div> <!-- end postcalendar_featuredevent -->

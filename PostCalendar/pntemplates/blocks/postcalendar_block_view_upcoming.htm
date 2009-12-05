@@ -1,9 +1,9 @@
-<!--[* $Id:$ *]-->
+<!--[* $Id$ *]-->
 <!--[ pc_queued_events_notify ]-->
 <!--[ pc_pagejs_init ]-->
 <div class="postcalendar_block_view_upcoming">
 <!--[ if $SHOW_TITLE eq 1 ]-->
-<h2 class='postcalendar_block_innertitle'><!--[gt text='Upcoming events']--></h2>
+<h2 class='postcalendar_block_innertitle'><!--[gt text='Upcoming events' domain="module_postcalendar"]--></h2>
 <!--[ /if ]-->
 
 <!--[ counter start=0 assign=eventcount ]-->
@@ -30,7 +30,7 @@
                     <li class="pc_blockevent">
                         <!--[ pc_popup bgcolor=$event.catcolor caption=$event.title text=$event.hometext|truncate:255:"..." assign="javascript"]-->
                         <!--[ pc_url full=true class="eventlink" action="detail" eid=$event.eid date=$date javascript=$javascript display="$timestamp `$event.title`"|strip_tags ]-->
-                        <!--[ if $event.alldayevent != true ]-->&nbsp;(<!--[ $event.duration ]--> <!--[gt text='Long']-->)<!--[ /if ]-->
+                        <!--[ if $event.alldayevent != true ]-->&nbsp;(<!--[ $event.duration ]--> <!--[gt text='Long' domain="module_postcalendar"]-->)<!--[ /if ]-->
                     </li>
                 </ul>
             <!--[ /if ]-->
@@ -40,6 +40,6 @@
 <!--[ /foreach ]-->
 
 <!--[ if $eventcount == 0 ]-->
-    <!--[gt text='No events today.']-->
+    <!--[gt text='No events today.' domain="module_postcalendar"]-->
 <!--[ /if ]-->
 </div>
