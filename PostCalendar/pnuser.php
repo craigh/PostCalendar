@@ -74,9 +74,9 @@ function postcalendar_user_display($args)
             }
 
             // build template and fetch:
-            if ($tpl->is_cached('user/postcalendar_user_view_event_details.html', $cacheid)) {
+            if ($tpl->is_cached('user/postcalendar_user_view_event_details.htm', $cacheid)) {
                 // use cached version
-                return $tpl->fetch('user/postcalendar_user_view_event_details.html', $cacheid);
+                return $tpl->fetch('user/postcalendar_user_view_event_details.htm', $cacheid);
             } else {
                 // get the event from the DB
                 $event = DBUtil::selectObjectByID('postcalendar_events', $args['eid'], 'eid');
@@ -101,7 +101,7 @@ function postcalendar_user_display($args)
                 $tpl->assign('24HOUR_TIME', _SETTING_TIME_24HOUR);
          
                 if ($popup == true) {
-                    $tpl->display('user/postcalendar_user_view_popup.html', $cacheid);
+                    $tpl->display('user/postcalendar_user_view_popup.htm', $cacheid);
                     return true; // displays template without theme wrap
                 } else {
                     if ((SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADD) && (pnUserGetVar('uid') == $event['aid']))
@@ -110,7 +110,7 @@ function postcalendar_user_display($args)
                     } else {
                         $tpl->assign('EVENT_CAN_EDIT', false);
                     }
-                    return $tpl->fetch('user/postcalendar_user_view_event_details.html', $cacheid);
+                    return $tpl->fetch('user/postcalendar_user_view_event_details.htm', $cacheid);
                 }
             }
             break;

@@ -544,7 +544,7 @@ function postcalendar_eventapi_validateformdata($submitted_event)
     $abort = false;
 
     if (empty($submitted_event['title'])) {
-        LogUtil::registerError(__(/*!This is the field name from pntemplates/event/postcalendar_event_submit.html:22*/"'Title' is a required field.", $dom).'<br />');
+        LogUtil::registerError(__(/*!This is the field name from pntemplates/event/postcalendar_event_submit.htm:22*/"'Title' is a required field.", $dom).'<br />');
         $abort = true;
     }
 

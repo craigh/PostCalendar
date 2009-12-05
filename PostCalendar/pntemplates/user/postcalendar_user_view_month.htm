@@ -1,3 +1,4 @@
+<!--[* $Id:$ *]-->
 <!--[pnsecauthaction comp="::" inst=".*" level="ACCESS_ADD" assign="ACCESS_ADD"]-->
 <!--[ if $smarty.get.theme eq "Printer" ]-->
     <!--[* page presented in printer theme *]-->
@@ -5,7 +6,7 @@
     <!--[ assign var="PRINT_VIEW" value=1 ]-->
 <!--[/if]-->
 <!--[ if $PRINT_VIEW eq false ]-->
-<!--[ include file="user/postcalendar_user_navigation.html" ]-->
+<!--[ include file="user/postcalendar_user_navigation.htm" ]-->
 <!--[ /if ]-->
 
 <!--[ pc_pagejs_init ]-->
@@ -122,4 +123,4 @@
         <a href="<!--[pnmodurl modname="PostCalendar" func="view" viewtype=$viewtype Date=$smarty.get.Date ]-->"><!--[gt text='Return']--></a>
     <!--[/if]-->
 </div>
-<!--[ include file="user/postcalendar_user_footer.html" ]-->
+<!--[ include file="user/postcalendar_user_footer.htm" ]-->

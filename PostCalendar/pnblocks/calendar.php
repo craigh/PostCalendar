@@ -62,24 +62,24 @@ function postcalendar_calendarblock_display($blockinfo)
     $tpl->cache_id = $blockinfo['bid'] . ':' . pnUserGetVar('uid');
     $templates_cached = true;
     if ($showcalendar) {
-        if (!$tpl->is_cached('blocks/postcalendar_block_view_month.html')) {
+        if (!$tpl->is_cached('blocks/postcalendar_block_view_month.htm')) {
             $templates_cached = false;
         }
     }
     if ($showevents) {
-        if (!$tpl->is_cached('blocks/postcalendar_block_view_day.html')) {
+        if (!$tpl->is_cached('blocks/postcalendar_block_view_day.htm')) {
             $templates_cached = false;
         }
     }
     if ($nextevents) {
-        if (!$tpl->is_cached('blocks/postcalendar_block_view_upcoming.html')) {
+        if (!$tpl->is_cached('blocks/postcalendar_block_view_upcoming.htm')) {
             $templates_cached = false;
         }
     }
     if ($templates_cached) {
-        $blockinfo['content'] = $tpl->fetch('blocks/postcalendar_block_view_month.html');
-        $blockinfo['content'] .= $tpl->fetch('blocks/postcalendar_block_view_day.html');
-        $blockinfo['content'] .= $tpl->fetch('blocks/postcalendar_block_view_upcoming.html');
+        $blockinfo['content'] = $tpl->fetch('blocks/postcalendar_block_view_month.htm');
+        $blockinfo['content'] .= $tpl->fetch('blocks/postcalendar_block_view_day.htm');
+        $blockinfo['content'] .= $tpl->fetch('blocks/postcalendar_block_view_upcoming.htm');
         return pnBlockThemeBlock($blockinfo);
     }
     // end cache return
@@ -201,7 +201,7 @@ function postcalendar_calendarblock_display($blockinfo)
 
 
     if ($showcalendar) {
-        $output .= $tpl->fetch("blocks/postcalendar_block_view_month.html");
+        $output .= $tpl->fetch("blocks/postcalendar_block_view_month.htm");
     }
 
     if ($showevents) {
@@ -210,7 +210,7 @@ function postcalendar_calendarblock_display($blockinfo)
         } else {
             $tpl->assign('SHOW_TITLE', 0);
         }
-        $output .= $tpl->fetch("blocks/postcalendar_block_view_day.html");
+        $output .= $tpl->fetch("blocks/postcalendar_block_view_day.htm");
     }
 
     if ($nextevents) {
@@ -219,7 +219,7 @@ function postcalendar_calendarblock_display($blockinfo)
         } else {
             $tpl->assign('SHOW_TITLE', 0);
         }
-        $output .= $tpl->fetch("blocks/postcalendar_block_view_upcoming.html");
+        $output .= $tpl->fetch("blocks/postcalendar_block_view_upcoming.htm");
     }
 
     if ($pcbshowsslinks) {
@@ -261,7 +261,7 @@ function postcalendar_calendarblock_modify($blockinfo)
 
     $pnRender->assign('vars', $vars);
 
-    return $pnRender->fetch('blocks/postcalendar_block_calendar_modify.html');
+    return $pnRender->fetch('blocks/postcalendar_block_calendar_modify.htm');
 }
 
 /**
@@ -286,9 +286,9 @@ function postcalendar_calendarblock_update($blockinfo)
     $vars['pcbshowsslinks'] = FormUtil::getPassedValue('pcbshowsslinks', 0);
 
     $pnRender = pnRender::getInstance('PostCalendar');
-    $pnRender->clear_cache('blocks/postcalendar_block_view_day.html');
-    $pnRender->clear_cache('blocks/postcalendar_block_view_month.html');
-    $pnRender->clear_cache('blocks/postcalendar_block_view_upcoming.html');
+    $pnRender->clear_cache('blocks/postcalendar_block_view_day.htm');
+    $pnRender->clear_cache('blocks/postcalendar_block_view_month.htm');
+    $pnRender->clear_cache('blocks/postcalendar_block_view_upcoming.htm');
     $blockinfo['content'] = pnBlockVarsToContent($vars);
 
     return $blockinfo;

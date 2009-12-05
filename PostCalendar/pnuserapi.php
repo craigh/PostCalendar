@@ -32,7 +32,7 @@ function postcalendar_userapi_buildView($args)
 
     //=================================================================
     // set the Template to use
-    $function_out['template'] = DataUtil::formatForOS('user/postcalendar_user_view_' . $viewtype . '.html');
+    $function_out['template'] = DataUtil::formatForOS('user/postcalendar_user_view_' . $viewtype . '.htm');
 
     //=================================================================
     // finish setting things up

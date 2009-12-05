@@ -250,5 +250,5 @@ function postcalendar_event_new($args)
     // assign function in case we were editing
     $tpl->assign('func', $func);
 
-    return $tpl->fetch("event/postcalendar_event_submit.html");
+    return $tpl->fetch("event/postcalendar_event_submit.htm");
 }
