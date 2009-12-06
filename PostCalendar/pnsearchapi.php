@@ -101,11 +101,13 @@ function postcalendar_searchapi_search($args)
     foreach ($eventsByDate as $date) {
         if (count($date) > 0) {
             foreach ($date as $event) {
+                $title   = $event['title'] ." (". strftime(pnModGetVar('PostCalendar', 'pcEventDateFormat'), strtotime($event['eventDate'])) .")";
+                $created = $event['eventDate'] . " 00:00:00";
                 $sql = $insertSql . '('
-                   . '\'' . DataUtil::formatForStore($event['title']) . '\', '
-                   . '\'' . DataUtil::formatForStore($event['text']) . '\', '
+                   . '\'' . DataUtil::formatForStore($title) . '\', '
+                   . '\'' . DataUtil::formatForStore($event['hometext']) . '\', '
                    . '\'' . DataUtil::formatForStore($event['eid']) . '\', '
-                   . '\'' . DataUtil::formatForStore($event['eventDate']) . '\', '
+                   . '\'' . DataUtil::formatForStore($created) . '\', '
                    . '\'' . 'PostCalendar' . '\', '
                    . '\'' . DataUtil::formatForStore($sessionId) . '\')';
             }
