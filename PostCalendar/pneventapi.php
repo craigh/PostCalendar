@@ -186,9 +186,6 @@ function postcalendar_eventapi_getEvents($args)
             continue;
         }
 
-        // get the user id of event's author
-        $cuserid = pnUserGetIDFromName(strtolower($event['informant'])); // change this to aid? for v6.0?
-
         // check the current event's permissions
         // the user does not have permission to view this event
         // if any of the following evaluate as false
@@ -197,7 +194,7 @@ function postcalendar_eventapi_getEvents($args)
             continue;
         /*} elseif (!SecurityUtil::checkPermission('PostCalendar::Category', "$event[catname]::$event[catid]", ACCESS_OVERVIEW)) {
             continue;*/
-        } elseif (!SecurityUtil::checkPermission('PostCalendar::User', "$event[uname]::$cuserid", ACCESS_OVERVIEW)) {
+        } elseif (!SecurityUtil::checkPermission('PostCalendar::User', "{$event[uname]}::{$event['aid']}", ACCESS_OVERVIEW)) {
             continue;
         }
         // split the event start date
@@ -497,9 +494,9 @@ function postcalendar_eventapi_formateventarrayforDB($event)
     $event['startTime'] = $startTime;
     // if event ADD perms are given to anonymous users...
     if (pnUserLoggedIn()) {
-        $event['informant'] = pnUserGetVar('uname'); // this is where need to change to uid for v6.0
+        $event['informant'] = SessionUtil::getVar('uid');
     } else {
-        $event['informant'] = pnConfigGetVar('anonymous');
+        $event['informant'] = 1; // 'guest'
     }
 
     define('PC_ACCESS_ADMIN', SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN));

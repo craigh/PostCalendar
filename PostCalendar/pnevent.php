@@ -52,7 +52,7 @@ class postcalendar_event_editHandler extends pnFormHandler
             $url = pnModUrl('howtopnforms', 'recipe', 'view', array('rid' => $this->recipeId));
             */
         } else if ($args['commandName'] == 'delete') {
-            if ((pnUserGetVar('uname') != $event['informant']) and (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN))) {
+            if ((SessionUtil::getVar('uid') != $event['informant']) and (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN))) {
                 return $render->pnFormSetErrorMsg(__('Sorry! You do not have authorization to delete this event.', $dom));
             }
             $result = DBUtil::deleteObjectByID('postcalendar_events', $this->eid, 'eid');
@@ -167,7 +167,7 @@ function postcalendar_event_new($args)
         } else {
             // here were need to format the DB data to be able to load it into the form
             $eventdata = DBUtil::selectObjectByID('postcalendar_events', $args['eid'], 'eid');
-            if ((pnUserGetVar('uname') != $eventdata['informant']) and (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN))) {
+            if ((SessionUtil::getVar('uid') <> $eventdata['informant']) && (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN))) {
                 return LogUtil::registerError(__('Sorry! You do not have authorization to edit this event.', $dom));
             } // wonder if this is needed at all... ^^^
             $eventdata = pnModAPIFunc('PostCalendar', 'event', 'formateventarrayfordisplay', $eventdata);
@@ -185,7 +185,7 @@ function postcalendar_event_new($args)
         unset($eid);
         unset($eventdata['eid']);
         $eventdata['is_update'] = false;
-        $eventdata['informant'] = pnUserGetVar('uname'); // change in v6.0 to uid
+        $eventdata['informant'] = SessionUtil::getVar('uid');
     }
 
     if ($abort) $form_action = 'preview'; // data not sufficient for commit. force preview and correct.

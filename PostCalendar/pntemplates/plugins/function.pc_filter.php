@@ -60,17 +60,10 @@ function smarty_function_pc_filter($args, &$smarty)
             );
             // if user is admin, add list of users with private events
             if (SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
-                //compile users that have submitted calendar events based on informant or aid... this is a hack.
-                // in the future will use one or the other...
-                //$users_by_informant = DBUtil::selectFieldArray('postcalendar_events', 'informant', null, null, true);
-                //foreach ($users_by_informant as $k=>$v) {
-                //    if (pnUserGetIDFromName($v)) $users[pnUserGetIDFromName($v)] = $v;
-                //}
                 $users_by_aid = DBUtil::selectFieldArray('postcalendar_events', 'aid', null, null, true);
                 foreach ($users_by_aid as $k=>$v) {
                     if (pnUserGetVar('uname', $v)) $users[$v] = pnUserGetVar('uname', $v);
                 }
-                    // if informant is converted to userid, then this area should be checked.
                 $filteroptions = $filteroptions + $users;
             }
             // generate html for selectbox - should move this to the template...

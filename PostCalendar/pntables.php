@@ -30,7 +30,7 @@ function postcalendar_pntables()
                     //'comments'    => 'pc_comments',         // UNUSED
                     //'counter'     => 'pc_counter',          // UNUSED
                     //'topic'       => 'pc_topic',            // UNUSED
-                    'informant'   => 'pc_informant',        // uname of event submittor
+                    'informant'   => 'pc_informant',        // uid of event submittor
                     'eventDate'   => 'pc_eventDate',        // YYYY-MM-DD event start date
                     'duration'    => 'pc_duration',         // event duration (in seconds)
                     'endDate'     => 'pc_endDate',          // YYYY-MM-DD event end date (optional)

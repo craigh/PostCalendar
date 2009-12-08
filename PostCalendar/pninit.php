@@ -20,7 +20,7 @@
  * @return  boolean    true/false
  * @access  public
  */
-function postcalendar_init()
+function PostCalendar_init()
 {
     $dom = ZLanguage::getModuleDomain('PostCalendar');
     // create tables
@@ -60,7 +60,7 @@ function postcalendar_init()
  * @access  public
  * @copyright    The PostCalendar Team 2009
  */
-function postcalendar_upgrade($oldversion)
+function PostCalendar_upgrade($oldversion)
 {
     $dom = ZLanguage::getModuleDomain('PostCalendar');
 
@@ -168,7 +168,7 @@ function postcalendar_upgrade($oldversion)
  * @access  public
  * @copyright    The PostCalendar Team 2009
  */
-function postcalendar_delete()
+function PostCalendar_delete()
 {
     $result = DBUtil::dropTable('postcalendar_events');
     $result = $result && pnModDelVar('PostCalendar');
