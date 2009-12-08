@@ -581,18 +581,22 @@ function _postcalendar_cull_meetings()
 function _postcalendar_convert_informant()
 {
     $dom = ZLanguage::getModuleDomain('PostCalendar');
+    $prefix = pnConfigGetVar('prefix');
 
-    $events = DBUtil::selectObjectArray('postcalendar_events'); // select all events
-    foreach ($events as &$event) {
-        $id = pnUserGetIDFromName(strtolower($event['informant']));
-        $event['informant'] = $id ? $id : SessionUtil::getVar('uid');
-    }
-    unset ($event);
-    if (DBUtil::updateObjectArray($events, 'postcalendar_events', 'eid')) {
-        LogUtil::registerStatus (__f("PostCalendar: '%s' field converted.", 'informant', $dom));
-        return true;
-    }
-    return false;
+    $sql="UPDATE {$prefix}_postcalendar_events e, {$prefix}_users u
+    SET e.pc_informant = u.pn_uid
+    WHERE u.pn_uname = e.pc_informant";
+
+    if (!$result = DBUtil::executeSQL($sql)) return false;
+
+    $sql="UPDATE {$prefix}_postcalendar_events e
+    SET e.pc_informant = ".SessionUtil::getVar('uid')." 
+    WHERE e.pc_informant = 0"; // seems to select text values only
+
+    if (!$result = DBUtil::executeSQL($sql)) return false;
+
+    LogUtil::registerStatus (__f("PostCalendar: '%s' field converted.", 'informant', $dom));
+    return true;
 }
 
 /**
