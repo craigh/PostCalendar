@@ -29,7 +29,7 @@ function postcalendar_init()
     }
 
     // insert default category
-    if (!_postcalendar_createdefaultcategory()) {
+    if (!_postcalendar_createdefaultcategory('/__SYSTEM__/Modules/PostCalendar')) {
         return LogUtil::registerError (__('Error! Could not create default category.', $dom));
     }
 
@@ -130,8 +130,13 @@ function postcalendar_upgrade($oldversion)
                 LogUtil::registerStatus (__('PostCalendar: Topics ignored in upgrade.', $dom));
             }
             // change structure of data to reassociate events with new categories
+            // this function upgrades the table defs also to newest
             if (!_postcalendar_transcode_ids($categorymap, $topicmap)) {
                 LogUtil::registerError (__('Error: Could not transcode category and/or topic IDs.', $dom));
+                return ('5.8.2');
+            }
+            if (!_postcalendar_convert_informant()) {
+                LogUtil::registerError (__('Error: Could not convert informant field to uid.', $dom));
                 return ('5.8.2');
             }
             pnModDelVar('PostCalendar', 'pcDisplayTopics');
@@ -252,20 +257,10 @@ function postcalendar_init_reset_scribite()
  * for postcalendar, only the serialized 'location' field needs correction
  * the serialized 'recurrspec' field only contains integers for values and the
  * keys are in english with no special characters.
- * @author Drak
+ * @author Drak & Craig Heydenburg
  */
 function postcalendar_init_correctserialization()
 {
-/*
-    $obj = DBUtil::selectObjectArray('postcalendar_events');
-    foreach ($obj as $event) {
-        $locdata = DataUtil::mb_unserialize($event['location']);
-        $event['location'] = serialize($locdata);
-        DBUtil::updateObject($event, 'postcalendar_events', '', 'eid', true);
-    }
-    LogUtil::registerStatus (__('PostCalendar: Serialized fields corrected.', $dom));
-    return true;
-*/
     $prefix = pnConfigGetVar('prefix');
     $Ssql = "SELECT pc_eid, pc_location FROM {$prefix}_postcalendar_events";
     $result = DBUtil::executeSQL($Ssql);
@@ -296,37 +291,24 @@ function _postcalendar_migratecategories()
         $categories[] = $result->fields;
     }
 
-    // load necessary classes
-    Loader::loadClass('CategoryUtil');
-    Loader::loadClassFromModule('Categories', 'Category');
-    Loader::loadClassFromModule('Categories', 'CategoryRegistry');
-
-    // get the language file
-    $lang = ZLanguage::getLanguageCode();
-
     // create the Main category and entry in the categories registry
     _postcalendar_createdefaultcategory('/__SYSTEM__/Modules/PostCalendar');
 
-    // get the category path for which we're going to insert our upgraded PostCalendar categories
-    $rootcat = CategoryUtil::getCategoryByPath('/__SYSTEM__/Modules/PostCalendar');
-
-    // migrate our main categories
+    // migrate main categories
     $categorymap = array();
     foreach ($categories as $category) {
-        $cat = new PNCategory ();
-        $data = $cat->getData();
-        $data['parent_id']               = $rootcat['id'];
-        $data['name']                    = $category[1];
-        $data['display_name']            = array($lang => $category[1]);
-        $data['display_desc']            = array($lang => $category[3]);
-        $data['__ATTRIBUTES__']['color'] = $category[2];
-        $cat->setData ($data);
-        if (!$cat->validate('admin')) {
-            return false;
+        if (!$catid = _postcalendar_createcategory(
+            array(
+                'rootpath'   =>'/__SYSTEM__/Modules/PostCalendar', 
+                'name'       =>$category[1], 
+                'displayname'=>$category[1], 
+                'description'=>$category[3],
+                'attributes' =>array('color'=>$category[2]),
+                )
+            )) {
+            LogUtil::registerError(__f('Error! Could not create sub-category (%s).', $category[1], $dom));
         }
-        $cat->insert();
-        $cat->update();
-        $categorymap[$category[0]] = $cat->getDataField('id');
+        $categorymap[$category[0]] = $catid;
     }
 
     // drop old table
@@ -359,38 +341,29 @@ function _postcalendar_migratetopics()
             $topics[] = $result->fields;
         }
 
-        // load necessary classes
-        Loader::loadClass('CategoryUtil');
-        Loader::loadClassFromModule('Categories', 'Category');
-        Loader::loadClassFromModule('Categories', 'CategoryRegistry');
-    
-        // get the language file
-        $lang = ZLanguage::getLanguageCode();
-    
         // create the Topics category and entry in the categories registry
         _postcalendar_createtopicscategory('/__SYSTEM__/Modules/Topics');
 
-        // get the category path for which we're going to insert our upgraded Topics categories
+        // get the category path to insert upgraded Topics categories
+        Loader::loadClass('CategoryUtil');
         $rootcat = CategoryUtil::getCategoryByPath('/__SYSTEM__/Modules/Topics');
     
-        // migrate our topic categories
+        // migrate topic categories
         $topicsmap = array();
         foreach ($topics as $topic) {
-            $cat = new PNCategory ();
-            $data = $cat->getData();
-            $data['parent_id']                     = $rootcat['id'];
-            $data['name']                          = $topic[1];
-            $data['value']                         = -1;
-            $data['display_name']                  = array($lang => $topic[3]);
-            $data['display_desc']                  = array($lang => $topic[3]);
-            $data['__ATTRIBUTES__']['topic_image'] = $topic[2];
-            $cat->setData ($data);
-            if (!$cat->validate('admin')) {
-                return false;
+            if (!$catid = _postcalendar_createcategory(
+                array(
+                    'rootpath'   =>'/__SYSTEM__/Modules/Topics', 
+                    'name'       =>$topic[1], 
+                    'value'      => -1,
+                    'displayname'=>$topic[3], 
+                    'description'=>$topic[3],
+                    'attributes' =>array('topic_image'=>$topic[2]),
+                    )
+                )) {
+                LogUtil::registerError(__f('Error! Could not create sub-category (%s).', $topic[1], $dom));
             }
-            $cat->insert();
-            $cat->update();
-            $topicsmap[$topic[0]] = $cat->getDataField('id');
+            $topicsmap[$topic[0]] = $catid;
         }
     
         // After an upgrade we want the legacy topic template variables to point to the Topic property
@@ -405,7 +378,6 @@ function _postcalendar_migratetopics()
 
     return $topicsmap;
 }
-
 
 /**
  * change old category and topic ids to new category ids.
@@ -436,7 +408,11 @@ function _postcalendar_transcode_ids($categorymap, $topicsmap)
                          '__META__' => array('module' => 'PostCalendar'));
     }
     // second, update each event with the new category assignments
-    foreach ($events as $event) {
+    if (DBUtil::updateObjectArray($events, 'postcalendar_events', 'eid')) {
+        LogUtil::registerStatus (__('PostCalendar: Category and/or Topic IDs converted.', $dom));
+        return true;
+    }
+/*    foreach ($events as $event) {
         if (!DBUtil::updateObject($event, 'postcalendar_events', '', 'eid')) {
             return LogUtil::registerError (__('Error! Table update failed.', $dom));
         }
@@ -444,7 +420,7 @@ function _postcalendar_transcode_ids($categorymap, $topicsmap)
 
     LogUtil::registerStatus (__('PostCalendar: Category and/or Topic IDs converted.', $dom));
 
-    return true;
+    return true; */
 }
 
 /**
@@ -458,44 +434,26 @@ function _postcalendar_createdefaultcategory($regpath = '/__SYSTEM__/Modules/Glo
 
     // load necessary classes
     Loader::loadClass('CategoryUtil');
-    Loader::loadClassFromModule('Categories', 'Category');
-    Loader::loadClassFromModule('Categories', 'CategoryRegistry');
 
     // get the language
     $lang = ZLanguage::getLanguageCode();
 
-    // get the category path for which we're going to insert our place holder category
-    $rootcat = CategoryUtil::getCategoryByPath('/__SYSTEM__/Modules');
-    $nCat    = CategoryUtil::getCategoryByPath('/__SYSTEM__/Modules/PostCalendar');
+    if (!$cat = _postcalendar_createcategory(array(
+                'rootpath'   =>'/__SYSTEM__/Modules', 
+                'name'       =>'PostCalendar', 
+                'displayname'=>__('PostCalendar', $dom), 
+                'description'=>__('Calendar for Zikula', $dom)))) return false;
 
-    if (!$nCat) {
-        // create placeholder for all our migrated categories
-        $cat = new PNCategory ();
-        $cat->setDataField('parent_id', $rootcat['id']);
-        $cat->setDataField('name', 'PostCalendar');
-        $cat->setDataField('display_name', array($lang => __('PostCalendar', $dom)));
-        $cat->setDataField('display_desc', array($lang => __('Calendar for Zikula', $dom)));
-        if (!$cat->validate('admin')) {
-            return false;
-        }
-        $cat->insert();
-        $cat->update();
-    }
-
-    // get the category path for which we're going to insert our upgraded PostCalendar categories
+    // get the category path to insert upgraded PostCalendar categories
     $rootcat = CategoryUtil::getCategoryByPath($regpath);
     if ($rootcat) {
         // create an entry in the categories registry to the Main property
-        $registry = new PNCategoryRegistry();
-        $registry->setDataField('modname', 'PostCalendar');
-        $registry->setDataField('table', 'postcalendar_events');
-        $registry->setDataField('property', __('Main', $dom));
-        $registry->setDataField('category_id', $rootcat['id']);
-        $registry->insert();
+        _postcalendar_create_regentry($rootcat, array('modname'=>'PostCalendar', 'table'=>'postcalendar_events', 'property'=>__('Main', $dom)));
     } else {
         return false;
     }
 
+    LogUtil::registerStatus (__("PostCalendar: Main category created.", $dom));
     return true;
 }
 
@@ -508,67 +466,36 @@ function _postcalendar_createtopicscategory($regpath = '/__SYSTEM__/Modules/Topi
 {
     if (!pnModAvailable('Topics')) return false;
 
-    // get the language file
-    $lang = ZLanguage::getLanguageCodeLegacy(); // need old three letter code for Topics
-
+    $dom = ZLanguage::getModuleDomain('PostCalendar');
 
     // load necessary classes
     Loader::loadClass('CategoryUtil');
-    Loader::loadClassFromModule('Categories', 'Category');
-    Loader::loadClassFromModule('Categories', 'CategoryRegistry');
-
-    // get the category path for which we're going to insert our place holder category
-    $rootcat = CategoryUtil::getCategoryByPath('/__SYSTEM__/Modules');
 
     // create placeholder for all the migrated topics
-    $tCat    = CategoryUtil::getCategoryByPath('/__SYSTEM__/Modules/Topics');
+    $tCat = CategoryUtil::getCategoryByPath('/__SYSTEM__/Modules/Topics');
 
     if (!$tCat) {
-        // create placeholder for all our migrated categories
-        $cat = new PNCategory ();
-        $cat->setDataField('parent_id', $rootcat['id']);
-        $cat->setDataField('name', 'Topics');
-
-        Loader::includeOnce("modules/Topics/lang/{$lang}/version.php");
-        $cat->setDataField('display_name', array($lang => _TOPICS_DISPLAYNAME)); // allow constants here because Topics is legacy
-        $cat->setDataField('display_desc', array($lang => _TOPICS_DESCRIPTION)); // allow constants here because Topics is legacy
-        if (!$cat->validate('admin')) {
-            return false;
-        }
-        $cat->insert();
-        $cat->update();
+        // create placeholder for migrated topics
+        $lang = ZLanguage::getLanguageCodeLegacy(); // need old three letter code for Topics
+        Loader::includeOnce("modules/Topics/lang/{$lang}/version.php"); // load & allow constants here because Topics is legacy
+        if (!$cat = _postcalendar_createcategory(array(
+                'rootpath'   =>'/__SYSTEM__/Modules', 
+                'name'       =>'Topics', 
+                'displayname'=>_TOPICS_DISPLAYNAME, 
+                'description'=>_TOPICS_DESCRIPTION))) return false;
     }
 
-    // get the category path for which we're going to insert our upgraded categories
+    // get the category path to insert upgraded categories
     $rootcat = CategoryUtil::getCategoryByPath($regpath);
     if ($rootcat) {
         // create an entry in the categories registry to the Topic property
-        _postcalendar_create_regentry_fortopics($rootcat);
+        _postcalendar_create_regentry($rootcat, array('modname'=>'PostCalendar', 'table'=>'postcalendar_events', 'property'=>'Topic'));
+
     } else {
         return false;
     }
 
-    return true;
-}
-
-/**
- * @author Craig Heydenburg
- * create an entry in the categories registry to the Topic property
- */
-function _postcalendar_create_regentry_fortopics($rootcat)
-{
-    // load necessary classes
-    Loader::loadClass('CategoryUtil');
-    Loader::loadClassFromModule('Categories', 'Category');
-    Loader::loadClassFromModule('Categories', 'CategoryRegistry');
-
-    $registry = new PNCategoryRegistry();
-    $registry->setDataField('modname', 'PostCalendar');
-    $registry->setDataField('table', 'postcalendar_events');
-    $registry->setDataField('property', 'Topic');
-    $registry->setDataField('category_id', $rootcat['id']);
-    $registry->insert();
-
+    LogUtil::registerStatus (__("PostCalendar: Topics category created.", $dom));
     return true;
 }
 
@@ -615,7 +542,7 @@ function _postcalendar_gettopicsmap($topicspath = '/__SYSTEM__/Modules/Topics')
     if (!empty($topics)) return false;
 
     // create an entry in the categories registry to the Topic property
-    _postcalendar_create_regentry_fortopics($cat);
+    _postcalendar_create_regentry($cat, array('modname'=>'PostCalendar', 'table'=>'postcalendar_events', 'property'=>'Topic'));
 
     // return array map
     return $topicidmap;
@@ -648,6 +575,27 @@ function _postcalendar_cull_meetings()
 }
 
 /**
+ * convert informant column to uid of informant
+ * @author Craig Heydenburg
+ */
+function _postcalendar_convert_informant()
+{
+    $dom = ZLanguage::getModuleDomain('PostCalendar');
+
+    $events = DBUtil::selectObjectArray('postcalendar_events'); // select all events
+    foreach ($events as &$event) {
+        $id = pnUserGetIDFromName(strtolower($event['informant']));
+        $event['informant'] = $id ? $id : SessionUtil::getVar('uid');
+    }
+    unset ($event);
+    if (DBUtil::updateObjectArray($events, 'postcalendar_events', 'eid')) {
+        LogUtil::registerStatus (__f("PostCalendar: '%s' field converted.", 'informant', $dom));
+        return true;
+    }
+    return false;
+}
+
+/**
  * create initial calendar event
  * @author Craig Heydenburg
  */
@@ -661,10 +609,10 @@ function _postcalendar_createinstallevent()
     $event = array (
         'title'          => __('PostCalendar Installed', $dom),
         'hometext'       => __(':text:On this date, the PostCalendar module was installed. Thank you for trying PostCalendar! This event can be safely deleted if you wish.', $dom),
-        'aid'            => pnUserGetVar('uid'),
+        'aid'            => SessionUtil::getVar('uid'),
         'time'           => date("Y-m-d H:i:s"),
-        'informant'      => pnUserGetVar('uname'), //change this to uid in v6.0?
-        'eventDate'      => pnModAPIFunc('PostCalendar','user','getDate',array('format'=>'%Y-%m-%d')),
+        'informant'      => SessionUtil::getVar('uid'),
+        'eventDate'      => date('Y-m-d'),
         'duration'       => 3600,
         'recurrtype'     => 0, //norepeat
         'recurrspec'     => 'a:5:{s:17:"event_repeat_freq";s:0:"";s:22:"event_repeat_freq_type";s:1:"0";s:19:"event_repeat_on_num";s:1:"1";s:19:"event_repeat_on_day";s:1:"0";s:20:"event_repeat_on_freq";s:0:"";}',
@@ -673,14 +621,20 @@ function _postcalendar_createinstallevent()
         'location'       => 'a:6:{s:14:"event_location";s:0:"";s:13:"event_street1";s:0:"";s:13:"event_street2";s:0:"";s:10:"event_city";s:0:"";s:11:"event_state";s:0:"";s:12:"event_postal";s:0:"";}',
         'eventstatus'    => 1, // approved
         'sharing'        => 3, // global
-        '__CATEGORIES__' => array('Events' => $cat['id']),
+        'website'        => 'http://code.zikula.org/soundwebdevelopment/wiki/PostCalendar',
+        '__CATEGORIES__' => array('Main' => $cat['id']),
+        '__META__'       => array('module' => 'PostCalendar'),
     );
 
-    if (DBUtil::insertObject($event, 'postcalendar_events', 'eid')) return true;
+    if (DBUtil::insertObject($event, 'postcalendar_events', 'eid')) {
+        LogUtil::registerStatus (__("PostCalendar: Installation event created.", $dom));
+        return true;
+    }
 
     return LogUtil::registerError(__('Error! Could not create an installation event.', $dom));
 
 }
+
 
 /**
  * create initial category on first install
@@ -690,6 +644,30 @@ function _postcalendar_createdefaultsubcategory()
 {
     $dom = ZLanguage::getModuleDomain('PostCalendar');
 
+    if (!$cat = _postcalendar_createcategory(
+            array(
+                'rootpath'   =>'/__SYSTEM__/Modules/PostCalendar', 
+                'name'       =>'Events', 
+                'displayname'=>__('Events', $dom), 
+                'description'=>__('Initial sub-category created on install', $dom),
+                'attributes' =>array('color'=>'#000000'),
+                )
+        )) {
+        LogUtil::registerError(__('Error! Could not create an initial sub-category.', $dom));
+        return false;
+    }
+
+    LogUtil::registerStatus (__("PostCalendar: Initial sub-category created (Events).", $dom));
+    return true; 
+}
+
+/**
+ * create category
+ * @author Craig Heydenburg
+ */
+function _postcalendar_createcategory($catarray)
+{
+    // expecting array(rootpath=>'', name=>'', displayname=>'', description=>'', attributes=>array())
     // load necessary classes
     Loader::loadClass('CategoryUtil');
     Loader::loadClassFromModule('Categories', 'Category');
@@ -698,22 +676,52 @@ function _postcalendar_createdefaultsubcategory()
     // get the language file
     $lang = ZLanguage::getLanguageCode();
 
-    // get the category path
-    $rootcat = CategoryUtil::getCategoryByPath('/__SYSTEM__/Modules/PostCalendar');
+    // get the category path to insert category
+    $rootcat = CategoryUtil::getCategoryByPath($catarray['rootpath']);
+    $nCat    = CategoryUtil::getCategoryByPath($catarray['rootpath']."/".$catarray['name']);
 
-    $cat = new PNCategory ();
-    $data = $cat->getData();
-    $data['parent_id']               = $rootcat['id'];
-    $data['name']                    = __('Events', $dom);
-    $data['display_name']            = array($lang => __('Events', $dom));
-    $data['display_desc']            = array($lang => __('Initial sub-category created on install', $dom));
-    $data['__ATTRIBUTES__']['color'] = '#000000';
-    $cat->setData ($data);
-    if (!$cat->validate('admin')) {
-        return false;
+    if (!$nCat) {
+        $cat = new PNCategory ();
+        $data = $cat->getData();
+        $data['parent_id']                     = $rootcat['id'];
+        $data['name']                          = $catarray['name'];
+        $data['value']                         = $catarray['value'];
+        $data['display_name']                  = array($lang => $catarray['displayname']);
+        $data['display_desc']                  = array($lang => $catarray['description']);
+        if (($catarray['attributes']) && is_array($catarray['attributes'])) {
+            foreach ($catarray['attributes'] as $name=>$value) {
+                $data['__ATTRIBUTES__'][$name] = $value;
+            }
+        }
+        $cat->setData ($data);
+        if (!$cat->validate('admin')) {
+            return false;
+        }
+        $cat->insert();
+        $cat->update();
+        return $cat->getDataField('id');
     }
-    if ($cat->insert()) return true;
+    return -1;
+}
+/**
+ * create an entry in the categories registry
+ * @author Craig Heydenburg
+ */
+function _postcalendar_create_regentry($rootcat, $data)
+{
+    // expecting $rootcat - rootcategory info
+    // expecting array(modname=>'', table=>'', property=>'')
+    // load necessary classes
+    Loader::loadClass('CategoryUtil');
+    Loader::loadClassFromModule('Categories', 'Category');
+    Loader::loadClassFromModule('Categories', 'CategoryRegistry');
 
-    return LogUtil::registerError(__('Error! Could not create an initial sub-category.', $dom));
-    
+    $registry = new PNCategoryRegistry();
+    $registry->setDataField('modname',     $data['modname']);
+    $registry->setDataField('table',       $data['table']);
+    $registry->setDataField('property',    $data['property']);
+    $registry->setDataField('category_id', $rootcat['id']);
+    $registry->insert();
+
+    return true;
 }
