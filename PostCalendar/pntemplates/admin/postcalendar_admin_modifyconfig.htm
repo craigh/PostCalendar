@@ -26,9 +26,12 @@
 			<td><input type="checkbox" value="1" id="enablecategorization" name="enablecategorization"<!--[if $pcEC eq true]--> checked="checked"<!--[/if]-->/></td>
 		</tr>
 		<tr class='z-even'>
-			<td><!--[gt text='Allow users to publish personal calendars']--></td>
+			<td><!--[gt text='Group allowed to publish personal calendars']--></td>
 			<!--[pnmodgetvar module="PostCalendar" name="pcAllowUserCalendar" assign="pcAUC"]-->
-			<td><input type="checkbox" value="1" id="pcAllowUserCalendar" name="pcAllowUserCalendar"<!--[if $pcAUC eq true]--> checked="checked"<!--[/if]-->/></td>
+            <!--[gt text="No group" assign="nogroup"]-->
+			<td><!--[selector_group selectedValue=$pcAUC defaultValue=0 allValue=0 allText=$nogroup name="pcAllowUserCalendar"]-->
+                &nbsp;&nbsp;<a href="<!--[pnmodurl modname="Groups" type="admin" func="view"]-->"><!--[pnimg src=xedit.gif modname=core set=icons/extrasmall __title="Edit groups" __alt="Edit groups"]--></a>
+            </td>
 		</tr>
     </table>
 	<table class="z-admintable">
@@ -56,7 +59,7 @@
                <!--[foreach from=$catregistry key=property item=category]-->
                    <!--[array_field_isset assign="selectedValue" array=$selectedDefaultCategories field=$property returnValue=1]-->
                    <span><!--[selector_category 
-                   editLink=0 
+                   editLink=true 
                    category=$category 
                    name="pcDefaultCategories[$property]" 
                    field="id" 
