@@ -1,4 +1,4 @@
-<!--[* $Id:$ *]-->
+<!--[* $Id$ *]-->
 <!--[pnsecauthaction comp="::" inst=".*" level="ACCESS_ADD" assign="ACCESS_ADD"]-->
 <!--[ if $smarty.get.theme eq "Printer" ]-->
     <!--[* page presented in printer theme *]-->
@@ -76,32 +76,24 @@
                             <div style="padding: 2px; border:solid 1px <!--[ $event.catcolor ]-->;">
                         <!--[ /if ]-->
 
-                        <!--[ * Here we determine if the event is an
-                            all day event or a timed event
-                            and determine how to display the time * ]-->
                         <!--[ if $event.alldayevent != true ]-->
                             <!--[ if $24HOUR_TIME ]-->
                                 <!--[ assign var="timestamp" value=$event.startTime|date_format:'%H:%M']-->
                             <!--[ else ]-->
                                 <!--[ assign var="timestamp" value=$event.startTime|date_format:'%l:%M %p']-->
                             <!--[ /if ]-->
-                            <!--[ *assign var="title" value=$event.title|truncate:15:"...":true* ]-->
                             <!--[ assign var="title" value=$event.title|strip_tags ]-->
                         <!--[ else ]-->
                             <!--[ assign var="timestamp" value="" ]-->
-                            <!--[ *assign var="title" value=$event.title|truncate:30:"...":true* ]-->
                             <!--[ assign var="title" value=$event.title|strip_tags ]-->
                         <!--[ /if ]-->
 
-                        <!--[ $event.uname ]--> <!-- // V4B SB Inseted Username to get a better overview -->
                         <!--[ assign var="desc" value=$event.hometext|truncate:255:"..." ]-->
-                        <!--[ * Here we start the actual display of the event * ]-->
                         <!--[ pc_popup bgcolor=$event.catcolor caption="`$timestamp` `$event.title`" text=$desc assign="javascript"]-->
                         <!--[ pc_url full=true action=detail eid=$event.eid date=$date style="font-size: 7pt; text-decoration: none;" javascript=$javascript display="$timestamp $title"|pnvarprephtmldisplay]--><br />
                         <!--[ assign var="oldCat" value=$event.catname ]-->
                         <!--[ if $smarty.foreach.events.last ]-->
-                            <!--[ * we need to close out the <div> tag * ]-->
-                                </div>
+                            </div>
                         <!--[ /if ]-->
                     <!--[ /foreach ]-->
                     <!--[ /if ]-->

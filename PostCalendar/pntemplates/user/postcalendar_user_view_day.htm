@@ -1,4 +1,4 @@
-<!--[* $Id:$ *]-->
+<!--[* $Id$ *]-->
 <!--[pnsecauthaction comp="::" inst=".*" level="ACCESS_ADD" assign="ACCESS_ADD"]-->
 <!--[ if $smarty.get.theme eq "Printer" ]-->
     <!--[* page presented in printer theme *]-->
@@ -44,7 +44,6 @@
                         <!--[ assign var="timestamp" value="" ]-->
                     <!--[ /if ]-->
                     <!--[ assign var="title" value=$event.title|strip_tags ]-->
-                    <!--[ $event.uname ]-->
                     <li class="eventslistitems">
                         <span style="padding: 1px 4px; color: <!--[$event.cattextcolor]-->; background: <!--[ $event.catcolor ]-->;"><!--[ $event.catname ]--></span>
                         <!--[ $timestamp ]-->&nbsp;

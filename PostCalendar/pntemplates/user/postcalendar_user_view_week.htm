@@ -1,4 +1,4 @@
-<!--[* $Id:$ *]-->
+<!--[* $Id$ *]-->
 <!--[pnsecauthaction comp="::" inst=".*" level="ACCESS_ADD" assign="ACCESS_ADD"]-->
 <!--[ if $smarty.get.theme eq "Printer" ]-->
     <!--[* page presented in printer theme *]-->
@@ -12,9 +12,9 @@
 <!--[ pc_pagejs_init ]-->
 
 <h2 class="postcalendar_header">
-            <!--[ if $PRINT_VIEW eq false ]--><a href="<!--[ $PREV_WEEK_URL ]-->">&lt;&lt;</a><!--[/if]-->
-            <!--[ pc_week_range date=$DATE ]-->
-            <!--[ if $PRINT_VIEW eq false ]--><a href="<!--[ $NEXT_WEEK_URL ]-->">&gt;&gt;</a><!--[/if]-->
+    <!--[ if $PRINT_VIEW eq false ]--><a href="<!--[ $PREV_WEEK_URL ]-->">&lt;&lt;</a><!--[/if]-->
+    <!--[ pc_week_range date=$DATE ]-->
+    <!--[ if $PRINT_VIEW eq false ]--><a href="<!--[ $NEXT_WEEK_URL ]-->">&gt;&gt;</a><!--[/if]-->
 </h2>
 
 <div class="calcontainer">
@@ -44,7 +44,6 @@
                     <!--[ if $event.alldayevent != true ]-->
                         <!--[ $timestamp ]-->
                     <!--[ /if ]-->
-                    <!--[ $event.uname ]-->
                     <!--[ pc_popup bgcolor=$event.catcolor caption=$event.title text=$event.hometext assign="javascript"]-->
                     <!--[ pc_url full=true action=detail eid=$event.eid date=$date display=$event.title|strip_tags javascript=$javascript]-->
                     <!--[ if $event.alldayevent != true ]-->

@@ -1,4 +1,4 @@
-<!--[* $Id:$ *]-->
+<!--[* $Id$ *]-->
 <!--[pnsecauthaction comp="::" inst=".*" level="ACCESS_ADD" assign="ACCESS_ADD"]-->
 <!--[ if $smarty.get.theme eq "Printer" ]-->
     <!--[* page presented in printer theme *]-->
@@ -32,9 +32,6 @@
             <!--[ foreach name=events item=event from=$S_EVENTS.$date ]-->
                 <!--[ if $smarty.foreach.events.first eq true ]--><h3 class="dayheader" style='margin-top: .5em;'><!--[ $date|date_format:"%A, %B %e, %Y" ]--></h3><!--[/if]-->
 
-                <!--[ * Here we determine if the event is an
-                    all day event or a timed event
-                    and determine how to display the time * ]-->
                 <!--[ if $event.alldayevent != true ]-->
                     <!--[ if $24HOUR_TIME ]-->
                         <!--[ assign var="timestamp" value=$event.startTime|date_format:'%H:%M']-->
@@ -46,9 +43,7 @@
                 <!--[ /if ]-->
                 <!--[ assign var="title" value=$event.title|strip_tags ]-->
 
-                <!--[ $event.uname ]--> <!-- // V4B SB Inseted Username to get a better overview -->
                 <!--[ assign var="desc" value=$event.hometext|truncate:255:"..." ]-->
-                <!--[ * Here we start the actual display of the event * ]-->
                 <li class="eventslistitems">
                     <span style="padding: 1px 1em; color: <!--[$event.cattextcolor]-->; background: <!--[ $event.catcolor ]-->;"><!--[ $event.catname ]--></span>
                     <!--[ $timestamp ]-->&nbsp;
