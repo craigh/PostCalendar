@@ -50,7 +50,9 @@ function smarty_function_pc_filter($args, &$smarty)
     //================================================================
     // build the username filter pulldown
     //================================================================
-    if ((pnModGetVar('PostCalendar', 'pcAllowUserCalendar')) AND (pnUserLoggedIn())) { // do not show if users not allowed personal calendar or not logged in
+    $ingroup = pnModGetVar('PostCalendar', 'pcAllowUserCalendar') > 0 ? pnModAPIFunc('Groups','user','isgroupmember',array('uid'=>pnUserGetVar('uid'), 'gid'=>$gid)) : false;
+
+    if ($ingroup && pnUserLoggedIn()) { // do not show if users not allowed personal calendar or not logged in
         if (in_array('user', $types)) {
             //define array of filter options
             $filteroptions = array(

@@ -1,5 +1,10 @@
 <!--[* $Id$ *]-->
-<!--[pnmodgetvar module="PostCalendar" name="pcAllowUserCalendar"|pnvarprepfordisplay assign="pcAllowUserCalendar"]-->
+<!--[pnmodgetvar module="PostCalendar" name="pcAllowUserCalendar" assign="pcAllowUserCalendar"]-->
+<!--[if $pcAllowUserCalendar]-->
+    <!--[pnusergetvar name="uid" assign="uid"]-->
+    <!--[pnmodapifunc modname='Groups' type='user' func='isgroupmember' uid=$uid gid=$pcAllowUserCalendar assign="ingroup"]-->
+    INGROUP:<!--[$ingroup]--><br />
+<!--[else]--><!--[assign var="ingroup" value=0]--><!--[/if]-->
 <!--[pnmodgetvar module="PostCalendar" name="enablecategorization" assign="enablecats"]-->
 <!--[pnpageaddvar name="javascript" value="modules/PostCalendar/pnjavascript/postcalendar_submit_validate.js"]-->
 <!--[if $func eq "edit"]-->
@@ -29,7 +34,7 @@
         <label for="postcalendar_events_title"><b><!--[gt text='Title']--></b></label><span style='color:red;padding-left:5em;'>*<!--[gt text='Required']--></span><br />
         <input type="text" class='postcal90' name="postcalendar_events[title]" id="postcalendar_events_title" value="<!--[ $loaded_event.title ]-->" /><br /><br />
 
-        <!--[if ((is_array($users)) AND ($pcAllowUserCalendar)) ]-->
+        <!--[if ((is_array($users)) AND ($ingroup)) ]-->
             <label for="postcalendar_events_aid"><b><!--[gt text='For user']--></b></label><span style='color:red;padding-left:5em;'>*<!--[gt text='Required']--></span><br />
             <!--[html_options name="postcalendar_events[aid]" id="postcalendar_events_aid" options=$users selected=$loaded_event.aid]--><br /><br />
         <!--[else]-->
@@ -37,7 +42,7 @@
         <!--[/if]-->
 
         <label for="postcalendar_events_sharing" style="padding-right:1em;"><b><!--[gt text='Sharing']--></b></label>
-        <!--[if $pcAllowUserCalendar ]-->
+        <!--[if $ingroup ]-->
             <!--[html_options name="postcalendar_events[sharing] id="postcalendar_events_sharing" options=$sharingselect selected=$loaded_event.sharing]--><br />
         <!--[else]-->
             <span id="postcalendar_events_sharing"><i><!--[gt text='Global']--></i><input type="hidden" name="postcalendar_events[sharing]" value="3"></span><br />
