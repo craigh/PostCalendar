@@ -192,6 +192,14 @@ function PostCalendar_delete()
  */
 function postcalendar_init_getdefaults()
 {
+    // figure out associated categories and assign default value of 0 (none)
+    Loader::loadClass('CategoryRegistryUtil');
+    $defaultscats=array();
+    $cats = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
+    foreach ($cats as $prop=>$id) {
+        $defaultcats[$prop] = 0;
+    }
+
     // PostCalendar Default Settings
     $defaults = array(
     'pcTime24Hours'           => _TIMEFORMAT == 24 ? '1' : '0',
@@ -201,7 +209,7 @@ function postcalendar_init_getdefaults()
     'pcAllowDirectSubmit'     => '0',
     'pcListHowManyEvents'     => '15',
     'pcEventDateFormat'       => '%B %e, %Y', /* American: e.g. July 4, 2010 */
-    'pcAllowUserCalendar'     => '0',
+    'pcAllowUserCalendar'     => '0', /* no group */
     'pcTimeIncrement'         => '15',
     'pcDefaultView'           => 'month',
     'pcNotifyAdmin'           => '1',
@@ -210,6 +218,7 @@ function postcalendar_init_getdefaults()
     'pcAllowCatFilter'        => '1',
     'enablecategorization'    => '1',
     'enablenavimages'         => '1',
+    'pcDefaultCategories'     => $defaultcats,
     );
 
     return $defaults;
