@@ -332,6 +332,8 @@ function postcalendar_eventapi_buildSubmitForm($args)
     }
     $form_data['catregistry'] = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
     $form_data['cat_count'] = count($form_data['catregistry']);
+    // configure default categories
+    $eventdata['__CATEGORIES__'] = $eventdata['__CATEGORIES__'] ? $eventdata['__CATEGORIES__'] : pnModGetVar('PostCalendar', 'pcDefaultCategories');
 
     // All-day event values for radio buttons
     $form_data['SelectedAllday'] = $eventdata['alldayevent'] == 1 ? ' checked' : '';

@@ -45,20 +45,41 @@
 			<td><input type="checkbox" value="1" id="pcTime24Hours" name="pcTime24Hours"<!--[if $pcT24H eq true]--> checked="checked"<!--[/if]-->/></td>
 		</tr>
 		<tr class='z-even'>
-			<td><!--[gt text='Time increment for new creation (1-60 minutes)']--></td>
+			<td><!--[gt text='Time increment for new event creation (1-60 minutes)']--></td>
 			<td><input type="text" size="5" value="<!--[pnmodgetvar module="PostCalendar" name="pcTimeIncrement"]-->" id="pcTimeIncrement" name="pcTimeIncrement"/></td>
 		</tr>
 		<tr class='z-odd'>
+			<td><!--[gt text='Default categories in new event creation.']--></td>
+			<td>
+               <!--[gt text="No Default Category" assign="allText"]-->
+               <!--[nocache]-->
+               <!--[foreach from=$catregistry key=property item=category]-->
+                   <!--[array_field_isset assign="selectedValue" array=$selectedDefaultCategories field=$property returnValue=1]-->
+                   <span><!--[selector_category 
+                   editLink=0 
+                   category=$category 
+                   name="pcDefaultCategories[$property]" 
+                   field="id" 
+                   selectedValue=$selectedValue 
+                   defaultValue="0"
+                   all=1
+                   allText=$allText
+                   allValue=0]--></span>
+               <!--[/foreach]-->
+               <!--[/nocache]-->
+            </td>
+        </tr>
+		<tr class='z-even'>
 			<td><!--[gt text='View event details in a pop-up window']--></td>
 			<!--[pnmodgetvar module="PostCalendar" name="pcEventsOpenInNewWindow" assign="pcEOINW"]-->
 			<td><input type="checkbox" value="1" id="pcEventsOpenInNewWindow" name="pcEventsOpenInNewWindow"<!--[if $pcEOINW eq true]--> checked="checked"<!--[/if]-->/></td>
 		</tr>
-		<tr class='z-event'>
+		<tr class='z-odd'>
 			<td><!--[gt text="Show event details in 'hover' window during 'mouseover' (overrides pop-up setting)"]--></td>
 			<!--[pnmodgetvar module="PostCalendar" name="pcUsePopups" assign="pcUP"]-->
 			<td><input type="checkbox" value="1" id="pcUsePopups" name="pcUsePopups"<!--[if $pcUP eq true]--> checked="checked"<!--[/if]-->/></td>
 		</tr>
-		<tr class='z-odd'>
+		<tr class='z-even'>
 			<td><!--[gt text='Date Display Format']-->&nbsp;(<i><!--[gt text='uses %s format' tag1='<a href="http://php.net/strftime" target="_blank">php strftime</a>']--></i>)</td>
 			<td>
                 <input type="text" size="20" value="<!--[pnmodgetvar module="PostCalendar" name="pcEventDateFormat"]-->" id="pcEventDateFormat" name="pcEventDateFormat"/>
@@ -67,7 +88,7 @@
                 <input type="button" name="format_iso8601" value="<!--[gt text='YYYY-MM-DD']-->" onClick="document.pcConfig.pcEventDateFormat.value='%F'">
             </td>
 		</tr>
-		<tr class='z-even'>
+		<tr class='z-odd'>
 			<td><!--[gt text='First day of the week']--></td>
 			<!--[pnmodgetvar module="PostCalendar" name="pcFirstDayOfWeek" assign="firstDay"]-->
 			<td><select size="1" id="pcFirstDayOfWeek" name="pcFirstDayOfWeek">
@@ -77,7 +98,7 @@
 				</select>
 			</td>
 		</tr>
-		<tr class='z-odd'>
+		<tr class='z-even'>
 			<td><!--[gt text='Default calendar view']--></td>
 			<!--[pnmodgetvar module="PostCalendar" name="pcDefaultView" assign="defView"]-->
 			<td><select size="1" id="pcDefaultView" name="pcDefaultView">
@@ -89,12 +110,12 @@
 				</select>
 			</td>
 		</tr>
-		<tr class='z-even'>
+		<tr class='z-odd'>
 			<td><!--[gt text='Allow users to filter event display by category']--></td>
 			<!--[pnmodgetvar module="PostCalendar" name="pcAllowCatFilter" assign="pcACF"]-->
 			<td><input type="checkbox" value="1" id="pcAllowCatFilter" name="pcAllowCatFilter"<!--[if $pcACF eq true]--> checked="checked"<!--[/if]-->/></td>
 		</tr>
-        <tr class='z-odd'>
+        <tr class='z-even'>
 			<td><!--[gt text='Enable images in navigation header']--></td>
 			<!--[pnmodgetvar module="PostCalendar" name="enablenavimages" assign="pcENI"]-->
 			<td><input type="checkbox" value="1" id="enablenavimages" name="enablenavimages"<!--[if $pcENI eq true]--> checked="checked"<!--[/if]-->/></td>

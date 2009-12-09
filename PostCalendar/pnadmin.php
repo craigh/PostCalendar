@@ -41,6 +41,14 @@ function postcalendar_admin_modifyconfig()
     $modinfo = pnModGetInfo(pnModGetIDFromName('PostCalendar'));
     $pnRender->assign('postcalendarversion', $modinfo['version']);
 
+    // load the category registry util
+    if (Loader::loadClass('CategoryRegistryUtil')) {
+        $catregistry  = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
+        $pnRender->assign('catregistry', $catregistry);
+    }
+    $selectedDefaultCategories = pnModGetVar('PostCalendar', 'pcDefaultCategories');
+    $pnRender->assign('selectedDefaultCategories', $selectedDefaultCategories);
+
     return $pnRender->fetch('admin/postcalendar_admin_modifyconfig.htm');
 }
 
@@ -280,6 +288,7 @@ function postcalendar_admin_updateconfig()
     'pcAllowCatFilter'        => FormUtil::getPassedValue('pcAllowCatFilter', 0),
     'enablecategorization'    => FormUtil::getPassedValue('enablecategorization', 0),
     'enablenavimages'         => FormUtil::getPassedValue('enablenavimages', 0),
+    'pcDefaultCategories'     => FormUtil::getPassedValue('pcDefaultCategories'), //array
     );
 
     // delete all the old vars
