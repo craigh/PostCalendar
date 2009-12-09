@@ -123,15 +123,16 @@ function postcalendar_user_display($args)
             $out = pnModAPIFunc('PostCalendar', 'user', 'buildView', 
                 compact('Date','viewtype','pc_username','filtercats','func'));
             // build template and fetch:
-            if ($tpl->is_cached($out['template'], $cacheid)) {
+            if ($tpl->is_cached('user/postcalendar_user_view_'.$viewtype.'.htm', $cacheid)) {
                 // use cached version
-                return $tpl->fetch($out['template'], $cacheid);
+                return $tpl->fetch('user/postcalendar_user_view_'.$viewtype.'.htm', $cacheid);
             } else {
                 foreach ($out as $var => $val) {
                     $tpl->assign($var, $val);
                 }
                 $tpl->assign('24HOUR_TIME', _SETTING_TIME_24HOUR);
-                return $tpl->fetch($out['template'], $cacheid);
+
+                return $tpl->fetch('user/postcalendar_user_view_'.$viewtype.'.htm', $cacheid);
             } // end if/else
             break;
     } // end switch

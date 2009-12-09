@@ -30,29 +30,22 @@ function postcalendar_userapi_buildView($args)
 
     if (strlen($Date) == 8 && is_numeric($Date)) $Date .= '000000'; // 20060101 + 000000
 
-    //=================================================================
-    // set the Template to use
-    $function_out['template'] = DataUtil::formatForOS('user/postcalendar_user_view_' . $viewtype . '.htm');
-
-    //=================================================================
     // finish setting things up
     $the_year = substr($Date, 0, 4);
     $the_month = substr($Date, 4, 2);
     $the_day = substr($Date, 6, 2);
     $last_day = Date_Calc::daysInMonth($the_month, $the_year);
-    //=================================================================
+
     // prepare Month Names, Long Day Names and Short Day Names
     // as translated in the language files for template
     // (may be adding more here soon - based on need)
-    //=================================================================
     $pc_month_names = explode(" ", __('January February March April May June July August September October November December', $dom));
     $pc_short_day_names = explode (" ", __(/*!First Letter of each Day of week*/'S M T W T F S', $dom));
     $pc_long_day_names = explode (" ", __('Sunday Monday Tuesday Wednesday Thursday Friday Saturday', $dom));
-    //=================================================================
+
     // set up some information for later variable creation.
     // This helps establish the correct date ranges for each view.
     // There may be a better way to handle all this.
-    //=================================================================
     switch (_SETTING_FIRST_DAY_WEEK) {
         case _IS_MONDAY:
             $pc_array_pos = 1;
@@ -91,13 +84,12 @@ function postcalendar_userapi_buildView($args)
             }
             break;
     }
-    //=================================================================
+
     // Week View
     // This section will
     // find the correct starting and ending dates for a given
     // seven day period, based on the day of the week the
     // calendar is setup to run under (Sunday, Saturday, Monday)
-    //=================================================================
     $first_day_of_week = sprintf('%02d', $the_day - $week_day);
     $week_first_day = date('m/d/Y', mktime(0, 0, 0, $the_month, $first_day_of_week, $the_year));
     list($week_first_day_month, $week_first_day_date, $week_first_day_year) = explode('/', $week_first_day);
@@ -108,16 +100,13 @@ function postcalendar_userapi_buildView($args)
     $week_last_day_month_name = pnModAPIFunc('PostCalendar', 'user', 'getmonthname',
         array('Date' => mktime(0, 0, 0, $week_last_day_month, $week_last_day_date, $week_last_day_year)));
 
-    //=================================================================
     // Setup some information so we know the actual month's dates
     // also get today's date for later use and highlighting
-    //=================================================================
     $month_view_start = date('Y-m-d', mktime(0, 0, 0, $the_month, 1, $the_year));
     $month_view_end = date('Y-m-t', mktime(0, 0, 0, $the_month, 1, $the_year));
     $today_date = DateUtil::getDatetime('', '%Y-%m-%d');
-    //=================================================================
+
     // Setup the starting and ending date ranges for pcGetEvents()
-    //=================================================================
     switch ($viewtype) {
         case 'day':
             $starting_date = date('m/d/Y', mktime(0, 0, 0, $the_month, $the_day, $the_year));
@@ -145,15 +134,12 @@ function postcalendar_userapi_buildView($args)
             $calendarView = Date_Calc::getCalendarMonth($the_month, $the_year, '%Y-%m-%d');
             break;
     }
-    //=================================================================
+
     // Load the events
-    //=================================================================
     $eventsByDate = & pnModAPIFunc('PostCalendar', 'event', 'getEvents',
         array('start'=>$starting_date, 'end'=>$ending_date, 'filtercats'=>$filtercats, 'Date'=>$Date, 'pc_username'=>$pc_username));
 
-    //=================================================================
     // Create an array with the day names in the correct order
-    //=================================================================
     $daynames = array();
     $numDays = count($pc_long_day_names);
     for ($i = 0; $i < $numDays; $i++) {
@@ -174,15 +160,12 @@ function postcalendar_userapi_buildView($args)
         $pc_array_pos++;
     }
     unset($numDays);
-    //=================================================================
+
     // Prepare values for the template
-    //=================================================================
     $prev_month = Date_Calc::beginOfPrevMonth(1, $the_month, $the_year, '%Y%m%d');
     $next_month = Date_Calc::beginOfNextMonth(1, $the_month, $the_year, '%Y%m%d');
 
-    //=================================================================
     // Prepare links for template
-    //=================================================================
     $pc_prev = pnModURL('PostCalendar', 'user', 'view',
         array('viewtype' => $viewtype, 'Date' => $prev_month, 'pc_username' => $pc_username, 'filtercats' => $filtercats));
     $pc_next = pnModURL('PostCalendar', 'user', 'view',
@@ -206,9 +189,6 @@ function postcalendar_userapi_buildView($args)
     $pc_next_year = pnModURL('PostCalendar', 'user', 'view',
         array('viewtype' => 'year', 'Date' => $next_year, 'pc_username' => $pc_username, 'filtercats' => $filtercats));
 
-    //=================================================================
-    // Populate the template
-    //=================================================================
 
     if (isset($calendarView)) $function_out['CAL_FORMAT'] = $calendarView;
     // convert categories array to proper filter info

@@ -412,15 +412,7 @@ function _postcalendar_transcode_ids($categorymap, $topicsmap)
         LogUtil::registerStatus (__('PostCalendar: Category and/or Topic IDs converted.', $dom));
         return true;
     }
-/*    foreach ($events as $event) {
-        if (!DBUtil::updateObject($event, 'postcalendar_events', '', 'eid')) {
-            return LogUtil::registerError (__('Error! Table update failed.', $dom));
-        }
-    }
-
-    LogUtil::registerStatus (__('PostCalendar: Category and/or Topic IDs converted.', $dom));
-
-    return true; */
+    return false;
 }
 
 /**
@@ -434,9 +426,6 @@ function _postcalendar_createdefaultcategory($regpath = '/__SYSTEM__/Modules/Glo
 
     // load necessary classes
     Loader::loadClass('CategoryUtil');
-
-    // get the language
-    $lang = ZLanguage::getLanguageCode();
 
     if (!$cat = _postcalendar_createcategory(array(
                 'rootpath'   =>'/__SYSTEM__/Modules', 
@@ -453,7 +442,7 @@ function _postcalendar_createdefaultcategory($regpath = '/__SYSTEM__/Modules/Glo
         return false;
     }
 
-    LogUtil::registerStatus (__("PostCalendar: Main category created.", $dom));
+    LogUtil::registerStatus (__("PostCalendar: 'Main' category created.", $dom));
     return true;
 }
 
@@ -490,7 +479,6 @@ function _postcalendar_createtopicscategory($regpath = '/__SYSTEM__/Modules/Topi
     if ($rootcat) {
         // create an entry in the categories registry to the Topic property
         _postcalendar_create_regentry($rootcat, array('modname'=>'PostCalendar', 'table'=>'postcalendar_events', 'property'=>'Topic'));
-
     } else {
         return false;
     }

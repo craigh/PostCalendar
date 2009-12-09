@@ -538,29 +538,28 @@ function postcalendar_eventapi_formateventarrayforDB($event)
 function postcalendar_eventapi_validateformdata($submitted_event)
 {
     $dom = ZLanguage::getModuleDomain('PostCalendar');
-    $abort = false;
 
     if (empty($submitted_event['title'])) {
         LogUtil::registerError(__(/*!This is the field name from pntemplates/event/postcalendar_event_submit.htm:22*/"'Title' is a required field.", $dom).'<br />');
-        $abort = true;
+        return true;
     }
 
     // check repeating frequencies
     if ($submitted_event['recurrtype'] == REPEAT) {
         if (!isset($submitted_event['repeat']['event_repeat_freq']) || $submitted_event['repeat']['event_repeat_freq'] < 1 || empty($submitted_event['repeat']['event_repeat_freq'])) {
             LogUtil::registerError(__('Error! The repetition frequency must be at least 1.', $dom));
-            $abort = true;
+            return true;
         } elseif (!is_numeric($submitted_event['repeat']['event_repeat_freq'])) {
             LogUtil::registerError(__('Error! The repetition frequency must be an integer.', $dom));
-            $abort = true;
+            return true;
         }
     } elseif ($submitted_event['recurrtype'] == REPEAT_ON) {
         if (!isset($submitted_event['repeat']['event_repeat_on_freq']) || $submitted_event['repeat']['event_repeat_on_freq'] < 1 || empty($submitted_event['repeat']['event_repeat_on_freq'])) {
             LogUtil::registerError(__('Error! The repetition frequency must be at least 1.', $dom));
-            $abort = true;
+            return true;
         } elseif (!is_numeric($submitted_event['repeat']['event_repeat_on_freq'])) {
             LogUtil::registerError(__('Error! The repetition frequency must be an integer.', $dom));
-            $abort = true;
+            return true;
         }
     }
 
@@ -571,7 +570,7 @@ function postcalendar_eventapi_validateformdata($submitted_event)
 
     if (($submitted_event['endtype'] == 1) && ($edate < $sdate)) {
         LogUtil::registerError(__('Error! The selected start date falls after the selected end date.', $dom));
-        $abort = true;
+        return true;
     }
     /*
     if (!checkdate($submitted_event['eventDate']['month'], $submitted_event['eventDate']['day'], $submitted_event['eventDate']['year'])) {
@@ -583,7 +582,7 @@ function postcalendar_eventapi_validateformdata($submitted_event)
         $abort = true;
     }
     */
-    return $abort;
+    return false;
 }
 
 /**
