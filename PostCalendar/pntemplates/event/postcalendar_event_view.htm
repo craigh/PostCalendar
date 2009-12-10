@@ -1,4 +1,4 @@
-<!--[* $Id:$ *]-->
+<!--[* $Id$ *]-->
 <div class="postcalendar_event_view">
 <h2 class="postcalendar_header">
     <!--[ $loaded_event.title|pnvarprephtmldisplay ]-->
@@ -40,6 +40,7 @@
             </ul>
             <!--[ if $loaded_event.fee ]--><!--[gt text='Fee']-->: <!--[ $loaded_event.fee ]--><!--[/if]-->
         </div>
+        <!--[if !$popup]-->
         <div class="postcalendar_event_categoryinfo">
             <!--[lang assign="lang"]-->
             <h3><!--[gt text='Categorized in']-->:</h3>
@@ -57,6 +58,7 @@
             <h3><!--[gt text='Event sharing information']-->:</h3>
             <p><!--[$loaded_event.sharing_sentence]--></p>
         </div>
+        <!--[/if]-->
     </div>
 </div>
 </div><!-- end postcalendar_event_view -->
