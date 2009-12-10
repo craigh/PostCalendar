@@ -201,7 +201,7 @@ function postcalendar_calendarblock_display($blockinfo)
 
 
     if ($showcalendar) {
-        $output .= $tpl->fetch("blocks/postcalendar_block_view_month.htm");
+        $output .= $tpl->fetch('blocks/postcalendar_block_view_month.htm');
     }
 
     if ($showevents) {
@@ -210,7 +210,7 @@ function postcalendar_calendarblock_display($blockinfo)
         } else {
             $tpl->assign('SHOW_TITLE', 0);
         }
-        $output .= $tpl->fetch("blocks/postcalendar_block_view_day.htm");
+        $output .= $tpl->fetch('blocks/postcalendar_block_view_day.htm');
     }
 
     if ($nextevents) {
@@ -219,20 +219,11 @@ function postcalendar_calendarblock_display($blockinfo)
         } else {
             $tpl->assign('SHOW_TITLE', 0);
         }
-        $output .= $tpl->fetch("blocks/postcalendar_block_view_upcoming.htm");
+        $output .= $tpl->fetch('blocks/postcalendar_block_view_upcoming.htm');
     }
 
     if ($pcbshowsslinks) {
-        $submit_event_url = pnModURL('PostCalendar', 'event', 'new');
-        $submit_event_url = DataUtil::formatForDisplay($submit_event_url);
-        $search_event_url = pnModURL('PostCalendar', 'user', 'search');
-        $search_event_url = DataUtil::formatForDisplay($search_event_url);
-        $output .= '<div class="pc_centerblocksubmitlinks">';
-        if (PC_ACCESS_ADD) {
-            $output .= '[<a href="' . $submit_event_url . '">' . __('Submit', $dom) . '</a>] ';
-        }
-        $output .= '[<a href="' . $search_event_url . '">' . __('Search', $dom) . '</a>]';
-        $output .= '</div>';
+        $output .= $tpl->fetch('blocks/postcalendar_block_calendarlinks.htm');
     }
 
     $blockinfo['content'] = $output;

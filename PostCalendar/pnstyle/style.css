@@ -248,6 +248,11 @@ td.blockmonthtoday { /* color assignments for TODAY */
 	background-color: yellow;
 	border: 1px solid Black;
 }
+td.blockmonthon:hover,
+td.blockmonthoff:hover,
+td.blockmonthtoday:hover {
+    background-color: #eeeeee;
+}
 h3.blockmonthheader {
 	background-color: #cccccc; /* Pale gray */
 	font-size: 8pt;
