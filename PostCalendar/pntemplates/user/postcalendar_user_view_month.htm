@@ -1,5 +1,6 @@
 <!--[* $Id$ *]-->
 <!--[pnsecauthaction comp="::" inst=".*" level="ACCESS_ADD" assign="ACCESS_ADD"]-->
+<!--[pnmodgetvar module='PostCalendar' name='pcEventsOpenInNewWindow' assign='in_new_window']-->
 <!--[ if $smarty.get.theme eq "Printer" ]-->
     <!--[* page presented in printer theme *]-->
     <!--[ assign var="ACCESS_ADD" value=0 ]-->
@@ -35,10 +36,8 @@
         <!--[ else ]-->
             <!--[ assign var="stylesheet" value="monthon" ]-->
         <!--[ /if ]-->
-        <td height="75" align="left" valign="top" class="<!--[ $stylesheet ]-->"
-            onmouseover="this.style.backgroundColor='white'"
-            onmouseout="this.style.backgroundColor=''"
-            onclick="javascript:location.href='<!--[ pc_url action=day date=$date ]-->';">
+        <td height="75" align="left" valign="top" class="<!--[ $stylesheet ]-->" 
+            <!--[if $in_new_window eq false]-->onclick="javascript:location.href='<!--[ pc_url action=day date=$date ]-->';"<!--[/if]-->>
             <table width="100%" border="0" cellpadding="0" cellspacing="0">
                 <!--[ if $PRINT_VIEW eq false ]-->
                 <tr>

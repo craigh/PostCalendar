@@ -70,7 +70,7 @@ input.postcal90 {
     font-style: italic;
 }
 
-/********** DAY & SEARCH ***************/
+/********** DAY ***************/
 h3.dayheader,
 h3.dayheader a {
 	font-size: 1.2em;
@@ -82,9 +82,8 @@ li.eventslistitems {
 	padding-left: 10px;
 	list-style: none;
 }
-
-.pc_searchtable {
-	border: 1px solid Black;
+ul.eventslist:hover {
+    background-color: #eeeeee;
 }
 
 /*********** MONTH **************/
@@ -102,6 +101,11 @@ td.monthtoday { /* color assignments for TODAY */
 	background-color: yellow;
 	border: 2px dashed #FF6600; /*orangish */
 	vertical-align: top;
+}
+td.monthon:hover,
+td.monthoff:hover,
+td.monthtoday:hover {
+    background-color: #eeeeee;
 }
 td.daynames {
 	background-color: #cccccc; /* Pale Grey */
