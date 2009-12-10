@@ -284,7 +284,7 @@ function postcalendar_eventapi_writeEvent($args)
     } else { //new event
         unset($eventdata['eid']); //be sure that eid is not set on insert op to autoincrement value
         unset($eventdata['is_update']);
-        $eventdata['time'] = date("Y-m-d H:i:s"); //current date
+        $eventdata['time'] = date("Y-m-d H:i:s"); //current date for timestamp on event
         $result = DBUtil::insertObject($eventdata, 'postcalendar_events', 'eid');
     }
     if ($result === false) return false;
@@ -510,7 +510,6 @@ function postcalendar_eventapi_formateventarrayforDB($event)
         $event['eventstatus'] = _EVENT_QUEUED;
     }
 
-    // format some vars for the insert statement
     $event['endDate'] = $event['endtype'] == 1 ? $event['endDate'] : '0000-00-00';
 
     if (!isset($event['alldayevent'])) $event['alldayevent'] = 0;
@@ -525,6 +524,8 @@ function postcalendar_eventapi_formateventarrayforDB($event)
     $event['location'] = serialize($event['location']);
     if (!isset($event['recurrtype'])) $event['recurrtype'] = NO_REPEAT;
     $event['recurrspec'] = serialize($event['repeat']);
+
+    $event['url'] = isset($event['url']) ? makeValidURL($event['url']) : '';
 
     return $event;
 }
@@ -541,6 +542,7 @@ function postcalendar_eventapi_validateformdata($submitted_event)
 {
     $dom = ZLanguage::getModuleDomain('PostCalendar');
 
+    // title must be present
     if (empty($submitted_event['title'])) {
         LogUtil::registerError(__(/*!This is the field name from pntemplates/event/postcalendar_event_submit.htm:22*/"'Title' is a required field.", $dom).'<br />');
         return true;
@@ -548,19 +550,21 @@ function postcalendar_eventapi_validateformdata($submitted_event)
 
     // check repeating frequencies
     if ($submitted_event['recurrtype'] == REPEAT) {
-        if (!isset($submitted_event['repeat']['event_repeat_freq']) || $submitted_event['repeat']['event_repeat_freq'] < 1 || empty($submitted_event['repeat']['event_repeat_freq'])) {
-            LogUtil::registerError(__('Error! The repetition frequency must be at least 1.', $dom));
-            return true;
-        } elseif (!is_numeric($submitted_event['repeat']['event_repeat_freq'])) {
+        if (!is_numeric($submitted_event['repeat']['event_repeat_freq'])) {
             LogUtil::registerError(__('Error! The repetition frequency must be an integer.', $dom));
             return true;
         }
-    } elseif ($submitted_event['recurrtype'] == REPEAT_ON) {
-        if (!isset($submitted_event['repeat']['event_repeat_on_freq']) || $submitted_event['repeat']['event_repeat_on_freq'] < 1 || empty($submitted_event['repeat']['event_repeat_on_freq'])) {
+        if (!isset($submitted_event['repeat']['event_repeat_freq']) || $submitted_event['repeat']['event_repeat_freq'] < 1 || empty($submitted_event['repeat']['event_repeat_freq'])) {
             LogUtil::registerError(__('Error! The repetition frequency must be at least 1.', $dom));
             return true;
-        } elseif (!is_numeric($submitted_event['repeat']['event_repeat_on_freq'])) {
+        }
+    } elseif ($submitted_event['recurrtype'] == REPEAT_ON) {
+        if (!is_numeric($submitted_event['repeat']['event_repeat_on_freq'])) {
             LogUtil::registerError(__('Error! The repetition frequency must be an integer.', $dom));
+            return true;
+        }
+        if (!isset($submitted_event['repeat']['event_repeat_on_freq']) || $submitted_event['repeat']['event_repeat_on_freq'] < 1 || empty($submitted_event['repeat']['event_repeat_on_freq'])) {
+            LogUtil::registerError(__('Error! The repetition frequency must be at least 1.', $dom));
             return true;
         }
     }
@@ -574,16 +578,7 @@ function postcalendar_eventapi_validateformdata($submitted_event)
         LogUtil::registerError(__('Error! The selected start date falls after the selected end date.', $dom));
         return true;
     }
-    /*
-    if (!checkdate($submitted_event['eventDate']['month'], $submitted_event['eventDate']['day'], $submitted_event['eventDate']['year'])) {
-        LogUtil::registerError(__('Error! Invalid start date.', $dom));
-        $abort = true;
-    }
-    if (!checkdate($submitted_event['endDate']['month'], $submitted_event['endDate']['day'], $submitted_event['endDate']['year'])) {
-        LogUtil::registerError(__('Error! Invalid end date.', $dom));
-        $abort = true;
-    }
-    */
+
     return false;
 }
 
@@ -594,13 +589,12 @@ function postcalendar_eventapi_validateformdata($submitted_event)
  * @private
  * @returns string
  */
-if (!function_exists('makeValidURL')) { // also defined in pnadminapi.php
-    function makeValidURL($s)
-    {
-        if (empty($s)) return '';
-        if (!preg_match('|^http[s]?:\/\/|i', $s)) $s = 'http://' . $s;
-        return $s;
-    }
+
+function makeValidURL($s)
+{
+    if (empty($s)) return '';
+    if (!preg_match('|^http[s]?:\/\/|i', $s)) $s = 'http://' . $s;
+    return $s;
 }
 
 /**

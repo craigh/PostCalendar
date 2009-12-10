@@ -223,22 +223,6 @@ function postcalendar_userapi_buildView($args)
 }
 
 /**
- * makeValidURL()
- * returns 'improved' url based on input string
- * checks to make sure scheme is present
- * @private
- * @returns string
- */
-if (!function_exists('makeValidURL')) {
-    function makeValidURL($s)
-    {
-        if (empty($s)) return '';
-        if (!preg_match('|^http[s]?:\/\/|i', $s)) $s = 'http://' . $s;
-        return $s;
-    }
-}
-
-/**
  * postcalendar_userapi_getDate
  *
  * get the correct day, format it and return
