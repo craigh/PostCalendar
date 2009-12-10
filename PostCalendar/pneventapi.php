@@ -336,8 +336,8 @@ function postcalendar_eventapi_buildSubmitForm($args)
     $eventdata['__CATEGORIES__'] = $eventdata['__CATEGORIES__'] ? $eventdata['__CATEGORIES__'] : pnModGetVar('PostCalendar', 'pcDefaultCategories');
 
     // All-day event values for radio buttons
-    $form_data['SelectedAllday'] = $eventdata['alldayevent'] == 1 ? ' checked' : '';
-    $form_data['SelectedTimed'] = (($eventdata['alldayevent'] == 0) OR (!isset($eventdata['alldayevent']))) ? ' checked' : ''; //default
+    $form_data['SelectedAllday'] = $eventdata['alldayevent'] == 1 ? " checked='checked'" : '';
+    $form_data['SelectedTimed'] = (($eventdata['alldayevent'] == 0) OR (!isset($eventdata['alldayevent']))) ? " checked='checked'" : ''; //default
 
     // StartTime
     $form_data['minute_interval'] = _SETTING_TIME_INCREMENT;
@@ -363,9 +363,9 @@ function postcalendar_eventapi_buildSubmitForm($args)
     if (!isset($eventdata['sharing'])) $eventdata['sharing'] = SHARING_GLOBAL; //default
 
     // recur type radio selects
-    $form_data['SelectedNoRepeat'] = (((int) $eventdata['recurrtype'] == 0) OR (empty($eventdata['recurrtype']))) ? ' checked' : ''; //default
-    $form_data['SelectedRepeat'] = (int) $eventdata['recurrtype'] == 1 ? ' checked' : '';
-    $form_data['SelectedRepeatOn'] = (int) $eventdata['recurrtype'] == 2 ? ' checked' : '';
+    $form_data['SelectedNoRepeat'] = (((int) $eventdata['recurrtype'] == 0) OR (empty($eventdata['recurrtype']))) ? " checked='checked'" : ''; //default
+    $form_data['SelectedRepeat'] = (int) $eventdata['recurrtype'] == 1 ? " checked='checked'" : '';
+    $form_data['SelectedRepeatOn'] = (int) $eventdata['recurrtype'] == 2 ? " checked='checked'" : '';
 
     // recur select box arrays
     $in = explode ("/", __('Day(s)/Week(s)/Month(s)/Year(s)', $dom));
@@ -389,8 +389,8 @@ function postcalendar_eventapi_buildSubmitForm($args)
     if (empty($eventdata['repeat']['event_repeat_on_day']) || $eventdata['repeat']['event_repeat_on_day'] < 1) $eventdata['repeat']['event_repeat_on_day'] = REPEAT_ON_SUN;
 
     // endType
-    $form_data['SelectedEndOn'] = (int) $eventdata['endtype'] == 1 ? ' checked' : '';
-    $form_data['SelectedNoEnd'] = (((int) $eventdata['endtype'] == 0) OR (empty($eventdata['endtype']))) ? ' checked' : ''; //default
+    $form_data['SelectedEndOn'] = (int) $eventdata['endtype'] == 1 ? " checked='checked'" : '';
+    $form_data['SelectedNoEnd'] = (((int) $eventdata['endtype'] == 0) OR (empty($eventdata['endtype']))) ? " checked='checked'" : ''; //default
 
     // Assign the content format (determines if scribite is in use)
     $form_data['formattedcontent'] = pnModAPIFunc('PostCalendar', 'event', 'isformatted', array('func' => 'new'));

@@ -1,4 +1,4 @@
-<!--[* $Id:$ *]-->
+<!--[* $Id$ *]-->
 <!--[pnsecauthaction comp="::" inst=".*" level="ACCESS_ADD" assign="ACCESS_ADD"]-->
 <!--[ if $smarty.get.theme eq "Printer" ]-->
 	<!--[* page presented in printer theme *]-->
@@ -12,9 +12,9 @@
 <!--[ pc_pagejs_init ]-->
 
 <h2 class="postcalendar_header">
-			<!--[ if $PRINT_VIEW eq false ]--><a href="<!--[ $PREV_YEAR_URL ]-->">&lt;&lt;</a><!--[/if]-->
-    		<!--[ $DATE|date_format:'%Y']-->
-			<!--[ if $PRINT_VIEW eq false ]--><a href="<!--[ $NEXT_YEAR_URL ]-->">&gt;&gt;</a><!--[/if]-->
+    <!--[ if $PRINT_VIEW eq false ]--><a href="<!--[ $PREV_YEAR_URL ]-->">&lt;&lt;</a><!--[/if]-->
+    <!--[ $DATE|date_format:'%Y']-->
+    <!--[ if $PRINT_VIEW eq false ]--><a href="<!--[ $NEXT_YEAR_URL ]-->">&gt;&gt;</a><!--[/if]-->
 </h2>
 
 <!--[ strip ]-->
@@ -26,7 +26,7 @@
 		<!--[ if $smarty.foreach.months.iteration %4 eq 1  ]-->
 		<tr>
 		<!--[ /if ]-->
-		<td width="25%" valign="top" align="center">
+		<td valign="top" align="center">
 		<!--[ * get the current year we're viewing * ]-->
 		<!--[ assign var="y" value=$DATE|date_format:"%Y" ]-->
 		<!--[ * figure out what month we are in * ]-->
@@ -36,14 +36,14 @@
 		<!--[ * create our link to the month * ]-->
 		<table width="100%" border="0" cellpadding="0" cellspacing="0" class="blockcalcontainer">
 			<tr>
-				<td width="100%" class="blockmonthheader" colspan="8" valign="top" align="center">
+				<td class="blockmonthheader" colspan="8" valign="top" align="center">
 					<a href="<!--[ pc_url action="month" date="$y-$m-01" ]-->"><!--[ $A_MONTH_NAMES.$monthnum ]--></a>
 				</td>
 			</tr>
 			<tr>
 				<td class="weeklink">&nbsp;</td>
 				<!--[ foreach name=daynames item=day from=$S_SHORT_DAY_NAMES ]-->
-				<td width="14%" class="daynames" align="center"><!--[ $day ]--></td>
+				<td class="daynames" align="center"><!--[ $day ]--></td>
 				<!--[ /foreach ]-->
 			</tr>
 			<!--[ foreach name=weeks item=days from=$month ]-->
@@ -60,7 +60,7 @@
     				<!--[ else ]-->
     					<!--[ assign var="stylesheet" value="monthoff" ]-->
     				<!--[ /if ]-->
-    				<td width="14%" align="center" class="<!--[ $stylesheet ]-->">
+    				<td align="center" class="<!--[ $stylesheet ]-->">
     					<!--[ assign var="classname" value="event-none" ]-->						 		   
     					<!--[ if (isset($A_EVENTS.$date)) ]-->
         					<!--[ if $A_EVENTS.$date|@count > 2  ]-->
@@ -73,15 +73,15 @@
     					<!--[ /if ]-->
     					<!--[ pc_url full=true class=$classname action=day date=$date display=$date|date_format:"%d" ]-->
                     </td>
-				<!--[ /foreach ]-->
+				<!--[ /foreach ]--><!--[* foreach name=day *]-->
 			</tr>
-			<!--[ /foreach ]-->
+			<!--[ /foreach ]--><!--[* foreach name=weeks *]-->
 		</table>
-		<!--[ /foreach ]-->
 		</td>
-		<!--[ if $smarty.foreach.months.iteration %3 eq 1  ]-->
+		<!--[ if $smarty.foreach.months.iteration %4 eq 0  ]-->
 		</tr>
 		<!--[ /if ]-->
+		<!--[ /foreach ]--><!--[* foreach name=months *]-->
 	</table>
 </div><!-- end calcontainer -->
 <!--[ /strip ]-->

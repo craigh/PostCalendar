@@ -22,7 +22,7 @@
 <table width="100%" border="0" cellpadding="0" cellspacing="0" class="postcalendar_month">
     <tr>
         <!--[ foreach from=$S_LONG_DAY_NAMES item=day ]-->
-        <td width="14%" align="center" valign="middle" class="daynames"><!--[ $day ]--></td>
+        <td align="center" valign="middle" class="daynames"><!--[ $day ]--></td>
         <!--[ /foreach ]-->
     </tr>
     <!--[ * CREATE THE CALENDAR * ]-->
@@ -36,7 +36,7 @@
         <!--[ else ]-->
             <!--[ assign var="stylesheet" value="monthon" ]-->
         <!--[ /if ]-->
-        <td height="75" align="left" valign="top" class="<!--[ $stylesheet ]-->" 
+        <td align="left" valign="top" class="<!--[ $stylesheet ]-->" 
             <!--[if $in_new_window eq false]-->onclick="javascript:location.href='<!--[ pc_url action=day date=$date ]-->';"<!--[/if]-->>
             <table width="100%" border="0" cellpadding="0" cellspacing="0">
                 <!--[ if $PRINT_VIEW eq false ]-->

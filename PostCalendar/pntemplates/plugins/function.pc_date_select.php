@@ -67,19 +67,19 @@ function smarty_function_pc_date_select($args, &$smarty)
     if ($args['view'] === true) {
         $sel_data = array();
         $sel_data[0]['id'] = 'day';
-        $sel_data[0]['selected'] = $viewtype == 'day';
+        $sel_data[0]['selected'] = $viewtype == 'day' ? 'selected' : '';
         $sel_data[0]['name'] = __('Day', $dom);
         $sel_data[1]['id'] = 'week';
-        $sel_data[1]['selected'] = $viewtype == 'week';
+        $sel_data[1]['selected'] = $viewtype == 'week' ? 'selected' : '';
         $sel_data[1]['name'] = __('Week', $dom);
         $sel_data[2]['id'] = 'month';
-        $sel_data[2]['selected'] = $viewtype == 'month';
+        $sel_data[2]['selected'] = $viewtype == 'month' ? 'selected' : '';
         $sel_data[2]['name'] = __('Month', $dom);
         $sel_data[3]['id'] = 'year';
-        $sel_data[3]['selected'] = $viewtype == 'year';
+        $sel_data[3]['selected'] = $viewtype == 'year' ? 'selected' : '';
         $sel_data[3]['name'] = __('Year', $dom);
         $sel_data[4]['id'] = 'list';
-        $sel_data[4]['selected'] = $viewtype == 'list';
+        $sel_data[4]['selected'] = $viewtype == 'list' ? 'selected' : '';
         $sel_data[4]['name'] = __('List View', $dom);
         $viewselect = HtmlUtil::FormSelectMultipleSubmit('viewtype', $sel_data);
     }

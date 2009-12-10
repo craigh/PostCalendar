@@ -23,10 +23,10 @@
         <!--[ include file="event/postcalendar_event_view.htm" ]-->
     </div>
 <!--[/if]-->
-<form name="nd" action="<!--[ pc_url action="submit" func=$func]-->" method="post" enctype="application/x-www-form-urlencoded">
-	<input type="hidden" name="authid" value="<!--[pnsecgenauthkey module="PostCalendar"]-->">
-
+<form name="nd" id="nd" action="<!--[ pc_url action="submit" func=$func]-->" method="post" enctype="application/x-www-form-urlencoded">
 <div style='border-color:#CCCCCC;border-style:solid;border-width:0 1px 1px;color:inherit;margin-bottom:1.25em;padding:0 1% 5px;width:auto;'>
+	<input type="hidden" name="authid" value="<!--[pnsecgenauthkey module="PostCalendar"]-->" />
+
 <span style='float:right;'><!--[pnimg modname=PostCalendar src=admin.gif __alt="PostCalendar Rocks!"]--></span>
 <h2 style='border-bottom:1px solid #CCCCCC;margin:2em 0 1em;text-align:left;'><!--[$titletext]-->&nbsp;<!--[gt text='calendar event']--></h2>
 <div style="padding-top:16px;">
@@ -38,20 +38,20 @@
             <label for="postcalendar_events_aid"><b><!--[gt text='For user']--></b></label><span style='color:red;padding-left:5em;'>*<!--[gt text='Required']--></span><br />
             <!--[html_options name="postcalendar_events[aid]" id="postcalendar_events_aid" options=$users selected=$loaded_event.aid]--><br /><br />
         <!--[else]-->
-            <input type="hidden" name="postcalendar_events[aid]" value="<!--[$loaded_event.aid]-->">          
+            <input type="hidden" name="postcalendar_events[aid]" value="<!--[$loaded_event.aid]-->" />          
         <!--[/if]-->
 
         <label for="postcalendar_events_sharing" style="padding-right:1em;"><b><!--[gt text='Sharing']--></b></label>
         <!--[if $ingroup ]-->
             <!--[html_options name="postcalendar_events[sharing] id="postcalendar_events_sharing" options=$sharingselect selected=$loaded_event.sharing]--><br />
         <!--[else]-->
-            <span id="postcalendar_events_sharing"><i><!--[gt text='Global']--></i><input type="hidden" name="postcalendar_events[sharing]" value="3"></span><br />
+            <span id="postcalendar_events_sharing"><i><!--[gt text='Global']--></i><input type="hidden" name="postcalendar_events[sharing]" value="3" /></span><br />
         <!--[/if]-->
         <br />
 
         <span style='padding-right:2em;'><label for="display_eventDate"><b><!--[gt text='Start date']--></b></label></span>
         <!--[ pncalendarinput display=true hidden=true objectname="postcalendar_events" htmlname="eventDate" ifformat="%Y-%m-%d" dateformat=$EVENT_DATE_FORMAT defaultstring=$loaded_event.eventDatevalue defaultdate=$loaded_event.eventDate ]-->
-        <br/ ><br />
+        <br /><br />
         <b><!--[gt text='Time']--></b><br />
         <input type="radio" name="postcalendar_events[alldayevent]" id="postcalendar_events_alldayevent1" value="1"<!--[$SelectedAllday]--> /><label for="postcalendar_events_alldayevent1" style='padding-left:1em;'><!--[gt text='All-day event']--></label>
         <br />
@@ -82,7 +82,7 @@
         <!--[/if]-->
 
         <label for="description"><b><!--[gt text='Description']--></b></label><br />
-        <textarea id="description" name="postcalendar_events[hometext]" wrap="virtual" style="width:90%; height: 12em;"><!--[ $loaded_event.hometext ]--></textarea><br />
+        <textarea  rows="30" cols="4" id="description" name="postcalendar_events[hometext]" style="width:90%; height: 12em;"><!--[ $loaded_event.hometext ]--></textarea><br />
         <!--[if $formattedcontent eq 0]-->
             <!--[* SCRIBITE NOT IN USE *]-->
             <!--[html_options name="postcalendar_events[html_or_text]" options=$EventHTMLorText selected=$loaded_event.HTMLorTextVal]-->
@@ -161,16 +161,16 @@
 </div>
 <div style='clear:both;'></div>
 
-<input type="hidden" name="is_update" value="<!--[$loaded_event.is_update]-->">
-<input type="hidden" name="postcalendar_events[eid]" value="<!--[$loaded_event.eid]-->">
-<!--[if !empty($loaded_event.data_loaded) ]--> <input type="hidden" name="postcalendar_events[data_loaded]" value="<!--[$loaded_event.data_loaded]-->"><!--[/if]-->
+<input type="hidden" name="is_update" value="<!--[$loaded_event.is_update]-->" />
+<input type="hidden" name="postcalendar_events[eid]" value="<!--[$loaded_event.eid]-->" />
+<!--[if !empty($loaded_event.data_loaded) ]--> <input type="hidden" name="postcalendar_events[data_loaded]" value="<!--[$loaded_event.data_loaded]-->" /><!--[/if]-->
 
 <div id="postcalendar_addevent_formaction">
     <select name="form_action">
     	<option value="preview"><!--[gt text='Preview event']--></option>
-    	<option value="commit" selected><!--[$submittext]--></option>
-    </select><input type="submit" name="_submit" value="go">
+    	<option value="commit" selected='selected'><!--[$submittext]--></option>
+    </select><input type="submit" name="_submit" value="<!--[gt text='go']-->" />
 </div>
 
-</form>
 </div> <!-- /page container-->
+</form>

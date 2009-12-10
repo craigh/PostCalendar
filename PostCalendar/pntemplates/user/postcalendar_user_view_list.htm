@@ -24,13 +24,13 @@
     <!--[ * CREATE THE LIST * ]-->
     <!--[ foreach name=weeks item=days from=$CAL_FORMAT ]-->
         <!--[ foreach name=days item=date from=$days ]-->
-            <ul class="eventslist" 
-            <!--[if $in_new_window eq false]-->onclick="javascript:location.href='<!--[ pc_url action=day date=$date ]-->';"<!--[/if]-->>
             <!--[ *sort the events by category so we can make it pretty* ]-->
             <!--[ pc_sort_events var="S_EVENTS" sort="time" order="asc" value=$A_EVENTS ]-->
-            <!--[ if isset($S_EVENTS) ]-->
+            <!--[ if count($S_EVENTS.$date) gt 0 ]-->
+            <ul class="eventslist" 
+            <!--[if $in_new_window eq false]-->onclick="javascript:location.href='<!--[ pc_url action=day date=$date ]-->';"<!--[/if]-->>
             <!--[ foreach name=events item=event from=$S_EVENTS.$date ]-->
-                <!--[ if $smarty.foreach.events.first eq true ]--><h3 class="dayheader" style='margin-top: .5em;'><!--[ $date|date_format:"%A, %B %e, %Y" ]--></h3><!--[/if]-->
+                <!--[ if $smarty.foreach.events.first eq true ]--><li class="dayheader" style='margin-top: .5em;'><!--[ $date|pc_date_format ]--></li><!--[/if]-->
 
                 <!--[ if $event.alldayevent != true ]-->
                     <!--[ if $24HOUR_TIME ]-->
@@ -55,8 +55,8 @@
                     <!--[/if]-->
                 </li>
             <!--[ /foreach ]-->
-            <!--[ /if ]-->
             </ul>
+            <!--[ /if ]--><!--[* end if isset($S_EVENTS) *]-->
         <!--[ /foreach ]-->
     <!--[ /foreach ]-->
 </div><!-- end calcontainer -->

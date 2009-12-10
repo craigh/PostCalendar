@@ -106,7 +106,7 @@ function smarty_function_pc_filter($args, &$smarty)
         //================================================================
         // build it in the correct order
         //================================================================
-        $submit = "<input type=\"submit\" name=\"submit\" value=\"$label\" $class />";
+        $submit = "<input type='submit' name='submit' value='$label' $class />";
         $orderArray = array('user' => $useroptions, 'category' => $catoptions, 'jump' => $submit);
     
         if (!is_null($order)) {

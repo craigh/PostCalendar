@@ -72,7 +72,9 @@ input.postcal90 {
 
 /********** DAY ***************/
 h3.dayheader,
-h3.dayheader a {
+h3.dayheader a,
+li.dayheader,
+li.dayheader a {
 	font-size: 1.2em;
 	font-weight: bold;
 	text-decoration: none;
@@ -87,6 +89,12 @@ ul.eventslist:hover {
 }
 
 /*********** MONTH **************/
+table.postcalendar_month td.monthon,
+table.postcalendar_month td.monthoff,
+table.postcalendar_month td.monthtoday
+{
+    height: 75px;
+}
 td.monthon {
 	background-color: transparent;
 	border: 1px solid Black;
@@ -113,6 +121,7 @@ td.daynames {
 	font-size: 10pt;
 	font-weight: normal;
 	text-decoration: none;
+    width: 14%;
 }
 
 /*********** YEAR **************/
@@ -280,6 +289,7 @@ td.blockcalcontainer {
 td.blockweeklink {
 	background-color: #cccccc; /* Pale gray */
 	border: 1px solid Black;
+    width: 1em;
 }
 .blockweeklink a {
 	color: black;
