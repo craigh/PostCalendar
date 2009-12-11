@@ -24,6 +24,7 @@
             <!--[ $loaded_event.hometext ]-->
         </div>
         <div>
+            <!--[ if ($loaded_event.location_info.event_location) OR ($loaded_event.location_info.event_street1) OR ($loaded_event.location_info.event_street2) OR ($loaded_event.location_info.event_city) ]-->
             <h3><!--[gt text='Location']-->:</h3>
             <ul>
                 <!--[ if $loaded_event.location_info.event_location ]--><li><!--[ $loaded_event.location_info.event_location ]--></li><!--[/if]-->
@@ -31,6 +32,8 @@
                 <!--[ if $loaded_event.location_info.event_street2 ]--><li><!--[ $loaded_event.location_info.event_street2 ]--></li><!--[/if]-->
                 <!--[ if $loaded_event.location_info.event_city ]--><li><!--[ $loaded_event.location_info.event_city ]-->&nbsp;<!--[ $loaded_event.location_info.event_state ]-->,&nbsp;<!--[ $loaded_event.location_info.event_postal ]--></li><!--[/if]-->
             </ul>
+            <!--[/if]-->
+            <!--[ if ($loaded_event.contname) OR ($loaded_event.conttel) OR ($loaded_event.contemail) OR ($loaded_event.website) ]-->
             <h3><!--[gt text='Contact information']-->:</h3>
             <ul>
                 <!--[ if $loaded_event.contname ]--><li><!--[ $loaded_event.contname ]--></li><!--[/if]-->
@@ -38,9 +41,11 @@
                 <!--[ if $loaded_event.contemail ]--><li><a href="mailto:<!--[ $loaded_event.contemail ]-->"><!--[ $loaded_event.contemail ]--></a></li><!--[ /if ]-->
                 <!--[ if $loaded_event.website ]--><li><a href="<!--[ $loaded_event.website ]-->" target="_blank"><!--[ $loaded_event.website ]--></a></li><!--[ /if ]-->
             </ul>
+            <!--[/if]-->
             <!--[ if $loaded_event.fee ]--><!--[gt text='Fee']-->: <!--[ $loaded_event.fee ]--><!--[/if]-->
         </div>
         <!--[if !$popup]-->
+        <!--[if count($loaded_event.__CATEGORIES__) gt 0]-->
         <div class="postcalendar_event_categoryinfo">
             <!--[lang assign="lang"]-->
             <h3><!--[gt text='Categorized in']-->:</h3>
@@ -48,8 +53,9 @@
                 <!--[foreach from=$loaded_event.__CATEGORIES__ key="property" item="attribute" ]-->
                     <li><span style='padding: 0 1em; background-color:<!--[$attribute.__ATTRIBUTES__.color]-->; color:<!--[$attribute.__ATTRIBUTES__.color|pc_inversecolor]-->;'><!--[$attribute.display_name.$lang]--></span></li>
                 <!--[/foreach]-->
-            <ul>
+            </ul>
         </div>
+        <!--[/if]-->
         <div class="postcalendar_event_recurrinfo">
             <h3><!--[gt text='Event recurrance information']-->:</h3>
             <p><!--[$loaded_event.recurr_sentence]--></p>

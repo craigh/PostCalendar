@@ -139,6 +139,9 @@ function PostCalendar_upgrade($oldversion)
                 LogUtil::registerError (__('Error: Could not convert informant field to uid.', $dom));
                 return ('5.8.2');
             }
+            if (!postcalendar_init_reset_scribite()) {
+                return ('5.8.2');
+            }
             pnModDelVar('PostCalendar', 'pcDisplayTopics');
             pnModDelVar('PostCalendar', 'pcUseCache');
             pnModDelVar('PostCalendar', 'pcCacheLifetime');
@@ -240,13 +243,13 @@ function postcalendar_init_reset_scribite()
         $mid = false;
 
         if (count($modconfig)) {
-            $modconfig['modfuncs'] = 'new,edit,submit';
+            $modconfig['modfuncs'] = 'new,edit,copy,submit';
             $modconfig['modareas'] = 'description';
             $mid = pnModAPIFunc('scribite', 'admin', 'editmodule', $modconfig);
         } else {
             // create new module in db
             $modconfig = array('modulename' => 'PostCalendar',
-                               'modfuncs'   => 'new,edit,submit',
+                               'modfuncs'   => 'new,edit,copy,submit',
                                'modareas'   => 'description',
                                'modeditor'  => '-');
             $mid = pnModAPIFunc('scribite', 'admin', 'addmodule', $modconfig);

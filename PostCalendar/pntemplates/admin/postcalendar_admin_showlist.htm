@@ -6,37 +6,37 @@
 <!--[if empty($events)]-->
     <!--[gt text='There are no %s events.' tag1=$functionname]-->
 <!--[else]-->
-	<form class="z-adminform" name="listevents" action="<!--[pnmodurl modname="PostCalendar" type="admin" func="adminEvents"]-->" method="post" enctype="application/x-www-form-urlencoded">
+	<form class="z-adminform" action="<!--[pnmodurl modname="PostCalendar" type="admin" func="adminEvents"]-->" method="post" enctype="application/x-www-form-urlencoded">
 		<div>
-			<input type="hidden" name="authid" value="<!--[pnsecgenauthkey module="PostCalendar"]-->">
+			<input type="hidden" name="authid" value="<!--[pnsecgenauthkey module="PostCalendar"]-->" />
 			<table class="z-admintable">
 				<tr>
 					<td><b><!--[gt text='Select']--></b></td>
-					<td><b><a href='<!--[$title_sort_url]-->'><!--[gt text='Title']--></a></b></td>
-					<td><b><a href='<!--[$time_sort_url]-->'><!--[gt text='Time stamp']--></a></b></td>
+					<td><b><a href='<!--[$title_sort_url|pnvarprepfordisplay]-->'><!--[gt text='Title']--></a></b></td>
+					<td><b><a href='<!--[$time_sort_url|pnvarprepfordisplay]-->'><!--[gt text='Time stamp']--></a></b></td>
 				</tr>
 				<!--[section name=event loop=$events]-->
 					<tr class="<!--[cycle values="z-odd,z-even"]-->">
-						<td><input type="checkbox" value="<!--[$events[event].eid]-->" id="events[]" name="events[]"/></td>
-						<td><a href='<!--[pnmodurl modname="PostCalendar" type="event" func="edit" eid=$events[event].eid]-->' ><!--[$events[event].title]--></a></td>
+						<td><input type="checkbox" value="<!--[$events[event].eid]-->" id="events_<!--[$events[event].eid]-->" name="events[]" /></td>
+						<td><a href='<!--[pnmodurl modname="PostCalendar" type="event" func="edit" eid=$events[event].eid]-->' ><!--[$events[event].title|pnvarprepfordisplay]--></a></td>
 						<td><!--[$events[event].time]--></td>
 					</tr>
 				<!--[/section]-->
 			</table>
 			<div style='text-align: left;'>
 				<!--[html_options name=action options=$formactions selected=$actionselected]-->
-				<input type="hidden" name="thelist" value="<!--[$function]-->">
-				<input type="submit" value="<!--[gt text="Perform this action"]-->"/>
+				<input type="hidden" name="thelist" value="<!--[$function]-->" />
+				<input type="submit" value="<!--[gt text="Perform this action"]-->" />
 			</div>
 			<div id="listmanipulator" style='text-align: center; background-color:#cccccc; padding:.5em; margin-top:.5em;'>
 				<!--[if !empty($prevlink)]-->
-					<< <a href="<!--[$prevlink]-->"><!--[gt text="Previous"]--> <!--[$offset_increment]--> <!--[gt text="Events"]--></a>
+					<< <a href="<!--[$prevlink|pnvarprepfordisplay]-->"><!--[gt text="Previous"]--> <!--[$offset_increment]--> <!--[gt text="Events"]--></a>
 				<!--[else]-->
 					<!--[gt text="Previous"]-->
 				<!--[/if]-->
 				&nbsp;|&nbsp;
 				<!--[if !empty($nextlink)]-->
-					<a href="<!--[$nextlink]-->"><!--[gt text="Next"]--> <!--[$offset_increment]--> <!--[gt text="Events"]--></a> >>
+					<a href="<!--[$nextlink|pnvarprepfordisplay]-->"><!--[gt text="Next"]--> <!--[$offset_increment]--> <!--[gt text="Events"]--></a> >>
 				<!--[else]-->
 					<!--[gt text="Next"]-->
 				<!--[/if]-->

@@ -1,22 +1,24 @@
 <!--[*  $Id$  *]-->
 <!--[include file="admin/postcalendar_admin_menu.htm"]-->
-<div class="z-admincontainer">
-<div class="z-adminpageicon"><!--[pnimg modname='PostCalendar' src='admin.gif']--></div>
-<h2><!--[gt text="PostCalendar settings"]-->&nbsp;(<!--[gt text="version"]-->&nbsp;<!--[$postcalendarversion]-->)</h2>
+<form class="z-adminform" action="<!--[pnmodurl modname="PostCalendar" type="admin" func="updateconfig"]-->" method="post" enctype="application/x-www-form-urlencoded">
 
-<form class="z-adminform" name="pcConfig" action="<!--[pnmodurl modname="PostCalendar" type="admin" func="updateconfig"]-->" method="post" enctype="application/x-www-form-urlencoded">
-	<input type="hidden" name="authid" value="<!--[pnsecgenauthkey module="PostCalendar"]-->">
+    <div class="z-admincontainer">
+    <div class="z-adminpageicon"><!--[pnimg modname='PostCalendar' src='admin.gif']--></div>
+    <h2><!--[gt text="PostCalendar settings"]-->&nbsp;(<!--[gt text="version"]-->&nbsp;<!--[$postcalendarversion]-->)</h2>
+
+	<input type="hidden" name="authid" value="<!--[pnsecgenauthkey module="PostCalendar"]-->" />
 	<table class="z-admintable">
         <thead>
             <tr><th colspan='2'><!--[gt text='General settings']--></th></tr>
         </thead>
+        <tbody>
         <tr class='z-odd'>
             <td colspan='2'>
                 <b><a href='<!--[pnmodurl modname="PostCalendar" type="admin" func="resetDefaults"]-->'><!--[gt text='Reset ALL Settings to Defaults']--></a></b>
             </td>
         </tr>
 		<tr class='z-even'>
-			<td width="50%"><!--[gt text='Allow submitted events to be activated without review']--></td>
+			<td><!--[gt text='Allow submitted events to be activated without review']--></td>
 			<!--[pnmodgetvar module="PostCalendar" name="pcAllowDirectSubmit" assign="pcADS"]-->
 			<td><input type="checkbox" value="1" id="pcAllowDirectSubmit" name="pcAllowDirectSubmit"<!--[if $pcADS eq true]--> checked="checked"<!--[/if]-->/></td>
 		</tr>
@@ -33,13 +35,15 @@
                 &nbsp;&nbsp;<a href="<!--[pnmodurl modname="Groups" type="admin" func="view"]-->"><!--[pnimg src=xedit.gif modname=core set=icons/extrasmall __title="Edit groups" __alt="Edit groups"]--></a>
             </td>
 		</tr>
+        </tbody>
     </table>
 	<table class="z-admintable">
         <thead>
             <tr><th colspan='2'><!--[gt text='Display settings']--></th></tr>
         </thead>
+        <tbody>
 		<tr class='z-even'>
-			<td width="50%"><!--[gt text='Number of events to list on administration pages']--></td>
+			<td><!--[gt text='Number of events to list on administration pages']--></td>
 			<td><input type="text" size="5" value="<!--[pnmodgetvar module="PostCalendar" name="pcListHowManyEvents"]-->" id="pcListHowManyEvents" name="pcListHowManyEvents"/></td>
 		</tr>
 		<tr class='z-odd'>
@@ -86,9 +90,9 @@
 			<td><!--[gt text='Date Display Format']-->&nbsp;(<i><!--[gt text='uses %s format' tag1='<a href="http://php.net/strftime" target="_blank">php strftime</a>']--></i>)</td>
 			<td>
                 <input type="text" size="20" value="<!--[pnmodgetvar module="PostCalendar" name="pcEventDateFormat"]-->" id="pcEventDateFormat" name="pcEventDateFormat"/>
-                <input type="button" name="format_usa" value="<!--[gt text='Month Day, Year']-->" onClick="document.pcConfig.pcEventDateFormat.value='%B %e, %Y'">
-                <input type="button" name="format_eu" value="<!--[gt text='Day Month Year']-->" onClick="document.pcConfig.pcEventDateFormat.value='%e %B %Y'">
-                <input type="button" name="format_iso8601" value="<!--[gt text='YYYY-MM-DD']-->" onClick="document.pcConfig.pcEventDateFormat.value='%F'">
+                <input type="button" name="format_usa" value="<!--[gt text='Month Day, Year']-->" onclick="this.form.pcEventDateFormat.value='%B %e, %Y'" />
+                <input type="button" name="format_eu" value="<!--[gt text='Day Month Year']-->" onclick="this.form.pcEventDateFormat.value='%e %B %Y'" />
+                <input type="button" name="format_iso8601" value="<!--[gt text='YYYY-MM-DD']-->" onclick="this.form.pcEventDateFormat.value='%F'" />
             </td>
 		</tr>
 		<tr class='z-odd'>
@@ -123,13 +127,15 @@
 			<!--[pnmodgetvar module="PostCalendar" name="enablenavimages" assign="pcENI"]-->
 			<td><input type="checkbox" value="1" id="enablenavimages" name="enablenavimages"<!--[if $pcENI eq true]--> checked="checked"<!--[/if]-->/></td>
 		</tr>
+        </tbody>
 	</table>
     <table class="z-admintable">
         <thead>
             <tr><th colspan='2'><!--[gt text='Notification settings']--></th></tr>
         </thead>
+        <tbody>
 		<tr class='z-odd'>
-			<td width="50%"><!--[gt text='Notify administrator about user event submission/change']--></td>
+			<td><!--[gt text='Notify administrator about user event submission/change']--></td>
 			<!--[pnmodgetvar module="PostCalendar" name="pcNotifyAdmin" assign="pcNA"]-->
 			<td><input type="checkbox" value="1" id="pcNotifyAdmin" name="pcNotifyAdmin"<!--[if $pcNA eq true]--> checked="checked"<!--[/if]-->/></td>
 		</tr>
@@ -142,7 +148,8 @@
 			<td><!--[gt text='E-mail address to send notifications']--></td>
 			<td><input type="text" size="20" value="<!--[pnmodgetvar module="PostCalendar" name="pcNotifyEmail"]-->" id="pcNotifyEmail" name="pcNotifyEmail"/></td>
 		</tr>
+        </tbody>
     </table>
-	<input type="submit" value="<!--[gt text="Update"]-->"/><br />
+	<div style='margin-bottom:1em; padding:3px;'><input type="submit" value="<!--[gt text="Update"]-->" /></div>
+    </div><!-- /z-admincontainer -->
 </form>
-</div><!-- /z-admincontainer -->

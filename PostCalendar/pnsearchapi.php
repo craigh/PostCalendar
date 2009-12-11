@@ -39,6 +39,9 @@ function postcalendar_searchapi_options($args)
         $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
         $renderer->assign('catregistry', $catregistry);
 
+        $props = array_keys($catregistry);
+        $renderer->assign('firstprop', $props[0]);
+
         return $renderer->fetch('search/postcalendar_search_options.htm');
     }
 
