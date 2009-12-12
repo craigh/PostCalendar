@@ -175,36 +175,6 @@ a.event-three {
 	padding: 0;
 	margin: 0;
 }
-td.nav,
-td.nav:hover {
-	border-right: 1px outset White;
-	background-color:white;
-}
-td.rnav,
-td.rnav:hover {
-	background-color: White;
-}
-td.snav {
-	border-right: 1px outset White;
-	background-color: White;
-	font-weight: bold;
-}
-td.rsnav {
-	background-color: White;
-	font-weight: bold;
-}
-a.nav {
-	padding-right: 3px;
-	padding-left: 3px;
-	color: Black;
-	text-decoration: none;
-}
-SELECT.nav,
-OPTION.nav,
-INPUT.nav {
-	color: Black;
-	background-color: White;
-}
 a.postcalendar_nav_img {
 
 }

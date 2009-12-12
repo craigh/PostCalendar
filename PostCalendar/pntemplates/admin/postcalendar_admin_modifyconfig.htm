@@ -1,68 +1,57 @@
 <!--[*  $Id$  *]-->
 <!--[include file="admin/postcalendar_admin_menu.htm"]-->
-<form class="z-adminform" action="<!--[pnmodurl modname="PostCalendar" type="admin" func="updateconfig"]-->" method="post" enctype="application/x-www-form-urlencoded">
 
-    <div class="z-admincontainer">
-    <div class="z-adminpageicon"><!--[pnimg modname='PostCalendar' src='admin.gif']--></div>
-    <h2><!--[gt text="PostCalendar settings"]-->&nbsp;(<!--[gt text="version"]-->&nbsp;<!--[$postcalendarversion]-->)</h2>
-
+<div class="z-admincontainer">
+<div class="z-adminpageicon"><!--[pnimg modname='PostCalendar' src='admin.gif']--></div>
+<h2><!--[gt text="PostCalendar settings"]-->&nbsp;(<!--[gt text="version"]-->&nbsp;<!--[$postcalendarversion]-->)</h2>
+<form class="z-form" action="<!--[pnmodurl modname="PostCalendar" type="admin" func="updateconfig"]-->" method="post" enctype="application/x-www-form-urlencoded">
+    <div>
 	<input type="hidden" name="authid" value="<!--[pnsecgenauthkey module="PostCalendar"]-->" />
-	<table class="z-admintable">
-        <thead>
-            <tr><th colspan='2'><!--[gt text='General settings']--></th></tr>
-        </thead>
-        <tbody>
-        <tr class='z-odd'>
-            <td colspan='2'>
-                <b><a href='<!--[pnmodurl modname="PostCalendar" type="admin" func="resetDefaults"]-->'><!--[gt text='Reset ALL Settings to Defaults']--></a></b>
-            </td>
-        </tr>
-		<tr class='z-even'>
-			<td><!--[gt text='Allow submitted events to be activated without review']--></td>
+    <fieldset>
+        <legend><!--[gt text='General settings']--></legend>
+        <div class="z-formrow">
+            <b><a href='<!--[pnmodurl modname="PostCalendar" type="admin" func="resetDefaults"]-->'><!--[gt text='Reset ALL Settings to Defaults']--></a></b>
+        </div>
+        <div class="z-formrow">
+			<label for="pcAllowDirectSubmit"><!--[gt text='Allow submitted events to be activated without review']--></label>
 			<!--[pnmodgetvar module="PostCalendar" name="pcAllowDirectSubmit" assign="pcADS"]-->
-			<td><input type="checkbox" value="1" id="pcAllowDirectSubmit" name="pcAllowDirectSubmit"<!--[if $pcADS eq true]--> checked="checked"<!--[/if]-->/></td>
-		</tr>
-		<tr class='z-odd'>
-			<td><!--[gt text='Enable categorization of events']--></td>
+			<input type="checkbox" value="1" id="pcAllowDirectSubmit" name="pcAllowDirectSubmit"<!--[if $pcADS eq true]--> checked="checked"<!--[/if]-->/>
+        </div>
+		<div class="z-formrow">
+			<label for="enablecategorization"><!--[gt text='Enable categorization of events']--></label>
 			<!--[pnmodgetvar module="PostCalendar" name="enablecategorization" assign="pcEC"]-->
-			<td><input type="checkbox" value="1" id="enablecategorization" name="enablecategorization"<!--[if $pcEC eq true]--> checked="checked"<!--[/if]-->/></td>
-		</tr>
-		<tr class='z-even'>
-			<td><!--[gt text='Group allowed to publish personal calendars']--></td>
+			<input type="checkbox" value="1" id="enablecategorization" name="enablecategorization"<!--[if $pcEC eq true]--> checked="checked"<!--[/if]-->/>
+		</div>
+		<div class="z-formrow">
+			<label for="pcAllowUserCalendar"><!--[gt text='Group allowed to publish personal calendars']--></label>
 			<!--[pnmodgetvar module="PostCalendar" name="pcAllowUserCalendar" assign="pcAUC"]-->
             <!--[gt text="No group" assign="nogroup"]-->
-			<td><!--[selector_group selectedValue=$pcAUC defaultValue=0 allValue=0 allText=$nogroup name="pcAllowUserCalendar"]-->
+			<!--[selector_group selectedValue=$pcAUC defaultValue=0 allValue=0 allText=$nogroup name="pcAllowUserCalendar" id="pcAllowUserCalendar"]-->
                 &nbsp;&nbsp;<a href="<!--[pnmodurl modname="Groups" type="admin" func="view"]-->"><!--[pnimg src=xedit.gif modname=core set=icons/extrasmall __title="Edit groups" __alt="Edit groups"]--></a>
-            </td>
-		</tr>
-        </tbody>
-    </table>
-	<table class="z-admintable">
-        <thead>
-            <tr><th colspan='2'><!--[gt text='Display settings']--></th></tr>
-        </thead>
-        <tbody>
-		<tr class='z-even'>
-			<td><!--[gt text='Number of events to list on administration pages']--></td>
-			<td><input type="text" size="5" value="<!--[pnmodgetvar module="PostCalendar" name="pcListHowManyEvents"]-->" id="pcListHowManyEvents" name="pcListHowManyEvents"/></td>
-		</tr>
-		<tr class='z-odd'>
-			<td><!--[gt text='Use 24-hour time format']--></td>
+		</div>
+    </fieldset>
+	<fieldset>
+        <legend><!--[gt text='Display settings']--></legend>
+		<div class="z-formrow">
+			<label for="pcListHowManyEvents"><!--[gt text='Number of events to list on administration pages']--></label>
+			<input type="text" size="3" value="<!--[pnmodgetvar module="PostCalendar" name="pcListHowManyEvents"]-->" id="pcListHowManyEvents" name="pcListHowManyEvents"/>
+		</div>
+		<div class="z-formrow">
+			<label for="pcTime24Hours"><!--[gt text='Use 24-hour time format']--></label>
 			<!--[pnmodgetvar module="PostCalendar" name="pcTime24Hours" assign="pcT24H"]-->
-			<td><input type="checkbox" value="1" id="pcTime24Hours" name="pcTime24Hours"<!--[if $pcT24H eq true]--> checked="checked"<!--[/if]-->/></td>
-		</tr>
-		<tr class='z-even'>
-			<td><!--[gt text='Time increment for new event creation (1-60 minutes)']--></td>
-			<td><input type="text" size="5" value="<!--[pnmodgetvar module="PostCalendar" name="pcTimeIncrement"]-->" id="pcTimeIncrement" name="pcTimeIncrement"/></td>
-		</tr>
-		<tr class='z-odd'>
-			<td><!--[gt text='Default categories in new event creation.']--></td>
-			<td>
+			<input type="checkbox" value="1" id="pcTime24Hours" name="pcTime24Hours"<!--[if $pcT24H eq true]--> checked="checked"<!--[/if]-->/>
+		</div>
+		<div class="z-formrow">
+			<label for="pcTimeIncrement"><!--[gt text='Time increment for new event creation (1-60 minutes)']--></label>
+			<input type="text" size="3" value="<!--[pnmodgetvar module="PostCalendar" name="pcTimeIncrement"]-->" id="pcTimeIncrement" name="pcTimeIncrement"/>
+		</div>
+		<div class="z-formrow">
+			<label for="pcDefaultCategories_<!--[$firstprop]-->_"><!--[gt text='Default categories in new event creation.']--></label>
                <!--[gt text="No Default Category" assign="allText"]-->
                <!--[nocache]-->
                <!--[foreach from=$catregistry key=property item=category]-->
                    <!--[array_field_isset assign="selectedValue" array=$selectedDefaultCategories field=$property returnValue=1]-->
-                   <span><!--[selector_category 
+                   <!--[selector_category 
                    editLink=true 
                    category=$category 
                    name="pcDefaultCategories[$property]" 
@@ -71,85 +60,81 @@
                    defaultValue="0"
                    all=1
                    allText=$allText
-                   allValue=0]--></span>
+                   allValue=0]-->
                <!--[/foreach]-->
                <!--[/nocache]-->
-            </td>
-        </tr>
-		<tr class='z-even'>
-			<td><!--[gt text='View event details in a pop-up window']--></td>
+        </div>
+		<div class="z-formrow">
+			<label for="pcEventsOpenInNewWindow"><!--[gt text='View event details in a pop-up window']--></label>
 			<!--[pnmodgetvar module="PostCalendar" name="pcEventsOpenInNewWindow" assign="pcEOINW"]-->
-			<td><input type="checkbox" value="1" id="pcEventsOpenInNewWindow" name="pcEventsOpenInNewWindow"<!--[if $pcEOINW eq true]--> checked="checked"<!--[/if]-->/></td>
-		</tr>
-		<tr class='z-odd'>
-			<td><!--[gt text="Show event details in 'hover' window during 'mouseover' (overrides pop-up setting)"]--></td>
+			<input type="checkbox" value="1" id="pcEventsOpenInNewWindow" name="pcEventsOpenInNewWindow"<!--[if $pcEOINW eq true]--> checked="checked"<!--[/if]-->/>
+		</div>
+		<div class="z-formrow">
+			<label for="pcUsePopups"><!--[gt text="Show event details in 'hover' window on 'mouseover'"]--><br />(<!--[gt text="overrides pop-up setting"]-->)</label>
 			<!--[pnmodgetvar module="PostCalendar" name="pcUsePopups" assign="pcUP"]-->
-			<td><input type="checkbox" value="1" id="pcUsePopups" name="pcUsePopups"<!--[if $pcUP eq true]--> checked="checked"<!--[/if]-->/></td>
-		</tr>
-		<tr class='z-even'>
-			<td><!--[gt text='Date Display Format']-->&nbsp;(<i><!--[gt text='uses %s format' tag1='<a href="http://php.net/strftime" target="_blank">php strftime</a>']--></i>)</td>
-			<td>
-                <input type="text" size="20" value="<!--[pnmodgetvar module="PostCalendar" name="pcEventDateFormat"]-->" id="pcEventDateFormat" name="pcEventDateFormat"/>
+			<input type="checkbox" value="1" id="pcUsePopups" name="pcUsePopups"<!--[if $pcUP eq true]--> checked="checked"<!--[/if]-->/>
+		</div>
+		<div class="z-formrow">
+			<label for="pcEventDateFormat"><!--[gt text='Date Display Format']--><br />(<i><!--[gt text='uses %s format' tag1='<a href="http://php.net/strftime" target="_blank">php strftime</a>']--></i>)</label>
+                <input type="text" size="15" value="<!--[pnmodgetvar module="PostCalendar" name="pcEventDateFormat"]-->" id="pcEventDateFormat" name="pcEventDateFormat"/>
+                &nbsp;<!--[gt text="Or choose a preset:"]-->&nbsp;
                 <input type="button" name="format_usa" value="<!--[gt text='Month Day, Year']-->" onclick="this.form.pcEventDateFormat.value='%B %e, %Y'" />
                 <input type="button" name="format_eu" value="<!--[gt text='Day Month Year']-->" onclick="this.form.pcEventDateFormat.value='%e %B %Y'" />
                 <input type="button" name="format_iso8601" value="<!--[gt text='YYYY-MM-DD']-->" onclick="this.form.pcEventDateFormat.value='%F'" />
-            </td>
-		</tr>
-		<tr class='z-odd'>
-			<td><!--[gt text='First day of the week']--></td>
+		</div>
+		<div class="z-formrow">
+			<label for="pcFirstDayOfWeek"><!--[gt text='First day of the week']--></label>
 			<!--[pnmodgetvar module="PostCalendar" name="pcFirstDayOfWeek" assign="firstDay"]-->
-			<td><select size="1" id="pcFirstDayOfWeek" name="pcFirstDayOfWeek">
+			<select size="1" id="pcFirstDayOfWeek" name="pcFirstDayOfWeek">
 				<option value="0"<!--[if $firstDay eq 0]--> selected="selected"<!--[/if]-->><!--[gt text='Sunday']--></option>
 				<option value="1"<!--[if $firstDay eq 1]--> selected="selected"<!--[/if]-->><!--[gt text='Monday']--></option>
 				<option value="6"<!--[if $firstDay eq 6]--> selected="selected"<!--[/if]-->><!--[gt text='Saturday']--></option>
 				</select>
-			</td>
-		</tr>
-		<tr class='z-even'>
-			<td><!--[gt text='Default calendar view']--></td>
+			
+		</div>
+		<div class="z-formrow">
+			<label for="pcDefaultView"><!--[gt text='Default calendar view']--></label>
 			<!--[pnmodgetvar module="PostCalendar" name="pcDefaultView" assign="defView"]-->
-			<td><select size="1" id="pcDefaultView" name="pcDefaultView">
+			<select size="1" id="pcDefaultView" name="pcDefaultView">
 				<option value="day"<!--[if $defView eq "day"]--> selected="selected"<!--[/if]-->><!--[gt text='Day']--></option>
 				<option value="week"<!--[if $defView eq "week"]--> selected="selected"<!--[/if]-->><!--[gt text='Week']--></option>
 				<option value="month"<!--[if $defView eq "month"]--> selected="selected"<!--[/if]-->><!--[gt text='Month']--></option>
 				<option value="year"<!--[if $defView eq "year"]--> selected="selected"<!--[/if]-->><!--[gt text='Year']--></option>
 				<option value="list"<!--[if $defView eq "list"]--> selected="selected"<!--[/if]-->><!--[gt text='List']--></option>
 				</select>
-			</td>
-		</tr>
-		<tr class='z-odd'>
-			<td><!--[gt text='Allow users to filter event display by category']--></td>
+		</div>
+		<div class="z-formrow">
+			<label for="pcAllowCatFilter"><!--[gt text='Allow users to filter event display by category']--></label>
 			<!--[pnmodgetvar module="PostCalendar" name="pcAllowCatFilter" assign="pcACF"]-->
-			<td><input type="checkbox" value="1" id="pcAllowCatFilter" name="pcAllowCatFilter"<!--[if $pcACF eq true]--> checked="checked"<!--[/if]-->/></td>
-		</tr>
-        <tr class='z-even'>
-			<td><!--[gt text='Enable images in navigation header']--></td>
+			<input type="checkbox" value="1" id="pcAllowCatFilter" name="pcAllowCatFilter"<!--[if $pcACF eq true]--> checked="checked"<!--[/if]-->/>
+		</div>
+        <div class="z-formrow">
+			<label for="enablenavimages"><!--[gt text='Enable images in navigation header']--></label>
 			<!--[pnmodgetvar module="PostCalendar" name="enablenavimages" assign="pcENI"]-->
-			<td><input type="checkbox" value="1" id="enablenavimages" name="enablenavimages"<!--[if $pcENI eq true]--> checked="checked"<!--[/if]-->/></td>
-		</tr>
-        </tbody>
-	</table>
-    <table class="z-admintable">
-        <thead>
-            <tr><th colspan='2'><!--[gt text='Notification settings']--></th></tr>
-        </thead>
-        <tbody>
-		<tr class='z-odd'>
-			<td><!--[gt text='Notify administrator about user event submission/change']--></td>
+			<input type="checkbox" value="1" id="enablenavimages" name="enablenavimages"<!--[if $pcENI eq true]--> checked="checked"<!--[/if]-->/>
+		</div>
+    </fieldset>
+	<fieldset>
+        <legend><!--[gt text='Notification settings']--></legend>
+		<div class="z-formrow">
+			<label for="pcNotifyAdmin"><!--[gt text='Notify administrator about user event submission/change']--></label>
 			<!--[pnmodgetvar module="PostCalendar" name="pcNotifyAdmin" assign="pcNA"]-->
-			<td><input type="checkbox" value="1" id="pcNotifyAdmin" name="pcNotifyAdmin"<!--[if $pcNA eq true]--> checked="checked"<!--[/if]-->/></td>
-		</tr>
-		<tr class='z-even'>
-			<td><!--[gt text='Notify administrator about administrator event submission/change']--></td>
+			<input type="checkbox" value="1" id="pcNotifyAdmin" name="pcNotifyAdmin"<!--[if $pcNA eq true]--> checked="checked"<!--[/if]-->/>
+		</div>
+		<div class="z-formrow">
+			<label for="pcNotifyAdmin2Admin"><!--[gt text='Notify administrator about administrator event submission/change']--></label>
 			<!--[pnmodgetvar module="PostCalendar" name="pcNotifyAdmin2Admin" assign="pcNA2A"]-->
-			<td><input type="checkbox" value="1" id="pcNotifyAdmin2Admin" name="pcNotifyAdmin2Admin"<!--[if $pcNA2A eq true]--> checked="checked"<!--[/if]-->/></td>
-		</tr>
-		<tr class='z-odd'>
-			<td><!--[gt text='E-mail address to send notifications']--></td>
-			<td><input type="text" size="20" value="<!--[pnmodgetvar module="PostCalendar" name="pcNotifyEmail"]-->" id="pcNotifyEmail" name="pcNotifyEmail"/></td>
-		</tr>
-        </tbody>
-    </table>
-	<div style='margin-bottom:1em; padding:3px;'><input type="submit" value="<!--[gt text="Update"]-->" /></div>
-    </div><!-- /z-admincontainer -->
+			<input type="checkbox" value="1" id="pcNotifyAdmin2Admin" name="pcNotifyAdmin2Admin"<!--[if $pcNA2A eq true]--> checked="checked"<!--[/if]-->/>
+		</div>
+		<div class="z-formrow">
+			<label for="pcNotifyEmail"><!--[gt text='E-mail address to send notifications']--></label>
+			<input type="text" size="30" value="<!--[pnmodgetvar module="PostCalendar" name="pcNotifyEmail"]-->" id="pcNotifyEmail" name="pcNotifyEmail"/>
+		</div>
+    </fieldset>
+    <div class="z-formbuttons">
+        <!--[pnbutton src=button_ok.gif set=icons/small __alt="Save" __title="Save"]-->
+        <a href="<!--[pnmodurl modname="PostCalendar" type="user"]-->"><!--[pnimg modname=core src=button_cancel.gif set=icons/small __alt="Cancel" __title="Cancel"]--></a>
+    </div>
+    </div>
 </form>
+</div><!-- /z-admincontainer -->

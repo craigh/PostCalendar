@@ -10,11 +10,14 @@
 		<div>
 			<input type="hidden" name="authid" value="<!--[pnsecgenauthkey module="PostCalendar"]-->" />
 			<table class="z-admintable">
-				<tr>
-					<td><b><!--[gt text='Select']--></b></td>
-					<td><b><a href='<!--[$title_sort_url|pnvarprepfordisplay]-->'><!--[gt text='Title']--></a></b></td>
-					<td><b><a href='<!--[$time_sort_url|pnvarprepfordisplay]-->'><!--[gt text='Time stamp']--></a></b></td>
-				</tr>
+                <thead>
+    				<tr>
+    					<th><!--[gt text='Select']--></th>
+    					<th><a href='<!--[$title_sort_url|pnvarprepfordisplay]-->'><!--[gt text='Title']--></a></th>
+    					<th><a href='<!--[$time_sort_url|pnvarprepfordisplay]-->'><!--[gt text='Time stamp']--></a></th>
+    				</tr>
+                </thead>
+                <tbody>
 				<!--[section name=event loop=$events]-->
 					<tr class="<!--[cycle values="z-odd,z-even"]-->">
 						<td><input type="checkbox" value="<!--[$events[event].eid]-->" id="events_<!--[$events[event].eid]-->" name="events[]" /></td>
@@ -22,6 +25,7 @@
 						<td><!--[$events[event].time]--></td>
 					</tr>
 				<!--[/section]-->
+                </tbody>
 			</table>
 			<div style='text-align: left;'>
 				<!--[html_options name=action options=$formactions selected=$actionselected]-->

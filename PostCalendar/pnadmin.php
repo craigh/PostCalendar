@@ -46,6 +46,8 @@ function postcalendar_admin_modifyconfig()
         $catregistry  = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
         $pnRender->assign('catregistry', $catregistry);
     }
+    $props = array_keys($catregistry);
+    $pnRender->assign('firstprop', $props[0]);
     $selectedDefaultCategories = pnModGetVar('PostCalendar', 'pcDefaultCategories');
     $pnRender->assign('selectedDefaultCategories', $selectedDefaultCategories);
 
