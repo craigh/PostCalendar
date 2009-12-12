@@ -11,13 +11,12 @@
 
 <!--[include file="event/postcalendar_event_view.htm" ]-->
 
-<!--[ pnmodcallhooks hookobject=item hookaction=display hookid=$loaded_event.eid returnurl="index.php?module=PostCalendar&func=view&viewtype=details&eid=`$loaded_event.eid`" ]-->
 <!--[ if $PRINT_VIEW eq false ]-->
     <!--[ if $EVENT_CAN_EDIT ]-->
         <div>
-            <a href="<!--[pnmodurl modname="PostCalendar" type="event" func="edit" eid=$loaded_event.eid]-->"><!--[gt text='Edit']--></a> |
-        <a href="<!--[pnmodurl modname="PostCalendar" type="event" func="copy" eid=$loaded_event.eid]-->"><!--[gt text='Copy']--></a> |
-            <a href="<!--[pnmodurl modname="PostCalendar" type="event" func="delete" eid=$loaded_event.eid]-->"><!--[gt text='Delete']--></a>
+            <a href="<!--[pnmodurl modname="PostCalendar" type="event" func="edit" eid=$loaded_event.eid]-->"><!--[gt text='Edit event']--></a> |
+        <a href="<!--[pnmodurl modname="PostCalendar" type="event" func="copy" eid=$loaded_event.eid]-->"><!--[gt text='Copy event']--></a> |
+            <a href="<!--[pnmodurl modname="PostCalendar" type="event" func="delete" eid=$loaded_event.eid]-->"><!--[gt text='Delete event']--></a>
         </div>
     <!--[ /if ]-->
 <!--[ else ]-->
@@ -29,3 +28,4 @@
         <a href="<!--[pnmodurl modname="PostCalendar" func="view" viewtype=$viewtype Date=$smarty.get.Date eid=$loaded_event.eid ]-->"><!--[gt text='Return']--></a>
     </div>
 <!--[/if]-->
+<!--[ pnmodcallhooks hookobject=item hookaction=display hookid=$loaded_event.eid returnurl="index.php?module=PostCalendar&func=view&viewtype=details&eid=`$loaded_event.eid`" ]-->
