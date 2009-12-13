@@ -26,15 +26,15 @@
 			<label for="pcAllowUserCalendar"><!--[gt text='Group allowed to publish personal calendars']--></label>
 			<!--[pnmodgetvar module="PostCalendar" name="pcAllowUserCalendar" assign="pcAUC"]-->
             <!--[gt text="No group" assign="nogroup"]-->
-			<!--[selector_group selectedValue=$pcAUC defaultValue=0 allValue=0 allText=$nogroup name="pcAllowUserCalendar" id="pcAllowUserCalendar"]-->
-                &nbsp;&nbsp;<a href="<!--[pnmodurl modname="Groups" type="admin" func="view"]-->"><!--[pnimg src=xedit.gif modname=core set=icons/extrasmall __title="Edit groups" __alt="Edit groups"]--></a>
+			<span><!--[selector_group selectedValue=$pcAUC defaultValue=0 allValue=0 allText=$nogroup name="pcAllowUserCalendar" id="pcAllowUserCalendar"]-->
+                &nbsp;&nbsp;<a href="<!--[pnmodurl modname="Groups" type="admin" func="view"]-->"><!--[pnimg src=xedit.gif modname=core set=icons/extrasmall __title="Edit groups" __alt="Edit groups"]--></a></span>
 		</div>
     </fieldset>
 	<fieldset>
         <legend><!--[gt text='Display settings']--></legend>
 		<div class="z-formrow">
 			<label for="pcListHowManyEvents"><!--[gt text='Number of events to list on administration pages']--></label>
-			<input type="text" size="3" value="<!--[pnmodgetvar module="PostCalendar" name="pcListHowManyEvents"]-->" id="pcListHowManyEvents" name="pcListHowManyEvents"/>
+			<span><input type="text" size="3" value="<!--[pnmodgetvar module="PostCalendar" name="pcListHowManyEvents"]-->" id="pcListHowManyEvents" name="pcListHowManyEvents" /></span>
 		</div>
 		<div class="z-formrow">
 			<label for="pcTime24Hours"><!--[gt text='Use 24-hour time format']--></label>
@@ -43,13 +43,13 @@
 		</div>
 		<div class="z-formrow">
 			<label for="pcTimeIncrement"><!--[gt text='Time increment for new event creation (1-60 minutes)']--></label>
-			<input type="text" size="3" value="<!--[pnmodgetvar module="PostCalendar" name="pcTimeIncrement"]-->" id="pcTimeIncrement" name="pcTimeIncrement"/>
+			<span><input type="text" size="3" value="<!--[pnmodgetvar module="PostCalendar" name="pcTimeIncrement"]-->" id="pcTimeIncrement" name="pcTimeIncrement" /></span>
 		</div>
 		<div class="z-formrow">
 			<label for="pcDefaultCategories_<!--[$firstprop]-->_"><!--[gt text='Default categories in new event creation.']--></label>
                <!--[gt text="No Default Category" assign="allText"]-->
                <!--[nocache]-->
-               <!--[foreach from=$catregistry key=property item=category]-->
+               <span><!--[foreach from=$catregistry key=property item=category]-->
                    <!--[array_field_isset assign="selectedValue" array=$selectedDefaultCategories field=$property returnValue=1]-->
                    <!--[selector_category 
                    editLink=true 
@@ -61,7 +61,7 @@
                    all=1
                    allText=$allText
                    allValue=0]-->
-               <!--[/foreach]-->
+               <!--[/foreach]--></span>
                <!--[/nocache]-->
         </div>
 		<div class="z-formrow">
@@ -76,32 +76,32 @@
 		</div>
 		<div class="z-formrow">
 			<label for="pcEventDateFormat"><!--[gt text='Date Display Format']--><br />(<i><!--[gt text='uses %s format' tag1='<a href="http://php.net/strftime" target="_blank">php strftime</a>']--></i>)</label>
-                <input type="text" size="15" value="<!--[pnmodgetvar module="PostCalendar" name="pcEventDateFormat"]-->" id="pcEventDateFormat" name="pcEventDateFormat"/>
+                <span><input type="text" size="15" value="<!--[pnmodgetvar module="PostCalendar" name="pcEventDateFormat"]-->" id="pcEventDateFormat" name="pcEventDateFormat" />
                 &nbsp;<!--[gt text="Or choose a preset:"]-->&nbsp;
                 <input type="button" name="format_usa" value="<!--[gt text='Month Day, Year']-->" onclick="this.form.pcEventDateFormat.value='%B %e, %Y'" />
                 <input type="button" name="format_eu" value="<!--[gt text='Day Month Year']-->" onclick="this.form.pcEventDateFormat.value='%e %B %Y'" />
-                <input type="button" name="format_iso8601" value="<!--[gt text='YYYY-MM-DD']-->" onclick="this.form.pcEventDateFormat.value='%F'" />
+                <input type="button" name="format_iso8601" value="<!--[gt text='YYYY-MM-DD']-->" onclick="this.form.pcEventDateFormat.value='%F'" /></span>
 		</div>
 		<div class="z-formrow">
 			<label for="pcFirstDayOfWeek"><!--[gt text='First day of the week']--></label>
 			<!--[pnmodgetvar module="PostCalendar" name="pcFirstDayOfWeek" assign="firstDay"]-->
-			<select size="1" id="pcFirstDayOfWeek" name="pcFirstDayOfWeek">
+			<span><select size="1" id="pcFirstDayOfWeek" name="pcFirstDayOfWeek">
 				<option value="0"<!--[if $firstDay eq 0]--> selected="selected"<!--[/if]-->><!--[gt text='Sunday']--></option>
 				<option value="1"<!--[if $firstDay eq 1]--> selected="selected"<!--[/if]-->><!--[gt text='Monday']--></option>
 				<option value="6"<!--[if $firstDay eq 6]--> selected="selected"<!--[/if]-->><!--[gt text='Saturday']--></option>
-				</select>
+				</select></span>
 			
 		</div>
 		<div class="z-formrow">
 			<label for="pcDefaultView"><!--[gt text='Default calendar view']--></label>
 			<!--[pnmodgetvar module="PostCalendar" name="pcDefaultView" assign="defView"]-->
-			<select size="1" id="pcDefaultView" name="pcDefaultView">
+			<span><select size="1" id="pcDefaultView" name="pcDefaultView">
 				<option value="day"<!--[if $defView eq "day"]--> selected="selected"<!--[/if]-->><!--[gt text='Day']--></option>
 				<option value="week"<!--[if $defView eq "week"]--> selected="selected"<!--[/if]-->><!--[gt text='Week']--></option>
 				<option value="month"<!--[if $defView eq "month"]--> selected="selected"<!--[/if]-->><!--[gt text='Month']--></option>
 				<option value="year"<!--[if $defView eq "year"]--> selected="selected"<!--[/if]-->><!--[gt text='Year']--></option>
 				<option value="list"<!--[if $defView eq "list"]--> selected="selected"<!--[/if]-->><!--[gt text='List']--></option>
-				</select>
+				</select></span>
 		</div>
 		<div class="z-formrow">
 			<label for="pcAllowCatFilter"><!--[gt text='Allow users to filter event display by category']--></label>
@@ -128,7 +128,7 @@
 		</div>
 		<div class="z-formrow">
 			<label for="pcNotifyEmail"><!--[gt text='E-mail address to send notifications']--></label>
-			<input type="text" size="30" value="<!--[pnmodgetvar module="PostCalendar" name="pcNotifyEmail"]-->" id="pcNotifyEmail" name="pcNotifyEmail"/>
+			<span><input type="text" size="30" value="<!--[pnmodgetvar module="PostCalendar" name="pcNotifyEmail"]-->" id="pcNotifyEmail" name="pcNotifyEmail" /></span>
 		</div>
     </fieldset>
     <div class="z-formbuttons">
