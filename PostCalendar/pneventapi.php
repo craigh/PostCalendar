@@ -449,7 +449,12 @@ function postcalendar_eventapi_formateventarrayfordisplay($event)
     $event['sharing_sentence'] = ($event['sharing'] == SHARING_PRIVATE) ? __('This is a private event.', $dom) : __('This is a public event. ', $dom);
 
     // converts seconds to HH:MM for display
-    $event['duration'] = gmdate("G:i", $event['duration']);
+    $event['duration'] = gmdate("G:i", $event['duration']); // stored in DB as seconds
+
+    // prepare starttime for display HH:MM or HH:MM AP
+    // for this to work, need to convert time to timestamp and then change all the templates.
+    list($h,$m,$s)=explode(':',$event['startTime']);
+    $event['startTime'] = _SETTING_TIME_24HOUR ? gmdate('G:i', gmmktime($h,$m,$s,0,0,0)) : gmdate('g:i a', gmmktime($h,$m,$s,0,0,0));
 
     // format endtype for edit form
     $event['endtype'] = $event['endDate'] == '0000-00-00' ? '0' : '1';
