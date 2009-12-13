@@ -32,17 +32,12 @@
         <!--[ * Loop through the events for this day and display the event data * ]-->
         <ul class="eventslist">
             <!--[ foreach name=eventloop key=id item=event from=$S_EVENTS.$cdate ]-->
-                <!--[ if $24HOUR_TIME ]-->
-                    <!--[ assign var="timestamp" value=$event.startTime|date_format:'%H:%M']-->
-                <!--[ else ]-->
-                    <!--[ assign var="timestamp" value=$event.startTime|date_format:'%l:%M %p']-->
-                <!--[ /if ]-->
                 <li class="eventslistitems">
                     <span style="padding: 1px 4px; color: <!--[$event.cattextcolor]-->; background: <!--[ $event.catcolor ]-->;">
                         <!--[ $event.catname ]-->
                     </span>&nbsp;
                     <!--[ if $event.alldayevent != true ]-->
-                        <!--[ $timestamp ]-->
+                        <!--[ $event.startTime ]-->
                     <!--[ /if ]-->
                     <!--[ pc_popup bgcolor=$event.catcolor caption=$event.title text=$event.hometext assign="javascript"]-->
                     <!--[ pc_url full=true action=detail eid=$event.eid date=$date display=$event.title|strip_tags javascript=$javascript]-->

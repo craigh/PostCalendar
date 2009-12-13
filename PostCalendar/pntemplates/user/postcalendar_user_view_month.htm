@@ -74,17 +74,11 @@
                             </div>
                             <div style="padding: 2px; border:solid 1px <!--[ $event.catcolor ]-->;">
                         <!--[ /if ]-->
-
+                        <!--[ assign var="title" value=$event.title|strip_tags ]-->
                         <!--[ if $event.alldayevent != true ]-->
-                            <!--[ if $24HOUR_TIME ]-->
-                                <!--[ assign var="timestamp" value=$event.startTime|date_format:'%H:%M']-->
-                            <!--[ else ]-->
-                                <!--[ assign var="timestamp" value=$event.startTime|date_format:'%l:%M %p']-->
-                            <!--[ /if ]-->
-                            <!--[ assign var="title" value=$event.title|strip_tags ]-->
+                            <!--[ assign var="timestamp" value=$event.startTime]-->
                         <!--[ else ]-->
                             <!--[ assign var="timestamp" value="" ]-->
-                            <!--[ assign var="title" value=$event.title|strip_tags ]-->
                         <!--[ /if ]-->
 
                         <!--[ assign var="desc" value=$event.hometext|truncate:255:"..." ]-->

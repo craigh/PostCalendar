@@ -7,12 +7,7 @@
     <div class="eventtime">
         <!--[ $loaded_event.eventDate|pc_date_format]--><br />
         <!--[ if $loaded_event.alldayevent != true ]-->
-            <!--[ if $24HOUR_TIME ]-->
-                <!--[ assign var="timestamp" value=$loaded_event.startTime|date_format:"%H:%M" ]-->
-            <!--[ else ]-->
-                <!--[ assign var="timestamp" value=$loaded_event.startTime|date_format:"%l:%M %p" ]-->
-            <!--[ /if ]-->
-            <!--[ $timestamp ]--><br />
+            <!--[ $loaded_event.startTime ]--><br />
             <!--[gt text='Duration']-->: <!--[ $loaded_event.duration ]--> <!--[gt text='hours']-->
         <!--[ else ]-->
             <!--[gt text='All day event']-->

@@ -34,19 +34,10 @@
                 <!--[ foreach name=events item=event from=$S_EVENTS.$date ]-->
                     <!--[ assign var="catname" value = $event.catname ]-->
                     <!--[ assign var="catcolor" value = $event.catcolor ]-->
-                    <!--[ if $event.alldayevent != true ]-->
-                        <!--[ if $24HOUR_TIME ]-->
-                            <!--[ assign var="timestamp" value=$event.startTime|date_format:'%H:%M' ]-->
-                        <!--[ else ]-->
-                            <!--[ assign var="timestamp" value=$event.startTime|date_format:'%l:%M %p']-->
-                        <!--[ /if ]-->
-                    <!--[ else ]-->
-                        <!--[ assign var="timestamp" value="" ]-->
-                    <!--[ /if ]-->
                     <!--[ assign var="title" value=$event.title|strip_tags ]-->
                     <li class="eventslistitems">
                         <span style="padding: 1px 4px; color: <!--[$event.cattextcolor]-->; background: <!--[ $event.catcolor ]-->;"><!--[ $event.catname ]--></span>
-                        <!--[ $timestamp ]-->&nbsp;
+                        <!--[ if $event.alldayevent != true ]--><!--[ $event.startTime ]-->&nbsp;<!--[ /if ]-->
                         <!--[ pc_url full=true action=detail eid=$event.eid date=$date style="text-decoration: none;" display=$title ]-->
                         <!--[ if $event.alldayevent != true ]-->
                             (<!--[ $event.duration ]-->)

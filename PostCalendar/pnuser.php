@@ -98,7 +98,6 @@ function postcalendar_user_display($args)
                     $event['eventDate'] = "$y-$m-$d";
                 }
                 $tpl->assign('loaded_event', $event);
-                $tpl->assign('24HOUR_TIME', _SETTING_TIME_24HOUR);
          
                 if ($popup == true) {
                     $tpl->display('user/postcalendar_user_view_popup.htm', $cacheid);
@@ -119,7 +118,6 @@ function postcalendar_user_display($args)
             if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_OVERVIEW)) {
                 return LogUtil::registerPermissionError();
             }
-            //now function just returns an array of information to pass to template 5/9/09 CAH
             $out = pnModAPIFunc('PostCalendar', 'user', 'buildView', 
                 compact('Date','viewtype','pc_username','filtercats','func'));
             // build template and fetch:
@@ -130,7 +128,6 @@ function postcalendar_user_display($args)
                 foreach ($out as $var => $val) {
                     $tpl->assign($var, $val);
                 }
-                $tpl->assign('24HOUR_TIME', _SETTING_TIME_24HOUR);
 
                 return $tpl->fetch('user/postcalendar_user_view_'.$viewtype.'.htm', $cacheid);
             } // end if/else
