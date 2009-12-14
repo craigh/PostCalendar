@@ -2,15 +2,19 @@
 <div class='postcalendar_featuredevent'>
 <!--[if $loaded_event.showcountdown ]-->
 <div class='eventcountdown'>
-    <!--[if $loaded_event.datedifference ]-->
-        <!--[gt text='This event will occur in %s days.' tag1=$loaded_event.datedifference domain="module_postcalendar"]-->
+    <!--[if $loaded_event.datedifference gt 0 ]-->
+        <!--[gt text='This event will occur in %s day.' plural='This event will occur in %s days.' count=$loaded_event.datedifference tag1=$loaded_event.datedifference domain="module_postcalendar"]-->
+    <!--[elseif $loaded_event.datedifference eq 0 ]-->
+        <!--[gt text='This event occurs today.' domain="module_postcalendar"]-->
     <!--[else]-->
-        <!--[gt text='This event has already passed.' domain="module_postcalendar"]-->
+        <!--[gt text='This event has already occured.' domain="module_postcalendar"]-->
     <!--[/if]-->
 </div>
 <!--[/if]-->
 <h2 class="eventheader">
     <!--[ $loaded_event.title|pnvarprephtmldisplay ]-->
+    <a href="<!--[pnmodurl modname='PostCalendar' func='view' viewtype='details' eid=$loaded_event.eid ]-->" title='<!--[gt text='Full event information' domain="module_postcalendar"]-->'>
+    <!--[pnimg modname=core src=info.gif set=icons/extrasmall __alt="Info" __title="Full event information" domain="module_postcalendar"]--></a>
 </h2>
 <div class="eventtime">
     <!--[ $loaded_event.eventDate|pc_date_format]--><br />

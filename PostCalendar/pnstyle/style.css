@@ -25,6 +25,18 @@ h2.postcalendar_header {
 	margin-top:1em;
 	border: 1px solid Black;
 	padding: .5em;
+    position: relative;
+}
+.postcalendar_header div.postcalendar_eid {
+    position: absolute;
+    top: 0;
+    right: 0;
+    color: #cccccc;
+    font-size: 10pt;
+    background-color: #eeeeee;
+    margin: 2px;
+    padding: .2em;
+    border: 1px solid #cccccc;
 }
 h2.postcalendar_header a {
 	font-size: 14pt;

@@ -73,7 +73,7 @@ function postcalendar_featuredeventblock_display($blockinfo)
 
     if ($vars['showcountdown']) {
         $datedifference = DateUtil::getDatetimeDiff_AsField(DateUtil::getDatetime(null, '%F'), $event['eventDate'], 3);
-        $event['datedifference'] = $datedifference > 0 ? round($datedifference) : false ;
+        $event['datedifference'] = round($datedifference);
         $event['showcountdown'] = true;
     }
 
