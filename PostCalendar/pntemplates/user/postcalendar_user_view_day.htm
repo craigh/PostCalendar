@@ -44,6 +44,11 @@
                         <!--[ else ]-->
                             (<!--[gt text='All-day event']-->)
                         <!--[/if]-->
+                        <!--[ if $event.commentcount gt 0]-->
+                            <!--[gt text='%s comment left' plural='%s comments left.' count=$event.commentcount tag1=$event.commentcount domain="module_postcalendar" assign="title"]-->
+                            <a href="<!--[pnmodurl modname='PostCalendar' func='view' viewtype='details' eid=$event.eid ]-->#comments" title=$title>
+                            <!--[pnimg modname=core src=comment.gif set=icons/extrasmall __alt="Comment" title=$title domain="module_postcalendar"]--></a>
+                        <!--[/if]-->
                     </li>
                 <!--[ foreachelse ]-->
                     <li><b><!--[gt text='No events scheduled.']--></b></li>

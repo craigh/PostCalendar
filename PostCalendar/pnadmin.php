@@ -299,6 +299,9 @@ function postcalendar_admin_updateconfig()
     // set the new variables
     pnModSetVars('PostCalendar', $settings);
 
+    // Let any other modules know that the modules configuration has been updated
+    pnModCallHooks('module','updateconfig','PostCalendar', array('module' => 'PostCalendar'));
+
     // clear the cache
     pnModAPIFunc('PostCalendar', 'admin', 'clearCache');
 

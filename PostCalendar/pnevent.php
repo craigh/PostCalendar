@@ -58,6 +58,7 @@ class postcalendar_event_editHandler extends pnFormHandler
             $result = DBUtil::deleteObjectByID('postcalendar_events', $this->eid, 'eid');
             if ($result === false) return $render->pnFormSetErrorMsg(__("Error! An 'unidentified error' occurred.", $dom));
             LogUtil::registerStatus(__('Done! The event was deleted.', $dom));
+            pnModCallHooks('item', 'delete', $this->eid, array ('module' => 'PostCalendar'));
 
             $redir = pnModUrl('PostCalendar', 'user', 'view', array('viewtype' => _SETTING_DEFAULT_VIEW));
             return $render->pnFormRedirect($redir);

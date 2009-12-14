@@ -281,11 +281,13 @@ function postcalendar_eventapi_writeEvent($args)
         unset($eventdata['is_update']);
         $obj = array($eventdata['eid'] => $eventdata);
         $result = DBUtil::updateObjectArray($obj, 'postcalendar_events', 'eid');
+        pnModCallHooks('item', 'update', $eventdata['eid'], array ('module' => 'PostCalendar'));
     } else { //new event
         unset($eventdata['eid']); //be sure that eid is not set on insert op to autoincrement value
         unset($eventdata['is_update']);
         $eventdata['time'] = date("Y-m-d H:i:s"); //current date for timestamp on event
         $result = DBUtil::insertObject($eventdata, 'postcalendar_events', 'eid');
+        pnModCallHooks('item', 'create', $result['eid'], array ('module' => 'PostCalendar'));
     }
     if ($result === false) return false;
 
@@ -471,6 +473,17 @@ function postcalendar_eventapi_formateventarrayfordisplay($event)
     // format all the values for display
     $event = DataUtil::formatForDisplay($event);
     $event['hometext'] = DataUtil::formatForDisplayHTML($hometext); //add hometext back into array with HTML formatting
+
+    // Hooks filtering should be after formatForDisplay to allow Hook transforms
+    list($event['hometext']) = pnModCallHooks('item', 'transform', '', array($event['hometext']));
+
+    // Check for comments
+    if (pnModAvailable('EZComments') && pnModIsHooked('EZComments', 'PostCalendar')) {
+        $event['commentcount'] = pnModAPIFunc('EZComments', 'user', 'countitems',
+                                             array('mod' => 'PostCalendar',
+                                                   'objectid' => $event['eid'],
+                                                   'status' => 0));
+    }
 
     return $event;
 }
