@@ -23,22 +23,27 @@ function postcalendar_needleapi_event($args)
         }
         list($dispose,$eid,$displaytype) = explode('-', $args['nid']);
         $link = pnModURL('PostCalendar', 'user', 'view', array('viewtype' => 'details', 'eid' => $eid));
-        $displaytype = $displaytype ? strtoupper($displaytype) : 'N'; // in any order: N (name) D (date) T (time) I (icon) - default: N
+        $displaytype = $displaytype ? strtoupper($displaytype) : 'NLI'; // in any order: N (name) D (date) T (time) I (icon) L (uselink) - default: NL
         if (!$event = postcalendar_needleapi_eventarray(compact('eid'))) return __f('No event with eid@%s', $eid, $dom);
         if ($event == -1) return ''; // event not allowed for user
 
-        $icon='';
+        $icon='';$uselink=false;
         $moddir = pnModGetBaseDir($modname = 'PostCalendar');
         if (strpos($displaytype, 'I') !== false) $icon = "<img src='$moddir/pnimages/smallcalicon.jpg' /> ";
         $linkarray = array();
         if (strpos($displaytype, 'N') !== false) $linkarray['name'] = $event['title'];
         if (strpos($displaytype, 'D') !== false) $linkarray['date'] = $event['eventDate'];
         if (strpos($displaytype, 'T') !== false) $linkarray['time'] = '@'.$event['startTime'];
+        if (strpos($displaytype, 'L') !== false) $uselink           = true;
         $linktext = implode(' ', $linkarray);
 
         $linktext = DataUtil::formatForDisplay($linktext);
-        $link     = DataUtil::formatForDisplay($link);
-        $result   = "$icon<a href='$link'>$linktext</a>";
+        if ($uselink) {
+            $link   = DataUtil::formatForDisplay($link);
+            $result = "$icon<a href='$link'>$linktext</a>";
+        } else {
+            $result = $icon.$linktext;
+        }
     } else {
         $result = __('No needle ID', $dom);
     }
