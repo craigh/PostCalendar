@@ -24,12 +24,12 @@ function postcalendar_needleapi_event($args)
         list($dispose,$eid,$displaytype) = explode('-', $args['nid']);
         $link = pnModURL('PostCalendar', 'user', 'view', array('viewtype' => 'details', 'eid' => $eid));
         $displaytype = $displaytype ? strtoupper($displaytype) : 'NLI'; // in any order: N (name) D (date) T (time) I (icon) L (uselink) - default: NL
-        if (!$event = postcalendar_needleapi_eventarray(compact('eid'))) return __f('No event with eid@%s', $eid, $dom);
+        if (!$event = postcalendar_needleapi_eventarray(compact('eid'))) return __f('No event with eid %s', $eid, $dom);
         if ($event == -1) return ''; // event not allowed for user
 
         $icon='';$uselink=false;
         $moddir = pnModGetBaseDir($modname = 'PostCalendar');
-        if (strpos($displaytype, 'I') !== false) $icon = "<img src='$moddir/pnimages/smallcalicon.jpg' /> ";
+        if (strpos($displaytype, 'I') !== false) $icon = "<img src='$moddir/pnimages/smallcalicon.jpg' alt='".__('cal icon', $dom)."' title='".__('PostCalendar Event', $dom)."' /> ";
         $linkarray = array();
         if (strpos($displaytype, 'N') !== false) $linkarray['name'] = $event['title'];
         if (strpos($displaytype, 'D') !== false) $linkarray['date'] = $event['eventDate'];

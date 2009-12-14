@@ -9,7 +9,7 @@
  */
 
 /**
- * event needle info
+ * pcdate needle info
  * @param none
  * @return array()
  */

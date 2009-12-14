@@ -9,7 +9,7 @@
  */
 
 /**
- * event needle
+ * pcdate needle
  * @param $args['nid'] needle id
  * @return link
  */
@@ -28,7 +28,7 @@ function postcalendar_needleapi_pcdate($args)
 
         $icon=''; $link=''; $uselink=false;
         $moddir = pnModGetBaseDir($modname = 'PostCalendar');
-        if (strpos($displaytype, 'I') !== false) $icon = "<img src='$moddir/pnimages/smallcalicon.jpg' /> ";
+        if (strpos($displaytype, 'I') !== false) $icon = "<img src='$moddir/pnimages/smallcalicon.jpg' alt='".__('cal icon', $dom)."' title='".__('PostCalendar Date', $dom)."' /> ";
         if (strpos($displaytype, 'L') !== false) $uselink = true;
         if (strpos($displaytype, 'D') !== false) {
             $link = pnModURL('PostCalendar', 'user', 'view', array('viewtype' => 'day', 'date' => $date));
