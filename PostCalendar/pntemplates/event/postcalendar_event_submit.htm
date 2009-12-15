@@ -164,6 +164,11 @@
 <input type="hidden" name="postcalendar_events[eid]" value="<!--[$loaded_event.eid]-->" />
 <!--[if !empty($loaded_event.data_loaded) ]--> <input type="hidden" name="postcalendar_events[data_loaded]" value="<!--[$loaded_event.data_loaded]-->" /><!--[/if]-->
 
+<!--[if $func eq "edit"]-->
+    <!--[pnmodcallhooks hookobject='item' hookaction='modify' hookid=$loaded_event.eid module='PostCalendar']-->
+<!--[else]-->
+    <!--[pnmodcallhooks hookobject='item' hookaction='new' module='PostCalendar']-->
+<!--[/if]-->
 <div id="postcalendar_addevent_formaction">
     <select name="form_action">
     	<option value="preview"><!--[gt text='Preview event']--></option>
