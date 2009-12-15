@@ -14,11 +14,13 @@
 <h2 class="eventheader">
     <!--[ $loaded_event.title|pnvarprephtmldisplay ]-->
     <a href="<!--[pnmodurl modname='PostCalendar' func='view' viewtype='details' eid=$loaded_event.eid ]-->" title='<!--[gt text='Full event information' domain="module_postcalendar"]-->'>
-    <!--[pnimg modname=core src=info.gif set=icons/extrasmall __alt="Info" __title="Full event information" domain="module_postcalendar"]--></a>
-    <!--[ if $loaded_event.commentcount gt 0]-->
+    <!--[gt text='Full event information' assign='title' domain='module_postcalendar']--><!--[gt text='Info' assign='alt' domain='module_postcalendar']-->
+    <!--[pnimg modname=core src=info.gif set=icons/extrasmall alt=$alt title=$title]--></a>
+    <!--[if $loaded_event.commentcount gt 0]-->
         <!--[gt text='%s comment left' plural='%s comments left.' count=$loaded_event.commentcount tag1=$loaded_event.commentcount domain="module_postcalendar" assign="title"]-->
-        <a href="<!--[pnmodurl modname='PostCalendar' func='view' viewtype='details' eid=$loaded_event.eid ]-->#comments" title=$title>
-        <!--[pnimg modname=core src=comment.gif set=icons/extrasmall __alt="Comment" title=$title domain="module_postcalendar"]--></a>
+        <!--[gt text='Comment' assign='alt' domain='module_postcalendar']-->
+        <a href="<!--[pnmodurl modname='PostCalendar' func='view' viewtype='details' eid=$loaded_event.eid ]-->#comments" title='<!--[$title]-->'>
+        <!--[pnimg modname=core src=comment.gif set=icons/extrasmall alt=$alt title=$title]--></a>
     <!--[/if]-->
 </h2>
 <div class="eventtime">
