@@ -28,20 +28,12 @@
         <!--[ /if ]-->
         <td class="<!--[ $stylesheet ]-->" align="center" valign="middle"
             onclick="javascript:location.href='<!--[ pc_url action=day date=$date ]-->';">
-            <!--[ assign var="titles" value="" ]-->
             <!--[ foreach name=events item=event from=$A_EVENTS.$date ]-->
                 <!--[ if $event.alldayevent != true ]-->
-                    <!--[ if $24HOUR_TIME  ]-->
-                        <!--[ assign var="timestamp" value=$event.startTime|date_format:'%H:%M' ]-->
-                    <!--[ else ]-->
-                        <!--[ assign var="timestamp" value=$event.startTime|date_format:'%I:%M %p' ]-->
-                    <!--[ /if ]-->
-                    <!--[ assign var="duration" value=$event.duration ]-->
+                    <!--[ assign var="titles" value="`$event.startTime` `$event.title` `$event.duration`<br /><br />" ]-->
                 <!--[ else ]-->
-                    <!--[ assign var="timestamp" value="" ]-->
-                    <!--[ assign var="duration" value="" ]-->
+                    <!--[ assign var="titles" value="`$event.title` <br /><br />" ]-->
                 <!--[ /if ]-->
-                <!--[ assign var="titles" value="$titles$timestamp `$event.title` $duration<br /><br />" ]-->
             <!--[ /foreach ]-->
             <!--[ if $A_EVENTS.$date|@count ]-->
                 <!--[ if $A_EVENTS.$date|@count > 2  ]-->

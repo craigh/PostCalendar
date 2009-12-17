@@ -13,11 +13,7 @@
         <!--[ foreach name=eventloop key=id item=event from=$events ]-->
             <!--[ if $eventcount < $DISPLAY_LIMIT ]-->
                 <!--[ if $event.alldayevent != true ]-->
-                    <!--[ if $24HOUR_TIME  ]-->
-                        <!--[ assign var="timestamp" value=$event.startTime|date_format:'%H:%M' ]-->
-                    <!--[ else ]-->
-                        <!--[ assign var="timestamp" value=$event.startTime|date_format:'%l:%M %p' ]-->
-                    <!--[ /if ]-->
+                    <!--[ assign var="timestamp" value=$event.startTime ]-->
                 <!--[ else ]-->
                     <!--[ assign var="timestamp" value="" ]-->
                 <!--[ /if ]-->

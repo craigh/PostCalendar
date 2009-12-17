@@ -199,8 +199,6 @@ function postcalendar_calendarblock_display($blockinfo)
     $tpl->assign_by_ref('TODAY_DATE', $today_date);
     $tpl->assign_by_ref('DATE', $Date);
     $tpl->assign_by_ref('DISPLAY_LIMIT', $eventslimit);
-    $tpl->assign('24HOUR_TIME', _SETTING_TIME_24HOUR);
-
 
     if ($showcalendar) {
         $output .= $tpl->fetch('blocks/postcalendar_block_view_month.htm');
