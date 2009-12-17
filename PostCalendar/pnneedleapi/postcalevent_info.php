@@ -9,14 +9,14 @@
  */
 
 /**
- * pcdate needle info
+ * event needle info
  * @param none
  * @return array()
  */
-function postcalendar_needleapi_pcdate_info()
+function postcalendar_needleapi_postcalevent_info()
 {
     $info = array('module'        => 'PostCalendar', // module name
-                  'info'          => 'PCDATE-{date-displaytype}',   // possible needles  
+                  'info'          => 'POSTCALEVENT-{eventid-displaytype}',   // possible needles  
                   'inspect'       => true,
                   //'needle'        => array('http://', 'https://', 'ftp://', 'mailto://'),
                   //'function'      => 'http',

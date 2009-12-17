@@ -13,7 +13,7 @@
  * @param $args['nid'] needle id
  * @return link
  */
-function postcalendar_needleapi_pcdate($args)
+function postcalendar_needleapi_postcaldate($args)
 {
     $dom = ZLanguage::getModuleDomain('PostCalendar');
     // simple replacement, no need to cache anything
