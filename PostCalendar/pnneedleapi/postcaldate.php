@@ -31,7 +31,7 @@ function postcalendar_needleapi_postcaldate($args)
         if (strpos($displaytype, 'I') !== false) $icon = "<img src='$moddir/pnimages/smallcalicon.jpg' alt='".__('cal icon', $dom)."' title='".__('PostCalendar Date', $dom)."' /> ";
         if (strpos($displaytype, 'L') !== false) $uselink = true;
         if (strpos($displaytype, 'D') !== false) {
-            $link = pnModURL('PostCalendar', 'user', 'view', array('viewtype' => 'day', 'date' => $date));
+            $link = pnModURL('PostCalendar', 'user', 'view', array('viewtype' => 'day', 'Date' => $date));
             $linktext = strftime(pnModGetVar('PostCalendar', 'pcEventDateFormat'), strtotime($date));
         }
 

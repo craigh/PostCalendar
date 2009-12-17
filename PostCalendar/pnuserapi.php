@@ -10,6 +10,7 @@
  */
 
 include dirname(__FILE__) . '/global.php';
+include dirname(__FILE__) . '/pnincludes/DateCalc.class.php';
 
 /**
  * postcalendar_userapi_buildView

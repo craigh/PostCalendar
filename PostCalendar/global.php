@@ -79,6 +79,5 @@ define('_SETTING_ALLOW_CAT_FILTER', pnModGetVar('PostCalendar', 'pcAllowCatFilte
 define('_SETTING_ENABLECATS',       pnModGetVar('PostCalendar', 'enablecategorization'));
 define('_SETTING_USENAVIMAGES',     pnModGetVar('PostCalendar', 'enablenavimages'));
 
-//  Require and Setup utility classes and functions
+// Setup utility classes and functions
 define('DATE_CALC_BEGIN_WEEKDAY', _SETTING_FIRST_DAY_WEEK);
-include dirname(__FILE__) . '/pnincludes/DateCalc.class.php';

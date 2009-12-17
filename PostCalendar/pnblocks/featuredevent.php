@@ -49,6 +49,7 @@ function postcalendar_featuredeventblock_display($blockinfo)
     // Defaults
     if (empty($vars['eid'])) return false;
     $vars['showcountdown'] = empty($vars['showcountdown']) ? false : true;
+    $vars['hideonexpire']  = empty($vars['hideonexpire']) ? false : true;
 
     // get the event from the DB
     pnModDBInfoLoad('PostCalendar');
@@ -58,22 +59,22 @@ function postcalendar_featuredeventblock_display($blockinfo)
     // is event allowed for this user?
     if ($event['sharing'] == SHARING_PRIVATE && $event['aid'] != pnUserGetVar('uid') && !SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
     // if event is PRIVATE and user is not assigned event ID (aid) and user is not Admin event should not be seen
-        return '';
+        return false;
     }
             
     // since recurrevents are dynamically calculcated, we need to change the date
     // to ensure that the correct/current date is being displayed (rather than the
     // date on which the recurring booking was executed).
     if ($event['recurrtype']) {
-        $y = substr($args['Date'], 0, 4);
-        $m = substr($args['Date'], 4, 2);
-        $d = substr($args['Date'], 6, 2);
-        $event['eventDate'] = "$y-$m-$d";
+        $event['eventDate'] = DateUtil::getDateTime(null,"%F");
     }
 
     if ($vars['showcountdown']) {
         $datedifference = DateUtil::getDatetimeDiff_AsField(DateUtil::getDatetime(null, '%F'), $event['eventDate'], 3);
         $event['datedifference'] = round($datedifference);
+        if($vars['hideonexpire'] && $event['datedifference'] < 0) {
+            return false;
+        }
         $event['showcountdown'] = true;
     }
 
@@ -112,6 +113,7 @@ function postcalendar_featuredeventblock_update($blockinfo)
     // alter the corresponding variable
     $vars['eid']           = FormUtil::getPassedValue('eid', '', 'POST');
     $vars['showcountdown'] = FormUtil::getPassedValue('showcountdown', '', 'POST');
+    $vars['hideonexpire']  = FormUtil::getPassedValue('hideonexpire', '', 'POST');
 
     // write back the new contents
     $blockinfo['content'] = pnBlockVarsToContent($vars);

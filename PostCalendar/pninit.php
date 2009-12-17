@@ -178,11 +178,8 @@ function PostCalendar_delete()
 
     // Delete entries from category registry
     pnModDBInfoLoad ('Categories');
-    Loader::loadArrayClassFromModule('Categories', 'CategoryRegistry');
-    $registry = new PNCategoryRegistryArray();
-    $registry->deleteWhere ('crg_modname=\'PostCalendar\'');
-
-    // this still does not delete all the category information...
+    DBUtil::deleteWhere('categories_registry', "crg_modname='PostCalendar'");
+    DBUtil::deleteWhere('categories_mapobj', "cmo_modname='PostCalendar'");
 
     return $result;
 }

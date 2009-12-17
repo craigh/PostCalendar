@@ -24,7 +24,7 @@ function postcalendar_needleapi_postcalevent($args)
         list($dispose,$eid,$displaytype) = explode('-', $args['nid']);
         $link = pnModURL('PostCalendar', 'user', 'view', array('viewtype' => 'details', 'eid' => $eid));
         $displaytype = $displaytype ? strtoupper($displaytype) : 'NLI'; // in any order: N (name) D (date) T (time) I (icon) L (uselink) - default: NL
-        if (!$event = postcalendar_needleapi_eventarray(compact('eid'))) return __f('No event with eid %s', $eid, $dom);
+        if (!$event = postcalendar_needleapi_eventarray(compact('eid'))) return "(". __f('No event with eid %s', $eid, $dom) .")";
         if ($event == -1) return ''; // event not allowed for user
 
         $icon='';$uselink=false;
