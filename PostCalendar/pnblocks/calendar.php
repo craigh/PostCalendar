@@ -87,9 +87,9 @@ function postcalendar_calendarblock_display($blockinfo)
     // end cache return
 
     // set up the next and previous months to move to
-    $prev_month = Date_Calc::beginOfPrevMonth(1, $the_month, $the_year, '%Y%m%d');
-    $next_month = Date_Calc::beginOfNextMonth(1, $the_month, $the_year, '%Y%m%d');
-    $last_day = Date_Calc::daysInMonth($the_month, $the_year);
+    $prev_month = DateUtil::getDatetime_NextMonth(-1, '%Y%m%d', $the_year, $the_month, 1);
+    $next_month = DateUtil::getDatetime_NextMonth(1, '%Y%m%d', $the_year, $the_month, 1);
+    $last_day   = DateUtil::getDaysInMonth($the_month, $the_year);
     $pc_prev = pnModURL('PostCalendar', 'user', 'view',
         array('viewtype' => 'month', 'Date' => $prev_month));
     $pc_next = pnModURL('PostCalendar', 'user', 'view',
@@ -152,6 +152,11 @@ function postcalendar_calendarblock_display($blockinfo)
     // suggest addming $limit paramter to getEvents() to reduce load CAH Sept 29, 2009
     $eventsByDate = pnModAPIFunc('PostCalendar', 'event', 'getEvents', array('start' => $starting_date, 'end' => $ending_date));
     $calendarView = Date_Calc::getCalendarMonth($the_month, $the_year, '%Y-%m-%d');
+    //echo "calendarView: "; print_r($calendarView); echo "<br />";
+    //$NUcalendarView = DateUtil::getWeekdaysInMonth($the_month, $the_year);
+    //echo "NUcalendarView: "; print_r($NUcalendarView); echo "<br />";
+    //$NUcalendarView = DateUtil::getMonthDates($the_month, $the_year);
+    //echo "NUcalendarView: "; print_r($NUcalendarView); echo "<br />";
 
     $sdaynames = array();
     $numDays = count($pc_short_day_names);
@@ -171,13 +176,6 @@ function postcalendar_calendarblock_display($blockinfo)
         }
         array_push($daynames, $pc_long_day_names[$pc_array_pos]);
         $pc_array_pos++;
-    }
-
-    $dates = array();
-    while ($starting_date <= $ending_date) {
-        array_push($dates, $starting_date);
-        list($m, $d, $y) = explode('/', $starting_date);
-        $starting_date = Date_Calc::nextDay($d, $m, $y, '%m/%d/%Y');
     }
 
     $categories = pnModAPIFunc('PostCalendar', 'user', 'getCategories');

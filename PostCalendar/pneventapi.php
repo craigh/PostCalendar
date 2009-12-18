@@ -60,7 +60,9 @@ function postcalendar_eventapi_queryEvents($args)
 
     if (!isset($eventstatus) || ((int) $eventstatus < -1 || (int) $eventstatus > 1)) $eventstatus = 1;
 
-    if (!isset($start)) $start = Date_Calc::dateNow('%Y-%m-%d');
+    if (!isset($start)) $start = DateUtil::getDatetime(null, '%Y-%m-%d');
+
+
     list($startyear, $startmonth, $startday) = explode('-', $start);
 
     $where = "WHERE pc_eventstatus=$eventstatus
@@ -147,7 +149,9 @@ function postcalendar_eventapi_getEvents($args)
             $currentday   = $startday;
         }
         $start_date = Date_Calc::dateFormat($startday, $startmonth, $startyear, '%Y-%m-%d');
+        //$DUstart_date = DateUtil::formatDatetime($start, '%Y-%m-%d'); // something wrong in timezone conversion
         $end_date = Date_Calc::dateFormat($endday, $endmonth, $endyear, '%Y-%m-%d');
+        //$DUend_date = DateUtil::formatDatetime($end, '%Y-%m-%d'); // something wrong in timezone conversion
     } else {
         $startmonth = $endmonth = $currentmonth;
         $startday = $endday = $currentday;

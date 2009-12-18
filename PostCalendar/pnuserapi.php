@@ -35,7 +35,7 @@ function postcalendar_userapi_buildView($args)
     $the_year = substr($Date, 0, 4);
     $the_month = substr($Date, 4, 2);
     $the_day = substr($Date, 6, 2);
-    $last_day = Date_Calc::daysInMonth($the_month, $the_year);
+    $last_day = DateUtil::getDaysInMonth($the_month, $the_year);
 
     // prepare Month Names, Long Day Names and Short Day Names
     // as translated in the language files for template
@@ -163,16 +163,16 @@ function postcalendar_userapi_buildView($args)
     unset($numDays);
 
     // Prepare values for the template
-    $prev_month = Date_Calc::beginOfPrevMonth(1, $the_month, $the_year, '%Y%m%d');
-    $next_month = Date_Calc::beginOfNextMonth(1, $the_month, $the_year, '%Y%m%d');
+    $prev_month = DateUtil::getDatetime_NextMonth(-1, '%Y%m%d', $the_year, $the_month, 1);
+    $next_month = DateUtil::getDatetime_NextMonth(1, '%Y%m%d', $the_year, $the_month, 1);
 
     // Prepare links for template
     $pc_prev = pnModURL('PostCalendar', 'user', 'view',
         array('viewtype' => $viewtype, 'Date' => $prev_month, 'pc_username' => $pc_username, 'filtercats' => $filtercats));
     $pc_next = pnModURL('PostCalendar', 'user', 'view',
         array('viewtype' => $viewtype, 'Date' => $next_month, 'pc_username' => $pc_username, 'filtercats' => $filtercats));
-    $prev_day = Date_Calc::prevDay($the_day, $the_month, $the_year, '%Y%m%d');
-    $next_day = Date_Calc::nextDay($the_day, $the_month, $the_year, '%Y%m%d');
+    $prev_day = DateUtil::getDatetime_NextDay(-1, '%Y%m%d', $the_year, $the_month, $the_day);
+    $next_day = DateUtil::getDatetime_NextDay(1, '%Y%m%d', $the_year, $the_month, $the_day);
     $pc_prev_day = pnModURL('PostCalendar', 'user', 'view',
         array('viewtype' => 'day', 'Date' => $prev_day, 'pc_username' => $pc_username, 'filtercats' => $filtercats));
     $pc_next_day = pnModURL('PostCalendar', 'user', 'view',
