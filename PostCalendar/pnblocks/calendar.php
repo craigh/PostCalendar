@@ -78,10 +78,18 @@ function postcalendar_calendarblock_display($blockinfo)
             $templates_cached = false;
         }
     }
+    if ($pcbshowsslinks) {
+        if (!$tpl->is_cached('blocks/postcalendar_block_calendarlinks.htm')) {
+            $templates_cached = false;
+        }
+    }
+
     if ($templates_cached) {
         $blockinfo['content'] = $tpl->fetch('blocks/postcalendar_block_view_month.htm');
         $blockinfo['content'] .= $tpl->fetch('blocks/postcalendar_block_view_day.htm');
         $blockinfo['content'] .= $tpl->fetch('blocks/postcalendar_block_view_upcoming.htm');
+        $blockinfo['content'] .= $tpl->fetch('blocks/postcalendar_block_calendarlinks.htm');
+
         return pnBlockThemeBlock($blockinfo);
     }
     // end cache return
@@ -278,6 +286,7 @@ function postcalendar_calendarblock_update($blockinfo)
     $pnRender->clear_cache('blocks/postcalendar_block_view_day.htm');
     $pnRender->clear_cache('blocks/postcalendar_block_view_month.htm');
     $pnRender->clear_cache('blocks/postcalendar_block_view_upcoming.htm');
+    $pnRender->clear_cache('blocks/postcalendar_block_calendarlinks.htm');
     $blockinfo['content'] = pnBlockVarsToContent($vars);
 
     return $blockinfo;
