@@ -38,9 +38,6 @@ function postcalendar_adminapi_getlinks()
     if (SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
         $links[] = array('url' => pnModURL('PostCalendar', 'admin', 'listqueued'), 'text' => __('Queued events', $dom));
     }
-    if (SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
-        $links[] = array('url' => pnModURL('PostCalendar', 'admin', 'manualClearCache'), 'text' => __('Clear Smarty cache', $dom));
-    }
 
     // Return the links array back to the calling function
     return $links;

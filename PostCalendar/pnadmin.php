@@ -309,25 +309,6 @@ function postcalendar_admin_updateconfig()
     return postcalendar_admin_modifyconfig();
 }
 
-/**
- * @function    postcalendar_admin_manualClearCache
- * @description clear pnRender Cache
- * @return      status/error -> return to admin config
- */
-function postcalendar_admin_manualClearCache()
-{
-    $dom = ZLanguage::getModuleDomain('PostCalendar');
-    if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
-        return LogUtil::registerPermissionError();
-    }
-    $clear = pnModAPIFunc('PostCalendar', 'admin', 'clearCache');
-    if ($clear) {
-        LogUtil::registerStatus(__('Done! Cleared Smarty cache.', $dom));
-        return postcalendar_admin_modifyconfig();
-    }
-    return LogUtil::registerError(__('Error! Could not clear Smarty cache.', $dom), null, pnModURL('PostCalendar', 'admin', 'modifyconfig'));
-}
-
 /*
  * postcalendar_admin_approveevents
  * update status of events so that they are viewable by users
