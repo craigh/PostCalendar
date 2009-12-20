@@ -120,7 +120,7 @@ function postcalendar_featuredeventblock_update($blockinfo)
 
     // clear the block cache
     $pnRender = pnRender::getInstance('PostCalendar');
-    $pnRender->clear_cache('PostCalendar_block_featuredevent.htm');
+    $pnRender->clear_cache('blocks/postcalendar_block_featuredevent.htm');
 
     return $blockinfo;
 }

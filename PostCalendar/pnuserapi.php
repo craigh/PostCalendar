@@ -191,6 +191,7 @@ function postcalendar_userapi_buildView($args)
         array('viewtype' => 'year', 'Date' => $next_year, 'pc_username' => $pc_username, 'filtercats' => $filtercats));
 
 
+    $function_out = array();
     if (isset($calendarView)) $function_out['CAL_FORMAT'] = $calendarView;
     // convert categories array to proper filter info
     $catsarray = $filtercats['__CATEGORIES__'];
