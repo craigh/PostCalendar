@@ -9,8 +9,8 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
  */
 
-include dirname(__FILE__) . '/global.php';
-include dirname(__FILE__) . '/pnincludes/DateCalc.class.php';
+include 'modules/PostCalendar/global.php';
+include_once 'modules/PostCalendar/pnincludes/DateCalc.class.php';
 
 /**
  * This is the event handler api

@@ -9,7 +9,7 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
  */
 
-include dirname(__FILE__) . '../pnincludes/DateCalc.class.php';
+include_once 'modules/PostCalendar/pnincludes/DateCalc.class.php';
 
 /**
  * initialise block

@@ -9,7 +9,7 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
  */
 
-include dirname(__FILE__) . '/global.php';
+include 'modules/PostCalendar/global.php';
 /**
  * Get available admin panel links
  *
@@ -46,12 +46,12 @@ function postcalendar_adminapi_getlinks()
 /**
  * @function    postcalendar_adminapi_clearCache
  *
- * @return bool clear the pnRender cache
+ * @return bool true if all cached templates successfully cleared, false otherwise.
  */
 function postcalendar_adminapi_clearCache()
 {
     $pnRender = pnRender::getInstance('PostCalendar');
-    // Do not call clear_all_cache, but only clear the cache of this module
+    // Do not call clear_all_cache, but only clear the cached templates of this module
     return $pnRender->clear_cache();
 }
 

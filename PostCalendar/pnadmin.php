@@ -9,7 +9,7 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
  */
 
-include dirname(__FILE__) . '/global.php';
+include 'modules/PostCalendar/global.php';
 
 /**
  * the main administration function

@@ -9,7 +9,7 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
  */
 Loader::requireOnce('includes/pnForm.php');
-include dirname(__FILE__) . '/global.php';
+include 'modules/PostCalendar/global.php';
 
 /**
  * This is the event handler file
@@ -153,6 +153,7 @@ function postcalendar_event_new($args)
     $authid           = FormUtil::getPassedValue('authid');
 
     // VALIDATE form data if form action is preview or commit
+    $abort = false;
     if (($form_action == 'preview') OR ($form_action == 'commit')) $abort = pnModAPIFunc('PostCalendar', 'event', 'validateformdata', $submitted_event);
 
     if ($func == 'new') { // triggered on form_action=preview && on brand new load

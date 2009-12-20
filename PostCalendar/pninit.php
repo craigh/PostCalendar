@@ -73,7 +73,7 @@ function PostCalendar_upgrade($oldversion)
     {
         $modversion = array('version' => 'unknown');
         // Receive the current version information, where $modversion will be overwritten
-        require dirname(__FILE__) . '/pnversion.php';
+        require 'modules/PostCalendar/pnversion.php';
 
         // Inform user about error, and how he can upgrade to $modversion['version']
         return LogUtil::registerError(__f('Notice: This version does not support upgrades from PostCalendar 3.x and earlier. Please download and install version 4.0.3  (available from <a href="http://code.zikula.org/soundwebdevelopment/downloads">code.zikula.org/soundwebdevelopment</a>). After upgrading, you can install PostCalendar %version% and perform this upgrade.', $modversion, $dom));
