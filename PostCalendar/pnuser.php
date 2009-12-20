@@ -57,15 +57,13 @@ function postcalendar_user_view()
 function postcalendar_user_display($args)
 {
     extract($args); // 'viewtype','Date','filtercats','pc_username','popup','eid','func'
+    $dom = ZLanguage::getModuleDomain('PostCalendar');
     if (empty($Date) && empty($viewtype)) {
         return LogUtil::registerError(__('Error! Required arguments not present.', $dom));
     }
 
-    $dom     = ZLanguage::getModuleDomain('PostCalendar');
-    $uid     = pnUserGetVar('uid');
-    $theme   = pnUserGetTheme();
-    $cacheid = md5($Date . $viewtype . $eid . $uid . 'u' . $pc_username . $theme);
-    $tpl     = pnRender::getInstance('PostCalendar');
+    $tpl = pnRender::getInstance('PostCalendar');
+    $tpl->cache_id = $Date . '|' . $viewtype . '|' . $eid . '|' . pnUserGetVar('uid');
     
     switch ($viewtype) {
         case 'details':
@@ -74,9 +72,9 @@ function postcalendar_user_display($args)
             }
 
             // build template and fetch:
-            if ($tpl->is_cached('user/postcalendar_user_view_event_details.htm', $cacheid)) {
+            if ($tpl->is_cached('user/postcalendar_user_view_event_details.htm')) {
                 // use cached version
-                return $tpl->fetch('user/postcalendar_user_view_event_details.htm', $cacheid);
+                return $tpl->fetch('user/postcalendar_user_view_event_details.htm');
             } else {
                 // get the event from the DB
                 $event = DBUtil::selectObjectByID('postcalendar_events', $args['eid'], 'eid');
@@ -100,7 +98,7 @@ function postcalendar_user_display($args)
                 $tpl->assign('loaded_event', $event);
          
                 if ($popup == true) {
-                    $tpl->display('user/postcalendar_user_view_popup.htm', $cacheid);
+                    $tpl->display('user/postcalendar_user_view_popup.htm');
                     return true; // displays template without theme wrap
                 } else {
                     if ((SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADD) && (pnUserGetVar('uid') == $event['aid']))
@@ -109,7 +107,7 @@ function postcalendar_user_display($args)
                     } else {
                         $tpl->assign('EVENT_CAN_EDIT', false);
                     }
-                    return $tpl->fetch('user/postcalendar_user_view_event_details.htm', $cacheid);
+                    return $tpl->fetch('user/postcalendar_user_view_event_details.htm');
                 }
             }
             break;
@@ -121,15 +119,15 @@ function postcalendar_user_display($args)
             $out = pnModAPIFunc('PostCalendar', 'user', 'buildView', 
                 compact('Date','viewtype','pc_username','filtercats','func'));
             // build template and fetch:
-            if ($tpl->is_cached('user/postcalendar_user_view_'.$viewtype.'.htm', $cacheid)) {
+            if ($tpl->is_cached('user/postcalendar_user_view_'.$viewtype.'.htm')) {
                 // use cached version
-                return $tpl->fetch('user/postcalendar_user_view_'.$viewtype.'.htm', $cacheid);
+                return $tpl->fetch('user/postcalendar_user_view_'.$viewtype.'.htm');
             } else {
                 foreach ($out as $var => $val) {
                     $tpl->assign($var, $val);
                 }
 
-                return $tpl->fetch('user/postcalendar_user_view_'.$viewtype.'.htm', $cacheid);
+                return $tpl->fetch('user/postcalendar_user_view_'.$viewtype.'.htm');
             } // end if/else
             break;
     } // end switch
