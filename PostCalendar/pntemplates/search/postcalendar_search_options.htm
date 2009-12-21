@@ -19,4 +19,21 @@
         allValue=0]--></span>
     <!--[/foreach]-->
     <!--[/nocache]-->
+    &nbsp;<!--[gt text="date range:" domain="module_postcalendar"]-->
+	<label for="modvar_PostCalendar_searchstart">&nbsp;<!--[gt text="from" domain="module_postcalendar"]--></label>
+    <select id="modvar_PostCalendar_searchstart" name="modvar[PostCalendar][searchstart]">
+        <option value="-10"><!--[gt text='last %s years' tag1='10' domain="module_postcalendar"]--></option>
+        <option value="-5"><!--[gt text='last %s years' tag1='5' domain="module_postcalendar"]--></option>
+        <option value="-2"><!--[gt text='last %s years' tag1='2' domain="module_postcalendar"]--></option>
+        <option value="-1"><!--[gt text='last year' domain="module_postcalendar"]--></option>
+        <option value="0" selected="selected"><!--[gt text='now' domain="module_postcalendar"]--></option>
+    </select>
+	<label for="modvar_PostCalendar_searchend">&nbsp;<!--[gt text="to" domain="module_postcalendar"]--></label>
+    <select id="modvar_PostCalendar_searchend" name="modvar[PostCalendar][searchend]">
+        <option value="0"><!--[gt text='now' domain="module_postcalendar"]--></option>
+        <option value="1"><!--[gt text='next year' domain="module_postcalendar"]--></option>
+        <option value="2" selected="selected"><!--[gt text='next %s years' tag1='2' domain="module_postcalendar"]--></option>
+        <option value="5"><!--[gt text='next %s years' tag1='5' domain="module_postcalendar"]--></option>
+        <option value="10"><!--[gt text='next %s years' tag1='10' domain="module_postcalendar"]--></option>
+    </select>
 </div>

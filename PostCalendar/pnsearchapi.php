@@ -57,7 +57,9 @@ function postcalendar_searchapi_options($args)
     $args[numlimit] (result limit)
     $args[page]
     $args[startnum]
-    $args[category] (postcalendar specific)
+    $args[__CATEGORIES__] (postcalendar specific)
+    $args[searchstart] (postcalendar specific)
+    $args[searchend] (postcalendar specific)
  **/
 function postcalendar_searchapi_search($args)
 {
@@ -83,6 +85,9 @@ function postcalendar_searchapi_search($args)
                                           $postcalendarcolumn['hometext']),
                                     null);
     if (!empty($where)) $searchargs['s_keywords'] = trim(substr(trim($where), 1, -1));
+
+    $searchargs['searchstart'] = (!isset($args['searchstart'])) ? 0 : $args['searchstart'];
+    $searchargs['searchend'] = (($args['searchstart'] == $args['searchend']) || (!isset($args['searchend']))) ? 2 : $args['searchend']; // user set both options to 'now'
 
     $eventsByDate = pnModAPIFunc('PostCalendar','event','getEvents',$searchargs);
     // $eventsByDate = array(Date[YYYY-MM-DD]=>array(key[int]=>array(assockey[name]=>values)))

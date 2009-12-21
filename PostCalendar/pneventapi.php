@@ -22,7 +22,7 @@ include_once 'modules/PostCalendar/pnincludes/DateCalc.class.php';
  * @param array $args arguments. Expected keys:
  *              eventstatus: -1 == hidden ; 0 == queued ; 1 == approved (default)
  *              start: Events start date (default today)
- *              end: Events end_date (default 000-00-00)
+ *              end: Events end_date (default 0000-00-00)
  *              s_keywords: search info
                 filtercats: categories to query events from
  * @return array The events
@@ -120,13 +120,13 @@ function postcalendar_eventapi_queryEvents($args)
  * This function returns an array of events sorted by date
  * expected args (from postcalendar_userapi_buildView): start, end
  *    if either is present, both must be present. else uses today's/jumped date.
- * expected args (from search/postcalendar_search_options): s_keywords, filtercats
+ * expected args (from search/postcalendar_search_options): s_keywords, filtercats, seachstart, searchend
  **/
 function postcalendar_eventapi_getEvents($args)
 {
     $dom = ZLanguage::getModuleDomain('PostCalendar');
     $s_keywords = ''; // search WHERE string
-    extract($args); //start, end, filtercats, Date, s_keywords, pc_username
+    extract($args); //start, end, filtercats, Date, s_keywords, pc_username, seachstart, searchend
 
     $date  = pnModAPIFunc('PostCalendar','user','getDate',array('Date'=>$args['Date'])); //formats date
 
@@ -155,8 +155,8 @@ function postcalendar_eventapi_getEvents($args)
     } else {
         $startmonth = $endmonth = $currentmonth;
         $startday = $endday = $currentday;
-        $startyear = $currentyear;
-        $endyear = $currentyear + 2; // defaults to two-year span
+        $startyear = $currentyear + $searchstart;
+        $endyear = $currentyear + $searchend;
         $start_date = $startyear . '-' . $startmonth . '-' . $startday;
         $end_date = $endyear . '-' . $endmonth . '-' . $endday;
     }
