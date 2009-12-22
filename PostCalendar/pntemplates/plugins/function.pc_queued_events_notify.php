@@ -1,9 +1,9 @@
 <?php
 /**
  * @package     PostCalendar
- * @author      $Author: craigh $
- * @link        $HeadURL:$
- * @version     $Id:$
+ * @author      $Author$
+ * @link        $HeadURL$
+ * @version     $Id$
  * @description determine if there are queued events and format a notice
  * @return      if (assign) return count, else return formatted alert notice
  * @copyright   Copyright (c) 2009, Craig Heydenburg, Sound Web Development

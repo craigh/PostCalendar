@@ -1,10 +1,9 @@
 <?php
 /**
  * @package     PostCalendar
- * @author      $Author: craigh $
- * @link        $HeadURL: https://code.zikula.org/svn/soundwebdevelopment/trunk/Modules/PostCalendar/pntables.php $
- * @version     $Id: pntables.php 172 2009-07-16 01:36:32Z craigh $
- * @copyright   Copyright (c) 2002, The PostCalendar Team
+ * @author      $Author$
+ * @link        $HeadURL$
+ * @version     $Id$
  * @copyright   Copyright (c) 2009, Craig Heydenburg, Sound Web Development
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
  */
