@@ -34,22 +34,22 @@
 		<!--[ * make sure we have a preceeding 0 on the month number * ]-->
 		<!--[ assign var="m" value=$m|string_format:"%02d" ]-->
 		<!--[ * create our link to the month * ]-->
-		<table width="100%" border="0" cellpadding="0" cellspacing="0" class="blockcalcontainer">
+		<table class="smallmonthtable">
 			<tr>
-				<td class="blockmonthheader" colspan="8" valign="top" align="center">
+				<td class="monthheader" colspan="8">
 					<a href="<!--[ pc_url action="month" date="$y-$m-01" ]-->"><!--[ $A_MONTH_NAMES.$monthnum ]--></a>
 				</td>
 			</tr>
-			<tr>
-				<td class="weeklink">&nbsp;</td>
+			<tr class="daynames">
+				<td>&nbsp;</td>
 				<!--[ foreach name=daynames item=day from=$S_SHORT_DAY_NAMES ]-->
-				<td class="daynames" align="center"><!--[ $day ]--></td>
+				<td><!--[ $day ]--></td>
 				<!--[ /foreach ]-->
 			</tr>
 			<!--[ foreach name=weeks item=days from=$month ]-->
 			<tr>
-				<td align="center" valign="middle" class="weeklink">
-					<a href="<!--[ pc_url action="week" date=$days[0] ]-->" class="weeklink">&gt;</a>
+				<td class="weeklink">
+					<a href="<!--[ pc_url action="week" date=$days[0] ]-->">&gt;</a>
 				</td>
 				<!--[ foreach name=day item=date from=$days ]-->
     				<!--[ assign var="themonth" value=$date|date_format:"%m" ]-->
@@ -60,7 +60,7 @@
     				<!--[ else ]-->
     					<!--[ assign var="stylesheet" value="monthoff" ]-->
     				<!--[ /if ]-->
-    				<td align="center" class="<!--[ $stylesheet ]-->">
+    				<td class="<!--[ $stylesheet ]-->">
     					<!--[ assign var="classname" value="event-none" ]-->						 		   
     					<!--[ if (isset($A_EVENTS.$date)) ]-->
         					<!--[ if $A_EVENTS.$date|@count > 2  ]-->

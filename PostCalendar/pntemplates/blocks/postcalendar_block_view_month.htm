@@ -1,33 +1,33 @@
 <!--[* $Id$ *]-->
 <!--[ pc_pagejs_init ]-->
 <div class="postcalendar_block_view_month">
-<h3 class="blockmonthheader">
-    <a href="<!--[ $PREV_MONTH_URL|pnvarprepfordisplay ]-->">&lt;&lt;&nbsp;</a>
-    <a href="<!--[ pc_url action="month" date=$DATE ]-->"><!--[ $DATE|pc_date_format:'%B %Y']--></a>
-    <a href="<!--[ $NEXT_MONTH_URL|pnvarprepfordisplay ]-->">&nbsp;&gt;&gt;</a>
-</h3>
-<table width="100%" border="0" cellpadding="0" cellspacing="0" class="blockcalcontainer">
+<table class="smallmonthtable">
     <tr>
-        <td class="blockweeklink">&nbsp;</td>
+        <td class="monthheader" colspan="8">
+            <a href="<!--[ $PREV_MONTH_URL|pnvarprepfordisplay ]-->">&lt;&lt;&nbsp;</a>
+            <a href="<!--[ pc_url action="month" date=$DATE ]-->"><!--[ $DATE|pc_date_format:'%B %Y']--></a>
+            <a href="<!--[ $NEXT_MONTH_URL|pnvarprepfordisplay ]-->">&nbsp;&gt;&gt;</a>
+        </td>
+    </tr>
+    <tr class="daynames">
+        <td>&nbsp;</td>
         <!--[ foreach name=daynames item=day from=$S_SHORT_DAY_NAMES ]-->
-        <td valign="top" align="center" class="blockdaynames"><!--[ $day ]--></td>
+        <td><!--[ $day ]--></td>
         <!--[ /foreach ]-->
     </tr>
     <!--[ foreach name=weeks item=days from=$CAL_FORMAT ]-->
     <tr>
-        <td class="blockweeklink" align="center" valign="middle"><a
-            href="<!--[ pc_url action=week date=$days[0] ]-->">&gt;</a></td>
+        <td class="weeklink"><a href="<!--[ pc_url action=week date=$days[0] ]-->">&gt;</a></td>
         <!--[ foreach name=day item=date from=$days ]-->
         <!--[ assign var="themonth" value=$date|date_format:"%m" ]-->
         <!--[ if $date == $TODAY_DATE ]-->
-            <!--[ assign var="stylesheet" value="blockmonthtoday" ]-->
+            <!--[ assign var="stylesheet" value="monthtoday" ]-->
         <!--[ elseif ($date < $MONTH_START_DATE || $date > $MONTH_END_DATE) ]-->
-            <!--[ assign var="stylesheet" value="blockmonthoff" ]-->
+            <!--[ assign var="stylesheet" value="monthoff" ]-->
         <!--[ else ]-->
-            <!--[ assign var="stylesheet" value="blockmonthon" ]-->
+            <!--[ assign var="stylesheet" value="monthon" ]-->
         <!--[ /if ]-->
-        <td class="<!--[ $stylesheet ]-->" align="center" valign="middle"
-            onclick="javascript:location.href='<!--[ pc_url action=day date=$date ]-->';">
+        <td class="<!--[ $stylesheet ]-->" onclick="javascript:location.href='<!--[ pc_url action=day date=$date ]-->';">
             <!--[ foreach name=events item=event from=$A_EVENTS.$date ]-->
                 <!--[ if $event.alldayevent != true ]-->
                     <!--[ assign var="titles" value="`$event.startTime` `$event.title` `$event.duration`<br /><br />" ]-->
@@ -37,15 +37,15 @@
             <!--[ /foreach ]-->
             <!--[ if $A_EVENTS.$date|@count ]-->
                 <!--[ if $A_EVENTS.$date|@count > 2  ]-->
-                    <!--[ assign var="classname" value="blockevent-three" ]-->
+                    <!--[ assign var="classname" value="event-three" ]-->
                 <!--[ elseif $A_EVENTS.$date|@count > 1  ]-->
-                    <!--[ assign var="classname" value="blockevent-two" ]-->
+                    <!--[ assign var="classname" value="event-two" ]-->
                 <!--[ elseif $A_EVENTS.$date|@count > 0  ]-->
-                    <!--[ assign var="classname" value="blockevent-one" ]-->
+                    <!--[ assign var="classname" value="event-one" ]-->
                 <!--[ else ]-->
-                    <!--[ assign var="classname" value="blockevent-none" ]-->
+                    <!--[ assign var="classname" value="event-none" ]-->
                 <!--[ /if ]-->
-                <!--[ pc_popup bgcolor="#cccccc" caption=$date|pc_date_format text="$titles" assign="javascript"]-->
+                <!--[ pc_popup bgcolor="#cccccc" caption=$date|pc_date_format text=$titles|pnvarprepfordisplay assign="javascript"]-->
                 <!--[ pc_url full=true class=$classname action="day" date=$date javascript=$javascript display=$date|date_format:"%d" ]-->
             <!--[ else ]-->
                 <!--[ pc_url full=true class="blockevent-none" action="day" date=$date display=$date|date_format:"%d" ]-->

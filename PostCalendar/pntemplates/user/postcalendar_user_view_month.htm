@@ -19,10 +19,10 @@
 </h2>
 
 <div class="calcontainer">
-<table width="100%" border="0" cellpadding="0" cellspacing="0" class="postcalendar_month">
-    <tr>
+<table class="postcalendar_month">
+    <tr class="daynames">
         <!--[ foreach from=$S_LONG_DAY_NAMES item=day ]-->
-        <td align="center" valign="middle" class="daynames"><!--[ $day ]--></td>
+        <td><!--[ $day ]--></td>
         <!--[ /foreach ]-->
     </tr>
     <!--[ * CREATE THE CALENDAR * ]-->
@@ -36,18 +36,18 @@
         <!--[ else ]-->
             <!--[ assign var="stylesheet" value="monthon" ]-->
         <!--[ /if ]-->
-        <td align="left" valign="top" class="<!--[ $stylesheet ]-->" 
+        <td class="<!--[ $stylesheet ]-->" 
             <!--[if $in_new_window eq false]-->onclick="javascript:location.href='<!--[ pc_url action=day date=$date ]-->';"<!--[/if]-->>
-            <table width="100%" border="0" cellpadding="0" cellspacing="0">
+            <table class="postcalendar_month_day">
                 <!--[ if $PRINT_VIEW eq false ]-->
                 <tr>
-                    <td align="left" valign="top"><a
+                    <td><a
                         href="<!--[ pc_url action=day date=$date ]-->"><!--[ $date|date_format:"%d" ]--></a>
                     <!--[ if $smarty.foreach.days.iteration == 1 ]-->
                     <a href="<!--[ pc_url action=week date=$date ]-->">[<!--[gt text="week"]-->]</a>
                     <!--[ /if ]-->
                     </td>
-                    <td align="right" valign="top">
+                    <td style='text-align:right;'>
                         <!--[ if $ACCESS_ADD eq true ]-->
                         <a href="<!--[ pc_url action=submit date=$date ]-->"><!--[ pnimg src='new.gif' ]--></a>
                         <!--[ /if ]-->
@@ -55,10 +55,10 @@
                 </tr>
                 <!--[else]-->
                     <!--[* we're in print view *]-->
-                    <tr><td colspan='2' align="left" valign="top"><!--[ $date|date_format:"%d" ]--></td></tr>
+                    <tr><td colspan='2'><!--[ $date|date_format:"%d" ]--></td></tr>
                 <!--[/if]-->
                 <tr>
-                    <td colspan="2" valign="top" align="left">
+                    <td colspan="2">
                     <!--[ *sort the events by category so we can make it pretty* ]-->
                     <!--[ pc_sort_events var="S_EVENTS" sort="time" order="asc" value=$A_EVENTS ]-->
                     <!--[ assign var="oldCat" value="" ]-->
@@ -82,7 +82,7 @@
                         <!--[ /if ]-->
 
                         <!--[ assign var="desc" value=$event.hometext|truncate:255:"..." ]-->
-                        <!--[ pc_popup bgcolor=$event.catcolor caption="`$timestamp` `$event.title`" text=$desc assign="javascript"]-->
+                        <!--[ pc_popup bgcolor=$event.catcolor caption="`$timestamp` `$event.title`" text=$desc|pnvarprepfordisplay assign="javascript"]-->
                         <!--[ pc_url full=true action=detail eid=$event.eid date=$date style="font-size: 7pt; text-decoration: none;" javascript=$javascript display="$timestamp $title"|pnvarprephtmldisplay]-->
                         <!--[ if $event.commentcount gt 0]-->
                             <!--[gt text='%s comment left' plural='%s comments left.' count=$event.commentcount tag1=$event.commentcount domain="module_postcalendar" assign="title"]-->

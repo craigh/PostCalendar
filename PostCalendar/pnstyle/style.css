@@ -2,11 +2,11 @@
 /*
  *  SVN: $Id$
  *
- *  @package         PostCalendar 
- *  @lastmodified    $Date$ 
- *  @modifiedby      $Author$ 
- *  @HeadURL	       $HeadURL$ 
- *  @version         $Revision$ 
+ *  @package       PostCalendar 
+ *  @lastmodified  $Date$ 
+ *  @modifiedby    $Author$ 
+ *  @HeadURL	   $HeadURL$ 
+ *  @version       $Revision$ 
 */
 
 /********** HEADERS & CONTAINERS ***********/
@@ -101,74 +101,51 @@ ul.eventslist:hover {
 }
 
 /*********** MONTH **************/
-table.postcalendar_month td.monthon,
-table.postcalendar_month td.monthoff,
-table.postcalendar_month td.monthtoday
-{
-    height: 75px;
+table.postcalendar_month {
+    width: 100%;
+	border: 1px solid black;
+	border-collapse: collapse;
 }
-td.monthon {
+table.postcalendar_month td {
+	border: 1px solid Black;
+    height: 85px;
+	vertical-align: top;
+    text-align: left;
+}
+table.postcalendar_month td td {
+    height: auto;
+}
+table.postcalendar_month td.monthon {
 	background-color: transparent;
-	border: 1px solid Black;
-	vertical-align: top;
 }
-td.monthoff {
+table.postcalendar_month td.monthoff {
 	background: #cccccc; /* Pale Grey */
-	border: 1px solid Black;
-	vertical-align: top;
 }
-td.monthtoday { /* color assignments for TODAY */
+table.postcalendar_month td.monthtoday { /* color assignments for TODAY */
 	background-color: yellow;
 	border: 2px dashed #FF6600; /*orangish */
-	vertical-align: top;
 }
-td.monthon:hover,
-td.monthoff:hover,
-td.monthtoday:hover {
+table.postcalendar_month td:hover {
     background-color: #eeeeee;
 }
-td.daynames {
+table.postcalendar_month tr.daynames td {
 	background-color: #cccccc; /* Pale Grey */
-	border: 1px solid Black;
 	font-size: 10pt;
 	font-weight: normal;
 	text-decoration: none;
     width: 14%;
+    height: 1.5em;
+    text-align: center;
 }
-
-/*********** YEAR **************/
-td.weeklink {
-	background-color: #cccccc; /* Pale Grey */
-	border: 1px solid Black;
+table.postcalendar_month_day {
+    width: 100%;
+    border: 0;
+    border-collapse: collapse;
 }
-.weeklink a {
-	font-size: 7pt;
-	font-weight: normal;
-	text-decoration: none;
-}
-a.event-none {
-	color: Black;
-	font-size: 10px;
-	font-weight: normal;
-	text-decoration: none;
-}
-a.event-one {
-	color: #006600; /* Obscure Dull Green */
-	font-size: 10px;
-	font-weight: normal;
-	text-decoration: none;
-}
-a.event-two {
-	color: #006666; /* Obscure Dull Cyan */
-	font-size: 10px;
-	font-weight: normal;
-	text-decoration: none;
-}
-a.event-three {
-	color: #0066cc; /* Hard Dark Azure */
-	font-size: 10px;
-	font-weight: normal;
-	text-decoration: none;
+table.postcalendar_month_day td {
+    /* vertical-align: top;
+    text-align: left; */
+    border: 0;
 }
 
 /*********** NAV **************/
@@ -219,6 +196,64 @@ a.postcalendar_nav_text_selected:hover {
 	padding: .3em 2em;
 }
 
+/*********** SMALLMONTHTABLE STYLES **************/
+table.smallmonthtable {
+    width: 100%;
+	border: 1px solid black;
+	border-collapse: collapse;
+}
+table.smallmonthtable a {
+	text-decoration: none;
+	color: black;
+    font-weight: normal;
+}
+table.smallmonthtable td {
+    border: 1px solid black;
+    text-align: center;
+    vertical-align: middle;
+	font-size: .8em;
+}
+table.smallmonthtable td.monthheader {
+	background-color: #cccccc; /* Pale gray */
+	font-size: 1em;
+    padding: 3px 0;
+}
+table.smallmonthtable td.monthheader a {
+    color: #666666;
+	font-weight: bold;
+}
+table.smallmonthtable td.monthheader a:hover {
+    color: #000000;
+    text-decoration: none;
+}
+table.smallmonthtable td.monthon {
+	background-color: white;
+}
+table.smallmonthtable td.monthoff {
+	background-color: #cccccc; /* Pale gray */
+}
+table.smallmonthtable td.monthtoday { /* color assignments for TODAY */
+	background-color: yellow;
+}
+table.smallmonthtable tr.daynames td {
+	background-color: #cccccc; /* Pale gray */
+}
+table.smallmonthtable td.weeklink {
+	background-color: #cccccc; /* Pale gray */
+    width: 1em;
+}
+table.smallmonthtable td:hover {
+    background-color: #eeeeee;
+}
+table.smallmonthtable a.event-one {
+	color: #006600; /* Obscure Dull Green */
+}
+table.smallmonthtable a.event-two {
+	color: #006666; /* Obscure Dull Cyan */
+}
+table.smallmonthtable a.event-three {
+	color: #0066cc; /* Hard Dark Azure */
+}
 /*********** BLOCK STYLES **************/
 .postcalendar_block_innertitle {
 	font-size: 1.4em;
@@ -226,82 +261,6 @@ a.postcalendar_nav_text_selected:hover {
 	border-bottom: 1px solid #cccccc;
 	margin: 4px 0;
 	padding: 2px 0;
-}
-td.blockmonthon {
-	background-color: white;
-	border: 1px solid Black;
-}
-td.blockmonthoff {
-	background-color: #cccccc; /* Pale gray */
-	border: 1px solid Black;
-}
-td.blockmonthtoday { /* color assignments for TODAY */
-	background-color: yellow;
-	border: 1px solid Black;
-}
-td.blockmonthon:hover,
-td.blockmonthoff:hover,
-td.blockmonthtoday:hover {
-    background-color: #eeeeee;
-}
-h3.blockmonthheader {
-	background-color: #cccccc; /* Pale gray */
-	font-size: 8pt;
-	font-weight: bold;
-	border: 1px solid Black;
-	text-align: center;
-	padding: 2px;
-}
-h3.blockmonthheader a {
-	text-decoration: none;
-}
-td.blockdaynames {
-	background-color: #cccccc; /* Pale gray */
-	border: 1px solid Black;
-	font-size: 8pt;
-	font-weight: normal;
-	text-decoration: none;
-}
-
-table.blockcalcontainer,
-td.blockcalcontainer {
-	border: 0;
-	border-collapse: collapse;
-}
-td.blockweeklink {
-	background-color: #cccccc; /* Pale gray */
-	border: 1px solid Black;
-    width: 1em;
-}
-.blockweeklink a {
-	color: black;
-	font-size: 7pt;
-	font-weight: normal;
-	text-decoration: none;
-}
-a.blockevent-none {
-	color: black;
-	font-size: 10px;
-	font-weight: normal;
-	text-decoration: none;
-}
-a.blockevent-one {
-	color: #006600; /* Obscure Dull Green */
-	font-size: 10px;
-	font-weight: normal;
-	text-decoration: none;
-}
-a.blockevent-two {
-	color: #006666; /* Obscure Dull Cyan */
-	font-size: 10px;
-	font-weight: normal;
-	text-decoration: none;
-}
-a.blockevent-three {
-	color: #0066cc; /* Hard Dark Azure */
-	font-size: 10px;
-	font-weight: normal;
-	text-decoration: none;
 }
 .postcalendar_block_view_upcoming ul.pc_blocklist,
 .postcalendar_block_view_day ul.pc_blocklist {
@@ -330,7 +289,6 @@ div.pc_centerblocksubmitlinks {
 	text-align: center;
 	padding: 1em 0 0 0;
 }
-/*********** BLOCK STYLES **************/
 div.postcalendar_featuredevent {
 }
 div.postcalendar_featuredevent div.eventcountdown {

@@ -29,7 +29,7 @@ function smarty_function_pc_popup($args, &$smarty)
     if (empty($args['text']) && !isset($args['inarray']) && empty($args['function']))
         $args['text'] = "overlib: attribute 'text' or 'inarray' or 'function' required";
 
-    if (empty($args['trigger'])) $args['trigger'] = " onMouseOver";
+    if (empty($args['trigger'])) $args['trigger'] = " onmouseover";
 
     if ((empty($args['capcolor'])) && (!empty($args['bgcolor']))) $args['capcolor'] = pnModAPIFunc('PostCalendar', 'event', 'color_inverse', $args['bgcolor']);
     
@@ -173,7 +173,7 @@ function smarty_function_pc_popup($args, &$smarty)
     if (!empty($args['vauto'])) {
         $ret_val .= ",VAUTO";
     }
-    $ret_val .= ');" onMouseOut="nd();"';
+    $ret_val .= ');" onmouseout="nd();"';
 
     if (isset($args['assign'])) {
         $smarty->assign($args['assign'], $ret_val);

@@ -27,7 +27,7 @@ function smarty_function_pc_filter($args, &$smarty)
         $smarty->trigger_error(__("%s: missing '%s' parameter", array('Plugin:pc_filter', 'type'), $dom));
         return;
     }
-    $class = isset($args['class']) ? ' class="'.$args['class'].'"' : '';
+    $class = !empty($args['class']) ? ' class="'.$args['class'].'"' : '';
     $label = isset($args['label']) ? $args['label'] : __('change', $dom);
     $order = isset($args['order']) ? $args['order'] : null;
 
