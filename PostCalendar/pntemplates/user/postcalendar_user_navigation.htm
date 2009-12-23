@@ -1,39 +1,32 @@
 <!--[* $Id$ *]-->
 <!--[ pc_queued_events_notify ]-->
 <!--[ pc_form_nav_open ]-->
-<table border="0" cellpadding="0" cellspacing="0" width="100%">
-	<tr>
-		<td valign="top" align="left">
+<div class=".z-clearfix">
+    <div id="postcalendar_nav_right">
+        <ul>
+            <!--[ if $DATE|truncate:8:"" ne $TODAY_DATE|replace:'-':'' ]-->
+                <li><!--[ pc_url action='today' full=true navlink=true ]--></li>
+            <!--[/if]-->
+            <li><!--[ pc_url action='day' full=true navlink=true ]--></li>
+            <li><!--[ pc_url action='week' full=true navlink=true ]--></li>
+            <li><!--[ pc_url action='month' full=true navlink=true ]--></li>
+            <li><!--[ pc_url action='year' full=true navlink=true ]--></li>
+            <li><!--[ pc_url action='list' full=true navlink=true ]--></li>
+            <!--[ if $ACCESS_ADD eq true ]-->
+                <li><!--[ pc_url action='add' full=true navlink=true ]--></li>
+            <!--[ /if ]-->
+            <li><!--[ pc_url action='search' full=true navlink=true ]--></li>
+            <li><!--[ pc_url action='print' full=true navlink=true ]--></li>
+        </ul>
+    </div>
+    <div id="postcalendar_nav_left">
+        <ul>
             <!--[gt text="Filter" assign="lbltxt"]-->
-		 	<!--[ pc_filter label=$lbltext 
-						 class="" type="user,category"
-						 order="user,category,jump" ]-->
+            <li><!--[ pc_filter label=$lbltext class="" type="user,category" order="user,category,jump" ]--></li>
             <!--[gt text="Jump" assign="lbltxt"]-->
-			<!--[ pc_date_select day="on" month="on" 
-							 year="on" view="on" 
-							 label=$lbltxt 
-							 order="month,day,year,view,jump" ]-->
-		</td>
-		<td valign="top" align="right">
-			<div id="bnav">
-				<ul>
-					<!--[ if $DATE|truncate:8:"" ne $TODAY_DATE|replace:'-':'' ]-->
-						<li><!--[ pc_url action='today' full=true navlink=true ]--></li>
-					<!--[/if]-->
-					<li><!--[ pc_url action='day' full=true navlink=true ]--></li>
-					<li><!--[ pc_url action='week' full=true navlink=true ]--></li>
-					<li><!--[ pc_url action='month' full=true navlink=true ]--></li>
-					<li><!--[ pc_url action='year' full=true navlink=true ]--></li>
-					<li><!--[ pc_url action='list' full=true navlink=true ]--></li>
-                    <!--[ if $ACCESS_ADD eq true ]-->
-						<li><!--[ pc_url action='add' full=true navlink=true ]--></li>
-					<!--[ /if ]-->
-					<li><!--[ pc_url action='search' full=true navlink=true ]--></li>
-					<li><!--[ pc_url action='print' full=true navlink=true ]--></li>
-				</ul>
-			</div>
-		</td>
-	</tr>
-</table>
+            <li><!--[ pc_date_select day="on" month="on" year="on" view="on" label=$lbltxt order="month,day,year,view,jump" ]--></li>
+        </ul>
+    </div>
+</div>
 <!--[ pc_form_nav_close ]-->
 <div><!--[pngetstatusmsg|pnvarprephtmldisplay]--></div>

@@ -3,7 +3,6 @@
 <!--[if $pcAllowUserCalendar]-->
     <!--[pnusergetvar name="uid" assign="uid"]-->
     <!--[pnmodapifunc modname='Groups' type='user' func='isgroupmember' uid=$uid gid=$pcAllowUserCalendar assign="ingroup"]-->
-    INGROUP:<!--[$ingroup]--><br />
 <!--[else]--><!--[assign var="ingroup" value=0]--><!--[/if]-->
 <!--[pnmodgetvar module="PostCalendar" name="enablecategorization" assign="enablecats"]-->
 <!--[if $func eq "edit"]-->

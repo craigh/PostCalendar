@@ -134,7 +134,6 @@ function smarty_function_pc_filter($args, &$smarty)
         foreach ($order as $element) {
             $ret_val .= $element;
         }
-        $ret_val .= "<br />";
     }
 
     if (!in_array('user', $types)) $ret_val .= "<input type='hidden' name='pc_username' value='$pc_username' />";
