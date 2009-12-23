@@ -85,6 +85,11 @@ table#postcalendar_yearview td.postcalendar_yearview_panel {
     text-align: center;
     vertical-align: top;
 }
+#postcalendar_footer {
+    text-align: left;
+    font-size: 8px;
+    padding: 2px;
+}
 /********** DAY ***************/
 h3.dayheader,
 h3.dayheader a,

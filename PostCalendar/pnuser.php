@@ -63,6 +63,9 @@ function postcalendar_user_display($args)
     }
 
     $tpl = pnRender::getInstance('PostCalendar');
+    $modinfo = pnModGetInfo(pnModGetIDFromName('PostCalendar'));
+    $tpl->assign('postcalendarversion', $modinfo['version']);
+
     $tpl->cache_id = $Date . '|' . $viewtype . '|' . $eid . '|' . pnUserGetVar('uid');
     
     switch ($viewtype) {
