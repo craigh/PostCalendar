@@ -65,11 +65,13 @@ function smarty_function_pc_filter($args, &$smarty)
             );
             // if user is admin, add list of users with private events
             if (IS_ADMIN) {
-                // should replace this with just SQL
-                $users_by_aid = DBUtil::selectFieldArray('postcalendar_events', 'aid', null, null, true);
-                foreach ($users_by_aid as $k=>$v) {
-                    if (pnUserGetVar('uname', $v)) $users[$v] = pnUserGetVar('uname', $v);
-                }
+                $joinInfo = array(array('join_table'         => 'users',
+                                        'join_field'         => 'uname',
+                                        'object_field_name'  => 'username',
+                                        'compare_field_table'=> 'aid',
+                                        'compare_field_join' => 'uid'));
+                $users = DBUtil::selectExpandedFieldArray('postcalendar_events', $joinInfo, 'aid', null, null, true, 'aid');
+                $users = array_flip($users); // returned results are backward... 
                 $filteroptions = $filteroptions + $users;
             }
             // generate html for selectbox - should move this to the template...
