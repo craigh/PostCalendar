@@ -10,20 +10,16 @@
 */
 
 /********** HEADERS & CONTAINERS ***********/
-table.postcalendar_month {
-	border:0;
-	border-collapse: collapse;
-}
 div.calcontainer {
-	margin-top:1em;
+	margin-top:.2em;
 }
 h2.postcalendar_header {
 	text-align: center;
 	background: transparent;
 	font-size: 14pt;
 	font-weight: bold;
-	margin-top:1em;
-	border: 1px solid Black;
+	margin:1em 0 0 0;
+	border: 1px solid #BBBBBB;
 	padding: .5em;
     position: relative;
 }
@@ -81,7 +77,14 @@ input.postcal90 {
     color: navy;
     font-style: italic;
 }
-
+table#postcalendar_yearview {
+    width: 100%;
+}
+table#postcalendar_yearview td.postcalendar_yearview_panel {
+    padding: 5px;
+    text-align: center;
+    vertical-align: top;
+}
 /********** DAY ***************/
 h3.dayheader,
 h3.dayheader a,
@@ -103,17 +106,14 @@ ul.eventslist:hover {
 /*********** MONTH **************/
 table.postcalendar_month {
     width: 100%;
-	border: 1px solid black;
+	border: 1px solid #BBBBBB;
 	border-collapse: collapse;
 }
 table.postcalendar_month td {
-	border: 1px solid Black;
+	border: 1px solid #BBBBBB;
     height: 85px;
 	vertical-align: top;
     text-align: left;
-}
-table.postcalendar_month td td {
-    height: auto;
 }
 table.postcalendar_month td.monthon {
 	background-color: transparent;
@@ -122,31 +122,30 @@ table.postcalendar_month td.monthoff {
 	background: #cccccc; /* Pale Grey */
 }
 table.postcalendar_month td.monthtoday { /* color assignments for TODAY */
-	background-color: yellow;
-	border: 2px dashed #FF6600; /*orangish */
+	background-color: #FFFFAA;
+	border: 2px dotted #999999;
 }
 table.postcalendar_month td:hover {
     background-color: #eeeeee;
 }
 table.postcalendar_month tr.daynames td {
 	background-color: #cccccc; /* Pale Grey */
-	font-size: 10pt;
 	font-weight: normal;
 	text-decoration: none;
     width: 14%;
     height: 1.5em;
     text-align: center;
 }
-table.postcalendar_month_day {
-    width: 100%;
-    border: 0;
-    border-collapse: collapse;
+table.postcalendar_month .monthview_daterow span {
+    padding: 0 2px;
 }
-table.postcalendar_month_day td {
-    /* vertical-align: top;
-    text-align: left; */
-    border: 0;
+table.postcalendar_month .monthview_daterow {
+    background-color: #dddddd;
 }
+table.postcalendar_month .monthview_daterow span.new_icon {
+    float: right;
+}
+
 
 /*********** NAV **************/
 #bnav {
@@ -163,9 +162,6 @@ table.postcalendar_month_day td {
 	display: inline;
 	padding: 0;
 	margin: 0;
-}
-a.postcalendar_nav_img {
-
 }
 a.postcalendar_nav_text {
     padding: 0 4px;
@@ -199,7 +195,7 @@ a.postcalendar_nav_text_selected:hover {
 /*********** SMALLMONTHTABLE STYLES **************/
 table.smallmonthtable {
     width: 100%;
-	border: 1px solid black;
+	border: 1px solid #BBBBBB;
 	border-collapse: collapse;
 }
 table.smallmonthtable a {
@@ -208,15 +204,17 @@ table.smallmonthtable a {
     font-weight: normal;
 }
 table.smallmonthtable td {
-    border: 1px solid black;
+    border: 1px solid #BBBBBB;
     text-align: center;
     vertical-align: middle;
 	font-size: .8em;
+    line-height: 1.8em;
 }
 table.smallmonthtable td.monthheader {
-	background-color: #cccccc; /* Pale gray */
+	background-color: #eeeeee;
 	font-size: 1em;
     padding: 3px 0;
+    line-height: normal;
 }
 table.smallmonthtable td.monthheader a {
     color: #666666;
@@ -233,7 +231,7 @@ table.smallmonthtable td.monthoff {
 	background-color: #cccccc; /* Pale gray */
 }
 table.smallmonthtable td.monthtoday { /* color assignments for TODAY */
-	background-color: yellow;
+	background-color: #FFFFAA;
 }
 table.smallmonthtable tr.daynames td {
 	background-color: #cccccc; /* Pale gray */

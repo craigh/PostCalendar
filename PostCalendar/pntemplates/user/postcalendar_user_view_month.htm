@@ -36,69 +36,56 @@
         <!--[ else ]-->
             <!--[ assign var="stylesheet" value="monthon" ]-->
         <!--[ /if ]-->
-        <td class="<!--[ $stylesheet ]-->" 
-            <!--[if $in_new_window eq false]-->onclick="javascript:location.href='<!--[ pc_url action=day date=$date ]-->';"<!--[/if]-->>
-            <table class="postcalendar_month_day">
-                <!--[ if $PRINT_VIEW eq false ]-->
-                <tr>
-                    <td><a
-                        href="<!--[ pc_url action=day date=$date ]-->"><!--[ $date|date_format:"%d" ]--></a>
+        <td class="<!--[ $stylesheet ]-->"<!--[if $in_new_window eq false]--> onclick="javascript:location.href='<!--[ pc_url action=day date=$date ]-->';"<!--[/if]-->>
+            <div class="monthview_daterow">
+                <span class="date_number"><a href="<!--[ pc_url action=day date=$date ]-->"><!--[ $date|date_format:"%e" ]--></a>
                     <!--[ if $smarty.foreach.days.iteration == 1 ]-->
                     <a href="<!--[ pc_url action=week date=$date ]-->">[<!--[gt text="week"]-->]</a>
                     <!--[ /if ]-->
-                    </td>
-                    <td style='text-align:right;'>
-                        <!--[ if $ACCESS_ADD eq true ]-->
-                        <a href="<!--[ pc_url action=submit date=$date ]-->"><!--[ pnimg src='new.gif' ]--></a>
-                        <!--[ /if ]-->
-                    </td>
-                </tr>
-                <!--[else]-->
-                    <!--[* we're in print view *]-->
-                    <tr><td colspan='2'><!--[ $date|date_format:"%d" ]--></td></tr>
-                <!--[/if]-->
-                <tr>
-                    <td colspan="2">
-                    <!--[ *sort the events by category so we can make it pretty* ]-->
-                    <!--[ pc_sort_events var="S_EVENTS" sort="time" order="asc" value=$A_EVENTS ]-->
-                    <!--[ assign var="oldCat" value="" ]-->
-                    <!--[ if isset($S_EVENTS) ]-->
-                    <!--[ foreach name=events item=event from=$S_EVENTS.$date ]-->
-                        <!--[ assign var="cCat" value=$event.catname ]-->
-                        <!--[ if $oldCat != $cCat ]-->
-                            <!--[ if $smarty.foreach.events.first != true ]-->
-                                </div>
-                            <!--[ /if ]-->
-                            <div style="padding: 1px; color: <!--[$event.cattextcolor]-->; background-color: <!--[ $event.catcolor ]-->;">
-                                <!--[ $event.catname ]-->
-                            </div>
-                            <div style="padding: 2px; border:solid 1px <!--[ $event.catcolor ]-->;">
-                        <!--[ /if ]-->
-                        <!--[ assign var="title" value=$event.title|strip_tags ]-->
-                        <!--[ if $event.alldayevent != true ]-->
-                            <!--[ assign var="timestamp" value=$event.startTime]-->
-                        <!--[ else ]-->
-                            <!--[ assign var="timestamp" value="" ]-->
-                        <!--[ /if ]-->
-
-                        <!--[ assign var="desc" value=$event.hometext|truncate:255:"..." ]-->
-                        <!--[ pc_popup bgcolor=$event.catcolor caption="`$timestamp` `$event.title`" text=$desc|pnvarprepfordisplay assign="javascript"]-->
-                        <!--[ pc_url full=true action=detail eid=$event.eid date=$date style="font-size: 7pt; text-decoration: none;" javascript=$javascript display="$timestamp $title"|pnvarprephtmldisplay]-->
-                        <!--[ if $event.commentcount gt 0]-->
-                            <!--[gt text='%s comment left' plural='%s comments left.' count=$event.commentcount tag1=$event.commentcount domain="module_postcalendar" assign="title"]-->
-                            <a href="<!--[pnmodurl modname='PostCalendar' func='view' viewtype='details' eid=$event.eid ]-->#comments" title='<!--[$title]-->'>
-                            <!--[pnimg modname=core src=comment.gif set=icons/extrasmall __alt="Comment" title=$title]--></a>
-                        <!--[/if]-->
-                        <br />
-                        <!--[ assign var="oldCat" value=$event.catname ]-->
-                        <!--[ if $smarty.foreach.events.last ]-->
+                </span>
+                <!--[ if ($ACCESS_ADD eq true) && ($PRINT_VIEW eq false) ]-->
+                <span class="new_icon"><a href="<!--[ pc_url action=submit date=$date ]-->"><!--[ pnimg src='new.gif' ]--></a></span>
+                <!--[ /if ]-->
+            </div>
+            <div class="monthview_events">
+                <!--[ *sort the events by category so we can make it pretty* ]-->
+                <!--[ pc_sort_events var="S_EVENTS" sort="time" order="asc" value=$A_EVENTS ]-->
+                <!--[ assign var="oldCat" value="" ]-->
+                <!--[ if isset($S_EVENTS) ]-->
+                <!--[ foreach name=events item=event from=$S_EVENTS.$date ]-->
+                    <!--[ assign var="cCat" value=$event.catname ]-->
+                    <!--[ if $oldCat != $cCat ]-->
+                        <!--[ if $smarty.foreach.events.first != true ]-->
                             </div>
                         <!--[ /if ]-->
-                    <!--[ /foreach ]-->
+                        <div style="padding: 1px; color: <!--[$event.cattextcolor]-->; background-color: <!--[ $event.catcolor ]-->;">
+                            <!--[ $event.catname ]-->
+                        </div>
+                        <div style="padding: 2px; border:solid 1px <!--[ $event.catcolor ]-->;">
                     <!--[ /if ]-->
-                    </td>
-                </tr>
-            </table>
+                    <!--[ assign var="title" value=$event.title|strip_tags ]-->
+                    <!--[ if $event.alldayevent != true ]-->
+                        <!--[ assign var="timestamp" value=$event.startTime]-->
+                    <!--[ else ]-->
+                        <!--[ assign var="timestamp" value="" ]-->
+                    <!--[ /if ]-->
+
+                    <!--[ assign var="desc" value=$event.hometext|truncate:255:"..." ]-->
+                    <!--[ pc_popup bgcolor=$event.catcolor caption="`$timestamp` `$event.title`" text=$desc|pnvarprepfordisplay assign="javascript"]-->
+                    <!--[ pc_url full=true action=detail eid=$event.eid date=$date style="font-size: 7pt; text-decoration: none;" javascript=$javascript display="$timestamp $title"|pnvarprephtmldisplay]-->
+                    <!--[ if $event.commentcount gt 0]-->
+                        <!--[gt text='%s comment left' plural='%s comments left.' count=$event.commentcount tag1=$event.commentcount domain="module_postcalendar" assign="title"]-->
+                        <a href="<!--[pnmodurl modname='PostCalendar' func='view' viewtype='details' eid=$event.eid ]-->#comments" title='<!--[$title]-->'>
+                        <!--[pnimg modname=core src=comment.gif set=icons/extrasmall __alt="Comment" title=$title]--></a>
+                    <!--[/if]-->
+                    <br />
+                    <!--[ assign var="oldCat" value=$event.catname ]-->
+                    <!--[ if $smarty.foreach.events.last ]-->
+                        </div>
+                    <!--[ /if ]-->
+                <!--[ /foreach ]-->
+                <!--[ /if ]-->
+            </div>
         </td>
         <!--[ /foreach ]-->
     </tr>

@@ -19,14 +19,14 @@
 
 <!--[ strip ]-->
 <div class="calcontainer">
-	<table width="100%" border="0" cellpadding="5" cellspacing="10">  
+	<table id="postcalendar_yearview" style="border-collapse:separate;">  
 		<!--[ * Loop through each month of the year * ]-->
 		<!--[ foreach name=months item=month key=monthnum from=$CAL_FORMAT ]-->
 		<!--[ * check to see if we're starting a new row * ]-->
 		<!--[ if $smarty.foreach.months.iteration %4 eq 1  ]-->
 		<tr>
 		<!--[ /if ]-->
-		<td valign="top" align="center">
+		<td class="postcalendar_yearview_panel">
 		<!--[ * get the current year we're viewing * ]-->
 		<!--[ assign var="y" value=$DATE|date_format:"%Y" ]-->
 		<!--[ * figure out what month we are in * ]-->

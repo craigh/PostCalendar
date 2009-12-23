@@ -46,9 +46,9 @@
                     <!--[ assign var="classname" value="event-none" ]-->
                 <!--[ /if ]-->
                 <!--[ pc_popup bgcolor="#cccccc" caption=$date|pc_date_format text=$titles|pnvarprepfordisplay assign="javascript"]-->
-                <!--[ pc_url full=true class=$classname action="day" date=$date javascript=$javascript display=$date|date_format:"%d" ]-->
+                <!--[ pc_url full=true class=$classname action="day" date=$date javascript=$javascript display=$date|date_format:"%e" ]-->
             <!--[ else ]-->
-                <!--[ pc_url full=true class="blockevent-none" action="day" date=$date display=$date|date_format:"%d" ]-->
+                <!--[ pc_url full=true class="blockevent-none" action="day" date=$date display=$date|date_format:"%e" ]-->
             <!--[ /if ]-->
         </td>
         <!--[ /foreach ]-->
