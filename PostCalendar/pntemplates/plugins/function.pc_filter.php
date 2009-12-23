@@ -50,9 +50,12 @@ function smarty_function_pc_filter($args, &$smarty)
     //================================================================
     // build the username filter pulldown
     //================================================================
-    $ingroup = pnModGetVar('PostCalendar', 'pcAllowUserCalendar') > 0 ? pnModAPIFunc('Groups','user','isgroupmember',array('uid'=>pnUserGetVar('uid'), 'gid'=>$gid)) : false;
+    define ('IS_ADMIN', SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN));
+    $allowedgroup = pnModGetVar('PostCalendar', 'pcAllowUserCalendar');
+    $uid = pnUserGetVar('uid'); $uid = empty($uid) ? 1 : $uid;
+    $ingroup = $allowedgroup > 0 ? pnModAPIFunc('Groups','user','isgroupmember',array('uid'=>$uid, 'gid'=>$allowedgroup)) : false;
 
-    if ($ingroup && pnUserLoggedIn()) { // do not show if users not allowed personal calendar or not logged in
+    if ($ingroup || ($allowedgroup && IS_ADMIN)) {
         if (in_array('user', $types)) {
             //define array of filter options
             $filteroptions = array(
@@ -61,7 +64,8 @@ function smarty_function_pc_filter($args, &$smarty)
                 _PC_FILTER_ALL     => __('Global Events', $dom) ." + ". __('My Events', $dom),
             );
             // if user is admin, add list of users with private events
-            if (SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
+            if (IS_ADMIN) {
+                // should replace this with just SQL
                 $users_by_aid = DBUtil::selectFieldArray('postcalendar_events', 'aid', null, null, true);
                 foreach ($users_by_aid as $k=>$v) {
                     if (pnUserGetVar('uname', $v)) $users[$v] = pnUserGetVar('uname', $v);
