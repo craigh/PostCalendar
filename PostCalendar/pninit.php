@@ -655,7 +655,7 @@ function _postcalendar_createdefaultsubcategory()
                 'name'       =>'Events', 
                 'displayname'=>__('Events', $dom), 
                 'description'=>__('Initial sub-category created on install', $dom),
-                'attributes' =>array('color'=>'#000000'),
+                'attributes' =>array('color'=>'#99ccff'),
                 )
         )) {
         LogUtil::registerError(__('Error! Could not create an initial sub-category.', $dom));
