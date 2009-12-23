@@ -36,9 +36,9 @@ function postcalendar_calendarblock_display($blockinfo)
 {
     $dom = ZLanguage::getModuleDomain('PostCalendar');
     if (!SecurityUtil::checkPermission('PostCalendar:calendarblock:', "$blockinfo[title]::", ACCESS_OVERVIEW)) {
-        return false;
+        return;
     }
-    if (!pnModLoad('PostCalendar')) return 'Unable to load module [PostCalendar]';
+    if (!pnModAvailable('PostCalendar')) return;
 
     // today's date
     $Date = DateUtil::getDatetime('', '%Y%m%d%H%M%S');
@@ -160,11 +160,6 @@ function postcalendar_calendarblock_display($blockinfo)
     // suggest addming $limit paramter to getEvents() to reduce load CAH Sept 29, 2009
     $eventsByDate = pnModAPIFunc('PostCalendar', 'event', 'getEvents', array('start' => $starting_date, 'end' => $ending_date));
     $calendarView = Date_Calc::getCalendarMonth($the_month, $the_year, '%Y-%m-%d');
-    //echo "calendarView: "; print_r($calendarView); echo "<br />";
-    //$NUcalendarView = DateUtil::getWeekdaysInMonth($the_month, $the_year);
-    //echo "NUcalendarView: "; print_r($NUcalendarView); echo "<br />";
-    //$NUcalendarView = DateUtil::getMonthDates($the_month, $the_year);
-    //echo "NUcalendarView: "; print_r($NUcalendarView); echo "<br />";
 
     $sdaynames = array();
     $numDays = count($pc_short_day_names);
@@ -241,10 +236,6 @@ function postcalendar_calendarblock_display($blockinfo)
  */
 function postcalendar_calendarblock_modify($blockinfo)
 {
-    if (!SecurityUtil::checkPermission('PostCalendar:calendarblock:', "$blockinfo[title]::", ACCESS_ADMIN)) {
-        return false;
-    }
-
     $vars = pnBlockVarsFromContent($blockinfo['content']);
     // Defaults
     if (empty($vars['pcbshowcalendar'])) $vars['pcbshowcalendar'] = 0;
@@ -266,11 +257,6 @@ function postcalendar_calendarblock_modify($blockinfo)
  */
 function postcalendar_calendarblock_update($blockinfo)
 {
-    // Security check
-    if (!SecurityUtil::checkPermission('PostCalendar:calendarblock:', "$blockinfo[title]::", ACCESS_ADMIN)) {
-        return false;
-    }
-
     // Get current content
     $vars = pnBlockVarsFromContent($blockinfo['content']);
 

@@ -39,10 +39,10 @@ function postcalendar_featuredeventblock_display($blockinfo)
 {
     $dom = ZLanguage::getModuleDomain('PostCalendar');
     if (!SecurityUtil::checkPermission('PostCalendar:featuredeventblock:', "$blockinfo[title]::", ACCESS_OVERVIEW)) {
-        return false;
+        return;
     }
     if (!pnModAvailable('PostCalendar')) {
-        return false;
+        return;
     }
     $vars = pnBlockVarsFromContent($blockinfo['content']);
 

@@ -18,10 +18,6 @@ include 'modules/PostCalendar/global.php';
  */
 function postcalendar_user_main()
 {
-    // check the authorization
-    if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_OVERVIEW)) {
-        return LogUtil::registerPermissionError();
-    }
     return postcalendar_user_view();
 }
 

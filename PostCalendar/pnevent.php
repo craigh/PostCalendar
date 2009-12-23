@@ -169,9 +169,6 @@ function postcalendar_event_new($args)
         } else {
             // here were need to format the DB data to be able to load it into the form
             $eventdata = DBUtil::selectObjectByID('postcalendar_events', $args['eid'], 'eid');
-            if ((SessionUtil::getVar('uid') <> $eventdata['informant']) && (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN))) {
-                return LogUtil::registerError(__('Sorry! You do not have authorization to edit this event.', $dom));
-            } // wonder if this is needed at all... ^^^
             $eventdata = pnModAPIFunc('PostCalendar', 'event', 'formateventarrayfordisplay', $eventdata);
         }
         // need to check each of these below to see if truly needed CAH 11/14/09

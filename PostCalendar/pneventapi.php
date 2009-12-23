@@ -62,7 +62,6 @@ function postcalendar_eventapi_queryEvents($args)
 
     if (!isset($start)) $start = DateUtil::getDatetime(null, '%Y-%m-%d');
 
-
     list($startyear, $startmonth, $startday) = explode('-', $start);
 
     $where = "WHERE pc_eventstatus=$eventstatus
@@ -111,7 +110,15 @@ function postcalendar_eventapi_queryEvents($args)
 
     if (!empty($s_keywords)) $where .= "AND $s_keywords";
 
-    $events = DBUtil::selectObjectArray('postcalendar_events', $where, null, null, null, null, null, $catsarray);
+    //if (!SecurityUtil::checkPermission('PostCalendar::Event', "{$event['title']}::{$event['eid']}", ACCESS_OVERVIEW)) {
+    $permFilter = array(array('realm'           => 0,
+                              'component_left'  => 'PostCalendar',
+                              'component_right' => 'Event',
+                              'instance_left'   => 'title',
+                              'instance_right'  => 'eid',
+                              'level'           => ACCESS_OVERVIEW));
+
+    $events = DBUtil::selectObjectArray('postcalendar_events', $where, null, null, null, null, $permFilter, $catsarray);
 
     return $events;
 }
@@ -137,9 +144,7 @@ function postcalendar_eventapi_getEvents($args)
     $currentday   = substr($date, 6, 2);
 
     if (isset($start) && isset($end)) {
-        // parse start date
         list($startmonth, $startday, $startyear) = explode('/', $start);
-        // parse end date
         list($endmonth, $endday, $endyear) = explode('/', $end);
 
         $s = (int) "$startyear$startmonth$startday";
@@ -149,9 +154,7 @@ function postcalendar_eventapi_getEvents($args)
             $currentday   = $startday;
         }
         $start_date = Date_Calc::dateFormat($startday, $startmonth, $startyear, '%Y-%m-%d');
-        //$DUstart_date = DateUtil::formatDatetime($start, '%Y-%m-%d'); // something wrong in timezone conversion
         $end_date = Date_Calc::dateFormat($endday, $endmonth, $endyear, '%Y-%m-%d');
-        //$DUend_date = DateUtil::formatDatetime($end, '%Y-%m-%d'); // something wrong in timezone conversion
     } else {
         $startmonth = $endmonth = $currentmonth;
         $startday = $endday = $currentday;
@@ -185,32 +188,10 @@ function postcalendar_eventapi_getEvents($args)
     foreach ($events as $event) {
         $event = pnModAPIFunc('PostCalendar', 'event', 'formateventarrayfordisplay', $event);
 
-        // should this bit be moved to queryEvents? shouldn't this be accomplished other ways? via DB?
-        if ($event['sharing'] == SHARING_PRIVATE && $event['aid'] != pnUserGetVar('uid') && !SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
-            // if event is PRIVATE and user is not assigned event ID (aid) and user is not Admin event should not be seen
-            continue;
-        }
-
-        // check the current event's permissions
-        // the user does not have permission to view this event
-        // if any of the following evaluate as false
-        // can this information be filtered in the DBUtil call? - yes using permFilter see DBUtil CAH 11/30/09
-        if (!SecurityUtil::checkPermission('PostCalendar::Event', "{$event['title']}::{$event['eid']}", ACCESS_OVERVIEW)) {
-            continue;
-        /*} elseif (!SecurityUtil::checkPermission('PostCalendar::Category', "$event[catname]::$event[catid]", ACCESS_OVERVIEW)) {
-            continue;*/
-        } elseif (!SecurityUtil::checkPermission('PostCalendar::User', "{$event[uname]}::{$event['aid']}", ACCESS_OVERVIEW)) {
-            continue;
-        }
-        // split the event start date
         list($eventstartyear, $eventstartmonth, $eventstartday) = explode('-', $event['eventDate']);
 
         // determine the stop date for this event
-        if ($event['endDate'] == '0000-00-00') {
-            $stop = $end_date;
-        } else {
-            $stop = $event['endDate'];
-        }
+        $stop = ($event['endDate'] == '0000-00-00') $end_date : $event['endDate'];
 
         // this switch block fills the $days array with events. It computes recurring events and adds the recurrances to the $days array also
         switch ($event['recurrtype']) {
