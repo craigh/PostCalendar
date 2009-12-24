@@ -26,8 +26,8 @@ function PostCalendar_accountapi_getall($args)
     }
     if (SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADD)) {
         $items['1'] = array('url' => pnModURL('PostCalendar', 'event', 'new'),
-                        'title' => __('Submit', $dom),
-                        'icon' => 'admin.gif');
+                        'title' => __('Submit Event', $dom),
+                        'icon' => 'admin.png');
     }
 
     // Return the items
