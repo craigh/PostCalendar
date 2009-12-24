@@ -222,12 +222,10 @@ function postcalendar_event_new($args)
             } else {
                 LogUtil::registerStatus(__f('Done! Submitted the event. (event date: %s)', $presentation_date, $dom));
             }
-            if ((!_SETTING_DIRECT_SUBMIT) && (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN))) {
-                 LogUtil::registerStatus(__('The event has been queued for administrator approval.', $dom));
+            if ($eventdata['eventstatus'] == _EVENT_QUEUED) {
+                LogUtil::registerStatus(__('The event has been queued for administrator approval.', $dom));
+                pnModAPIFunc('PostCalendar','admin','notify',compact('eid','is_update')); //notify admin
             }
-
-            pnModAPIFunc('PostCalendar','admin','notify',compact('eid','is_update')); //notify admin
-
             // format startdate for redirect on success
             $url_date = strftime('%Y%m%d', $sdate);
         }

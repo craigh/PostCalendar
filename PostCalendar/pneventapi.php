@@ -111,12 +111,20 @@ function postcalendar_eventapi_queryEvents($args)
     if (!empty($s_keywords)) $where .= "AND $s_keywords";
 
     //if (!SecurityUtil::checkPermission('PostCalendar::Event', "{$event['title']}::{$event['eid']}", ACCESS_OVERVIEW)) {
-    $permFilter = array(array('realm'           => 0,
-                              'component_left'  => 'PostCalendar',
-                              'component_right' => 'Event',
-                              'instance_left'   => 'title',
-                              'instance_right'  => 'eid',
-                              'level'           => ACCESS_OVERVIEW));
+    $permFilter = array();
+    $permFilter[] = array('realm'           => 0,
+                          'component_left'  => 'PostCalendar',
+                          'component_right' => 'Event',
+                          'instance_left'   => 'title',
+                          'instance_right'  => 'eid',
+                          'level'           => ACCESS_OVERVIEW);
+/*    $permFilter[] = array('realm'            => 0,
+                          'component_left'   => 'Categories',
+                          'component_right'  => 'Category',
+                          'instance_left'    => 'id',
+                          'instance_middle'  => 'path',
+                          'instance_right'   => 'ipath',
+                          'level'            => ACCESS_OVERVIEW); */
 
     $events = DBUtil::selectObjectArray('postcalendar_events', $where, null, null, null, null, $permFilter, $catsarray);
 
@@ -191,7 +199,7 @@ function postcalendar_eventapi_getEvents($args)
         list($eventstartyear, $eventstartmonth, $eventstartday) = explode('-', $event['eventDate']);
 
         // determine the stop date for this event
-        $stop = ($event['endDate'] == '0000-00-00') $end_date : $event['endDate'];
+        $stop = ($event['endDate'] == '0000-00-00') ? $end_date : $event['endDate'];
 
         // this switch block fills the $days array with events. It computes recurring events and adds the recurrances to the $days array also
         switch ($event['recurrtype']) {
@@ -508,7 +516,7 @@ function postcalendar_eventapi_formateventarrayforDB($event)
     define('PC_ACCESS_ADMIN', SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN));
 
     // determine if the event is to be published immediately or not
-    if ((bool) _SETTING_DIRECT_SUBMIT || (bool) PC_ACCESS_ADMIN || ($event_sharing != SHARING_GLOBAL)) {
+    if ((bool) _SETTING_DIRECT_SUBMIT || (bool) PC_ACCESS_ADMIN || ($event['sharing'] != SHARING_GLOBAL)) {
         $event['eventstatus'] = _EVENT_APPROVED;
     } else {
         $event['eventstatus'] = _EVENT_QUEUED;
