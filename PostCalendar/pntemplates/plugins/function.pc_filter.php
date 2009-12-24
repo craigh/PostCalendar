@@ -31,9 +31,9 @@ function smarty_function_pc_filter($args, &$smarty)
     $label = isset($args['label']) ? $args['label'] : __('change', $dom);
     $order = isset($args['order']) ? $args['order'] : null;
 
-    $jumpday   = FormUtil::getPassedValue('jumpday');
-    $jumpmonth = FormUtil::getPassedValue('jumpmonth');
-    $jumpyear  = FormUtil::getPassedValue('jumpyear');
+    $jumpday   = FormUtil::getPassedValue('jumpDay');
+    $jumpmonth = FormUtil::getPassedValue('jumpMonth');
+    $jumpyear  = FormUtil::getPassedValue('jumpYear');
     $Date      = FormUtil::getPassedValue('Date');
     $Date      = pnModAPIFunc('PostCalendar','user','getDate',compact('Date','jumpday','jumpmonth','jumpyear'));    
 

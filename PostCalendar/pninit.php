@@ -149,6 +149,7 @@ function PostCalendar_upgrade($oldversion)
             pnModDelVar('PostCalendar', 'pcRepeating');
             pnModSetVar('PostCalendar', 'enablecategorization', true);
             pnModSetVar('PostCalendar', 'enablenavimages', true);
+            pnModSetVar('PostCalendar', 'pcNavDateOrder', array('format'=>'MDY','D'=>'%e','M'=>'%B','Y'=>'%Y'));
 
         case '6.0.0':
         case '6.0.0-dev': // remove
@@ -223,6 +224,7 @@ function postcalendar_init_getdefaults()
     'enablecategorization'    => '1',
     'enablenavimages'         => '1',
     'pcDefaultCategories'     => $defaultcats,
+    'pcNavDateOrder'          => array('format'=>'MDY','D'=>'%e','M'=>'%B','Y'=>'%Y'),
     );
 
     return $defaults;

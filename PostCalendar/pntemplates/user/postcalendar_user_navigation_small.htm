@@ -1,7 +1,7 @@
 <!--[* $Id$ *]-->
 <!--[ pc_queued_events_notify ]-->
 <!--[ pc_form_nav_open ]-->
-<div class=".z-clearfix">
+<div class="z-clearfix">
     <div id="postcalendar_nav_right">
         <ul>
             <li><!--[ pc_url action='day' full=true navlink=true ]--></li>
@@ -15,10 +15,14 @@
     </div>
     <div id="postcalendar_nav_left">
         <ul>
-            <!--[gt text="Jump" assign="lbltxt"]-->
-            <li><!--[ pc_date_select day="on" month="on" year="on" view="on" label=$lbltxt order="month,day,year,view,jump" ]--></li>
+            <li>
+                <!--[pc_date_select]-->
+                <!--[html_select_date time=$currentjumpdate prefix="jump" start_year="-10" end_year="+10" day_format="%d" day_value_format="%02d" month_format=$dateorderinfo.M field_order=$dateorderinfo.format]-->
+                <!--[html_options name='viewtype' options=$viewtypeselector selected=$viewtypeselected]-->
+                <input type="submit" name="submit" value="<!--[gt text="Jump"]-->" />
+            </li>
         </ul>
     </div>
 </div>
-<!--[ pc_form_nav_close ]-->
+</form>
 <div><!--[pngetstatusmsg|pnvarprephtmldisplay]--></div>

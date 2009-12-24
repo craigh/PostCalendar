@@ -13,7 +13,7 @@ include 'modules/PostCalendar/global.php';
 /**
  * postcalendar_user_main
  *
- * main view functino for end user
+ * main view function for end user
  * @access public
  */
 function postcalendar_user_main()
@@ -37,9 +37,9 @@ function postcalendar_user_view()
     $pc_username = FormUtil::getPassedValue('pc_username');
     $eid         = FormUtil::getPassedValue('eid');
     $viewtype    = FormUtil::getPassedValue('viewtype', _SETTING_DEFAULT_VIEW);
-    $jumpday     = FormUtil::getPassedValue('jumpday');
-    $jumpmonth   = FormUtil::getPassedValue('jumpmonth');
-    $jumpyear    = FormUtil::getPassedValue('jumpyear');
+    $jumpday     = FormUtil::getPassedValue('jumpDay');
+    $jumpmonth   = FormUtil::getPassedValue('jumpMonth');
+    $jumpyear    = FormUtil::getPassedValue('jumpYear');
     $Date        = FormUtil::getPassedValue('Date', pnModAPIFunc('PostCalendar','user','getDate',compact('jumpday','jumpmonth','jumpyear')));
     $filtercats  = FormUtil::getPassedValue('postcalendar_events');
     $func        = FormUtil::getPassedValue('func');

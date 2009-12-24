@@ -292,6 +292,7 @@ function postcalendar_admin_updateconfig()
     'enablenavimages'         => FormUtil::getPassedValue('enablenavimages', 0),
     'pcDefaultCategories'     => FormUtil::getPassedValue('pcDefaultCategories'), //array
     );
+    $settings['pcNavDateOrder'] = pnModAPIFunc('PostCalendar', 'admin', 'getdateorder', $settings['pcEventDateFormat']);
 
     // delete all the old vars
     pnModDelVar('PostCalendar');

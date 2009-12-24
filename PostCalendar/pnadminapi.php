@@ -93,3 +93,24 @@ function postcalendar_adminapi_notify($args)
         return false;
     }
 }
+
+function postcalendar_adminapi_getdateorder($format)
+{
+    $possiblevals = array('D' => array("%e","%d"),
+                          'M' => array("%B","%b","%h","%m"),
+                          'Y' => array("%y","%Y"));
+    foreach ($possiblevals as $type=>$vals) {
+        foreach ($vals as $needle) {
+            $tail = strstr($format,$needle);
+            if ($tail !== false) {
+                $$type = $needle;
+                break;
+            }
+        }
+        $format = str_replace($$type, $type, $format);
+    }
+    $format = str_replace(array(" ", ",", "."), '', $format); // remove extraneous punctuation
+    if ($format == "%F") { $format='YMD'; $D='%d'; $M='%m'; $Y='%Y'; }
+    if (strlen($format) <> 3) { $format='MDY'; $D='%e'; $M='%B'; $Y='%Y'; } // default to American
+    return compact('format','D','M','Y');
+}

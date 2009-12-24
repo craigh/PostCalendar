@@ -28,9 +28,9 @@ function smarty_function_pc_url($args, &$smarty)
 
     if (is_null($date)) {
         //not sure these three lines are needed with call to getDate here
-        $jumpday   = FormUtil::getPassedValue('jumpday');
-        $jumpmonth = FormUtil::getPassedValue('jumpmonth');
-        $jumpyear  = FormUtil::getPassedValue('jumpyear');
+        $jumpday   = FormUtil::getPassedValue('jumpDay');
+        $jumpmonth = FormUtil::getPassedValue('jumpMonth');
+        $jumpyear  = FormUtil::getPassedValue('jumpYear');
         $Date      = FormUtil::getPassedValue('Date');
         $date      = pnModAPIFunc('PostCalendar','user','getDate',compact('Date','jumpday','jumpmonth','jumpyear'));
     }
