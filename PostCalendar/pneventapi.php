@@ -24,14 +24,20 @@ include_once 'modules/PostCalendar/pnincludes/DateCalc.class.php';
  *              start: Events start date (default today)
  *              end: Events end_date (default 0000-00-00)
  *              s_keywords: search info
-                filtercats: categories to query events from
+ *              filtercats: categories to query events from
+ *              pc_username: event type or user id
  * @return array The events
  */
 function postcalendar_eventapi_queryEvents($args)
 {
     $dom = ZLanguage::getModuleDomain('PostCalendar');
-    $end = '0000-00-00';
-    extract($args); //start, end, s_keywords, filtercats, pc_username, eventstatus
+
+    $start       = $args['start'];
+    $end         = $args['end'] ? $args['end'] : '0000-00-00';
+    $s_keywords  = $args['s_keywords'];
+    $filtercats  = $args['filtercats'];
+    $pc_username = $args['pc_username'];
+    $eventstatus = $args['eventstatus'];
 
     if (_SETTING_ALLOW_USER_CAL) { 
         $filterdefault = _PC_FILTER_ALL; 
@@ -140,8 +146,14 @@ function postcalendar_eventapi_queryEvents($args)
 function postcalendar_eventapi_getEvents($args)
 {
     $dom = ZLanguage::getModuleDomain('PostCalendar');
-    $s_keywords = ''; // search WHERE string
-    extract($args); //start, end, filtercats, Date, s_keywords, pc_username, seachstart, searchend
+
+    $start       = $args['start'];
+    $end         = $args['end'];
+    $s_keywords  = $args['s_keywords'] ? $args['s_keywords'] : ''; // search WHERE string
+    $filtercats  = $args['filtercats'];
+    $pc_username = $args['pc_username'];
+    $seachstart  = $args['seachstart'];
+    $searchend   = $args['searchend'];
 
     $date  = pnModAPIFunc('PostCalendar','user','getDate',array('Date'=>$args['Date'])); //formats date
 

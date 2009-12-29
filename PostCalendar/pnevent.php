@@ -130,6 +130,8 @@ function postcalendar_event_copy($args)
  *  copy existing event (first pass): load existing values from DB and fill into to form
  *      $func=copy, data_loaded=true, form_action=NULL
  *  copy becomes 'new' after first pass - see new event preview and new event submit above
+ *
+ * expected $args = 'eid'
  **/
 function postcalendar_event_new($args)
 {
@@ -139,12 +141,11 @@ function postcalendar_event_new($args)
         return LogUtil::registerPermissionError();
     }
 
-    extract($args); // eid when func=copy or func=edit
     // these items come on brand new view of this function
     $func      = FormUtil::getPassedValue('func', 'new');
     $Date      = FormUtil::getPassedValue('Date'); //typically formatted YYYYMMDD or YYYYMMDD000000
     // format to '%Y%m%d%H%M%S'
-    $Date  = pnModAPIFunc('PostCalendar','user','getDate',compact('Date'));
+    $Date  = pnModAPIFunc('PostCalendar','user','getDate',array('Date'=>$Date));
 
     // these items come on submission of form
     $submitted_event  = FormUtil::getPassedValue('postcalendar_events', NULL);
@@ -181,7 +182,7 @@ function postcalendar_event_new($args)
         // reset some default values that are different from 'edit'
         $form_action = '';
         $func = "new"; // change function so data is processed as 'new' in subsequent pass
-        unset($eid);
+        unset($args['eid']);
         unset($eventdata['eid']);
         $eventdata['is_update'] = false;
         $eventdata['informant'] = SessionUtil::getVar('uid');
@@ -212,7 +213,7 @@ function postcalendar_event_new($args)
 
         $eventdata = pnModAPIFunc('PostCalendar', 'event', 'formateventarrayforDB', $eventdata);
 
-        if (!$eid = pnModAPIFunc('PostCalendar', 'event', 'writeEvent', compact('eventdata'))) {
+        if (!$eid = pnModAPIFunc('PostCalendar', 'event', 'writeEvent', array('eventdata'=>$eventdata))) {
             LogUtil::registerError(__('Error! Submission failed.', $dom));
         } else {
             pnModAPIFunc('PostCalendar', 'admin', 'clearCache');
@@ -224,7 +225,7 @@ function postcalendar_event_new($args)
             }
             if ($eventdata['eventstatus'] == _EVENT_QUEUED) {
                 LogUtil::registerStatus(__('The event has been queued for administrator approval.', $dom));
-                pnModAPIFunc('PostCalendar','admin','notify',compact('eid','is_update')); //notify admin
+                pnModAPIFunc('PostCalendar','admin','notify',array('eid'=>$args['eid'],'is_update'=>$is_update)); //notify admin
             }
             // format startdate for redirect on success
             $url_date = strftime('%Y%m%d', $sdate);
@@ -234,7 +235,7 @@ function postcalendar_event_new($args)
         return true;
     }
 
-    $submitformelements = pnModAPIFunc('PostCalendar', 'event', 'buildSubmitForm', compact('eventdata','Date')); //sets defaults or builds selected values
+    $submitformelements = pnModAPIFunc('PostCalendar', 'event', 'buildSubmitForm', array('eventdata'=>$eventdata,'Date'=>$Date)); //sets defaults or builds selected values
     $tpl = pnRender::getInstance('PostCalendar', false);    // Turn off template caching here
     foreach ($submitformelements as $var => $val) {
         $tpl->assign($var, $val);

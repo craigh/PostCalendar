@@ -52,7 +52,14 @@ function postcalendar_user_view()
  */
 function postcalendar_user_display($args)
 {
-    extract($args); // 'viewtype','Date','filtercats','pc_username','popup','eid','func'
+    $viewtype    = $args['viewtype'];
+    $Date        = $args['Date'];
+    $filtercats  = $args['filtercats'];
+    $pc_username = $args['pc_username'];
+    $popup       = $args['popup'];
+    $eid         = $args['eid'];
+    $func        = $args['func'];
+
     $dom = ZLanguage::getModuleDomain('PostCalendar');
     if (empty($Date) && empty($viewtype)) {
         return LogUtil::registerError(__('Error! Required arguments not present.', $dom));
@@ -116,7 +123,7 @@ function postcalendar_user_display($args)
                 return LogUtil::registerPermissionError();
             }
             $out = pnModAPIFunc('PostCalendar', 'user', 'buildView', 
-                compact('Date','viewtype','pc_username','filtercats','func'));
+                array('Date'=>$Date,'viewtype'=>$viewtype,'pc_username'=>$pc_username,'filtercats'=>$filtercats,'func'=>$func));
             // build template and fetch:
             if ($tpl->is_cached('user/postcalendar_user_view_'.$viewtype.'.htm')) {
                 // use cached version
