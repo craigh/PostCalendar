@@ -169,7 +169,8 @@ function postcalendar_event_new($args)
             $eventdata = $submitted_event; // reloaded event when editing
         } else {
             // here were need to format the DB data to be able to load it into the form
-            $eventdata = DBUtil::selectObjectByID('postcalendar_events', $args['eid'], 'eid');
+            $eid = $args['eid'];
+            $eventdata = DBUtil::selectObjectByID('postcalendar_events', $eid, 'eid');
             $eventdata = pnModAPIFunc('PostCalendar', 'event', 'formateventarrayfordisplay', $eventdata);
         }
         // need to check each of these below to see if truly needed CAH 11/14/09
@@ -223,9 +224,9 @@ function postcalendar_event_new($args)
             } else {
                 LogUtil::registerStatus(__f('Done! Submitted the event. (event date: %s)', $presentation_date, $dom));
             }
-            if ($eventdata['eventstatus'] == _EVENT_QUEUED) {
+            if ((int) $eventdata['eventstatus'] === (int) _EVENT_QUEUED) {
                 LogUtil::registerStatus(__('The event has been queued for administrator approval.', $dom));
-                pnModAPIFunc('PostCalendar','admin','notify',array('eid'=>$args['eid'],'is_update'=>$is_update)); //notify admin
+                pnModAPIFunc('PostCalendar','admin','notify',array('eid'=>$eid,'is_update'=>$is_update)); //notify admin
             }
             // format startdate for redirect on success
             $url_date = strftime('%Y%m%d', $sdate);

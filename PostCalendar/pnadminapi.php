@@ -64,16 +64,19 @@ function postcalendar_adminapi_clearCache()
  */
 function postcalendar_adminapi_notify($args)
 {
+    $dom = ZLanguage::getModuleDomain('PostCalendar');
+
     $eid       = $args['eid'];
     $is_update = $args['is_update'];
-    if (!isset($eid, $is_update)) return false;
+
+    if (!isset($eid)) {
+        return LogUtil::registerError(__f('Error! %s required in %s.', 'eid', 'postcalendar_adminapi_notify', $dom));
+    }
 
     if (!(bool) _SETTING_NOTIFY_ADMIN) return true;
     $isadmin = SecurityUtil::checkPermission('PostCalendar::', 'null::null', ACCESS_ADMIN);
     $notifyadmin2admin = pnModGetVar('PostCalendar', 'pcNotifyAdmin2Admin');
     if ($isadmin && !$notifyadmin2admin) return true;
-
-    $dom = ZLanguage::getModuleDomain('PostCalendar');
 
     $modinfo = pnModGetInfo(pnModGetIDFromName('PostCalendar'));
     $modversion = DataUtil::formatForOS($modinfo['version']);
