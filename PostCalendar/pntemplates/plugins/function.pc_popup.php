@@ -26,8 +26,10 @@ function smarty_function_pc_popup($args, &$smarty)
     // if we're not using popups just return an empty string
     if (!_SETTING_USE_POPUPS) return;
 
+    $dom = ZLanguage::getModuleDomain('PostCalendar');
+
     if (empty($args['text']) && !isset($args['inarray']) && empty($args['function']))
-        $args['text'] = "overlib: attribute 'text' or 'inarray' or 'function' required";
+        $args['text'] = __("overlib: attribute 'text' or 'inarray' or 'function' not present", $dom);
 
     if (empty($args['trigger'])) $args['trigger'] = " onmouseover";
 

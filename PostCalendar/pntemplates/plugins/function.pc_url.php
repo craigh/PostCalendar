@@ -22,6 +22,8 @@ function smarty_function_pc_url($args, &$smarty)
     $navlink    = array_key_exists('navlink',    $args) && !empty($args['navlink'])    ? true                : false; unset($args['navlink']);
     $func       = array_key_exists('func',       $args) && !empty($args['func'])       ? $args['func']       : 'new'; unset($args['func']);
 
+    $dom = ZLanguage::getModuleDomain('PostCalendar');
+
     $viewtype    = strtolower(FormUtil::getPassedValue('viewtype', _SETTING_DEFAULT_VIEW));
     if (FormUtil::getPassedValue('func') == 'new') $viewtype='new';
     $pc_username = FormUtil::getPassedValue('pc_username');
