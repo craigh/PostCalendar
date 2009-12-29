@@ -72,8 +72,7 @@ function postcalendar_eventapi_queryEvents($args)
 
     $where = "WHERE pc_eventstatus=$eventstatus
               AND (pc_endDate>='$start' 
-              OR (pc_endDate='0000-00-00' 
-              AND pc_recurrtype<>'0') 
+              OR (pc_endDate='0000-00-00' AND pc_recurrtype<>'0') 
               OR pc_eventDate>='$start')
               AND pc_eventDate<='$end' ";
 
@@ -96,9 +95,9 @@ function postcalendar_eventapi_queryEvents($args)
             $where .= "AND (pc_aid = $ruserid ";
             $where .= "AND (pc_sharing = '" . SHARING_PRIVATE . "' ";
             $where .= "OR pc_sharing = '" . SHARING_BUSY . "' "; //deprecated
-            $where .= "OR pc_sharing = '" . SHARING_HIDEDESC . "')) "; //deprecated
+            $where .= "OR pc_sharing = '" . SHARING_HIDEDESC . "') "; //deprecated
             $where .= "OR (pc_sharing = '" . SHARING_GLOBAL . "' ";
-            $where .= "OR pc_sharing = '" . SHARING_PUBLIC . "') "; //deprecated
+            $where .= "OR pc_sharing = '" . SHARING_PUBLIC . "')) "; //deprecated
             break;
         case _PC_FILTER_GLOBAL: // show all public/global events
         default:

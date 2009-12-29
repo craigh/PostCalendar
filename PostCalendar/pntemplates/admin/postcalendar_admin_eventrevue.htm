@@ -14,6 +14,10 @@
 <!--[/foreach]-->
 </div><!-- /z-admincontainer -->
 <!--[if (!empty($function))]-->
-	<div><!--[$areyousure]-->&nbsp;&nbsp;<input type="submit" name="submit" value="<!--[gt text='Yes']-->" /></div>
+	<div><!--[$areyousure]--></div>
+    <div class="z-formbuttons">
+        <!--[pnbutton src=button_ok.gif set=icons/small __alt="Yes" __title="Yes"]-->
+        <a href="<!--[pnmodurl modname=PostCalendar type=admin func=listqueued]-->"><!--[pnimg modname=core src=button_cancel.gif set=icons/small __alt="Cancel" __title="Cancel"]--></a>
+    </div>
 	</form>
 <!--[/if]-->

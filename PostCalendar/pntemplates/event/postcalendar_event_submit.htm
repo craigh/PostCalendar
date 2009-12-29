@@ -41,7 +41,7 @@
 
         <label for="postcalendar_events_sharing" style="padding-right:1em;"><b><!--[gt text='Sharing']--></b></label>
         <!--[if $ingroup ]-->
-            <!--[html_options name="postcalendar_events[sharing] id="postcalendar_events_sharing" options=$sharingselect selected=$loaded_event.sharing]--><br />
+            <!--[html_options name="postcalendar_events[sharing]" id="postcalendar_events_sharing" options=$sharingselect selected=$loaded_event.sharing]--><br />
         <!--[else]-->
             <span id="postcalendar_events_sharing"><i><!--[gt text='Global']--></i><input type="hidden" name="postcalendar_events[sharing]" value="3" /></span><br />
         <!--[/if]-->
