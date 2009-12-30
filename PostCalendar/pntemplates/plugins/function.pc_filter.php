@@ -35,7 +35,8 @@ function smarty_function_pc_filter($args, &$smarty)
     $jumpmonth = FormUtil::getPassedValue('jumpMonth');
     $jumpyear  = FormUtil::getPassedValue('jumpYear');
     $Date      = FormUtil::getPassedValue('Date');
-    $Date      = pnModAPIFunc('PostCalendar','user','getDate',compact('Date','jumpday','jumpmonth','jumpyear'));    
+    $jumpargs  = array('Date'=>$Date,'jumpday'=>$jumpday,'jumpmonth'=>$jumpmonth,'jumpyear'=>$jumpyear);
+    $Date      = pnModAPIFunc('PostCalendar','user','getDate',$jumpargs);    
 
     if (!isset($y)) $y = substr($Date, 0, 4);
     if (!isset($m)) $m = substr($Date, 4, 2);

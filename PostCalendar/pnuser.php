@@ -40,11 +40,20 @@ function postcalendar_user_view()
     $jumpday     = FormUtil::getPassedValue('jumpDay');
     $jumpmonth   = FormUtil::getPassedValue('jumpMonth');
     $jumpyear    = FormUtil::getPassedValue('jumpYear');
-    $Date        = FormUtil::getPassedValue('Date', pnModAPIFunc('PostCalendar','user','getDate',compact('jumpday','jumpmonth','jumpyear')));
+    $jumpargs    = array('jumpday'=>$jumpday,'jumpmonth'=>$jumpmonth,'jumpyear'=>$jumpyear);
+    $Date        = FormUtil::getPassedValue('Date', pnModAPIFunc('PostCalendar','user','getDate',$jumpargs));
     $filtercats  = FormUtil::getPassedValue('postcalendar_events');
     $func        = FormUtil::getPassedValue('func');
 
-    return postcalendar_user_display(compact('viewtype','Date','filtercats','pc_username','popup','eid','func'));
+    return postcalendar_user_display(array(
+        'viewtype'   =>$viewtype,
+        'Date'       =>$Date,
+        'filtercats' =>$filtercats,
+        'pc_username'=>$pc_username,
+        'popup'      =>$popup,
+        'eid'        =>$eid,
+        'func'       =>$func,
+        ));
 }
 
 /**

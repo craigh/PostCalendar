@@ -118,5 +118,5 @@ function postcalendar_adminapi_getdateorder($format)
     $format = str_replace(array(" ", ",", "."), '', $format); // remove extraneous punctuation
     if ($format == "%F") { $format='YMD'; $D='%d'; $M='%m'; $Y='%Y'; }
     if (strlen($format) <> 3) { $format='MDY'; $D='%e'; $M='%B'; $Y='%Y'; } // default to American
-    return compact('format','D','M','Y');
+    return array('format'=>$format,'D'=>$D,'M'=>$M,'Y'=>$Y);
 }
