@@ -9,7 +9,7 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
  */
 Loader::requireOnce('includes/pnForm.php');
-include 'modules/PostCalendar/global.php';
+include_once 'modules/PostCalendar/global.php';
 
 /**
  * This is the event handler file

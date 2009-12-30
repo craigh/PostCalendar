@@ -8,7 +8,7 @@
  * @copyright   Copyright (c) 2009, Craig Heydenburg, Sound Web Development
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
  */
-include 'modules/PostCalendar/global.php';
+include_once 'modules/PostCalendar/global.php';
 
 /**
  * postcalendar_user_main

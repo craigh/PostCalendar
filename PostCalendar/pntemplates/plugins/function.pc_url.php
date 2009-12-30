@@ -96,7 +96,7 @@ function smarty_function_pc_url($args, &$smarty)
             if (_SETTING_USENAVIMAGES) {
                 $image_text = $labeltexts[$action];
                 $image_src = ($viewtype==$action) ? $action.'_on.gif' : $action.'.gif';
-                include $smarty->_get_plugin_filepath('function', 'pnimg');
+                include_once $smarty->_get_plugin_filepath('function', 'pnimg');
                 $pnimg_params = array('src'=>$image_src, 'alt'=>$image_text, 'title'=>$image_text);
                 if ($action == 'print') { $pnimg_params['modname']='core';$pnimg_params['set']='icons/small';$pnimg_params['src']='printer1.gif'; }
                 $display = smarty_function_pnimg($pnimg_params, $smarty);

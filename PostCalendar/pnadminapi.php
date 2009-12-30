@@ -9,7 +9,7 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
  */
 
-include 'modules/PostCalendar/global.php';
+include_once 'modules/PostCalendar/global.php';
 /**
  * Get available admin panel links
  *
