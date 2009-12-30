@@ -197,7 +197,7 @@ function postcalendar_userapi_buildView($args)
     $catsarray = $filtercats['__CATEGORIES__'];
     $selectedcategories=array();
     foreach ($catsarray as $propname => $propid) {
-        if ($propid > 0) $selectedcategories[$propname]=$propid); // removes categories set to 'all'
+        if ($propid > 0) $selectedcategories[$propname]=$propid; // removes categories set to 'all'
     }
 
     $function_out['FUNCTION']          = $func;
