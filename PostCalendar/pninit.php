@@ -43,7 +43,6 @@ function PostCalendar_init()
     postcalendar_init_reset_scribite();
     _postcalendar_createdefaultsubcategory();
     _postcalendar_createinstallevent();
-    _postcalendar_registermodulehooks();
 
     return true;
 }
@@ -114,18 +113,18 @@ function PostCalendar_upgrade($oldversion)
         case '5.8.2':
             if (!_postcalendar_cull_meetings()) {
                 LogUtil::registerError (__('Error: Could not cull meetings.', $dom));
-                return ('5.8.2');
+                return '5.8.2';
             }
             if (!$categorymap = _postcalendar_migratecategories()) {
                 // attempt to migrate local categories
                 LogUtil::registerError (__('Error: Could not migrate categories.', $dom));
-                return ('5.8.2');
+                return '5.8.2';
             }
             if (pnModGetVar('PostCalendar', 'pcDisplayTopics')) {
                 // if currently using Topics module, attempt to migrate
                 if (!$topicmap = _postcalendar_migratetopics()) {
                     LogUtil::registerError (__('Error: Could not migrate topics.', $dom));
-                    return ('5.8.2');
+                    return '5.8.2';
                 }
             } else {
                 LogUtil::registerStatus (__('PostCalendar: Topics ignored in upgrade.', $dom));
@@ -134,14 +133,14 @@ function PostCalendar_upgrade($oldversion)
             // this function upgrades the table defs also to newest
             if (!_postcalendar_transcode_ids($categorymap, $topicmap)) {
                 LogUtil::registerError (__('Error: Could not transcode category and/or topic IDs.', $dom));
-                return ('5.8.2');
+                return '5.8.2';
             }
             if (!_postcalendar_convert_informant()) {
                 LogUtil::registerError (__('Error: Could not convert informant field to uid.', $dom));
-                return ('5.8.2');
+                return '5.8.2';
             }
             if (!postcalendar_init_reset_scribite()) {
-                return ('5.8.2');
+                return '5.8.2';
             }
             pnModDelVar('PostCalendar', 'pcDisplayTopics');
             pnModDelVar('PostCalendar', 'pcUseCache');
@@ -151,10 +150,7 @@ function PostCalendar_upgrade($oldversion)
             pnModSetVar('PostCalendar', 'enablenavimages', true);
             pnModSetVar('PostCalendar', 'pcNavDateOrder', array('format'=>'MDY','D'=>'%e','M'=>'%B','Y'=>'%Y'));
 
-        case '6.0.0':
-        case '6.0.0-dev': // remove
-            _postcalendar_registermodulehooks();
-        //case '6.1.0':
+        //case '6.0.0':
             //placeholder
     }
 
@@ -730,42 +726,5 @@ function _postcalendar_create_regentry($rootcat, $data)
     $registry->setDataField('category_id', $rootcat['id']);
     $registry->insert();
 
-    return true;
-}
-
-/**
- * register module hooks
- * @author Craig Heydenburg
- */
-function _postcalendar_registermodulehooks()
-{
-    $dom = ZLanguage::getModuleDomain('PostCalendar');
-
-    /*
-    ($hookobject, $hookaction, $hookarea, $hookmodule, $hooktype, $hookfunc)
-    $hookobject = 'item', 'category' or 'module'
-    $hookaction = 'new' (GUI), 'create' (API), 'modify' (GUI), 'update' (API), 'delete' (API), 'transform', 'display' (GUI), 'modifyconfig', 'updateconfig'
-    $hookarea = 'GUI' or 'API'
-    $hookmodule = name of the hook module
-    $hooktype = name of the hook type (==admin && (area==API) = function is located in pnadminapi.php)
-    $hookfunc = name of the hook function
-    */
-
-    if (!pnModRegisterHook('item', 'create', 'API', 'PostCalendar', 'hooks', 'create')) {
-        return LogUtil::registerError(__f('PostCalendar: Could not register %s hook.', 'create', $dom));
-    }
-    if (!pnModRegisterHook('item', 'update', 'API', 'PostCalendar', 'hooks', 'update')) {
-        return LogUtil::registerError(__f('PostCalendar: Could not register %s hook.', 'update', $dom));
-    }
-    if (!pnModRegisterHook('item', 'delete', 'API', 'PostCalendar', 'hooks', 'delete')) {
-        return LogUtil::registerError(__f('PostCalendar: Could not register %s hook.', 'delete', $dom));
-    }
-
-    // register the module delete hook - function called when hooked modules are uninstalled
-    if (!pnModRegisterHook('module', 'remove', 'API', 'PostCalendar', 'hooks', 'deletemodule')) {
-        return LogUtil::registerError(__f('PostCalendar: Could not register %s hook.', 'deletemodule', $dom));
-    }   
-
-    LogUtil::registerStatus(__f('PostCalendar: All hooks registered.', $dom));
     return true;
 }
