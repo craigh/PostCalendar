@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Zikula 1.2.x\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-12-24 16:50+0000\n"
+"POT-Creation-Date: 2009-12-30 02:10+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -28,7 +28,7 @@ msgstr ""
 msgid "Queued events administration"
 msgstr ""
 
-#: pnadmin.php:139 pntemplates/plugins/function.pc_url.php:108
+#: pnadmin.php:139 pntemplates/plugins/function.pc_url.php:111
 #: pntemplates/admin/postcalendar_admin_modifyconfig.htm:94
 msgid "List"
 msgstr ""
@@ -131,99 +131,99 @@ msgstr ""
 msgid "change"
 msgstr ""
 
-#: pntemplates/plugins/function.pc_filter.php:62
-#: pntemplates/plugins/function.pc_filter.php:64
+#: pntemplates/plugins/function.pc_filter.php:63
+#: pntemplates/plugins/function.pc_filter.php:65
 msgid "Global Events"
 msgstr ""
 
-#: pntemplates/plugins/function.pc_filter.php:62
 #: pntemplates/plugins/function.pc_filter.php:63
+#: pntemplates/plugins/function.pc_filter.php:64
 msgid "Only"
 msgstr ""
 
-#: pntemplates/plugins/function.pc_filter.php:63
 #: pntemplates/plugins/function.pc_filter.php:64
+#: pntemplates/plugins/function.pc_filter.php:65
 msgid "My Events"
 msgstr ""
 
-#: pntemplates/plugins/function.pc_filter.php:96 pnsearchapi.php:36
-#: pneventapi.php:327
+#: pntemplates/plugins/function.pc_filter.php:97 pnsearchapi.php:36
+#: pneventapi.php:338
 #, php-format
 msgid "Error! Unable to load class [%s]"
 msgstr ""
 
-#: pntemplates/plugins/function.pc_url.php:81
+#: pntemplates/plugins/function.pc_url.php:84
 msgid "Jump to Today"
 msgstr ""
 
-#: pntemplates/plugins/function.pc_url.php:82
+#: pntemplates/plugins/function.pc_url.php:85
 msgid "Day View"
 msgstr ""
 
-#: pntemplates/plugins/function.pc_url.php:83
+#: pntemplates/plugins/function.pc_url.php:86
 msgid "Week View"
 msgstr ""
 
-#: pntemplates/plugins/function.pc_url.php:84
+#: pntemplates/plugins/function.pc_url.php:87
 msgid "Month View"
 msgstr ""
 
-#: pntemplates/plugins/function.pc_url.php:85
+#: pntemplates/plugins/function.pc_url.php:88
 msgid "Year View"
 msgstr ""
 
-#: pntemplates/plugins/function.pc_url.php:86
-#: pntemplates/plugins/function.pc_date_select.php:31
+#: pntemplates/plugins/function.pc_url.php:89
+#: pntemplates/plugins/function.pc_date_select.php:32
 msgid "List View"
 msgstr ""
 
-#: pntemplates/plugins/function.pc_url.php:87
+#: pntemplates/plugins/function.pc_url.php:90
 msgid "Submit New Event"
 msgstr ""
 
-#: pntemplates/plugins/function.pc_url.php:88
-#: pntemplates/plugins/function.pc_url.php:110
+#: pntemplates/plugins/function.pc_url.php:91
+#: pntemplates/plugins/function.pc_url.php:113
 #: pntemplates/blocks/postcalendar_block_calendarlinks.htm:8
 msgid "Search"
 msgstr ""
 
-#: pntemplates/plugins/function.pc_url.php:89
+#: pntemplates/plugins/function.pc_url.php:92
 msgid "Print View"
 msgstr ""
 
-#: pntemplates/plugins/function.pc_url.php:103
+#: pntemplates/plugins/function.pc_url.php:106
 msgid "Today"
 msgstr ""
 
-#: pntemplates/plugins/function.pc_url.php:104
-#: pntemplates/plugins/function.pc_date_select.php:27
+#: pntemplates/plugins/function.pc_url.php:107
+#: pntemplates/plugins/function.pc_date_select.php:28
 #: pntemplates/admin/postcalendar_admin_modifyconfig.htm:90
 msgid "Day"
 msgstr ""
 
-#: pntemplates/plugins/function.pc_url.php:105
-#: pntemplates/plugins/function.pc_date_select.php:28
+#: pntemplates/plugins/function.pc_url.php:108
+#: pntemplates/plugins/function.pc_date_select.php:29
 #: pntemplates/admin/postcalendar_admin_modifyconfig.htm:91
 msgid "Week"
 msgstr ""
 
-#: pntemplates/plugins/function.pc_url.php:106
-#: pntemplates/plugins/function.pc_date_select.php:29
+#: pntemplates/plugins/function.pc_url.php:109
+#: pntemplates/plugins/function.pc_date_select.php:30
 #: pntemplates/admin/postcalendar_admin_modifyconfig.htm:92
 msgid "Month"
 msgstr ""
 
-#: pntemplates/plugins/function.pc_url.php:107
-#: pntemplates/plugins/function.pc_date_select.php:30
+#: pntemplates/plugins/function.pc_url.php:110
+#: pntemplates/plugins/function.pc_date_select.php:31
 #: pntemplates/admin/postcalendar_admin_modifyconfig.htm:93
 msgid "Year"
 msgstr ""
 
-#: pntemplates/plugins/function.pc_url.php:109
+#: pntemplates/plugins/function.pc_url.php:112
 msgid "Add"
 msgstr ""
 
-#: pntemplates/plugins/function.pc_url.php:111
+#: pntemplates/plugins/function.pc_url.php:114
 msgid "Print"
 msgstr ""
 
@@ -251,6 +251,10 @@ msgstr[1] ""
 msgid "Review queued events"
 msgstr ""
 
+#: pntemplates/plugins/function.pc_popup.php:32
+msgid "overlib: attribute 'text' or 'inarray' or 'function' not present"
+msgstr ""
+
 #: pnsearchapi.php:124
 msgid "Error! Could not load items."
 msgstr ""
@@ -270,7 +274,7 @@ msgstr ""
 msgid "Sunday Monday Tuesday Wednesday Thursday Friday Saturday"
 msgstr ""
 
-#: pnuserapi.php:279 pnuser.php:58
+#: pnuserapi.php:279 pnuser.php:74
 msgid "Error! Required arguments not present."
 msgstr ""
 
@@ -352,7 +356,7 @@ msgstr ""
 msgid "PostCalendar Date"
 msgstr ""
 
-#: pnuser.php:85
+#: pnuser.php:101
 msgid "You do not have permission to view this event."
 msgstr ""
 
@@ -373,105 +377,105 @@ msgstr ""
 msgid "Done! The event was deleted."
 msgstr ""
 
-#: pnevent.php:216
+#: pnevent.php:218
 msgid "Error! Submission failed."
-msgstr ""
-
-#: pnevent.php:221
-#, php-format
-msgid "Done! Updated the event. (event date: %s)"
 msgstr ""
 
 #: pnevent.php:223
 #, php-format
+msgid "Done! Updated the event. (event date: %s)"
+msgstr ""
+
+#: pnevent.php:225
+#, php-format
 msgid "Done! Submitted the event. (event date: %s)"
 msgstr ""
 
-#: pnevent.php:226
+#: pnevent.php:228
 msgid "The event has been queued for administrator approval."
 msgstr ""
 
-#: pneventapi.php:349
+#: pneventapi.php:360
 msgid "Plain text"
 msgstr ""
 
-#: pneventapi.php:349
+#: pneventapi.php:360
 msgid "HTML-formatted"
 msgstr ""
 
-#: pneventapi.php:353
+#: pneventapi.php:364
 msgid "Private"
 msgstr ""
 
-#: pneventapi.php:355 pntemplates/event/postcalendar_event_submit.htm:46
+#: pneventapi.php:366 pntemplates/event/postcalendar_event_submit.htm:46
 msgid "Global"
 msgstr ""
 
-#: pneventapi.php:367 pneventapi.php:428
+#: pneventapi.php:378 pneventapi.php:439
 msgid "Day(s)/Week(s)/Month(s)/Year(s)"
 msgstr ""
 
-#: pneventapi.php:372 pneventapi.php:429
+#: pneventapi.php:383 pneventapi.php:440
 msgid "First/Second/Third/Fourth/Last"
 msgstr ""
 
-#: pneventapi.php:377 pneventapi.php:430
+#: pneventapi.php:388 pneventapi.php:441
 msgid "Sun Mon Tue Wed Thu Fri Sat"
 msgstr ""
 
-#: pneventapi.php:411
+#: pneventapi.php:422
 msgid "Required argument not present."
 msgstr ""
 
-#: pneventapi.php:432
+#: pneventapi.php:443
 #, php-format
 msgid "Event recurs every %s"
 msgstr ""
 
-#: pneventapi.php:434 pneventapi.php:439
+#: pneventapi.php:445 pneventapi.php:450
 msgid "until"
 msgstr ""
 
-#: pneventapi.php:436
+#: pneventapi.php:447
 msgid "Event recurs on"
 msgstr ""
 
-#: pneventapi.php:438
+#: pneventapi.php:449
 #, php-format
 msgid "of the month, every %s months"
 msgstr ""
 
-#: pneventapi.php:441
+#: pneventapi.php:452
 msgid "This event does not recur."
 msgstr ""
 
-#: pneventapi.php:445
+#: pneventapi.php:456
 msgid "This is a private event."
 msgstr ""
 
-#: pneventapi.php:445
+#: pneventapi.php:456
 msgid "This is a public event. "
 msgstr ""
 
 #. !(abbr) not applicable or not available
-#: pneventapi.php:531
+#: pneventapi.php:542
 msgid "n/a"
 msgstr ""
 
 #. !This is the field name from pntemplates/event/postcalendar_event_submit.htm:22
-#: pneventapi.php:559
+#: pneventapi.php:570
 msgid "'Title' is a required field."
 msgstr ""
 
-#: pneventapi.php:566 pneventapi.php:575
+#: pneventapi.php:577 pneventapi.php:586
 msgid "Error! The repetition frequency must be an integer."
 msgstr ""
 
-#: pneventapi.php:570 pneventapi.php:579
+#: pneventapi.php:581 pneventapi.php:590
 msgid "Error! The repetition frequency must be at least 1."
 msgstr ""
 
-#: pneventapi.php:590
+#: pneventapi.php:601
 msgid "Error! The selected start date falls after the selected end date."
 msgstr ""
 
@@ -499,15 +503,20 @@ msgstr ""
 msgid "Queued events"
 msgstr ""
 
-#: pnadminapi.php:86 pntemplates/email/postcalendar_email_adminnotify.htm:2
+#: pnadminapi.php:73
+#, php-format
+msgid "Error! %s required in %s."
+msgstr ""
+
+#: pnadminapi.php:92 pntemplates/email/postcalendar_email_adminnotify.htm:2
 msgid "Notice: PostCalendar submission/change"
 msgstr ""
 
-#: pnadminapi.php:89
+#: pnadminapi.php:95
 msgid "Done! Sent administrator notification e-mail message."
 msgstr ""
 
-#: pnadminapi.php:92
+#: pnadminapi.php:98
 msgid "Error! Could not send administrator notification e-mail message."
 msgstr ""
 
@@ -788,6 +797,7 @@ msgid "Save"
 msgstr ""
 
 #: pntemplates/admin/postcalendar_admin_modifyconfig.htm:127
+#: pntemplates/admin/postcalendar_admin_eventrevue.htm:20
 msgid "Cancel"
 msgstr ""
 
@@ -795,7 +805,7 @@ msgstr ""
 msgid "Event review"
 msgstr ""
 
-#: pntemplates/admin/postcalendar_admin_eventrevue.htm:17
+#: pntemplates/admin/postcalendar_admin_eventrevue.htm:19
 msgid "Yes"
 msgstr ""
 
