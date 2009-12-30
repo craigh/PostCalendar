@@ -688,10 +688,10 @@ function _postcalendar_createcategory($catarray)
         $data = $cat->getData();
         $data['parent_id']                     = $rootcat['id'];
         $data['name']                          = $catarray['name'];
-        $data['value']                         = $catarray['value'];
+        if (isset($catarray['value'])) $data['value'] = $catarray['value'];
         $data['display_name']                  = array($lang => $catarray['displayname']);
         $data['display_desc']                  = array($lang => $catarray['description']);
-        if (($catarray['attributes']) && is_array($catarray['attributes'])) {
+        if ((isset($catarray['attributes'])) && is_array($catarray['attributes'])) {
             foreach ($catarray['attributes'] as $name=>$value) {
                 $data['__ATTRIBUTES__'][$name] = $value;
             }
