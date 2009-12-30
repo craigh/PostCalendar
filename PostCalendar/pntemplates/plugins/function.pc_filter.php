@@ -55,6 +55,7 @@ function smarty_function_pc_filter($args, &$smarty)
     $allowedgroup = pnModGetVar('PostCalendar', 'pcAllowUserCalendar');
     $uid = pnUserGetVar('uid'); $uid = empty($uid) ? 1 : $uid;
     $ingroup = $allowedgroup > 0 ? pnModAPIFunc('Groups','user','isgroupmember',array('uid'=>$uid, 'gid'=>$allowedgroup)) : false;
+    $useroptions = "";
 
     if ($ingroup || ($allowedgroup && IS_ADMIN)) {
         if (in_array('user', $types)) {
