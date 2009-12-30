@@ -61,10 +61,13 @@ input.postcal90 {
     width: 90%;
 }
 #postcalendar_addevent_formaction {
-    padding: 1em;
+    padding: 1em 2em;
     background: #cccccc;
     border-top: 1px solid #999999;
     margin-top: 1em;
+}
+#postcalendar_addevent_formaction input {
+    margin: 0 .3em;
 }
 #postcalendar_addevent_previewevent {
     background-color: #eeeeee;

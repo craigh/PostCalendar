@@ -37,21 +37,7 @@ class postcalendar_event_editHandler extends pnFormHandler
         $event = DBUtil::selectObjectByID('postcalendar_events', $this->eid, 'eid');
         if (count($event) == 0) return $render->pnFormSetErrorMsg(__f('Error! There are no events with ID %s.',$this->eid, $dom));
 
-        if ($args['commandName'] == 'update') {
-            /*
-            if (!$render->pnFormIsValid())
-                return false;
-
-            $recipeData = $render->pnFormGetValues();
-            $recipeData['id'] = $this->recipeId;
-
-            $result = pnModAPIFunc('howtopnforms', 'recipe', 'update', array('recipe' => $recipeData));
-            if ($result === false)
-                return $render->pnFormSetErrorMsg(howtopnformsErrorAPIGet());
-
-            $url = pnModUrl('howtopnforms', 'recipe', 'view', array('rid' => $this->recipeId));
-            */
-        } else if ($args['commandName'] == 'delete') {
+        if ($args['commandName'] == 'delete') {
             if ((SessionUtil::getVar('uid') != $event['informant']) and (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN))) {
                 return $render->pnFormSetErrorMsg(__('Sorry! You do not have authorization to delete this event.', $dom));
             }
@@ -120,12 +106,12 @@ function postcalendar_event_copy($args)
  *  new event preview (subsequent pass): loaded form values refilled into form w/preview (also triggered if form does not validate - e.g. abort=true)
  *      $func=new, data_loaded=true, form_action=preview
  *  new event submit (subsequent pass): loaded form values - write to DB
- *      $func=new, data_loaded=true, form_action=commit
+ *      $func=new, data_loaded=true, form_action=save
  *  edit existing event (first pass): load existing values from DB and fill into form
  *      $func=edit, data_loaded=true, form_action=NULL
  *  edit event preview (subsequent pass): loaded form values refilled  into form w/preview (also triggered if form does not validate - e.g. abort=true)
  *      $func=edit, data_loaded=true, form_action=preview
- *  edit event commit (subsequent pass): loaded form values - write to DB
+ *  edit event save (subsequent pass): loaded form values - write to DB
  *      see same for 'new'
  *  copy existing event (first pass): load existing values from DB and fill into to form
  *      $func=copy, data_loaded=true, form_action=NULL
@@ -153,13 +139,24 @@ function postcalendar_event_new($args)
     $form_action      = FormUtil::getPassedValue('form_action', NULL);
     $authid           = FormUtil::getPassedValue('authid');
 
-    // VALIDATE form data if form action is preview or commit
+    // compensate for translation of input values
+    $formactionarraymap = array(
+        __('Save', $dom)         => 'save',
+        __('Save and Add', $dom) => 'save and add',
+        __('Preview', $dom)      => 'preview',
+        );
+    $form_action = $formactionarraymap[$form_action];
+
+    $addtrigger = false;
+    if ($form_action == 'save and add') { $form_action = 'save'; $addtrigger = true; }
+
+    // VALIDATE form data if form action is preview or save
     $abort = false;
-    if (($form_action == 'preview') OR ($form_action == 'commit')) $abort = pnModAPIFunc('PostCalendar', 'event', 'validateformdata', $submitted_event);
+    if (($form_action == 'preview') OR ($form_action == 'save')) $abort = pnModAPIFunc('PostCalendar', 'event', 'validateformdata', $submitted_event);
 
     if ($func == 'new') { // triggered on form_action=preview && on brand new load
         $eventdata = array();
-        // wrap all the data into array for passing to commit and preview functions
+        // wrap all the data into array for passing to save and preview functions
         if ($submitted_event['data_loaded']) $eventdata = $submitted_event; // data loaded on preview and processing of new event, but not on initial pageload
         $eventdata['is_update'] = $is_update;
         $eventdata['data_loaded'] = true;
@@ -189,7 +186,7 @@ function postcalendar_event_new($args)
         $eventdata['informant'] = SessionUtil::getVar('uid');
     }
 
-    if ($abort) $form_action = 'preview'; // data not sufficient for commit. force preview and correct.
+    if ($abort) $form_action = 'preview'; // data not sufficient for save. force preview and correct.
 
     // Preview the event
     if ($form_action == 'preview') {
@@ -208,7 +205,7 @@ function postcalendar_event_new($args)
     }
 
     // Enter the event into the DB
-    if ($form_action == 'commit') {
+    if ($form_action == 'save') {
         $sdate = strtotime($submitted_event['eventDate']);
         if (!SecurityUtil::confirmAuthKey()) return LogUtil::registerAuthidError(pnModURL('postcalendar', 'admin', 'main'));
 
@@ -231,8 +228,11 @@ function postcalendar_event_new($args)
             // format startdate for redirect on success
             $url_date = strftime('%Y%m%d', $sdate);
         }
-
-        pnRedirect(pnModURL('PostCalendar', 'user', 'view', array('viewtype' => _SETTING_DEFAULT_VIEW, 'Date' => $url_date)));
+        if ($addtrigger) {
+            pnRedirect(pnModURL('PostCalendar', 'event', 'new'));
+        } else {
+            pnRedirect(pnModURL('PostCalendar', 'user', 'view', array('viewtype' => _SETTING_DEFAULT_VIEW, 'Date' => $url_date)));
+        }
         return true;
     }
 

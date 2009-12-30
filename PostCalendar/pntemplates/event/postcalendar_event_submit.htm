@@ -26,8 +26,8 @@
 	<input type="hidden" name="authid" value="<!--[pnsecgenauthkey module="PostCalendar"]-->" />
 
 <span style='float:right;'><!--[pnimg modname='PostCalendar' src='admin.png' __alt="PostCalendar Rocks!"]--></span>
-<h2 style='border-bottom:1px solid #CCCCCC;margin:2em 0 1em;text-align:left;'><!--[$titletext]-->&nbsp;<!--[gt text='calendar event']--></h2>
-<div style="padding-top:16px;">
+<h2 style='border-bottom:1px solid #CCCCCC;text-align:left;padding-top:1em;'><!--[$titletext]-->&nbsp;<!--[gt text='calendar event']--></h2>
+<div>
     <div id="postcalendar_addevent_leftcol">
         <label for="postcalendar_events_title"><b><!--[gt text='Title']--></b></label><span style='color:red;padding-left:5em;'>*<!--[gt text='Required']--></span><br />
         <input type="text" class='postcal90' name="postcalendar_events[title]" id="postcalendar_events_title" value="<!--[ $loaded_event.title ]-->" /><br /><br />
@@ -169,10 +169,10 @@
     <!--[pnmodcallhooks hookobject='item' hookaction='new' module='PostCalendar']-->
 <!--[/if]-->
 <div id="postcalendar_addevent_formaction">
-    <select name="form_action">
-    	<option value="preview"><!--[gt text='Preview event']--></option>
-    	<option value="commit" selected='selected'><!--[$submittext]--></option>
-    </select><input type="submit" name="_submit" value="<!--[gt text='go']-->" />
+    <input type="submit" name="form_action" value="<!--[gt text='Preview']-->" />
+    <input type="submit" name="form_action" value="<!--[gt text='Save']-->" />
+    <input type="submit" name="form_action" value="<!--[gt text='Save and Add']-->" />
+    <input type="button" value="<!--[gt text='Cancel']-->" onclick="window.location.href='<!--[pnmodurl modname=PostCalendar]-->'" /> 
 </div>
 
 </div> <!-- /page container-->
