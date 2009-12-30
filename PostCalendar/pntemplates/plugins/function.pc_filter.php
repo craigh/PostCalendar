@@ -98,7 +98,7 @@ function smarty_function_pc_filter($args, &$smarty)
         }
         $catregistry  = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
 
-        $smarty->assign('enablecategorization', $modvars['enablecategorization']);
+        $smarty->assign('enablecategorization', pnModGetVar('PostCalendar', 'enablecategorization'));
         $smarty->assign('catregistry', $catregistry);
 
         $catoptions = $smarty->fetch('event/postcalendar_event_filtercats.htm');

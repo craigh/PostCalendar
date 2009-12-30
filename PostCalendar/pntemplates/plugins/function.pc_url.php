@@ -119,8 +119,8 @@ function smarty_function_pc_url($args, &$smarty)
             }
         }
         // create string of remaining properties and values
+        $props = "";
         if (!empty($args)) {
-            $props = "";
             foreach ($args as $prop=>$val) {
                 $props .= " $prop='$val'";
             }
