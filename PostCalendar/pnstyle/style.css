@@ -216,7 +216,7 @@ table.smallmonthtable {
 }
 table.smallmonthtable a {
 	text-decoration: none;
-	color: black;
+	color: #333333;
     font-weight: normal;
 }
 table.smallmonthtable td {
