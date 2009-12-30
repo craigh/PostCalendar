@@ -1,9 +1,7 @@
 <!--[* $Id$ *]-->
 <!--[pnmodgetvar module='PostCalendar' name='pcEventsOpenInNewWindow' assign='in_new_window']-->
-<!--[pnsecauthaction comp="::" inst=".*" level="ACCESS_ADD" assign="ACCESS_ADD"]-->
 <!--[ if $smarty.get.theme eq "Printer" ]-->
     <!--[* page presented in printer theme *]-->
-    <!--[ assign var="ACCESS_ADD" value=0 ]-->
     <!--[ assign var="PRINT_VIEW" value=1 ]-->
 <!--[/if]-->
 <!--[ if $PRINT_VIEW eq false ]-->
@@ -31,12 +29,10 @@
             <!--[if $in_new_window eq false]-->onclick="javascript:location.href='<!--[ pc_url action=day date=$date ]-->';"<!--[/if]-->>
             <!--[ foreach name=events item=event from=$S_EVENTS.$date ]-->
                 <!--[ if $smarty.foreach.events.first eq true ]--><li class="dayheader" style='margin-top: .5em;'><!--[ $date|pc_date_format ]--></li><!--[/if]-->
-                <!--[ assign var="title" value=$event.title|strip_tags ]-->
-                <!--[ assign var="desc" value=$event.hometext|truncate:255:"..." ]-->
                 <li class="eventslistitems">
                     <span style="padding: 1px 1em; color: <!--[$event.cattextcolor]-->; background: <!--[ $event.catcolor ]-->;"><!--[ $event.catname ]--></span>
                     <!--[ if $event.alldayevent != true ]--><!--[ $event.startTime ]-->&nbsp;<!--[ /if ]-->
-                    <!--[ pc_url full=true action=detail eid=$event.eid date=$date style="text-decoration: none;" display=$title]-->
+                    <!--[ pc_url full=true action=detail eid=$event.eid date=$date style="text-decoration: none;" display=$event.title|strip_tags]-->
                     <!--[ if $event.alldayevent != true ]-->
                         (<!--[ $event.duration ]-->)
                     <!--[ else ]-->

@@ -19,7 +19,6 @@
     <tr>
         <td class="weeklink"><a href="<!--[ pc_url action=week date=$days[0] ]-->">&gt;</a></td>
         <!--[ foreach name=day item=date from=$days ]-->
-        <!--[ assign var="themonth" value=$date|date_format:"%m" ]-->
         <!--[ if $date == $TODAY_DATE ]-->
             <!--[ assign var="stylesheet" value="monthtoday" ]-->
         <!--[ elseif ($date < $MONTH_START_DATE || $date > $MONTH_END_DATE) ]-->

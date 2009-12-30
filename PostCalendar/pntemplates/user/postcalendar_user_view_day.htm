@@ -1,8 +1,6 @@
 <!--[* $Id$ *]-->
-<!--[pnsecauthaction comp="::" inst=".*" level="ACCESS_ADD" assign="ACCESS_ADD"]-->
 <!--[ if $smarty.get.theme eq "Printer" ]-->
     <!--[* page presented in printer theme *]-->
-    <!--[ assign var="ACCESS_ADD" value=0 ]-->
     <!--[ assign var="PRINT_VIEW" value=1 ]-->
 <!--[/if]-->
 <!--[ if $PRINT_VIEW != 1 ]-->
@@ -11,10 +9,6 @@
 
 <!--[ pc_pagejs_init ]-->
 
-<!--[ assign var="dayname" value=$DATE|date_format:"%w" ]-->
-<!--[ assign var="day" value=$DATE|date_format:"%d"|string_format:"%1d" ]-->
-<!--[ assign var="month" value=$DATE|date_format:"%m"|string_format:"%1d" ]-->
-<!--[ assign var="year" value=$DATE|date_format:"%Y"|string_format:"%4d" ]-->
 <h2 class="postcalendar_header">
     <!--[ if $PRINT_VIEW eq false ]--><a href="<!--[ $PREV_DAY_URL ]-->">&lt;&lt;</a><!--[/if]-->
     <!--[ $DATE|pc_date_format]-->
@@ -25,20 +19,13 @@
     <ul class="eventslist">
         <!--[ pc_sort_events var="S_EVENTS" sort="time" order="asc" value=$A_EVENTS ]-->
         <!--[ foreach name=dates item=events key=date from=$S_EVENTS ]-->
-            <!--[ assign var="dayname" value=$date|date_format:"%w" ]-->
-            <!--[ assign var="day" value=$date|date_format:"%d"|string_format:"%1d" ]-->
-            <!--[ assign var="month" value=$date|date_format:"%m"|string_format:"%1d" ]-->
-            <!--[ assign var="year" value=$date|date_format:"%Y"|string_format:"%4d" ]-->
             <!--[ pc_sort_events var="S_EVENTS" sort="time" order="asc" value=$A_EVENTS ]-->
             <!--[ if isset($events) ]-->
                 <!--[ foreach name=events item=event from=$S_EVENTS.$date ]-->
-                    <!--[ assign var="catname" value = $event.catname ]-->
-                    <!--[ assign var="catcolor" value = $event.catcolor ]-->
-                    <!--[ assign var="title" value=$event.title|strip_tags ]-->
                     <li class="eventslistitems">
                         <span style="padding: 1px 4px; color: <!--[$event.cattextcolor]-->; background: <!--[ $event.catcolor ]-->;"><!--[ $event.catname ]--></span>
                         <!--[ if $event.alldayevent != true ]--><!--[ $event.startTime ]-->&nbsp;<!--[ /if ]-->
-                        <!--[ pc_url full=true action=detail eid=$event.eid date=$date style="text-decoration: none;" display=$title ]-->
+                        <!--[ pc_url full=true action=detail eid=$event.eid date=$date style="text-decoration: none;" display=$event.title|strip_tags ]-->
                         <!--[ if $event.alldayevent != true ]-->
                             (<!--[ $event.duration ]-->)
                         <!--[ else ]-->

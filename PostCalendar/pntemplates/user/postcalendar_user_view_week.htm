@@ -1,8 +1,6 @@
 <!--[* $Id$ *]-->
-<!--[pnsecauthaction comp="::" inst=".*" level="ACCESS_ADD" assign="ACCESS_ADD"]-->
 <!--[ if $smarty.get.theme eq "Printer" ]-->
     <!--[* page presented in printer theme *]-->
-    <!--[ assign var="ACCESS_ADD" value=0 ]-->
     <!--[ assign var="PRINT_VIEW" value=1 ]-->
 <!--[/if]-->
 <!--[ if $PRINT_VIEW eq false ]-->
@@ -21,11 +19,6 @@
     <!--[ * Loop through the EventsByDate array : This array contains data for each day in the view. * ]-->
     <!--[ pc_sort_events var="S_EVENTS" sort="time" order="asc" value=$A_EVENTS ]-->
     <!--[ foreach name=dates item=events key=cdate from=$S_EVENTS ]-->
-        <!--[ assign var="dayname" value=$cdate|date_format:"%w" ]-->
-        <!--[ assign var="day" value=$cdate|date_format:"%d"|string_format:"%1d" ]-->
-        <!--[ assign var="month" value=$cdate|date_format:"%m"|string_format:"%1d" ]-->
-        <!--[ assign var="month" value=$month-1 ]-->
-        <!--[ assign var="year" value=$cdate|date_format:"%Y"|string_format:"%4d" ]-->
         <h3 class="dayheader">
             <a href="<!--[ pc_url action=day date=$cdate ]-->"><!--[ $cdate|pc_date_format]--></a>
         </h3>
