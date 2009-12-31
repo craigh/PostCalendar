@@ -24,7 +24,7 @@
 function smarty_function_pc_popup($args, &$smarty)
 {
     // if we're not using popups just return an empty string
-    if (!_SETTING_USE_POPUPS) return;
+    if (!_SETTING_USE_POPUPS) return '';
 
     $dom = ZLanguage::getModuleDomain('PostCalendar');
 

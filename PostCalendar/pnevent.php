@@ -140,12 +140,14 @@ function postcalendar_event_new($args)
     $authid           = FormUtil::getPassedValue('authid');
 
     // compensate for translation of input values
-    $formactionarraymap = array(
-        __('Save', $dom)         => 'save',
-        __('Save and Add', $dom) => 'save and add',
-        __('Preview', $dom)      => 'preview',
-        );
-    $form_action = $formactionarraymap[$form_action];
+    if (isset($form_action)) {
+        $formactionarraymap = array(
+            __('Save', $dom)         => 'save',
+            __('Save and Add', $dom) => 'save and add',
+            __('Preview', $dom)      => 'preview',
+            );
+        $form_action = $formactionarraymap[$form_action];
+    }
 
     $addtrigger = false;
     if ($form_action == 'save and add') { $form_action = 'save'; $addtrigger = true; }
@@ -202,6 +204,8 @@ function postcalendar_event_new($args)
         $eventdata['__CATEGORIES__'] = $categories;
         // format the data for preview
         $eventdata = pnModAPIFunc('PostCalendar', 'event', 'formateventarrayfordisplay', $eventdata);
+    } else {
+        $eventdata['preview'] = "";
     }
 
     // Enter the event into the DB

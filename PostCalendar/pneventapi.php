@@ -37,7 +37,7 @@ function postcalendar_eventapi_queryEvents($args)
     $s_keywords  = $args['s_keywords'];
     $filtercats  = $args['filtercats'];
     $pc_username = $args['pc_username'];
-    $eventstatus = $args['eventstatus'];
+    $eventstatus = isset($args['eventstatus']) ? $args['eventstatus'] : 1;
 
     if (_SETTING_ALLOW_USER_CAL) { 
         $filterdefault = _PC_FILTER_ALL; 
@@ -107,12 +107,15 @@ function postcalendar_eventapi_queryEvents($args)
 
 
     // convert categories array to proper filter info
-    $catsarray = $filtercats['__CATEGORIES__'];
-    foreach ($catsarray as $propname => $propid) {
-        if ($propid <= 0) unset($catsarray[$propname]); // removes categories set to 'all' (0)
+    if (is_array($filtercats)) {
+        $catsarray = $filtercats['__CATEGORIES__'];
+        foreach ($catsarray as $propname => $propid) {
+            if ($propid <= 0) unset($catsarray[$propname]); // removes categories set to 'all' (0)
+        }
+        if (!empty($catsarray)) $catsarray['__META__']['module']="PostCalendar"; // required for search operation
+    } else {
+        $catsarray = array();
     }
-    if (!empty($catsarray)) $catsarray['__META__']['module']="PostCalendar"; // required for search operation
-
     if (!empty($s_keywords)) $where .= "AND $s_keywords";
 
     //if (!SecurityUtil::checkPermission('PostCalendar::Event', "{$event['title']}::{$event['eid']}", ACCESS_OVERVIEW)) {
@@ -146,15 +149,16 @@ function postcalendar_eventapi_getEvents($args)
 {
     $dom = ZLanguage::getModuleDomain('PostCalendar');
 
-    $start       = $args['start'];
-    $end         = $args['end'];
-    $s_keywords  = $args['s_keywords'] ? $args['s_keywords'] : ''; // search WHERE string
-    $filtercats  = $args['filtercats'];
-    $pc_username = $args['pc_username'];
-    $seachstart  = $args['seachstart'];
-    $searchend   = $args['searchend'];
+    $start       = isset($args['start'])       ? $args['start']       : '';
+    $end         = isset($args['end'])         ? $args['end']         : '';
+    $s_keywords  = isset($args['s_keywords'])  ? $args['s_keywords']  : ''; // search WHERE string
+    $filtercats  = isset($args['filtercats'])  ? $args['filtercats']  : '';
+    $pc_username = isset($args['pc_username']) ? $args['pc_username'] : '';
+    $searchstart = isset($args['searchstart']) ? $args['searchstart']  : '';
+    $searchend   = isset($args['searchend'])   ? $args['searchend']   : '';
+    $Date        = isset($args['Date'])        ? $args['Date']        : '';
 
-    $date  = pnModAPIFunc('PostCalendar','user','getDate',array('Date'=>$args['Date'])); //formats date
+    $date  = pnModAPIFunc('PostCalendar','user','getDate',array('Date'=>$Date)); //formats date
 
     if (!empty($s_keywords)) { unset($start); unset($end); } // clear start and end dates for search
 
@@ -313,13 +317,13 @@ function postcalendar_eventapi_buildSubmitForm($args)
     $eventdata = $args['eventdata']; // contains data for editing if loaded
 
     // format date information 
-    if (($eventdata['endDate'] == '') || ($eventdata['endDate'] == '00000000') || ($eventdata['endDate'] == '0000-00-00')) {
+    if ((!isset($eventdata['endDate'])) || ($eventdata['endDate'] == '') || ($eventdata['endDate'] == '00000000') || ($eventdata['endDate'] == '0000-00-00')) {
         $eventdata['endvalue'] = pnModAPIFunc('PostCalendar','user','getDate',array('Date'=>$args['Date'], 'format'=>_SETTING_DATE_FORMAT));
         $eventdata['endDate'] = pnModAPIFunc('PostCalendar','user','getDate',array('Date'=>$args['Date'], 'format'=>'%Y-%m-%d')); // format for JS cal & DB
     }  else {
         $eventdata['endvalue'] = pnModAPIFunc('PostCalendar','user','getDate',array('Date'=>str_replace('-', '', $eventdata['endDate']), 'format'=>_SETTING_DATE_FORMAT));
     }
-    if ($eventdata['eventDate'] == '') {
+    if ((!isset($eventdata['eventDate'])) || ($eventdata['eventDate'] == '')) {
         $eventdata['eventDatevalue'] = pnModAPIFunc('PostCalendar','user','getDate',array('Date'=>$args['Date'], 'format'=>_SETTING_DATE_FORMAT));
         $eventdata['eventDate'] = pnModAPIFunc('PostCalendar','user','getDate',array('Date'=>$args['Date'], 'format'=>'%Y-%m-%d')); // format for JS cal & DB
     } else {
@@ -330,7 +334,7 @@ function postcalendar_eventapi_buildSubmitForm($args)
         $users = DBUtil::selectFieldArray('users', 'uname', null, null, null, 'uid');
         $form_data['users'] = $users;
     }
-    $eventdata['aid'] = $eventdata['aid'] ? $eventdata['aid'] : pnUserGetVar('uid'); // set value of user-select box
+    $eventdata['aid'] = isset($eventdata['aid']) ? $eventdata['aid'] : pnUserGetVar('uid'); // set value of user-select box
     $form_data['username_selected'] = pnUsergetVar('uname', $eventdata['aid']); // for display of username
 
     // load the category registry util
@@ -340,11 +344,11 @@ function postcalendar_eventapi_buildSubmitForm($args)
     $form_data['catregistry'] = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
     $form_data['cat_count'] = count($form_data['catregistry']);
     // configure default categories
-    $eventdata['__CATEGORIES__'] = $eventdata['__CATEGORIES__'] ? $eventdata['__CATEGORIES__'] : pnModGetVar('PostCalendar', 'pcDefaultCategories');
+    $eventdata['__CATEGORIES__'] = isset($eventdata['__CATEGORIES__']) ? $eventdata['__CATEGORIES__'] : pnModGetVar('PostCalendar', 'pcDefaultCategories');
 
     // All-day event values for radio buttons
-    $form_data['SelectedAllday'] = $eventdata['alldayevent'] == 1 ? " checked='checked'" : '';
-    $form_data['SelectedTimed'] = (($eventdata['alldayevent'] == 0) OR (!isset($eventdata['alldayevent']))) ? " checked='checked'" : ''; //default
+    $form_data['SelectedAllday'] = ((isset($eventdata['alldayevent'])) && ($eventdata['alldayevent'] == 1)) ? " checked='checked'" : '';
+    $form_data['SelectedTimed'] = ((!isset($eventdata['alldayevent'])) || ($eventdata['alldayevent'] == 0)) ? " checked='checked'" : ''; //default
 
     // StartTime
     $form_data['minute_interval'] = _SETTING_TIME_INCREMENT;
@@ -370,9 +374,9 @@ function postcalendar_eventapi_buildSubmitForm($args)
     if (!isset($eventdata['sharing'])) $eventdata['sharing'] = SHARING_GLOBAL; //default
 
     // recur type radio selects
-    $form_data['SelectedNoRepeat'] = (((int) $eventdata['recurrtype'] == 0) OR (empty($eventdata['recurrtype']))) ? " checked='checked'" : ''; //default
-    $form_data['SelectedRepeat'] = (int) $eventdata['recurrtype'] == 1 ? " checked='checked'" : '';
-    $form_data['SelectedRepeatOn'] = (int) $eventdata['recurrtype'] == 2 ? " checked='checked'" : '';
+    $form_data['SelectedNoRepeat'] = ((!isset($eventdata['recurrtype'])) || ((int) $eventdata['recurrtype'] == 0)) ? " checked='checked'" : ''; //default
+    $form_data['SelectedRepeat'] = ((isset($eventdata['recurrtype'])) && ((int) $eventdata['recurrtype'] == 1)) ? " checked='checked'" : '';
+    $form_data['SelectedRepeatOn'] = ((isset($eventdata['recurrtype'])) && ((int) $eventdata['recurrtype'] == 2)) ? " checked='checked'" : '';
 
     // recur select box arrays
     $in = explode ("/", __('Day(s)/Week(s)/Month(s)/Year(s)', $dom));
@@ -396,11 +400,30 @@ function postcalendar_eventapi_buildSubmitForm($args)
     if (empty($eventdata['repeat']['event_repeat_on_day']) || $eventdata['repeat']['event_repeat_on_day'] < 1) $eventdata['repeat']['event_repeat_on_day'] = REPEAT_ON_SUN;
 
     // endType
-    $form_data['SelectedEndOn'] = (int) $eventdata['endtype'] == 1 ? " checked='checked'" : '';
-    $form_data['SelectedNoEnd'] = (((int) $eventdata['endtype'] == 0) OR (empty($eventdata['endtype']))) ? " checked='checked'" : ''; //default
+    $form_data['SelectedEndOn'] = ((isset($eventdata['endtype'])) && ((int) $eventdata['endtype'] == 1)) ? " checked='checked'" : '';
+    $form_data['SelectedNoEnd'] = ((!isset($eventdata['endtype'])) || ((int) $eventdata['endtype'] == 0)) ? " checked='checked'" : ''; //default
 
     // Assign the content format (determines if scribite is in use)
     $form_data['formattedcontent'] = pnModAPIFunc('PostCalendar', 'event', 'isformatted', array('func' => 'new'));
+
+    // assign empty values to text fields that don't need changing
+    $eventdata['title']     = isset($eventdata['title'])     ? $eventdata['title']     : "";
+    $eventdata['hometext']  = isset($eventdata['hometext'])  ? $eventdata['hometext']  : "";
+    $eventdata['contname']  = isset($eventdata['contname'])  ? $eventdata['contname']  : "";
+    $eventdata['conttel']   = isset($eventdata['conttel'])   ? $eventdata['conttel']   : "";
+    $eventdata['contemail'] = isset($eventdata['contemail']) ? $eventdata['contemail'] : "";
+    $eventdata['website']   = isset($eventdata['website'])   ? $eventdata['website']   : "";
+    $eventdata['fee']       = isset($eventdata['fee'])       ? $eventdata['fee']       : "";
+
+    $eventdata['repeat']['event_repeat_freq']     = isset($eventdata['repeat']['event_repeat_freq'])     ? $eventdata['repeat']['event_repeat_freq']     : "";
+    $eventdata['repeat']['event_repeat_on_freq']  = isset($eventdata['repeat']['event_repeat_on_freq'])  ? $eventdata['repeat']['event_repeat_on_freq']  : "";
+
+    $eventdata['location_info']['event_location'] = isset($eventdata['location_info']['event_location']) ? $eventdata['location_info']['event_location'] : "";
+    $eventdata['location_info']['event_street1']  = isset($eventdata['location_info']['event_street1'])  ? $eventdata['location_info']['event_street1']  : "";
+    $eventdata['location_info']['event_street2']  = isset($eventdata['location_info']['event_street2'])  ? $eventdata['location_info']['event_street2']  : "";
+    $eventdata['location_info']['event_city']     = isset($eventdata['location_info']['event_city'])     ? $eventdata['location_info']['event_city']     : "";
+    $eventdata['location_info']['event_state']    = isset($eventdata['location_info']['event_state'])    ? $eventdata['location_info']['event_state']    : "";
+    $eventdata['location_info']['event_postal']   = isset($eventdata['location_info']['event_postal'])   ? $eventdata['location_info']['event_postal']   : "";
 
     // assign loaded data or default values
     $form_data['loaded_event'] = DataUtil::formatForDisplay($eventdata);
@@ -488,6 +511,8 @@ function postcalendar_eventapi_formateventarrayfordisplay($event)
                                              array('mod' => 'PostCalendar',
                                                    'objectid' => $event['eid'],
                                                    'status' => 0));
+    } else {
+        $event['commentcount'] = 0;
     }
 
     return $event;

@@ -32,7 +32,7 @@
         <label for="postcalendar_events_title"><b><!--[gt text='Title']--></b></label><span style='color:red;padding-left:5em;'>*<!--[gt text='Required']--></span><br />
         <input type="text" class='postcal90' name="postcalendar_events[title]" id="postcalendar_events_title" value="<!--[ $loaded_event.title ]-->" /><br /><br />
 
-        <!--[if ((is_array($users)) AND ($ingroup)) ]-->
+        <!--[if ((isset($users)) AND (is_array($users)) AND ($ingroup)) ]-->
             <label for="postcalendar_events_aid"><b><!--[gt text='For user']--></b></label><span style='color:red;padding-left:5em;'>*<!--[gt text='Required']--></span><br />
             <!--[html_options name="postcalendar_events[aid]" id="postcalendar_events_aid" options=$users selected=$loaded_event.aid]--><br /><br />
         <!--[else]-->
@@ -113,7 +113,7 @@
             <b><!--[gt text='End date']--></b><br />
             <input type="radio" name="postcalendar_events[endtype]" id="postcalendar_events_endtype1" value="1" <!--[ $SelectedEndOn ]--> />
             <span style='padding-left:1em;'>
-            <!--[ if $postcalendar_events.eventDate > $postcalendar_events.endDate ]-->
+            <!--[ if ((isset($postcalendar_events)) AND ($postcalendar_events.eventDate > $postcalendar_events.endDate)) ]-->
                 <!--[ pncalendarinput display=true hidden=true objectname="postcalendar_events" htmlname="endDate" ifformat="%Y-%m-%d" dateformat=$EVENT_DATE_FORMAT defaultstring=$loaded_event.eventDatevalue defaultdate=$loaded_event.eventDate ]--><br />
             <!--[ else ]-->
                 <!--[ pncalendarinput display=true hidden=true objectname="postcalendar_events" htmlname="endDate" ifformat="%Y-%m-%d" dateformat=$EVENT_DATE_FORMAT defaultstring=$loaded_event.endvalue defaultdate=$loaded_event.endDate ]--><br />
@@ -160,7 +160,7 @@
 <div style='clear:both;'></div>
 
 <input type="hidden" name="is_update" value="<!--[$loaded_event.is_update]-->" />
-<input type="hidden" name="postcalendar_events[eid]" value="<!--[$loaded_event.eid]-->" />
+<input type="hidden" name="postcalendar_events[eid]" value="<!--[if isset($loaded_event.eid)]--><!--[$loaded_event.eid]--><!--[/if]-->" />
 <!--[if !empty($loaded_event.data_loaded) ]--> <input type="hidden" name="postcalendar_events[data_loaded]" value="<!--[$loaded_event.data_loaded]-->" /><!--[/if]-->
 
 <!--[if $func eq "edit"]-->

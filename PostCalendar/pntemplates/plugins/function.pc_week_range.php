@@ -23,7 +23,7 @@
  */
 function smarty_function_pc_week_range($args, &$smarty)
 {
-    setlocale(LC_TIME, _PC_LOCALE);
+    setlocale(LC_TIME, ZLanguage::getLocale()); //setlocale(LC_TIME, _PC_LOCALE);
     if (!isset($args['date'])) {
         //not sure these three lines are needed with call to getDate here
         $jumpday   = FormUtil::getPassedValue('jumpday');

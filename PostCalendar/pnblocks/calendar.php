@@ -59,6 +59,7 @@ function postcalendar_calendarblock_display($blockinfo)
     $the_day = substr($Date, 6, 2);
 
     $tpl = pnRender::getInstance('PostCalendar');
+    $output = '';
 
     // If block is cached, return cached version
     $tpl->cache_id = $blockinfo['bid'] . ':' . pnUserGetVar('uid');

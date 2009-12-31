@@ -6,13 +6,11 @@
     <!--[gt text="All These Categories" domain="module_postcalendar" assign="allText"]-->
     <!--[nocache]-->
     <!--[foreach from=$catregistry key=property item=category]-->
-        <!--[array_field_isset assign="selectedValue" array=$selectedcategories field=$property returnValue=1]-->
         <span><!--[selector_category 
         editLink=0 
         category=$category 
         name="modvar[PostCalendar][__CATEGORIES__][$property]" 
         field="id" 
-        selectedValue=$selectedValue 
         defaultValue="0"
         all=1
         allText=$allText

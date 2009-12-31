@@ -194,10 +194,12 @@ function postcalendar_userapi_buildView($args)
     $function_out = array();
     if (isset($calendarView)) $function_out['CAL_FORMAT'] = $calendarView;
     // convert categories array to proper filter info
-    $catsarray = $filtercats['__CATEGORIES__'];
     $selectedcategories=array();
-    foreach ($catsarray as $propname => $propid) {
-        if ($propid > 0) $selectedcategories[$propname]=$propid; // removes categories set to 'all'
+    if (is_array($filtercats)) {
+        $catsarray = $filtercats['__CATEGORIES__'];
+        foreach ($catsarray as $propname => $propid) {
+            if ($propid > 0) $selectedcategories[$propname]=$propid; // removes categories set to 'all'
+        }
     }
 
     $function_out['FUNCTION']          = $func;
@@ -239,24 +241,18 @@ function postcalendar_userapi_buildView($args)
  */
 function postcalendar_userapi_getDate($args)
 {
-    if (!is_array($args)) {
-        $format = $args; //backwards compatibility
-    } else {
-        $format    = (!empty($args['format'])) ? $args['format'] : '%Y%m%d%H%M%S';
-        $Date      = $args['Date'];
-        $jumpday   = $args['jumpday'];
-        $jumpmonth = $args['jumpmonth'];
-        $jumpyear  = $args['jumpyear'];
-    }
+    $format    = (!empty($args['format'])) ? $args['format']    : '%Y%m%d%H%M%S';
+
+    $time      = time();
+    $jumpday   = isset($args['jumpday'])   ? $args['jumpday']   : strftime('%d', $time);
+    $jumpmonth = isset($args['jumpmonth']) ? $args['jumpmonth'] : strftime('%m', $time);
+    $jumpyear  = isset($args['jumpyear'])  ? $args['jumpyear']  : strftime('%Y', $time);
+
+    if (pnUserLoggedIn()) $time += (pnUserGetVar('timezone_offset') - pnConfigGetVar('timezone_offset')) * 3600;
+    $Date      = isset($args['Date'])      ? $args['Date']      : '';
 
     if (empty($Date)) {
         // if we still don't have a date then calculate it
-        $time = time();
-        if (pnUserLoggedIn()) $time += (pnUserGetVar('timezone_offset') - pnConfigGetVar('timezone_offset')) * 3600;
-        // check the jump menu
-        if (!isset($jumpday))   $jumpday = strftime('%d', $time);
-        if (!isset($jumpmonth)) $jumpmonth = strftime('%m', $time);
-        if (!isset($jumpyear))  $jumpyear = strftime('%Y', $time);
         $Date = (int) "$jumpyear$jumpmonth$jumpday";
     }
 

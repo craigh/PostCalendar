@@ -40,7 +40,7 @@
             <!--[/if]-->
             <!--[ if $loaded_event.fee ]--><!--[gt text='Fee']-->: <!--[ $loaded_event.fee ]--><!--[/if]-->
         </div>
-        <!--[if !$popup]-->
+        <!--[if !isset($popup)]-->
         <!--[if count($loaded_event.__CATEGORIES__) gt 0]-->
         <div class="postcalendar_event_categoryinfo">
             <!--[lang assign="lang"]-->

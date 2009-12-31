@@ -1,7 +1,9 @@
 <!--[* $Id$ *]-->
 <!--[pnsecauthaction comp="::" inst=".*" level="ACCESS_ADD" assign="ACCESS_ADD"]-->
 <!--[pnmodgetvar module='PostCalendar' name='pcEventsOpenInNewWindow' assign='in_new_window']-->
-<!--[ if $smarty.get.theme eq "Printer" ]-->
+<!--[formutil_getpassedvalue name="theme" source="get" assign="theme" default=false]-->
+<!--[ assign var="PRINT_VIEW" value=0 ]-->
+<!--[if $theme eq "Printer"]-->
     <!--[* page presented in printer theme *]-->
     <!--[ assign var="ACCESS_ADD" value=0 ]-->
     <!--[ assign var="PRINT_VIEW" value=1 ]-->
@@ -13,9 +15,9 @@
 <!--[ pc_pagejs_init ]-->
 
 <h2 class="postcalendar_header">
-            <!--[ if $PRINT_VIEW eq false ]--><a href="<!--[ $PREV_MONTH_URL ]-->">&lt;&lt;</a><!--[/if]-->
-            <!--[ $DATE|pc_date_format:'%B %Y']-->
-            <!--[ if $PRINT_VIEW eq false ]--><a href="<!--[ $NEXT_MONTH_URL ]-->">&gt;&gt;</a><!--[/if]-->
+    <!--[ if $PRINT_VIEW eq false ]--><a href="<!--[ $PREV_MONTH_URL ]-->">&lt;&lt;</a><!--[/if]-->
+    <!--[ $DATE|pc_date_format:'%B %Y']-->
+    <!--[ if $PRINT_VIEW eq false ]--><a href="<!--[ $NEXT_MONTH_URL ]-->">&gt;&gt;</a><!--[/if]-->
 </h2>
 
 <div class="calcontainer">
@@ -36,7 +38,7 @@
         <!--[ else ]-->
             <!--[ assign var="stylesheet" value="monthon" ]-->
         <!--[ /if ]-->
-        <td class="<!--[ $stylesheet ]-->"<!--[if $in_new_window eq false]--> onclick="javascript:location.href='<!--[ pc_url action=day date=$date ]-->';"<!--[/if]-->>
+        <td class="<!--[ $stylesheet ]-->"<!--[if $in_new_window eq false]--> onclick="window.location.href='<!--[ pc_url action=day date=$date ]-->';"<!--[/if]-->>
             <div class="monthview_daterow">
                 <span class="date_number"><a href="<!--[ pc_url action=day date=$date ]-->"><!--[ $date|date_format:"%e" ]--></a>
                     <!--[ if $smarty.foreach.days.iteration == 1 ]-->
@@ -51,6 +53,7 @@
                 <!--[ *sort the events by category so we can make it pretty* ]-->
                 <!--[ pc_sort_events var="S_EVENTS" sort="time" order="asc" value=$A_EVENTS ]-->
                 <!--[ assign var="oldCat" value="" ]-->
+                <!--[ assign var="javascript" value="" ]-->
                 <!--[ if isset($S_EVENTS) ]-->
                 <!--[ foreach name=events item=event from=$S_EVENTS.$date ]-->
                     <!--[ assign var="cCat" value=$event.catname ]-->
@@ -98,7 +101,8 @@
         <!--[if ((empty($smarty.get.viewtype)) or (!isset($smarty.get.viewtype)))]-->
             <!--[pnmodgetvar module="PostCalendar" name="pcDefaultView" assign="viewtype" ]-->
         <!--[/if]-->
-        <a href="<!--[pnmodurl modname="PostCalendar" func="view" viewtype=$viewtype Date=$smarty.get.Date ]-->"><!--[gt text='Return']--></a>
+        <!--[formutil_getpassedvalue name="Date" source="get" assign="Date" default='']-->
+        <a href="<!--[pnmodurl modname="PostCalendar" func="view" viewtype=$viewtype Date=$Date ]-->"><!--[gt text='Return']--></a>
     <!--[/if]-->
 </div>
 <!--[ include file="user/postcalendar_user_footer.htm" ]-->

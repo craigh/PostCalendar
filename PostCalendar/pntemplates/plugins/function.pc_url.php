@@ -80,7 +80,7 @@ function smarty_function_pc_url($args, &$smarty)
     }
 
     $link = DataUtil::formatForDisplay($link);
-
+    $title = "";
     $labeltexts = array('today'  => __('Jump to Today', $dom), 
                         'day'    => __('Day View', $dom), 
                         'week'   => __('Week View', $dom),

@@ -12,7 +12,7 @@ include_once $smarty->_get_plugin_filepath('shared', 'make_timestamp');
 function smarty_modifier_pc_date_format($string, $format = null, $default_date = null)
 {
     $format = isset($format) && !empty($format) ? $format : _SETTING_DATE_FORMAT;
-    setlocale(LC_TIME, _PC_LOCALE);
+    setlocale(LC_TIME, ZLanguage::getLocale()); //setlocale(LC_TIME, _PC_LOCALE);
 
     $ret_val = "";
 

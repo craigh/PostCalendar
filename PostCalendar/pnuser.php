@@ -122,6 +122,8 @@ function postcalendar_user_display($args)
                     } else {
                         $tpl->assign('EVENT_CAN_EDIT', false);
                     }
+                    $tpl->assign('TODAY_DATE', DateUtil::getDatetime('', '%Y-%m-%d'));
+                    $tpl->assign('DATE', $Date);
                     return $tpl->fetch('user/postcalendar_user_view_event_details.htm');
                 }
             }

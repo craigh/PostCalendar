@@ -1,10 +1,13 @@
 <!--[* $Id$ *]-->
-<!--[ if $smarty.get.theme eq "Printer" ]-->
+<!--[pnsecauthaction comp="::" inst=".*" level="ACCESS_ADD" assign="ACCESS_ADD"]-->
+<!--[formutil_getpassedvalue name="theme" source="get" assign="theme" default=false]-->
+<!--[ assign var="PRINT_VIEW" value=0 ]-->
+<!--[if $theme eq "Printer"]-->
     <!--[* page presented in printer theme *]-->
     <!--[ assign var="PRINT_VIEW" value=1 ]-->
 <!--[/if]-->
 <!--[ if $PRINT_VIEW eq false ]-->
-    <!--[ include file="user/postcalendar_user_navigation.htm" ]-->
+    <!--[ include file="user/postcalendar_user_navigation_small.htm" ]-->
 <!--[ /if ]-->
 
 <!--[include file="event/postcalendar_event_view.htm" ]-->
@@ -23,7 +26,8 @@
         <!--[if ((empty($smarty.get.viewtype)) or (!isset($smarty.get.viewtype)))]-->
             <!--[pnmodgetvar module="PostCalendar" name="pcDefaultView" assign="viewtype" ]-->
         <!--[/if]-->
-        <a href="<!--[pnmodurl modname="PostCalendar" func="view" viewtype=$viewtype Date=$smarty.get.Date eid=$loaded_event.eid ]-->"><!--[gt text='Return']--></a>
+        <!--[formutil_getpassedvalue name="Date" source="get" assign="Date" default='']-->
+        <a href="<!--[pnmodurl modname="PostCalendar" func="view" viewtype=$viewtype Date=$Date eid=$loaded_event.eid ]-->"><!--[gt text='Return']--></a>
     </div>
 <!--[/if]-->
 <!--[ pnmodcallhooks hookobject=item hookaction=display hookid=$loaded_event.eid returnurl="index.php?module=PostCalendar&func=view&viewtype=details&eid=`$loaded_event.eid`" ]-->
