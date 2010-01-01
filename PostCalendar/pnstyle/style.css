@@ -23,7 +23,7 @@ h2.postcalendar_header {
 	padding: .5em;
     position: relative;
 }
-.postcalendar_header div.postcalendar_eid {
+.postcalendar_header span.postcalendar_eid {
     position: absolute;
     top: 0;
     right: 0;
