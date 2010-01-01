@@ -52,6 +52,8 @@ function postcalendar_calendarblock_display($blockinfo)
     $nextevents     = $vars['pcbnextevents'];
     $pcbshowsslinks = $vars['pcbshowsslinks'];
     $pcbeventsrange = $vars['pcbeventsrange'];
+    $pcbfiltercats  = $vars['pcbfiltercats'];
+
 
     // setup the info to build this
     $the_year = substr($Date, 0, 4);
@@ -159,7 +161,10 @@ function postcalendar_calendarblock_display($blockinfo)
 
     // this grabs more events that required and could slow down the process. RNG
     // suggest addming $limit paramter to getEvents() to reduce load CAH Sept 29, 2009
-    $eventsByDate = pnModAPIFunc('PostCalendar', 'event', 'getEvents', array('start' => $starting_date, 'end' => $ending_date));
+
+    echo "<pre>"; print_r($pcbfiltercats); echo "</pre>";
+    $filtercats['__CATEGORIES__'] = $pcbfiltercats; //reformat array
+    $eventsByDate = pnModAPIFunc('PostCalendar', 'event', 'getEvents', array('start' => $starting_date, 'end' => $ending_date, 'filtercats' => $filtercats));
     $calendarView = Date_Calc::getCalendarMonth($the_month, $the_year, '%Y-%m-%d');
 
     $sdaynames = array();
@@ -239,14 +244,23 @@ function postcalendar_calendarblock_modify($blockinfo)
 {
     $vars = pnBlockVarsFromContent($blockinfo['content']);
     // Defaults
-    if (empty($vars['pcbshowcalendar'])) $vars['pcbshowcalendar'] = 0;
-    if (empty($vars['pcbeventslimit'])) $vars['pcbeventslimit'] = 5;
+    if (empty($vars['pcbshowcalendar']))  $vars['pcbshowcalendar']  = 0;
+    if (empty($vars['pcbeventslimit']))   $vars['pcbeventslimit']   = 5;
     if (empty($vars['pcbeventoverview'])) $vars['pcbeventoverview'] = 0;
-    if (empty($vars['pcbnextevents'])) $vars['pcbnextevents'] = 0;
-    if (empty($vars['pcbeventsrange'])) $vars['pcbeventsrange'] = 6;
-    if (empty($vars['pcbshowsslinks'])) $vars['pcbshowsslinks'] = 0;
+    if (empty($vars['pcbnextevents']))    $vars['pcbnextevents']    = 0;
+    if (empty($vars['pcbeventsrange']))   $vars['pcbeventsrange']   = 6;
+    if (empty($vars['pcbshowsslinks']))   $vars['pcbshowsslinks']   = 0;
+    if (empty($vars['pcbfiltercats']))    $vars['pcbfiltercats']    = array();
 
     $pnRender = pnRender::getInstance('PostCalendar', false); // no caching
+
+    // load the category registry util
+    if (Loader::loadClass('CategoryRegistryUtil')) {
+        $catregistry  = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
+        $pnRender->assign('catregistry', $catregistry);
+    }
+    $props = array_keys($catregistry);
+    $pnRender->assign('firstprop', $props[0]);
 
     $pnRender->assign('vars', $vars);
 
@@ -262,12 +276,13 @@ function postcalendar_calendarblock_update($blockinfo)
     $vars = pnBlockVarsFromContent($blockinfo['content']);
 
     // overwrite with new values
-    $vars['pcbshowcalendar'] = FormUtil::getPassedValue('pcbshowcalendar', 0);
-    $vars['pcbeventslimit'] = FormUtil::getPassedValue('pcbeventslimit', 5);
+    $vars['pcbshowcalendar']  = FormUtil::getPassedValue('pcbshowcalendar',  0);
+    $vars['pcbeventslimit']   = FormUtil::getPassedValue('pcbeventslimit',   5);
     $vars['pcbeventoverview'] = FormUtil::getPassedValue('pcbeventoverview', 0);
-    $vars['pcbnextevents'] = FormUtil::getPassedValue('pcbnextevents', 0);
-    $vars['pcbeventsrange'] = FormUtil::getPassedValue('pcbeventsrange', 6);
-    $vars['pcbshowsslinks'] = FormUtil::getPassedValue('pcbshowsslinks', 0);
+    $vars['pcbnextevents']    = FormUtil::getPassedValue('pcbnextevents',    0);
+    $vars['pcbeventsrange']   = FormUtil::getPassedValue('pcbeventsrange',   6);
+    $vars['pcbshowsslinks']   = FormUtil::getPassedValue('pcbshowsslinks',   0);
+    $vars['pcbfiltercats']    = FormUtil::getPassedValue('pcbfiltercats'); //array
 
     $pnRender = pnRender::getInstance('PostCalendar');
     $pnRender->clear_cache('blocks/postcalendar_block_view_day.htm');
