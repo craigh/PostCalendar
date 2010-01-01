@@ -161,8 +161,6 @@ function postcalendar_calendarblock_display($blockinfo)
 
     // this grabs more events that required and could slow down the process. RNG
     // suggest addming $limit paramter to getEvents() to reduce load CAH Sept 29, 2009
-
-    echo "<pre>"; print_r($pcbfiltercats); echo "</pre>";
     $filtercats['__CATEGORIES__'] = $pcbfiltercats; //reformat array
     $eventsByDate = pnModAPIFunc('PostCalendar', 'event', 'getEvents', array('start' => $starting_date, 'end' => $ending_date, 'filtercats' => $filtercats));
     $calendarView = Date_Calc::getCalendarMonth($the_month, $the_year, '%Y-%m-%d');
