@@ -42,7 +42,7 @@ function PostCalendar_hooksapi_create_news($args)
         'eventstatus'    => 1, // approved
         'sharing'        => 3, // global
         'website'        => 'http://code.zikula.org/soundwebdevelopment/wiki/PostCalendar',
-        '__CATEGORIES__' => array('Main' => $cat['id']),
+        '__CATEGORIES__' => array('Main' => 5/*$cat['id']*/),
         '__META__'       => array('module' => 'PostCalendar'),
     );
     return $event;

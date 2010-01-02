@@ -204,8 +204,9 @@ function pc_clean($s)
 
     unset($display_type);
     $s = preg_replace('/[\r|\n]/i', '', $s);
-    $s = str_replace("'", "\'", $s);
     $s = str_replace('"', '&quot;', $s);
+    //$s = str_replace("'", "\'", $s);
+    $s = addslashes($s);
     // break really long lines - only break at spaces to allow for
     // correct interpretation of special characters
     $tmp = explode(' ', $s);

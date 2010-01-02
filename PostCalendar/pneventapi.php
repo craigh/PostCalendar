@@ -48,7 +48,6 @@ function postcalendar_eventapi_queryEvents($args)
     if (!pnUserLoggedIn()) $pc_username = _PC_FILTER_GLOBAL;
 
     $userid = pnUserGetVar('uid');
-    unset($ruserid);
 
     // convert $pc_username to useable information
     /* possible values:

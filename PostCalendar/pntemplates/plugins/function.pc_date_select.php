@@ -20,9 +20,9 @@ function smarty_function_pc_date_select($args, &$smarty)
     $Date      = pnModAPIFunc('PostCalendar','user','getDate',$jumpargs);
     if (!isset($viewtype)) $viewtype = _SETTING_DEFAULT_VIEW;
 
-    if (!isset($y)) $y = substr($Date, 0, 4);
-    if (!isset($m)) $m = substr($Date, 4, 2);
-    if (!isset($d)) $d = substr($Date, 6, 2);
+    $y = substr($Date, 0, 4);
+    $m = substr($Date, 4, 2);
+    $d = substr($Date, 6, 2);
 
     $sel_data = array(
         'day'   => __('Day', $dom),

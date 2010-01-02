@@ -38,10 +38,6 @@ function smarty_function_pc_filter($args, &$smarty)
     $jumpargs  = array('Date'=>$Date,'jumpday'=>$jumpday,'jumpmonth'=>$jumpmonth,'jumpyear'=>$jumpyear);
     $Date      = pnModAPIFunc('PostCalendar','user','getDate',$jumpargs);    
 
-    if (!isset($y)) $y = substr($Date, 0, 4);
-    if (!isset($m)) $m = substr($Date, 4, 2);
-    if (!isset($d)) $d = substr($Date, 6, 2);
-
     $viewtype = FormUtil::getPassedValue('viewtype', _SETTING_DEFAULT_VIEW);
     if (pnModGetVar('PostCalendar', 'pcAllowUserCalendar')) { $filterdefault = _PC_FILTER_ALL; } else { $filterdefault = _PC_FILTER_GLOBAL; }
     $pc_username = FormUtil::getPassedValue('pc_username', $filterdefault);
