@@ -94,7 +94,9 @@ function postcalendar_featuredeventblock_modify($blockinfo)
 {
     $vars = pnBlockVarsFromContent($blockinfo['content']);
     // Defaults
-    if (empty($vars['eid'])) $vars['eid'] = '';
+    if (empty($vars['eid']))           $vars['eid']           = '';
+    if (empty($vars['showcountdown'])) $vars['showcountdown'] = 0;
+    if (empty($vars['hideonexpire']))  $vars['hideonexpire']  = 0;
 
     $pnRender = pnRender::getInstance('PostCalendar', false); // no caching
 
