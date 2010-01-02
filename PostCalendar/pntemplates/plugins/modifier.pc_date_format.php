@@ -8,10 +8,9 @@
  * @copyright   Copyright (c) 2009, Craig Heydenburg, Sound Web Development
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
  */
-function smarty_modifier_pc_date_format($string, $format = null, $default_date = null, &$smarty)
+include_once $smarty->_get_plugin_filepath('shared', 'make_timestamp');
+function smarty_modifier_pc_date_format($string, $format = null, $default_date = null)
 {
-    include_once $smarty->_get_plugin_filepath('shared', 'make_timestamp');
-    
     $format = isset($format) && !empty($format) ? $format : _SETTING_DATE_FORMAT;
     setlocale(LC_TIME, ZLanguage::getLocale()); //setlocale(LC_TIME, _PC_LOCALE);
 
