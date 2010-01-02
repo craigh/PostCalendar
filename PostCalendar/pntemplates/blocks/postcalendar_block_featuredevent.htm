@@ -26,12 +26,7 @@
 <div class="eventtime">
     <!--[ $loaded_event.eventDate|pc_date_format]--><br />
     <!--[ if $loaded_event.alldayevent != true ]-->
-        <!--[ if $24HOUR_TIME ]-->
-            <!--[ assign var="timestamp" value=$loaded_event.startTime|date_format:"%H:%M" ]-->
-        <!--[ else ]-->
-            <!--[ assign var="timestamp" value=$loaded_event.startTime|date_format:"%l:%M %p" ]-->
-        <!--[ /if ]-->
-        <!--[ $timestamp ]--><br />
+        <!--[ $loaded_event.startTime ]--><br />
         <!--[gt text='Duration' domain="module_postcalendar"]-->: <!--[ $loaded_event.duration ]--> <!--[gt text='hours' domain="module_postcalendar"]-->
     <!--[ else ]-->
         <!--[gt text='All day event' domain="module_postcalendar"]-->

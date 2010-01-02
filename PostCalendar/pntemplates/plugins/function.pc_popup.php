@@ -38,7 +38,7 @@ function smarty_function_pc_popup($args, &$smarty)
     $ret_val = "";
 
     $ret_val .= $args['trigger'] . '="return overlib(\'' . pc_clean($args['text']) . '\'';
-    if ($args['sticky']) {
+    if (isset($args['sticky'])) {
         $ret_val .= ",STICKY";
     }
     if (!empty($args['caption'])) {
