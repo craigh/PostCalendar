@@ -402,7 +402,7 @@ function _postcalendar_migratetopics()
  */
 function _postcalendar_transcode_ids($categorymap, $topicsmap)
 {
-    if ((!isset($categorymap)) AND (!isset($topicmap))) return false;
+    if ((!isset($categorymap)) AND (!isset($topicsmap))) return false;
 
     $dom = ZLanguage::getModuleDomain('PostCalendar');
     $prefix = pnConfigGetVar('prefix');
