@@ -276,12 +276,13 @@ function postcalendar_init_reset_scribite()
  */
 function postcalendar_init_correctserialization()
 {
+    $dom = ZLanguage::getModuleDomain('PostCalendar');
     $prefix = pnConfigGetVar('prefix');
     $Ssql = "SELECT pc_eid, pc_location FROM {$prefix}_postcalendar_events";
     $result = DBUtil::executeSQL($Ssql);
     for (; !$result->EOF; $result->MoveNext()) {
         $oldlocdata = DataUtil::mb_unserialize($result->fields[1]);
-        $newlocdata = serialize($locdata);
+        $newlocdata = serialize($oldlocdata);
         $Usql = "UPDATE {$prefix}_postcalendar_events SET pc_location='$newlocdata' WHERE pc_eid=".$result->fields[0];
         DBUtil::executeSQL($Usql);
     }
@@ -401,7 +402,7 @@ function _postcalendar_migratetopics()
  */
 function _postcalendar_transcode_ids($categorymap, $topicsmap)
 {
-    if ((empty($categorymap)) AND (empty($topicmap))) return false;
+    if ((!isset($categorymap)) AND (!isset($topicmap))) return false;
 
     $dom = ZLanguage::getModuleDomain('PostCalendar');
     $prefix = pnConfigGetVar('prefix');
@@ -565,10 +566,9 @@ function _postcalendar_cull_meetings()
     for (; !$result->EOF; $result->MoveNext()) {
         $new_m_id = $result->fields[1];
         if (($old_m_id) && ($old_m_id != "NULL") && ($new_m_id > 0) && ($old_m_id == $new_m_id)) {
-            $old_m_id = $new_m_id;
             DBUtil::deleteObjectByID('postcalendar_events', $result->fields[0], 'eid'); // delete dup event
         }
-        $old_m_id = $evt['meeting_id'];
+        $old_m_id = $new_m_id;
     }
 
     DBUtil::dropColumn('postcalendar_events', 'pc_meeting_id');
