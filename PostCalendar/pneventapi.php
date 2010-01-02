@@ -459,7 +459,7 @@ function postcalendar_eventapi_formateventarrayfordisplay($event)
 
     // build recurrance sentence for display
     $repeat_freq_type = explode ("/", __('Day(s)/Week(s)/Month(s)/Year(s)', $dom));
-    $repeat_on_num    = explode ("/", __('First/Second/Third/Fourth/Last', $dom));
+    $repeat_on_num    = explode ("/", __('err/First/Second/Third/Fourth/Last', $dom));
     $repeat_on_day    = explode (" ", __('Sun Mon Tue Wed Thu Fri Sat', $dom));
     if ($event['recurrtype'] == REPEAT) {
         $event['recurr_sentence']  = __f("Event recurs every %s", $event['repeat']['event_repeat_freq'], $dom);
