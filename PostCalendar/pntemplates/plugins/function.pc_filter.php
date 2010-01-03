@@ -106,6 +106,7 @@ function smarty_function_pc_filter($args, &$smarty)
         unset($types[$key]);
     }
 
+    $ret_val = "";
     if (!empty($types)) {
         //================================================================
         // build it in the correct order
@@ -128,7 +129,6 @@ function smarty_function_pc_filter($args, &$smarty)
             $order = $orderArray;
         }
 
-        $ret_val = "";
         foreach ($order as $element) {
             $ret_val .= $element;
         }
