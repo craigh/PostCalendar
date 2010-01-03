@@ -112,6 +112,7 @@ function PostCalendar_upgrade($oldversion)
         case '5.8.1':
             postcalendar_init_correctserialization();
         case '5.8.2':
+            ini_set('max_execution_time', 86400);
             if (!_postcalendar_cull_meetings()) {
                 LogUtil::registerError (__('Error: Could not cull meetings.', $dom));
                 return '5.8.2';
@@ -150,12 +151,10 @@ function PostCalendar_upgrade($oldversion)
             pnModSetVar('PostCalendar', 'enablecategorization', true);
             pnModSetVar('PostCalendar', 'enablenavimages', true);
             pnModSetVar('PostCalendar', 'pcNavDateOrder', array('format'=>'MDY','D'=>'%e','M'=>'%B','Y'=>'%Y'));
-
         case '6.0.0':
-        case '6.0.0-dev': // remove
             _postcalendar_registermodulehooks();
-        //case '6.1.0':
-            //placeholder
+        case '6.1.0':
+            //future development
     }
 
     // if we get this far - clear the cache
