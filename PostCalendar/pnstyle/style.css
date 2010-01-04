@@ -210,7 +210,10 @@ a.postcalendar_nav_text_selected:hover {
 .postcalendar_event_view div.eventdetails {
 	padding: .3em 2em;
 }
-
+.postcalendar_event_view div.eventdetails span.location{
+    padding-left: 2em;
+    display: block;
+}
 /*********** SMALLMONTHTABLE STYLES **************/
 table.smallmonthtable {
     width: 100%;
