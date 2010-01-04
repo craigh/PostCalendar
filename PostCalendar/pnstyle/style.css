@@ -332,6 +332,10 @@ div.postcalendar_featuredevent div.eventdetails {
 div.postcalendar_featuredevent div.eventdetails ul {
     padding-left: 2em;
 }
+div.postcalendar_featuredevent div.eventdetails span.location{
+    padding-left: 2em;
+    display: block;
+}
 /********** last things ************/
 div#overDiv {
     /* this should correct issues with themes changing all divs 
