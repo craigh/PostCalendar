@@ -30,7 +30,7 @@ function smarty_function_pc_date_select($args, &$smarty)
         'month' => __('Month', $dom),
         'year'  => __('Year', $dom),
         'list'  => __('List View', $dom),
-        );
+    );
 
     $smarty->assign('dateorderinfo', pnModGetVar('PostCalendar', 'pcNavDateOrder'));
     $smarty->assign('currentjumpdate', $y.'-'.$m.'-'.$d);

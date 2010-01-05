@@ -90,7 +90,7 @@ function smarty_function_pc_url($args, &$smarty)
                         'add'    => __('Submit New Event', $dom),
                         'search' => __('Search', $dom),
                         'print'  => __('Print View', $dom),
-                        );
+    );
     if ($full) {
         if ($navlink) {
             if (_SETTING_USENAVIMAGES) {
@@ -112,7 +112,7 @@ function smarty_function_pc_url($args, &$smarty)
                                  'add'    => __('Add', $dom),
                                  'search' => __('Search', $dom),
                                  'print'  => __('Print', $dom),
-                                 );
+                );
                 $display = $linkmap[$action];
                 $class = ($viewtype==$action) ? 'postcalendar_nav_text_selected' : 'postcalendar_nav_text';
                 $title = $labeltexts[$action];

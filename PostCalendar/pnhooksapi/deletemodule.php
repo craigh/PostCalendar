@@ -19,7 +19,7 @@
 function PostCalendar_hooksapi_deletemodule($args)
 {
     if ((!isset($args['objectid'])) || ((int)$args['objectid'] <= 0)) return false;
-	$module = isset($args['module']) ? strtolower($args['module']) : strtolower(pnModGetName()); // default to active module
+    $module = isset($args['module']) ? strtolower($args['module']) : strtolower(pnModGetName()); // default to active module
 
     if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADD)) {
         return LogUtil::registerPermissionError();
