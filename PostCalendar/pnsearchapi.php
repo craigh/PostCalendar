@@ -13,8 +13,10 @@
  **/
 function postcalendar_searchapi_info()
 {
-    return array('title' => 'PostCalendar',
-                 'functions' => array('PostCalendar' => 'search'));
+    return array(
+        'title' => 'PostCalendar',
+        'functions' => array(
+            'PostCalendar' => 'search'));
 }
 
 /**
@@ -50,15 +52,15 @@ function postcalendar_searchapi_options($args)
 /**
  * Search plugin main function
  * args expected:
-    $args[q] (user entered search terms)
-    $args[searchtype] (AND/OR/EXACT)
-    $args[searchorder] (newest/oldest/alphabetical)
-    $args[numlimit] (result limit)
-    $args[page]
-    $args[startnum]
-    $args[__CATEGORIES__] (postcalendar specific)
-    $args[searchstart] (postcalendar specific)
-    $args[searchend] (postcalendar specific)
+ *     $args[q] (user entered search terms)
+ *     $args[searchtype] (AND/OR/EXACT)
+ *     $args[searchorder] (newest/oldest/alphabetical)
+ *     $args[numlimit] (result limit)
+ *     $args[page]
+ *     $args[startnum]
+ *     $args[__CATEGORIES__] (postcalendar specific)
+ *     $args[searchstart] (postcalendar specific)
+ *     $args[searchend] (postcalendar specific)
  **/
 function postcalendar_searchapi_search($args)
 {
@@ -79,56 +81,55 @@ function postcalendar_searchapi_search($args)
     $searchTable = $pntable['search_result'];
     $searchColumn = $pntable['search_result_column'];
 
-    $where = search_construct_where($args,
-                                    array($postcalendarcolumn['title'],
-                                          $postcalendarcolumn['hometext']),
-                                    null);
-    if (!empty($where)) $searchargs['s_keywords'] = trim(substr(trim($where), 1, -1));
+    $where = search_construct_where($args, array(
+        $postcalendarcolumn['title'],
+        $postcalendarcolumn['hometext']), null);
+    if (!empty($where)) {
+        $searchargs['s_keywords'] = trim(substr(trim($where), 1, -1));
+    }
 
     $searchargs['searchstart'] = (!isset($args['searchstart'])) ? 0 : $args['searchstart'];
     $searchargs['searchend'] = (($args['searchstart'] == $args['searchend']) || (!isset($args['searchend']))) ? 2 : $args['searchend']; // user set both options to 'now'
 
-    $eventsByDate = pnModAPIFunc('PostCalendar','event','getEvents',$searchargs);
+    $eventsByDate = pnModAPIFunc('PostCalendar', 'event', 'getEvents', $searchargs);
     // $eventsByDate = array(Date[YYYY-MM-DD]=>array(key[int]=>array(assockey[name]=>values)))
     // !Dates exist w/o data
 
     $sessionId = session_id();
 
-    $insertSql =
-        "INSERT INTO $searchTable
+    $insertSql = "INSERT INTO $searchTable
           ($searchColumn[title],
-           $searchColumn[text],
-           $searchColumn[extra],
-           $searchColumn[created],
-           $searchColumn[module],
-           $searchColumn[session])
+          $searchColumn[text],
+          $searchColumn[extra],
+          $searchColumn[created],
+          $searchColumn[module],
+          $searchColumn[session])
         VALUES ";
 
     // Process the result set and insert into search result table
     foreach ($eventsByDate as $date) {
         if (count($date) > 0) {
             foreach ($date as $event) {
-                $title   = $event['title'] ." (". strftime(pnModGetVar('PostCalendar', 'pcEventDateFormat'), strtotime($event['eventDate'])) .")";
-                $start   = $event['alldayevent'] ? "12:00:00" : $event['startTime'];
+                $title = $event['title'] . " (" . strftime(pnModGetVar('PostCalendar', 'pcEventDateFormat'), strtotime($event['eventDate'])) . ")";
+                $start = $event['alldayevent'] ? "12:00:00" : $event['startTime'];
                 $created = $event['eventDate'] . " " . $start;
                 $sql = $insertSql . '('
-                   . '\'' . DataUtil::formatForStore($title) . '\', '
-                   . '\'' . DataUtil::formatForStore($event['hometext']) . '\', '
-                   . '\'' . DataUtil::formatForStore($event['eid']) . '\', '
-                   . '\'' . DataUtil::formatForStore($created) . '\', '
-                   . '\'' . 'PostCalendar' . '\', '
-                   . '\'' . DataUtil::formatForStore($sessionId) . '\')';
+                    . '\'' . DataUtil::formatForStore($title) . '\', '
+                    . '\'' . DataUtil::formatForStore($event['hometext']) . '\', '
+                    . '\'' . DataUtil::formatForStore($event['eid']) . '\', '
+                    . '\'' . DataUtil::formatForStore($created) . '\', '
+                    . '\'' . 'PostCalendar' . '\', '
+                    . '\'' . DataUtil::formatForStore($sessionId) . '\')';
             }
             $insertResult = DBUtil::executeSQL($sql);
             if (!$insertResult) {
-                return LogUtil::registerError (__('Error! Could not load items.', $dom));
+                return LogUtil::registerError(__('Error! Could not load items.', $dom));
             }
         }
     }
 
     return true;
 }
-
 
 /**
  * Do last minute access checking and assign URL to items
@@ -142,8 +143,12 @@ function postcalendar_searchapi_search_check(&$args)
     $eid = $datarow['extra'];
     $date = str_replace("-", "", substr($datarow['created'], 0, 10));
 
-    $datarow['url'] = pnModUrl('PostCalendar', 'user', 'view', array('Date' => $date, 'eid' => $eid, 'viewtype' => 'details'));
+    $datarow['url'] = pnModUrl('PostCalendar', 'user', 'view', array(
+        'Date' => $date,
+        'eid' => $eid,
+        'viewtype' => 'details'));
     // needed: index.php?module=PostCalendar&func=view&Date=20090726&viewtype=details&eid=1718
+
 
     return true;
 }

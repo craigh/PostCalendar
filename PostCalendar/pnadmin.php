@@ -43,7 +43,7 @@ function postcalendar_admin_modifyconfig()
 
     // load the category registry util
     if (Loader::loadClass('CategoryRegistryUtil')) {
-        $catregistry  = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
+        $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
         $pnRender->assign('catregistry', $catregistry);
     }
     $props = array_keys($catregistry);
@@ -63,9 +63,9 @@ function postcalendar_admin_listapproved()
 {
     $dom = ZLanguage::getModuleDomain('PostCalendar');
     $args = array();
-    $args['type']     = _EVENT_APPROVED;
+    $args['type'] = _EVENT_APPROVED;
     $args['function'] = 'listapproved';
-    $args['title']    = __('Approved events administration', $dom);
+    $args['title'] = __('Approved events administration', $dom);
     return postcalendar_admin_showlist($args);
 }
 
@@ -78,9 +78,9 @@ function postcalendar_admin_listhidden()
 {
     $dom = ZLanguage::getModuleDomain('PostCalendar');
     $args = array();
-    $args['type']     = _EVENT_HIDDEN;
+    $args['type'] = _EVENT_HIDDEN;
     $args['function'] = 'listhidden';
-    $args['title']    = __('Hidden events administration', $dom);
+    $args['title'] = __('Hidden events administration', $dom);
     return postcalendar_admin_showlist($args);
 }
 
@@ -93,9 +93,9 @@ function postcalendar_admin_listqueued()
 {
     $dom = ZLanguage::getModuleDomain('PostCalendar');
     $args = array();
-    $args['type']     = _EVENT_QUEUED;
+    $args['type'] = _EVENT_QUEUED;
     $args['function'] = 'listqueued';
-    $args['title']    = __('Queued events administration', $dom);
+    $args['title'] = __('Queued events administration', $dom);
     return postcalendar_admin_showlist($args);
 }
 
@@ -113,20 +113,29 @@ function postcalendar_admin_showlist($args)
     }
 
     // $args should be array with keys 'type', 'function', 'title'
-    if (!isset($args['type']) or empty($args['function'])) return false; // $title not required, type can be 1, 0, -1
+    if (!isset($args['type']) or empty($args['function'])) {
+        return false; // $title not required, type can be 1, 0, -1
+    }
+
 
     $offset_increment = _SETTING_HOW_MANY_EVENTS;
-    if (empty($offset_increment)) $offset_increment = 15;
+    if (empty($offset_increment)) {
+        $offset_increment = 15;
+    }
 
     $offset = FormUtil::getPassedValue('offset', 0);
-    $sort   = FormUtil::getPassedValue('sort', 'time');
-    $sdir   = FormUtil::getPassedValue('sdir', 1);
+    $sort = FormUtil::getPassedValue('sort', 'time');
+    $sdir = FormUtil::getPassedValue('sdir', 1);
     $original_sdir = $sdir;
     $sdir = $sdir ? 0 : 1; //if true change to false, if false change to true
-    if ($sdir == 0) $sort .= ' DESC';
-    if ($sdir == 1) $sort .= ' ASC';
+    if ($sdir == 0) {
+        $sort .= ' DESC';
+    }
+    if ($sdir == 1) {
+        $sort .= ' ASC';
+    }
 
-    $events = DBUtil::selectObjectArray('postcalendar_events', "WHERE pc_eventstatus=".$args['type'], $sort, $offset, $offset_increment, false);
+    $events = DBUtil::selectObjectArray('postcalendar_events', "WHERE pc_eventstatus=" . $args['type'], $sort, $offset, $offset_increment, false);
 
     // Turn off template caching here
     $pnRender = pnRender::getInstance('PostCalendar', false);
@@ -134,20 +143,32 @@ function postcalendar_admin_showlist($args)
     $pnRender->assign('function', $args['function']);
     $pnRender->assign('functionname', substr($args['function'], 4));
     $pnRender->assign('events', $events);
-    $pnRender->assign('title_sort_url', pnModUrl('PostCalendar', 'admin', $args['function'], array('sort' => 'title', 'sdir' => $sdir)));
-    $pnRender->assign('time_sort_url', pnModUrl('PostCalendar', 'admin', $args['function'], array('sort' => 'time', 'sdir' => $sdir)));
-    $pnRender->assign('formactions', array(_ADMIN_ACTION_VIEW => __('List', $dom), _ADMIN_ACTION_APPROVE => __('Approve', $dom),
-                        _ADMIN_ACTION_HIDE => __('Hide', $dom),
-                        _ADMIN_ACTION_DELETE => __('Delete', $dom)));
+    $pnRender->assign('title_sort_url', pnModUrl('PostCalendar', 'admin', $args['function'], array(
+        'sort' => 'title',
+        'sdir' => $sdir)));
+    $pnRender->assign('time_sort_url', pnModUrl('PostCalendar', 'admin', $args['function'], array(
+        'sort' => 'time',
+        'sdir' => $sdir)));
+    $pnRender->assign('formactions', array(
+        _ADMIN_ACTION_VIEW => __('List', $dom),
+        _ADMIN_ACTION_APPROVE => __('Approve', $dom),
+        _ADMIN_ACTION_HIDE => __('Hide', $dom),
+        _ADMIN_ACTION_DELETE => __('Delete', $dom)));
     $pnRender->assign('actionselected', _ADMIN_ACTION_VIEW);
     if ($offset > 1) {
-        $prevlink = pnModUrl('PostCalendar', 'admin', $args['function'], array('offset' => $offset - $offset_increment, 'sort' => $sort, 'sdir' => $original_sdir));
+        $prevlink = pnModUrl('PostCalendar', 'admin', $args['function'], array(
+            'offset' => $offset - $offset_increment,
+            'sort' => $sort,
+            'sdir' => $original_sdir));
     } else {
         $prevlink = false;
     }
     $pnRender->assign('prevlink', $prevlink);
     if (count($events) >= $offset_increment) {
-        $nextlink = pnModUrl('PostCalendar', 'admin', $args['function'], array('offset' => $offset + $offset_increment, 'sort' => $sort, 'sdir' => $original_sdir));
+        $nextlink = pnModUrl('PostCalendar', 'admin', $args['function'], array(
+            'offset' => $offset + $offset_increment,
+            'sort' => $sort,
+            'sdir' => $original_sdir));
     } else {
         $nextlink = false;
     }
@@ -169,9 +190,9 @@ function postcalendar_admin_adminevents()
         return LogUtil::registerPermissionError();
     }
 
-    $action      = FormUtil::getPassedValue('action');
-    $events      = FormUtil::getPassedValue('events'); // could be an array or single val
-    $thelist     = FormUtil::getPassedValue('thelist');
+    $action = FormUtil::getPassedValue('action');
+    $events = FormUtil::getPassedValue('events'); // could be an array or single val
+    $thelist = FormUtil::getPassedValue('thelist');
 
     if (!isset($events)) {
         LogUtil::registerError(__('Please select an event.', $dom));
@@ -179,16 +200,23 @@ function postcalendar_admin_adminevents()
         // return to where we came from
         switch ($thelist) {
             case 'listqueued':
-                return pnModFunc('PostCalendar', 'admin', 'showlist', array('type' => _EVENT_QUEUED,   'function' => 'showlist'));
+                return pnModFunc('PostCalendar', 'admin', 'showlist', array(
+                    'type' => _EVENT_QUEUED,
+                    'function' => 'showlist'));
             case 'listhidden':
-                return pnModFunc('PostCalendar', 'admin', 'showlist', array('type' => _EVENT_HIDDEN,   'function' => 'showlist'));
+                return pnModFunc('PostCalendar', 'admin', 'showlist', array(
+                    'type' => _EVENT_HIDDEN,
+                    'function' => 'showlist'));
             case 'listapproved':
-                return pnModFunc('PostCalendar', 'admin', 'showlist', array('type' => _EVENT_APPROVED, 'function' => 'showlist'));
+                return pnModFunc('PostCalendar', 'admin', 'showlist', array(
+                    'type' => _EVENT_APPROVED,
+                    'function' => 'showlist'));
         }
     }
 
     if (!is_array($events)) {
-        $events = array($events);
+        $events = array(
+            $events);
     } //create array if not already
 
     foreach ($events as $eid) {
@@ -274,23 +302,23 @@ function postcalendar_admin_updateconfig()
     }
 
     $settings = array(
-    'pcTime24Hours'           => FormUtil::getPassedValue('pcTime24Hours', 0),
-    'pcEventsOpenInNewWindow' => FormUtil::getPassedValue('pcEventsOpenInNewWindow', 0),
-    'pcFirstDayOfWeek'        => FormUtil::getPassedValue('pcFirstDayOfWeek', $defaults['pcFirstDayOfWeek']),
-    'pcUsePopups'             => FormUtil::getPassedValue('pcUsePopups', 0),
-    'pcAllowDirectSubmit'     => FormUtil::getPassedValue('pcAllowDirectSubmit', 0),
-    'pcListHowManyEvents'     => FormUtil::getPassedValue('pcListHowManyEvents', $defaults['pcListHowManyEvents']),
-    'pcEventDateFormat'       => FormUtil::getPassedValue('pcEventDateFormat', $defaults['pcEventDateFormat']),
-    'pcAllowUserCalendar'     => FormUtil::getPassedValue('pcAllowUserCalendar', 0),
-    'pcTimeIncrement'         => FormUtil::getPassedValue('pcTimeIncrement', $defaults['pcTimeIncrement']),
-    'pcDefaultView'           => FormUtil::getPassedValue('pcDefaultView', $defaults['pcDefaultView']),
-    'pcNotifyAdmin'           => FormUtil::getPassedValue('pcNotifyAdmin', 0),
-    'pcNotifyEmail'           => FormUtil::getPassedValue('pcNotifyEmail', $defaults['pcNotifyEmail']),
-    'pcNotifyAdmin2Admin'     => FormUtil::getPassedValue('pcNotifyAdmin2Admin', 0),
-    'pcAllowCatFilter'        => FormUtil::getPassedValue('pcAllowCatFilter', 0),
-    'enablecategorization'    => FormUtil::getPassedValue('enablecategorization', 0),
-    'enablenavimages'         => FormUtil::getPassedValue('enablenavimages', 0),
-    'pcDefaultCategories'     => FormUtil::getPassedValue('pcDefaultCategories'), //array
+        'pcTime24Hours'           => FormUtil::getPassedValue('pcTime24Hours', 0),
+        'pcEventsOpenInNewWindow' => FormUtil::getPassedValue('pcEventsOpenInNewWindow', 0),
+        'pcFirstDayOfWeek'        => FormUtil::getPassedValue('pcFirstDayOfWeek', $defaults['pcFirstDayOfWeek']),
+        'pcUsePopups'             => FormUtil::getPassedValue('pcUsePopups', 0),
+        'pcAllowDirectSubmit'     => FormUtil::getPassedValue('pcAllowDirectSubmit', 0),
+        'pcListHowManyEvents'     => FormUtil::getPassedValue('pcListHowManyEvents', $defaults['pcListHowManyEvents']),
+        'pcEventDateFormat'       => FormUtil::getPassedValue('pcEventDateFormat', $defaults['pcEventDateFormat']),
+        'pcAllowUserCalendar'     => FormUtil::getPassedValue('pcAllowUserCalendar', 0),
+        'pcTimeIncrement'         => FormUtil::getPassedValue('pcTimeIncrement', $defaults['pcTimeIncrement']),
+        'pcDefaultView'           => FormUtil::getPassedValue('pcDefaultView', $defaults['pcDefaultView']),
+        'pcNotifyAdmin'           => FormUtil::getPassedValue('pcNotifyAdmin', 0),
+        'pcNotifyEmail'           => FormUtil::getPassedValue('pcNotifyEmail', $defaults['pcNotifyEmail']),
+        'pcNotifyAdmin2Admin'     => FormUtil::getPassedValue('pcNotifyAdmin2Admin', 0),
+        'pcAllowCatFilter'        => FormUtil::getPassedValue('pcAllowCatFilter', 0),
+        'enablecategorization'    => FormUtil::getPassedValue('enablecategorization', 0),
+        'enablenavimages'         => FormUtil::getPassedValue('enablenavimages', 0),
+        'pcDefaultCategories'     => FormUtil::getPassedValue('pcDefaultCategories'), //array
     );
     $settings['pcNavDateOrder'] = pnModAPIFunc('PostCalendar', 'admin', 'getdateorder', $settings['pcEventDateFormat']);
 
@@ -301,7 +329,8 @@ function postcalendar_admin_updateconfig()
     pnModSetVars('PostCalendar', $settings);
 
     // Let any other modules know that the modules configuration has been updated
-    pnModCallHooks('module','updateconfig','PostCalendar', array('module' => 'PostCalendar'));
+    pnModCallHooks('module', 'updateconfig', 'PostCalendar', array(
+        'module' => 'PostCalendar'));
 
     // clear the cache
     pnModAPIFunc('PostCalendar', 'admin', 'clearCache');
@@ -323,12 +352,16 @@ function postcalendar_admin_approveevents()
     }
 
     $pc_eid = FormUtil::getPassedValue('pc_eid');
-    if (!is_array($pc_eid)) return __("Error! An 'unidentified error' occurred.", $dom);
+    if (!is_array($pc_eid)) {
+        return __("Error! An 'unidentified error' occurred.", $dom);
+    }
 
     // structure array for DB interaction
     $eventarray = array();
     foreach ($pc_eid as $eid) {
-        $eventarray[$eid] = array('eid' => $eid, 'eventstatus' => _EVENT_APPROVED);
+        $eventarray[$eid] = array(
+            'eid' => $eid,
+            'eventstatus' => _EVENT_APPROVED);
     }
     $count = count($pc_eid);
 
@@ -341,7 +374,10 @@ function postcalendar_admin_approveevents()
     }
 
     pnModAPIFunc('PostCalendar', 'admin', 'clearCache');
-    return pnModFunc('PostCalendar', 'admin', 'showlist', array('type' => _EVENT_APPROVED, 'function' => 'listapproved', 'title' => __('Approved events administration', $dom)));
+    return pnModFunc('PostCalendar', 'admin', 'showlist', array(
+        'type' => _EVENT_APPROVED,
+        'function' => 'listapproved',
+        'title' => __('Approved events administration', $dom)));
 }
 
 /*
@@ -357,14 +393,18 @@ function postcalendar_admin_hideevents()
     }
 
     $pc_eid = FormUtil::getPassedValue('pc_eid');
-    if (!is_array($pc_eid)) return __("Error! An 'unidentified error' occurred.", $dom);
+    if (!is_array($pc_eid)) {
+        return __("Error! An 'unidentified error' occurred.", $dom);
+    }
 
     // structure array for DB interaction
     $eventarray = array();
     foreach ($pc_eid as $eid) {
-        $eventarray[$eid] = array('eid' => $eid, 'eventstatus' => _EVENT_HIDDEN);
+        $eventarray[$eid] = array(
+            'eid' => $eid,
+            'eventstatus' => _EVENT_HIDDEN);
     }
-    $count=count($pc_eid);
+    $count = count($pc_eid);
 
     // update the DB
     $res = DBUtil::updateObjectArray($eventarray, 'postcalendar_events', 'eid');
@@ -375,7 +415,10 @@ function postcalendar_admin_hideevents()
     }
 
     pnModAPIFunc('PostCalendar', 'admin', 'clearCache');
-    return pnModFunc('PostCalendar', 'admin', 'showlist', array('type' => _EVENT_APPROVED, 'function' => 'listapproved', 'title' => __('Approved events administration', $dom)));
+    return pnModFunc('PostCalendar', 'admin', 'showlist', array(
+        'type' => _EVENT_APPROVED,
+        'function' => 'listapproved',
+        'title' => __('Approved events administration', $dom)));
 }
 
 /*
@@ -391,7 +434,9 @@ function postcalendar_admin_deleteevents()
     }
 
     $pc_eid = FormUtil::getPassedValue('pc_eid');
-    if (!is_array($pc_eid)) return __("Error! An 'unidentified error' occurred.", $dom);
+    if (!is_array($pc_eid)) {
+        return __("Error! An 'unidentified error' occurred.", $dom);
+    }
 
     // structure array for DB interaction
     $eventarray = array();
@@ -409,5 +454,8 @@ function postcalendar_admin_deleteevents()
     }
 
     pnModAPIFunc('PostCalendar', 'admin', 'clearCache');
-    return pnModFunc('PostCalendar', 'admin', 'showlist', array('type' => _EVENT_APPROVED, 'function' => 'listapproved', 'title' => __('Approved events administration', $dom)));
+    return pnModFunc('PostCalendar', 'admin', 'showlist', array(
+        'type' => _EVENT_APPROVED,
+        'function' => 'listapproved',
+        'title' => __('Approved events administration', $dom)));
 }

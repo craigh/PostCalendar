@@ -25,9 +25,10 @@ function PostCalendar_accountapi_getall($args)
         return $items;
     }
     if (SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADD)) {
-        $items['1'] = array('url' => pnModURL('PostCalendar', 'event', 'new'),
-                        'title' => __('Submit Event', $dom),
-                        'icon' => 'admin.png');
+        $items['1'] = array(
+            'url' => pnModURL('PostCalendar', 'event', 'new'),
+            'title' => __('Submit Event', $dom),
+            'icon' => 'admin.png');
     }
 
     // Return the items

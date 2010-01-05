@@ -40,20 +40,22 @@ function postcalendar_user_view()
     $jumpday     = FormUtil::getPassedValue('jumpDay');
     $jumpmonth   = FormUtil::getPassedValue('jumpMonth');
     $jumpyear    = FormUtil::getPassedValue('jumpYear');
-    $jumpargs    = array('jumpday'=>$jumpday,'jumpmonth'=>$jumpmonth,'jumpyear'=>$jumpyear);
-    $Date        = FormUtil::getPassedValue('Date', pnModAPIFunc('PostCalendar','user','getDate',$jumpargs));
+    $jumpargs    = array(
+        'jumpday' => $jumpday,
+        'jumpmonth' => $jumpmonth,
+        'jumpyear' => $jumpyear);
+    $Date        = FormUtil::getPassedValue('Date', pnModAPIFunc('PostCalendar', 'user', 'getDate', $jumpargs));
     $filtercats  = FormUtil::getPassedValue('postcalendar_events');
     $func        = FormUtil::getPassedValue('func');
 
     return postcalendar_user_display(array(
-        'viewtype'   =>$viewtype,
-        'Date'       =>$Date,
-        'filtercats' =>$filtercats,
-        'pc_username'=>$pc_username,
-        'popup'      =>$popup,
-        'eid'        =>$eid,
-        'func'       =>$func,
-        ));
+        'viewtype' => $viewtype,
+        'Date' => $Date,
+        'filtercats' => $filtercats,
+        'pc_username' => $pc_username,
+        'popup' => $popup,
+        'eid' => $eid,
+        'func' => $func));
 }
 
 /**
@@ -116,8 +118,7 @@ function postcalendar_user_display($args)
                     $tpl->display('user/postcalendar_user_view_popup.htm');
                     return true; // displays template without theme wrap
                 } else {
-                    if ((SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADD) && (pnUserGetVar('uid') == $event['aid']))
-                        || SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
+                    if ((SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADD) && (pnUserGetVar('uid') == $event['aid'])) || SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
                         $tpl->assign('EVENT_CAN_EDIT', true);
                     } else {
                         $tpl->assign('EVENT_CAN_EDIT', false);
@@ -133,18 +134,22 @@ function postcalendar_user_display($args)
             if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_OVERVIEW)) {
                 return LogUtil::registerPermissionError();
             }
-            $out = pnModAPIFunc('PostCalendar', 'user', 'buildView',
-                array('Date'=>$Date,'viewtype'=>$viewtype,'pc_username'=>$pc_username,'filtercats'=>$filtercats,'func'=>$func));
+            $out = pnModAPIFunc('PostCalendar', 'user', 'buildView', array(
+                'Date' => $Date,
+                'viewtype' => $viewtype,
+                'pc_username' => $pc_username,
+                'filtercats' => $filtercats,
+                'func' => $func));
             // build template and fetch:
-            if ($tpl->is_cached('user/postcalendar_user_view_'.$viewtype.'.htm')) {
+            if ($tpl->is_cached('user/postcalendar_user_view_' . $viewtype . '.htm')) {
                 // use cached version
-                return $tpl->fetch('user/postcalendar_user_view_'.$viewtype.'.htm');
+                return $tpl->fetch('user/postcalendar_user_view_' . $viewtype . '.htm');
             } else {
                 foreach ($out as $var => $val) {
                     $tpl->assign($var, $val);
                 }
 
-                return $tpl->fetch('user/postcalendar_user_view_'.$viewtype.'.htm');
+                return $tpl->fetch('user/postcalendar_user_view_' . $viewtype . '.htm');
             } // end if/else
             break;
     } // end switch

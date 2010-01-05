@@ -27,5 +27,5 @@ $modversion['contact']        = 'http://code.zikula.org/soundwebdevelopment/';
 $modversion['admin']          = 1;
 $modversion['user']           = 1;
 $modversion['securityschema'] = array(
-                'PostCalendar::Event' => 'Event Title::Event ID',
-                'PostCalendar::' => '::');
+    'PostCalendar::Event' => 'Event Title::Event ID',
+    'PostCalendar::' => '::');
