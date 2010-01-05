@@ -425,7 +425,7 @@ function postcalendar_eventapi_buildSubmitForm($args)
     $eventdata['location_info']['event_postal']   = isset($eventdata['location_info']['event_postal'])   ? $eventdata['location_info']['event_postal']   : "";
 
     // assign loaded data or default values
-    $form_data['loaded_event'] = DataUtil::formatForDisplay($eventdata);
+    $form_data['loaded_event'] = $eventdata;
 
     return $form_data;
 }
