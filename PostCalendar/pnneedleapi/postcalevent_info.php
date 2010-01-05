@@ -16,11 +16,11 @@
 function postcalendar_needleapi_postcalevent_info()
 {
     $info = array('module'        => 'PostCalendar', // module name
-                  'info'          => 'POSTCALEVENT-{eventid-displaytype}',   // possible needles  
+                  'info'          => 'POSTCALEVENT-{eventid-displaytype}',   // possible needles
                   'inspect'       => true,
                   //'needle'        => array('http://', 'https://', 'ftp://', 'mailto://'),
                   //'function'      => 'http',
                   //'casesensitive' => false,
-                  ); 
+                  );
     return $info;
 }

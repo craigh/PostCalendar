@@ -266,8 +266,8 @@ function postcalendar_init_reset_scribite()
 
 /**
  * this code takes a field, unserialises it mb-safely, then reserialises it
- * This is only required when the previously serialised data contained 
- * multi-byte data like German/Spanish characters. 
+ * This is only required when the previously serialised data contained
+ * multi-byte data like German/Spanish characters.
  * for postcalendar, only the serialized 'location' field needs correction
  * the serialized 'recurrspec' field only contains integers for values and the
  * keys are in english with no special characters.
@@ -314,9 +314,9 @@ function _postcalendar_migratecategories()
     foreach ($categories as $category) {
         if (!$catid = _postcalendar_createcategory(
             array(
-                'rootpath'   =>'/__SYSTEM__/Modules/PostCalendar', 
-                'name'       =>$category[1], 
-                'displayname'=>$category[1], 
+                'rootpath'   =>'/__SYSTEM__/Modules/PostCalendar',
+                'name'       =>$category[1],
+                'displayname'=>$category[1],
                 'description'=>$category[3],
                 'attributes' =>array('color'=>$category[2]),
                 )
@@ -362,16 +362,16 @@ function _postcalendar_migratetopics()
         // get the category path to insert upgraded Topics categories
         Loader::loadClass('CategoryUtil');
         $rootcat = CategoryUtil::getCategoryByPath('/__SYSTEM__/Modules/Topics');
-    
+
         // migrate topic categories
         $topicsmap = array();
         foreach ($topics as $topic) {
             if (!$catid = _postcalendar_createcategory(
                 array(
-                    'rootpath'   =>'/__SYSTEM__/Modules/Topics', 
-                    'name'       =>$topic[1], 
+                    'rootpath'   =>'/__SYSTEM__/Modules/Topics',
+                    'name'       =>$topic[1],
                     'value'      => -1,
-                    'displayname'=>$topic[3], 
+                    'displayname'=>$topic[3],
                     'description'=>$topic[3],
                     'attributes' =>array('topic_image'=>$topic[2]),
                     )
@@ -380,7 +380,7 @@ function _postcalendar_migratetopics()
             }
             $topicsmap[$topic[0]] = $catid;
         }
-    
+
         // After an upgrade we want the legacy topic template variables to point to the Topic property
         pnModSetVar('PostCalendar', 'topicproperty', 'Topic');
     } else {
@@ -396,7 +396,7 @@ function _postcalendar_migratetopics()
 
 /**
  * change old category and topic ids to new category ids.
- * update event table 
+ * update event table
  * @author  Craig Heydenburg
  */
 function _postcalendar_transcode_ids($categorymap, $topicsmap)
@@ -443,9 +443,9 @@ function _postcalendar_createdefaultcategory($regpath = '/__SYSTEM__/Modules/Glo
     Loader::loadClass('CategoryUtil');
 
     if (!$cat = _postcalendar_createcategory(array(
-                'rootpath'   =>'/__SYSTEM__/Modules', 
-                'name'       =>'PostCalendar', 
-                'displayname'=>__('PostCalendar', $dom), 
+                'rootpath'   =>'/__SYSTEM__/Modules',
+                'name'       =>'PostCalendar',
+                'displayname'=>__('PostCalendar', $dom),
                 'description'=>__('Calendar for Zikula', $dom)))) return false;
 
     // get the category path to insert upgraded PostCalendar categories
@@ -483,9 +483,9 @@ function _postcalendar_createtopicscategory($regpath = '/__SYSTEM__/Modules/Topi
         $lang = ZLanguage::getLanguageCodeLegacy(); // need old three letter code for Topics
         Loader::includeOnce("modules/Topics/lang/{$lang}/version.php"); // load & allow constants here because Topics is legacy
         if (!$cat = _postcalendar_createcategory(array(
-                'rootpath'   =>'/__SYSTEM__/Modules', 
-                'name'       =>'Topics', 
-                'displayname'=>_TOPICS_DISPLAYNAME, 
+                'rootpath'   =>'/__SYSTEM__/Modules',
+                'name'       =>'Topics',
+                'displayname'=>_TOPICS_DISPLAYNAME,
                 'description'=>_TOPICS_DESCRIPTION))) return false;
     }
 
@@ -512,7 +512,7 @@ function _postcalendar_gettopicsmap($topicspath = '/__SYSTEM__/Modules/Topics')
 {
     Loader::loadClass('CategoryUtil');
     $cat = CategoryUtil::getCategoryByPath($topicspath);
-    // if category path doesn't exist or Topics mod not available (can't map)  
+    // if category path doesn't exist or Topics mod not available (can't map)
     if ((empty($cat)) OR (!pnModAvailable('Topics'))) return false;
 
     // get the categories in Topics as an array
@@ -522,7 +522,7 @@ function _postcalendar_gettopicsmap($topicspath = '/__SYSTEM__/Modules/Topics')
         $n_cats[$thisid] = $category['name'];
     }
 
-    // get the topics information into an array 
+    // get the topics information into an array
     $prefix = pnConfigGetVar('prefix');
     $sql = "SELECT pn_topicid, pn_topicname FROM {$prefix}_topics";
     $result = DBUtil::executeSQL($sql);
@@ -592,7 +592,7 @@ function _postcalendar_convert_informant()
     if (!$result = DBUtil::executeSQL($sql)) return false;
 
     $sql="UPDATE {$prefix}_postcalendar_events e
-    SET e.pc_informant = ".SessionUtil::getVar('uid')." 
+    SET e.pc_informant = ".SessionUtil::getVar('uid')."
     WHERE e.pc_informant = 0"; // seems to select text values only
 
     if (!$result = DBUtil::executeSQL($sql)) return false;
@@ -652,9 +652,9 @@ function _postcalendar_createdefaultsubcategory()
 
     if (!$cat = _postcalendar_createcategory(
             array(
-                'rootpath'   =>'/__SYSTEM__/Modules/PostCalendar', 
-                'name'       =>'Events', 
-                'displayname'=>__('Events', $dom), 
+                'rootpath'   =>'/__SYSTEM__/Modules/PostCalendar',
+                'name'       =>'Events',
+                'displayname'=>__('Events', $dom),
                 'description'=>__('Initial sub-category created on install', $dom),
                 'attributes' =>array('color'=>'#99ccff'),
                 )
@@ -664,7 +664,7 @@ function _postcalendar_createdefaultsubcategory()
     }
 
     LogUtil::registerStatus (__("PostCalendar: Initial sub-category created (Events).", $dom));
-    return true; 
+    return true;
 }
 
 /**
@@ -763,7 +763,7 @@ function _postcalendar_registermodulehooks()
     // register the module delete hook - function called when hooked modules are uninstalled
     if (!pnModRegisterHook('module', 'remove', 'API', 'PostCalendar', 'hooks', 'deletemodule')) {
         return LogUtil::registerError(__f('PostCalendar: Could not register %s hook.', 'deletemodule', $dom));
-    }   
+    }
 
     LogUtil::registerStatus(__f('PostCalendar: All hooks registered.', $dom));
     return true;

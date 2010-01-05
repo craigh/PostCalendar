@@ -61,7 +61,7 @@ function postcalendar_featuredeventblock_display($blockinfo)
     // if event is PRIVATE and user is not assigned event ID (aid) and user is not Admin event should not be seen
         return false;
     }
-            
+
     // since recurrevents are dynamically calculcated, we need to change the date
     // to ensure that the correct/current date is being displayed (rather than the
     // date on which the recurring booking was executed).

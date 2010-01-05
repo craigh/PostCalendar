@@ -39,9 +39,9 @@ function postcalendar_eventapi_queryEvents($args)
     $pc_username = $args['pc_username'];
     $eventstatus = isset($args['eventstatus']) ? $args['eventstatus'] : 1;
 
-    if (_SETTING_ALLOW_USER_CAL) { 
-        $filterdefault = _PC_FILTER_ALL; 
-    } else { 
+    if (_SETTING_ALLOW_USER_CAL) {
+        $filterdefault = _PC_FILTER_ALL;
+    } else {
         $filterdefault = _PC_FILTER_GLOBAL;
     }
     if (empty($pc_username)) $pc_username = $filterdefault;
@@ -70,8 +70,8 @@ function postcalendar_eventapi_queryEvents($args)
     list($startyear, $startmonth, $startday) = explode('-', $start);
 
     $where = "WHERE pc_eventstatus=$eventstatus
-              AND (pc_endDate>='$start' 
-              OR (pc_endDate='0000-00-00' AND pc_recurrtype<>'0') 
+              AND (pc_endDate>='$start'
+              OR (pc_endDate='0000-00-00' AND pc_recurrtype<>'0')
               OR pc_eventDate>='$start')
               AND pc_eventDate<='$end' ";
 
@@ -187,8 +187,8 @@ function postcalendar_eventapi_getEvents($args)
     }
 
     if (!isset($s_keywords)) $s_keywords = '';
-    $events = pnModAPIFunc('PostCalendar', 'event', 'queryEvents', 
-        array('start'=>$start_date, 'end'=>$end_date, 's_keywords'=>$s_keywords, 
+    $events = pnModAPIFunc('PostCalendar', 'event', 'queryEvents',
+        array('start'=>$start_date, 'end'=>$end_date, 's_keywords'=>$s_keywords,
               'filtercats'=>$filtercats, 'pc_username'=>$pc_username));
 
     //==============================================================
@@ -315,7 +315,7 @@ function postcalendar_eventapi_buildSubmitForm($args)
 
     $eventdata = $args['eventdata']; // contains data for editing if loaded
 
-    // format date information 
+    // format date information
     if ((!isset($eventdata['endDate'])) || ($eventdata['endDate'] == '') || ($eventdata['endDate'] == '00000000') || ($eventdata['endDate'] == '0000-00-00')) {
         $eventdata['endvalue'] = pnModAPIFunc('PostCalendar','user','getDate',array('Date'=>$args['Date'], 'format'=>_SETTING_DATE_FORMAT));
         $eventdata['endDate'] = pnModAPIFunc('PostCalendar','user','getDate',array('Date'=>$args['Date'], 'format'=>'%Y-%m-%d')); // format for JS cal & DB

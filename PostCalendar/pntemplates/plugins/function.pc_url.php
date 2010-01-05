@@ -81,8 +81,8 @@ function smarty_function_pc_url($args, &$smarty)
 
     $link = DataUtil::formatForDisplay($link);
     $title = "";
-    $labeltexts = array('today'  => __('Jump to Today', $dom), 
-                        'day'    => __('Day View', $dom), 
+    $labeltexts = array('today'  => __('Jump to Today', $dom),
+                        'day'    => __('Day View', $dom),
                         'week'   => __('Week View', $dom),
                         'month'  => __('Month View', $dom),
                         'year'   => __('Year View', $dom),
@@ -103,8 +103,8 @@ function smarty_function_pc_url($args, &$smarty)
                 $class = 'postcalendar_nav_img';
                 $title = $image_text;
             } else {
-                $linkmap = array('today'  => __('Today', $dom), 
-                                 'day'    => __('Day', $dom), 
+                $linkmap = array('today'  => __('Today', $dom),
+                                 'day'    => __('Day', $dom),
                                  'week'   => __('Week', $dom),
                                  'month'  => __('Month', $dom),
                                  'year'   => __('Year', $dom),

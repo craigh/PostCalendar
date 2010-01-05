@@ -79,7 +79,7 @@ function postcalendar_user_display($args)
     $tpl->assign('postcalendarversion', $modinfo['version']);
 
     $tpl->cache_id = $Date . '|' . $viewtype . '|' . $eid . '|' . pnUserGetVar('uid');
-    
+
     switch ($viewtype) {
         case 'details':
             if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_READ)) {
@@ -100,7 +100,7 @@ function postcalendar_user_display($args)
                     // if event is PRIVATE and user is not assigned event ID (aid) and user is not Admin event should not be seen
                     return LogUtil::registerError(__('You do not have permission to view this event.', $dom));
                 }
-            
+
                 // since recurrevents are dynamically calculcated, we need to change the date
                 // to ensure that the correct/current date is being displayed (rather than the
                 // date on which the recurring booking was executed).
@@ -111,7 +111,7 @@ function postcalendar_user_display($args)
                     $event['eventDate'] = "$y-$m-$d";
                 }
                 $tpl->assign('loaded_event', $event);
-         
+
                 if ($popup == true) {
                     $tpl->display('user/postcalendar_user_view_popup.htm');
                     return true; // displays template without theme wrap
@@ -133,7 +133,7 @@ function postcalendar_user_display($args)
             if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_OVERVIEW)) {
                 return LogUtil::registerPermissionError();
             }
-            $out = pnModAPIFunc('PostCalendar', 'user', 'buildView', 
+            $out = pnModAPIFunc('PostCalendar', 'user', 'buildView',
                 array('Date'=>$Date,'viewtype'=>$viewtype,'pc_username'=>$pc_username,'filtercats'=>$filtercats,'func'=>$func));
             // build template and fetch:
             if ($tpl->is_cached('user/postcalendar_user_view_'.$viewtype.'.htm')) {

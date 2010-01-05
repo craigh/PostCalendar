@@ -58,13 +58,13 @@ function postcalendar_needleapi_eventarray($args)
 
     if (!$event = pnModAPIFunc('PostCalendar', 'event', 'formateventarrayfordisplay', $event)) return false;
     $event['eventDate'] = strftime(pnModGetVar('PostCalendar', 'pcEventDateFormat'), strtotime($event['eventDate']));
-    
+
     // is event allowed for this user?
     if ($event['sharing'] == SHARING_PRIVATE && $event['aid'] != pnUserGetVar('uid') && !SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
         // if event is PRIVATE and user is not assigned event ID (aid) and user is not Admin event should not be seen
         return -1;
     }
-    
+
     // compensate for recurring events
     if ($event['recurrtype']) {
         $dom = ZLanguage::getModuleDomain('PostCalendar');

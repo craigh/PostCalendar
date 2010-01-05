@@ -36,7 +36,7 @@ function smarty_function_pc_filter($args, &$smarty)
     $jumpyear  = FormUtil::getPassedValue('jumpYear');
     $Date      = FormUtil::getPassedValue('Date');
     $jumpargs  = array('Date'=>$Date,'jumpday'=>$jumpday,'jumpmonth'=>$jumpmonth,'jumpyear'=>$jumpyear);
-    $Date      = pnModAPIFunc('PostCalendar','user','getDate',$jumpargs);    
+    $Date      = pnModAPIFunc('PostCalendar','user','getDate',$jumpargs);
 
     $viewtype = FormUtil::getPassedValue('viewtype', _SETTING_DEFAULT_VIEW);
     if (pnModGetVar('PostCalendar', 'pcAllowUserCalendar')) { $filterdefault = _PC_FILTER_ALL; } else { $filterdefault = _PC_FILTER_GLOBAL; }
@@ -69,7 +69,7 @@ function smarty_function_pc_filter($args, &$smarty)
                                         'compare_field_table'=> 'aid',
                                         'compare_field_join' => 'uid'));
                 $users = DBUtil::selectExpandedFieldArray('postcalendar_events', $joinInfo, 'aid', null, null, true, 'aid');
-                $users = array_flip($users); // returned results are backward... 
+                $users = array_flip($users); // returned results are backward...
                 $filteroptions = $filteroptions + $users;
             }
             // generate html for selectbox - should move this to the template...
@@ -113,7 +113,7 @@ function smarty_function_pc_filter($args, &$smarty)
         //================================================================
         $submit = "<input type='submit' name='submit' value='$label' $class />";
         $orderArray = array('user' => $useroptions, 'category' => $catoptions, 'jump' => $submit);
-    
+
         if (!is_null($order)) {
             $newOrder = array();
             $order = explode(',', $order);
