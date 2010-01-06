@@ -162,14 +162,14 @@ function postcalendar_eventapi_getEvents($args)
 {
     $dom = ZLanguage::getModuleDomain('PostCalendar');
 
-    $start       = isset($args['start']) ? $args['start'] : '';
-    $end         = isset($args['end']) ? $args['end'] : '';
-    $s_keywords  = isset($args['s_keywords']) ? $args['s_keywords'] : ''; // search WHERE string
-    $filtercats  = isset($args['filtercats']) ? $args['filtercats'] : '';
+    $start       = isset($args['start'])       ? $args['start']       : '';
+    $end         = isset($args['end'])         ? $args['end']         : '';
+    $s_keywords  = isset($args['s_keywords'])  ? $args['s_keywords']  : ''; // search WHERE string
+    $filtercats  = isset($args['filtercats'])  ? $args['filtercats']  : '';
     $pc_username = isset($args['pc_username']) ? $args['pc_username'] : '';
     $searchstart = isset($args['searchstart']) ? $args['searchstart'] : '';
-    $searchend   = isset($args['searchend']) ? $args['searchend'] : '';
-    $Date        = isset($args['Date']) ? $args['Date'] : '';
+    $searchend   = isset($args['searchend'])   ? $args['searchend']   : '';
+    $Date        = isset($args['Date'])        ? $args['Date']        : '';
 
     $date = pnModAPIFunc('PostCalendar', 'user', 'getDate', array(
         'Date' => $Date)); //formats date
@@ -210,10 +210,10 @@ function postcalendar_eventapi_getEvents($args)
         $s_keywords = '';
     }
     $events = pnModAPIFunc('PostCalendar', 'event', 'queryEvents', array(
-        'start' => $start_date,
-        'end' => $end_date,
-        's_keywords' => $s_keywords,
-        'filtercats' => $filtercats,
+        'start'       => $start_date,
+        'end'         => $end_date,
+        's_keywords'  => $s_keywords,
+        'filtercats'  => $filtercats,
         'pc_username' => $pc_username));
 
     //==============================================================
@@ -430,8 +430,8 @@ function postcalendar_eventapi_buildSubmitForm($args)
 
     // recur type radio selects
     $form_data['SelectedNoRepeat'] = ((!isset($eventdata['recurrtype'])) || ((int) $eventdata['recurrtype'] == 0)) ? " checked='checked'" : ''; //default
-    $form_data['SelectedRepeat'] = ((isset($eventdata['recurrtype'])) && ((int) $eventdata['recurrtype'] == 1)) ? " checked='checked'" : '';
-    $form_data['SelectedRepeatOn'] = ((isset($eventdata['recurrtype'])) && ((int) $eventdata['recurrtype'] == 2)) ? " checked='checked'" : '';
+    $form_data['SelectedRepeat']   = ((isset($eventdata['recurrtype']))  && ((int) $eventdata['recurrtype'] == 1)) ? " checked='checked'" : '';
+    $form_data['SelectedRepeatOn'] = ((isset($eventdata['recurrtype']))  && ((int) $eventdata['recurrtype'] == 2)) ? " checked='checked'" : '';
 
     // recur select box arrays
     $in = explode("/", __('Day(s)/Week(s)/Month(s)/Year(s)', $dom));
@@ -477,7 +477,7 @@ function postcalendar_eventapi_buildSubmitForm($args)
     }
 
     // endType
-    $form_data['SelectedEndOn'] = ((isset($eventdata['endtype'])) && ((int) $eventdata['endtype'] == 1)) ? " checked='checked'" : '';
+    $form_data['SelectedEndOn'] = ((isset($eventdata['endtype']))  && ((int) $eventdata['endtype'] == 1)) ? " checked='checked'" : '';
     $form_data['SelectedNoEnd'] = ((!isset($eventdata['endtype'])) || ((int) $eventdata['endtype'] == 0)) ? " checked='checked'" : ''; //default
 
     // Assign the content format (determines if scribite is in use)
@@ -485,23 +485,23 @@ function postcalendar_eventapi_buildSubmitForm($args)
         'func' => 'new'));
 
     // assign empty values to text fields that don't need changing
-    $eventdata['title'] = isset($eventdata['title']) ? $eventdata['title'] : "";
-    $eventdata['hometext'] = isset($eventdata['hometext']) ? $eventdata['hometext'] : "";
-    $eventdata['contname'] = isset($eventdata['contname']) ? $eventdata['contname'] : "";
-    $eventdata['conttel'] = isset($eventdata['conttel']) ? $eventdata['conttel'] : "";
+    $eventdata['title']     = isset($eventdata['title'])     ? $eventdata['title']     : "";
+    $eventdata['hometext']  = isset($eventdata['hometext'])  ? $eventdata['hometext']  : "";
+    $eventdata['contname']  = isset($eventdata['contname'])  ? $eventdata['contname']  : "";
+    $eventdata['conttel']   = isset($eventdata['conttel'])   ? $eventdata['conttel']   : "";
     $eventdata['contemail'] = isset($eventdata['contemail']) ? $eventdata['contemail'] : "";
-    $eventdata['website'] = isset($eventdata['website']) ? $eventdata['website'] : "";
-    $eventdata['fee'] = isset($eventdata['fee']) ? $eventdata['fee'] : "";
+    $eventdata['website']   = isset($eventdata['website'])   ? $eventdata['website']   : "";
+    $eventdata['fee']       = isset($eventdata['fee'])       ? $eventdata['fee']       : "";
 
-    $eventdata['repeat']['event_repeat_freq'] = isset($eventdata['repeat']['event_repeat_freq']) ? $eventdata['repeat']['event_repeat_freq'] : "";
+    $eventdata['repeat']['event_repeat_freq']    = isset($eventdata['repeat']['event_repeat_freq'])    ? $eventdata['repeat']['event_repeat_freq']    : "";
     $eventdata['repeat']['event_repeat_on_freq'] = isset($eventdata['repeat']['event_repeat_on_freq']) ? $eventdata['repeat']['event_repeat_on_freq'] : "";
 
     $eventdata['location_info']['event_location'] = isset($eventdata['location_info']['event_location']) ? $eventdata['location_info']['event_location'] : "";
-    $eventdata['location_info']['event_street1'] = isset($eventdata['location_info']['event_street1']) ? $eventdata['location_info']['event_street1'] : "";
-    $eventdata['location_info']['event_street2'] = isset($eventdata['location_info']['event_street2']) ? $eventdata['location_info']['event_street2'] : "";
-    $eventdata['location_info']['event_city'] = isset($eventdata['location_info']['event_city']) ? $eventdata['location_info']['event_city'] : "";
-    $eventdata['location_info']['event_state'] = isset($eventdata['location_info']['event_state']) ? $eventdata['location_info']['event_state'] : "";
-    $eventdata['location_info']['event_postal'] = isset($eventdata['location_info']['event_postal']) ? $eventdata['location_info']['event_postal'] : "";
+    $eventdata['location_info']['event_street1']  = isset($eventdata['location_info']['event_street1'])  ? $eventdata['location_info']['event_street1']  : "";
+    $eventdata['location_info']['event_street2']  = isset($eventdata['location_info']['event_street2'])  ? $eventdata['location_info']['event_street2']  : "";
+    $eventdata['location_info']['event_city']     = isset($eventdata['location_info']['event_city'])     ? $eventdata['location_info']['event_city']     : "";
+    $eventdata['location_info']['event_state']    = isset($eventdata['location_info']['event_state'])    ? $eventdata['location_info']['event_state']    : "";
+    $eventdata['location_info']['event_postal']   = isset($eventdata['location_info']['event_postal'])   ? $eventdata['location_info']['event_postal']   : "";
 
     // assign loaded data or default values
     $form_data['loaded_event'] = $eventdata;
@@ -526,10 +526,10 @@ function postcalendar_eventapi_formateventarrayfordisplay($event)
 
     //remap sharing values to global/private (this sharing map converts pre-6.0 values to 6.0+ values)
     $sharingmap = array(
-        SHARING_PRIVATE => SHARING_PRIVATE,
-        SHARING_PUBLIC => SHARING_GLOBAL,
-        SHARING_BUSY => SHARING_PRIVATE,
-        SHARING_GLOBAL => SHARING_GLOBAL,
+        SHARING_PRIVATE  => SHARING_PRIVATE,
+        SHARING_PUBLIC   => SHARING_GLOBAL,
+        SHARING_BUSY     => SHARING_PRIVATE,
+        SHARING_GLOBAL   => SHARING_GLOBAL,
         SHARING_HIDEDESC => SHARING_PRIVATE);
     $event['sharing'] = $sharingmap[$event['sharing']];
 
@@ -580,8 +580,8 @@ function postcalendar_eventapi_formateventarrayfordisplay($event)
 
     // compensate for changeover to new categories system
     $lang = ZLanguage::getLanguageCode();
-    $event['catname'] = $event['__CATEGORIES__']['Main']['display_name'][$lang];
-    $event['catcolor'] = $event['__CATEGORIES__']['Main']['__ATTRIBUTES__']['color'];
+    $event['catname']      = $event['__CATEGORIES__']['Main']['display_name'][$lang];
+    $event['catcolor']     = $event['__CATEGORIES__']['Main']['__ATTRIBUTES__']['color'];
     $event['cattextcolor'] = postcalendar_eventapi_color_inverse($event['catcolor']);
 
     // temporarily remove hometext from array

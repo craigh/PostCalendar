@@ -63,9 +63,9 @@ function postcalendar_admin_listapproved()
 {
     $dom = ZLanguage::getModuleDomain('PostCalendar');
     $args = array();
-    $args['type'] = _EVENT_APPROVED;
+    $args['type']     = _EVENT_APPROVED;
     $args['function'] = 'listapproved';
-    $args['title'] = __('Approved events administration', $dom);
+    $args['title']    = __('Approved events administration', $dom);
     return postcalendar_admin_showlist($args);
 }
 
@@ -78,9 +78,9 @@ function postcalendar_admin_listhidden()
 {
     $dom = ZLanguage::getModuleDomain('PostCalendar');
     $args = array();
-    $args['type'] = _EVENT_HIDDEN;
+    $args['type']     = _EVENT_HIDDEN;
     $args['function'] = 'listhidden';
-    $args['title'] = __('Hidden events administration', $dom);
+    $args['title']    = __('Hidden events administration', $dom);
     return postcalendar_admin_showlist($args);
 }
 
@@ -93,9 +93,9 @@ function postcalendar_admin_listqueued()
 {
     $dom = ZLanguage::getModuleDomain('PostCalendar');
     $args = array();
-    $args['type'] = _EVENT_QUEUED;
+    $args['type']     = _EVENT_QUEUED;
     $args['function'] = 'listqueued';
-    $args['title'] = __('Queued events administration', $dom);
+    $args['title']    = __('Queued events administration', $dom);
     return postcalendar_admin_showlist($args);
 }
 
@@ -124,8 +124,8 @@ function postcalendar_admin_showlist($args)
     }
 
     $offset = FormUtil::getPassedValue('offset', 0);
-    $sort = FormUtil::getPassedValue('sort', 'time');
-    $sdir = FormUtil::getPassedValue('sdir', 1);
+    $sort   = FormUtil::getPassedValue('sort', 'time');
+    $sdir   = FormUtil::getPassedValue('sdir', 1);
     $original_sdir = $sdir;
     $sdir = $sdir ? 0 : 1; //if true change to false, if false change to true
     if ($sdir == 0) {
@@ -190,8 +190,8 @@ function postcalendar_admin_adminevents()
         return LogUtil::registerPermissionError();
     }
 
-    $action = FormUtil::getPassedValue('action');
-    $events = FormUtil::getPassedValue('events'); // could be an array or single val
+    $action  = FormUtil::getPassedValue('action');
+    $events  = FormUtil::getPassedValue('events'); // could be an array or single val
     $thelist = FormUtil::getPassedValue('thelist');
 
     if (!isset($events)) {
@@ -246,7 +246,6 @@ function postcalendar_admin_adminevents()
     // Turn off template caching here
     $pnRender = pnRender::getInstance('PostCalendar', false);
 
-    $pnRender->assign('24HOUR_TIME', _SETTING_TIME_24HOUR);
     $pnRender->assign('function', $function);
     $pnRender->assign('areyousure', $are_you_sure_text);
     $pnRender->assign('alleventinfo', $alleventinfo);

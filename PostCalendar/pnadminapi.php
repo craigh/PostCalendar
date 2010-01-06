@@ -74,9 +74,9 @@ function postcalendar_adminapi_clearCache()
  */
 function postcalendar_adminapi_notify($args)
 {
-    $dom = ZLanguage::getModuleDomain('PostCalendar');
+    $dom       = ZLanguage::getModuleDomain('PostCalendar');
 
-    $eid = $args['eid'];
+    $eid       = $args['eid'];
     $is_update = $args['is_update'];
 
     if (!isset($eid)) {

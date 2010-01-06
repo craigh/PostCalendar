@@ -81,7 +81,7 @@ function postcalendar_event_delete()
     if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADD)) {
         return LogUtil::registerPermissionError();
     }
-    $eid = FormUtil::getPassedValue('eid'); //  seems like this should be handled by the eventHandler
+    $eid    = FormUtil::getPassedValue('eid'); //  seems like this should be handled by the eventHandler
     $render = FormUtil::newpnForm('PostCalendar');
 
     // get the event from the DB
@@ -147,9 +147,9 @@ function postcalendar_event_new($args)
 
     // these items come on submission of form
     $submitted_event = FormUtil::getPassedValue('postcalendar_events', NULL);
-    $is_update = FormUtil::getPassedValue('is_update', false);
-    $form_action = FormUtil::getPassedValue('form_action', NULL);
-    $authid = FormUtil::getPassedValue('authid');
+    $is_update       = FormUtil::getPassedValue('is_update', false);
+    $form_action     = FormUtil::getPassedValue('form_action', NULL);
+    $authid          = FormUtil::getPassedValue('authid');
 
     // compensate for translation of input values
     if (isset($form_action)) {
