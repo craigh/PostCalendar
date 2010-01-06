@@ -19,14 +19,16 @@
  */
 function PostCalendar_hooksapi_create_news($args)
 {
-    if ((!isset($args['objectid'])) || ((int)$args['objectid'] <= 0)) return false;
+    if ((!isset($args['objectid'])) || ((int)$args['objectid'] <= 0)) {
+        return false;
+    }
 
     $article = pnModAPIFunc('News', 'user', 'get', $args);
 
     $dom = ZLanguage::getModuleDomain('PostCalendar');
 
     // change below based on $article array
-    $event = array (
+    $event = array(
         'title'          => __('News Event', $dom),
         'hometext'       => __(':text:test', $dom),
         'aid'            => SessionUtil::getVar('uid'),
