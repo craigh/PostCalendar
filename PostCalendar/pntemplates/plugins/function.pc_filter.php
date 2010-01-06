@@ -24,18 +24,24 @@ function smarty_function_pc_filter($args, &$smarty)
 {
     $dom = ZLanguage::getModuleDomain('PostCalendar');
     if (empty($args['type'])) {
-        $smarty->trigger_error(__("%s: missing '%s' parameter", array('Plugin:pc_filter', 'type'), $dom));
+        $smarty->trigger_error(__("%s: missing '%s' parameter", array(
+            'Plugin:pc_filter',
+            'type'), $dom));
         return;
     }
-    $class = !empty($args['class']) ? ' class="'.$args['class'].'"' : '';
-    $label = isset($args['label'])  ? $args['label'] : __('change', $dom);
-    $order = isset($args['order'])  ? $args['order'] : null;
+    $class = !empty($args['class']) ? ' class="' . $args['class'] . '"' : '';
+    $label = isset($args['label'])  ? $args['label']                    : __('change', $dom);
+    $order = isset($args['order'])  ? $args['order']                    : null;
 
     $jumpday   = FormUtil::getPassedValue('jumpDay');
     $jumpmonth = FormUtil::getPassedValue('jumpMonth');
     $jumpyear  = FormUtil::getPassedValue('jumpYear');
     $Date      = FormUtil::getPassedValue('Date');
-    $jumpargs  = array('Date'=>$Date,'jumpday'=>$jumpday,'jumpmonth'=>$jumpmonth,'jumpyear'=>$jumpyear);
+    $jumpargs  = array(
+        'Date' => $Date,
+        'jumpday' => $jumpday,
+        'jumpmonth' => $jumpmonth,
+        'jumpyear' => $jumpyear);
     $Date      = pnModAPIFunc('PostCalendar','user','getDate',$jumpargs);
 
     $viewtype = FormUtil::getPassedValue('viewtype', _SETTING_DEFAULT_VIEW);
@@ -53,28 +59,31 @@ function smarty_function_pc_filter($args, &$smarty)
     //================================================================
     // build the username filter pulldown
     //================================================================
-    define ('IS_ADMIN', SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN));
+    define('IS_ADMIN', SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN));
     $allowedgroup = pnModGetVar('PostCalendar', 'pcAllowUserCalendar');
-    $uid = pnUserGetVar('uid'); $uid = empty($uid) ? 1 : $uid;
-    $ingroup = $allowedgroup > 0 ? pnModAPIFunc('Groups','user','isgroupmember',array('uid'=>$uid, 'gid'=>$allowedgroup)) : false;
+    $uid = pnUserGetVar('uid');
+    $uid = empty($uid) ? 1 : $uid;
+    $ingroup = $allowedgroup > 0 ? pnModAPIFunc('Groups', 'user', 'isgroupmember', array(
+        'uid' => $uid,
+        'gid' => $allowedgroup)) : false;
     $useroptions = "";
 
     if ($ingroup || ($allowedgroup && IS_ADMIN)) {
         if (in_array('user', $types)) {
             //define array of filter options
             $filteroptions = array(
-                _PC_FILTER_GLOBAL  => __('Global Events', $dom) ." ". __('Only', $dom),
-                _PC_FILTER_PRIVATE => __('My Events', $dom) ." ". __('Only', $dom),
-                _PC_FILTER_ALL     => __('Global Events', $dom) ." + ". __('My Events', $dom),
-            );
+                _PC_FILTER_GLOBAL  => __('Global Events', $dom) . " " . __('Only', $dom),
+                _PC_FILTER_PRIVATE => __('My Events', $dom) . " " . __('Only', $dom),
+                _PC_FILTER_ALL     => __('Global Events', $dom) . " + " . __('My Events', $dom));
             // if user is admin, add list of users with private events
             if (IS_ADMIN) {
-                $joinInfo = array(array(
-                    'join_table'         => 'users',
-                    'join_field'         => 'uname',
-                    'object_field_name'  => 'username',
-                    'compare_field_table'=> 'aid',
-                    'compare_field_join' => 'uid'));
+                $joinInfo = array(
+                    array(
+                        'join_table'          => 'users',
+                        'join_field'          => 'uname',
+                        'object_field_name'   => 'username',
+                        'compare_field_table' => 'aid',
+                        'compare_field_join'  => 'uid'));
                 $users = DBUtil::selectExpandedFieldArray('postcalendar_events', $joinInfo, 'aid', null, null, true, 'aid');
                 $users = array_flip($users); // returned results are backward...
                 $filteroptions = $filteroptions + $users;
@@ -89,7 +98,7 @@ function smarty_function_pc_filter($args, &$smarty)
         }
     } else {
         // remove user from types array to force hidden input display below
-        $key = array_search('user',$types);
+        $key = array_search('user', $types);
         unset($types[$key]);
     }
     //================================================================
@@ -98,9 +107,9 @@ function smarty_function_pc_filter($args, &$smarty)
     if (in_array('category', $types) && _SETTING_ALLOW_CAT_FILTER && _SETTING_ENABLECATS) {
         // load the category registry util
         if (!Loader::loadClass('CategoryRegistryUtil')) {
-            pn_exit (__f('Error! Unable to load class [%s]', 'CategoryRegistryUtil'));
+            pn_exit(__f('Error! Unable to load class [%s]', 'CategoryRegistryUtil'));
         }
-        $catregistry  = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
+        $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
 
         $smarty->assign('enablecategorization', pnModGetVar('PostCalendar', 'enablecategorization'));
         $smarty->assign('catregistry', $catregistry);
@@ -109,7 +118,7 @@ function smarty_function_pc_filter($args, &$smarty)
 
     } else {
         $catoptions = '';
-        $key = array_search('category',$types);
+        $key = array_search('category', $types);
         unset($types[$key]);
     }
 
@@ -119,7 +128,10 @@ function smarty_function_pc_filter($args, &$smarty)
         // build it in the correct order
         //================================================================
         $submit = "<input type='submit' name='submit' value='$label' $class />";
-        $orderArray = array('user' => $useroptions, 'category' => $catoptions, 'jump' => $submit);
+        $orderArray = array(
+            'user' => $useroptions,
+            'category' => $catoptions,
+            'jump' => $submit);
 
         if (!is_null($order)) {
             $newOrder = array();
@@ -128,7 +140,9 @@ function smarty_function_pc_filter($args, &$smarty)
                 array_push($newOrder, $orderArray[$tmp_order]);
             }
             foreach ($orderArray as $key => $old_order) {
-                if (!in_array($old_order, $newOrder)) array_push($newOrder, $orderArray[$key]);
+                if (!in_array($old_order, $newOrder)) {
+                    array_push($newOrder, $orderArray[$key]);
+                }
             }
 
             $order = $newOrder;

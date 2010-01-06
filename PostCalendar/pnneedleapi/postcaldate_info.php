@@ -15,12 +15,13 @@
  */
 function postcalendar_needleapi_postcaldate_info()
 {
-    $info = array('module'        => 'PostCalendar', // module name
-                  'info'          => 'POSTCALDATE-{date-displaytype}',   // possible needles
-                  'inspect'       => true,
-                  //'needle'        => array('http://', 'https://', 'ftp://', 'mailto://'),
-                  //'function'      => 'http',
-                  //'casesensitive' => false,
-                  );
+    $info = array(
+        'module'        => 'PostCalendar', // module name
+        'info'          => 'POSTCALDATE-{date-displaytype}', // possible needles
+        'inspect'       => true,
+        //'needle'        => array('http://', 'https://', 'ftp://', 'mailto://'),
+        //'function'      => 'http',
+        //'casesensitive' => false,
+    );
     return $info;
 }

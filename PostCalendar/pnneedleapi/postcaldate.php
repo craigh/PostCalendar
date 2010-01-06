@@ -19,9 +19,9 @@ function postcalendar_needleapi_postcaldate($args)
     // simple replacement, no need to cache anything
     if (isset($args['nid']) && !empty($args['nid'])) {
         if (substr($args['nid'], 0, 1) != '-') {
-            $args['nid'] =  '-' . $args['nid'];
+            $args['nid'] = '-' . $args['nid'];
         }
-        list ($dispose,$date,$displaytype) = explode('-', $args['nid']);
+        list ($dispose, $date, $displaytype) = explode('-', $args['nid']);
         //validate date format
         if ((empty($date)) || (strlen($date) != 8)) {
             $date = date("Ymd");
@@ -32,8 +32,12 @@ function postcalendar_needleapi_postcaldate($args)
         $link = '';
         $uselink = false;
         $moddir = pnModGetBaseDir($modname = 'PostCalendar');
-        if (strpos($displaytype, 'I') !== false) $icon = "<img src='$moddir/pnimages/smallcalicon.jpg' alt='".__('cal icon', $dom)."' title='".__('PostCalendar Date', $dom)."' /> ";
-        if (strpos($displaytype, 'L') !== false) $uselink = true;
+        if (strpos($displaytype, 'I') !== false) {
+            $icon = "<img src='$moddir/pnimages/smallcalicon.jpg' alt='" . __('cal icon', $dom) . "' title='" . __('PostCalendar Date', $dom) . "' /> ";
+        }
+        if (strpos($displaytype, 'L') !== false) {
+            $uselink = true;
+        }
         if (strpos($displaytype, 'D') !== false) {
             $link = pnModURL('PostCalendar', 'user', 'view', array(
                 'viewtype' => 'day',
@@ -46,7 +50,7 @@ function postcalendar_needleapi_postcaldate($args)
             $link   = DataUtil::formatForDisplay($link);
             $result = "$icon<a href='$link'>$linktext</a>";
         } else {
-            $result = $icon.$linktext;
+            $result = $icon . $linktext;
         }
     } else {
         $result = __('No needle ID', $dom);

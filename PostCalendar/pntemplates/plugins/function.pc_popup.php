@@ -52,7 +52,7 @@ function smarty_function_pc_popup($args, &$smarty)
         $ret_val .= ",FGCOLOR,'{$args['fgcolor']}'";
     }
     if (!empty($args['bgcolor'])) {
-        $ret_val .= ",BGCOLOR,'".$args['bgcolor']."'";
+        $ret_val .= ",BGCOLOR,'" . $args['bgcolor'] . "'";
     }
     if (!empty($args['textcolor'])) {
         $ret_val .= ",TEXTCOLOR,'{$args['textcolor']}'";

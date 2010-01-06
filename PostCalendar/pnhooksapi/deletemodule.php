@@ -18,7 +18,7 @@
  */
 function PostCalendar_hooksapi_deletemodule($args)
 {
-    if ((!isset($args['objectid'])) || ((int)$args['objectid'] <= 0)) {
+    if ((!isset($args['objectid'])) || ((int) $args['objectid'] <= 0)) {
         return false;
     }
     $module = isset($args['module']) ? strtolower($args['module']) : strtolower(pnModGetName()); // default to active module

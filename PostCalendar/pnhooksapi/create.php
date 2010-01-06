@@ -17,7 +17,7 @@
  */
 function PostCalendar_hooksapi_create($args)
 {
-    if ((!isset($args['objectid'])) || ((int)$args['objectid'] <= 0)) {
+    if ((!isset($args['objectid'])) || ((int) $args['objectid'] <= 0)) {
         return false;
     }
     $module = isset($args['module']) ? strtolower($args['module']) : strtolower(pnModGetName()); // default to active module
@@ -29,7 +29,8 @@ function PostCalendar_hooksapi_create($args)
     if (!_pc_funcisavail($module)) {
         return false;
     }
-    $event = pnModAPIFunc('PostCalendar', 'hooks', 'create_'.$module, array('objectid'=>$args['objectid']));
+    $event = pnModAPIFunc('PostCalendar', 'hooks', 'create_' . $module, array(
+        'objectid' => $args['objectid']));
 
     // add correct category information to new event
 

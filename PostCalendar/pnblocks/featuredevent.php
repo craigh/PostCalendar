@@ -48,7 +48,9 @@ function postcalendar_featuredeventblock_display($blockinfo)
     $vars = pnBlockVarsFromContent($blockinfo['content']);
 
     // Defaults
-    if (empty($vars['eid'])) return false;
+    if (empty($vars['eid'])) {
+        return false;
+    }
     $vars['showcountdown'] = empty($vars['showcountdown']) ? false : true;
     $vars['hideonexpire']  = empty($vars['hideonexpire'])  ? false : true;
 
@@ -67,13 +69,13 @@ function postcalendar_featuredeventblock_display($blockinfo)
     // to ensure that the correct/current date is being displayed (rather than the
     // date on which the recurring booking was executed).
     if ($event['recurrtype']) {
-        $event['eventDate'] = DateUtil::getDateTime(null,"%F");
+        $event['eventDate'] = DateUtil::getDateTime(null, "%F");
     }
 
     if ($vars['showcountdown']) {
         $datedifference = DateUtil::getDatetimeDiff_AsField(DateUtil::getDatetime(null, '%F'), $event['eventDate'], 3);
         $event['datedifference'] = round($datedifference);
-        if($vars['hideonexpire'] && $event['datedifference'] < 0) {
+        if ($vars['hideonexpire'] && $event['datedifference'] < 0) {
             return false;
         }
         $event['showcountdown'] = true;

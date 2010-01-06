@@ -19,7 +19,7 @@
  */
 function PostCalendar_hooksapi_create_news($args)
 {
-    if ((!isset($args['objectid'])) || ((int)$args['objectid'] <= 0)) {
+    if ((!isset($args['objectid'])) || ((int) $args['objectid'] <= 0)) {
         return false;
     }
 
@@ -36,7 +36,7 @@ function PostCalendar_hooksapi_create_news($args)
         'informant'      => SessionUtil::getVar('uid'),
         'eventDate'      => date('Y-m-d'),
         'duration'       => 3600,
-        'recurrtype'     => 0, //norepeat
+        'recurrtype'     => 0, // norepeat
         'recurrspec'     => 'a:5:{s:17:"event_repeat_freq";s:0:"";s:22:"event_repeat_freq_type";s:1:"0";s:19:"event_repeat_on_num";s:1:"1";s:19:"event_repeat_on_day";s:1:"0";s:20:"event_repeat_on_freq";s:0:"";}',
         'startTime'      => '01:00:00',
         'alldayevent'    => 1,
@@ -44,7 +44,7 @@ function PostCalendar_hooksapi_create_news($args)
         'eventstatus'    => 1, // approved
         'sharing'        => 3, // global
         'website'        => 'http://code.zikula.org/soundwebdevelopment/wiki/PostCalendar',
-        '__CATEGORIES__' => array('Main' => 5/*$cat['id']*/),
+        '__CATEGORIES__' => array('Main' => 5), // $cat['id']
         '__META__'       => array('module' => 'PostCalendar'),
     );
     return $event;

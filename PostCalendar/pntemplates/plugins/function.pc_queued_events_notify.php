@@ -22,7 +22,9 @@ function smarty_function_pc_queued_events_notify($args, &$smarty)
 
     $count = DBUtil::selectObjectCount('postcalendar_events', 'WHERE pc_eventstatus=0');
 
-    if (empty($count) OR ($count < 1)) return;
+    if (empty($count) || ($count < 1)) {
+        return;
+    }
 
     $dom = ZLanguage::getModuleDomain('PostCalendar');
     $url = pnModURL('PostCalendar', 'admin', 'listqueued');

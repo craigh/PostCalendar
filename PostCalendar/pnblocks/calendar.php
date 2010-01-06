@@ -61,7 +61,6 @@ function postcalendar_calendarblock_display($blockinfo)
     $pcbeventsrange = $vars['pcbeventsrange'];
     $pcbfiltercats  = $vars['pcbfiltercats'];
 
-
     // setup the info to build this
     $the_year  = substr($Date, 0, 4);
     $the_month = substr($Date, 4, 2);

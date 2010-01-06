@@ -10,23 +10,34 @@
  */
 function smarty_function_pc_url($args, &$smarty)
 {
-    $action     = array_key_exists('action',     $args) && isset($args['action'])      ? $args['action']     : _SETTING_DEFAULT_VIEW; unset($args['action']);
-    $print      = array_key_exists('print',      $args) && !empty($args['print'])      ? true                : false; unset($args['print']);
-    $date       = array_key_exists('date',       $args) && !empty($args['date'])       ? $args['date']       : null; unset($args['date']);
-    $full       = array_key_exists('full',       $args) && !empty($args['full'])       ? true                : false; unset($args['full']);
-    $class      = array_key_exists('class',      $args) && !empty($args['class'])      ? $args['class']      : null; unset($args['class']);
-    $display    = array_key_exists('display',    $args) && !empty($args['display'])    ? $args['display']    : null; unset($args['display']);
-    $eid        = array_key_exists('eid',        $args) && !empty($args['eid'])        ? $args['eid']        : null; unset($args['eid']);
-    $javascript = array_key_exists('javascript', $args) && !empty($args['javascript']) ? $args['javascript'] : null; unset($args['javascript']);
-    $assign     = array_key_exists('assign',     $args) && !empty($args['assign'])     ? $args['assign']     : null; unset($args['assign']);
-    $navlink    = array_key_exists('navlink',    $args) && !empty($args['navlink'])    ? true                : false; unset($args['navlink']);
-    $func       = array_key_exists('func',       $args) && !empty($args['func'])       ? $args['func']       : 'new'; unset($args['func']);
+    $action     = array_key_exists('action',     $args) && isset($args['action'])      ? $args['action']     : _SETTING_DEFAULT_VIEW;
+    $print      = array_key_exists('print',      $args) && !empty($args['print'])      ? true                : false;
+    $date       = array_key_exists('date',       $args) && !empty($args['date'])       ? $args['date']       : null;
+    $full       = array_key_exists('full',       $args) && !empty($args['full'])       ? true                : false;
+    $class      = array_key_exists('class',      $args) && !empty($args['class'])      ? $args['class']      : null;
+    $display    = array_key_exists('display',    $args) && !empty($args['display'])    ? $args['display']    : null;
+    $eid        = array_key_exists('eid',        $args) && !empty($args['eid'])        ? $args['eid']        : null;
+    $javascript = array_key_exists('javascript', $args) && !empty($args['javascript']) ? $args['javascript'] : null;
+    $assign     = array_key_exists('assign',     $args) && !empty($args['assign'])     ? $args['assign']     : null;
+    $navlink    = array_key_exists('navlink',    $args) && !empty($args['navlink'])    ? true                : false;
+    $func       = array_key_exists('func',       $args) && !empty($args['func'])       ? $args['func']       : 'new';
+    unset($args['action']);
+    unset($args['print']);
+    unset($args['date']);
+    unset($args['full']);
+    unset($args['class']);
+    unset($args['display']);
+    unset($args['eid']);
+    unset($args['javascript']);
+    unset($args['assign']);
+    unset($args['navlink']);
+    unset($args['func']);
 
     $dom = ZLanguage::getModuleDomain('PostCalendar');
 
-    $viewtype    = strtolower(FormUtil::getPassedValue('viewtype', _SETTING_DEFAULT_VIEW));
+    $viewtype = strtolower(FormUtil::getPassedValue('viewtype', _SETTING_DEFAULT_VIEW));
     if (FormUtil::getPassedValue('func') == 'new') {
-        $viewtype='new';
+        $viewtype = 'new';
     }
     $pc_username = FormUtil::getPassedValue('pc_username');
 
@@ -36,8 +47,12 @@ function smarty_function_pc_url($args, &$smarty)
         $jumpmonth = FormUtil::getPassedValue('jumpMonth');
         $jumpyear  = FormUtil::getPassedValue('jumpYear');
         $Date      = FormUtil::getPassedValue('Date');
-        $jumpargs  = array('Date'=>$Date,'jumpday'=>$jumpday,'jumpmonth'=>$jumpmonth,'jumpyear'=>$jumpyear);
-        $date      = pnModAPIFunc('PostCalendar','user','getDate',$jumpargs);
+        $jumpargs  = array(
+            'Date' => $Date,
+            'jumpday' => $jumpday,
+            'jumpmonth' => $jumpmonth,
+            'jumpyear' => $jumpyear);
+        $date      = pnModAPIFunc('PostCalendar', 'user', 'getDate', $jumpargs);
     }
     // some extra cleanup if necessary
     $date = str_replace('-', '', $date);
@@ -52,7 +67,8 @@ function smarty_function_pc_url($args, &$smarty)
         case 'today':
             $link = pnModURL('PostCalendar', 'user', 'view', array(
                 'viewtype' => $viewtype,
-                'Date' => DateUtil::getDatetime('', '%Y%m%d000000'), 'pc_username' => $pc_username));
+                'Date' => DateUtil::getDatetime('', '%Y%m%d000000'),
+                'pc_username' => $pc_username));
             break;
         case 'day':
         case 'week':
@@ -68,7 +84,7 @@ function smarty_function_pc_url($args, &$smarty)
             $link = pnModURL('Search');
             break;
         case 'print':
-            $link = pnGetCurrentURL() ."&theme=Printer";
+            $link = pnGetCurrentURL() . "&theme=Printer";
             break;
         case 'detail':
             if (isset($eid)) {
@@ -98,13 +114,12 @@ function smarty_function_pc_url($args, &$smarty)
         'list'   => __('List View', $dom),
         'add'    => __('Submit New Event', $dom),
         'search' => __('Search', $dom),
-        'print'  => __('Print View', $dom),
-    );
+        'print'  => __('Print View', $dom));
     if ($full) {
         if ($navlink) {
             if (_SETTING_USENAVIMAGES) {
                 $image_text = $labeltexts[$action];
-                $image_src = ($viewtype==$action) ? $action.'_on.gif' : $action.'.gif';
+                $image_src = ($viewtype == $action) ? $action . '_on.gif' : $action . '.gif';
                 include_once $smarty->_get_plugin_filepath('function', 'pnimg');
                 $pnimg_params = array(
                     'src'   => $image_src,
@@ -128,27 +143,26 @@ function smarty_function_pc_url($args, &$smarty)
                     'list'   => __('List', $dom),
                     'add'    => __('Add', $dom),
                     'search' => __('Search', $dom),
-                    'print'  => __('Print', $dom),
-                );
+                    'print'  => __('Print', $dom));
                 $display = $linkmap[$action];
-                $class = ($viewtype==$action) ? 'postcalendar_nav_text_selected' : 'postcalendar_nav_text';
+                $class = ($viewtype == $action) ? 'postcalendar_nav_text_selected' : 'postcalendar_nav_text';
                 $title = $labeltexts[$action];
             }
         }
         // create string of remaining properties and values
         $props = "";
         if (!empty($args)) {
-            foreach ($args as $prop=>$val) {
+            foreach ($args as $prop => $val) {
                 $props .= " $prop='$val'";
             }
         }
         if ($class) {
-            $class=" class='$class'";
+            $class = " class='$class'";
         }
         if ($title) {
-            $title=" title='$title'";
+            $title = " title='$title'";
         }
-        $ret_val = "<a href='$link'".$class.$title.$props.$javascript.">$display</a>";
+        $ret_val = "<a href='$link'" . $class . $title . $props . $javascript . ">$display</a>";
     } else {
         $ret_val = $link;
     }

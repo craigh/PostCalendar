@@ -19,16 +19,16 @@ function postcalendar_needleapi_postcalevent($args)
     // simple replacement, no need to cache anything
     if (isset($args['nid']) && !empty($args['nid'])) {
         if (substr($args['nid'], 0, 1) != '-') {
-            $args['nid'] =  '-' . $args['nid'];
+            $args['nid'] = '-' . $args['nid'];
         }
-        list ($dispose,$eid,$displaytype) = explode('-', $args['nid']);
+        list ($dispose, $eid, $displaytype) = explode('-', $args['nid']);
         $link = pnModURL('PostCalendar', 'user', 'view', array(
             'viewtype' => 'details',
             'eid' => $eid));
         $displaytype = $displaytype ? strtoupper($displaytype) : 'NLI'; // in any order: N (name) D (date) T (time) I (icon) L (uselink) - default: NL
-        $e_array = array('eid'=>$eid);
+        $e_array = array('eid' => $eid);
         if (!$event = postcalendar_needleapi_eventarray($e_array)) {
-            return "(". __f('No event with eid %s', $eid, $dom) .")";
+            return "(" . __f('No event with eid %s', $eid, $dom) . ")";
         }
         if ($event == -1) {
             return ''; // event not allowed for user
@@ -38,7 +38,7 @@ function postcalendar_needleapi_postcalevent($args)
         $uselink = false;
         $moddir = pnModGetBaseDir($modname = 'PostCalendar');
         if (strpos($displaytype, 'I') !== false) {
-            $icon = "<img src='$moddir/pnimages/smallcalicon.jpg' alt='".__('cal icon', $dom)."' title='".__('PostCalendar Event', $dom)."' /> ";
+            $icon = "<img src='$moddir/pnimages/smallcalicon.jpg' alt='" . __('cal icon', $dom) . "' title='" . __('PostCalendar Event', $dom) . "' /> ";
         }
         $linkarray = array();
         if (strpos($displaytype, 'N') !== false) {
@@ -48,7 +48,7 @@ function postcalendar_needleapi_postcalevent($args)
             $linkarray['date'] = $event['eventDate'];
         }
         if (strpos($displaytype, 'T') !== false) {
-            $linkarray['time'] = '@'.$event['startTime'];
+            $linkarray['time'] = '@' . $event['startTime'];
         }
         if (strpos($displaytype, 'L') !== false) {
             $uselink = true;
@@ -57,10 +57,10 @@ function postcalendar_needleapi_postcalevent($args)
 
         $linktext = DataUtil::formatForDisplay($linktext);
         if ($uselink) {
-            $link   = DataUtil::formatForDisplay($link);
+            $link = DataUtil::formatForDisplay($link);
             $result = "$icon<a href='$link'>$linktext</a>";
         } else {
-            $result = $icon.$linktext;
+            $result = $icon . $linktext;
         }
     } else {
         $result = __('No needle ID', $dom);
