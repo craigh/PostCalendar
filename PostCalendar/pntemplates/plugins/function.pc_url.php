@@ -86,6 +86,11 @@ function smarty_function_pc_url($args, &$smarty)
         case 'print':
             $link = pnGetCurrentURL() . "&theme=Printer";
             break;
+        case 'rss':
+            $link = pnModURL('PostCalendar', 'user', 'view', array(
+                'viewtype' => 'xml',
+                'theme' => 'rss'));
+            break;
         case 'detail':
             if (isset($eid)) {
                 if (_SETTING_OPEN_NEW_WINDOW && !_SETTING_USE_POPUPS) {
@@ -114,7 +119,8 @@ function smarty_function_pc_url($args, &$smarty)
         'list'   => __('List View', $dom),
         'add'    => __('Submit New Event', $dom),
         'search' => __('Search', $dom),
-        'print'  => __('Print View', $dom));
+        'print'  => __('Print View', $dom),
+        'rss'    => __('RSS Feed', $dom));
     if ($full) {
         if ($navlink) {
             if (_SETTING_USENAVIMAGES) {
@@ -130,6 +136,11 @@ function smarty_function_pc_url($args, &$smarty)
                     $pnimg_params['set']     = 'icons/small';
                     $pnimg_params['src']     = 'printer1.gif';
                 }
+                if ($action == 'rss') {
+                    $pnimg_params['modname'] = 'core';
+                    $pnimg_params['set']     = 'feeds';
+                    $pnimg_params['src']     = 'feed-icon-16x16.gif';
+                }
                 $display = smarty_function_pnimg($pnimg_params, $smarty);
                 $class = 'postcalendar_nav_img';
                 $title = $image_text;
@@ -143,7 +154,8 @@ function smarty_function_pc_url($args, &$smarty)
                     'list'   => __('List', $dom),
                     'add'    => __('Add', $dom),
                     'search' => __('Search', $dom),
-                    'print'  => __('Print', $dom));
+                    'print'  => __('Print', $dom),
+                    'rss'    => __('RSS', $dom));
                 $display = $linkmap[$action];
                 $class = ($viewtype == $action) ? 'postcalendar_nav_text_selected' : 'postcalendar_nav_text';
                 $title = $labeltexts[$action];
