@@ -25,7 +25,9 @@ function smarty_function_pc_url($args, &$smarty)
     $dom = ZLanguage::getModuleDomain('PostCalendar');
 
     $viewtype    = strtolower(FormUtil::getPassedValue('viewtype', _SETTING_DEFAULT_VIEW));
-    if (FormUtil::getPassedValue('func') == 'new') $viewtype='new';
+    if (FormUtil::getPassedValue('func') == 'new') {
+        $viewtype='new';
+    }
     $pc_username = FormUtil::getPassedValue('pc_username');
 
     if (is_null($date)) {
@@ -44,19 +46,23 @@ function smarty_function_pc_url($args, &$smarty)
         case 'add':
         case 'submit':
         case 'submit-admin':
-            $link = pnModURL('PostCalendar', 'event', $func, array('Date' => $date));
+            $link = pnModURL('PostCalendar', 'event', $func, array(
+                'Date' => $date));
             break;
         case 'today':
-            $link = pnModURL('PostCalendar', 'user', 'view',
-                array('viewtype' => $viewtype, 'Date' => DateUtil::getDatetime('', '%Y%m%d000000'), 'pc_username' => $pc_username));
+            $link = pnModURL('PostCalendar', 'user', 'view', array(
+                'viewtype' => $viewtype,
+                'Date' => DateUtil::getDatetime('', '%Y%m%d000000'), 'pc_username' => $pc_username));
             break;
         case 'day':
         case 'week':
         case 'month':
         case 'year':
         case 'list':
-            $link = pnModURL('PostCalendar', 'user', 'view',
-                array('viewtype' => $action, 'Date' => $date, 'pc_username' => $pc_username));
+            $link = pnModURL('PostCalendar', 'user', 'view', array(
+                'viewtype' => $action,
+                'Date' => $date,
+                'pc_username' => $pc_username));
             break;
         case 'search':
             $link = pnModURL('Search');
@@ -70,8 +76,10 @@ function smarty_function_pc_url($args, &$smarty)
                     $javascript = " onClick=\"opencal('$eid','$date'); return false;\"";
                     $link = "#";
                 } else {
-                    $link = pnModURL('PostCalendar', 'user', 'view',
-                        array('Date' => $date, 'viewtype' => 'details', 'eid' => $eid));
+                    $link = pnModURL('PostCalendar', 'user', 'view', array(
+                        'Date' => $date,
+                        'viewtype' => 'details',
+                        'eid' => $eid));
                 }
             } else {
                 $link = '';
@@ -81,15 +89,16 @@ function smarty_function_pc_url($args, &$smarty)
 
     $link = DataUtil::formatForDisplay($link);
     $title = "";
-    $labeltexts = array('today'  => __('Jump to Today', $dom),
-                        'day'    => __('Day View', $dom),
-                        'week'   => __('Week View', $dom),
-                        'month'  => __('Month View', $dom),
-                        'year'   => __('Year View', $dom),
-                        'list'   => __('List View', $dom),
-                        'add'    => __('Submit New Event', $dom),
-                        'search' => __('Search', $dom),
-                        'print'  => __('Print View', $dom),
+    $labeltexts = array(
+        'today'  => __('Jump to Today', $dom),
+        'day'    => __('Day View', $dom),
+        'week'   => __('Week View', $dom),
+        'month'  => __('Month View', $dom),
+        'year'   => __('Year View', $dom),
+        'list'   => __('List View', $dom),
+        'add'    => __('Submit New Event', $dom),
+        'search' => __('Search', $dom),
+        'print'  => __('Print View', $dom),
     );
     if ($full) {
         if ($navlink) {
@@ -97,21 +106,29 @@ function smarty_function_pc_url($args, &$smarty)
                 $image_text = $labeltexts[$action];
                 $image_src = ($viewtype==$action) ? $action.'_on.gif' : $action.'.gif';
                 include_once $smarty->_get_plugin_filepath('function', 'pnimg');
-                $pnimg_params = array('src'=>$image_src, 'alt'=>$image_text, 'title'=>$image_text);
-                if ($action == 'print') { $pnimg_params['modname']='core';$pnimg_params['set']='icons/small';$pnimg_params['src']='printer1.gif'; }
+                $pnimg_params = array(
+                    'src'   => $image_src,
+                    'alt'   => $image_text,
+                    'title' => $image_text);
+                if ($action == 'print') {
+                    $pnimg_params['modname'] = 'core';
+                    $pnimg_params['set']     = 'icons/small';
+                    $pnimg_params['src']     = 'printer1.gif';
+                }
                 $display = smarty_function_pnimg($pnimg_params, $smarty);
                 $class = 'postcalendar_nav_img';
                 $title = $image_text;
             } else {
-                $linkmap = array('today'  => __('Today', $dom),
-                                 'day'    => __('Day', $dom),
-                                 'week'   => __('Week', $dom),
-                                 'month'  => __('Month', $dom),
-                                 'year'   => __('Year', $dom),
-                                 'list'   => __('List', $dom),
-                                 'add'    => __('Add', $dom),
-                                 'search' => __('Search', $dom),
-                                 'print'  => __('Print', $dom),
+                $linkmap = array(
+                    'today'  => __('Today', $dom),
+                    'day'    => __('Day', $dom),
+                    'week'   => __('Week', $dom),
+                    'month'  => __('Month', $dom),
+                    'year'   => __('Year', $dom),
+                    'list'   => __('List', $dom),
+                    'add'    => __('Add', $dom),
+                    'search' => __('Search', $dom),
+                    'print'  => __('Print', $dom),
                 );
                 $display = $linkmap[$action];
                 $class = ($viewtype==$action) ? 'postcalendar_nav_text_selected' : 'postcalendar_nav_text';
@@ -125,8 +142,12 @@ function smarty_function_pc_url($args, &$smarty)
                 $props .= " $prop='$val'";
             }
         }
-        if ($class) $class=" class='$class'";
-        if ($title) $title=" title='$title'";
+        if ($class) {
+            $class=" class='$class'";
+        }
+        if ($title) {
+            $title=" title='$title'";
+        }
         $ret_val = "<a href='$link'".$class.$title.$props.$javascript.">$display</a>";
     } else {
         $ret_val = $link;

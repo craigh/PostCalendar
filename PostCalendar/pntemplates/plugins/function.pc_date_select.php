@@ -10,7 +10,7 @@
  */
 function smarty_function_pc_date_select($args, &$smarty)
 {
-    $dom = ZLanguage::getModuleDomain('PostCalendar');
+    $dom       = ZLanguage::getModuleDomain('PostCalendar');
     $viewtype  = FormUtil::getPassedValue('viewtype');
     $jumpday   = FormUtil::getPassedValue('jumpDay');
     $jumpmonth = FormUtil::getPassedValue('jumpMonth');
@@ -18,7 +18,9 @@ function smarty_function_pc_date_select($args, &$smarty)
     $Date      = FormUtil::getPassedValue('Date');
     $jumpargs  = array('Date'=>$Date,'jumpday'=>$jumpday,'jumpmonth'=>$jumpmonth,'jumpyear'=>$jumpyear);
     $Date      = pnModAPIFunc('PostCalendar','user','getDate',$jumpargs);
-    if (!isset($viewtype)) $viewtype = _SETTING_DEFAULT_VIEW;
+    if (!isset($viewtype)) {
+        $viewtype = _SETTING_DEFAULT_VIEW;
+    }
 
     $y = substr($Date, 0, 4);
     $m = substr($Date, 4, 2);

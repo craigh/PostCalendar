@@ -24,19 +24,23 @@
 function smarty_function_pc_popup($args, &$smarty)
 {
     // if we're not using popups just return an empty string
-    if (!_SETTING_USE_POPUPS) return '';
+    if (!_SETTING_USE_POPUPS) {
+        return '';
+    }
 
     $dom = ZLanguage::getModuleDomain('PostCalendar');
 
-    if (empty($args['text']) && !isset($args['inarray']) && empty($args['function']))
+    if (empty($args['text']) && !isset($args['inarray']) && empty($args['function'])) {
         $args['text'] = __("overlib: attribute 'text' or 'inarray' or 'function' not present", $dom);
-
-    if (empty($args['trigger'])) $args['trigger'] = " onmouseover";
-
-    if ((empty($args['capcolor'])) && (!empty($args['bgcolor']))) $args['capcolor'] = pnModAPIFunc('PostCalendar', 'event', 'color_inverse', $args['bgcolor']);
+    }
+    if (empty($args['trigger'])) {
+        $args['trigger'] = " onmouseover";
+    }
+    if ((empty($args['capcolor'])) && (!empty($args['bgcolor']))) {
+        $args['capcolor'] = pnModAPIFunc('PostCalendar', 'event', 'color_inverse', $args['bgcolor']);
+    }
 
     $ret_val = "";
-
     $ret_val .= $args['trigger'] . '="return overlib(\'' . pc_clean($args['text']) . '\'';
     if (isset($args['sticky'])) {
         $ret_val .= ",STICKY";

@@ -34,11 +34,17 @@ function smarty_function_pc_week_range($args, &$smarty)
         $args['date'] = pnModAPIFunc('PostCalendar','user','getDate',$jumpargs);
     }
 
-    if (!isset($args['sep'])) $args['sep'] = ' - ';
+    if (!isset($args['sep'])) {
+        $args['sep'] = ' - ';
+    }
 
     if (!isset($args['format'])) {
-        if (!isset($args['format1'])) $args['format1'] = _SETTING_DATE_FORMAT;
-        if (!isset($args['format2'])) $args['format2'] = _SETTING_DATE_FORMAT;
+        if (!isset($args['format1'])) {
+            $args['format1'] = _SETTING_DATE_FORMAT;
+        }
+        if (!isset($args['format2'])) {
+            $args['format2'] = _SETTING_DATE_FORMAT;
+        }
     } else {
         $args['format1'] = $args['format'];
         $args['format2'] = $args['format'];

@@ -28,8 +28,8 @@ function smarty_function_pc_filter($args, &$smarty)
         return;
     }
     $class = !empty($args['class']) ? ' class="'.$args['class'].'"' : '';
-    $label = isset($args['label']) ? $args['label'] : __('change', $dom);
-    $order = isset($args['order']) ? $args['order'] : null;
+    $label = isset($args['label'])  ? $args['label'] : __('change', $dom);
+    $order = isset($args['order'])  ? $args['order'] : null;
 
     $jumpday   = FormUtil::getPassedValue('jumpDay');
     $jumpmonth = FormUtil::getPassedValue('jumpMonth');
@@ -39,9 +39,15 @@ function smarty_function_pc_filter($args, &$smarty)
     $Date      = pnModAPIFunc('PostCalendar','user','getDate',$jumpargs);
 
     $viewtype = FormUtil::getPassedValue('viewtype', _SETTING_DEFAULT_VIEW);
-    if (pnModGetVar('PostCalendar', 'pcAllowUserCalendar')) { $filterdefault = _PC_FILTER_ALL; } else { $filterdefault = _PC_FILTER_GLOBAL; }
+    if (pnModGetVar('PostCalendar', 'pcAllowUserCalendar')) {
+        $filterdefault = _PC_FILTER_ALL;
+    } else {
+        $filterdefault = _PC_FILTER_GLOBAL;
+    }
     $pc_username = FormUtil::getPassedValue('pc_username', $filterdefault);
-    if (!pnUserLoggedIn()) $pc_username = _PC_FILTER_GLOBAL;
+    if (!pnUserLoggedIn()) {
+        $pc_username = _PC_FILTER_GLOBAL;
+    }
     $types = explode(',', $args['type']);
 
     //================================================================
@@ -63,11 +69,12 @@ function smarty_function_pc_filter($args, &$smarty)
             );
             // if user is admin, add list of users with private events
             if (IS_ADMIN) {
-                $joinInfo = array(array('join_table'         => 'users',
-                                        'join_field'         => 'uname',
-                                        'object_field_name'  => 'username',
-                                        'compare_field_table'=> 'aid',
-                                        'compare_field_join' => 'uid'));
+                $joinInfo = array(array(
+                    'join_table'         => 'users',
+                    'join_field'         => 'uname',
+                    'object_field_name'  => 'username',
+                    'compare_field_table'=> 'aid',
+                    'compare_field_join' => 'uid'));
                 $users = DBUtil::selectExpandedFieldArray('postcalendar_events', $joinInfo, 'aid', null, null, true, 'aid');
                 $users = array_flip($users); // returned results are backward...
                 $filteroptions = $filteroptions + $users;
@@ -134,7 +141,9 @@ function smarty_function_pc_filter($args, &$smarty)
         }
     }
 
-    if (!in_array('user', $types)) $ret_val .= "<input type='hidden' name='pc_username' value='$pc_username' />";
+    if (!in_array('user', $types)) {
+        $ret_val .= "<input type='hidden' name='pc_username' value='$pc_username' />";
+    }
 
     if (isset($args['assign'])) {
         $smarty->assign($args['assign'], $ret_val);
