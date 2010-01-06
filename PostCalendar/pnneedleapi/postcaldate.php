@@ -21,17 +21,23 @@ function postcalendar_needleapi_postcaldate($args)
         if (substr($args['nid'], 0, 1) != '-') {
             $args['nid'] =  '-' . $args['nid'];
         }
-        list($dispose,$date,$displaytype) = explode('-', $args['nid']);
+        list ($dispose,$date,$displaytype) = explode('-', $args['nid']);
         //validate date format
-        if ((empty($date)) || (strlen($date) != 8)) $date = date("Ymd");
+        if ((empty($date)) || (strlen($date) != 8)) {
+            $date = date("Ymd");
+        }
         $displaytype = $displaytype ? strtoupper($displaytype) : 'DIL'; // in any order: D (date) I (icon) L (uselink) - default: DIL
 
-        $icon=''; $link=''; $uselink=false;
+        $icon = '';
+        $link = '';
+        $uselink = false;
         $moddir = pnModGetBaseDir($modname = 'PostCalendar');
         if (strpos($displaytype, 'I') !== false) $icon = "<img src='$moddir/pnimages/smallcalicon.jpg' alt='".__('cal icon', $dom)."' title='".__('PostCalendar Date', $dom)."' /> ";
         if (strpos($displaytype, 'L') !== false) $uselink = true;
         if (strpos($displaytype, 'D') !== false) {
-            $link = pnModURL('PostCalendar', 'user', 'view', array('viewtype' => 'day', 'Date' => $date));
+            $link = pnModURL('PostCalendar', 'user', 'view', array(
+                'viewtype' => 'day',
+                'Date'     => $date));
             $linktext = strftime(pnModGetVar('PostCalendar', 'pcEventDateFormat'), strtotime($date));
         }
 

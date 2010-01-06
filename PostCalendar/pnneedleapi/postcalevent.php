@@ -21,20 +21,38 @@ function postcalendar_needleapi_postcalevent($args)
         if (substr($args['nid'], 0, 1) != '-') {
             $args['nid'] =  '-' . $args['nid'];
         }
-        list($dispose,$eid,$displaytype) = explode('-', $args['nid']);
-        $link = pnModURL('PostCalendar', 'user', 'view', array('viewtype' => 'details', 'eid' => $eid));
+        list ($dispose,$eid,$displaytype) = explode('-', $args['nid']);
+        $link = pnModURL('PostCalendar', 'user', 'view', array(
+            'viewtype' => 'details',
+            'eid' => $eid));
         $displaytype = $displaytype ? strtoupper($displaytype) : 'NLI'; // in any order: N (name) D (date) T (time) I (icon) L (uselink) - default: NL
-        if (!$event = postcalendar_needleapi_eventarray(array('eid'=>$eid))) return "(". __f('No event with eid %s', $eid, $dom) .")";
-        if ($event == -1) return ''; // event not allowed for user
+        $e_array = array('eid'=>$eid);
+        if (!$event = postcalendar_needleapi_eventarray($e_array)) {
+            return "(". __f('No event with eid %s', $eid, $dom) .")";
+        }
+        if ($event == -1) {
+            return ''; // event not allowed for user
+        }
 
-        $icon='';$uselink=false;
+        $icon = '';
+        $uselink = false;
         $moddir = pnModGetBaseDir($modname = 'PostCalendar');
-        if (strpos($displaytype, 'I') !== false) $icon = "<img src='$moddir/pnimages/smallcalicon.jpg' alt='".__('cal icon', $dom)."' title='".__('PostCalendar Event', $dom)."' /> ";
+        if (strpos($displaytype, 'I') !== false) {
+            $icon = "<img src='$moddir/pnimages/smallcalicon.jpg' alt='".__('cal icon', $dom)."' title='".__('PostCalendar Event', $dom)."' /> ";
+        }
         $linkarray = array();
-        if (strpos($displaytype, 'N') !== false) $linkarray['name'] = $event['title'];
-        if (strpos($displaytype, 'D') !== false) $linkarray['date'] = $event['eventDate'];
-        if (strpos($displaytype, 'T') !== false) $linkarray['time'] = '@'.$event['startTime'];
-        if (strpos($displaytype, 'L') !== false) $uselink           = true;
+        if (strpos($displaytype, 'N') !== false) {
+            $linkarray['name'] = $event['title'];
+        }
+        if (strpos($displaytype, 'D') !== false) {
+            $linkarray['date'] = $event['eventDate'];
+        }
+        if (strpos($displaytype, 'T') !== false) {
+            $linkarray['time'] = '@'.$event['startTime'];
+        }
+        if (strpos($displaytype, 'L') !== false) {
+            $uselink = true;
+        }
         $linktext = implode(' ', $linkarray);
 
         $linktext = DataUtil::formatForDisplay($linktext);
@@ -54,9 +72,13 @@ function postcalendar_needleapi_eventarray($args)
 {
     // get the event from the DB
     $event = DBUtil::selectObjectByID('postcalendar_events', $args['eid'], 'eid');
-    if (!$event) return false;
+    if (!$event) {
+        return false;
+    }
 
-    if (!$event = pnModAPIFunc('PostCalendar', 'event', 'formateventarrayfordisplay', $event)) return false;
+    if (!$event = pnModAPIFunc('PostCalendar', 'event', 'formateventarrayfordisplay', $event)) {
+        return false;
+    }
     $event['eventDate'] = strftime(pnModGetVar('PostCalendar', 'pcEventDateFormat'), strtotime($event['eventDate']));
 
     // is event allowed for this user?
