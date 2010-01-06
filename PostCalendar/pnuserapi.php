@@ -130,6 +130,7 @@ function postcalendar_userapi_buildView($args)
             $ending_date = date('m/d/Y', mktime(0, 0, 0, 1, 1, $the_year + 1));
             $calendarView = Date_Calc::getCalendarYear($the_year, '%Y-%m-%d');
             break;
+        case 'xml':
         case 'list':
             $starting_date = "$the_month/1/$the_year";
             $ending_date = "$the_month/$last_day/$the_year";
