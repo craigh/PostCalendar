@@ -22,14 +22,15 @@ function postcalendar_featuredeventblock_init()
 function postcalendar_featuredeventblock_info()
 {
     $dom = ZLanguage::getModuleDomain('PostCalendar');
-    return array('text_type'        => 'featuredevent',
-                 'module'           => __('PostCalendar', $dom),
-                 'text_type_long'   => __('Featured Event Calendar Block', $dom),
-                 'allow_multiple'   => true,
-                 'form_content'     => false,
-                 'form_refresh'     => false,
-                 'show_preview'     => true,
-                 'admin_tableless'  => true);
+    return array(
+        'text_type'        => 'featuredevent',
+        'module'           => __('PostCalendar', $dom),
+        'text_type_long'   => __('Featured Event Calendar Block', $dom),
+        'allow_multiple'   => true,
+        'form_content'     => false,
+        'form_refresh'     => false,
+        'show_preview'     => true,
+        'admin_tableless'  => true);
 }
 
 /**
@@ -49,7 +50,7 @@ function postcalendar_featuredeventblock_display($blockinfo)
     // Defaults
     if (empty($vars['eid'])) return false;
     $vars['showcountdown'] = empty($vars['showcountdown']) ? false : true;
-    $vars['hideonexpire']  = empty($vars['hideonexpire']) ? false : true;
+    $vars['hideonexpire']  = empty($vars['hideonexpire'])  ? false : true;
 
     // get the event from the DB
     pnModDBInfoLoad('PostCalendar');

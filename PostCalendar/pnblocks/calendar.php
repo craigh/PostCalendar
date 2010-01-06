@@ -24,9 +24,14 @@ function postcalendar_calendarblock_init()
  */
 function postcalendar_calendarblock_info()
 {
-    return array('text_type' => 'PostCalendar', 'module' => 'PostCalendar', 'text_type_long' => 'Calendar Block',
-                    'allow_multiple' => true, 'form_content' => false,
-                    'form_refresh' => false, 'show_preview' => true);
+    return array(
+        'text_type'      => 'PostCalendar',
+        'module'         => 'PostCalendar',
+        'text_type_long' => 'Calendar Block',
+        'allow_multiple' => true,
+        'form_content'   => false,
+        'form_refresh'   => false,
+        'show_preview'   => true);
 }
 
 /**
@@ -38,7 +43,9 @@ function postcalendar_calendarblock_display($blockinfo)
     if (!SecurityUtil::checkPermission('PostCalendar:calendarblock:', "$blockinfo[title]::", ACCESS_OVERVIEW)) {
         return;
     }
-    if (!pnModAvailable('PostCalendar')) return;
+    if (!pnModAvailable('PostCalendar')) {
+        return;
+    }
 
     // today's date
     $Date = DateUtil::getDatetime('', '%Y%m%d%H%M%S');
@@ -56,9 +63,9 @@ function postcalendar_calendarblock_display($blockinfo)
 
 
     // setup the info to build this
-    $the_year = substr($Date, 0, 4);
+    $the_year  = substr($Date, 0, 4);
     $the_month = substr($Date, 4, 2);
-    $the_day = substr($Date, 6, 2);
+    $the_day   = substr($Date, 6, 2);
 
     $tpl = pnRender::getInstance('PostCalendar');
     $output = '';
@@ -101,22 +108,25 @@ function postcalendar_calendarblock_display($blockinfo)
     $prev_month = DateUtil::getDatetime_NextMonth(-1, '%Y%m%d', $the_year, $the_month, 1);
     $next_month = DateUtil::getDatetime_NextMonth(1, '%Y%m%d', $the_year, $the_month, 1);
     $last_day   = DateUtil::getDaysInMonth($the_month, $the_year);
-    $pc_prev = pnModURL('PostCalendar', 'user', 'view',
-        array('viewtype' => 'month', 'Date' => $prev_month));
-    $pc_next = pnModURL('PostCalendar', 'user', 'view',
-        array('viewtype' => 'month', 'Date' => $next_month));
-    $pc_month_name = pnModAPIFunc('PostCalendar', 'user', 'getmonthname',
-        array('Date' => mktime(0, 0, 0, $the_month, $the_day, $the_year)));
-    $month_link_url = pnModURL('PostCalendar', 'user', 'view',
-        array('viewtype' => 'month', 'Date' => date('Ymd', mktime(0, 0, 0, $the_month, 1, $the_year))));
+    $pc_prev = pnModURL('PostCalendar', 'user', 'view', array(
+        'viewtype' => 'month',
+        'Date' => $prev_month));
+    $pc_next = pnModURL('PostCalendar', 'user', 'view', array(
+        'viewtype' => 'month',
+        'Date' => $next_month));
+    $pc_month_name = pnModAPIFunc('PostCalendar', 'user', 'getmonthname', array(
+        'Date' => mktime(0, 0, 0, $the_month, $the_day, $the_year)));
+    $month_link_url = pnModURL('PostCalendar', 'user', 'view', array(
+        'viewtype' => 'month',
+        'Date' => date('Ymd', mktime(0, 0, 0, $the_month, 1, $the_year))));
     $month_link_text = $pc_month_name . ' ' . $the_year;
     //*******************************************************************
     // get the events for the current month view
     //*******************************************************************
     $day_of_week = 1;
-    $pc_month_names = explode (" ", __('January February March April May June July August September October November December', $dom));
+    $pc_month_names     = explode (" ", __('January February March April May June July August September October November December', $dom));
     $pc_short_day_names = explode (" ", __(/*!First Letter of each Day of week*/'S M T W T F S', $dom));
-    $pc_long_day_names = explode (" ", __('Sunday Monday Tuesday Wednesday Thursday Friday Saturday', $dom));
+    $pc_long_day_names  = explode (" ", __('Sunday Monday Tuesday Wednesday Thursday Friday Saturday', $dom));
     switch (_SETTING_FIRST_DAY_WEEK) {
         case _IS_MONDAY:
             $pc_array_pos = 1;
@@ -154,15 +164,18 @@ function postcalendar_calendarblock_display($blockinfo)
     }
 
     $month_view_start = date('Y-m-d', mktime(0, 0, 0, $the_month, 1, $the_year));
-    $month_view_end = date('Y-m-t', mktime(0, 0, 0, $the_month, 1, $the_year));
-    $today_date = DateUtil::getDatetime('', '%Y-%m-%d');
-    $starting_date = date('m/d/Y', mktime(0, 0, 0, $the_month, 1 - $first_day, $the_year));
-    $ending_date = date('m/t/Y', mktime(0, 0, 0, $the_month + $pcbeventsrange, 1, $the_year));
+    $month_view_end   = date('Y-m-t', mktime(0, 0, 0, $the_month, 1, $the_year));
+    $today_date       = DateUtil::getDatetime('', '%Y-%m-%d');
+    $starting_date    = date('m/d/Y', mktime(0, 0, 0, $the_month, 1 - $first_day, $the_year));
+    $ending_date      = date('m/t/Y', mktime(0, 0, 0, $the_month + $pcbeventsrange, 1, $the_year));
 
     // this grabs more events that required and could slow down the process. RNG
     // suggest addming $limit paramter to getEvents() to reduce load CAH Sept 29, 2009
     $filtercats['__CATEGORIES__'] = $pcbfiltercats; //reformat array
-    $eventsByDate = pnModAPIFunc('PostCalendar', 'event', 'getEvents', array('start' => $starting_date, 'end' => $ending_date, 'filtercats' => $filtercats));
+    $eventsByDate = pnModAPIFunc('PostCalendar', 'event', 'getEvents', array(
+        'start'      => $starting_date,
+        'end'        => $ending_date,
+        'filtercats' => $filtercats));
     $calendarView = Date_Calc::getCalendarMonth($the_month, $the_year, '%Y-%m-%d');
 
     $sdaynames = array();
@@ -254,7 +267,7 @@ function postcalendar_calendarblock_modify($blockinfo)
 
     // load the category registry util
     if (Loader::loadClass('CategoryRegistryUtil')) {
-        $catregistry  = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
+        $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
         $pnRender->assign('catregistry', $catregistry);
     }
     $props = array_keys($catregistry);
