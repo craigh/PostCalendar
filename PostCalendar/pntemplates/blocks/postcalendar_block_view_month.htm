@@ -28,11 +28,12 @@
             <!--[ assign var="stylesheet" value="monthon" ]-->
         <!--[ /if ]-->
         <td class="<!--[ $stylesheet ]-->" onclick="window.location.href='<!--[ pc_url action=day date=$date ]-->';">
+            <!--[ assign var="titles" value="" ]-->
             <!--[ foreach name=events item=event from=$A_EVENTS.$date ]-->
                 <!--[ if $event.alldayevent != true ]-->
-                    <!--[ assign var="titles" value="`$event.startTime` `$event.title` `$event.duration`<br /><br />" ]-->
+                    <!--[ assign var="titles" value="$titles`$event.startTime` `$event.title` `$event.duration`<br /><br />" ]-->
                 <!--[ else ]-->
-                    <!--[ assign var="titles" value="`$event.title` <br /><br />" ]-->
+                    <!--[ assign var="titles" value="$titles`$event.title`<br /><br />" ]-->
                 <!--[ /if ]-->
             <!--[ /foreach ]-->
             <!--[ if $A_EVENTS.$date|@count ]-->
