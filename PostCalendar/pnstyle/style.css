@@ -167,6 +167,7 @@ table.postcalendar_month .monthview_daterow span.new_icon {
 #postcalendar_nav_right {
     float: right;
     text-align: right;
+    line-height: 1.8em;
 }
 #postcalendar_nav_right ul,
 #postcalendar_nav_left ul { /* navigation icons list */
