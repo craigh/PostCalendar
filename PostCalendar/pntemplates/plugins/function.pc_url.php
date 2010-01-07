@@ -48,10 +48,10 @@ function smarty_function_pc_url($args, &$smarty)
         $jumpyear  = FormUtil::getPassedValue('jumpYear');
         $Date      = FormUtil::getPassedValue('Date');
         $jumpargs  = array(
-            'Date' => $Date,
-            'jumpday' => $jumpday,
+            'Date'      => $Date,
+            'jumpday'   => $jumpday,
             'jumpmonth' => $jumpmonth,
-            'jumpyear' => $jumpyear);
+            'jumpyear'  => $jumpyear);
         $date      = pnModAPIFunc('PostCalendar', 'user', 'getDate', $jumpargs);
     }
     // some extra cleanup if necessary
@@ -66,8 +66,8 @@ function smarty_function_pc_url($args, &$smarty)
             break;
         case 'today':
             $link = pnModURL('PostCalendar', 'user', 'view', array(
-                'viewtype' => $viewtype,
-                'Date' => DateUtil::getDatetime('', '%Y%m%d000000'),
+                'viewtype'    => $viewtype,
+                'Date'        => DateUtil::getDatetime('', '%Y%m%d000000'),
                 'pc_username' => $pc_username));
             break;
         case 'day':
@@ -76,8 +76,8 @@ function smarty_function_pc_url($args, &$smarty)
         case 'year':
         case 'list':
             $link = pnModURL('PostCalendar', 'user', 'view', array(
-                'viewtype' => $action,
-                'Date' => $date,
+                'viewtype'    => $action,
+                'Date'        => $date,
                 'pc_username' => $pc_username));
             break;
         case 'search':
@@ -89,7 +89,7 @@ function smarty_function_pc_url($args, &$smarty)
         case 'rss':
             $link = pnModURL('PostCalendar', 'user', 'view', array(
                 'viewtype' => 'xml',
-                'theme' => 'rss'));
+                'theme'    => 'rss'));
             break;
         case 'detail':
             if (isset($eid)) {
@@ -98,9 +98,9 @@ function smarty_function_pc_url($args, &$smarty)
                     $link = "#";
                 } else {
                     $link = pnModURL('PostCalendar', 'user', 'view', array(
-                        'Date' => $date,
+                        'Date'     => $date,
                         'viewtype' => 'details',
-                        'eid' => $eid));
+                        'eid'      => $eid));
                 }
             } else {
                 $link = '';
@@ -137,9 +137,8 @@ function smarty_function_pc_url($args, &$smarty)
                     $pnimg_params['src']     = 'printer1.gif';
                 }
                 if ($action == 'rss') {
-                    $pnimg_params['modname'] = 'core';
-                    $pnimg_params['set']     = 'feeds';
-                    $pnimg_params['src']     = 'feed-icon-16x16.gif';
+                    $pnimg_params['modname'] = 'PostCalendar';
+                    $pnimg_params['src']     = 'feed.gif';
                 }
                 $display = smarty_function_pnimg($pnimg_params, $smarty);
                 $class = 'postcalendar_nav_img';
