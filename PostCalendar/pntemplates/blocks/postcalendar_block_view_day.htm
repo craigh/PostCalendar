@@ -5,6 +5,8 @@
     <h2 class='postcalendar_block_innertitle'><!--[gt text="Today's events" domain="module_postcalendar"]--></h2>
 <!--[ /if ]-->
 <!--[ pc_sort_events var="S_EVENTS" sort="time" order="asc" value=$A_EVENTS ]-->
+<!--[assign var="eventtotal" value=0]-->
+<!--[assign var="eventcount" value=0]-->
 <!--[ foreach name=dates item=events key=date from=$S_EVENTS ]-->
     <!--[ if $date eq $TODAY_DATE ]-->
         <ul class="pc_blocklist">
