@@ -204,8 +204,6 @@ function pc_clean($s)
         $s = substr($s, 6);
     }
 
-    $s = DataUtil::formatForDisplayHTML($s);
-
     unset($display_type);
     $s = preg_replace('/[\r|\n]/i', '', $s);
     $s = str_replace('"', '&quot;', $s);
