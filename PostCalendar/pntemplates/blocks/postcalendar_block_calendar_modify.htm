@@ -12,7 +12,7 @@
 	<input id="pcbnextevents" type="checkbox" <!--[if $vars.pcbnextevents eq 1]-->checked="checked" <!--[/if]-->value="1" name="pcbnextevents" />
 </div>
 <div class="z-formrow">
-    <label for="pcbfiltercats_<!--[$firstprop]-->_"><!--[gt text='Only display events in category' domain="module_postcalendar"]--></label>
+    <label for="pcbfiltercats_<!--[$firstprop]-->_"><!--[gt text='Only display events in category(s)' domain="module_postcalendar"]--></label>
     <!--[gt text="All Categories" assign="allText" domain="module_postcalendar"]-->
     <!--[nocache]-->
     <span><!--[foreach from=$catregistry key=property item=category]-->
@@ -26,7 +26,8 @@
             defaultValue="0"
             all=1
             allText=$allText
-            allValue=0]-->
+            allValue=0
+            multipleSize=6]-->
         <!--[/foreach]-->
     </span>
     <!--[/nocache]-->
