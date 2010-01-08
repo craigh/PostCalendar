@@ -116,8 +116,19 @@ function postcalendar_eventapi_queryEvents($args)
     if (is_array($filtercats)) {
         $catsarray = $filtercats['__CATEGORIES__'];
         foreach ($catsarray as $propname => $propid) {
-            if ($propid <= 0) {
-                unset($catsarray[$propname]); // removes categories set to 'all' (0)
+            if (is_array($propid)) {
+                foreach ($propid as $int_key => $int_id) {
+                    if ($int_id <= 0) {
+                        unset($catsarray[$propname][$int_key]); // removes categories set to 'all' (0)
+                    }
+                    if (empty($catsarray[$propname])) {
+                        unset($catsarray[$propname]);
+                    }
+                }
+            } else {
+                if ($propid <= 0) {
+                    unset($catsarray[$propname]); // removes categories set to 'all' (0)
+                }
             }
         }
         if (!empty($catsarray)) {
