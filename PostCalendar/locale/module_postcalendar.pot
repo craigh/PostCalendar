@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Zikula 1.2.x\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-01-09 16:13+0000\n"
+"POT-Creation-Date: 2010-01-10 21:52+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -107,7 +107,7 @@ msgid_plural "Done! %s events deleted."
 msgstr[0] ""
 msgstr[1] ""
 
-#: pnversion.php:14 pnblocks/featuredevent.php:27 pninit.php:461
+#: pnversion.php:14 pnblocks/featuredevent.php:27 pninit.php:460
 #: pntemplates/user/postcalendar_user_footer.htm:3
 #: pntemplates/user/postcalendar_user_footer.htm:4
 msgid "PostCalendar"
@@ -118,7 +118,7 @@ msgstr ""
 msgid "postcalendar"
 msgstr ""
 
-#: pnversion.php:16 pninit.php:462
+#: pnversion.php:16 pninit.php:461
 msgid "Calendar for Zikula"
 msgstr ""
 
@@ -594,89 +594,93 @@ msgstr ""
 msgid "Error: Could not convert informant field to uid."
 msgstr ""
 
-#: pninit.php:271
+#: pninit.php:268
 msgid "Error! Could not update the scribite configuration."
 msgstr ""
 
-#: pninit.php:297
+#: pninit.php:270
+msgid "PostCalendar: Scribite! associations reset for PostCalendar."
+msgstr ""
+
+#: pninit.php:296
 msgid "PostCalendar: Serialized fields corrected."
 msgstr ""
 
-#: pninit.php:331 pninit.php:384
+#: pninit.php:330 pninit.php:383
 #, php-format
 msgid "Error! Could not create sub-category (%s)."
 msgstr ""
 
-#: pninit.php:339
+#: pninit.php:338
 msgid "PostCalendar: Categories successfully migrated."
 msgstr ""
 
-#: pninit.php:397
+#: pninit.php:396
 msgid "PostCalendar: Topics successfully migrated."
 msgstr ""
 
-#: pninit.php:422
+#: pninit.php:421
 msgid "Error! Could not upgrade the tables."
 msgstr ""
 
-#: pninit.php:440
+#: pninit.php:439
 msgid "PostCalendar: Category and/or Topic IDs converted."
 msgstr ""
 
-#: pninit.php:473
+#: pninit.php:472
 msgid "Main"
 msgstr ""
 
-#: pninit.php:478
+#: pninit.php:477
 msgid "PostCalendar: 'Main' category created."
 msgstr ""
 
-#: pninit.php:526
+#: pninit.php:525
 msgid "PostCalendar: Topics category created."
 msgstr ""
 
-#: pninit.php:606
+#: pninit.php:605
 #, php-format
 msgid "PostCalendar: Meetings culled. %s column dropped"
 msgstr ""
 
-#: pninit.php:637
+#: pninit.php:636
 #, php-format
 msgid "PostCalendar: '%s' field converted."
 msgstr ""
 
-#: pninit.php:653
+#: pninit.php:652
 msgid "PostCalendar Installed"
 msgstr ""
 
-#: pninit.php:654
+#: pninit.php:653
 msgid ""
 ":text:On this date, the PostCalendar module was installed. Thank you for "
 "trying PostCalendar! This event can be safely deleted if you wish."
 msgstr ""
 
-#: pninit.php:674
+#: pninit.php:673
 msgid "PostCalendar: Installation event created."
 msgstr ""
 
-#: pninit.php:678
+#: pninit.php:677
 msgid "Error! Could not create an installation event."
 msgstr ""
 
-#: pninit.php:693 pntemplates/admin/postcalendar_admin_showlist.htm:37
+#: pninit.php:692 pntemplates/admin/postcalendar_admin_showlist.htm:37
 #: pntemplates/admin/postcalendar_admin_showlist.htm:43
 msgid "Events"
 msgstr ""
 
-#: pninit.php:694
+#: pninit.php:693
 msgid "Initial sub-category created on install"
 msgstr ""
 
-#: pninit.php:697
+#: pninit.php:696
 msgid "Error! Could not create an initial sub-category."
 msgstr ""
 
-#: pninit.php:701
+#: pninit.php:700
 msgid "PostCalendar: Initial sub-category created (Events)."
 msgstr ""
 
