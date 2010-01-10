@@ -144,9 +144,6 @@ function PostCalendar_upgrade($oldversion)
                 LogUtil::registerError(__('Error: Could not convert informant field to uid.', $dom));
                 return '5.8.2';
             }
-            if (!postcalendar_init_reset_scribite()) {
-                return '5.8.2';
-            }
             pnModDelVar('PostCalendar', 'pcDisplayTopics');
             pnModDelVar('PostCalendar', 'pcUseCache');
             pnModDelVar('PostCalendar', 'pcCacheLifetime');
@@ -271,9 +268,11 @@ function postcalendar_init_reset_scribite()
 
         // Error tracking
         if ($mid === false) {
-            LogUtil::registerError(__('Error! Could not update the scribite configuration.', $dom));
+            return LogUtil::registerError(__('Error! Could not update the scribite configuration.', $dom));
         }
+        LogUtil::registerStatus(__('PostCalendar: Scribite! associations reset for PostCalendar.', $dom));
     }
+    return true;
 }
 
 /**
