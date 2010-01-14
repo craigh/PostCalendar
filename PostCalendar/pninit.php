@@ -116,6 +116,9 @@ function PostCalendar_upgrade($oldversion)
             }
         case '5.8.2':
             ini_set('max_execution_time', 86400);
+            if (!postcalendar_init_reset_scribite()) {
+                return '5.8.2';
+            }
             if (!_postcalendar_cull_meetings()) {
                 LogUtil::registerError(__('Error: Could not cull meetings.', $dom));
                 return '5.8.2';
