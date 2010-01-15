@@ -801,6 +801,7 @@ function _postcalendar_coreversion_required($required_version)
     } else {
         return LogUtil::registerError(__("PostCalendar: Unable to determine Zikula Core Version.", $dom));
     }
+    $current_version = substr($current_version, 0, 5); // truncate to x.x.x
     return version_compare($current_version, $required_version, '>=');
 }
 /**
