@@ -23,6 +23,12 @@
 function PostCalendar_init()
 {
     $dom = ZLanguage::getModuleDomain('PostCalendar');
+
+    // Check for required core version
+    if (!_postcalendar_coreversion_required('1.2.1')) {
+        return LogUtil::registerError(__f('Error! Zikula %1$s is required. No installation started. You are advised to upgrade to Zikula %1$s first.', '1.2.1', $dom));
+    }
+
     // create tables
     if (!DBUtil::createTable('postcalendar_events')) {
         return LogUtil::registerError(__('Error! Could not create the table.', $dom));
@@ -67,6 +73,11 @@ function PostCalendar_upgrade($oldversion)
 
     if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
         return LogUtil::registerPermissionError();
+    }
+
+    // Check for required core version
+    if (!_postcalendar_coreversion_required('1.2.1')) {
+        return LogUtil::registerError(__f('Error! Zikula %1$s is required. No upgrade started. You are advised to restore the previous PostCalendar version, or upgrade to Zikula %1$s first.', '1.2.1', $dom));
     }
 
     // We only support upgrade from version 4 and up. Notify users if they have a version below that one.
@@ -775,7 +786,23 @@ function _postcalendar_create_regentry($rootcat, $data)
 
     return true;
 }
-
+/**
+ * check to see if core version is supported
+ * @author Craig Heydenburg
+ */
+function _postcalendar_coreversion_required($required_version)
+{
+    $dom = ZLanguage::getModuleDomain('PostCalendar');
+    $db_version_num = pnConfigGetVar('Version_Num');
+    if (defined('PN_VERSION_NUM')) {
+        $current_version = PN_VERSION_NUM;
+    } else if (!empty($db_version_num)) {
+        $current_version = $db_version_num;
+    } else {
+        return LogUtil::registerError(__("PostCalendar: Unable to determine Zikula Core Version.", $dom));
+    }
+    return version_compare($current_version, $required_version, '>=');
+}
 /**
  * register module hooks
  * @author Craig Heydenburg
