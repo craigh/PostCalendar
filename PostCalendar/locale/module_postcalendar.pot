@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Zikula 1.2.x\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-01-15 01:37+0000\n"
+"POT-Creation-Date: 2010-01-17 19:01+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -952,11 +952,11 @@ msgstr ""
 msgid "Categorized in"
 msgstr ""
 
-#: pntemplates/event/postcalendar_event_view.htm:56
+#: pntemplates/event/postcalendar_event_view.htm:61
 msgid "Event recurrance information"
 msgstr ""
 
-#: pntemplates/event/postcalendar_event_view.htm:60
+#: pntemplates/event/postcalendar_event_view.htm:65
 msgid "Event sharing information"
 msgstr ""
 
