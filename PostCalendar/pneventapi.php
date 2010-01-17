@@ -592,8 +592,8 @@ function postcalendar_eventapi_formateventarrayfordisplay($event)
     // compensate for changeover to new categories system
     $lang = ZLanguage::getLanguageCode();
     $event['catname']      = $event['__CATEGORIES__']['Main']['display_name'][$lang];
-    $event['catcolor']     = $event['__CATEGORIES__']['Main']['__ATTRIBUTES__']['color'];
-    $event['cattextcolor'] = postcalendar_eventapi_color_inverse($event['catcolor']);
+    $event['catcolor']     = isset($event['__CATEGORIES__']['Main']['__ATTRIBUTES__']['color'])     ? $event['__CATEGORIES__']['Main']['__ATTRIBUTES__']['color']     : '#eeeeee';
+    $event['cattextcolor'] = isset($event['__CATEGORIES__']['Main']['__ATTRIBUTES__']['textcolor']) ? $event['__CATEGORIES__']['Main']['__ATTRIBUTES__']['textcolor'] : postcalendar_eventapi_color_inverse($event['catcolor']);
 
     // temporarily remove hometext from array
     $hometext = $event['hometext'];
