@@ -1,5 +1,10 @@
 #zLP_select_multiple_container {
     position:relative;
+    display: inline;
+}
+#zLP_select_multiple_container a {
+    vertical-align: bottom;
+    padding: 0 .5em;
 }
 .zLP_width200 {
     width:200px;

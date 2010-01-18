@@ -116,7 +116,7 @@ function postcalendar_eventapi_queryEvents($args)
     if (is_array($filtercats)) {
         $catsarray = $filtercats['__CATEGORIES__'];
         foreach ($catsarray as $propname => $propid) {
-            if (is_array($propid)) {
+            if (is_array($propid)) { // select multiple used
                 foreach ($propid as $int_key => $int_id) {
                     if ($int_id <= 0) {
                         unset($catsarray[$propname][$int_key]); // removes categories set to 'all' (0)
@@ -125,7 +125,10 @@ function postcalendar_eventapi_queryEvents($args)
                         unset($catsarray[$propname]);
                     }
                 }
-            } else {
+            } elseif (strstr($propid, ',')) { // category zLP_multiselctor used
+                $catsarray[$propname] = explode(',', $propid);
+                // no propid should be '0' in this case
+            } else { // single selectbox used
                 if ($propid <= 0) {
                     unset($catsarray[$propname]); // removes categories set to 'all' (0)
                 }
