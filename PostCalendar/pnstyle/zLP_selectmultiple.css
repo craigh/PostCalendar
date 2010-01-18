@@ -1,0 +1,73 @@
+#zLP_select_multiple_container {
+    position:relative;
+}
+.zLP_width200 {
+    width:200px;
+}
+.zLP_select_multiple_submit {
+    background: #eeeeee;
+    padding:10px;
+    height:22px;
+    text-align:right;
+}
+
+.zLP_select_multiple_label {
+    margin-left:5px;
+    font-family:"Lucida Grande",Verdana;
+    font-size:11px;
+}
+
+.zLP_select_multiple_container {
+    width:300px;
+    position:absolute;
+    top:0;
+    left:0;
+    z-index:500;
+    border:1px solid #222;
+    border-top:none;
+}
+
+.zLP_select_multiple_container .zLP_select_multiple_header {
+    background: #bbbbbb;
+    color:#eee;
+    font-family:"Lucida Grande",Verdana;
+    font-weight:bold;
+    font-size:12px;
+    margin:0;
+    padding:7px 0 8px 10px;
+    background-color:#000;
+}
+
+table.zLP_select_multiple_table td {
+    height:27px;
+    border-bottom:1px solid #ddd;
+    font-family:"Lucida Grande",Verdana;
+    color:#333;
+    font-size:11px;
+}
+
+table.zLP_select_multiple_table tr.zLP_even {
+    background-color:#FCFCFC;
+}
+
+table.zLP_select_multiple_table tr.zLP_odd {
+    background-color:#F7F7F7;
+}
+ 
+table.zLP_select_multiple_table tr.selected {
+    background-image:none;
+    background-color:#D9E9FE;
+}
+
+.zLP_select_multiple_name {
+    padding-left:15px;
+    font-weight:bold;
+}
+
+.zLP_select_multiple_checkbox {
+    text-align:right;
+}
+
+.zLP_select_multiple_checkbox input {
+    margin-right:15px;
+}  

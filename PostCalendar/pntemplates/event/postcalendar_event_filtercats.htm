@@ -3,7 +3,7 @@
 <!--[nocache]-->
 <!--[foreach from=$catregistry key=property item=category]-->
     <!--[array_field_isset assign="selectedValue" array=$selectedcategories field=$property returnValue=1]-->
-    <span><!--[selector_category 
+    <!--[selector_LivePipeMultCats 
     editLink=0 
     category=$category 
     name="postcalendar_events[__CATEGORIES__][$property]" 
@@ -12,6 +12,6 @@
     defaultValue="0"
     all=1
     allText=$allText
-    allValue=0]--></span>
+    allValue=0]-->
 <!--[/foreach]-->
 <!--[/nocache]-->
