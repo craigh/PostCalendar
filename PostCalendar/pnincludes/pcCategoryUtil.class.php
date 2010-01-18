@@ -1,4 +1,13 @@
 <?php
+/**
+ * @package     PostCalendar
+ * @author      $Author$
+ * @link        $HeadURL$
+ * @version     $Id$
+ * @copyright   Copyright (c) 2009, Craig Heydenburg, Sound Web Development
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
+ */
+
 if (!class_exists('CategoryUtil')) {
     Loader::requireOnce('CategoryUtil.class.php');
 }
@@ -142,46 +151,51 @@ class pcCategoryUtil extends CategoryUtil
 
         $zLP_javascript = "
             <!--//
-            var {$id} = new Control.SelectMultiple('{$id}','{$id}_options',{
-                checkboxSelector: 'table.zLP_select_multiple_table tr td input[type=checkbox]',
-                nameSelector: 'table.zLP_select_multiple_table tr td.zLP_select_multiple_name',
-                afterChange: function(){
-                    if({$id} && {$id}.setSelectedRows)
-                        {$id}.setSelectedRows();
-                }
-            });
-            {$id}.setSelectedRows = function(){
-                this.checkboxes.each(function(checkbox){
-                    var tr = $(checkbox.parentNode.parentNode);
-                    tr.removeClassName('selected');
-                    if(checkbox.checked)
-                        tr.addClassName('selected');
+            document.observe('dom:loaded', postcalendar_init_multiselect);
+            function postcalendar_init_multiselect()
+            {
+                var {$id} = new Control.SelectMultiple('{$id}','{$id}_options',{
+                    checkboxSelector: 'table.zLP_select_multiple_table tr td input[type=checkbox]',
+                    nameSelector: 'table.zLP_select_multiple_table tr td.zLP_select_multiple_name',
+                    afterChange: function(){
+                        if({$id} && {$id}.setSelectedRows)
+                            {$id}.setSelectedRows();
+                    }
                 });
-            }.bind({$id});
-            {$id}.checkboxes.each(function(checkbox){
-                $(checkbox).observe('click',{$id}.setSelectedRows);
-            });
-            {$id}.setSelectedRows();
-            $('{$id}_open').observe('click',function(event){
-                $(this.select).style.visibility = 'hidden';
-                new Effect.BlindDown(this.container,{
-                    duration: 0.3
+                {$id}.setSelectedRows = function(){
+                    this.checkboxes.each(function(checkbox){
+                        var tr = $(checkbox.parentNode.parentNode);
+                        tr.removeClassName('selected');
+                        if(checkbox.checked)
+                            tr.addClassName('selected');
+                    });
+                }.bind({$id});
+                {$id}.checkboxes.each(function(checkbox){
+                    $(checkbox).observe('click',{$id}.setSelectedRows);
                 });
-                Event.stop(event);
-                return false;
-            }.bindAsEventListener({$id}));
-            $('{$id}_close').observe('click',function(event){
-                $(this.select).style.visibility = 'visible';
-                new Effect.BlindUp(this.container,{
-                    duration: 0.3
-                });
-                Event.stop(event);
-                return false;
-            }.bindAsEventListener({$id}));
+                {$id}.setSelectedRows();
+                $('{$id}_open').observe('click',function(event){
+                    $(this.select).style.visibility = 'hidden';
+                    new Effect.BlindDown(this.container,{
+                        duration: 0.3
+                    });
+                    Event.stop(event);
+                    return false;
+                }.bindAsEventListener({$id}));
+                $('{$id}_close').observe('click',function(event){
+                    $(this.select).style.visibility = 'visible';
+                    new Effect.BlindUp(this.container,{
+                        duration: 0.3
+                    });
+                    Event.stop(event);
+                    return false;
+                }.bindAsEventListener({$id}));
+            }
             //-->";
 
         PageUtil::addVar("stylesheet", "modules/PostCalendar/pnstyle/zLP_selectmultiple.css");
         PageUtil::addVar("javascript", "javascript/ajax/prototype.js");
+        PageUtil::addVar("javascript", "javascript/ajax/effects.js");
         PageUtil::addVar("javascript", "javascript/livepipe/livepipe.js");
         PageUtil::addVar("javascript", "javascript/livepipe/selectmultiple.js");
         PageUtil::addVar("rawtext",    "<script type='text/javascript'>$zLP_javascript</script>");
