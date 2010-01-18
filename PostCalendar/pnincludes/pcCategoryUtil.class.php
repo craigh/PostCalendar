@@ -51,6 +51,8 @@ class pcCategoryUtil extends CategoryUtil
                 (string) $selectedValue);
         }
 
+        $zLP_selectedValueList = implode(",", $selectedValue);
+
         $id = strtr($name, '[]', '__');
         $submit = $submit ? ' onchange="this.form.submit();"' : '';
         $lang = ZLanguage::getLanguageCode();
@@ -155,6 +157,7 @@ class pcCategoryUtil extends CategoryUtil
             function postcalendar_init_multiselect()
             {
                 var {$id} = new Control.SelectMultiple('{$id}','{$id}_options',{
+                    value: '{$zLP_selectedValueList}',
                     checkboxSelector: 'table.zLP_select_multiple_table tr td input[type=checkbox]',
                     nameSelector: 'table.zLP_select_multiple_table tr td.zLP_select_multiple_name',
                     afterChange: function(){
