@@ -1,14 +1,16 @@
 <?php
 /**
- * Zikula Application Framework
+ * LivePipe Multi Selector Smarty plugin
  *
- * @copyright (c) Zikula Development Team
- * @link http://www.zikula.org
- * @version $Id: function.selector_category.php 27368 2009-11-02 20:19:51Z mateo $
- * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
- * @author Robert Gasch
- * @package Zikula_Template_Plugins
- * @subpackage Functions
+ * @copyright (c) Zikula Development Team, Craig Heydenburg
+ * @link          http://www.zikula.org
+ * @version       $Id: function.selector_category.php 27368 2009-11-02 20:19:51Z mateo $
+ * @license       GNU/GPL - http://www.gnu.org/copyleft/gpl.html
+ * @author        Robert Gasch and Craig Heydenburg
+ * @package       Zikula_Template_Plugins
+ * @subpackage    Functions
+ *
+ * @return        (string) selected value - use of multiselect returns a comma-seperated list of values (e.g. '1,2,3,4')
  */
 
 function smarty_function_selector_LivePipeMultCats ($params, &$smarty)
@@ -77,12 +79,19 @@ function smarty_function_selector_LivePipeMultCats ($params, &$smarty)
     }
     $cacheKey = "$category[id]||$recurse|$relative|$includeRoot|$includeLeaf|$all|||$attributes|$sortField";
     if (!isset($catCache[$cacheKey])) {
-        $catCache[$cacheKey] = CategoryUtil::getSubCategoriesForCategory ($category, $recurse, $relative, $includeRoot,
+        $catCache[$cacheKey] = CategoryUtil::getSubCategoriesForCategory($category, $recurse, $relative, $includeRoot,
                                                                           $includeLeaf, $all, '', '', $attributes, $sortField);
     }
 
     $html = pcCategoryUtil::getSelector_LivePipeMultCats($catCache[$cacheKey], $field, $selectedValue, $name, $defaultValue, $defaultText,
                                                   $allValue, $allText, $submit, $displayPath, $doReplaceRootCat, $fieldIsAttribute);
+
+    if (!is_array($selectedValue)) {
+        $selectedValue = array(
+            (string) $selectedValue);
+    }
+    $zLP_selectedValueList = implode(",", $selectedValue);
+    $id = strtr($name, '[]', '__');
 
     if ($editLink && !empty($category) && SecurityUtil::checkPermission( 'Categories::', "$category[id]::", ACCESS_EDIT)) {
         $url = DataUtil::formatForDisplay(pnModURL ('Categories', 'user', 'edit', array('dr' => $category['id'])));
@@ -93,6 +102,58 @@ function smarty_function_selector_LivePipeMultCats ($params, &$smarty)
     if ($_pnTables) {
         $GLOBALS['pntables'] = $_pnTables;
     }
+
+    $zLP_javascript = "
+        <!--//
+        document.observe('dom:loaded', postcalendar_init_multiselect);
+        function postcalendar_init_multiselect()
+        {
+            var {$id} = new Control.SelectMultiple('{$id}','{$id}_options',{
+                value: '{$zLP_selectedValueList}',
+                checkboxSelector: 'table.zLP_select_multiple_table tr td input[type=checkbox]',
+                nameSelector: 'table.zLP_select_multiple_table tr td.zLP_select_multiple_name',
+                afterChange: function(){
+                    if({$id} && {$id}.setSelectedRows)
+                        {$id}.setSelectedRows();
+                }
+            });
+            {$id}.setSelectedRows = function(){
+                this.checkboxes.each(function(checkbox){
+                    var tr = $(checkbox.parentNode.parentNode);
+                    tr.removeClassName('selected');
+                    if(checkbox.checked)
+                        tr.addClassName('selected');
+                });
+            }.bind({$id});
+            {$id}.checkboxes.each(function(checkbox){
+                $(checkbox).observe('click',{$id}.setSelectedRows);
+            });
+            {$id}.setSelectedRows();
+            $('{$id}_open').observe('click',function(event){
+                $(this.select).style.visibility = 'hidden';
+                new Effect.BlindDown(this.container,{
+                    duration: 0.3
+                });
+                Event.stop(event);
+                return false;
+            }.bindAsEventListener({$id}));
+            $('{$id}_close').observe('click',function(event){
+                $(this.select).style.visibility = 'visible';
+                new Effect.BlindUp(this.container,{
+                    duration: 0.3
+                });
+                Event.stop(event);
+                return false;
+            }.bindAsEventListener({$id}));
+        }
+        //-->";
+
+        PageUtil::addVar("stylesheet", "modules/PostCalendar/pnstyle/zLP_selectmultiple.css");
+        PageUtil::addVar("javascript", "javascript/ajax/prototype.js");
+        PageUtil::addVar("javascript", "javascript/ajax/effects.js");
+        PageUtil::addVar("javascript", "javascript/livepipe/livepipe.js");
+        PageUtil::addVar("javascript", "javascript/livepipe/selectmultiple.js");
+        PageUtil::addVar("rawtext",    "<script type='text/javascript'>$zLP_javascript</script>");
 
     if ($assign) {
         $smarty->assign($assign, $html);

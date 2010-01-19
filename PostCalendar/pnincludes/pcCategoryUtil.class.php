@@ -24,7 +24,7 @@ class pcCategoryUtil extends CategoryUtil
      * Return *enhanced* HTML selector code for the given category hierarchy
      *   LivePipe reference: http://livepipe.net/control/selectmultiple
      *   LivePipe builds a standard select (not multiple) and then augments with with JS to return a comma-separated list of values.
-     *   Hence, this funciton will not provide an option for 'multiple' but will provide to a functional equivelant
+     *   Hence, this function will not provide an option for 'multiple' but will provide a functional equivelant
      *   code adapted from CategoryUtil::getSelector_Categories and example code at website referenced above
      *
      * @param cats              The category hierarchy to generate a HTML selector for
@@ -51,8 +51,6 @@ class pcCategoryUtil extends CategoryUtil
                 (string) $selectedValue);
         }
 
-        $zLP_selectedValueList = implode(",", $selectedValue);
-
         $id = strtr($name, '[]', '__');
         $submit = $submit ? ' onchange="this.form.submit();"' : '';
         $lang = ZLanguage::getLanguageCode();
@@ -69,7 +67,6 @@ class pcCategoryUtil extends CategoryUtil
         if ($allText) {
             $sel = (in_array((string) $allValue, $selectedValue) ? ' selected="selected"' : '');
             $html .= "<option value=\"$allValue\"$sel>$allText</option>";
-            //$options[$allValue] = $allText;
         }
 
         Loader::loadClass('StringUtil');
@@ -150,58 +147,6 @@ class pcCategoryUtil extends CategoryUtil
         $html .= "</table>  
             <div class='zLP_select_multiple_submit'><input type='button' value='" . __("Done") . "' id='{$id}_close'/></div>  
             </div>";
-
-        $zLP_javascript = "
-            <!--//
-            document.observe('dom:loaded', postcalendar_init_multiselect);
-            function postcalendar_init_multiselect()
-            {
-                var {$id} = new Control.SelectMultiple('{$id}','{$id}_options',{
-                    value: '{$zLP_selectedValueList}',
-                    checkboxSelector: 'table.zLP_select_multiple_table tr td input[type=checkbox]',
-                    nameSelector: 'table.zLP_select_multiple_table tr td.zLP_select_multiple_name',
-                    afterChange: function(){
-                        if({$id} && {$id}.setSelectedRows)
-                            {$id}.setSelectedRows();
-                    }
-                });
-                {$id}.setSelectedRows = function(){
-                    this.checkboxes.each(function(checkbox){
-                        var tr = $(checkbox.parentNode.parentNode);
-                        tr.removeClassName('selected');
-                        if(checkbox.checked)
-                            tr.addClassName('selected');
-                    });
-                }.bind({$id});
-                {$id}.checkboxes.each(function(checkbox){
-                    $(checkbox).observe('click',{$id}.setSelectedRows);
-                });
-                {$id}.setSelectedRows();
-                $('{$id}_open').observe('click',function(event){
-                    $(this.select).style.visibility = 'hidden';
-                    new Effect.BlindDown(this.container,{
-                        duration: 0.3
-                    });
-                    Event.stop(event);
-                    return false;
-                }.bindAsEventListener({$id}));
-                $('{$id}_close').observe('click',function(event){
-                    $(this.select).style.visibility = 'visible';
-                    new Effect.BlindUp(this.container,{
-                        duration: 0.3
-                    });
-                    Event.stop(event);
-                    return false;
-                }.bindAsEventListener({$id}));
-            }
-            //-->";
-
-        PageUtil::addVar("stylesheet", "modules/PostCalendar/pnstyle/zLP_selectmultiple.css");
-        PageUtil::addVar("javascript", "javascript/ajax/prototype.js");
-        PageUtil::addVar("javascript", "javascript/ajax/effects.js");
-        PageUtil::addVar("javascript", "javascript/livepipe/livepipe.js");
-        PageUtil::addVar("javascript", "javascript/livepipe/selectmultiple.js");
-        PageUtil::addVar("rawtext",    "<script type='text/javascript'>$zLP_javascript</script>");
 
         return "<div id='zLP_select_multiple_container'>$html</div>";
     } // end getSelector_LivePipeMultCats
