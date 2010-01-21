@@ -134,7 +134,7 @@ table.postcalendar_month td.monthtoday { /* color assignments for TODAY */
 	border: 2px dotted #999999;
 }
 table.postcalendar_month td:hover {
-    background-color: #eeeeee;
+    background-color: #ffffdd;
 }
 table.postcalendar_month tr.daynames td {
 	background-color: #cccccc; /* Pale Grey */
@@ -153,7 +153,9 @@ table.postcalendar_month .monthview_daterow {
 table.postcalendar_month .monthview_daterow span.new_icon {
     float: right;
 }
-
+table.postcalendar_month col.pcWeekend {
+    background-color: #eeeeee;
+}
 
 /*********** NAV **************/
 #postcalendar_nav_right,
@@ -248,7 +250,7 @@ table.smallmonthtable td.monthheader a:hover {
     text-decoration: none;
 }
 table.smallmonthtable td.monthon {
-	background-color: white;
+	background-color: transparent;
 }
 table.smallmonthtable td.monthoff {
 	background-color: #cccccc; /* Pale gray */
@@ -259,12 +261,12 @@ table.smallmonthtable td.monthtoday { /* color assignments for TODAY */
 table.smallmonthtable tr.daynames td {
 	background-color: #cccccc; /* Pale gray */
 }
-table.smallmonthtable td.weeklink {
+table.smallmonthtable col.weeklink {
 	background-color: #cccccc; /* Pale gray */
     width: 1em;
 }
 table.smallmonthtable td:hover {
-    background-color: #eeeeee;
+    background-color: #ffffdd;
 }
 table.smallmonthtable a.event-one {
 	color: #006600; /* Obscure Dull Green */
@@ -274,6 +276,12 @@ table.smallmonthtable a.event-two {
 }
 table.smallmonthtable a.event-three {
 	color: #0066cc; /* Hard Dark Azure */
+}
+table.smallmonthtable col.pcWeekend {
+    background-color: #dddddd;
+}
+table.smallmonthtable col.pcWeekday {
+    background-color: #ffffff;
 }
 /*********** BLOCK STYLES **************/
 .postcalendar_block_innertitle {

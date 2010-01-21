@@ -42,9 +42,17 @@ function postcalendar_userapi_buildView($args)
     // prepare Month Names, Long Day Names and Short Day Names
     // as translated in the language files for template
     // (may be adding more here soon - based on need)
-    $pc_month_names = explode(" ", __('January February March April May June July August September October November December', $dom));
+    $pc_month_names     = explode(" ", __('January February March April May June July August September October November December', $dom));
     $pc_short_day_names = explode(" ", __(/*!First Letter of each Day of week*/'S M T W T F S', $dom));
-    $pc_long_day_names = explode(" ", __('Sunday Monday Tuesday Wednesday Thursday Friday Saturday', $dom));
+    $pc_long_day_names  = explode(" ", __('Sunday Monday Tuesday Wednesday Thursday Friday Saturday', $dom));
+    $pc_colclasses      = array(
+        0 => "pcWeekday", 
+        1 => "pcWeekday", 
+        2 => "pcWeekday", 
+        3 => "pcWeekday", 
+        4 => "pcWeekday", 
+        5 => "pcWeekday", 
+        6 => "pcWeekday");
 
     // set up some information for later variable creation.
     // This helps establish the correct date ranges for each view.
@@ -60,6 +68,8 @@ function postcalendar_userapi_buildView($args)
             } else {
                 $the_last_day = $last_day;
             }
+            $pc_colclasses[5] = "pcWeekend";
+            $pc_colclasses[6] = "pcWeekend";
             break;
         case _IS_SATURDAY:
             $pc_array_pos = 6;
@@ -73,6 +83,8 @@ function postcalendar_userapi_buildView($args)
             } else {
                 $the_last_day = $last_day;
             }
+            $pc_colclasses[0] = "pcWeekend";
+            $pc_colclasses[1] = "pcWeekend";
             break;
         case _IS_SUNDAY:
         default:
@@ -85,6 +97,8 @@ function postcalendar_userapi_buildView($args)
             } else {
                 $the_last_day = $last_day;
             }
+            $pc_colclasses[0] = "pcWeekend";
+            $pc_colclasses[6] = "pcWeekend";
             break;
     }
 
@@ -258,6 +272,7 @@ function postcalendar_userapi_buildView($args)
     $function_out['MONTH_END_DATE']     = $month_view_end;
     $function_out['TODAY_DATE']         = $today_date;
     $function_out['DATE']               = $Date;
+    $function_out['pc_colclasses']      = $pc_colclasses;
 
     return $function_out;
 }

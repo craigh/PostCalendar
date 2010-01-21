@@ -2,6 +2,10 @@
 <!--[ pc_pagejs_init ]-->
 <div class="postcalendar_block_view_month">
 <table class="smallmonthtable">
+    <col class='weeklink' />
+    <!--[foreach from=$pc_colclasses item=colclassname]-->
+    <col class='<!--[ $colclassname ]-->' />
+    <!--[/foreach]-->
     <tr>
         <td class="monthheader" colspan="8">
             <a href="<!--[ $PREV_MONTH_URL|pnvarprepfordisplay ]-->">&lt;&lt;&nbsp;</a>
@@ -17,7 +21,7 @@
     </tr>
     <!--[ foreach name=weeks item=days from=$CAL_FORMAT ]-->
     <tr>
-        <td class="weeklink"><a href="<!--[ pc_url action=week date=$days[0] ]-->">&gt;</a></td>
+        <td><a href="<!--[ pc_url action=week date=$days[0] ]-->">&gt;</a></td>
         <!--[ assign var="javascript" value="" ]-->
         <!--[ foreach name=day item=date from=$days ]-->
         <!--[ if $date == $TODAY_DATE ]-->

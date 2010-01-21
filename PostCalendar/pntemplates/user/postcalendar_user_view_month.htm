@@ -22,6 +22,9 @@
 
 <div class="calcontainer">
 <table class="postcalendar_month">
+    <!--[foreach from=$pc_colclasses item=colclassname]-->
+    <col class='<!--[ $colclassname ]-->' />
+    <!--[/foreach]-->
     <tr class="daynames">
         <!--[ foreach from=$S_LONG_DAY_NAMES item=day ]-->
         <td><!--[ $day ]--></td>

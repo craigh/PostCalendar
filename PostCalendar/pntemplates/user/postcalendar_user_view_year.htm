@@ -36,6 +36,10 @@
 		<!--[ assign var="m" value=$m|string_format:"%02d" ]-->
 		<!--[ * create our link to the month * ]-->
 		<table class="smallmonthtable">
+            <col class='weeklink' />
+            <!--[foreach from=$pc_colclasses item=colclassname]-->
+            <col class='<!--[ $colclassname ]-->' />
+            <!--[/foreach]-->
 			<tr>
 				<td class="monthheader" colspan="8">
 					<a href="<!--[ pc_url action="month" date="$y-$m-01" ]-->"><!--[ $A_MONTH_NAMES.$monthnum ]--></a>
@@ -49,7 +53,7 @@
 			</tr>
 			<!--[ foreach name=weeks item=days from=$month ]-->
 			<tr>
-				<td class="weeklink">
+				<td>
 					<a href="<!--[ pc_url action="week" date=$days[0] ]-->">&gt;</a>
 				</td>
 				<!--[ foreach name=day item=date from=$days ]-->

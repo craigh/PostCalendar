@@ -126,6 +126,14 @@ function postcalendar_calendarblock_display($blockinfo)
     $pc_month_names     = explode (" ", __('January February March April May June July August September October November December', $dom));
     $pc_short_day_names = explode (" ", __(/*!First Letter of each Day of week*/'S M T W T F S', $dom));
     $pc_long_day_names  = explode (" ", __('Sunday Monday Tuesday Wednesday Thursday Friday Saturday', $dom));
+    $pc_colclasses      = array(
+        0 => "pcWeekday", 
+        1 => "pcWeekday", 
+        2 => "pcWeekday", 
+        3 => "pcWeekday", 
+        4 => "pcWeekday", 
+        5 => "pcWeekday", 
+        6 => "pcWeekday");
     switch (_SETTING_FIRST_DAY_WEEK) {
         case _IS_MONDAY:
             $pc_array_pos = 1;
@@ -136,6 +144,8 @@ function postcalendar_calendarblock_display($blockinfo)
             } else {
                 $the_last_day = $last_day;
             }
+            $pc_colclasses[5] = "pcWeekend";
+            $pc_colclasses[6] = "pcWeekend";
             break;
         case _IS_SATURDAY:
             $pc_array_pos = 6;
@@ -148,6 +158,8 @@ function postcalendar_calendarblock_display($blockinfo)
             } else {
                 $the_last_day = $last_day;
             }
+            $pc_colclasses[0] = "pcWeekend";
+            $pc_colclasses[1] = "pcWeekend";
             break;
         case _IS_SUNDAY:
         default:
@@ -159,6 +171,8 @@ function postcalendar_calendarblock_display($blockinfo)
             } else {
                 $the_last_day = $last_day;
             }
+            $pc_colclasses[0] = "pcWeekend";
+            $pc_colclasses[6] = "pcWeekend";
             break;
     }
 
@@ -216,6 +230,7 @@ function postcalendar_calendarblock_display($blockinfo)
     $tpl->assign_by_ref('TODAY_DATE', $today_date);
     $tpl->assign_by_ref('DATE', $Date);
     $tpl->assign_by_ref('DISPLAY_LIMIT', $eventslimit);
+    $tpl->assign_by_ref('pc_colclasses', $pc_colclasses);
 
     if ($showcalendar) {
         $output .= $tpl->fetch('blocks/postcalendar_block_view_month.htm');
