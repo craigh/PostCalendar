@@ -65,12 +65,9 @@ function postcalendar_featuredeventblock_display($blockinfo)
         return false;
     }
 
-    // since recurrevents are dynamically calculcated, we need to change the date
-    // to ensure that the correct/current date is being displayed (rather than the
-    // date on which the recurring booking was executed).
-    if ($event['recurrtype']) {
-        $event['eventDate'] = DateUtil::getDateTime(null, "%F");
-    }
+    $alleventdates = pnModAPIFunc('PostCalendar', 'event', 'geteventdates', $event); // gets all FUTURE occurances
+    // assign next occurance to eventDate
+    $event['eventDate'] = array_shift($alleventdates);
 
     if ($vars['showcountdown']) {
         $datedifference = DateUtil::getDatetimeDiff_AsField(DateUtil::getDatetime(null, '%F'), $event['eventDate'], 3);

@@ -272,14 +272,24 @@ function postcalendar_eventapi_getEvents($args)
                 $newday = $eventstartday;
                 $occurance = Date_Calc::dateFormat($newday, $newmonth, $newyear, '%Y-%m-%d');
                 while ($occurance < $start_date) {
-                    $occurance = dateIncrement($newday, $newmonth, $newyear, $rfreq, $rtype);
+                    $occurance = postcalendar_eventapi_dateIncrement(array(
+                        'd' => $newday, 
+                        'm' => $newmonth, 
+                        'y' => $newyear, 
+                        'f' => $rfreq, 
+                        't' => $rtype));
                     list ($newyear, $newmonth, $newday) = explode('-', $occurance);
                 }
                 while ($occurance <= $stop) {
                     if (isset($days[$occurance])) {
                         $days[$occurance][] = $event;
                     }
-                    $occurance = dateIncrement($newday, $newmonth, $newyear, $rfreq, $rtype);
+                    $occurance = postcalendar_eventapi_dateIncrement(array(
+                        'd' => $newday, 
+                        'm' => $newmonth, 
+                        'y' => $newyear, 
+                        'f' => $rfreq, 
+                        't' => $rtype));
                     list ($newyear, $newmonth, $newday) = explode('-', $occurance);
                 }
                 break;
@@ -760,14 +770,18 @@ function makeValidURL($s)
 }
 
 /**
- * dateIncrement()
+ * postcalendar_eventapi_dateIncrement()
  * returns the next valid date for an event based on the
  * current day,month,year,freq and type
- * @private
  * @returns string YYYY-MM-DD
  */
-function dateIncrement($d, $m, $y, $f, $t)
+function postcalendar_eventapi_dateIncrement($args)
 {
+    $d = $args['d']; // day
+    $m = $args['m']; // month
+    $y = $args['y']; // year
+    $f = $args['f']; // freq
+    $t = $args['t']; // type
     if ($t == REPEAT_EVERY_DAY) {
         return date('Y-m-d', mktime(0, 0, 0, $m, ($d + $f), $y));
     } elseif ($t == REPEAT_EVERY_WEEK) {
@@ -834,4 +848,88 @@ function postcalendar_eventapi_color_inverse($color)
         $rgb .= (strlen($c) < 2) ? '0' . $c : $c;
     }
     return '#' . $rgb;
+}
+
+function postcalendar_eventapi_geteventdates($event)
+{
+    list ($eventstartyear, $eventstartmonth, $eventstartday) = explode('-', $event['eventDate']);
+    // determine the stop date for this event
+    $default_end_date = date("Y-m-d", strtotime("+2 years")); // default to only get first two years of recurrance
+    $stop = ($event['endDate'] == '0000-00-00') ? $default_end_date : $event['endDate'];
+
+    $start_date = $event['eventDate']; // maybe try today instead?
+
+    $eventdates = array(); // placeholder array for all event dates
+
+    switch ($event['recurrtype']) {
+        // Events that do not repeat only have a startday (eventDate)
+        case NO_REPEAT:
+            if (isset($days[$event['eventDate']])) {
+                return array($event['eventDate']); // there is only one date - return it
+            }
+            break;
+        case REPEAT:
+            $rfreq = $event['repeat']['event_repeat_freq']; // could be any int
+            $rtype = $event['repeat']['event_repeat_freq_type']; // REPEAT_EVERY_DAY (0), REPEAT_EVERY_WEEK (1), REPEAT_EVERY_MONTH (2), REPEAT_EVERY_YEAR (3)
+            // we should bring the event up to date to make this a tad bit faster
+            // any ideas on how to do that, exactly??? dateToDays probably. (RNG <5.0)
+            $newyear   = $eventstartyear;
+            $newmonth  = $eventstartmonth;
+            $newday    = $eventstartday;
+            $occurance = Date_Calc::dateFormat($newday, $newmonth, $newyear, '%Y-%m-%d');
+            while ($occurance < $start_date) {
+                $occurance = postcalendar_eventapi_dateIncrement(array(
+                    'd' => $newday, 
+                    'm' => $newmonth, 
+                    'y' => $newyear, 
+                    'f' => $rfreq, 
+                    't' => $rtype));
+                list ($newyear, $newmonth, $newday) = explode('-', $occurance);
+            }
+            while ($occurance <= $stop) {
+                $eventdates[] = $occurance;
+                $occurance = postcalendar_eventapi_dateIncrement(array(
+                    'd' => $newday, 
+                    'm' => $newmonth, 
+                    'y' => $newyear, 
+                    'f' => $rfreq, 
+                    't' => $rtype));
+                list ($newyear, $newmonth, $newday) = explode('-', $occurance);
+            }
+            break;
+        case REPEAT_ON:
+            $rfreq = $event['repeat']['event_repeat_on_freq'];
+            $rnum = $event['repeat']['event_repeat_on_num'];
+            $rday = $event['repeat']['event_repeat_on_day'];
+            $newmonth = $eventstartmonth;
+            $newyear = $eventstartyear;
+            $newday = $eventstartday;
+            // make us current
+            $currentyear = date('Y');
+            while ($newyear < $currentyear) {
+                $occurance = date('Y-m-d', mktime(0, 0, 0, $newmonth + $rfreq, $newday, $newyear));
+                list ($newyear, $newmonth, $newday) = explode('-', $occurance);
+            }
+            // populate the event array
+            while ($newyear <= $currentyear) {
+                $dnum = $rnum; // get day event repeats on
+                do {
+                    $occurance = Date_Calc::NWeekdayOfMonth($dnum--, $rday, $newmonth, $newyear, "%Y-%m-%d");
+                } while ($occurance === -1);
+                if ($occurance <= $stop) {
+                    $eventdates[] = $occurance;
+                }
+                $occurance = date('Y-m-d', mktime(0, 0, 0, $newmonth + $rfreq, $newday, $newyear));
+                list ($newyear, $newmonth, $newday) = explode('-', $occurance);
+            }
+            break;
+    }
+    $today = date('Y-m-d');
+    foreach ($eventdates as $key => $date) {
+        if ($date < $today) {
+            unset ($eventdates[$key]);
+        }
+    }
+
+    return $eventdates;
 }
