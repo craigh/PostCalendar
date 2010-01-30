@@ -170,6 +170,8 @@ function PostCalendar_upgrade($oldversion)
                 'M' => '%B',
                 'Y' => '%Y'));
         case '6.0.0':
+            // no changes
+        case '6.0.1':
             _postcalendar_registermodulehooks();
         case '6.1.0':
             //future development
