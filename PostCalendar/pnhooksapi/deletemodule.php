@@ -16,16 +16,27 @@
  * @return  boolean    true/false
  * @access  public
  */
-function PostCalendar_hooksapi_deletemodule($args)
+function postcalendar_hooksapi_deletemodule($args)
 {
-    if ((!isset($args['objectid'])) || ((int) $args['objectid'] <= 0)) {
-        return false;
-    }
+    $dom = ZLanguage::getModuleDomain('PostCalendar');
+
     $module = isset($args['module']) ? strtolower($args['module']) : strtolower(pnModGetName()); // default to active module
 
-    if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADD)) {
+    if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
         return LogUtil::registerPermissionError();
     }
 
+    // Get table info
+    $pntable = pnDBGetTables();
+    $cols = $pntable['postcalendar_events_column'];
+    // build where statement
+    $where = "WHERE " . $cols['hooked_modulename'] . " = '" . DataUtil::formatForStore($module) . "'";
+
+    //return (bool)DBUtil::deleteWhere('postcalendar_events', $where);
+    if (!DBUtil::deleteObject(array(), 'postcalendar_events', $where, 'eid')) {
+        return LogUtil::registerError(__('Error! Could not delete associated PostCalendar events.', $dom));
+    }
+
+    LogUtil::registerStatus(__('ALL associated PostCalendar events also deleted.', $dom));
     return true;
 }

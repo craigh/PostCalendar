@@ -15,8 +15,10 @@
  * @return  boolean    true/false
  * @access  public
  */
-function PostCalendar_hooksapi_create($args)
+function postcalendar_hooksapi_create($args)
 {
+    $dom = ZLanguage::getModuleDomain('PostCalendar');
+
     if ((!isset($args['objectid'])) || ((int) $args['objectid'] <= 0)) {
         return false;
     }
@@ -26,35 +28,20 @@ function PostCalendar_hooksapi_create($args)
         return LogUtil::registerPermissionError();
     }
 
-    if (!_pc_funcisavail($module)) {
-        return false;
+    if (!$home = pnModAPIFunc('PostCalendar', 'hooks', 'funcisavail', array(
+        'module' => $module))) {
+        return LogUtil::registerError(__('Hook function not available', $dom));;
     }
-    $event = pnModAPIFunc('PostCalendar', 'hooks', 'create_' . $module, array(
+    $event = pnModAPIFunc($home, 'hooks', 'create_' . $module, array(
         'objectid' => $args['objectid']));
 
     // add correct category information to new event
 
     // write event to postcal table
-
-    return true;
-}
-
-/**
- * check to see if relevent file is available in PostCalendar/pnhooksapi/
- *
- * @author  Craig Heydenburg
- * @return  boolean    true/false
- * @access  private
- */
-function _pc_funcisavail($module)
-{
-    $osdir   = DataUtil::formatForOS('PostCalendar');
-    $ostype  = DataUtil::formatForOS('hooks');
-    $osfunc  = DataUtil::formatForOS($module);
-    $mosfile = "modules/$osdir/pn{$ostype}api/create_{$osfunc}.php";
-    if (file_exists($mosfile)) {
+    if (DBUtil::insertObject($event, 'postcalendar_events', 'eid')) {
+        LogUtil::registerStatus(__("PostCalendar: News event created.", $dom));
         return true;
-    } else {
-        return false;
     }
+
+    return LogUtil::registerError(__('Error! PostCalender: Could not create an News event.', $dom));
 }

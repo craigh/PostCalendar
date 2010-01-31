@@ -172,7 +172,15 @@ function PostCalendar_upgrade($oldversion)
         case '6.0.0':
             // no changes
         case '6.0.1':
-            _postcalendar_registermodulehooks();
+            if !(_postcalendar_registermodulehooks()) {
+                LogUtil::registerError(__('Error! Could not register module hooks.', $dom));
+                return '6.0.1';
+            }
+            // upgrade table structure
+            if (!DBUtil::changeTable('postcalendar_events')) {
+                LogUtil::registerError(__('Error! Could not upgrade the tables.', $dom));
+                return '6.0.1';
+            }
         case '6.1.0':
             //future development
     }
