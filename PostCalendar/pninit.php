@@ -170,7 +170,8 @@ function PostCalendar_upgrade($oldversion)
                 'M' => '%B',
                 'Y' => '%Y'));
         case '6.0.0':
-            // no changes
+            pnModSetVar('PostCalendar', 'pcFilterYearStart', 1);
+            pnModSetVar('PostCalendar', 'pcFilterYearEnd', 2);
         case '6.0.1':
             if !(_postcalendar_registermodulehooks()) {
                 LogUtil::registerError(__('Error! Could not register module hooks.', $dom));
@@ -234,24 +235,26 @@ function postcalendar_init_getdefaults()
 
     // PostCalendar Default Settings
     $defaults = array(
-        'pcTime24Hours' => _TIMEFORMAT == 24 ? '1' : '0',
+        'pcTime24Hours'           => _TIMEFORMAT == 24 ? '1' : '0',
         'pcEventsOpenInNewWindow' => '0',
-        'pcFirstDayOfWeek' => '0', // Sunday
-        'pcUsePopups' => '0',
-        'pcAllowDirectSubmit' => '0',
-        'pcListHowManyEvents' => '15',
-        'pcEventDateFormat' => '%B %e, %Y', // American: e.g. July 4, 2010
-        'pcAllowUserCalendar' => '0', // no group
-        'pcTimeIncrement' => '15',
-        'pcDefaultView' => 'month',
-        'pcNotifyAdmin' => '1',
-        'pcNotifyEmail' => pnConfigGetVar('adminmail'),
-        'pcNotifyAdmin2Admin' => '0',
-        'pcAllowCatFilter' => '1',
-        'enablecategorization' => '1',
-        'enablenavimages' => '1',
-        'pcDefaultCategories' => $defaultcats,
-        'pcNavDateOrder' => array(
+        'pcFirstDayOfWeek'        => '0', // Sunday
+        'pcUsePopups'             => '0',
+        'pcAllowDirectSubmit'     => '0',
+        'pcListHowManyEvents'     => '15',
+        'pcEventDateFormat'       => '%B %e, %Y', // American: e.g. July 4, 2010
+        'pcAllowUserCalendar'     => '0', // no group
+        'pcTimeIncrement'         => '15',
+        'pcDefaultView'           => 'month',
+        'pcNotifyAdmin'           => '1',
+        'pcNotifyEmail'           => pnConfigGetVar('adminmail'),
+        'pcNotifyAdmin2Admin'     => '0',
+        'pcAllowCatFilter'        => '1',
+        'enablecategorization'    => '1',
+        'enablenavimages'         => '1',
+        'pcDefaultCategories'     => $defaultcats,
+        'pcFilterYearStart'       => 1,
+        'pcFilterYearEnd'         => 2,
+        'pcNavDateOrder'          => array(
             'format' => 'MDY',
             'D' => '%e',
             'M' => '%B',

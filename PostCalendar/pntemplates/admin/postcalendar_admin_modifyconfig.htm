@@ -108,6 +108,16 @@
 			<!--[pnmodgetvar module="PostCalendar" name="pcAllowCatFilter" assign="pcACF"]-->
 			<input type="checkbox" value="1" id="pcAllowCatFilter" name="pcAllowCatFilter"<!--[if $pcACF eq true]--> checked="checked"<!--[/if]-->/>
 		</div>
+		<div class="z-formrow">
+			<label for="pcFilterYearStart"><!--[gt text='In jump date selector, display']--></label>
+			<span><input type="text" size="3" value="<!--[pnmodgetvar module="PostCalendar" name="pcFilterYearStart"]-->" id="pcFilterYearStart" name="pcFilterYearStart" />
+                 &nbsp;<!--[gt text='year(s) before current year.']--></span>
+		</div>
+		<div class="z-formrow">
+			<label for="pcFilterYearEnd"><!--[gt text='In jump date selector, display']--></label>
+			<span><input type="text" size="3" value="<!--[pnmodgetvar module="PostCalendar" name="pcFilterYearEnd"]-->" id="pcFilterYearEnd" name="pcFilterYearEnd" />
+                 &nbsp;<!--[gt text='year(s) after current year.']--></span>
+		</div>
         <div class="z-formrow">
 			<label for="enablenavimages"><!--[gt text='Enable images in navigation header']--></label>
 			<!--[pnmodgetvar module="PostCalendar" name="enablenavimages" assign="pcENI"]-->

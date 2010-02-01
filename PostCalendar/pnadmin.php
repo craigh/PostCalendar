@@ -51,6 +51,9 @@ function postcalendar_admin_modifyconfig()
     $selectedDefaultCategories = pnModGetVar('PostCalendar', 'pcDefaultCategories');
     $pnRender->assign('selectedDefaultCategories', $selectedDefaultCategories);
 
+    $pnRender->assign('pcFilterYearStart', pnModGetVar('PostCalendar', 'pcFilterYearStart', 1));
+    $pnRender->assign('pcFilterYearEnd', pnModGetVar('PostCalendar', 'pcFilterYearEnd', 2));
+
     return $pnRender->fetch('admin/postcalendar_admin_modifyconfig.htm');
 }
 
@@ -318,6 +321,8 @@ function postcalendar_admin_updateconfig()
         'enablecategorization'    => FormUtil::getPassedValue('enablecategorization', 0),
         'enablenavimages'         => FormUtil::getPassedValue('enablenavimages', 0),
         'pcDefaultCategories'     => FormUtil::getPassedValue('pcDefaultCategories'), //array
+        'pcFilterYearStart'       => abs((int) FormUtil::getPassedValue('pcFilterYearStart', $defaults['pcFilterYearStart'])), // ensures positive value
+        'pcFilterYearEnd'         => abs((int) FormUtil::getPassedValue('pcFilterYearEnd', $defaults['pcFilterYearEnd'])), // ensures positive value
     );
     $settings['pcNavDateOrder'] = pnModAPIFunc('PostCalendar', 'admin', 'getdateorder', $settings['pcEventDateFormat']);
 
