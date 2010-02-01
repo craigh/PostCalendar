@@ -24,13 +24,12 @@ function postcalendar_hooksapi_create_news($args)
     if ((!isset($args['objectid'])) || ((int) $args['objectid'] <= 0)) {
         return false;
     }
+    $args['SQLcache'] = false;
 
     $article = pnModAPIFunc('News', 'user', 'get', $args);
 
     Loader::loadClass('CategoryUtil');
     $cat = CategoryUtil::getCategoryByPath('/__SYSTEM__/Modules/PostCalendar/Events');
-
-    $dom = ZLanguage::getModuleDomain('PostCalendar');
 
     // change below based on $article array
     $event = array(

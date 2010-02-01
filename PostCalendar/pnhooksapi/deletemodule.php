@@ -20,7 +20,11 @@ function postcalendar_hooksapi_deletemodule($args)
 {
     $dom = ZLanguage::getModuleDomain('PostCalendar');
 
-    $module = isset($args['module']) ? strtolower($args['module']) : strtolower(pnModGetName()); // default to active module
+    if (isset($args['extrainfo']['module'])) {
+        $module = strtolower($args['extrainfo']['module']);
+    } else {
+        return LogUtil::registerError(__f('Error! Module name not present in %s hook.', 'deletemodule', $dom));
+    }
 
     if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
         return LogUtil::registerPermissionError();

@@ -19,7 +19,7 @@
 function postcalendar_hooksapi_funcisavail($args)
 {
     if (!isset($args['module'])) return false;
-    $homearray = array($args['module'], 'PostCalendar');
+    $homearray = array($args['module'], 'PostCalendar'); // locations to search for the function
     $module    = $args['module'];
     $type      = isset($args['type']) ? $args['type'] : 'create';
 
@@ -30,7 +30,7 @@ function postcalendar_hooksapi_funcisavail($args)
         $osdir   = DataUtil::formatForOS($home);
         $ostype  = DataUtil::formatForOS($apidir);
         $osfunc  = DataUtil::formatForOS($func);
-        $mosfile = "modules/$osdir/$ostype/$osfunc"; // doesn't allow old file format
+        $mosfile = "modules/$osdir/$ostype/$osfunc"; // doesn't allow oldstyle 'file' format - must be in a dir
         if (file_exists($mosfile)) {
             return $home;
         }
