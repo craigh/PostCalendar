@@ -25,11 +25,10 @@ function postcalendar_hooksapi_create_news($args)
         return false;
     }
     $args['SQLcache'] = false;
-
     $article = pnModAPIFunc('News', 'user', 'get', $args);
 
-    Loader::loadClass('CategoryUtil');
-    $cat = CategoryUtil::getCategoryByPath('/__SYSTEM__/Modules/PostCalendar/Events');
+    $optin = $args['hookinfo']['optin'];
+    $cats  = $args['hookinfo']['cats'];
 
     // change below based on $article array
     $event = array(
@@ -37,7 +36,7 @@ function postcalendar_hooksapi_create_news($args)
         'hometext'          => ":html:" . __('Article link: ', $dom) . "<a href='" . pnModURL('News', 'user', 'display', array('sid' => $article['sid'])) . "'>" . substr($article['hometext'], 0, 32) . "...</a>",
         'aid'               => $article['aid'],
         'time'              => $article['time'],
-        'informant'         => $article['aid'], // change this?
+        'informant'         => $article['aid'],
         'eventDate'         => substr($article['from'], 0, 10),
         'duration'          => 3600,
         'recurrtype'        => 0, // norepeat
@@ -49,7 +48,7 @@ function postcalendar_hooksapi_create_news($args)
         'sharing'           => 3, // global
         'hooked_modulename' => 'news',
         'hooked_objectid'   => $article['sid'],
-        '__CATEGORIES__'    => array('Main' => $cat['id']), // CHANGE THIS!
+        '__CATEGORIES__'    => $cats,
         '__META__'          => array('module' => 'PostCalendar'),
     );
     return $event;

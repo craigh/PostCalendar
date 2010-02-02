@@ -173,7 +173,7 @@ function PostCalendar_upgrade($oldversion)
             pnModSetVar('PostCalendar', 'pcFilterYearStart', 1);
             pnModSetVar('PostCalendar', 'pcFilterYearEnd', 2);
         case '6.0.1':
-            if !(_postcalendar_registermodulehooks()) {
+            if (!_postcalendar_registermodulehooks()) {
                 LogUtil::registerError(__('Error! Could not register module hooks.', $dom));
                 return '6.0.1';
             }
@@ -843,6 +843,12 @@ function _postcalendar_registermodulehooks()
     }
     if (!pnModRegisterHook('item', 'delete', 'API', 'PostCalendar', 'hooks', 'delete')) {
         return LogUtil::registerError(__f('PostCalendar: Could not register %s hook.', 'delete', $dom));
+    }
+    if (!pnModRegisterHook('item', 'new', 'GUI', 'PostCalendar', 'hooks', 'new')) {
+        return LogUtil::registerError(__f('PostCalendar: Could not register %s hook.', 'new', $dom));
+    }
+    if (!pnModRegisterHook('item', 'modify', 'GUI', 'PostCalendar', 'hooks', 'modify')) {
+        return LogUtil::registerError(__f('PostCalendar: Could not register %s hook.', 'modify', $dom));
     }
 
     // register the module delete hook - function called when hooked modules are uninstalled

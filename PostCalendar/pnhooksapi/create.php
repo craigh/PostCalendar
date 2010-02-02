@@ -28,12 +28,16 @@ function postcalendar_hooksapi_create($args)
         return LogUtil::registerPermissionError();
     }
 
+	$hookinfo = FormUtil::getPassedValue('postcalendar', array(), 'POST'); // array of data from 'new' hook
+
+
     if (!$home = pnModAPIFunc('PostCalendar', 'hooks', 'funcisavail', array(
         'module' => $module))) {
         return LogUtil::registerError(__('Hook function not available', $dom));;
     }
     $event = pnModAPIFunc($home, 'hooks', 'create_' . $module, array(
-        'objectid' => $args['objectid']));
+        'objectid' => $args['objectid'],
+        'hookinfo' => $hookinfo));
 
     // add correct category information to new event
 

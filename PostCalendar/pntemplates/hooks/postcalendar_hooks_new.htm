@@ -1,0 +1,21 @@
+<!--[*  $Id$  *]-->
+<fieldset>
+    <legend><!--[gt text='PostCalendar Hook']--></legend>
+    <div class="z-formrow">
+        <label for="postcalendar_optin"><!--[gt text="Create associated PostCalendar event"]--></label>
+        <input type="checkbox" value="1" id='postcalendar_optin' name='postcalendar[optin]' checked="checked" />
+    </div>
+    <div class="z-formrow">
+        <label for="postcalendar_cats"><!--[gt text="Assign to PostCalendar categories:"]--></label>
+        <!--[nocache]-->
+        <span><!--[foreach from=$postcalendar_catregistry key=property item=category]-->
+            <!--[selector_category 
+                editLink=false 
+                category=$category 
+                name="postcalendar[cats][$property]" 
+                field="id" 
+                all=0]-->
+            <!--[/foreach]--></span>
+        <!--[/nocache]-->
+    </div>
+</fieldset>
