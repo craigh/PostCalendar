@@ -1,2 +1,23 @@
 <!--[*  $Id$  *]-->
-<!--[$testvar]-->
+<fieldset>
+    <legend><!--[gt text='Associated PostCalendar event' domain="module_postcalendar"]--></legend>
+    <div class="z-formrow">
+        <label for="postcalendar_optin"><!--[gt text="Create associated PostCalendar event" domain="module_postcalendar"]--></label>
+        <input type="checkbox" value="1" id='postcalendar_optin' name='postcalendar[optin]' checked="checked" />
+    </div>
+    <div class="z-formrow">
+        <label for="postcalendar_cats"><!--[gt text="Assign to PostCalendar categories:" domain="module_postcalendar"]--></label>
+        <!--[nocache]-->
+        <span><!--[foreach from=$postcalendar_catregistry key=property item=category]-->
+            <!--[array_field_isset assign="selectedValue" array=$postcalendar_selectedcategories field=$property returnValue=1]-->
+            <!--[selector_category 
+                editLink=false 
+                category=$category 
+                name="postcalendar[cats][$property]" 
+                field="id" 
+                selectedValue=$selectedValue]-->
+            <!--[/foreach]--></span>
+        <!--[/nocache]-->
+    </div>
+    <input type="hidden" value="<!--[$postcalendar_eid]-->" name="postcalendar[eid]" />
+</fieldset>

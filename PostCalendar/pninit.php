@@ -850,8 +850,12 @@ function _postcalendar_registermodulehooks()
     if (!pnModRegisterHook('item', 'modify', 'GUI', 'PostCalendar', 'hooks', 'modify')) {
         return LogUtil::registerError(__f('PostCalendar: Could not register %s hook.', 'modify', $dom));
     }
-
-    // register the module delete hook - function called when hooked modules are uninstalled
+    if (!pnModRegisterHook('module', 'modifyconfig', 'GUI', 'PostCalendar', 'hooks', 'modifyconfig')) {
+        return LogUtil::registerError(__f('PostCalendar: Could not register %s hook.', 'modifyconfig', $dom));
+    }
+    if (!pnModRegisterHook('module', 'updateconfig', 'API', 'PostCalendar', 'hooks', 'updateconfig')) {
+        return LogUtil::registerError(__f('PostCalendar: Could not register %s hook.', 'updateconfig', $dom));
+    }
     if (!pnModRegisterHook('module', 'remove', 'API', 'PostCalendar', 'hooks', 'deletemodule')) {
         return LogUtil::registerError(__f('PostCalendar: Could not register %s hook.', 'deletemodule', $dom));
     }

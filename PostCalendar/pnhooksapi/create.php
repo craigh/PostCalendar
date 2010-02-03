@@ -30,6 +30,10 @@ function postcalendar_hooksapi_create($args)
 
 	$hookinfo = FormUtil::getPassedValue('postcalendar', array(), 'POST'); // array of data from 'new' hook
 
+    if ((!isset($hookinfo['optin'])) || (!$hookinfo['optin'])) {
+        LogUtil::registerStatus(__("PostCalendar: Event not created (opt out).", $dom));
+        return;
+    }
 
     if (!$home = pnModAPIFunc('PostCalendar', 'hooks', 'funcisavail', array(
         'module' => $module))) {
@@ -39,13 +43,16 @@ function postcalendar_hooksapi_create($args)
         'objectid' => $args['objectid'],
         'hookinfo' => $hookinfo));
 
-    // add correct category information to new event
-
-    // write event to postcal table
-    if (DBUtil::insertObject($event, 'postcalendar_events', 'eid')) {
-        LogUtil::registerStatus(__("PostCalendar: News event created.", $dom));
-        return true;
+    if ($event) {
+        // write event to postcal table
+        if (DBUtil::insertObject($event, 'postcalendar_events', 'eid')) {
+            LogUtil::registerStatus(__("PostCalendar: Event created.", $dom));
+            return true;
+        }
+    } else {
+        // if the create_ function returns false, it means that an event is not desired, so quietly exit
+        return;
     }
 
-    return LogUtil::registerError(__('Error! PostCalender: Could not create an News event.', $dom));
+    return LogUtil::registerError(__('Error! PostCalender: Could not create an event.', $dom));
 }
