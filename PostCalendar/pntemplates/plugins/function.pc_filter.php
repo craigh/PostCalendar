@@ -24,7 +24,7 @@ function smarty_function_pc_filter($args, &$smarty)
 {
     $dom = ZLanguage::getModuleDomain('PostCalendar');
     if (empty($args['type'])) {
-        $smarty->trigger_error(__("%s: missing '%s' parameter", array(
+        $smarty->trigger_error(__f("%1$s: missing '%2$s' parameter", array(
             'Plugin:pc_filter',
             'type'), $dom));
         return;

@@ -80,7 +80,7 @@ function postcalendar_adminapi_notify($args)
     $is_update = $args['is_update'];
 
     if (!isset($eid)) {
-        return LogUtil::registerError(__f('Error! %s required in %s.', 'eid', 'postcalendar_adminapi_notify', $dom));
+        return LogUtil::registerError(__f('Error! %1$s required in %2$s.', array('eid', 'postcalendar_adminapi_notify'), $dom));
     }
 
     if (!(bool) _SETTING_NOTIFY_ADMIN) {
