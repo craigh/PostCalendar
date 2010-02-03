@@ -864,9 +864,7 @@ function postcalendar_eventapi_geteventdates($event)
     switch ($event['recurrtype']) {
         // Events that do not repeat only have a startday (eventDate)
         case NO_REPEAT:
-            if (isset($days[$event['eventDate']])) {
-                return array($event['eventDate']); // there is only one date - return it
-            }
+            return array($event['eventDate']); // there is only one date - return it
             break;
         case REPEAT:
             $rfreq = $event['repeat']['event_repeat_freq']; // could be any int
