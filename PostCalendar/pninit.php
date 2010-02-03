@@ -499,7 +499,7 @@ function _postcalendar_createdefaultcategory($regpath = '/__SYSTEM__/Modules/Glo
         _postcalendar_create_regentry($rootcat, array(
             'modname'  => 'PostCalendar',
             'table'    => 'postcalendar_events',
-            'property' => __('Main', $dom)));
+            'property' => 'Main'));
     } else {
         return false;
     }
