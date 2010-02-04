@@ -29,6 +29,9 @@ function postcalendar_hooksapi_create($args)
     }
 
 	$hookinfo = FormUtil::getPassedValue('postcalendar', array(), 'POST'); // array of data from 'new' hook
+    if (DataUtil::is_serialized($hookinfo['cats'])) {
+        $hookinfo['cats'] = unserialize($hookinfo['cats']);
+    }
 
     if ((!isset($hookinfo['optin'])) || (!$hookinfo['optin'])) {
         LogUtil::registerStatus(__("PostCalendar: Event not created (opt out).", $dom));

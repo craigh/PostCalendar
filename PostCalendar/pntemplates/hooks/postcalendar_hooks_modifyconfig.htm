@@ -12,7 +12,7 @@
         <span><!--[foreach from=$postcalendar_catregistry key=property item=category]-->
             <!--[array_field_isset assign="selectedValue" array=$postcalendar_admincatselected field=$property returnValue=1]-->
             <!--[selector_category 
-                editLink=false 
+                editLink=true 
                 category=$category 
                 name="postcalendar[postcalendar_admincatselected][$property]" 
                 field="id" 

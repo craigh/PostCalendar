@@ -29,6 +29,9 @@ function postcalendar_hooksapi_update($args)
     }
 
 	$hookinfo = FormUtil::getPassedValue('postcalendar', array(), 'POST'); // array of data from 'new' hook
+    if (DataUtil::is_serialized($hookinfo['cats'])) {
+        $hookinfo['cats'] = unserialize($hookinfo['cats']);
+    }
 
     if ((!isset($hookinfo['optin'])) || (!$hookinfo['optin'])) {
         // check to see if event currently exists - delete if so
