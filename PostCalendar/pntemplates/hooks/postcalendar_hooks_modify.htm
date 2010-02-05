@@ -1,7 +1,7 @@
 <!--[*  $Id$  *]-->
 <!--[if $postcalendar_hide]-->
     <input type="hidden" value="1" name='postcalendar[optin]' />
-    <input type="hidden" value="<!--[$postcalendar_admincatselected]-->" name='postcalendar[cats]' />
+    <input type="hidden" value="<!--[$postcalendar_admincatselected|pnvarprepfordisplay]-->" name='postcalendar[cats]' />
 <!--[else]-->
 <fieldset>
     <legend><!--[gt text='Associated PostCalendar event' domain="module_postcalendar"]--></legend>
@@ -29,7 +29,7 @@
         <!--[/nocache]-->
     </div>
     <!--[else]-->
-        <input type="hidden" value="<!--[$postcalendar_admincatselected]-->" name='postcalendar[cats]' />
+        <input type="hidden" value="<!--[$postcalendar_admincatselected|pnvarprepfordisplay]-->" name='postcalendar[cats]' />
     <!--[/if]-->
     <input type="hidden" value="<!--[$postcalendar_eid]-->" name="postcalendar[eid]" />
 </fieldset>
