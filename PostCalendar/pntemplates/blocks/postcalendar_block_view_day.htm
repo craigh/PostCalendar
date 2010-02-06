@@ -1,19 +1,17 @@
 <!--[* $Id$ *]-->
+<!--[if !$hideTodaysEvents]-->
 <!--[ pc_pagejs_init ]-->
 <div class="postcalendar_block_view_day">
 <!--[ if $SHOW_TITLE eq 1 ]-->
     <h2 class='postcalendar_block_innertitle'><!--[gt text="Today's events" domain="module_postcalendar"]--></h2>
 <!--[ /if ]-->
-<!--[ pc_sort_events var="S_EVENTS" sort="time" order="asc" value=$A_EVENTS ]-->
 <!--[assign var="eventtotal" value=0]-->
 <!--[assign var="eventcount" value=0]-->
-<!--[ foreach name=dates item=events key=date from=$S_EVENTS ]-->
-    <!--[ if $date eq $TODAY_DATE ]-->
-        <ul class="pc_blocklist">
+    <ul class="pc_blocklist">
         <li class="pc_blockdate">
             <!--[ $TODAY_DATE|pc_date_format ]-->
         </li>
-        <!--[ foreach name=eventloop key=id item=event from=$events ]-->
+        <!--[ foreach name=eventloop key=id item=event from=$todaysEvents ]-->
             <!--[ assign var="eventtotal" value=$eventtotal+1 ]-->
             <!--[ if $eventcount < $DISPLAY_LIMIT ]-->
                 <!--[ assign var="eventcount" value=$eventcount+1 ]-->
@@ -40,11 +38,9 @@
                 <!--[ assign var="eventtotal" value="0" ]-->
                     <li class="pc_blockevent"><!--[gt text='No events scheduled.' domain="module_postcalendar"]--></li>
         <!--[ /foreach ]-->
-        </ul>
-    <!--[ /if ]-->
-<!--[ /foreach ]-->
-
+    </ul>
 <!--[ if ($eventtotal > $DISPLAY_LIMIT) ]-->
   <a href="<!--[ pc_url action=day eid=$event.eid date=$TODAY_DATE ]-->"><!--[ $eventtotal ]-->&nbsp<!--[ $EVENTS_TOTAL_LINK ]--></a>
 <!--[ /if ]-->
 </div>
+<!--[/if]-->

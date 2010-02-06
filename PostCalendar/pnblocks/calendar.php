@@ -55,6 +55,7 @@ function postcalendar_calendarblock_display($blockinfo)
 
     $showcalendar   = $vars['pcbshowcalendar'];
     $showevents     = $vars['pcbeventoverview'];
+    $hideevents     = $vars['pcbhideeventoverview'];
     $eventslimit    = $vars['pcbeventslimit'];
     $nextevents     = $vars['pcbnextevents'];
     $pcbshowsslinks = $vars['pcbshowsslinks'];
@@ -216,21 +217,26 @@ function postcalendar_calendarblock_display($blockinfo)
         $tpl->assign_by_ref('CAL_FORMAT', $calendarView);
     }
 
-    $tpl->assign_by_ref('A_MONTH_NAMES', $pc_month_names);
-    $tpl->assign_by_ref('A_LONG_DAY_NAMES', $pc_long_day_names);
+    $countTodaysEvents = count($eventsByDate[$today_date]);
+    $hideTodaysEvents  = ($hideevents && ($countTodaysEvents == 0)) ? true : false;
+
+    $tpl->assign_by_ref('A_MONTH_NAMES',     $pc_month_names);
+    $tpl->assign_by_ref('A_LONG_DAY_NAMES',  $pc_long_day_names);
     $tpl->assign_by_ref('A_SHORT_DAY_NAMES', $pc_short_day_names);
-    $tpl->assign_by_ref('S_LONG_DAY_NAMES', $daynames);
+    $tpl->assign_by_ref('S_LONG_DAY_NAMES',  $daynames);
     $tpl->assign_by_ref('S_SHORT_DAY_NAMES', $sdaynames);
-    $tpl->assign_by_ref('A_EVENTS', $eventsByDate);
-    $tpl->assign_by_ref('A_CATEGORY', $categories);
-    $tpl->assign_by_ref('PREV_MONTH_URL', $pc_prev);
-    $tpl->assign_by_ref('NEXT_MONTH_URL', $pc_next);
-    $tpl->assign_by_ref('MONTH_START_DATE', $month_view_start);
-    $tpl->assign_by_ref('MONTH_END_DATE', $month_view_end);
-    $tpl->assign_by_ref('TODAY_DATE', $today_date);
-    $tpl->assign_by_ref('DATE', $Date);
-    $tpl->assign_by_ref('DISPLAY_LIMIT', $eventslimit);
-    $tpl->assign_by_ref('pc_colclasses', $pc_colclasses);
+    $tpl->assign_by_ref('A_EVENTS',          $eventsByDate);
+    $tpl->assign_by_ref('todaysEvents',      $eventsByDate[$today_date]);
+    $tpl->assign_by_ref('hideTodaysEvents',  $hideTodaysEvents);
+    $tpl->assign_by_ref('A_CATEGORY',        $categories);
+    $tpl->assign_by_ref('PREV_MONTH_URL',    $pc_prev);
+    $tpl->assign_by_ref('NEXT_MONTH_URL',    $pc_next);
+    $tpl->assign_by_ref('MONTH_START_DATE',  $month_view_start);
+    $tpl->assign_by_ref('MONTH_END_DATE',    $month_view_end);
+    $tpl->assign_by_ref('TODAY_DATE',        $today_date);
+    $tpl->assign_by_ref('DATE',              $Date);
+    $tpl->assign_by_ref('DISPLAY_LIMIT',     $eventslimit);
+    $tpl->assign_by_ref('pc_colclasses',     $pc_colclasses);
 
     if ($showcalendar) {
         $output .= $tpl->fetch('blocks/postcalendar_block_view_month.htm');
@@ -269,13 +275,14 @@ function postcalendar_calendarblock_modify($blockinfo)
 {
     $vars = pnBlockVarsFromContent($blockinfo['content']);
     // Defaults
-    if (empty($vars['pcbshowcalendar']))  $vars['pcbshowcalendar']  = 0;
-    if (empty($vars['pcbeventslimit']))   $vars['pcbeventslimit']   = 5;
-    if (empty($vars['pcbeventoverview'])) $vars['pcbeventoverview'] = 0;
-    if (empty($vars['pcbnextevents']))    $vars['pcbnextevents']    = 0;
-    if (empty($vars['pcbeventsrange']))   $vars['pcbeventsrange']   = 6;
-    if (empty($vars['pcbshowsslinks']))   $vars['pcbshowsslinks']   = 0;
-    if (empty($vars['pcbfiltercats']))    $vars['pcbfiltercats']    = array();
+    if (empty($vars['pcbshowcalendar']))      $vars['pcbshowcalendar']      = 0;
+    if (empty($vars['pcbeventslimit']))       $vars['pcbeventslimit']       = 5;
+    if (empty($vars['pcbeventoverview']))     $vars['pcbeventoverview']     = 0;
+    if (empty($vars['pcbhideeventoverview'])) $vars['pcbhideeventoverview'] = 0;
+    if (empty($vars['pcbnextevents']))        $vars['pcbnextevents']        = 0;
+    if (empty($vars['pcbeventsrange']))       $vars['pcbeventsrange']       = 6;
+    if (empty($vars['pcbshowsslinks']))       $vars['pcbshowsslinks']       = 0;
+    if (empty($vars['pcbfiltercats']))        $vars['pcbfiltercats']        = array();
 
     $pnRender = pnRender::getInstance('PostCalendar', false); // no caching
 
@@ -301,13 +308,14 @@ function postcalendar_calendarblock_update($blockinfo)
     $vars = pnBlockVarsFromContent($blockinfo['content']);
 
     // overwrite with new values
-    $vars['pcbshowcalendar']  = FormUtil::getPassedValue('pcbshowcalendar',  0);
-    $vars['pcbeventslimit']   = FormUtil::getPassedValue('pcbeventslimit',   5);
-    $vars['pcbeventoverview'] = FormUtil::getPassedValue('pcbeventoverview', 0);
-    $vars['pcbnextevents']    = FormUtil::getPassedValue('pcbnextevents',    0);
-    $vars['pcbeventsrange']   = FormUtil::getPassedValue('pcbeventsrange',   6);
-    $vars['pcbshowsslinks']   = FormUtil::getPassedValue('pcbshowsslinks',   0);
-    $vars['pcbfiltercats']    = FormUtil::getPassedValue('pcbfiltercats'); //array
+    $vars['pcbshowcalendar']      = FormUtil::getPassedValue('pcbshowcalendar',      0);
+    $vars['pcbeventslimit']       = FormUtil::getPassedValue('pcbeventslimit',       5);
+    $vars['pcbeventoverview']     = FormUtil::getPassedValue('pcbeventoverview',     0);
+    $vars['pcbhideeventoverview'] = FormUtil::getPassedValue('pcbhideeventoverview', 0);
+    $vars['pcbnextevents']        = FormUtil::getPassedValue('pcbnextevents',        0);
+    $vars['pcbeventsrange']       = FormUtil::getPassedValue('pcbeventsrange',       6);
+    $vars['pcbshowsslinks']       = FormUtil::getPassedValue('pcbshowsslinks',       0);
+    $vars['pcbfiltercats']        = FormUtil::getPassedValue('pcbfiltercats'); //array
 
     $pnRender = pnRender::getInstance('PostCalendar');
     $pnRender->clear_cache('blocks/postcalendar_block_view_day.htm');
