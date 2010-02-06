@@ -12,6 +12,8 @@
 </div>
 <!--[/if]-->
 <h2 class="eventheader">
+    <!--[gt text='private event' assign='p_txt' domain='module_postcalendar']-->
+    <!--[if $event.privateicon]--><!--[pnimg src='locked.png' modname='core' set='icons/extrasmall' title=$p_txt alt=$p_txt]--><!--[/if]-->
     <!--[ $loaded_event.title|pnvarprephtmldisplay ]-->
     <a href="<!--[pnmodurl modname='PostCalendar' func='view' viewtype='details' eid=$loaded_event.eid ]-->" title='<!--[gt text='Full event information' domain="module_postcalendar"]-->'>
     <!--[gt text='Full event information' assign='title' domain='module_postcalendar']--><!--[gt text='Info' assign='alt' domain='module_postcalendar']-->

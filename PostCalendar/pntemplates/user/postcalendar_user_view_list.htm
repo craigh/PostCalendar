@@ -35,6 +35,7 @@
                 <li class="eventslistitems">
                     <span style="padding: 1px 1em; color: <!--[$event.cattextcolor]-->; background: <!--[ $event.catcolor ]-->;"><!--[ $event.catname ]--></span>
                     <!--[ if $event.alldayevent != true ]--><!--[ $event.startTime ]-->&nbsp;<!--[ /if ]-->
+                    <!--[if $event.privateicon]--><!--[pnimg src='locked.png' modname='core' set='icons/extrasmall' __title="private event" __alt="private event"]--><!--[/if]-->
                     <!--[ pc_url full=true action=detail eid=$event.eid date=$date style="text-decoration: none;" display=$event.title|strip_tags]-->
                     <!--[ if $event.alldayevent != true ]-->
                         (<!--[ $event.duration ]-->)

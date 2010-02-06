@@ -557,6 +557,8 @@ function postcalendar_eventapi_formateventarrayfordisplay($event)
         SHARING_HIDEDESC => SHARING_PRIVATE);
     $event['sharing'] = $sharingmap[$event['sharing']];
 
+    $event['privateicon'] = ($event['sharing'] == SHARING_PRIVATE) ? true : false;
+
     // prep hometext for display
     if ($event['hometext'] == 'n/a') {
         $event['hometext'] = ':text:n/a'; // compenseate for my bad programming in previous versions CAH

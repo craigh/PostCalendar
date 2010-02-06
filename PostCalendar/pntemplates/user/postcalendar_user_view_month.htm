@@ -78,6 +78,7 @@
 
                     <!--[ assign var="desc" value=$event.hometext|truncate:255:"..." ]-->
                     <!--[ pc_popup bgcolor=$event.catcolor caption="`$timestamp` `$event.title`" text=$desc|pnvarprepfordisplay assign="javascript"]-->
+                    <!--[if $event.privateicon]--><!--[pnimg src='locked.png' modname='core' set='icons/extrasmall' __title="private event" __alt="private event"]--><!--[/if]-->
                     <!--[ pc_url full=true action=detail eid=$event.eid date=$date style="font-size: 7pt; text-decoration: none;" javascript=$javascript display="$timestamp $title"|pnvarprephtmldisplay]-->
                     <!--[ if $event.commentcount gt 0]-->
                         <!--[gt text='%s comment left' plural='%s comments left.' count=$event.commentcount tag1=$event.commentcount domain="module_postcalendar" assign="title"]-->
