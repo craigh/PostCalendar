@@ -146,9 +146,17 @@ function postcalendar_userapi_buildView($args)
             break;
         case 'xml':
         case 'list':
-            $starting_date = "$the_month/1/$the_year";
-            $ending_date = "$the_month/$last_day/$the_year";
-            $calendarView = Date_Calc::getCalendarMonth($the_month, $the_year, '%Y-%m-%d');
+            $listmonths    = pnModGetVar('PostCalendar', 'pcListMonths');
+            $listyears     = floor($listmonths/12);
+            $listendyears  = (int) $the_year + (int) $listyears;
+            $listmonths    = $listmonths % 12;
+            $listendmonths = (int) $the_month + (int) $listmonths;
+            if ($listendmonths > 12) {
+                $listendyears++;
+                $listendmonths = $listendmonths - 12;
+            }
+            $starting_date = "$the_month/$the_day/$the_year";
+            $ending_date   = "$listendmonths/$the_day/$listendyears";
             break;
     }
 
@@ -185,8 +193,6 @@ function postcalendar_userapi_buildView($args)
     // Prepare values for the template
     $prev_month = DateUtil::getDatetime_NextMonth(-1, '%Y%m%d', $the_year, $the_month, 1);
     $next_month = DateUtil::getDatetime_NextMonth(1, '%Y%m%d', $the_year, $the_month, 1);
-
-    // Prepare links for template
     $pc_prev = pnModURL('PostCalendar', 'user', 'view', array(
         'viewtype' => $viewtype,
         'Date' => $prev_month,
@@ -197,6 +203,7 @@ function postcalendar_userapi_buildView($args)
         'Date' => $next_month,
         'pc_username' => $pc_username,
         'filtercats' => $filtercats));
+
     $prev_day = DateUtil::getDatetime_NextDay(-1, '%Y%m%d', $the_year, $the_month, $the_day);
     $next_day = DateUtil::getDatetime_NextDay(1, '%Y%m%d', $the_year, $the_month, $the_day);
     $pc_prev_day = pnModURL('PostCalendar', 'user', 'view', array(
@@ -236,6 +243,19 @@ function postcalendar_userapi_buildView($args)
         'pc_username' => $pc_username,
         'filtercats' => $filtercats));
 
+    $prev_list = date('Ymd', mktime(0, 0, 0, $the_month - $listmonths, $the_day, $the_year));
+    $next_list = date('Ymd', mktime(0, 0, 0, $listendmonths, $the_day, $listendyears));
+    $pc_prev_list = pnModURL('PostCalendar', 'user', 'view', array(
+        'viewtype' => 'list',
+        'Date' => $prev_list,
+        'pc_username' => $pc_username,
+        'filtercats' => $filtercats));
+    $pc_next_list = pnModURL('PostCalendar', 'user', 'view', array(
+        'viewtype' => 'list',
+        'Date' => $next_list,
+        'pc_username' => $pc_username,
+        'filtercats' => $filtercats));
+
     $function_out = array();
     if (isset($calendarView)) {
         $function_out['CAL_FORMAT'] = $calendarView;
@@ -268,6 +288,8 @@ function postcalendar_userapi_buildView($args)
     $function_out['NEXT_WEEK_URL']      = DataUtil::formatForDisplay($pc_next_week);
     $function_out['PREV_YEAR_URL']      = DataUtil::formatForDisplay($pc_prev_year);
     $function_out['NEXT_YEAR_URL']      = DataUtil::formatForDisplay($pc_next_year);
+    $function_out['PREV_LIST_URL']      = DataUtil::formatForDisplay($pc_prev_list);
+    $function_out['NEXT_LIST_URL']      = DataUtil::formatForDisplay($pc_next_list);
     $function_out['MONTH_START_DATE']   = $month_view_start;
     $function_out['MONTH_END_DATE']     = $month_view_end;
     $function_out['TODAY_DATE']         = $today_date;

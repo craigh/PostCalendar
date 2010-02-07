@@ -1,6 +1,6 @@
 <!--[* $Id$ *]-->
-<!--[ foreach name=weeks item=days from=$CAL_FORMAT ]-->
-<!--[ foreach name=days item=date from=$days ]-->
+<!--[ pc_sort_events var="S_EVENTS" sort="time" order="asc" value=$A_EVENTS ]-->
+<!--[ foreach name=dates item=events key=date from=$S_EVENTS ]-->
   <!--[ pc_sort_events var="S_EVENTS" sort="time" order="asc" value=$A_EVENTS ]-->
   <!--[ if ((isset($S_EVENTS.$date)) && (count($S_EVENTS.$date) gt 0)) ]-->
   <!--[ foreach name=events item=event from=$S_EVENTS.$date ]-->
@@ -11,6 +11,5 @@
 <comments><!--[pnmodurl modname='PostCalendar' func='view' viewtype='details' eid=$event.eid ]-->#comments</comments>
 </item>
   <!--[ /foreach ]-->
-  <!--[ /if ]--><!--[* end if isset($S_EVENTS) *]-->
-<!--[ /foreach ]-->
+  <!--[ /if ]-->
 <!--[ /foreach ]-->

@@ -182,6 +182,7 @@ function PostCalendar_upgrade($oldversion)
                 LogUtil::registerError(__('Error! Could not upgrade the tables.', $dom));
                 return '6.0.1';
             }
+            pnModSetVar('PostCalendar', 'pcListMonths', 12);
         case '6.1.0':
             //future development
     }
@@ -254,6 +255,7 @@ function postcalendar_init_getdefaults()
         'pcDefaultCategories'     => $defaultcats,
         'pcFilterYearStart'       => 1,
         'pcFilterYearEnd'         => 2,
+        'pcListMonths'            => 12,
         'pcNavDateOrder'          => array(
             'format' => 'MDY',
             'D' => '%e',

@@ -316,6 +316,7 @@ function postcalendar_admin_updateconfig()
         'pcDefaultView'           => FormUtil::getPassedValue('pcDefaultView', $defaults['pcDefaultView']),
         'pcNotifyAdmin'           => FormUtil::getPassedValue('pcNotifyAdmin', 0),
         'pcNotifyEmail'           => FormUtil::getPassedValue('pcNotifyEmail', $defaults['pcNotifyEmail']),
+        'pcListMonths'            => abs((int) FormUtil::getPassedValue('pcListMonths', $defaults['pcListMonths'])),
         'pcNotifyAdmin2Admin'     => FormUtil::getPassedValue('pcNotifyAdmin2Admin', 0),
         'pcAllowCatFilter'        => FormUtil::getPassedValue('pcAllowCatFilter', 0),
         'enablecategorization'    => FormUtil::getPassedValue('enablecategorization', 0),

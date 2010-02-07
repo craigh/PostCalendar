@@ -104,6 +104,10 @@
 				</select></span>
 		</div>
 		<div class="z-formrow">
+			<label for="pcListMonths"><!--[gt text='Number of months to display in list/rss view']--></label>
+			<span><input type="text" size="3" maxlength="3" value="<!--[pnmodgetvar module="PostCalendar" name="pcListMonths"]-->" id="pcListMonths" name="pcListMonths" /></span>
+		</div>
+		<div class="z-formrow">
 			<label for="pcAllowCatFilter"><!--[gt text='Allow users to filter event display by category']--></label>
 			<!--[pnmodgetvar module="PostCalendar" name="pcAllowCatFilter" assign="pcACF"]-->
 			<input type="checkbox" value="1" id="pcAllowCatFilter" name="pcAllowCatFilter"<!--[if $pcACF eq true]--> checked="checked"<!--[/if]-->/>

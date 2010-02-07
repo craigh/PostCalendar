@@ -13,46 +13,47 @@
 
 <!--[ pc_pagejs_init ]-->
 
-<h2><!--[gt text='Month list view']--></h2>
-
-<h2 class="postcalendar_header">
-    <!--[ if $PRINT_VIEW eq false ]--><a href="<!--[ $PREV_MONTH_URL ]-->">&lt;&lt;</a><!--[/if]-->
-    <!--[ $DATE|pc_date_format:'%B %Y']-->
-    <!--[ if $PRINT_VIEW eq false ]--><a href="<!--[ $NEXT_MONTH_URL ]-->">&gt;&gt;</a><!--[/if]-->
-</h2>
+<h2><!--[gt text='List view']--></h2>
 
 <div class="calcontainer">
+
+    <!--[ pc_sort_events var="S_EVENTS" sort="time" order="asc" value=$A_EVENTS ]-->
+    <!--[ foreach name=dates item=events key=date from=$S_EVENTS ]-->
+
     <!--[ * CREATE THE LIST * ]-->
-    <!--[ foreach name=weeks item=days from=$CAL_FORMAT ]-->
-        <!--[ foreach name=days item=date from=$days ]-->
-            <!--[ *sort the events by category so we can make it pretty* ]-->
-            <!--[ pc_sort_events var="S_EVENTS" sort="time" order="asc" value=$A_EVENTS ]-->
-            <!--[ if ((isset($S_EVENTS.$date)) && (count($S_EVENTS.$date) gt 0)) ]-->
-            <ul class="eventslist" 
-            <!--[if $in_new_window eq false]-->onclick="window.location.href='<!--[ pc_url action=day date=$date ]-->';"<!--[/if]-->>
-            <!--[ foreach name=events item=event from=$S_EVENTS.$date ]-->
-                <!--[ if $smarty.foreach.events.first eq true ]--><li class="dayheader" style='margin-top: .5em;'><!--[ $date|pc_date_format ]--></li><!--[/if]-->
-                <li class="eventslistitems">
-                    <span style="padding: 1px 1em; color: <!--[$event.cattextcolor]-->; background: <!--[ $event.catcolor ]-->;"><!--[ $event.catname ]--></span>
-                    <!--[ if $event.alldayevent != true ]--><!--[ $event.startTime ]-->&nbsp;<!--[ /if ]-->
-                    <!--[if $event.privateicon]--><!--[pnimg src='locked.png' modname='core' set='icons/extrasmall' __title="private event" __alt="private event"]--><!--[/if]-->
-                    <!--[ pc_url full=true action=detail eid=$event.eid date=$date style="text-decoration: none;" display=$event.title|strip_tags]-->
-                    <!--[ if $event.alldayevent != true ]-->
-                        (<!--[ $event.duration ]-->)
-                    <!--[ else ]-->
-                        (<!--[gt text='All-day event']-->)
-                    <!--[/if]-->
-                    <!--[ if $event.commentcount gt 0]-->
-                        <!--[gt text='%s comment left' plural='%s comments left.' count=$event.commentcount tag1=$event.commentcount domain="module_postcalendar" assign="title"]-->
-                        <a href="<!--[pnmodurl modname='PostCalendar' func='view' viewtype='details' eid=$event.eid ]-->#comments" title='<!--[$title]-->'>
-                        <!--[pnimg modname=core src=comment.gif set=icons/extrasmall __alt="Comment" title=$title]--></a>
-                    <!--[/if]-->
-                </li>
-            <!--[ /foreach ]-->
-            </ul>
-            <!--[ /if ]--><!--[* end if isset($S_EVENTS) *]-->
-        <!--[ /foreach ]-->
+    <!--[ *sort the events by category so we can make it pretty* ]-->
+    <!--[ pc_sort_events var="S_EVENTS" sort="time" order="asc" value=$A_EVENTS ]-->
+    <!--[ if ((isset($S_EVENTS.$date)) && (count($S_EVENTS.$date) gt 0)) ]-->
+    <ul class="eventslist" 
+    <!--[if $in_new_window eq false]-->onclick="window.location.href='<!--[ pc_url action=day date=$date ]-->';"<!--[/if]-->>
+    <!--[ foreach name=events item=event from=$S_EVENTS.$date ]-->
+        <!--[ if $smarty.foreach.events.first eq true ]--><li class="dayheader" style='margin-top: .5em;'><!--[ $date|pc_date_format ]--></li><!--[/if]-->
+        <li class="eventslistitems">
+            <span style="padding: 1px 1em; color: <!--[$event.cattextcolor]-->; background: <!--[ $event.catcolor ]-->;"><!--[ $event.catname ]--></span>
+            <!--[ if $event.alldayevent != true ]--><!--[ $event.startTime ]-->&nbsp;<!--[ /if ]-->
+            <!--[if $event.privateicon]--><!--[pnimg src='locked.png' modname='core' set='icons/extrasmall' __title="private event" __alt="private event"]--><!--[/if]-->
+            <!--[ pc_url full=true action=detail eid=$event.eid date=$date style="text-decoration: none;" display=$event.title|strip_tags]-->
+            <!--[ if $event.alldayevent != true ]-->
+                (<!--[ $event.duration ]-->)
+            <!--[ else ]-->
+                (<!--[gt text='All-day event']-->)
+            <!--[/if]-->
+            <!--[ if $event.commentcount gt 0]-->
+                <!--[gt text='%s comment left' plural='%s comments left.' count=$event.commentcount tag1=$event.commentcount domain="module_postcalendar" assign="title"]-->
+                <a href="<!--[pnmodurl modname='PostCalendar' func='view' viewtype='details' eid=$event.eid ]-->#comments" title='<!--[$title]-->'>
+                <!--[pnimg modname=core src=comment.gif set=icons/extrasmall __alt="Comment" title=$title]--></a>
+            <!--[/if]-->
+        </li>
     <!--[ /foreach ]-->
+    </ul>
+    <!--[ /if ]--><!--[* end if isset($S_EVENTS) *]-->
+    <!--[ /foreach ]-->
+
+    <div style='padding: .5em'>
+        <a href="<!--[$PREV_LIST_URL]-->"><!--[pnimg src='previous.gif' modname='core' set='icons/extrasmall' __title="previous list" __alt="previous list"]-->&nbsp;<!--[gt text='previous list']--></a>
+        &nbsp;::&nbsp;
+        <a href="<!--[$NEXT_LIST_URL]-->"><!--[gt text='next list']-->&nbsp;<!--[pnimg src='next.gif' modname='core' set='icons/extrasmall' __title="next list" __alt="next list"]--></a>
+    </div>
 </div><!-- end calcontainer -->
 <div style='text-align:right;'>
     <!--[ if $PRINT_VIEW eq true ]-->

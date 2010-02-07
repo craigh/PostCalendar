@@ -306,7 +306,7 @@ function postcalendar_eventapi_getEvents($args)
                     list ($newyear, $newmonth, $newday) = explode('-', $occurance);
                 }
                 // populate the event array
-                while ($newyear <= $currentyear) {
+                while ($newyear <= $endyear) { // was $currentyear
                     $dnum = $rnum; // get day event repeats on
                     do {
                         $occurance = Date_Calc::NWeekdayOfMonth($dnum--, $rday, $newmonth, $newyear, "%Y-%m-%d");
