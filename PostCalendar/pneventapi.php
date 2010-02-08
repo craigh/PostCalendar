@@ -598,7 +598,8 @@ function postcalendar_eventapi_formateventarrayfordisplay($event)
 
     // prepare starttime for display HH:MM or HH:MM AP
     // for this to work, need to convert time to timestamp and then change all the templates.
-    list ($h, $m, $s) = explode(':', $event['startTime']);
+    $event['sortTime']  = $event['startTime']; // save for sorting later
+    list ($h, $m, $s)   = explode(':', $event['startTime']);
     $event['startTime'] = _SETTING_TIME_24HOUR ? gmdate('G:i', gmmktime($h, $m, $s, 0, 0, 0)) : gmdate('g:i a', gmmktime($h, $m, $s, 0, 0, 0));
 
     // format endtype for edit form

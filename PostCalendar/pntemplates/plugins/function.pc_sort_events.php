@@ -117,9 +117,9 @@ function sort_byTitleD($a, $b)
 }
 function sort_byTimeA($a, $b)
 {
-    if ($a['startTime'] < $b['startTime']) {
+    if ($a['sortTime'] < $b['sortTime']) {
         return -1;
-    } elseif ($a['startTime'] > $b['startTime']) {
+    } elseif ($a['sortTime'] > $b['sortTime']) {
         return 1;
     } else {
         return 0;
@@ -127,9 +127,9 @@ function sort_byTimeA($a, $b)
 }
 function sort_byTimeD($a, $b)
 {
-    if ($a['startTime'] < $b['startTime']) {
+    if ($a['sortTime'] < $b['sortTime']) {
         return 1;
-    } elseif ($a['startTime'] > $b['startTime']) {
+    } elseif ($a['sortTime'] > $b['sortTime']) {
         return -1;
     } else {
         return 0;
