@@ -42,9 +42,6 @@ function postcalendar_hooks_new($args)
     }
     $render->assign('postcalendar_optoverride', $postcalendar_optoverride);
 
-    $newsnote = ($thismodule == 'news') ? true : false;
-    $render->assign('newsnote', $newsnote);
-
     return $render->fetch('hooks/postcalendar_hooks_new.htm');
 }
 
@@ -104,9 +101,6 @@ function postcalendar_hooks_modify($args)
     $render->assign('postcalendar_optoverride', $postcalendar_optoverride);
 
     $render->assign('postcalendar_eid', $eventid);
-
-    $newsnote = ($thismodule == 'news') ? true : false;
-    $render->assign('newsnote', $newsnote);
 
     return $render->fetch('hooks/postcalendar_hooks_modify.htm');
 }
