@@ -27,8 +27,14 @@ function postcalendar_hooksapi_create_news($args)
     $article = pnModAPIFunc('News', 'user', 'get', $args);
 
     $eventstatus = 1; // approved
-    if ($article['published_status'] != 0) { // article not published yet
-        $eventstatus = -1; // hidden
+    if ($article['published_status'] != 0) { // article not published yet (draft, etc)
+        return false;
+    }
+
+    $now = DateUtil::getDatetime(null, '%Y-%m-%d %H:%M:%S');
+    $diff = DateUtil::getDatetimeDiff_AsField($now, $article['from'], 6);
+    if ($diff > 0) {
+        $eventstatus = -1; // hide published events
     }
 
     // change below based on $article array
