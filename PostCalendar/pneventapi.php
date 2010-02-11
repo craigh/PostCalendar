@@ -194,6 +194,10 @@ function postcalendar_eventapi_getEvents($args)
         unset($end);
     } // clear start and end dates for search
 
+    // update news-hooked stories that have been published since last pageload
+    if (pnModIsHooked('postcalendar', 'news')) {
+        pnModAPIFunc('PostCalendar', 'hooks', 'scheduler');
+    }
 
     $currentyear  = substr($date, 0, 4);
     $currentmonth = substr($date, 4, 2);

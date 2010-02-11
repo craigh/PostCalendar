@@ -836,7 +836,7 @@ function _postcalendar_registermodulehooks()
     $hooktype = name of the hook type (==admin && (area==API) = function is located in pnadminapi.php)
     $hookfunc = name of the hook function
     */
-/*
+
     if (!pnModRegisterHook('item', 'create', 'API', 'PostCalendar', 'hooks', 'create')) {
         return LogUtil::registerError(__f('PostCalendar: Could not register %s hook.', 'create', $dom));
     }
@@ -860,10 +860,12 @@ function _postcalendar_registermodulehooks()
     }
     if (!pnModRegisterHook('module', 'remove', 'API', 'PostCalendar', 'hooks', 'deletemodule')) {
         return LogUtil::registerError(__f('PostCalendar: Could not register %s hook.', 'deletemodule', $dom));
-    } */
-    if (!pnModRegisterHook('zikula', 'systeminit', 'API', 'PostCalendar', 'hooks', 'scheduler')) {
-        return LogUtil::registerError(__f('PostCalendar: Could not register %s hook.', 'scheduler', $dom));
     }
+    // this (working) solution has been disabled in favor of a plugin-based solution.
+    // the code remains here as another possible solution if required.
+    //if (!pnModRegisterHook('zikula', 'systeminit', 'API', 'PostCalendar', 'hooks', 'scheduler')) {
+    //    return LogUtil::registerError(__f('PostCalendar: Could not register %s hook.', 'scheduler', $dom));
+    //}
 
     LogUtil::registerStatus(__f('PostCalendar: All hooks registered.', $dom));
     return true;

@@ -17,7 +17,6 @@
  */
 function postcalendar_hooksapi_scheduler($args)
 {
-    // do a quick update sql call
     $today = DateUtil::getDatetime(null, '%Y-%m-%d');
     $time  = DateUtil::getDatetime(null, '%H:%M:%S');
     $where = "WHERE pc_hooked_modulename = 'news' 
