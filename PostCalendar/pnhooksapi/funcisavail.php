@@ -13,18 +13,19 @@
  *
  * @author  Craig Heydenburg
  * @param   module     module being hooked
- * @param   type       function type (optional) (default 'create')
+ * @param   type       function type (optional) (default 'pcevent')
  * @return  boolean    location or false
  */
 function postcalendar_hooksapi_funcisavail($args)
 {
     if (!isset($args['module'])) return false;
-    $homearray = array($args['module'], 'PostCalendar'); // locations to search for the function
     $module    = $args['module'];
-    $type      = isset($args['type']) ? $args['type'] : 'create';
+    $modinfo   = pnModGetInfo(pnModGetIDFromName($module));
+    $homearray = array($modinfo['directory'], 'PostCalendar'); // locations to search for the function
+    $type      = isset($args['type']) ? $args['type'] : 'pcevent';
 
     $apidir = "pnhooksapi";
-    $func   = "{$type}_{$module}.php";
+    $func   = "{$module}_{$type}.php";
 
     foreach ($homearray as $home) {
         $osdir   = DataUtil::formatForOS($home);
