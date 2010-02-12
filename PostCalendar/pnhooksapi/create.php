@@ -43,10 +43,18 @@ function postcalendar_hooksapi_create($args)
         return LogUtil::registerError(__('Hook function not available', $dom));;
     }
     $event = pnModAPIFunc($home, 'hooks', $module . '_pcevent', array(
-        'objectid' => $args['objectid'],
-        'hookinfo' => $hookinfo));
+        'objectid' => $args['objectid']));
 
     if ($event) {
+        // add hook specific and non-changing values
+        $event['hooked_modulename'] = $module;
+        $event['hooked_objectid']   = $args['objectid'];
+        $event['__CATEGORIES__']    = $hookinfo['cats'];
+        $event['__META__']          = array('module' => 'PostCalendar');
+        $event['recurrtype']        = 0; // norepeat
+        $event['recurrspec']        = 'a:5:{s:17:"event_repeat_freq";s:0:"";s:22:"event_repeat_freq_type";s:1:"0";s:19:"event_repeat_on_num";s:1:"1";s:19:"event_repeat_on_day";s:1:"0";s:20:"event_repeat_on_freq";s:0:"";}'; // default recurrance info - serialized (not used)
+        $event['location']          = 'a:6:{s:14:"event_location";s:0:"";s:13:"event_street1";s:0:"";s:13:"event_street2";s:0:"";s:10:"event_city";s:0:"";s:11:"event_state";s:0:"";s:12:"event_postal";s:0:"";}'; // default location info - serialized (not used)
+
         // write event to postcal table
         if (DBUtil::insertObject($event, 'postcalendar_events', 'eid')) {
             LogUtil::registerStatus(__("PostCalendar: Event created.", $dom));
