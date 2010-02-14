@@ -12,7 +12,7 @@
 function smarty_modifier_pc_date_format($string, $format = null, $default_date = null)
 {
     $format = isset($format) && !empty($format) ? $format : _SETTING_DATE_FORMAT;
-    setlocale(LC_TIME, ZLanguage::getLocale()); //setlocale(LC_TIME, _PC_LOCALE);
+    //setlocale(LC_TIME, ZLanguage::getLocale()); //setlocale(LC_TIME, _PC_LOCALE);
 
     $ret_val = "";
 
@@ -20,12 +20,12 @@ function smarty_modifier_pc_date_format($string, $format = null, $default_date =
     require_once $smarty->_get_plugin_filepath('shared', 'make_timestamp');
 
     if ($string != '') {
-        $ret_val = strftime($format, smarty_make_timestamp($string));
+        $ret_val = DateUtil::strftime($format, smarty_make_timestamp($string));
     } elseif (isset($default_date) && $default_date != '') {
-        $ret_val = strftime($format, smarty_make_timestamp($default_date));
+        $ret_val = DateUtil::strftime($format, smarty_make_timestamp($default_date));
     } else {
         // when having empty var, just return the current date/time
-        $ret_val = strftime($format, time());
+        $ret_val = DateUtil::strftime($format, time());
     }
 
     return $ret_val;

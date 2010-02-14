@@ -110,7 +110,7 @@ function postcalendar_searchapi_search($args)
     foreach ($eventsByDate as $date) {
         if (count($date) > 0) {
             foreach ($date as $event) {
-                $title = $event['title'] . " (" . strftime(pnModGetVar('PostCalendar', 'pcEventDateFormat'), strtotime($event['eventDate'])) . ")";
+                $title = $event['title'] . " (" . DateUtil::strftime(pnModGetVar('PostCalendar', 'pcEventDateFormat'), strtotime($event['eventDate'])) . ")";
                 $start = $event['alldayevent'] ? "12:00:00" : $event['startTime'];
                 $created = $event['eventDate'] . " " . $start;
                 $sql = $insertSql . '('

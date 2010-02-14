@@ -23,7 +23,7 @@
  */
 function smarty_function_pc_week_range($args, &$smarty)
 {
-    setlocale(LC_TIME, ZLanguage::getLocale()); //setlocale(LC_TIME, _PC_LOCALE);
+    //setlocale(LC_TIME, ZLanguage::getLocale()); //setlocale(LC_TIME, _PC_LOCALE);
     if (!isset($args['date'])) {
         //not sure these three lines are needed with call to getDate here
         $jumpday   = FormUtil::getPassedValue('jumpday');
@@ -61,16 +61,16 @@ function smarty_function_pc_week_range($args, &$smarty)
     // get the week date range for the supplied $date
     $dow = date('w', mktime(0, 0, 0, $m, $d, $y));
     if (_SETTING_FIRST_DAY_WEEK == 0) {
-        $firstDay = strftime($args['format1'], mktime(0, 0, 0, $m, ($d - $dow), $y));
-        $lastDay = strftime($args['format2'], mktime(0, 0, 0, $m, ($d + (6 - $dow)), $y));
+        $firstDay = DateUtil::strftime($args['format1'], mktime(0, 0, 0, $m, ($d - $dow), $y));
+        $lastDay = DateUtil::strftime($args['format2'], mktime(0, 0, 0, $m, ($d + (6 - $dow)), $y));
     } elseif (_SETTING_FIRST_DAY_WEEK == 1) {
         $sub = ($dow == 0 ? 6 : $dow - 1);
-        $firstDay = strftime($args['format1'], mktime(0, 0, 0, $m, ($d - $sub), $y));
-        $lastDay = strftime($args['format2'], mktime(0, 0, 0, $m, ($d + (6 - $sub)), $y));
+        $firstDay = DateUtil::strftime($args['format1'], mktime(0, 0, 0, $m, ($d - $sub), $y));
+        $lastDay = DateUtil::strftime($args['format2'], mktime(0, 0, 0, $m, ($d + (6 - $sub)), $y));
     } elseif (_SETTING_FIRST_DAY_WEEK == 6) {
         $sub = ($dow == 6 ? 0 : $dow + 1);
-        $firstDay = strftime($args['format1'], mktime(0, 0, 0, $m, ($d - $sub), $y));
-        $lastDay = strftime($args['format2'], mktime(0, 0, 0, $m, ($d + (6 - $sub)), $y));
+        $firstDay = DateUtil::strftime($args['format1'], mktime(0, 0, 0, $m, ($d - $sub), $y));
+        $lastDay = DateUtil::strftime($args['format2'], mktime(0, 0, 0, $m, ($d + (6 - $sub)), $y));
     }
 
     $ret_val = $firstDay . $args['sep'] . $lastDay;

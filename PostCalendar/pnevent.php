@@ -243,7 +243,7 @@ function postcalendar_event_new($args)
             LogUtil::registerError(__('Error! Submission failed.', $dom));
         } else {
             pnModAPIFunc('PostCalendar', 'admin', 'clearCache');
-            $presentation_date = strftime(_SETTING_DATE_FORMAT, $sdate);
+            $presentation_date = DateUtil::strftime(_SETTING_DATE_FORMAT, $sdate);
             if ($is_update) {
                 LogUtil::registerStatus(__f('Done! Updated the event. (event date: %s)', $presentation_date, $dom));
             } else {
