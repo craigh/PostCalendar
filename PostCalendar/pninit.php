@@ -173,6 +173,8 @@ function PostCalendar_upgrade($oldversion)
             pnModSetVar('PostCalendar', 'pcFilterYearStart', 1);
             pnModSetVar('PostCalendar', 'pcFilterYearEnd', 2);
         case '6.0.1':
+            // no changes
+        case '6.0.2':
             if (!_postcalendar_registermodulehooks()) {
                 LogUtil::registerError(__('Error! Could not register module hooks.', $dom));
                 return '6.0.1';

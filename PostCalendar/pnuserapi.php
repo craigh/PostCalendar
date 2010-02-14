@@ -40,8 +40,6 @@ function postcalendar_userapi_buildView($args)
     $last_day = DateUtil::getDaysInMonth($the_month, $the_year);
 
     // prepare Month Names, Long Day Names and Short Day Names
-    // as translated in the language files for template
-    // (may be adding more here soon - based on need)
     $pc_month_names     = explode(" ", __('January February March April May June July August September October November December', $dom));
     $pc_short_day_names = explode(" ", __(/*!First Letter of each Day of week*/'S M T W T F S', $dom));
     $pc_long_day_names  = explode(" ", __('Sunday Monday Tuesday Wednesday Thursday Friday Saturday', $dom));
