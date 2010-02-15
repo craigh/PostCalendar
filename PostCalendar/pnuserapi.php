@@ -331,7 +331,7 @@ function postcalendar_userapi_getDate($args)
     $y = substr($Date, 0, 4);
     $m = substr($Date, 4, 2);
     $d = substr($Date, 6, 2);
-    return strftime($format, mktime(0, 0, 0, $m, $d, $y));
+    return DateUtil::strftime($format, mktime(0, 0, 0, $m, $d, $y));
 }
 
 /**
