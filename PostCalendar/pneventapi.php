@@ -382,7 +382,7 @@ function postcalendar_eventapi_buildSubmitForm($args)
             'format' => _SETTING_DATE_FORMAT));
         $eventdata['endDate'] = pnModAPIFunc('PostCalendar', 'user', 'getDate', array(
             'Date' => $args['Date'],
-            'format' => '%Y-%m-%d')); // format for JS cal & DB
+            'format' => __('%Y-%m-%d'))); // format for JS cal
     } else {
         $eventdata['endvalue'] = pnModAPIFunc('PostCalendar', 'user', 'getDate', array(
             'Date' => str_replace('-', '', $eventdata['endDate']),
@@ -394,7 +394,7 @@ function postcalendar_eventapi_buildSubmitForm($args)
             'format' => _SETTING_DATE_FORMAT));
         $eventdata['eventDate'] = pnModAPIFunc('PostCalendar', 'user', 'getDate', array(
             'Date' => $args['Date'],
-            'format' => '%Y-%m-%d')); // format for JS cal & DB
+            'format' => __('%Y-%m-%d'))); // format for JS cal
     } else {
         $eventdata['eventDatevalue'] = pnModAPIFunc('PostCalendar', 'user', 'getDate', array(
             'Date' => str_replace('-', '', $eventdata['eventDate']),
@@ -649,6 +649,12 @@ function postcalendar_eventapi_formateventarrayfordisplay($event)
  */
 function postcalendar_eventapi_formateventarrayforDB($event)
 {
+    // convert dates to YYYY-MM-DD for DB
+    $parseddatevalue    = DateUtil::parseUIDate($event['eventDate']);
+    $event['eventDate'] = DateUtil::transformInternalDate($parseddatevalue);
+    $parseddatevalue    = DateUtil::parseUIDate($event['endDate']);
+    $event['endDate']   = DateUtil::transformInternalDate($parseddatevalue);
+
     if (substr($event['endDate'], 0, 4) == '0000') {
         $event['endDate'] = $event['eventDate'];
     }
