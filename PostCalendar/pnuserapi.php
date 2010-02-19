@@ -95,44 +95,112 @@ function postcalendar_userapi_buildView($args)
             $pc_colclasses[6] = "pcWeekend";
             break;
     }
+    // prepare Month Names, Long Day Names and Short Day Names
+    $pc_short_day_names = explode(" ", __(/*!First Letter of each Day of week*/'S M T W T F S', $dom));
+    $pc_long_day_names  = explode(" ", __('Sunday Monday Tuesday Wednesday Thursday Friday Saturday', $dom));
+    // Create an array with the day names in the correct order
+    $daynames = array();
+    $sdaynames = array();
+    for ($i = 0; $i < 7; $i++) {
+        if ($pc_array_pos >= 7) {
+            $pc_array_pos = 0;
+        }
+        $daynames[]  = $pc_long_day_names[$pc_array_pos];
+        $sdaynames[] = $pc_short_day_names[$pc_array_pos];
+        $pc_array_pos++;
+    }
 
-    // Week View
-    // This section will
-    // find the correct starting and ending dates for a given
-    // seven day period, based on the day of the week the
-    // calendar is setup to run under (Sunday, Saturday, Monday)
-    $first_day_of_week = sprintf('%02d', $the_day - $week_day);
-    $week_first_day = date('m/d/Y', mktime(0, 0, 0, $the_month, $first_day_of_week, $the_year));
-    list ($week_first_day_month, $week_first_day_date, $week_first_day_year) = explode('/', $week_first_day);
-    $week_last_day = date('m/d/Y', mktime(0, 0, 0, $the_month, $first_day_of_week + 6, $the_year));
-    list ($week_last_day_month, $week_last_day_date, $week_last_day_year) = explode('/', $week_last_day);
-
-    // Setup some information so we know the actual month's dates
-    // also get today's date for later use and highlighting
-    $month_view_start = date('Y-m-d', mktime(0, 0, 0, $the_month, 1, $the_year));
-    $month_view_end = date('Y-m-t', mktime(0, 0, 0, $the_month, 1, $the_year));
-    $today_date = DateUtil::getDatetime('', '%Y-%m-%d');
+    $function_out = array();
 
     // Setup the starting and ending date ranges for pcGetEvents()
     switch ($viewtype) {
         case 'day':
             $starting_date = date('m/d/Y', mktime(0, 0, 0, $the_month, $the_day, $the_year));
             $ending_date = date('m/d/Y', mktime(0, 0, 0, $the_month, $the_day, $the_year));
+
+            $prev_day = DateUtil::getDatetime_NextDay(-1, '%Y%m%d', $the_year, $the_month, $the_day);
+            $next_day = DateUtil::getDatetime_NextDay(1, '%Y%m%d', $the_year, $the_month, $the_day);
+            $pc_prev_day = pnModURL('PostCalendar', 'user', 'view', array(
+                'viewtype' => 'day',
+                'Date' => $prev_day,
+                'pc_username' => $pc_username,
+                'filtercats' => $filtercats));
+            $pc_next_day = pnModURL('PostCalendar', 'user', 'view', array(
+                'viewtype' => 'day',
+                'Date' => $next_day,
+                'pc_username' => $pc_username,
+                'filtercats' => $filtercats));
+            $function_out['PREV_DAY_URL'] = DataUtil::formatForDisplay($pc_prev_day);
+            $function_out['NEXT_DAY_URL'] = DataUtil::formatForDisplay($pc_next_day);
             break;
         case 'week':
+            $first_day_of_week = sprintf('%02d', $the_day - $week_day);
+            $week_first_day = date('m/d/Y', mktime(0, 0, 0, $the_month, $first_day_of_week, $the_year));
+            list ($week_first_day_month, $week_first_day_date, $week_first_day_year) = explode('/', $week_first_day);
+            $week_last_day = date('m/d/Y', mktime(0, 0, 0, $the_month, $first_day_of_week + 6, $the_year));
+            list ($week_last_day_month, $week_last_day_date, $week_last_day_year) = explode('/', $week_last_day);
+
             $starting_date = "$week_first_day_month/$week_first_day_date/$week_first_day_year";
             $ending_date = "$week_last_day_month/$week_last_day_date/$week_last_day_year";
             $calendarView = Date_Calc::getCalendarWeek($week_first_day_date, $week_first_day_month, $week_first_day_year, '%Y-%m-%d');
+
+            $prev_week = date('Ymd', mktime(0, 0, 0, $week_first_day_month, $week_first_day_date - 7, $week_first_day_year));
+            $next_week = date('Ymd', mktime(0, 0, 0, $week_last_day_month, $week_last_day_date + 1, $week_last_day_year));
+            $pc_prev_week = pnModURL('PostCalendar', 'user', 'view', array(
+                'viewtype' => 'week',
+                'Date' => $prev_week,
+                'pc_username' => $pc_username,
+                'filtercats' => $filtercats));
+            $pc_next_week = pnModURL('PostCalendar', 'user', 'view', array(
+                'viewtype' => 'week',
+                'Date' => $next_week,
+                'pc_username' => $pc_username,
+                'filtercats' => $filtercats));
+            $function_out['PREV_WEEK_URL'] = DataUtil::formatForDisplay($pc_prev_week);
+            $function_out['NEXT_WEEK_URL'] = DataUtil::formatForDisplay($pc_next_week);
             break;
         case 'month':
             $starting_date = date('m/d/Y', mktime(0, 0, 0, $the_month, 1 - $first_day, $the_year));
             $ending_date = date('m/d/Y', mktime(0, 0, 0, $the_month, $the_last_day, $the_year));
             $calendarView = Date_Calc::getCalendarMonth($the_month, $the_year, '%Y-%m-%d');
+
+            $prev_month = DateUtil::getDatetime_NextMonth(-1, '%Y%m%d', $the_year, $the_month, 1);
+            $next_month = DateUtil::getDatetime_NextMonth(1, '%Y%m%d', $the_year, $the_month, 1);
+            $pc_prev_month = pnModURL('PostCalendar', 'user', 'view', array(
+                'viewtype' => $viewtype,
+                'Date' => $prev_month,
+                'pc_username' => $pc_username,
+                'filtercats' => $filtercats));
+            $pc_next_month = pnModURL('PostCalendar', 'user', 'view', array(
+                'viewtype' => $viewtype,
+                'Date' => $next_month,
+                'pc_username' => $pc_username,
+                'filtercats' => $filtercats));
+            $function_out['PREV_MONTH_URL']   = DataUtil::formatForDisplay($pc_prev_month);
+            $function_out['NEXT_MONTH_URL']   = DataUtil::formatForDisplay($pc_next_month);
+            $function_out['S_LONG_DAY_NAMES'] = $daynames;
             break;
         case 'year':
             $starting_date = date('m/d/Y', mktime(0, 0, 0, 1, 1, $the_year));
             $ending_date = date('m/d/Y', mktime(0, 0, 0, 1, 1, $the_year + 1));
             $calendarView = Date_Calc::getCalendarYear($the_year, '%Y-%m-%d');
+
+            $prev_year = date('Ymd', mktime(0, 0, 0, 1, 1, $the_year - 1));
+            $next_year = date('Ymd', mktime(0, 0, 0, 1, 1, $the_year + 1));
+            $pc_prev_year = pnModURL('PostCalendar', 'user', 'view', array(
+                'viewtype' => 'year',
+                'Date' => $prev_year,
+                'pc_username' => $pc_username,
+                'filtercats' => $filtercats));
+            $pc_next_year = pnModURL('PostCalendar', 'user', 'view', array(
+                'viewtype' => 'year',
+                'Date' => $next_year,
+                'pc_username' => $pc_username,
+                'filtercats' => $filtercats));
+            $function_out['PREV_YEAR_URL']      = DataUtil::formatForDisplay($pc_prev_year);
+            $function_out['NEXT_YEAR_URL']      = DataUtil::formatForDisplay($pc_next_year);
+            $function_out['A_MONTH_NAMES']      = explode(" ", __('January February March April May June July August September October November December', $dom));
+            $function_out['S_SHORT_DAY_NAMES']  = $sdaynames;
             break;
         case 'xml':
         case 'list':
@@ -147,6 +215,21 @@ function postcalendar_userapi_buildView($args)
             }
             $starting_date = "$the_month/$the_day/$the_year";
             $ending_date   = "$listendmonths/$the_day/$listendyears";
+
+            $prev_list = date('Ymd', mktime(0, 0, 0, $the_month - $listmonths, $the_day, $the_year));
+            $next_list = date('Ymd', mktime(0, 0, 0, $listendmonths, $the_day, $listendyears));
+            $pc_prev_list = pnModURL('PostCalendar', 'user', 'view', array(
+                'viewtype' => 'list',
+                'Date' => $prev_list,
+                'pc_username' => $pc_username,
+                'filtercats' => $filtercats));
+            $pc_next_list = pnModURL('PostCalendar', 'user', 'view', array(
+                'viewtype' => 'list',
+                'Date' => $next_list,
+                'pc_username' => $pc_username,
+                'filtercats' => $filtercats));
+            $function_out['PREV_LIST_URL'] = DataUtil::formatForDisplay($pc_prev_list);
+            $function_out['NEXT_LIST_URL'] = DataUtil::formatForDisplay($pc_next_list);
             break;
     }
 
@@ -158,90 +241,6 @@ function postcalendar_userapi_buildView($args)
         'Date' => $Date,
         'pc_username' => $pc_username));
 
-    // prepare Month Names, Long Day Names and Short Day Names
-    $pc_month_names     = explode(" ", __('January February March April May June July August September October November December', $dom));
-    $pc_short_day_names = explode(" ", __(/*!First Letter of each Day of week*/'S M T W T F S', $dom));
-    $pc_long_day_names  = explode(" ", __('Sunday Monday Tuesday Wednesday Thursday Friday Saturday', $dom));
-
-    // Create an array with the day names in the correct order
-    $daynames = array();
-    $sdaynames = array();
-    for ($i = 0; $i < 7; $i++) {
-        if ($pc_array_pos >= 7) {
-            $pc_array_pos = 0;
-        }
-        $daynames[]  = $pc_long_day_names[$pc_array_pos];
-        $sdaynames[] = $pc_short_day_names[$pc_array_pos];
-        $pc_array_pos++;
-    }
-
-    // Prepare values for the template
-    $prev_month = DateUtil::getDatetime_NextMonth(-1, '%Y%m%d', $the_year, $the_month, 1);
-    $next_month = DateUtil::getDatetime_NextMonth(1, '%Y%m%d', $the_year, $the_month, 1);
-    $pc_prev_month = pnModURL('PostCalendar', 'user', 'view', array(
-        'viewtype' => $viewtype,
-        'Date' => $prev_month,
-        'pc_username' => $pc_username,
-        'filtercats' => $filtercats));
-    $pc_next_month = pnModURL('PostCalendar', 'user', 'view', array(
-        'viewtype' => $viewtype,
-        'Date' => $next_month,
-        'pc_username' => $pc_username,
-        'filtercats' => $filtercats));
-
-    $prev_day = DateUtil::getDatetime_NextDay(-1, '%Y%m%d', $the_year, $the_month, $the_day);
-    $next_day = DateUtil::getDatetime_NextDay(1, '%Y%m%d', $the_year, $the_month, $the_day);
-    $pc_prev_day = pnModURL('PostCalendar', 'user', 'view', array(
-        'viewtype' => 'day',
-        'Date' => $prev_day,
-        'pc_username' => $pc_username,
-        'filtercats' => $filtercats));
-    $pc_next_day = pnModURL('PostCalendar', 'user', 'view', array(
-        'viewtype' => 'day',
-        'Date' => $next_day,
-        'pc_username' => $pc_username,
-        'filtercats' => $filtercats));
-
-    $prev_week = date('Ymd', mktime(0, 0, 0, $week_first_day_month, $week_first_day_date - 7, $week_first_day_year));
-    $next_week = date('Ymd', mktime(0, 0, 0, $week_last_day_month, $week_last_day_date + 1, $week_last_day_year));
-    $pc_prev_week = pnModURL('PostCalendar', 'user', 'view', array(
-        'viewtype' => 'week',
-        'Date' => $prev_week,
-        'pc_username' => $pc_username,
-        'filtercats' => $filtercats));
-    $pc_next_week = pnModURL('PostCalendar', 'user', 'view', array(
-        'viewtype' => 'week',
-        'Date' => $next_week,
-        'pc_username' => $pc_username,
-        'filtercats' => $filtercats));
-
-    $prev_year = date('Ymd', mktime(0, 0, 0, 1, 1, $the_year - 1));
-    $next_year = date('Ymd', mktime(0, 0, 0, 1, 1, $the_year + 1));
-    $pc_prev_year = pnModURL('PostCalendar', 'user', 'view', array(
-        'viewtype' => 'year',
-        'Date' => $prev_year,
-        'pc_username' => $pc_username,
-        'filtercats' => $filtercats));
-    $pc_next_year = pnModURL('PostCalendar', 'user', 'view', array(
-        'viewtype' => 'year',
-        'Date' => $next_year,
-        'pc_username' => $pc_username,
-        'filtercats' => $filtercats));
-
-    $prev_list = date('Ymd', mktime(0, 0, 0, $the_month - $listmonths, $the_day, $the_year));
-    $next_list = date('Ymd', mktime(0, 0, 0, $listendmonths, $the_day, $listendyears));
-    $pc_prev_list = pnModURL('PostCalendar', 'user', 'view', array(
-        'viewtype' => 'list',
-        'Date' => $prev_list,
-        'pc_username' => $pc_username,
-        'filtercats' => $filtercats));
-    $pc_next_list = pnModURL('PostCalendar', 'user', 'view', array(
-        'viewtype' => 'list',
-        'Date' => $next_list,
-        'pc_username' => $pc_username,
-        'filtercats' => $filtercats));
-
-    $function_out = array();
     if (isset($calendarView)) {
         $function_out['CAL_FORMAT'] = $calendarView;
     }
@@ -258,24 +257,11 @@ function postcalendar_userapi_buildView($args)
 
     $function_out['FUNCTION']           = $func;
     $function_out['VIEW_TYPE']          = $viewtype;
-    $function_out['A_MONTH_NAMES']      = $pc_month_names; // only used in year view
-    $function_out['S_LONG_DAY_NAMES']   = $daynames;       // only used in month view
-    $function_out['S_SHORT_DAY_NAMES']  = $sdaynames;      // only used in year view
     $function_out['A_EVENTS']           = $eventsByDate;
     $function_out['selectedcategories'] = $selectedcategories;
-    $function_out['PREV_MONTH_URL']     = DataUtil::formatForDisplay($pc_prev_month);
-    $function_out['NEXT_MONTH_URL']     = DataUtil::formatForDisplay($pc_next_month);
-    $function_out['PREV_DAY_URL']       = DataUtil::formatForDisplay($pc_prev_day);
-    $function_out['NEXT_DAY_URL']       = DataUtil::formatForDisplay($pc_next_day);
-    $function_out['PREV_WEEK_URL']      = DataUtil::formatForDisplay($pc_prev_week);
-    $function_out['NEXT_WEEK_URL']      = DataUtil::formatForDisplay($pc_next_week);
-    $function_out['PREV_YEAR_URL']      = DataUtil::formatForDisplay($pc_prev_year);
-    $function_out['NEXT_YEAR_URL']      = DataUtil::formatForDisplay($pc_next_year);
-    $function_out['PREV_LIST_URL']      = DataUtil::formatForDisplay($pc_prev_list);
-    $function_out['NEXT_LIST_URL']      = DataUtil::formatForDisplay($pc_next_list);
-    $function_out['MONTH_START_DATE']   = $month_view_start;
-    $function_out['MONTH_END_DATE']     = $month_view_end;
-    $function_out['TODAY_DATE']         = $today_date;
+    $function_out['MONTH_START_DATE']   = date('Y-m-d', mktime(0, 0, 0, $the_month, 1, $the_year));
+    $function_out['MONTH_END_DATE']     = date('Y-m-t', mktime(0, 0, 0, $the_month, 1, $the_year));
+    $function_out['TODAY_DATE']         = DateUtil::getDatetime('', '%Y-%m-%d');
     $function_out['DATE']               = $Date;
     $function_out['pc_colclasses']      = $pc_colclasses;
 
