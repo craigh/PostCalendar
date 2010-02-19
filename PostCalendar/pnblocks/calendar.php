@@ -107,26 +107,18 @@ function postcalendar_calendarblock_display($blockinfo)
     // set up the next and previous months to move to
     $prev_month = DateUtil::getDatetime_NextMonth(-1, '%Y%m%d', $the_year, $the_month, 1);
     $next_month = DateUtil::getDatetime_NextMonth(1, '%Y%m%d', $the_year, $the_month, 1);
-    $last_day   = DateUtil::getDaysInMonth($the_month, $the_year);
     $pc_prev = pnModURL('PostCalendar', 'user', 'view', array(
         'viewtype' => 'month',
-        'Date' => $prev_month));
+        'Date'     => $prev_month));
     $pc_next = pnModURL('PostCalendar', 'user', 'view', array(
         'viewtype' => 'month',
-        'Date' => $next_month));
-    $pc_month_name = pnModAPIFunc('PostCalendar', 'user', 'getmonthname', array(
-        'Date' => mktime(0, 0, 0, $the_month, $the_day, $the_year)));
+        'Date'     => $next_month));
+    $pc_month_name = DateUtil::strftime("%B", strtotime($Date));
     $month_link_url = pnModURL('PostCalendar', 'user', 'view', array(
         'viewtype' => 'month',
-        'Date' => date('Ymd', mktime(0, 0, 0, $the_month, 1, $the_year))));
+        'Date'     => date('Ymd', mktime(0, 0, 0, $the_month, 1, $the_year))));
     $month_link_text = $pc_month_name . ' ' . $the_year;
-    //*******************************************************************
-    // get the events for the current month view
-    //*******************************************************************
-    $day_of_week = 1;
-    $pc_month_names     = explode (" ", __('January February March April May June July August September October November December', $dom));
-    $pc_short_day_names = explode (" ", __(/*!First Letter of each Day of week*/'S M T W T F S', $dom));
-    $pc_long_day_names  = explode (" ", __('Sunday Monday Tuesday Wednesday Thursday Friday Saturday', $dom));
+
     $pc_colclasses      = array(
         0 => "pcWeekday", 
         1 => "pcWeekday", 
@@ -139,26 +131,12 @@ function postcalendar_calendarblock_display($blockinfo)
         case _IS_MONDAY:
             $pc_array_pos = 1;
             $first_day = date('w', mktime(0, 0, 0, $the_month, 0, $the_year));
-            $end_dow = date('w', mktime(0, 0, 0, $the_month, $last_day, $the_year));
-            if ($end_dow != 0) {
-                $the_last_day = $last_day + (7 - $end_dow);
-            } else {
-                $the_last_day = $last_day;
-            }
             $pc_colclasses[5] = "pcWeekend";
             $pc_colclasses[6] = "pcWeekend";
             break;
         case _IS_SATURDAY:
             $pc_array_pos = 6;
             $first_day = date('w', mktime(0, 0, 0, $the_month, 2, $the_year));
-            $end_dow = date('w', mktime(0, 0, 0, $the_month, $last_day, $the_year));
-            if ($end_dow == 6) {
-                $the_last_day = $last_day + 6;
-            } elseif ($end_dow != 5) {
-                $the_last_day = $last_day + (5 - $end_dow);
-            } else {
-                $the_last_day = $last_day;
-            }
             $pc_colclasses[0] = "pcWeekend";
             $pc_colclasses[1] = "pcWeekend";
             break;
@@ -166,12 +144,6 @@ function postcalendar_calendarblock_display($blockinfo)
         default:
             $pc_array_pos = 0;
             $first_day = date('w', mktime(0, 0, 0, $the_month, 1, $the_year));
-            $end_dow = date('w', mktime(0, 0, 0, $the_month, $last_day, $the_year));
-            if ($end_dow != 6) {
-                $the_last_day = $last_day + (6 - $end_dow);
-            } else {
-                $the_last_day = $last_day;
-            }
             $pc_colclasses[0] = "pcWeekend";
             $pc_colclasses[6] = "pcWeekend";
             break;
@@ -192,51 +164,35 @@ function postcalendar_calendarblock_display($blockinfo)
         'filtercats' => $filtercats));
     $calendarView = Date_Calc::getCalendarMonth($the_month, $the_year, '%Y-%m-%d');
 
+    $pc_short_day_names = explode (" ", __(/*!First Letter of each Day of week*/'S M T W T F S', $dom));
     $sdaynames = array();
-    $numDays = count($pc_short_day_names);
-    for ($i = 0; $i < $numDays; $i++) {
-        if ($pc_array_pos >= $numDays) {
+    for ($i = 0; $i < 7; $i++) {
+        if ($pc_array_pos >= 7) {
             $pc_array_pos = 0;
         }
-        array_push($sdaynames, $pc_short_day_names[$pc_array_pos]);
+        $sdaynames[] = $pc_short_day_names[$pc_array_pos];
         $pc_array_pos++;
     }
 
-    $daynames = array();
-    $numDays = count($pc_long_day_names);
-    for ($i = 0; $i < $numDays; $i++) {
-        if ($pc_array_pos >= $numDays) {
-            $pc_array_pos = 0;
-        }
-        array_push($daynames, $pc_long_day_names[$pc_array_pos]);
-        $pc_array_pos++;
-    }
-
-    $categories = pnModAPIFunc('PostCalendar', 'user', 'getCategories');
     if (isset($calendarView)) {
-        $tpl->assign_by_ref('CAL_FORMAT', $calendarView);
+        $tpl->assign('CAL_FORMAT', $calendarView);
     }
 
     $countTodaysEvents = count($eventsByDate[$today_date]);
     $hideTodaysEvents  = ($hideevents && ($countTodaysEvents == 0)) ? true : false;
 
-    $tpl->assign_by_ref('A_MONTH_NAMES',     $pc_month_names);
-    $tpl->assign_by_ref('A_LONG_DAY_NAMES',  $pc_long_day_names);
-    $tpl->assign_by_ref('A_SHORT_DAY_NAMES', $pc_short_day_names);
-    $tpl->assign_by_ref('S_LONG_DAY_NAMES',  $daynames);
-    $tpl->assign_by_ref('S_SHORT_DAY_NAMES', $sdaynames);
-    $tpl->assign_by_ref('A_EVENTS',          $eventsByDate);
-    $tpl->assign_by_ref('todaysEvents',      $eventsByDate[$today_date]);
-    $tpl->assign_by_ref('hideTodaysEvents',  $hideTodaysEvents);
-    $tpl->assign_by_ref('A_CATEGORY',        $categories);
-    $tpl->assign_by_ref('PREV_MONTH_URL',    $pc_prev);
-    $tpl->assign_by_ref('NEXT_MONTH_URL',    $pc_next);
-    $tpl->assign_by_ref('MONTH_START_DATE',  $month_view_start);
-    $tpl->assign_by_ref('MONTH_END_DATE',    $month_view_end);
-    $tpl->assign_by_ref('TODAY_DATE',        $today_date);
-    $tpl->assign_by_ref('DATE',              $Date);
-    $tpl->assign_by_ref('DISPLAY_LIMIT',     $eventslimit);
-    $tpl->assign_by_ref('pc_colclasses',     $pc_colclasses);
+    $tpl->assign('S_SHORT_DAY_NAMES', $sdaynames);
+    $tpl->assign('A_EVENTS',          $eventsByDate);
+    $tpl->assign('todaysEvents',      $eventsByDate[$today_date]);
+    $tpl->assign('hideTodaysEvents',  $hideTodaysEvents);
+    $tpl->assign('PREV_MONTH_URL',    $pc_prev);
+    $tpl->assign('NEXT_MONTH_URL',    $pc_next);
+    $tpl->assign('MONTH_START_DATE',  $month_view_start);
+    $tpl->assign('MONTH_END_DATE',    $month_view_end);
+    $tpl->assign('TODAY_DATE',        $today_date);
+    $tpl->assign('DATE',              $Date);
+    $tpl->assign('DISPLAY_LIMIT',     $eventslimit);
+    $tpl->assign('pc_colclasses',     $pc_colclasses);
 
     if ($showcalendar) {
         $output .= $tpl->fetch('blocks/postcalendar_block_view_month.htm');
