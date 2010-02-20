@@ -11,82 +11,88 @@
 class postcalendar_contenttypesapi_postcaleventPlugin extends contentTypeBase
 {
     var $eid; // event id
+    var $showcountdown;
+    var $hideonexpire;
 
-    function getModule()
-    {
-        return 'postcalendar';
+    function getModule() {
+        return 'PostCalendar';
     }
-    function getName()
-    {
+    function getName() {
         return 'postcalevent';
     }
-    function getTitle()
-    {
+    function getTitle() {
         $dom = ZLanguage::getModuleDomain('PostCalendar');
-        return __('Featured Event', $dom);
+        return __('PostCalendar Featured Event', $dom);
     }
-    function getDescription()
-    {
+    function getDescription() {
         $dom = ZLanguage::getModuleDomain('PostCalendar');
         return __('Displays one event from PostCalendar.', $dom);
     }
 
-    function loadData($data)
-    {
-        $this->text = $data['text'];
+    function loadData($data) {
+        $this->eid = $data['eid'];
+        $this->showcountdown = $data['showcountdown'];
+        $this->hideonexpire = $data['hideonexpire'];
     }
 
-    function display()
-    {
-        if (pnModIsHooked('bbcode', 'content')) {
-            $code = '[code]' . $this->text . '[/code]';
-            $code = pnModAPIFunc('bbcode', 'user', 'transform', array('extrainfo' => array($code), 'objectid' => 999));
-            $this->$code = $code[0];
-            return $this->$code;
-        } else {
-            return $this->transformCode($this->text, true);
+    function display() {
+        $dom = ZLanguage::getModuleDomain('PostCalendar');
+        if (!isset($this->eid) || $this->eid == 0) {
+            return LogUtil::RegisterError (__('PostCalendar: No event ID set.', $dom));
         }
-    }
-
-    function displayEditing()
-    {
-        return $this->transformCode($this->text, false); // <pre> does not work in IE 7 with the portal javascript
-    }
-
-    function getDefaultData()
-    {
-        return array('text' => '');
-    }
-
-    function getSearchableText()
-    {
-        return html_entity_decode(strip_tags($this->text));
-    }
-
-    function transformCode($code, $usePre)
-    {
-        $lines = explode("\n", $code);
-        $html = "<div class=\"content-computercode\"><ol class=\"codelisting\">\n";
-
-        for ($i = 1, $cou = count($lines); $i <= $cou; ++$i) {
-            if ($usePre) {
-                $line = empty($lines[$i - 1]) ? ' ' : htmlspecialchars($lines[$i - 1]);
-                $line = '<div><pre>' . $line . '</pre></div>';
-            } else {
-                $line = empty($lines[$i - 1]) ? '&nbsp;' : htmlspecialchars($lines[$i - 1]);
-                $line = str_replace(' ', '&nbsp;', $line);
-                $line = '<div>' . $line . '</div>';
+        $vars = array();
+        $vars['showcountdown'] = empty($this->showcountdown) ? false : true;
+        $vars['hideonexpire']  = empty($this->hideonexpire)  ? false : true;
+    
+        // get the event from the DB
+        pnModDBInfoLoad('PostCalendar');
+        $event = DBUtil::selectObjectByID('postcalendar_events', (int) $this->eid, 'eid');
+        $event = pnModAPIFunc('PostCalendar', 'event', 'formateventarrayfordisplay', $event);
+    
+        // is event allowed for this user?
+        if ($event['sharing'] == SHARING_PRIVATE && $event['aid'] != pnUserGetVar('uid') && !SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
+            // if event is PRIVATE and user is not assigned event ID (aid) and user is not Admin event should not be seen
+            return false;
+        }
+    
+        $alleventdates = pnModAPIFunc('PostCalendar', 'event', 'geteventdates', $event); // gets all FUTURE occurances
+        // assign next occurance to eventDate
+        $event['eventDate'] = array_shift($alleventdates);
+    
+        if ($vars['showcountdown']) {
+            $datedifference = DateUtil::getDatetimeDiff_AsField(DateUtil::getDatetime(null, '%F'), $event['eventDate'], 3);
+            $event['datedifference'] = round($datedifference);
+            if ($vars['hideonexpire'] && $event['datedifference'] < 0) {
+                return false;
             }
-            $html .= "<li>$line</li>\n";
+            $event['showcountdown'] = true;
         }
-
-        $html .= "</ol></div>\n";
-
-        return $html;
+    
+        $pnRender = pnRender::getInstance('PostCalendar');
+    
+        $pnRender->assign('loaded_event', $event);
+    
+        return $pnRender->fetch('blocks/postcalendar_block_featuredevent.htm');
     }
+
+    function displayEditing() {
+        $dom = ZLanguage::getModuleDomain('PostCalendar');
+        return __('Display featured event', $dom) . ' #' . $this->eid;
+    }
+
+    function getDefaultData() {
+        return array(
+            'eid'           => 0,
+            'hideonexpire'  => 0,
+            'showcountdown' => 0);
+    }
+
+    function getSearchableText() {
+        return; // html_entity_decode(strip_tags($this->text));
+    }
+
 }
 
-function postcalendar_contenttypesapi_postcalevent($args)
-{
+function postcalendar_contenttypesapi_postcalevent($args) {
     return new postcalendar_contenttypesapi_postcaleventPlugin($args['data']);
 }

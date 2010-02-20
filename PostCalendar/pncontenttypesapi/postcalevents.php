@@ -10,83 +10,77 @@
 
 class postcalendar_contenttypesapi_postcaleventsPlugin extends contentTypeBase
 {
-    var $eid; // event id
+    var $pcbeventsrange;
+    var $pcbeventslimit;
+    var $categories;
 
-    function getModule()
-    {
-        return 'postcalendar';
+    function getModule() {
+        return 'PostCalendar';
     }
-    function getName()
-    {
+    function getName() {
         return 'postcalevents';
     }
-    function getTitle()
-    {
+    function getTitle() {
         $dom = ZLanguage::getModuleDomain('PostCalendar');
-        return __('Calendar Event List', $dom);
+        return __('PostCalendar Event List', $dom);
     }
-    function getDescription()
-    {
+    function getDescription() {
         $dom = ZLanguage::getModuleDomain('PostCalendar');
         return __('Displays a list of PostCalendar events.', $dom);
     }
 
-    function loadData($data)
-    {
-        $this->text = $data['text'];
-    }
+    function loadData($data) {
+        $this->pcbeventsrange = $data['pcbeventsrange'];
+        $this->pcbeventslimit = $data['pcbeventslimit'];
 
-    function display()
-    {
-        if (pnModIsHooked('bbcode', 'content')) {
-            $code = '[code]' . $this->text . '[/code]';
-            $code = pnModAPIFunc('bbcode', 'user', 'transform', array('extrainfo' => array($code), 'objectid' => 999));
-            $this->$code = $code[0];
-            return $this->$code;
-        } else {
-            return $this->transformCode($this->text, true);
+        // Get the registrered categories for the News module
+        Loader::loadClass('CategoryRegistryUtil');
+        $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories ('PostCalendar', 'postcalendar_events');
+        $properties = array_keys($catregistry);
+        $this->categories = array();
+        foreach($properties as $prop) {
+            $this->categories[$prop] = $data['category__'.$prop];
         }
     }
 
-    function displayEditing()
-    {
-        return $this->transformCode($this->text, false); // <pre> does not work in IE 7 with the portal javascript
+    function display() {
+        echo "event list";
     }
 
-    function getDefaultData()
-    {
-        return array('text' => '');
-    }
+    function startEditing(&$render) {
+        $dom = ZLanguage::getModuleDomain('PostCalendar');
 
-    function getSearchableText()
-    {
-        return html_entity_decode(strip_tags($this->text));
-    }
-
-    function transformCode($code, $usePre)
-    {
-        $lines = explode("\n", $code);
-        $html = "<div class=\"content-computercode\"><ol class=\"codelisting\">\n";
-
-        for ($i = 1, $cou = count($lines); $i <= $cou; ++$i) {
-            if ($usePre) {
-                $line = empty($lines[$i - 1]) ? ' ' : htmlspecialchars($lines[$i - 1]);
-                $line = '<div><pre>' . $line . '</pre></div>';
-            } else {
-                $line = empty($lines[$i - 1]) ? '&nbsp;' : htmlspecialchars($lines[$i - 1]);
-                $line = str_replace(' ', '&nbsp;', $line);
-                $line = '<div>' . $line . '</div>';
+        // Get the News categorization setting
+        $enablecategorization = pnModGetVar('PostCalendar', 'enablecategorization');
+        // Select categories only if enabled for the PostCalendar module, otherwise selector will not be shown in modify template
+        if ($enablecategorization) {
+            // load the categories system
+            if (!Loader::loadClass('CategoryRegistryUtil')) {
+                return LogUtil::registerError(__f('Error! Could not load [%s] class.', 'CategoryRegistryUtil', $dom));
             }
-            $html .= "<li>$line</li>\n";
+            // Get the registered categories for the PostCalendar module
+            $catregistry  = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
+            $render->assign('catregistry', $catregistry);
         }
+        $render->assign('enablecategorization', $enablecategorization);
+    }
 
-        $html .= "</ol></div>\n";
+    function displayEditing() {
+        return; // $this->transformCode($this->text, false); // <pre> does not work in IE 7 with the portal javascript
+    }
 
-        return $html;
+    function getDefaultData() {
+        return array(
+            'pcbeventsrange' => 6,
+            'pcbeventslimit' => 5,
+            'categories'     => null);
+    }
+
+    function getSearchableText() {
+        return; // html_entity_decode(strip_tags($this->text));
     }
 }
 
-function postcalendar_contenttypesapi_postcalevents($args)
-{
+function postcalendar_contenttypesapi_postcalevents($args) {
     return new postcalendar_contenttypesapi_postcaleventsPlugin($args['data']);
 }
