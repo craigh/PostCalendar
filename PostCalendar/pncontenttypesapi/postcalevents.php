@@ -33,7 +33,7 @@ class postcalendar_contenttypesapi_postcaleventsPlugin extends contentTypeBase
         $this->pcbeventsrange = $data['pcbeventsrange'];
         $this->pcbeventslimit = $data['pcbeventslimit'];
 
-        // Get the registrered categories for the News module
+        // Get the registrered categories for the module
         Loader::loadClass('CategoryRegistryUtil');
         $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories ('PostCalendar', 'postcalendar_events');
         $properties = array_keys($catregistry);
@@ -41,32 +41,66 @@ class postcalendar_contenttypesapi_postcaleventsPlugin extends contentTypeBase
         foreach($properties as $prop) {
             $this->categories[$prop] = $data['category__'.$prop];
         }
+        return;
     }
 
     function display() {
-        echo "event list";
+        // today's date
+        $Date       = DateUtil::getDatetime('', '%Y%m%d%H%M%S');
+        $today_date = DateUtil::getDatetime('', '%Y-%m-%d');
+        $the_year   = substr($Date, 0, 4);
+        $the_month  = substr($Date, 4, 2);
+        $the_day    = substr($Date, 6, 2);
+
+        $starting_date = date('m/d/Y', mktime(0, 0, 0, $the_month, 1 - $first_day, $the_year));
+        $ending_date   = date('m/t/Y', mktime(0, 0, 0, $the_month + $this->pcbeventsrange, 1, $the_year));
+
+        $filtercats['__CATEGORIES__'] = $this->categories; //reformat array
+        $eventsByDate = pnModAPIFunc('PostCalendar', 'event', 'getEvents', array(
+            'start'      => $starting_date,
+            'end'        => $ending_date,
+            'filtercats' => $filtercats));
+
+        $render = pnRender::getInstance('PostCalendar');
+
+        $render->assign('A_EVENTS',      $eventsByDate);
+        $render->assign('TODAY_DATE',    $today_date);
+        $render->assign('DATE',          $Date);
+        $render->assign('DISPLAY_LIMIT', $this->pcbeventslimit);
+
+        return $render->fetch('blocks/postcalendar_block_view_upcoming.htm');
     }
 
     function startEditing(&$render) {
         $dom = ZLanguage::getModuleDomain('PostCalendar');
 
-        // Get the News categorization setting
         $enablecategorization = pnModGetVar('PostCalendar', 'enablecategorization');
-        // Select categories only if enabled for the PostCalendar module, otherwise selector will not be shown in modify template
         if ($enablecategorization) {
-            // load the categories system
-            if (!Loader::loadClass('CategoryRegistryUtil')) {
-                return LogUtil::registerError(__f('Error! Could not load [%s] class.', 'CategoryRegistryUtil', $dom));
+            if (Loader::loadClass('CategoryRegistryUtil')) {
+                $catregistry  = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
+                $render->assign('catregistry', $catregistry);
             }
-            // Get the registered categories for the PostCalendar module
-            $catregistry  = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
-            $render->assign('catregistry', $catregistry);
         }
         $render->assign('enablecategorization', $enablecategorization);
+
+        return;
     }
 
     function displayEditing() {
-        return; // $this->transformCode($this->text, false); // <pre> does not work in IE 7 with the portal javascript
+        Loader::loadClass('CategoryUtil');
+        $cats = array();
+        $lang = ZLanguage::getLanguageCode();
+        foreach ($this->categories['Main'] as $id) {
+            $thiscat = CategoryUtil::getCategoryByID($id);
+            $cats[]  = $thiscat['display_name'][$lang];
+        }
+        $catlist = implode (', ', $cats);
+        $dom     = ZLanguage::getModuleDomain('PostCalendar');
+        $output  = __('Display event list from catgories', $dom) . '<br />';
+        $output .= "$catlist<br />";
+        $output .= __f('Maximum %s events.', $this->pcbeventslimit, $dom) . '<br />';
+        $output .= __f('Over %s months.', $this->pcbeventsrange, $dom);
+        return $output;
     }
 
     function getDefaultData() {

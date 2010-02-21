@@ -4,7 +4,15 @@
     <!--[pnformlabel for='category' __text='Only display events in category(s)']-->
     <!--[nocache]-->
     <!--[foreach from=$catregistry key='prop' item='cat']-->
-    <div class="z-formnote"><!--[pnformcategoryselector category=$cat id="category__$prop" group='data' selectedValue=$data.category__$prop selectionMode='multiple' size='5']--></div>
+        <div class="z-formnote">
+            <!--[pnformcategoryselector 
+                category=$cat 
+                id="category__$prop" 
+                group='data' 
+                selectedValue=$data.category__$prop 
+                selectionMode='multiple' 
+                size='5']-->
+        </div>
     <!--[/foreach]-->
     <!--[/nocache]-->
 </div>
