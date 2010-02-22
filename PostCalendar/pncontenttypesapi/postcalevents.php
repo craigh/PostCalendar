@@ -45,14 +45,12 @@ class postcalendar_contenttypesapi_postcaleventsPlugin extends contentTypeBase
     }
 
     function display() {
-        // today's date
         $Date       = DateUtil::getDatetime('', '%Y%m%d%H%M%S');
-        $today_date = DateUtil::getDatetime('', '%Y-%m-%d');
         $the_year   = substr($Date, 0, 4);
         $the_month  = substr($Date, 4, 2);
         $the_day    = substr($Date, 6, 2);
 
-        $starting_date = date('m/d/Y', mktime(0, 0, 0, $the_month, 1 - $first_day, $the_year));
+        $starting_date = "$the_month/$the_day/$the_year";
         $ending_date   = date('m/t/Y', mktime(0, 0, 0, $the_month + $this->pcbeventsrange, 1, $the_year));
 
         $filtercats['__CATEGORIES__'] = $this->categories; //reformat array
@@ -62,13 +60,11 @@ class postcalendar_contenttypesapi_postcaleventsPlugin extends contentTypeBase
             'filtercats' => $filtercats));
 
         $render = pnRender::getInstance('PostCalendar');
-
         $render->assign('A_EVENTS',      $eventsByDate);
-        $render->assign('TODAY_DATE',    $today_date);
         $render->assign('DATE',          $Date);
         $render->assign('DISPLAY_LIMIT', $this->pcbeventslimit);
 
-        return $render->fetch('blocks/postcalendar_block_view_upcoming.htm');
+        return $render->fetch('contenttype/postcalevents_view.html');
     }
 
     function startEditing(&$render) {

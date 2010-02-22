@@ -72,7 +72,7 @@ class postcalendar_contenttypesapi_postcaleventPlugin extends contentTypeBase
     
         $pnRender->assign('loaded_event', $event);
     
-        return $pnRender->fetch('blocks/postcalendar_block_featuredevent.htm');
+        return $pnRender->fetch('contenttype/postcalevent_view.html');
     }
 
     function displayEditing() {
