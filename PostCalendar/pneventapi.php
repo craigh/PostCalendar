@@ -184,6 +184,7 @@ function postcalendar_eventapi_getEvents($args)
     $searchstart = isset($args['searchstart']) ? $args['searchstart'] : '';
     $searchend   = isset($args['searchend'])   ? $args['searchend']   : '';
     $Date        = isset($args['Date'])        ? $args['Date']        : '';
+    $sort        = ((isset($args['sort'])) && ($args['sort'] == 'DESC')) ? 'DESC' : 'ASC';
 
     $date = pnModAPIFunc('PostCalendar', 'user', 'getDate', array(
         'Date' => $Date)); //formats date
@@ -242,12 +243,22 @@ function postcalendar_eventapi_getEvents($args)
     $days = array();
     $sday = Date_Calc::dateToDays($startday, $startmonth, $startyear);
     $eday = Date_Calc::dateToDays($endday, $endmonth, $endyear);
-    for ($cday = $sday; $cday <= $eday; $cday++) {
-        $d = Date_Calc::daysToDate($cday, '%d');
-        $m = Date_Calc::daysToDate($cday, '%m');
-        $y = Date_Calc::daysToDate($cday, '%Y');
-        $store_date = Date_Calc::dateFormat($d, $m, $y, '%Y-%m-%d');
-        $days[$store_date] = array();
+    if ($sort == 'DESC') { // format days array in date-descending order
+        for ($cday = $eday; $cday >= $sday; $cday--) {
+            $d = Date_Calc::daysToDate($cday, '%d');
+            $m = Date_Calc::daysToDate($cday, '%m');
+            $y = Date_Calc::daysToDate($cday, '%Y');
+            $store_date = Date_Calc::dateFormat($d, $m, $y, '%Y-%m-%d');
+            $days[$store_date] = array();
+        }
+    } else { // format days array in date-ascending order
+        for ($cday = $sday; $cday <= $eday; $cday++) {
+            $d = Date_Calc::daysToDate($cday, '%d');
+            $m = Date_Calc::daysToDate($cday, '%m');
+            $y = Date_Calc::daysToDate($cday, '%Y');
+            $store_date = Date_Calc::dateFormat($d, $m, $y, '%Y-%m-%d');
+            $days[$store_date] = array();
+        }
     }
 
     foreach ($events as $event) {
