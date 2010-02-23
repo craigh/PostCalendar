@@ -75,17 +75,14 @@ function smarty_function_pc_filter($args, &$smarty)
                 _PC_FILTER_GLOBAL  => __('Global Events', $dom) . " " . __('Only', $dom),
                 _PC_FILTER_PRIVATE => __('My Events', $dom) . " " . __('Only', $dom),
                 _PC_FILTER_ALL     => __('Global Events', $dom) . " + " . __('My Events', $dom));
-            // if user is admin, add list of users with private events
+            // if user is admin, add list of users in allowed group
             if (IS_ADMIN) {
-                $joinInfo = array(
-                    array(
-                        'join_table'          => 'users',
-                        'join_field'          => 'uname',
-                        'object_field_name'   => 'username',
-                        'compare_field_table' => 'aid',
-                        'compare_field_join'  => 'uid'));
-                $users = DBUtil::selectExpandedFieldArray('postcalendar_events', $joinInfo, 'aid', null, null, true, 'aid');
-                $users = array_flip($users); // returned results are backward...
+                $group = pnModAPIFunc('Groups', 'user', 'get', array(
+                    'gid' => $allowedgroup));
+                $users = array();
+                foreach ($group['members'] as $uid => $uarray) {
+                    $users[$uid] = pnUserGetVar('uname', $uid);
+                }
                 $filteroptions = $filteroptions + $users;
             }
             // generate html for selectbox - should move this to the template...
