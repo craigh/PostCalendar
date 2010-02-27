@@ -16,7 +16,7 @@ $modversion['url']            = __(/*!used in URL - nospaces, no special chars, 
 $modversion['description']    = __('Calendar for Zikula', $dom);
 
 $modversion['id']             = '$Revision$'; // svn revision #
-$modversion['version']        = '6.1.0-dev';
+$modversion['version']        = '6.1.0';
 $modversion['credits']        = 'http://code.zikula.org/soundwebdevelopment/wiki/PostCalendarHistoryCredits';
 $modversion['changelog']      = 'http://code.zikula.org/soundwebdevelopment/wiki/PostCalendarReleaseNotes';
 $modversion['help']           = 'http://code.zikula.org/soundwebdevelopment/';

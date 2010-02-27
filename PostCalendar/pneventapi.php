@@ -393,14 +393,14 @@ function postcalendar_eventapi_buildSubmitForm($args)
             'format' => _SETTING_DATE_FORMAT));
         $eventdata['endDate'] = pnModAPIFunc('PostCalendar', 'user', 'getDate', array(
             'Date' => $args['Date'],
-            'format' => __('%Y-%m-%d'))); // format for JS cal - intentional use of core domain
+            'format' => __(/*!ensure translation EXACTLY the same as locale definition*/'%Y-%m-%d'))); // format for JS cal - intentional use of core domain
     } else {
         $eventdata['endvalue'] = pnModAPIFunc('PostCalendar', 'user', 'getDate', array(
             'Date' => str_replace('-', '', $eventdata['endDate']),
             'format' => _SETTING_DATE_FORMAT));
         $eventdata['endDate'] = pnModAPIFunc('PostCalendar', 'user', 'getDate', array(
             'Date' => str_replace('-', '', $eventdata['endDate']),
-            'format' => __('%Y-%m-%d'))); // format for JS cal - intentional use of core domain
+            'format' => __(/*!ensure translation EXACTLY the same as locale definition*/'%Y-%m-%d'))); // format for JS cal - intentional use of core domain
     }
     if ((!isset($eventdata['eventDate'])) || ($eventdata['eventDate'] == '')) {
         $eventdata['eventDatevalue'] = pnModAPIFunc('PostCalendar', 'user', 'getDate', array(
@@ -408,14 +408,14 @@ function postcalendar_eventapi_buildSubmitForm($args)
             'format' => _SETTING_DATE_FORMAT));
         $eventdata['eventDate'] = pnModAPIFunc('PostCalendar', 'user', 'getDate', array(
             'Date' => $args['Date'],
-            'format' => __('%Y-%m-%d'))); // format for JS cal - intentional use of core domain
+            'format' => __(/*!ensure translation EXACTLY the same as locale definition*/'%Y-%m-%d'))); // format for JS cal - intentional use of core domain
     } else {
         $eventdata['eventDatevalue'] = pnModAPIFunc('PostCalendar', 'user', 'getDate', array(
             'Date' => str_replace('-', '', $eventdata['eventDate']),
             'format' => _SETTING_DATE_FORMAT));
         $eventdata['eventDate'] = pnModAPIFunc('PostCalendar', 'user', 'getDate', array(
             'Date' => str_replace('-', '', $eventdata['eventDate']),
-            'format' => __('%Y-%m-%d'))); // format for JS cal - intentional use of core domain
+            'format' => __(/*!ensure translation EXACTLY the same as locale definition*/'%Y-%m-%d'))); // format for JS cal - intentional use of core domain
     }
 
     if ((SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) && (_SETTING_ALLOW_USER_CAL)) {
