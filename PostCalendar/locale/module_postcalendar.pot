@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Zikula 1.2.x\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-02-27 19:04+0000\n"
+"POT-Creation-Date: 2010-02-27 20:54+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -382,15 +382,15 @@ msgstr ""
 msgid "Root category"
 msgstr ""
 
-#: pnincludes/pcCategoryUtil.class.php:133
+#: pnincludes/pcCategoryUtil.class.php:135
 msgid "Select Multiple"
 msgstr ""
 
-#: pnincludes/pcCategoryUtil.class.php:137
+#: pnincludes/pcCategoryUtil.class.php:140
 msgid "Select Multiple Categories"
 msgstr ""
 
-#: pnincludes/pcCategoryUtil.class.php:148
+#: pnincludes/pcCategoryUtil.class.php:151
 msgid "Done"
 msgstr ""
 
