@@ -94,7 +94,7 @@ function smarty_function_selector_LivePipeMultCats ($params, &$smarty)
     $id = strtr($name, '[]', '__');
 
     if ($editLink && !empty($category) && SecurityUtil::checkPermission( 'Categories::', "$category[id]::", ACCESS_EDIT)) {
-        $url = DataUtil::formatForDisplay(pnModURL ('Categories', 'user', 'edit', array('dr' => $category['id'])));
+        $url = DataUtil::formatForDisplay(pnModURL('Categories', 'user', 'edit', array('dr' => $category['id'])));
         $html .= "&nbsp;&nbsp;<a href=\"$url\"><img src=\"".pnGetBaseURL()."images/icons/extrasmall/xedit.gif\" title=\"" . __('Edit sub-category') . '" alt="' . __('Edit sub-category') . '" /></a>';
     }
 
@@ -103,57 +103,62 @@ function smarty_function_selector_LivePipeMultCats ($params, &$smarty)
         $GLOBALS['pntables'] = $_pnTables;
     }
 
-    $zLP_javascript = "
-        <!--//
-        document.observe('dom:loaded', postcalendar_init_multiselect);
-        function postcalendar_init_multiselect()
-        {
-            var {$id} = new Control.SelectMultiple('{$id}','{$id}_options',{
-                value: '{$zLP_selectedValueList}',
-                checkboxSelector: 'table.zLP_select_multiple_table tr td input[type=checkbox]',
-                nameSelector: 'table.zLP_select_multiple_table tr td.zLP_select_multiple_name',
-                afterChange: function(){
-                    if({$id} && {$id}.setSelectedRows)
-                        {$id}.setSelectedRows();
-                }
-            });
-            {$id}.setSelectedRows = function(){
-                this.checkboxes.each(function(checkbox){
-                    var tr = $(checkbox.parentNode.parentNode);
-                    tr.removeClassName('selected');
-                    if(checkbox.checked)
-                        tr.addClassName('selected');
+    $LivePipeAvailable = file_exists('javascript/livepipe/livepipe.js');
+    if ($LivePipeAvailable) {
+        $zLP_javascript = "
+            <!--//
+            document.observe('dom:loaded', postcalendar_init_multiselect);
+            function postcalendar_init_multiselect()
+            {
+                var {$id} = new Control.SelectMultiple('{$id}','{$id}_options',{
+                    value: '{$zLP_selectedValueList}',
+                    checkboxSelector: 'table.zLP_select_multiple_table tr td input[type=checkbox]',
+                    nameSelector: 'table.zLP_select_multiple_table tr td.zLP_select_multiple_name',
+                    afterChange: function(){
+                        if({$id} && {$id}.setSelectedRows)
+                            {$id}.setSelectedRows();
+                    }
                 });
-            }.bind({$id});
-            {$id}.checkboxes.each(function(checkbox){
-                $(checkbox).observe('click',{$id}.setSelectedRows);
-            });
-            {$id}.setSelectedRows();
-            $('{$id}_open').observe('click',function(event){
-                $(this.select).style.visibility = 'hidden';
-                new Effect.BlindDown(this.container,{
-                    duration: 0.3
+                {$id}.setSelectedRows = function(){
+                    this.checkboxes.each(function(checkbox){
+                        var tr = $(checkbox.parentNode.parentNode);
+                        tr.removeClassName('selected');
+                        if(checkbox.checked)
+                            tr.addClassName('selected');
+                    });
+                }.bind({$id});
+                {$id}.checkboxes.each(function(checkbox){
+                    $(checkbox).observe('click',{$id}.setSelectedRows);
                 });
-                Event.stop(event);
-                return false;
-            }.bindAsEventListener({$id}));
-            $('{$id}_close').observe('click',function(event){
-                $(this.select).style.visibility = 'visible';
-                new Effect.BlindUp(this.container,{
-                    duration: 0.3
-                });
-                Event.stop(event);
-                return false;
-            }.bindAsEventListener({$id}));
-        }
-        //-->";
-
-        PageUtil::addVar("stylesheet", "modules/PostCalendar/pnstyle/zLP_selectmultiple.css");
+                {$id}.setSelectedRows();
+                $('{$id}_open').observe('click',function(event){
+                    $(this.select).style.visibility = 'hidden';
+                    new Effect.BlindDown(this.container,{
+                        duration: 0.3
+                    });
+                    Event.stop(event);
+                    return false;
+                }.bindAsEventListener({$id}));
+                $('{$id}_close').observe('click',function(event){
+                    $(this.select).style.visibility = 'visible';
+                    new Effect.BlindUp(this.container,{
+                        duration: 0.3
+                    });
+                    Event.stop(event);
+                    return false;
+                }.bindAsEventListener({$id}));
+            }
+            //-->";
+    
         PageUtil::addVar("javascript", "javascript/ajax/prototype.js");
         PageUtil::addVar("javascript", "javascript/ajax/effects.js");
         PageUtil::addVar("javascript", "javascript/livepipe/livepipe.js");
         PageUtil::addVar("javascript", "javascript/livepipe/selectmultiple.js");
         PageUtil::addVar("rawtext",    "<script type='text/javascript'>$zLP_javascript</script>");
+    }
+
+    // add stylesheet regardless
+    PageUtil::addVar("stylesheet", "modules/PostCalendar/pnstyle/zLP_selectmultiple.css");
 
     if ($assign) {
         $smarty->assign($assign, $html);
