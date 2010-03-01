@@ -12,21 +12,21 @@ function smarty_function_pc_sort_events($params, &$smarty)
 {
     $dom = ZLanguage::getModuleDomain('PostCalendar');
     if (!array_key_exists('var', $params) || empty($params['var'])) {
-        $smarty->trigger_error(__f("%1$s: missing or empty '%2$s' parameter", array(
+        $smarty->trigger_error(__f('%1$s: missing or empty \'%2$s\' parameter', array(
             'Plugin:pc_sort_events',
             'var'), $dom));
         return;
     }
 
     if (!array_key_exists('value', $params) || !is_array($params['value'])) {
-        $smarty->trigger_error(__f("%1$s: missing or invalid '%2$s' parameter", array(
+        $smarty->trigger_error(__f('%1$s: missing or empty \'%2$s\' parameter', array(
             'Plugin:pc_sort_events',
             'value'), $dom));
         return;
     }
 
     if (!array_key_exists('sort', $params)) {
-        $smarty->trigger_error(__f("%1$s: missing '%2$s' parameter", array(
+        $smarty->trigger_error(__f('%1$s: missing or empty \'%2$s\' parameter', array(
             'Plugin:pc_sort_events',
             'sort'), $dom));
         return;
