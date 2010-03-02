@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Zikula 1.2.x\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-02-27 20:54+0000\n"
+"POT-Creation-Date: 2010-03-02 23:54+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -120,6 +120,14 @@ msgstr ""
 
 #: pnversion.php:16 pninit.php:495
 msgid "Calendar for Zikula"
+msgstr ""
+
+#: pntemplates/plugins/function.pc_filter.php:27
+#: pntemplates/plugins/function.pc_sort_events.php:15
+#: pntemplates/plugins/function.pc_sort_events.php:22
+#: pntemplates/plugins/function.pc_sort_events.php:29
+#, php-format
+msgid "%1$s: missing or empty '%2$s' parameter"
 msgstr ""
 
 #: pntemplates/plugins/function.pc_filter.php:33
