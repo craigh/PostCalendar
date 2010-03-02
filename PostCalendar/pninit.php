@@ -323,7 +323,7 @@ function postcalendar_init_correctserialization()
     $result = DBUtil::executeSQL($Ssql);
     for (; !$result->EOF; $result->MoveNext()) {
         $oldlocdata = DataUtil::mb_unserialize($result->fields[1]);
-        $newlocdata = serialize($oldlocdata);
+        $newlocdata = DataUtil::formatForStore(serialize($oldlocdata));
         $Usql = "UPDATE {$prefix}_postcalendar_events SET pc_location='$newlocdata' WHERE pc_eid=" . $result->fields[0];
         DBUtil::executeSQL($Usql);
     }
