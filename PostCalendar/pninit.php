@@ -114,6 +114,7 @@ function PostCalendar_upgrade($oldversion)
         case '5.5.2':
         case '5.5.3':
             pnModSetVar('PostCalendar', 'pcAllowCatFilter', '1');
+            pnModSetVar('PostCalendar', 'pcEventDateFormat', '%B %e, %Y'); // added this @v6.1.0
             pnModDelVar('PostCalendar', 'pcDayHighlightColor');
             pnModDelVar('PostCalendar', 'pcAllowSiteWide');
             pnModDelVar('PostCalendar', 'pcAddressbook');

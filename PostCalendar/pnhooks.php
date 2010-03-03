@@ -78,8 +78,8 @@ function postcalendar_hooks_modify($args)
     }
 
     $render = pnRender::getInstance('PostCalendar');
-    $postcalendar_admincatselected = pnModGetVar($thismodule, 'postcalendar_admincatselected');
-    $postcalendar_optoverride = pnModGetVar($thismodule, 'postcalendar_optoverride', false);
+    $postcalendar_admincatselected = pnModGetVar($module, 'postcalendar_admincatselected');
+    $postcalendar_optoverride = pnModGetVar($module, 'postcalendar_optoverride', false);
 
     if (($postcalendar_admincatselected['Main'] > 0) && (!$postcalendar_optoverride)) {
         $postcalendar_hide = true;

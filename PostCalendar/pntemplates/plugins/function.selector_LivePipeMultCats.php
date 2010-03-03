@@ -73,10 +73,10 @@ function smarty_function_selector_LivePipeMultCats ($params, &$smarty)
         $category = CategoryUtil::getCategoryByPath ($category, $pathfield);
     }
 
-    static $catCache;
-    if (!$catCache) {
+    //static $catCache;
+    //if (!$catCache) {
         $catCache = array();
-    }
+    //}
     $cacheKey = "$category[id]||$recurse|$relative|$includeRoot|$includeLeaf|$all|||$attributes|$sortField";
     if (!isset($catCache[$cacheKey])) {
         $catCache[$cacheKey] = CategoryUtil::getSubCategoriesForCategory($category, $recurse, $relative, $includeRoot,
