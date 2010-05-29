@@ -16,7 +16,7 @@ $modversion['url']            = __(/*!used in URL - nospaces, no special chars, 
 $modversion['description']    = __('Calendar for Zikula', $dom);
 
 $modversion['id']             = '$Revision$'; // svn revision #
-$modversion['version']        = '6.1.0';
+$modversion['version']        = '7.0.0-dev';
 $modversion['credits']        = 'http://code.zikula.org/soundwebdevelopment/wiki/PostCalendarHistoryCredits';
 $modversion['changelog']      = 'http://code.zikula.org/soundwebdevelopment/wiki/PostCalendarReleaseNotes';
 $modversion['help']           = 'http://code.zikula.org/soundwebdevelopment/';
@@ -28,4 +28,7 @@ $modversion['admin']          = 1;
 $modversion['user']           = 1;
 $modversion['securityschema'] = array(
     'PostCalendar::Event' => 'Event Title::Event ID',
-    'PostCalendar::' => '::');
+    'PostCalendar::'      => '::');
+$modversion['core_min']       = '1.3.0'; // requires minimum 1.3.0 or later
+//$modversion['core_max'] = '1.3.0'; // doesn't work with versions later than x.x.x
+
