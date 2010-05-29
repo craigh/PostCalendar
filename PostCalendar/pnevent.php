@@ -8,7 +8,8 @@
  * @copyright   Copyright (c) 2009, Craig Heydenburg, Sound Web Development
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
  */
-Loader::requireOnce('includes/pnForm.php');
+//Loader::requireOnce('includes/pnForm.php');
+Loader::loadClass('pnForm');
 include_once 'modules/PostCalendar/global.php';
 
 /**

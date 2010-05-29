@@ -9,7 +9,8 @@
  */
 
 if (!class_exists('CategoryUtil')) {
-    Loader::requireOnce('CategoryUtil.class.php');
+    //Loader::requireOnce('CategoryUtil.class.php');
+    Loader::loadClass('CategoryUtil');
 }
 /**
  * class pcCategoryUtil extends CategoryUtil in order to enhance multiple select option with LivePipe
