@@ -126,7 +126,7 @@ function smarty_function_pc_url($args, &$smarty)
             if (_SETTING_USENAVIMAGES) {
                 $image_text = $labeltexts[$action];
                 $image_src = ($viewtype == $action) ? $action . '_on.gif' : $action . '.gif';
-                include_once $smarty->_get_plugin_filepath('function', 'pnimg');
+                include_once $smarty->_get_plugin_filepath('function', 'img');
                 $pnimg_params = array(
                     'src'   => $image_src,
                     'alt'   => $image_text,
@@ -140,7 +140,7 @@ function smarty_function_pc_url($args, &$smarty)
                     $pnimg_params['modname'] = 'PostCalendar';
                     $pnimg_params['src']     = 'feed.gif';
                 }
-                $display = smarty_function_pnimg($pnimg_params, $smarty);
+                $display = smarty_function_img($pnimg_params, $smarty);
                 $class = 'postcalendar_nav_img';
                 $title = $image_text;
             } else {
