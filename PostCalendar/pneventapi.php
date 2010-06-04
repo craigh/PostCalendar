@@ -591,7 +591,7 @@ function postcalendar_eventapi_formateventarrayfordisplay($event)
     }
 
     // add unserialized info to event array
-    $event['location_info'] = DataUtil::is_serialized($event['location']) ? unserialize($event['location']) : $event['location']; //on preview of formdata, location is not serialized
+    $event['location_info'] = DataUtil::is_serialized($event['location'], false) ? unserialize($event['location']) : $event['location']; //on preview of formdata, location is not serialized
     $event['repeat'] = unserialize($event['recurrspec']);
 
     // build recurrance sentence for display
