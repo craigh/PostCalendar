@@ -42,16 +42,16 @@ function smarty_function_pc_filter($args, &$smarty)
         'jumpday' => $jumpday,
         'jumpmonth' => $jumpmonth,
         'jumpyear' => $jumpyear);
-    $Date      = pnModAPIFunc('PostCalendar','user','getDate',$jumpargs);
+    $Date      = ModUtil::apiFunc('PostCalendar','user','getDate',$jumpargs);
 
     $viewtype = FormUtil::getPassedValue('viewtype', _SETTING_DEFAULT_VIEW);
-    if (pnModGetVar('PostCalendar', 'pcAllowUserCalendar')) {
+    if (ModUtil::getVar('PostCalendar', 'pcAllowUserCalendar')) {
         $filterdefault = _PC_FILTER_ALL;
     } else {
         $filterdefault = _PC_FILTER_GLOBAL;
     }
     $pc_username = FormUtil::getPassedValue('pc_username', $filterdefault);
-    if (!pnUserLoggedIn()) {
+    if (!UserUtil::isLoggedIn()) {
         $pc_username = _PC_FILTER_GLOBAL;
     }
     $types = explode(',', $args['type']);
@@ -60,10 +60,10 @@ function smarty_function_pc_filter($args, &$smarty)
     // build the username filter pulldown
     //================================================================
     define('IS_ADMIN', SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN));
-    $allowedgroup = pnModGetVar('PostCalendar', 'pcAllowUserCalendar');
-    $uid = pnUserGetVar('uid');
+    $allowedgroup = ModUtil::getVar('PostCalendar', 'pcAllowUserCalendar');
+    $uid = UserUtil::getVar('uid');
     $uid = empty($uid) ? 1 : $uid;
-    $ingroup = $allowedgroup > 0 ? pnModAPIFunc('Groups', 'user', 'isgroupmember', array(
+    $ingroup = $allowedgroup > 0 ? ModUtil::apiFunc('Groups', 'user', 'isgroupmember', array(
         'uid' => $uid,
         'gid' => $allowedgroup)) : false;
     $useroptions = "";
@@ -77,11 +77,11 @@ function smarty_function_pc_filter($args, &$smarty)
                 _PC_FILTER_ALL     => __('Global Events', $dom) . " + " . __('My Events', $dom));
             // if user is admin, add list of users in allowed group
             if (IS_ADMIN) {
-                $group = pnModAPIFunc('Groups', 'user', 'get', array(
+                $group = ModUtil::apiFunc('Groups', 'user', 'get', array(
                     'gid' => $allowedgroup));
                 $users = array();
                 foreach ($group['members'] as $uid => $uarray) {
-                    $users[$uid] = pnUserGetVar('uname', $uid);
+                    $users[$uid] = UserUtil::getVar('uname', $uid);
                 }
                 $filteroptions = $filteroptions + $users;
             }
@@ -102,13 +102,9 @@ function smarty_function_pc_filter($args, &$smarty)
     // build the category filter pulldown
     //================================================================
     if (in_array('category', $types) && _SETTING_ALLOW_CAT_FILTER && _SETTING_ENABLECATS) {
-        // load the category registry util
-        if (!Loader::loadClass('CategoryRegistryUtil')) {
-            pn_exit(__f('Error! Unable to load class [%s]', 'CategoryRegistryUtil'));
-        }
         $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
 
-        $smarty->assign('enablecategorization', pnModGetVar('PostCalendar', 'enablecategorization'));
+        $smarty->assign('enablecategorization', ModUtil::getVar('PostCalendar', 'enablecategorization'));
         $smarty->assign('catregistry', $catregistry);
 
         $catoptions = $smarty->fetch('event/postcalendar_event_filtercats.htm');

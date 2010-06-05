@@ -21,7 +21,7 @@ function smarty_function_pc_date_select($args, &$smarty)
         'jumpday' => $jumpday,
         'jumpmonth' => $jumpmonth,
         'jumpyear' => $jumpyear);
-    $Date      = pnModAPIFunc('PostCalendar','user','getDate',$jumpargs);
+    $Date      = ModUtil::apiFunc('PostCalendar','user','getDate',$jumpargs);
     if (!isset($viewtype)) {
         $viewtype = _SETTING_DEFAULT_VIEW;
     }
@@ -37,7 +37,7 @@ function smarty_function_pc_date_select($args, &$smarty)
         'year'  => __('Year', $dom),
         'list'  => __('List View', $dom));
 
-    $smarty->assign('dateorderinfo', pnModGetVar('PostCalendar', 'pcNavDateOrder'));
+    $smarty->assign('dateorderinfo', ModUtil::getVar('PostCalendar', 'pcNavDateOrder'));
     $smarty->assign('currentjumpdate', $y . '-' . $m . '-' . $d);
     $smarty->assign('viewtypeselector', $sel_data);
     $smarty->assign('viewtypeselected', $viewtype);

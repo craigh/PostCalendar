@@ -47,15 +47,15 @@ class postcalendar_contenttypesapi_postcaleventPlugin extends contentTypeBase
         // get the event from the DB
         pnModDBInfoLoad('PostCalendar');
         $event = DBUtil::selectObjectByID('postcalendar_events', (int) $this->eid, 'eid');
-        $event = pnModAPIFunc('PostCalendar', 'event', 'formateventarrayfordisplay', $event);
+        $event = ModUtil::apiFunc('PostCalendar', 'event', 'formateventarrayfordisplay', $event);
     
         // is event allowed for this user?
-        if ($event['sharing'] == SHARING_PRIVATE && $event['aid'] != pnUserGetVar('uid') && !SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
+        if ($event['sharing'] == SHARING_PRIVATE && $event['aid'] != UserUtil::getVar('uid') && !SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
             // if event is PRIVATE and user is not assigned event ID (aid) and user is not Admin event should not be seen
             return false;
         }
     
-        $alleventdates = pnModAPIFunc('PostCalendar', 'event', 'geteventdates', $event); // gets all FUTURE occurances
+        $alleventdates = ModUtil::apiFunc('PostCalendar', 'event', 'geteventdates', $event); // gets all FUTURE occurances
         // assign next occurance to eventDate
         $event['eventDate'] = array_shift($alleventdates);
     

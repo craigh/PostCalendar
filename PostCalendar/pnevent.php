@@ -8,8 +8,6 @@
  * @copyright   Copyright (c) 2009, Craig Heydenburg, Sound Web Development
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
  */
-//Loader::requireOnce('includes/pnForm.php');
-//Loader::loadClass('Form');
 include_once 'modules/PostCalendar/global.php';
 
 /**
@@ -51,21 +49,21 @@ class postcalendar_event_editHandler extends pnFormHandler
                 return $render->pnFormSetErrorMsg(__("Error! An 'unidentified error' occurred.", $dom));
             }
             LogUtil::registerStatus(__('Done! The event was deleted.', $dom));
-            pnModCallHooks('item', 'delete', $this->eid, array(
+            ModUtil::callHooks('item', 'delete', $this->eid, array(
                 'module' => 'PostCalendar'));
 
-            $redir = pnModUrl('PostCalendar', 'user', 'view', array(
+            $redir = ModUtil::url('PostCalendar', 'user', 'view', array(
                 'viewtype' => _SETTING_DEFAULT_VIEW));
             return $render->pnFormRedirect($redir);
         } else if ($args['commandName'] == 'cancel') {
-            $url = pnModUrl('PostCalendar', 'user', 'view', array(
+            $url = ModUtil::url('PostCalendar', 'user', 'view', array(
                 'eid' => $this->eid,
                 'viewtype' => 'details',
                 'Date' => $event['Date']));
         }
 
         if ($url != null) {
-            /*pnModAPIFunc('PageLock', 'user', 'releaseLock', array('lockName' => "HowtoPnFormsRecipe{$this->recipeId}")); */
+            /*ModUtil::apiFunc('PageLock', 'user', 'releaseLock', array('lockName' => "HowtoPnFormsRecipe{$this->recipeId}")); */
             return $render->pnFormRedirect($url);
         }
 
@@ -87,7 +85,7 @@ function postcalendar_event_delete()
 
     // get the event from the DB
     $event = DBUtil::selectObjectByID('postcalendar_events', $eid, 'eid');
-    $event = pnModAPIFunc('PostCalendar', 'event', 'formateventarrayfordisplay', $event);
+    $event = ModUtil::apiFunc('PostCalendar', 'event', 'formateventarrayfordisplay', $event);
 
     $render->assign('loaded_event', $event);
     return $render->pnFormExecute('event/postcalendar_event_deleteeventconfirm.htm', new postcalendar_event_editHandler());
@@ -143,7 +141,7 @@ function postcalendar_event_new($args)
     $func = FormUtil::getPassedValue('func', 'new');
     $Date = FormUtil::getPassedValue('Date'); //typically formatted YYYYMMDD or YYYYMMDD000000
     // format to '%Y%m%d%H%M%S'
-    $Date = pnModAPIFunc('PostCalendar', 'user', 'getDate', array(
+    $Date = ModUtil::apiFunc('PostCalendar', 'user', 'getDate', array(
         'Date' => $Date));
 
     // these items come on submission of form
@@ -170,7 +168,7 @@ function postcalendar_event_new($args)
     // VALIDATE form data if form action is preview or save
     $abort = false;
     if (($form_action == 'preview') || ($form_action == 'save')) {
-        $abort = pnModAPIFunc('PostCalendar', 'event', 'validateformdata', $submitted_event);
+        $abort = ModUtil::apiFunc('PostCalendar', 'event', 'validateformdata', $submitted_event);
     }
 
     if ($func == 'new') { // triggered on form_action=preview && on brand new load
@@ -189,7 +187,7 @@ function postcalendar_event_new($args)
             // here were need to format the DB data to be able to load it into the form
             $eid = $args['eid'];
             $eventdata = DBUtil::selectObjectByID('postcalendar_events', $eid, 'eid');
-            $eventdata = pnModAPIFunc('PostCalendar', 'event', 'formateventarrayfordisplay', $eventdata);
+            $eventdata = ModUtil::apiFunc('PostCalendar', 'event', 'formateventarrayfordisplay', $eventdata);
         }
         // need to check each of these below to see if truly needed CAH 11/14/09
         $eventdata['Date'] = $Date;
@@ -216,16 +214,15 @@ function postcalendar_event_new($args)
     if ($form_action == 'preview') {
         $eventdata['preview'] = true;
         // format the data for editing
-        $eventdata = pnModAPIFunc('PostCalendar', 'event', 'formateventarrayforDB', $eventdata);
+        $eventdata = ModUtil::apiFunc('PostCalendar', 'event', 'formateventarrayforDB', $eventdata);
         // reformat the category information
-        Loader::loadClass('CategoryUtil');
         foreach ($eventdata['__CATEGORIES__'] as $name => $id) {
             $categories[$name] = CategoryUtil::getCategoryByID($id);
         }
         unset($eventdata['__CATEGORIES__']);
         $eventdata['__CATEGORIES__'] = $categories;
         // format the data for preview
-        $eventdata = pnModAPIFunc('PostCalendar', 'event', 'formateventarrayfordisplay', $eventdata);
+        $eventdata = ModUtil::apiFunc('PostCalendar', 'event', 'formateventarrayfordisplay', $eventdata);
     } else {
         $eventdata['preview'] = "";
     }
@@ -234,16 +231,16 @@ function postcalendar_event_new($args)
     if ($form_action == 'save') {
         $sdate = strtotime($submitted_event['eventDate']);
         if (!SecurityUtil::confirmAuthKey()) {
-            return LogUtil::registerAuthidError(pnModURL('postcalendar', 'admin', 'main'));
+            return LogUtil::registerAuthidError(ModUtil::url('postcalendar', 'admin', 'main'));
         }
 
-        $eventdata = pnModAPIFunc('PostCalendar', 'event', 'formateventarrayforDB', $eventdata);
+        $eventdata = ModUtil::apiFunc('PostCalendar', 'event', 'formateventarrayforDB', $eventdata);
 
-        if (!$eid = pnModAPIFunc('PostCalendar', 'event', 'writeEvent', array(
+        if (!$eid = ModUtil::apiFunc('PostCalendar', 'event', 'writeEvent', array(
             'eventdata' => $eventdata))) {
             LogUtil::registerError(__('Error! Submission failed.', $dom));
         } else {
-            pnModAPIFunc('PostCalendar', 'admin', 'clearCache');
+            ModUtil::apiFunc('PostCalendar', 'admin', 'clearCache');
             $presentation_date = DateUtil::strftime(_SETTING_DATE_FORMAT, $sdate);
             if ($is_update) {
                 LogUtil::registerStatus(__f('Done! Updated the event. (event date: %s)', $presentation_date, $dom));
@@ -252,7 +249,7 @@ function postcalendar_event_new($args)
             }
             if ((int) $eventdata['eventstatus'] === (int) _EVENT_QUEUED) {
                 LogUtil::registerStatus(__('The event has been queued for administrator approval.', $dom));
-                pnModAPIFunc('PostCalendar', 'admin', 'notify', array(
+                ModUtil::apiFunc('PostCalendar', 'admin', 'notify', array(
                     'eid' => $eid,
                     'is_update' => $is_update)); //notify admin
             }
@@ -260,16 +257,16 @@ function postcalendar_event_new($args)
             $url_date = strftime('%Y%m%d', $sdate);
         }
         if ($addtrigger) {
-            pnRedirect(pnModURL('PostCalendar', 'event', 'new'));
+            pnRedirect(ModUtil::url('PostCalendar', 'event', 'new'));
         } else {
-            pnRedirect(pnModURL('PostCalendar', 'user', 'view', array(
+            pnRedirect(ModUtil::url('PostCalendar', 'user', 'view', array(
                 'viewtype' => _SETTING_DEFAULT_VIEW,
                 'Date' => $url_date)));
         }
         return true;
     }
 
-    $submitformelements = pnModAPIFunc('PostCalendar', 'event', 'buildSubmitForm', array(
+    $submitformelements = ModUtil::apiFunc('PostCalendar', 'event', 'buildSubmitForm', array(
         'eventdata' => $eventdata,
         'Date' => $Date)); //sets defaults or builds selected values
     $tpl = pnRender::getInstance('PostCalendar', false); // Turn off template caching here

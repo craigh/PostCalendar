@@ -42,7 +42,7 @@ function postcalendar_featuredeventblock_display($blockinfo)
     if (!SecurityUtil::checkPermission('PostCalendar:featuredeventblock:', "$blockinfo[title]::", ACCESS_OVERVIEW)) {
         return;
     }
-    if (!pnModAvailable('PostCalendar')) {
+    if (!ModUtil::available('PostCalendar')) {
         return;
     }
     $vars = pnBlockVarsFromContent($blockinfo['content']);
@@ -57,15 +57,15 @@ function postcalendar_featuredeventblock_display($blockinfo)
     // get the event from the DB
     pnModDBInfoLoad('PostCalendar');
     $event = DBUtil::selectObjectByID('postcalendar_events', (int) $vars['eid'], 'eid');
-    $event = pnModAPIFunc('PostCalendar', 'event', 'formateventarrayfordisplay', $event);
+    $event = ModUtil::apiFunc('PostCalendar', 'event', 'formateventarrayfordisplay', $event);
 
     // is event allowed for this user?
-    if ($event['sharing'] == SHARING_PRIVATE && $event['aid'] != pnUserGetVar('uid') && !SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
+    if ($event['sharing'] == SHARING_PRIVATE && $event['aid'] != UserUtil::getVar('uid') && !SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
         // if event is PRIVATE and user is not assigned event ID (aid) and user is not Admin event should not be seen
         return false;
     }
 
-    $alleventdates = pnModAPIFunc('PostCalendar', 'event', 'geteventdates', $event); // gets all FUTURE occurances
+    $alleventdates = ModUtil::apiFunc('PostCalendar', 'event', 'geteventdates', $event); // gets all FUTURE occurances
     // assign next occurance to eventDate
     $event['eventDate'] = array_shift($alleventdates);
 

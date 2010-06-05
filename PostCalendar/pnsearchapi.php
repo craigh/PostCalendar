@@ -33,10 +33,6 @@ function postcalendar_searchapi_options($args)
         $renderer->assign('active', $active);
 
         // assign category info
-        // load the category registry util
-        if (!Loader::loadClass('CategoryRegistryUtil')) {
-            pn_exit(__f('Error! Unable to load class [%s]', 'CategoryRegistryUtil'));
-        }
         $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
         $renderer->assign('catregistry', $catregistry);
 
@@ -91,7 +87,7 @@ function postcalendar_searchapi_search($args)
     $searchargs['searchstart'] = (!isset($args['searchstart'])) ? 0 : $args['searchstart'];
     $searchargs['searchend'] = (($args['searchstart'] == $args['searchend']) || (!isset($args['searchend']))) ? 2 : $args['searchend']; // user set both options to 'now'
 
-    $eventsByDate = pnModAPIFunc('PostCalendar', 'event', 'getEvents', $searchargs);
+    $eventsByDate = ModUtil::apiFunc('PostCalendar', 'event', 'getEvents', $searchargs);
     // $eventsByDate = array(Date[YYYY-MM-DD]=>array(key[int]=>array(assockey[name]=>values)))
     // !Dates exist w/o data
 
@@ -110,7 +106,7 @@ function postcalendar_searchapi_search($args)
     foreach ($eventsByDate as $date) {
         if (count($date) > 0) {
             foreach ($date as $event) {
-                $title = $event['title'] . " (" . DateUtil::strftime(pnModGetVar('PostCalendar', 'pcEventDateFormat'), strtotime($event['eventDate'])) . ")";
+                $title = $event['title'] . " (" . DateUtil::strftime(ModUtil::getVar('PostCalendar', 'pcEventDateFormat'), strtotime($event['eventDate'])) . ")";
                 $start = $event['alldayevent'] ? "12:00:00" : $event['startTime'];
                 $created = $event['eventDate'] . " " . $start;
                 $sql = $insertSql . '('
@@ -143,7 +139,7 @@ function postcalendar_searchapi_search_check(&$args)
     $eid = $datarow['extra'];
     $date = str_replace("-", "", substr($datarow['created'], 0, 10));
 
-    $datarow['url'] = pnModUrl('PostCalendar', 'user', 'view', array(
+    $datarow['url'] = ModUtil::url('PostCalendar', 'user', 'view', array(
         'Date' => $date,
         'eid' => $eid,
         'viewtype' => 'details'));

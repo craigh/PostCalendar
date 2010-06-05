@@ -35,7 +35,7 @@ function smarty_function_pc_week_range($args, &$smarty)
             'jumpday' => $jumpday,
             'jumpmonth' => $jumpmonth,
             'jumpyear' => $jumpyear);
-        $args['date'] = pnModAPIFunc('PostCalendar', 'user', 'getDate', $jumpargs);
+        $args['date'] = ModUtil::apiFunc('PostCalendar', 'user', 'getDate', $jumpargs);
     }
 
     if (!isset($args['sep'])) {

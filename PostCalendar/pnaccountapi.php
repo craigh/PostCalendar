@@ -20,13 +20,13 @@ function PostCalendar_accountapi_getall($args)
 
     $items = array();
     // show link for users only
-    if (!pnUserLoggedIn()) {
+    if (!UserUtil::isLoggedIn()) {
         // not logged in
         return $items;
     }
     if (SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADD)) {
         $items['1'] = array(
-            'url' => pnModURL('PostCalendar', 'event', 'new'),
+            'url' => ModUtil::url('PostCalendar', 'event', 'new'),
             'title' => __('Submit Event', $dom),
             'icon' => 'admin.png');
     }

@@ -24,7 +24,7 @@ function postcalendar_hooksapi_news_pcevent($args)
         return false;
     }
     $args['SQLcache'] = false;
-    $article = pnModAPIFunc('News', 'user', 'get', $args);
+    $article = ModUtil::apiFunc('News', 'user', 'get', $args);
 
     $eventstatus = 1; // approved
     if ($article['published_status'] != 0) { // article not published yet (draft, etc)
@@ -40,7 +40,7 @@ function postcalendar_hooksapi_news_pcevent($args)
     // change below based on $article array
     $event = array(
         'title'             => __('News: ', $dom) . $article['title'],
-        'hometext'          => ":html:" . __('Article link: ', $dom) . "<a href='" . pnModURL('News', 'user', 'display', array('sid' => $article['sid'])) . "'>" . substr($article['hometext'], 0, 32) . "...</a>",
+        'hometext'          => ":html:" . __('Article link: ', $dom) . "<a href='" . ModUtil::url('News', 'user', 'display', array('sid' => $article['sid'])) . "'>" . substr($article['hometext'], 0, 32) . "...</a>",
         'aid'               => $article['aid'], // userid of creator
         'time'              => $article['time'], // mysql timestamp YYYY-MM-DD HH:MM:SS
         'informant'         => $article['aid'], // userid of creator

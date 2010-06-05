@@ -47,11 +47,11 @@ function postcalendar_eventapi_queryEvents($args)
     if (empty($pc_username)) {
         $pc_username = $filterdefault;
     }
-    if (!pnUserLoggedIn()) {
+    if (!UserUtil::isLoggedIn()) {
         $pc_username = _PC_FILTER_GLOBAL;
     }
 
-    $userid = pnUserGetVar('uid');
+    $userid = UserUtil::getVar('uid');
 
     // convert $pc_username to useable information
     /* possible values:
@@ -186,7 +186,7 @@ function postcalendar_eventapi_getEvents($args)
     $Date        = isset($args['Date'])        ? $args['Date']        : '';
     $sort        = ((isset($args['sort'])) && ($args['sort'] == 'DESC')) ? 'DESC' : 'ASC';
 
-    $date = pnModAPIFunc('PostCalendar', 'user', 'getDate', array(
+    $date = ModUtil::apiFunc('PostCalendar', 'user', 'getDate', array(
         'Date' => $Date)); //formats date
 
 
@@ -196,8 +196,8 @@ function postcalendar_eventapi_getEvents($args)
     } // clear start and end dates for search
 
     // update news-hooked stories that have been published since last pageload
-    if (pnModIsHooked('postcalendar', 'news')) {
-        pnModAPIFunc('PostCalendar', 'hooks', 'scheduler');
+    if (ModUtil::isHooked('postcalendar', 'news')) {
+        ModUtil::apiFunc('PostCalendar', 'hooks', 'scheduler');
     }
 
     $currentyear  = substr($date, 0, 4);
@@ -228,7 +228,7 @@ function postcalendar_eventapi_getEvents($args)
     if (!isset($s_keywords)) {
         $s_keywords = '';
     }
-    $events = pnModAPIFunc('PostCalendar', 'event', 'queryEvents', array(
+    $events = ModUtil::apiFunc('PostCalendar', 'event', 'queryEvents', array(
         'start'       => $start_date,
         'end'         => $end_date,
         's_keywords'  => $s_keywords,
@@ -262,7 +262,7 @@ function postcalendar_eventapi_getEvents($args)
     }
 
     foreach ($events as $event) {
-        $event = pnModAPIFunc('PostCalendar', 'event', 'formateventarrayfordisplay', $event);
+        $event = ModUtil::apiFunc('PostCalendar', 'event', 'formateventarrayfordisplay', $event);
 
         list ($eventstartyear, $eventstartmonth, $eventstartday) = explode('-', $event['eventDate']);
 
@@ -356,14 +356,14 @@ function postcalendar_eventapi_writeEvent($args)
         $obj = array(
             $eventdata['eid'] => $eventdata);
         $result = DBUtil::updateObjectArray($obj, 'postcalendar_events', 'eid');
-        pnModCallHooks('item', 'update', $eventdata['eid'], array(
+        ModUtil::callHooks('item', 'update', $eventdata['eid'], array(
             'module' => 'PostCalendar'));
     } else { //new event
         unset($eventdata['eid']); //be sure that eid is not set on insert op to autoincrement value
         unset($eventdata['is_update']);
         $eventdata['time'] = date("Y-m-d H:i:s"); //current date for timestamp on event
         $result = DBUtil::insertObject($eventdata, 'postcalendar_events', 'eid');
-        pnModCallHooks('item', 'create', $result['eid'], array(
+        ModUtil::callHooks('item', 'create', $result['eid'], array(
             'module' => 'PostCalendar'));
     }
     if ($result === false) {
@@ -388,32 +388,32 @@ function postcalendar_eventapi_buildSubmitForm($args)
 
     // format date information
     if ((!isset($eventdata['endDate'])) || ($eventdata['endDate'] == '') || ($eventdata['endDate'] == '00000000') || ($eventdata['endDate'] == '0000-00-00')) {
-        $eventdata['endvalue'] = pnModAPIFunc('PostCalendar', 'user', 'getDate', array(
+        $eventdata['endvalue'] = ModUtil::apiFunc('PostCalendar', 'user', 'getDate', array(
             'Date' => $args['Date'],
             'format' => _SETTING_DATE_FORMAT));
-        $eventdata['endDate'] = pnModAPIFunc('PostCalendar', 'user', 'getDate', array(
+        $eventdata['endDate'] = ModUtil::apiFunc('PostCalendar', 'user', 'getDate', array(
             'Date' => $args['Date'],
             'format' => __(/*!ensure translation EXACTLY the same as locale definition*/'%Y-%m-%d'))); // format for JS cal - intentional use of core domain
     } else {
-        $eventdata['endvalue'] = pnModAPIFunc('PostCalendar', 'user', 'getDate', array(
+        $eventdata['endvalue'] = ModUtil::apiFunc('PostCalendar', 'user', 'getDate', array(
             'Date' => str_replace('-', '', $eventdata['endDate']),
             'format' => _SETTING_DATE_FORMAT));
-        $eventdata['endDate'] = pnModAPIFunc('PostCalendar', 'user', 'getDate', array(
+        $eventdata['endDate'] = ModUtil::apiFunc('PostCalendar', 'user', 'getDate', array(
             'Date' => str_replace('-', '', $eventdata['endDate']),
             'format' => __(/*!ensure translation EXACTLY the same as locale definition*/'%Y-%m-%d'))); // format for JS cal - intentional use of core domain
     }
     if ((!isset($eventdata['eventDate'])) || ($eventdata['eventDate'] == '')) {
-        $eventdata['eventDatevalue'] = pnModAPIFunc('PostCalendar', 'user', 'getDate', array(
+        $eventdata['eventDatevalue'] = ModUtil::apiFunc('PostCalendar', 'user', 'getDate', array(
             'Date' => $args['Date'],
             'format' => _SETTING_DATE_FORMAT));
-        $eventdata['eventDate'] = pnModAPIFunc('PostCalendar', 'user', 'getDate', array(
+        $eventdata['eventDate'] = ModUtil::apiFunc('PostCalendar', 'user', 'getDate', array(
             'Date' => $args['Date'],
             'format' => __(/*!ensure translation EXACTLY the same as locale definition*/'%Y-%m-%d'))); // format for JS cal - intentional use of core domain
     } else {
-        $eventdata['eventDatevalue'] = pnModAPIFunc('PostCalendar', 'user', 'getDate', array(
+        $eventdata['eventDatevalue'] = ModUtil::apiFunc('PostCalendar', 'user', 'getDate', array(
             'Date' => str_replace('-', '', $eventdata['eventDate']),
             'format' => _SETTING_DATE_FORMAT));
-        $eventdata['eventDate'] = pnModAPIFunc('PostCalendar', 'user', 'getDate', array(
+        $eventdata['eventDate'] = ModUtil::apiFunc('PostCalendar', 'user', 'getDate', array(
             'Date' => str_replace('-', '', $eventdata['eventDate']),
             'format' => __(/*!ensure translation EXACTLY the same as locale definition*/'%Y-%m-%d'))); // format for JS cal - intentional use of core domain
     }
@@ -422,17 +422,13 @@ function postcalendar_eventapi_buildSubmitForm($args)
         $users = DBUtil::selectFieldArray('users', 'uname', null, null, null, 'uid');
         $form_data['users'] = $users;
     }
-    $eventdata['aid'] = isset($eventdata['aid']) ? $eventdata['aid'] : pnUserGetVar('uid'); // set value of user-select box
-    $form_data['username_selected'] = pnUsergetVar('uname', $eventdata['aid']); // for display of username
+    $eventdata['aid'] = isset($eventdata['aid']) ? $eventdata['aid'] : UserUtil::getVar('uid'); // set value of user-select box
+    $form_data['username_selected'] = UserUtil::getVar('uname', $eventdata['aid']); // for display of username
 
-    // load the category registry util
-    if (!Loader::loadClass('CategoryRegistryUtil')) {
-        pn_exit(__f('Error! Unable to load class [%s]', 'CategoryRegistryUtil'));
-    }
     $form_data['catregistry'] = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
     $form_data['cat_count'] = count($form_data['catregistry']);
     // configure default categories
-    $eventdata['__CATEGORIES__'] = isset($eventdata['__CATEGORIES__']) ? $eventdata['__CATEGORIES__'] : pnModGetVar('PostCalendar', 'pcDefaultCategories');
+    $eventdata['__CATEGORIES__'] = isset($eventdata['__CATEGORIES__']) ? $eventdata['__CATEGORIES__'] : ModUtil::getVar('PostCalendar', 'pcDefaultCategories');
 
     // All-day event values for radio buttons
     $form_data['SelectedAllday'] = ((isset($eventdata['alldayevent'])) && ($eventdata['alldayevent'] == 1)) ? " checked='checked'" : '';
@@ -526,7 +522,7 @@ function postcalendar_eventapi_buildSubmitForm($args)
     $form_data['SelectedNoEnd'] = ((!isset($eventdata['endtype'])) || ((int) $eventdata['endtype'] == 0)) ? " checked='checked'" : ''; //default
 
     // Assign the content format (determines if scribite is in use)
-    $form_data['formattedcontent'] = pnModAPIFunc('PostCalendar', 'event', 'isformatted', array(
+    $form_data['formattedcontent'] = ModUtil::apiFunc('PostCalendar', 'event', 'isformatted', array(
         'func' => 'new'));
 
     // assign empty values to text fields that don't need changing
@@ -640,12 +636,12 @@ function postcalendar_eventapi_formateventarrayfordisplay($event)
     $event['hometext'] = DataUtil::formatForDisplayHTML($hometext); //add hometext back into array with HTML formatting
 
     // Hooks filtering should be after formatForDisplay to allow Hook transforms
-    list ($event['hometext']) = pnModCallHooks('item', 'transform', '', array(
+    list ($event['hometext']) = ModUtil::callHooks('item', 'transform', '', array(
         $event['hometext']));
 
     // Check for comments
-    if (pnModAvailable('EZComments') && pnModIsHooked('EZComments', 'PostCalendar')) {
-        $event['commentcount'] = pnModAPIFunc('EZComments', 'user', 'countitems', array(
+    if (ModUtil::available('EZComments') && ModUtil::isHooked('EZComments', 'PostCalendar')) {
+        $event['commentcount'] = ModUtil::apiFunc('EZComments', 'user', 'countitems', array(
             'mod' => 'PostCalendar',
             'objectid' => $event['eid'],
             'status' => 0));
@@ -689,7 +685,7 @@ function postcalendar_eventapi_formateventarrayforDB($event)
     unset($event['startTime']); // clears the whole array
     $event['startTime'] = $startTime;
     // if event ADD perms are given to anonymous users...
-    if (pnUserLoggedIn()) {
+    if (UserUtil::isLoggedIn()) {
         $event['informant'] = SessionUtil::getVar('uid');
     } else {
         $event['informant'] = 1; // 'guest'
@@ -839,8 +835,8 @@ function postcalendar_eventapi_isformatted($args)
         $args['func'] = 'all';
     }
 
-    if (pnModAvailable('scribite')) {
-        $modinfo = pnModGetInfo(pnModGetIDFromName('scribite'));
+    if (ModUtil::available('scribite')) {
+        $modinfo = ModUtil::getInfo(ModUtil::getIdFromName('scribite'));
         if (version_compare($modinfo['version'], '2.2', '>=')) {
             $apiargs = array(
                 'modulename' => 'PostCalendar'); // parameter handling corrected in 2.2
@@ -848,7 +844,7 @@ function postcalendar_eventapi_isformatted($args)
             $apiargs = 'PostCalendar'; // old direct parameter
         }
 
-        $modconfig = pnModAPIFunc('scribite', 'user', 'getModuleConfig', $apiargs);
+        $modconfig = ModUtil::apiFunc('scribite', 'user', 'getModuleConfig', $apiargs);
         if (in_array($args['func'], (array) $modconfig['modfuncs']) && $modconfig['modeditor'] != '-') {
             return true;
         }

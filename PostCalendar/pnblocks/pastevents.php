@@ -43,7 +43,7 @@ function postcalendar_pasteventsblock_display($blockinfo)
     if (!SecurityUtil::checkPermission('PostCalendar:pasteventsblock:', "$blockinfo[title]::", ACCESS_OVERVIEW)) {
         return;
     }
-    if (!pnModAvailable('PostCalendar')) {
+    if (!ModUtil::available('PostCalendar')) {
         return;
     }
 
@@ -64,7 +64,7 @@ function postcalendar_pasteventsblock_display($blockinfo)
     $tpl = pnRender::getInstance('PostCalendar');
 
     // If block is cached, return cached version
-    $tpl->cache_id = $blockinfo['bid'] . ':' . pnUserGetVar('uid');
+    $tpl->cache_id = $blockinfo['bid'] . ':' . UserUtil::getVar('uid');
     if ($tpl->is_cached('blocks/postcalendar_block_pastevents.htm')) {
         $blockinfo['content'] = $tpl->fetch('blocks/postcalendar_block_pastevents.htm');
         return pnBlockThemeBlock($blockinfo);
@@ -78,7 +78,7 @@ function postcalendar_pasteventsblock_display($blockinfo)
     $ending_date   = date('m/d/Y', mktime(0, 0, 0, $the_month, $the_day - 1, $the_year)); // yesterday
 
     $filtercats['__CATEGORIES__'] = $pcbfiltercats; //reformat array
-    $eventsByDate = pnModAPIFunc('PostCalendar', 'event', 'getEvents', array(
+    $eventsByDate = ModUtil::apiFunc('PostCalendar', 'event', 'getEvents', array(
         'start'      => $starting_date,
         'end'        => $ending_date,
         'filtercats' => $filtercats,
@@ -105,10 +105,9 @@ function postcalendar_pasteventsblock_modify($blockinfo)
     $pnRender = pnRender::getInstance('PostCalendar', false); // no caching
 
     // load the category registry util
-    if (Loader::loadClass('CategoryRegistryUtil')) {
-        $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
-        $pnRender->assign('catregistry', $catregistry);
-    }
+    $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
+    $pnRender->assign('catregistry', $catregistry);
+
     $props = array_keys($catregistry);
     $pnRender->assign('firstprop', $props[0]);
 

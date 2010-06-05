@@ -18,7 +18,7 @@ function smarty_function_pc_queued_events_notify($args, &$smarty)
     $assign = array_key_exists('assign', $args) && !empty($args['assign']) ? $args['assign'] : null;
     unset($args);
 
-    $prefix = pnConfigGetVar('prefix');
+    $prefix = System::getVar('prefix');
 
     $count = DBUtil::selectObjectCount('postcalendar_events', 'WHERE pc_eventstatus=0');
 
@@ -27,7 +27,7 @@ function smarty_function_pc_queued_events_notify($args, &$smarty)
     }
 
     $dom = ZLanguage::getModuleDomain('PostCalendar');
-    $url = pnModURL('PostCalendar', 'admin', 'listqueued');
+    $url = ModUtil::url('PostCalendar', 'admin', 'listqueued');
 
     $text     = _fn('There is %s queued calendar event awaiting your review.', 'There are %s queued calendar events awaiting your review.', $count, $count, $dom);
     $linktext = __(/*!This is link text*/'Review queued events', $dom);

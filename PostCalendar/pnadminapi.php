@@ -25,27 +25,27 @@ function postcalendar_adminapi_getlinks()
     // and populate the links array if the user has permission
     if (SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
         $links[] = array(
-            'url' => pnModURL('PostCalendar', 'admin', 'modifyconfig'),
+            'url' => ModUtil::url('PostCalendar', 'admin', 'modifyconfig'),
             'text' => __('Settings', $dom));
     }
     if (SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADD)) {
         $links[] = array(
-            'url' => pnModURL('PostCalendar', 'event', 'new'),
+            'url' => ModUtil::url('PostCalendar', 'event', 'new'),
             'text' => __('Create new event', $dom));
     }
     if (SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
         $links[] = array(
-            'url' => pnModURL('PostCalendar', 'admin', 'listapproved'),
+            'url' => ModUtil::url('PostCalendar', 'admin', 'listapproved'),
             'text' => __('Approved events', $dom));
     }
     if (SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
         $links[] = array(
-            'url' => pnModURL('PostCalendar', 'admin', 'listhidden'),
+            'url' => ModUtil::url('PostCalendar', 'admin', 'listhidden'),
             'text' => __('Hidden events', $dom));
     }
     if (SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
         $links[] = array(
-            'url' => pnModURL('PostCalendar', 'admin', 'listqueued'),
+            'url' => ModUtil::url('PostCalendar', 'admin', 'listqueued'),
             'text' => __('Queued events', $dom));
     }
 
@@ -87,12 +87,12 @@ function postcalendar_adminapi_notify($args)
         return true;
     }
     $isadmin = SecurityUtil::checkPermission('PostCalendar::', 'null::null', ACCESS_ADMIN);
-    $notifyadmin2admin = pnModGetVar('PostCalendar', 'pcNotifyAdmin2Admin');
+    $notifyadmin2admin = ModUtil::getVar('PostCalendar', 'pcNotifyAdmin2Admin');
     if ($isadmin && !$notifyadmin2admin) {
         return true;
     }
 
-    $modinfo = pnModGetInfo(pnModGetIDFromName('PostCalendar'));
+    $modinfo = ModUtil::getInfo(ModUtil::getIdFromName('PostCalendar'));
     $modversion = DataUtil::formatForOS($modinfo['version']);
 
     // Turn off template caching here
@@ -100,12 +100,12 @@ function postcalendar_adminapi_notify($args)
     $pnRender->assign('is_update', $is_update);
     $pnRender->assign('modversion', $modversion);
     $pnRender->assign('eid', $eid);
-    $pnRender->assign('link', pnModURL('PostCalendar', 'admin', 'adminevents', array(
+    $pnRender->assign('link', ModUtil::url('PostCalendar', 'admin', 'adminevents', array(
         'events' => $eid,
         'action' => _ADMIN_ACTION_VIEW), null, null, true));
     $message = $pnRender->fetch('email/postcalendar_email_adminnotify.htm');
 
-    $messagesent = pnModAPIFunc('Mailer', 'user', 'sendmessage', array(
+    $messagesent = ModUtil::apiFunc('Mailer', 'user', 'sendmessage', array(
         'toaddress' => _SETTING_NOTIFY_EMAIL,
         'subject' => __('Notice: PostCalendar submission/change', $dom),
         'body' => $message,

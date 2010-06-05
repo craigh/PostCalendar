@@ -38,21 +38,20 @@ function postcalendar_admin_modifyconfig()
     // Turn off template caching here
     $pnRender = pnRender::getInstance('PostCalendar', false);
 
-    $modinfo = pnModGetInfo(pnModGetIDFromName('PostCalendar'));
+    $modinfo = ModUtil::getInfo(ModUtil::getIdFromName('PostCalendar'));
     $pnRender->assign('postcalendarversion', $modinfo['version']);
 
     // load the category registry util
-    if (Loader::loadClass('CategoryRegistryUtil')) {
-        $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
-        $pnRender->assign('catregistry', $catregistry);
-    }
+    $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
+    $pnRender->assign('catregistry', $catregistry);
+
     $props = array_keys($catregistry);
     $pnRender->assign('firstprop', $props[0]);
-    $selectedDefaultCategories = pnModGetVar('PostCalendar', 'pcDefaultCategories');
+    $selectedDefaultCategories = ModUtil::getVar('PostCalendar', 'pcDefaultCategories');
     $pnRender->assign('selectedDefaultCategories', $selectedDefaultCategories);
 
-    $pnRender->assign('pcFilterYearStart', pnModGetVar('PostCalendar', 'pcFilterYearStart', 1));
-    $pnRender->assign('pcFilterYearEnd', pnModGetVar('PostCalendar', 'pcFilterYearEnd', 2));
+    $pnRender->assign('pcFilterYearStart', ModUtil::getVar('PostCalendar', 'pcFilterYearStart', 1));
+    $pnRender->assign('pcFilterYearEnd', ModUtil::getVar('PostCalendar', 'pcFilterYearEnd', 2));
 
     return $pnRender->fetch('admin/postcalendar_admin_modifyconfig.htm');
 }
@@ -146,10 +145,10 @@ function postcalendar_admin_showlist($args)
     $pnRender->assign('function', $args['function']);
     $pnRender->assign('functionname', substr($args['function'], 4));
     $pnRender->assign('events', $events);
-    $pnRender->assign('title_sort_url', pnModUrl('PostCalendar', 'admin', $args['function'], array(
+    $pnRender->assign('title_sort_url', ModUtil::url('PostCalendar', 'admin', $args['function'], array(
         'sort' => 'title',
         'sdir' => $sdir)));
-    $pnRender->assign('time_sort_url', pnModUrl('PostCalendar', 'admin', $args['function'], array(
+    $pnRender->assign('time_sort_url', ModUtil::url('PostCalendar', 'admin', $args['function'], array(
         'sort' => 'time',
         'sdir' => $sdir)));
     $pnRender->assign('formactions', array(
@@ -159,7 +158,7 @@ function postcalendar_admin_showlist($args)
         _ADMIN_ACTION_DELETE => __('Delete', $dom)));
     $pnRender->assign('actionselected', _ADMIN_ACTION_VIEW);
     if ($offset > 1) {
-        $prevlink = pnModUrl('PostCalendar', 'admin', $args['function'], array(
+        $prevlink = ModUtil::url('PostCalendar', 'admin', $args['function'], array(
             'offset' => $offset - $offset_increment,
             'sort' => $sort,
             'sdir' => $original_sdir));
@@ -168,7 +167,7 @@ function postcalendar_admin_showlist($args)
     }
     $pnRender->assign('prevlink', $prevlink);
     if (count($events) >= $offset_increment) {
-        $nextlink = pnModUrl('PostCalendar', 'admin', $args['function'], array(
+        $nextlink = ModUtil::url('PostCalendar', 'admin', $args['function'], array(
             'offset' => $offset + $offset_increment,
             'sort' => $sort,
             'sdir' => $original_sdir));
@@ -225,7 +224,7 @@ function postcalendar_admin_adminevents()
     foreach ($events as $eid) {
         // get event info
         $eventitems = DBUtil::selectObjectByID('postcalendar_events', $eid, 'eid');
-        $eventitems = pnModAPIFunc('PostCalendar', 'event', 'formateventarrayfordisplay', $eventitems);
+        $eventitems = ModUtil::apiFunc('PostCalendar', 'event', 'formateventarrayfordisplay', $eventitems);
         $alleventinfo[$eid] = $eventitems;
     }
 
@@ -280,7 +279,7 @@ function postcalendar_admin_resetDefaults()
     pnModSetVars('PostCalendar', $defaults);
 
     // clear the cache
-    pnModAPIFunc('PostCalendar', 'admin', 'clearCache');
+    ModUtil::apiFunc('PostCalendar', 'admin', 'clearCache');
 
     LogUtil::registerStatus(__('Done! PostCalendar configuration reset to use default values.', $dom));
     return postcalendar_admin_modifyconfig();
@@ -325,7 +324,7 @@ function postcalendar_admin_updateconfig()
         'pcFilterYearStart'       => abs((int) FormUtil::getPassedValue('pcFilterYearStart', $defaults['pcFilterYearStart'])), // ensures positive value
         'pcFilterYearEnd'         => abs((int) FormUtil::getPassedValue('pcFilterYearEnd', $defaults['pcFilterYearEnd'])), // ensures positive value
     );
-    $settings['pcNavDateOrder'] = pnModAPIFunc('PostCalendar', 'admin', 'getdateorder', $settings['pcEventDateFormat']);
+    $settings['pcNavDateOrder'] = ModUtil::apiFunc('PostCalendar', 'admin', 'getdateorder', $settings['pcEventDateFormat']);
 
     // delete all the old vars
     pnModDelVar('PostCalendar');
@@ -334,11 +333,11 @@ function postcalendar_admin_updateconfig()
     pnModSetVars('PostCalendar', $settings);
 
     // Let any other modules know that the modules configuration has been updated
-    pnModCallHooks('module', 'updateconfig', 'PostCalendar', array(
+    ModUtil::callHooks('module', 'updateconfig', 'PostCalendar', array(
         'module' => 'PostCalendar'));
 
     // clear the cache
-    pnModAPIFunc('PostCalendar', 'admin', 'clearCache');
+    ModUtil::apiFunc('PostCalendar', 'admin', 'clearCache');
 
     LogUtil::registerStatus(__('Done! Updated the PostCalendar configuration.', $dom));
     return postcalendar_admin_modifyconfig();
@@ -378,7 +377,7 @@ function postcalendar_admin_approveevents()
         LogUtil::registerError(__("Error! An 'unidentified error' occurred.", $dom));
     }
 
-    pnModAPIFunc('PostCalendar', 'admin', 'clearCache');
+    ModUtil::apiFunc('PostCalendar', 'admin', 'clearCache');
     return pnModFunc('PostCalendar', 'admin', 'showlist', array(
         'type' => _EVENT_APPROVED,
         'function' => 'listapproved',
@@ -419,7 +418,7 @@ function postcalendar_admin_hideevents()
         LogUtil::registerError(__("Error! An 'unidentified error' occurred.", $dom));
     }
 
-    pnModAPIFunc('PostCalendar', 'admin', 'clearCache');
+    ModUtil::apiFunc('PostCalendar', 'admin', 'clearCache');
     return pnModFunc('PostCalendar', 'admin', 'showlist', array(
         'type' => _EVENT_APPROVED,
         'function' => 'listapproved',
@@ -458,7 +457,7 @@ function postcalendar_admin_deleteevents()
         LogUtil::registerError(__("Error! An 'unidentified error' occurred.", $dom));
     }
 
-    pnModAPIFunc('PostCalendar', 'admin', 'clearCache');
+    ModUtil::apiFunc('PostCalendar', 'admin', 'clearCache');
     return pnModFunc('PostCalendar', 'admin', 'showlist', array(
         'type' => _EVENT_APPROVED,
         'function' => 'listapproved',

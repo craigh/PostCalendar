@@ -44,7 +44,7 @@ function postcalendar_user_view()
         'jumpday' => $jumpday,
         'jumpmonth' => $jumpmonth,
         'jumpyear' => $jumpyear);
-    $Date        = FormUtil::getPassedValue('Date', pnModAPIFunc('PostCalendar', 'user', 'getDate', $jumpargs));
+    $Date        = FormUtil::getPassedValue('Date', ModUtil::apiFunc('PostCalendar', 'user', 'getDate', $jumpargs));
     $filtercats  = FormUtil::getPassedValue('postcalendar_events');
     $func        = FormUtil::getPassedValue('func');
 
@@ -77,10 +77,10 @@ function postcalendar_user_display($args)
     }
 
     $tpl = pnRender::getInstance('PostCalendar');
-    $modinfo = pnModGetInfo(pnModGetIDFromName('PostCalendar'));
+    $modinfo = ModUtil::getInfo(ModUtil::getIdFromName('PostCalendar'));
     $tpl->assign('postcalendarversion', $modinfo['version']);
 
-    $tpl->cache_id = $Date . '|' . $viewtype . '|' . $eid . '|' . pnUserGetVar('uid');
+    $tpl->cache_id = $Date . '|' . $viewtype . '|' . $eid . '|' . UserUtil::getVar('uid');
 
     switch ($viewtype) {
         case 'details':
@@ -95,10 +95,10 @@ function postcalendar_user_display($args)
             } else {
                 // get the event from the DB
                 $event = DBUtil::selectObjectByID('postcalendar_events', $args['eid'], 'eid');
-                $event = pnModAPIFunc('PostCalendar', 'event', 'formateventarrayfordisplay', $event);
+                $event = ModUtil::apiFunc('PostCalendar', 'event', 'formateventarrayfordisplay', $event);
 
                 // is event allowed for this user?
-                if ($event['sharing'] == SHARING_PRIVATE && $event['aid'] != pnUserGetVar('uid') && !SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
+                if ($event['sharing'] == SHARING_PRIVATE && $event['aid'] != UserUtil::getVar('uid') && !SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
                     // if event is PRIVATE and user is not assigned event ID (aid) and user is not Admin event should not be seen
                     return LogUtil::registerError(__('You do not have permission to view this event.', $dom));
                 }
@@ -118,7 +118,7 @@ function postcalendar_user_display($args)
                     $tpl->display('user/postcalendar_user_view_popup.htm');
                     return true; // displays template without theme wrap
                 } else {
-                    if ((SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADD) && (pnUserGetVar('uid') == $event['aid'])) || SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
+                    if ((SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADD) && (UserUtil::getVar('uid') == $event['aid'])) || SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
                         $tpl->assign('EVENT_CAN_EDIT', true);
                     } else {
                         $tpl->assign('EVENT_CAN_EDIT', false);
@@ -134,7 +134,7 @@ function postcalendar_user_display($args)
             if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_OVERVIEW)) {
                 return LogUtil::registerPermissionError();
             }
-            $out = pnModAPIFunc('PostCalendar', 'user', 'buildView', array(
+            $out = ModUtil::apiFunc('PostCalendar', 'user', 'buildView', array(
                 'Date' => $Date,
                 'viewtype' => $viewtype,
                 'pc_username' => $pc_username,

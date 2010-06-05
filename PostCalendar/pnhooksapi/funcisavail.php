@@ -20,7 +20,7 @@ function postcalendar_hooksapi_funcisavail($args)
 {
     if (!isset($args['module'])) return false;
     $module    = $args['module'];
-    $modinfo   = pnModGetInfo(pnModGetIDFromName($module));
+    $modinfo   = ModUtil::getInfo(ModUtil::getIdFromName($module));
     $homearray = array($modinfo['directory'], 'PostCalendar'); // locations to search for the function
     $type      = isset($args['type']) ? $args['type'] : 'pcevent';
 

@@ -43,7 +43,7 @@ function postcalendar_calendarblock_display($blockinfo)
     if (!SecurityUtil::checkPermission('PostCalendar:calendarblock:', "$blockinfo[title]::", ACCESS_OVERVIEW)) {
         return;
     }
-    if (!pnModAvailable('PostCalendar')) {
+    if (!ModUtil::available('PostCalendar')) {
         return;
     }
 
@@ -71,7 +71,7 @@ function postcalendar_calendarblock_display($blockinfo)
     $output = '';
 
     // If block is cached, return cached version
-    $tpl->cache_id = $blockinfo['bid'] . ':' . pnUserGetVar('uid');
+    $tpl->cache_id = $blockinfo['bid'] . ':' . UserUtil::getVar('uid');
     $templates_cached = true;
     if ($showcalendar) {
         if (!$tpl->is_cached('blocks/postcalendar_block_view_month.htm')) {
@@ -107,14 +107,14 @@ function postcalendar_calendarblock_display($blockinfo)
     // set up the next and previous months to move to
     $prev_month = DateUtil::getDatetime_NextMonth(-1, '%Y%m%d', $the_year, $the_month, 1);
     $next_month = DateUtil::getDatetime_NextMonth(1, '%Y%m%d', $the_year, $the_month, 1);
-    $pc_prev = pnModURL('PostCalendar', 'user', 'view', array(
+    $pc_prev = ModUtil::url('PostCalendar', 'user', 'view', array(
         'viewtype' => 'month',
         'Date'     => $prev_month));
-    $pc_next = pnModURL('PostCalendar', 'user', 'view', array(
+    $pc_next = ModUtil::url('PostCalendar', 'user', 'view', array(
         'viewtype' => 'month',
         'Date'     => $next_month));
     $pc_month_name = DateUtil::strftime("%B", strtotime($Date));
-    $month_link_url = pnModURL('PostCalendar', 'user', 'view', array(
+    $month_link_url = ModUtil::url('PostCalendar', 'user', 'view', array(
         'viewtype' => 'month',
         'Date'     => date('Ymd', mktime(0, 0, 0, $the_month, 1, $the_year))));
     $month_link_text = $pc_month_name . ' ' . $the_year;
@@ -158,7 +158,7 @@ function postcalendar_calendarblock_display($blockinfo)
     // this grabs more events that required and could slow down the process. RNG
     // suggest addming $limit paramter to getEvents() to reduce load CAH Sept 29, 2009
     $filtercats['__CATEGORIES__'] = $pcbfiltercats; //reformat array
-    $eventsByDate = pnModAPIFunc('PostCalendar', 'event', 'getEvents', array(
+    $eventsByDate = ModUtil::apiFunc('PostCalendar', 'event', 'getEvents', array(
         'start'      => $starting_date,
         'end'        => $ending_date,
         'filtercats' => $filtercats));
@@ -243,10 +243,9 @@ function postcalendar_calendarblock_modify($blockinfo)
     $pnRender = pnRender::getInstance('PostCalendar', false); // no caching
 
     // load the category registry util
-    if (Loader::loadClass('CategoryRegistryUtil')) {
-        $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
-        $pnRender->assign('catregistry', $catregistry);
-    }
+    $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
+    $pnRender->assign('catregistry', $catregistry);
+
     $props = array_keys($catregistry);
     $pnRender->assign('firstprop', $props[0]);
 

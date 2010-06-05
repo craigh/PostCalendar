@@ -32,7 +32,7 @@ function postcalendar_hooksapi_users_pcevent($args)
 
     $event = array(
         'title'             => __('New user: ', $dom) . $user['uname'],
-        'hometext'          => ":html:" . __('Profile link: ', $dom) . "<a href='" . pnModURL('Profile', 'user', 'view', array('uid' => $user['uid'])) . "'>" . $user['uname'] . "</a>",
+        'hometext'          => ":html:" . __('Profile link: ', $dom) . "<a href='" . ModUtil::url('Profile', 'user', 'view', array('uid' => $user['uid'])) . "'>" . $user['uname'] . "</a>",
         'aid'               => $user['uid'], // userid of creator
         'time'              => $user['user_regdate'], // mysql timestamp YYYY-MM-DD HH:MM:SS
         'informant'         => $user['uid'], // userid of creator

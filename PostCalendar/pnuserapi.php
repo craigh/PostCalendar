@@ -120,12 +120,12 @@ function postcalendar_userapi_buildView($args)
 
             $prev_day = DateUtil::getDatetime_NextDay(-1, '%Y%m%d', $the_year, $the_month, $the_day);
             $next_day = DateUtil::getDatetime_NextDay(1, '%Y%m%d', $the_year, $the_month, $the_day);
-            $pc_prev_day = pnModURL('PostCalendar', 'user', 'view', array(
+            $pc_prev_day = ModUtil::url('PostCalendar', 'user', 'view', array(
                 'viewtype' => 'day',
                 'Date' => $prev_day,
                 'pc_username' => $pc_username,
                 'filtercats' => $filtercats));
-            $pc_next_day = pnModURL('PostCalendar', 'user', 'view', array(
+            $pc_next_day = ModUtil::url('PostCalendar', 'user', 'view', array(
                 'viewtype' => 'day',
                 'Date' => $next_day,
                 'pc_username' => $pc_username,
@@ -146,12 +146,12 @@ function postcalendar_userapi_buildView($args)
 
             $prev_week = date('Ymd', mktime(0, 0, 0, $week_first_day_month, $week_first_day_date - 7, $week_first_day_year));
             $next_week = date('Ymd', mktime(0, 0, 0, $week_last_day_month, $week_last_day_date + 1, $week_last_day_year));
-            $pc_prev_week = pnModURL('PostCalendar', 'user', 'view', array(
+            $pc_prev_week = ModUtil::url('PostCalendar', 'user', 'view', array(
                 'viewtype' => 'week',
                 'Date' => $prev_week,
                 'pc_username' => $pc_username,
                 'filtercats' => $filtercats));
-            $pc_next_week = pnModURL('PostCalendar', 'user', 'view', array(
+            $pc_next_week = ModUtil::url('PostCalendar', 'user', 'view', array(
                 'viewtype' => 'week',
                 'Date' => $next_week,
                 'pc_username' => $pc_username,
@@ -166,12 +166,12 @@ function postcalendar_userapi_buildView($args)
 
             $prev_month = DateUtil::getDatetime_NextMonth(-1, '%Y%m%d', $the_year, $the_month, 1);
             $next_month = DateUtil::getDatetime_NextMonth(1, '%Y%m%d', $the_year, $the_month, 1);
-            $pc_prev_month = pnModURL('PostCalendar', 'user', 'view', array(
+            $pc_prev_month = ModUtil::url('PostCalendar', 'user', 'view', array(
                 'viewtype' => $viewtype,
                 'Date' => $prev_month,
                 'pc_username' => $pc_username,
                 'filtercats' => $filtercats));
-            $pc_next_month = pnModURL('PostCalendar', 'user', 'view', array(
+            $pc_next_month = ModUtil::url('PostCalendar', 'user', 'view', array(
                 'viewtype' => $viewtype,
                 'Date' => $next_month,
                 'pc_username' => $pc_username,
@@ -187,12 +187,12 @@ function postcalendar_userapi_buildView($args)
 
             $prev_year = date('Ymd', mktime(0, 0, 0, 1, 1, $the_year - 1));
             $next_year = date('Ymd', mktime(0, 0, 0, 1, 1, $the_year + 1));
-            $pc_prev_year = pnModURL('PostCalendar', 'user', 'view', array(
+            $pc_prev_year = ModUtil::url('PostCalendar', 'user', 'view', array(
                 'viewtype' => 'year',
                 'Date' => $prev_year,
                 'pc_username' => $pc_username,
                 'filtercats' => $filtercats));
-            $pc_next_year = pnModURL('PostCalendar', 'user', 'view', array(
+            $pc_next_year = ModUtil::url('PostCalendar', 'user', 'view', array(
                 'viewtype' => 'year',
                 'Date' => $next_year,
                 'pc_username' => $pc_username,
@@ -204,7 +204,7 @@ function postcalendar_userapi_buildView($args)
             break;
         case 'xml':
         case 'list':
-            $listmonths    = pnModGetVar('PostCalendar', 'pcListMonths');
+            $listmonths    = ModUtil::getVar('PostCalendar', 'pcListMonths');
             $listyears     = floor($listmonths/12);
             $listendyears  = (int) $the_year + (int) $listyears;
             $listmonths    = $listmonths % 12;
@@ -218,12 +218,12 @@ function postcalendar_userapi_buildView($args)
 
             $prev_list = date('Ymd', mktime(0, 0, 0, $the_month - $listmonths, $the_day, $the_year));
             $next_list = date('Ymd', mktime(0, 0, 0, $listendmonths, $the_day, $listendyears));
-            $pc_prev_list = pnModURL('PostCalendar', 'user', 'view', array(
+            $pc_prev_list = ModUtil::url('PostCalendar', 'user', 'view', array(
                 'viewtype' => 'list',
                 'Date' => $prev_list,
                 'pc_username' => $pc_username,
                 'filtercats' => $filtercats));
-            $pc_next_list = pnModURL('PostCalendar', 'user', 'view', array(
+            $pc_next_list = ModUtil::url('PostCalendar', 'user', 'view', array(
                 'viewtype' => 'list',
                 'Date' => $next_list,
                 'pc_username' => $pc_username,
@@ -234,7 +234,7 @@ function postcalendar_userapi_buildView($args)
     }
 
     // Load the events
-    $eventsByDate = & pnModAPIFunc('PostCalendar', 'event', 'getEvents', array(
+    $eventsByDate = & ModUtil::apiFunc('PostCalendar', 'event', 'getEvents', array(
         'start' => $starting_date,
         'end' => $ending_date,
         'filtercats' => $filtercats,
@@ -289,8 +289,8 @@ function postcalendar_userapi_getDate($args)
     $jumpmonth = isset($args['jumpmonth']) ? $args['jumpmonth'] : strftime('%m', $time);
     $jumpyear  = isset($args['jumpyear']) ? $args['jumpyear'] : strftime('%Y', $time);
 
-    if (pnUserLoggedIn()) {
-        $time += (pnUserGetVar('timezone_offset') - pnConfigGetVar('timezone_offset')) * 3600;
+    if (UserUtil::isLoggedIn()) {
+        $time += (UserUtil::getVar('timezone_offset') - System::getVar('timezone_offset')) * 3600;
     }
 
     $Date = isset($args['Date']) ? $args['Date'] : '';

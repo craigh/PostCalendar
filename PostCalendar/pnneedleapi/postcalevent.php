@@ -22,7 +22,7 @@ function postcalendar_needleapi_postcalevent($args)
             $args['nid'] = '-' . $args['nid'];
         }
         list ($dispose, $eid, $displaytype) = explode('-', $args['nid']);
-        $link = pnModURL('PostCalendar', 'user', 'view', array(
+        $link = ModUtil::url('PostCalendar', 'user', 'view', array(
             'viewtype' => 'details',
             'eid' => $eid));
         $displaytype = $displaytype ? strtoupper($displaytype) : 'NLI'; // in any order: N (name) D (date) T (time) I (icon) L (uselink) - default: NL
@@ -76,13 +76,13 @@ function postcalendar_needleapi_eventarray($args)
         return false;
     }
 
-    if (!$event = pnModAPIFunc('PostCalendar', 'event', 'formateventarrayfordisplay', $event)) {
+    if (!$event = ModUtil::apiFunc('PostCalendar', 'event', 'formateventarrayfordisplay', $event)) {
         return false;
     }
-    $event['eventDate'] = DateUtil::strftime(pnModGetVar('PostCalendar', 'pcEventDateFormat'), strtotime($event['eventDate']));
+    $event['eventDate'] = DateUtil::strftime(ModUtil::getVar('PostCalendar', 'pcEventDateFormat'), strtotime($event['eventDate']));
 
     // is event allowed for this user?
-    if ($event['sharing'] == SHARING_PRIVATE && $event['aid'] != pnUserGetVar('uid') && !SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
+    if ($event['sharing'] == SHARING_PRIVATE && $event['aid'] != UserUtil::getVar('uid') && !SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
         // if event is PRIVATE and user is not assigned event ID (aid) and user is not Admin event should not be seen
         return -1;
     }

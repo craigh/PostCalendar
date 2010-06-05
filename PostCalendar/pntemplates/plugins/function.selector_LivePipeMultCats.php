@@ -55,7 +55,6 @@ function smarty_function_selector_LivePipeMultCats ($params, &$smarty)
     }
 
     if (!$category && !$path && $categoryRegistryModule && $categoryRegistryTable && $categoryRegistryProperty) {
-        Loader::loadClass('CategoryRegistryUtil');
         $category = CategoryRegistryUtil::getRegisteredModuleCategory ($categoryRegistryModule, $categoryRegistryTable, $categoryRegistryProperty);
     }
 
@@ -94,7 +93,7 @@ function smarty_function_selector_LivePipeMultCats ($params, &$smarty)
     $id = strtr($name, '[]', '__');
 
     if ($editLink && !empty($category) && SecurityUtil::checkPermission( 'Categories::', "$category[id]::", ACCESS_EDIT)) {
-        $url = DataUtil::formatForDisplay(pnModURL('Categories', 'user', 'edit', array('dr' => $category['id'])));
+        $url = DataUtil::formatForDisplay(ModUtil::url('Categories', 'user', 'edit', array('dr' => $category['id'])));
         $html .= "&nbsp;&nbsp;<a href=\"$url\"><img src=\"".pnGetBaseURL()."images/icons/extrasmall/xedit.gif\" title=\"" . __('Edit sub-category') . '" alt="' . __('Edit sub-category') . '" /></a>';
     }
 

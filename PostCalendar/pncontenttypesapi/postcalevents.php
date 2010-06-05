@@ -34,7 +34,6 @@ class postcalendar_contenttypesapi_postcaleventsPlugin extends contentTypeBase
         $this->pcbeventslimit = $data['pcbeventslimit'];
 
         // Get the registrered categories for the module
-        Loader::loadClass('CategoryRegistryUtil');
         $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories ('PostCalendar', 'postcalendar_events');
         $properties = array_keys($catregistry);
         $this->categories = array();
@@ -54,7 +53,7 @@ class postcalendar_contenttypesapi_postcaleventsPlugin extends contentTypeBase
         $ending_date   = date('m/t/Y', mktime(0, 0, 0, $the_month + $this->pcbeventsrange, 1, $the_year));
 
         $filtercats['__CATEGORIES__'] = $this->categories; //reformat array
-        $eventsByDate = pnModAPIFunc('PostCalendar', 'event', 'getEvents', array(
+        $eventsByDate = ModUtil::apiFunc('PostCalendar', 'event', 'getEvents', array(
             'start'      => $starting_date,
             'end'        => $ending_date,
             'filtercats' => $filtercats));
@@ -70,12 +69,10 @@ class postcalendar_contenttypesapi_postcaleventsPlugin extends contentTypeBase
     function startEditing(&$render) {
         $dom = ZLanguage::getModuleDomain('PostCalendar');
 
-        $enablecategorization = pnModGetVar('PostCalendar', 'enablecategorization');
+        $enablecategorization = ModUtil::getVar('PostCalendar', 'enablecategorization');
         if ($enablecategorization) {
-            if (Loader::loadClass('CategoryRegistryUtil')) {
-                $catregistry  = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
-                $render->assign('catregistry', $catregistry);
-            }
+            $catregistry  = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
+            $render->assign('catregistry', $catregistry);
         }
         $render->assign('enablecategorization', $enablecategorization);
 
@@ -83,7 +80,6 @@ class postcalendar_contenttypesapi_postcaleventsPlugin extends contentTypeBase
     }
 
     function displayEditing() {
-        Loader::loadClass('CategoryUtil');
         $cats = array();
         $lang = ZLanguage::getLanguageCode();
         foreach ($this->categories['Main'] as $id) {

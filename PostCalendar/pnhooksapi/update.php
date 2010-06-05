@@ -44,11 +44,11 @@ function postcalendar_hooksapi_update($args)
         return;
     }
 
-    if (!$home = pnModAPIFunc('PostCalendar', 'hooks', 'funcisavail', array(
+    if (!$home = ModUtil::apiFunc('PostCalendar', 'hooks', 'funcisavail', array(
         'module' => $module))) {
         return LogUtil::registerError(__('Hook function not available', $dom));;
     }
-    $event = pnModAPIFunc($home, 'hooks', $module . '_pcevent', array(
+    $event = ModUtil::apiFunc($home, 'hooks', $module . '_pcevent', array(
         'objectid' => $args['objectid'],
         'hookinfo' => $hookinfo));
 

@@ -62,22 +62,22 @@ define('_ADMIN_ACTION_DELETE',  4);
 // Get the global PostCalendar config settings
 // This will save us a lot of time and DB queries later
 //=================================================================
-define('_SETTING_USE_POPUPS',       pnModGetVar('PostCalendar', 'pcUsePopups'));
-define('_SETTING_OPEN_NEW_WINDOW',  pnModGetVar('PostCalendar', 'pcEventsOpenInNewWindow'));
-define('_SETTING_FIRST_DAY_WEEK',   pnModGetVar('PostCalendar', 'pcFirstDayOfWeek'));
-define('_SETTING_DATE_FORMAT',      pnModGetVar('PostCalendar', 'pcEventDateFormat'));
-define('_SETTING_TIME_24HOUR',      pnModGetVar('PostCalendar', 'pcTime24Hours'));
-define('_SETTING_DIRECT_SUBMIT',    pnModGetVar('PostCalendar', 'pcAllowDirectSubmit'));
-define('_SETTING_ALLOW_USER_CAL',   pnModGetVar('PostCalendar', 'pcAllowUserCalendar'));
-define('_SETTING_TIME_INCREMENT',   pnModGetVar('PostCalendar', 'pcTimeIncrement'));
-define('_SETTING_HOW_MANY_EVENTS',  pnModGetVar('PostCalendar', 'pcListHowManyEvents'));
-define('_SETTING_EVENTS_IN_YEAR',   pnModGetVar('PostCalendar', 'pcShowEventsInYear'));
-define('_SETTING_DEFAULT_VIEW',     pnModGetVar('PostCalendar', 'pcDefaultView'));
-define('_SETTING_NOTIFY_ADMIN',     pnModGetVar('PostCalendar', 'pcNotifyAdmin'));
-define('_SETTING_NOTIFY_EMAIL',     pnModGetVar('PostCalendar', 'pcNotifyEmail'));
-define('_SETTING_ALLOW_CAT_FILTER', pnModGetVar('PostCalendar', 'pcAllowCatFilter'));
-define('_SETTING_ENABLECATS',       pnModGetVar('PostCalendar', 'enablecategorization'));
-define('_SETTING_USENAVIMAGES',     pnModGetVar('PostCalendar', 'enablenavimages'));
+define('_SETTING_USE_POPUPS',       ModUtil::getVar('PostCalendar', 'pcUsePopups'));
+define('_SETTING_OPEN_NEW_WINDOW',  ModUtil::getVar('PostCalendar', 'pcEventsOpenInNewWindow'));
+define('_SETTING_FIRST_DAY_WEEK',   ModUtil::getVar('PostCalendar', 'pcFirstDayOfWeek'));
+define('_SETTING_DATE_FORMAT',      ModUtil::getVar('PostCalendar', 'pcEventDateFormat'));
+define('_SETTING_TIME_24HOUR',      ModUtil::getVar('PostCalendar', 'pcTime24Hours'));
+define('_SETTING_DIRECT_SUBMIT',    ModUtil::getVar('PostCalendar', 'pcAllowDirectSubmit'));
+define('_SETTING_ALLOW_USER_CAL',   ModUtil::getVar('PostCalendar', 'pcAllowUserCalendar'));
+define('_SETTING_TIME_INCREMENT',   ModUtil::getVar('PostCalendar', 'pcTimeIncrement'));
+define('_SETTING_HOW_MANY_EVENTS',  ModUtil::getVar('PostCalendar', 'pcListHowManyEvents'));
+define('_SETTING_EVENTS_IN_YEAR',   ModUtil::getVar('PostCalendar', 'pcShowEventsInYear'));
+define('_SETTING_DEFAULT_VIEW',     ModUtil::getVar('PostCalendar', 'pcDefaultView'));
+define('_SETTING_NOTIFY_ADMIN',     ModUtil::getVar('PostCalendar', 'pcNotifyAdmin'));
+define('_SETTING_NOTIFY_EMAIL',     ModUtil::getVar('PostCalendar', 'pcNotifyEmail'));
+define('_SETTING_ALLOW_CAT_FILTER', ModUtil::getVar('PostCalendar', 'pcAllowCatFilter'));
+define('_SETTING_ENABLECATS',       ModUtil::getVar('PostCalendar', 'enablecategorization'));
+define('_SETTING_USENAVIMAGES',     ModUtil::getVar('PostCalendar', 'enablenavimages'));
 
 // Setup utility classes and functions
 define('DATE_CALC_BEGIN_WEEKDAY', _SETTING_FIRST_DAY_WEEK);

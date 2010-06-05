@@ -52,7 +52,7 @@ function smarty_function_pc_url($args, &$smarty)
             'jumpday'   => $jumpday,
             'jumpmonth' => $jumpmonth,
             'jumpyear'  => $jumpyear);
-        $date      = pnModAPIFunc('PostCalendar', 'user', 'getDate', $jumpargs);
+        $date      = ModUtil::apiFunc('PostCalendar', 'user', 'getDate', $jumpargs);
     }
     // some extra cleanup if necessary
     $date = str_replace('-', '', $date);
@@ -61,11 +61,11 @@ function smarty_function_pc_url($args, &$smarty)
         case 'add':
         case 'submit':
         case 'submit-admin':
-            $link = pnModURL('PostCalendar', 'event', $func, array(
+            $link = ModUtil::url('PostCalendar', 'event', $func, array(
                 'Date' => $date));
             break;
         case 'today':
-            $link = pnModURL('PostCalendar', 'user', 'view', array(
+            $link = ModUtil::url('PostCalendar', 'user', 'view', array(
                 'viewtype'    => $viewtype,
                 'Date'        => DateUtil::getDatetime('', '%Y%m%d000000'),
                 'pc_username' => $pc_username));
@@ -75,19 +75,19 @@ function smarty_function_pc_url($args, &$smarty)
         case 'month':
         case 'year':
         case 'list':
-            $link = pnModURL('PostCalendar', 'user', 'view', array(
+            $link = ModUtil::url('PostCalendar', 'user', 'view', array(
                 'viewtype'    => $action,
                 'Date'        => $date,
                 'pc_username' => $pc_username));
             break;
         case 'search':
-            $link = pnModURL('Search');
+            $link = ModUtil::url('Search');
             break;
         case 'print':
-            $link = pnGetCurrentURL() . "&theme=Printer";
+            $link = System::getCurrentUrl() . "&theme=Printer";
             break;
         case 'rss':
-            $link = pnModURL('PostCalendar', 'user', 'view', array(
+            $link = ModUtil::url('PostCalendar', 'user', 'view', array(
                 'viewtype' => 'xml',
                 'theme'    => 'rss'));
             break;
@@ -97,7 +97,7 @@ function smarty_function_pc_url($args, &$smarty)
                     $javascript = " onClick=\"opencal('$eid','$date'); return false;\"";
                     $link = "#";
                 } else {
-                    $link = pnModURL('PostCalendar', 'user', 'view', array(
+                    $link = ModUtil::url('PostCalendar', 'user', 'view', array(
                         'Date'     => $date,
                         'viewtype' => 'details',
                         'eid'      => $eid));

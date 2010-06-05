@@ -8,10 +8,6 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
  */
 
-if (!class_exists('CategoryUtil')) {
-    //Loader::requireOnce('CategoryUtil.class.php');
-    Loader::loadClass('CategoryUtil');
-}
 /**
  * class pcCategoryUtil extends CategoryUtil in order to enhance multiple select option with LivePipe
  *
@@ -70,7 +66,6 @@ class pcCategoryUtil extends CategoryUtil
             $html .= "<option value=\"$allValue\"$sel>$allText</option>";
         }
 
-        Loader::loadClass('StringUtil');
         $count = 0;
         if (!isset($cats) || empty($cats)) {
             $cats = array();

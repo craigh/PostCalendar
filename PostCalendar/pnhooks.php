@@ -21,8 +21,8 @@ function postcalendar_hooks_new($args)
     $thismodule = isset($args['extrainfo']['module']) ? strtolower($args['extrainfo']['module']) : strtolower(pnModGetName()); // default to active module
 
     $render = pnRender::getInstance('PostCalendar');
-    $postcalendar_admincatselected = pnModGetVar($thismodule, 'postcalendar_admincatselected');
-    $postcalendar_optoverride = pnModGetVar($thismodule, 'postcalendar_optoverride', false);
+    $postcalendar_admincatselected = ModUtil::getVar($thismodule, 'postcalendar_admincatselected');
+    $postcalendar_optoverride = ModUtil::getVar($thismodule, 'postcalendar_optoverride', false);
 
     if (($postcalendar_admincatselected['Main'] > 0) && (!$postcalendar_optoverride)) {
         $postcalendar_hide = true;
@@ -32,11 +32,8 @@ function postcalendar_hooks_new($args)
     $render->assign('postcalendar_hide', $postcalendar_hide);
 
     if ($postcalendar_admincatselected['Main'] == 0) {
-        // load the category registry util
-        if (Loader::loadClass('CategoryRegistryUtil')) {
-            $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
-            $render->assign('postcalendar_catregistry', $catregistry);
-        }
+        $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
+        $render->assign('postcalendar_catregistry', $catregistry);
     } else {
         $render->assign('postcalendar_admincatselected', serialize($postcalendar_admincatselected)); // value assigned by admin
     }
@@ -78,8 +75,8 @@ function postcalendar_hooks_modify($args)
     }
 
     $render = pnRender::getInstance('PostCalendar');
-    $postcalendar_admincatselected = pnModGetVar($module, 'postcalendar_admincatselected');
-    $postcalendar_optoverride = pnModGetVar($module, 'postcalendar_optoverride', false);
+    $postcalendar_admincatselected = ModUtil::getVar($module, 'postcalendar_admincatselected');
+    $postcalendar_optoverride = ModUtil::getVar($module, 'postcalendar_optoverride', false);
 
     if (($postcalendar_admincatselected['Main'] > 0) && (!$postcalendar_optoverride)) {
         $postcalendar_hide = true;
@@ -89,12 +86,9 @@ function postcalendar_hooks_modify($args)
     $render->assign('postcalendar_hide', $postcalendar_hide);
 
     if ($postcalendar_admincatselected['Main'] == 0) {
-        // load the category registry util
-        if (Loader::loadClass('CategoryRegistryUtil')) {
-            $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
-            $render->assign('postcalendar_catregistry', $catregistry);
-            $render->assign('postcalendar_selectedcategories', $selectedcategories);
-        }
+        $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
+        $render->assign('postcalendar_catregistry', $catregistry);
+        $render->assign('postcalendar_selectedcategories', $selectedcategories);
     } else {
         $render->assign('postcalendar_admincatselected', serialize($postcalendar_admincatselected)); // value assigned by admin
     }
@@ -117,13 +111,10 @@ function postcalendar_hooks_modifyconfig($args)
     $thismodule = isset($args['extrainfo']['module']) ? strtolower($args['extrainfo']['module']) : strtolower(pnModGetName()); // default to active module
     $render = pnRender::getInstance('PostCalendar');
 
-    // load the category registry util
-    if (Loader::loadClass('CategoryRegistryUtil')) {
-        $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
-        $render->assign('postcalendar_catregistry', $catregistry);
-    }
+    $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
+    $render->assign('postcalendar_catregistry', $catregistry);
 
-    $render->assign('postcalendar_optoverride', pnModGetVar($thismodule, 'postcalendar_optoverride', false));
-    $render->assign('postcalendar_admincatselected', pnModGetVar($thismodule, 'postcalendar_admincatselected'));
+    $render->assign('postcalendar_optoverride', ModUtil::getVar($thismodule, 'postcalendar_optoverride', false));
+    $render->assign('postcalendar_admincatselected', ModUtil::getVar($thismodule, 'postcalendar_admincatselected'));
     return $render->fetch('hooks/postcalendar_hooks_modifyconfig.htm');
 }

@@ -12,5 +12,5 @@ function smarty_modifier_pc_inversecolor($color)
     if (empty($color)) {
         return;
     }
-    return pnModAPIFunc('PostCalendar', 'event', 'color_inverse', $color);
+    return ModUtil::apiFunc('PostCalendar', 'event', 'color_inverse', $color);
 }

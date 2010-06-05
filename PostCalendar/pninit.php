@@ -140,7 +140,7 @@ function PostCalendar_upgrade($oldversion)
                 LogUtil::registerError(__('Error: Could not migrate categories.', $dom));
                 return '5.8.2';
             }
-            if (pnModGetVar('PostCalendar', 'pcDisplayTopics')) {
+            if (ModUtil::getVar('PostCalendar', 'pcDisplayTopics')) {
                 // if currently using Topics module, attempt to migrate
                 if (!$topicmap = _postcalendar_migratetopics()) {
                     LogUtil::registerError(__('Error: Could not migrate topics.', $dom));
@@ -191,7 +191,7 @@ function PostCalendar_upgrade($oldversion)
     }
 
     // if we get this far - clear the cache
-    pnModAPIFunc('PostCalendar', 'admin', 'clearCache');
+    ModUtil::apiFunc('PostCalendar', 'admin', 'clearCache');
 
     return true;
 }
@@ -230,7 +230,6 @@ function PostCalendar_delete()
 function postcalendar_init_getdefaults()
 {
     // figure out associated categories and assign default value of 0 (none)
-    Loader::loadClass('CategoryRegistryUtil');
     $defaultscats = array();
     $cats = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
     foreach ($cats as $prop => $id) {
@@ -250,7 +249,7 @@ function postcalendar_init_getdefaults()
         'pcTimeIncrement'         => '15',
         'pcDefaultView'           => 'month',
         'pcNotifyAdmin'           => '1',
-        'pcNotifyEmail'           => pnConfigGetVar('adminmail'),
+        'pcNotifyEmail'           => System::getVar('adminmail'),
         'pcNotifyAdmin2Admin'     => '0',
         'pcAllowCatFilter'        => '1',
         'enablecategorization'    => '1',
@@ -279,15 +278,15 @@ function postcalendar_init_reset_scribite()
 {
     $dom = ZLanguage::getModuleDomain('PostCalendar');
     // update the scribite
-    if (pnModAvailable('scribite') && pnModAPILoad('scribite', 'user') && pnModAPILoad('scribite', 'admin')) {
-        $modconfig = pnModAPIFunc('scribite', 'user', 'getModuleConfig', array(
+    if (ModUtil::available('scribite') && pnModAPILoad('scribite', 'user') && pnModAPILoad('scribite', 'admin')) {
+        $modconfig = ModUtil::apiFunc('scribite', 'user', 'getModuleConfig', array(
             'modulename' => 'PostCalendar'));
         $mid = false;
 
         if (count($modconfig)) {
             $modconfig['modfuncs'] = 'new,edit,copy,submit';
             $modconfig['modareas'] = 'description';
-            $mid = pnModAPIFunc('scribite', 'admin', 'editmodule', $modconfig);
+            $mid = ModUtil::apiFunc('scribite', 'admin', 'editmodule', $modconfig);
         } else {
             // create new module in db
             $modconfig = array(
@@ -295,7 +294,7 @@ function postcalendar_init_reset_scribite()
                 'modfuncs' => 'new,edit,copy,submit',
                 'modareas' => 'description',
                 'modeditor' => '-');
-            $mid = pnModAPIFunc('scribite', 'admin', 'addmodule', $modconfig);
+            $mid = ModUtil::apiFunc('scribite', 'admin', 'addmodule', $modconfig);
         }
 
         // Error tracking
@@ -319,7 +318,7 @@ function postcalendar_init_reset_scribite()
 function postcalendar_init_correctserialization()
 {
     $dom = ZLanguage::getModuleDomain('PostCalendar');
-    $prefix = pnConfigGetVar('prefix');
+    $prefix = System::getVar('prefix');
     $Ssql = "SELECT pc_eid, pc_location FROM {$prefix}_postcalendar_events";
     $result = DBUtil::executeSQL($Ssql);
     for (; !$result->EOF; $result->MoveNext()) {
@@ -340,7 +339,7 @@ function postcalendar_init_correctserialization()
 function _postcalendar_migratecategories()
 {
     $dom = ZLanguage::getModuleDomain('PostCalendar');
-    $prefix = pnConfigGetVar('prefix');
+    $prefix = System::getVar('prefix');
 
     $sql = "SELECT pc_catid, pc_catname, pc_catcolor, pc_catdesc FROM {$prefix}_postcalendar_categories";
     $result = DBUtil::executeSQL($sql);
@@ -382,12 +381,12 @@ function _postcalendar_migratecategories()
 function _postcalendar_migratetopics()
 {
     $dom = ZLanguage::getModuleDomain('PostCalendar');
-    $prefix = pnConfigGetVar('prefix');
+    $prefix = System::getVar('prefix');
 
     // determine if Topics module has already been migrated
     $topicsidmap = _postcalendar_gettopicsmap(); // returns false if not previously migrated
 
-    if (pnModAvailable('Topics') && (!$topicsidmap)) {
+    if (ModUtil::available('Topics') && (!$topicsidmap)) {
         // if the Topics module is available and topics have not already been moved to categories
         // migrate existing topics to categories
         $sql = "SELECT pn_topicid, pn_topicname, pn_topicimage, pn_topictext FROM {$prefix}_topics";
@@ -401,7 +400,6 @@ function _postcalendar_migratetopics()
         _postcalendar_createtopicscategory('/__SYSTEM__/Modules/Topics');
 
         // get the category path to insert upgraded Topics categories
-        Loader::loadClass('CategoryUtil');
         $rootcat = CategoryUtil::getCategoryByPath('/__SYSTEM__/Modules/Topics');
 
         // migrate topic categories
@@ -424,7 +422,7 @@ function _postcalendar_migratetopics()
         pnModSetVar('PostCalendar', 'topicproperty', 'Topic');
     } else {
         $topicsmap = $topicsidmap; // use previously migrated topics
-    } // end if ((pnModAvailable('Topics')) AND (!$topicsidmap))
+    } // end if ((ModUtil::available('Topics')) AND (!$topicsidmap))
 
     // don't drop the topics table - this is the job of the topics module
 
@@ -445,7 +443,7 @@ function _postcalendar_transcode_ids($categorymap, $topicsmap)
     }
 
     $dom = ZLanguage::getModuleDomain('PostCalendar');
-    $prefix = pnConfigGetVar('prefix');
+    $prefix = System::getVar('prefix');
 
     // migrate event category and topic assignments
     // first, associate each event with the new category ids
@@ -486,9 +484,6 @@ function _postcalendar_createdefaultcategory($regpath = '/__SYSTEM__/Modules/Glo
 {
     $dom = ZLanguage::getModuleDomain('PostCalendar');
 
-    // load necessary classes
-    Loader::loadClass('CategoryUtil');
-
     if (!$cat = _postcalendar_createcategory(array(
         'rootpath'    => '/__SYSTEM__/Modules',
         'name'        => 'PostCalendar',
@@ -520,14 +515,11 @@ function _postcalendar_createdefaultcategory($regpath = '/__SYSTEM__/Modules/Glo
  */
 function _postcalendar_createtopicscategory($regpath = '/__SYSTEM__/Modules/Topics')
 {
-    if (!pnModAvailable('Topics')) {
+    if (!ModUtil::available('Topics')) {
         return false;
     }
 
     $dom = ZLanguage::getModuleDomain('PostCalendar');
-
-    // load necessary classes
-    Loader::loadClass('CategoryUtil');
 
     // create placeholder for all the migrated topics
     $tCat = CategoryUtil::getCategoryByPath('/__SYSTEM__/Modules/Topics');
@@ -569,10 +561,9 @@ function _postcalendar_createtopicscategory($regpath = '/__SYSTEM__/Modules/Topi
  */
 function _postcalendar_gettopicsmap($topicspath = '/__SYSTEM__/Modules/Topics')
 {
-    Loader::loadClass('CategoryUtil');
     $cat = CategoryUtil::getCategoryByPath($topicspath);
     // if category path doesn't exist or Topics mod not available (can't map)
-    if ((empty($cat)) || (!pnModAvailable('Topics'))) {
+    if ((empty($cat)) || (!ModUtil::available('Topics'))) {
         return false;
     }
 
@@ -584,7 +575,7 @@ function _postcalendar_gettopicsmap($topicspath = '/__SYSTEM__/Modules/Topics')
     }
 
     // get the topics information into an array
-    $prefix = pnConfigGetVar('prefix');
+    $prefix = System::getVar('prefix');
     $sql = "SELECT pn_topicid, pn_topicname FROM {$prefix}_topics";
     $result = DBUtil::executeSQL($sql);
     $topics = array();
@@ -624,7 +615,7 @@ function _postcalendar_gettopicsmap($topicspath = '/__SYSTEM__/Modules/Topics')
 function _postcalendar_cull_meetings()
 {
     $dom = ZLanguage::getModuleDomain('PostCalendar');
-    $prefix = pnConfigGetVar('prefix');
+    $prefix = System::getVar('prefix');
     $sql = "SELECT pc_eid, pc_meeting_id FROM {$prefix}_postcalendar_events WHERE pc_meeting_id > 0 ORDER BY pc_meeting_id, pc_eid";
     $result = DBUtil::executeSQL($sql);
     $old_m_id = "NULL";
@@ -649,7 +640,7 @@ function _postcalendar_cull_meetings()
 function _postcalendar_convert_informant()
 {
     $dom = ZLanguage::getModuleDomain('PostCalendar');
-    $prefix = pnConfigGetVar('prefix');
+    $prefix = System::getVar('prefix');
 
     $sql = "UPDATE {$prefix}_postcalendar_events e, {$prefix}_users u
         SET e.pc_informant = u.pn_uid
@@ -680,7 +671,6 @@ function _postcalendar_createinstallevent()
 {
     $dom = ZLanguage::getModuleDomain('PostCalendar');
 
-    Loader::loadClass('CategoryUtil');
     $cat = CategoryUtil::getCategoryByPath('/__SYSTEM__/Modules/PostCalendar/Events');
 
     $event = array(
@@ -743,11 +733,6 @@ function _postcalendar_createdefaultsubcategory()
 function _postcalendar_createcategory($catarray)
 {
     // expecting array(rootpath=>'', name=>'', displayname=>'', description=>'', attributes=>array())
-    // load necessary classes
-    Loader::loadClass('CategoryUtil');
-    Loader::loadClassFromModule('Categories', 'Category');
-    Loader::loadClassFromModule('Categories', 'CategoryRegistry');
-
     // get the language file
     $lang = ZLanguage::getLanguageCode();
 
@@ -790,10 +775,6 @@ function _postcalendar_create_regentry($rootcat, $data)
 {
     // expecting $rootcat - rootcategory info
     // expecting array(modname=>'', table=>'', property=>'')
-    // load necessary classes
-    Loader::loadClass('CategoryUtil');
-    Loader::loadClassFromModule('Categories', 'Category');
-    Loader::loadClassFromModule('Categories', 'CategoryRegistry');
 
     $registry = new PNCategoryRegistry();
     $registry->setDataField('modname',     $data['modname']);
@@ -811,7 +792,7 @@ function _postcalendar_create_regentry($rootcat, $data)
 function _postcalendar_coreversion_required($required_version)
 {
     $dom = ZLanguage::getModuleDomain('PostCalendar');
-    $db_version_num = pnConfigGetVar('Version_Num');
+    $db_version_num = System::getVar('Version_Num');
     if (defined('PN_VERSION_NUM')) {
         $current_version = PN_VERSION_NUM;
     } else if (!empty($db_version_num)) {

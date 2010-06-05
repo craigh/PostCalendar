@@ -11,13 +11,13 @@
  */
 function smarty_function_pc_init_rss_feed($args, &$smarty)
 {
-    if (!pnModGetVar('pnRender', 'expose_template')) {
-        $rsslink = pnModURL('PostCalendar', 'user', 'view', array(
+    if (!ModUtil::getVar('pnRender', 'expose_template')) {
+        $rsslink = ModUtil::url('PostCalendar', 'user', 'view', array(
             'viewtype' => 'xml',
             'theme'    => 'rss'));
         $rsslink      = DataUtil::formatForDisplay($rsslink);
-        $sitename     = pnConfigGetVar('sitename');
-        $modinfo      = pnModGetInfo(pnModGetIDFromName('PostCalendar'));
+        $sitename     = System::getVar('sitename');
+        $modinfo      = ModUtil::getInfo(ModUtil::getIdFromName('PostCalendar'));
         $modname      = $modinfo['displayname'];
         $title        = DataUtil::formatForDisplay($sitename . " " . $modname);
         $pagevarvalue = "<link rel='alternate' href='$rsslink' type='application/rss+xml' title='$title' />";
