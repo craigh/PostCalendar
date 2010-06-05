@@ -13,16 +13,16 @@
 <!--[/if]-->
 <h2 class="eventheader">
     <!--[gt text='private event' assign='p_txt' domain='module_postcalendar']-->
-    <!--[if $event.privateicon]--><!--[pnimg src='locked.png' modname='core' set='icons/extrasmall' title=$p_txt alt=$p_txt]--><!--[/if]-->
-    <!--[ $loaded_event.title|pnvarprephtmldisplay ]-->
-    <a href="<!--[pnmodurl modname='PostCalendar' func='view' viewtype='details' eid=$loaded_event.eid ]-->" title='<!--[gt text='Full event information' domain="module_postcalendar"]-->'>
+    <!--[if $event.privateicon]--><!--[img src='locked.png' modname='core' set='icons/extrasmall' title=$p_txt alt=$p_txt]--><!--[/if]-->
+    <!--[ $loaded_event.title|varprephtmldisplay ]-->
+    <a href="<!--[modurl modname='PostCalendar' func='view' viewtype='details' eid=$loaded_event.eid ]-->" title='<!--[gt text='Full event information' domain="module_postcalendar"]-->'>
     <!--[gt text='Full event information' assign='title' domain='module_postcalendar']--><!--[gt text='Info' assign='alt' domain='module_postcalendar']-->
-    <!--[pnimg modname=core src=info.gif set=icons/extrasmall alt=$alt title=$title]--></a>
+    <!--[img modname=core src=info.gif set=icons/extrasmall alt=$alt title=$title]--></a>
     <!--[if $loaded_event.commentcount gt 0]-->
         <!--[gt text='%s comment left' plural='%s comments left.' count=$loaded_event.commentcount tag1=$loaded_event.commentcount domain="module_postcalendar" assign="title"]-->
         <!--[gt text='Comment' assign='alt' domain='module_postcalendar']-->
-        <a href="<!--[pnmodurl modname='PostCalendar' func='view' viewtype='details' eid=$loaded_event.eid ]-->#comments" title='<!--[$title]-->'>
-        <!--[pnimg modname=core src=comment.gif set=icons/extrasmall alt=$alt title=$title]--></a>
+        <a href="<!--[modurl modname='PostCalendar' func='view' viewtype='details' eid=$loaded_event.eid ]-->#comments" title='<!--[$title]-->'>
+        <!--[img modname=core src=comment.gif set=icons/extrasmall alt=$alt title=$title]--></a>
     <!--[/if]-->
 </h2>
 <div class="eventtime">

@@ -1,5 +1,5 @@
 <!--[* $Id$ *]-->
-<!--[pnsecauthaction comp="::" inst=".*" level="ACCESS_ADD" assign="ACCESS_ADD"]-->
+<!--[secauthaction comp="::" inst=".*" level="ACCESS_ADD" assign="ACCESS_ADD"]-->
 <!--[formutil_getpassedvalue name="theme" source="get" assign="theme" default=false]-->
 <!--[ assign var="PRINT_VIEW" value=0 ]-->
 <!--[if $theme eq "Printer"]-->
@@ -94,10 +94,10 @@
 	<!--[ if $PRINT_VIEW eq true ]-->
 		<!--[ assign var="viewtype" value=$smarty.get.viewtype ]-->
 		<!--[if ((empty($smarty.get.viewtype)) or (!isset($smarty.get.viewtype)))]-->
-			<!--[pnmodgetvar module="PostCalendar" name="pcDefaultView" assign="viewtype" ]-->
+			<!--[modgetvar module="PostCalendar" name="pcDefaultView" assign="viewtype" ]-->
 		<!--[/if]-->
         <!--[formutil_getpassedvalue name="Date" source="get" assign="Date" default='']-->
-		<a href="<!--[pnmodurl modname="PostCalendar" func="view" viewtype=$viewtype Date=$Date ]-->"><!--[gt text='Return']--></a>
+		<a href="<!--[modurl modname="PostCalendar" func="view" viewtype=$viewtype Date=$Date ]-->"><!--[gt text='Return']--></a>
 	<!--[/if]-->
 </div>
 <!--[ include file="user/postcalendar_user_footer.htm" ]-->

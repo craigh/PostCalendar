@@ -1,5 +1,5 @@
 <!--[* $Id$ *]-->
-<!--[pnsecauthaction comp="::" inst=".*" level="ACCESS_ADD" assign="ACCESS_ADD"]-->
+<!--[secauthaction comp="::" inst=".*" level="ACCESS_ADD" assign="ACCESS_ADD"]-->
 <!--[formutil_getpassedvalue name="theme" source="get" assign="theme" default=false]-->
 <!--[ assign var="PRINT_VIEW" value=0 ]-->
 <!--[if $theme eq "Printer"]-->
@@ -36,8 +36,8 @@
                     <!--[ if $event.alldayevent != true ]-->
                         <!--[ $event.startTime ]-->
                     <!--[ /if ]-->
-                    <!--[ pc_popup bgcolor=$event.catcolor caption=$event.title text=$event.hometext|pnvarprepfordisplay assign="javascript"]-->
-                    <!--[if $event.privateicon]--><!--[pnimg src='locked.png' modname='core' set='icons/extrasmall' __title="private event" __alt="private event"]--><!--[/if]-->
+                    <!--[ pc_popup bgcolor=$event.catcolor caption=$event.title text=$event.hometext|varprepfordisplay assign="javascript"]-->
+                    <!--[if $event.privateicon]--><!--[img src='locked.png' modname='core' set='icons/extrasmall' __title="private event" __alt="private event"]--><!--[/if]-->
                     <!--[ pc_url full=true action=detail eid=$event.eid date=$cdate display=$event.title|strip_tags javascript=$javascript]-->
                     <!--[ if $event.alldayevent != true ]-->
                         (<!--[ $event.duration ]-->)
@@ -46,8 +46,8 @@
                     <!--[/if]-->
                     <!--[ if $event.commentcount gt 0]-->
                         <!--[gt text='%s comment left' plural='%s comments left.' count=$event.commentcount tag1=$event.commentcount domain="module_postcalendar" assign="title"]-->
-                        <a href="<!--[pnmodurl modname='PostCalendar' func='view' viewtype='details' eid=$event.eid ]-->#comments" title='<!--[$title]-->'>
-                        <!--[pnimg modname=core src=comment.gif set=icons/extrasmall __alt="Comment" title=$title]--></a>
+                        <a href="<!--[modurl modname='PostCalendar' func='view' viewtype='details' eid=$event.eid ]-->#comments" title='<!--[$title]-->'>
+                        <!--[img modname=core src=comment.gif set=icons/extrasmall __alt="Comment" title=$title]--></a>
                     <!--[/if]-->
                 </li>
             <!--[ foreachelse ]-->
@@ -60,10 +60,10 @@
     <!--[ if $PRINT_VIEW eq true ]-->
         <!--[ assign var="viewtype" value=$smarty.get.viewtype ]-->
         <!--[if ((empty($smarty.get.viewtype)) or (!isset($smarty.get.viewtype)))]-->
-            <!--[pnmodgetvar module="PostCalendar" name="pcDefaultView" assign="viewtype" ]-->
+            <!--[modgetvar module="PostCalendar" name="pcDefaultView" assign="viewtype" ]-->
         <!--[/if]-->
         <!--[formutil_getpassedvalue name="Date" source="get" assign="Date" default='']-->
-        <a href="<!--[pnmodurl modname="PostCalendar" func="view" viewtype=$viewtype Date=$Date ]-->"><!--[gt text='Return']--></a>
+        <a href="<!--[modurl modname="PostCalendar" func="view" viewtype=$viewtype Date=$Date ]-->"><!--[gt text='Return']--></a>
     <!--[/if]-->
 </div>
 <!--[ include file="user/postcalendar_user_footer.htm" ]-->

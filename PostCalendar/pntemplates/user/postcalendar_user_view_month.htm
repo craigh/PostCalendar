@@ -1,6 +1,6 @@
 <!--[* $Id$ *]-->
-<!--[pnsecauthaction comp="::" inst=".*" level="ACCESS_ADD" assign="ACCESS_ADD"]-->
-<!--[pnmodgetvar module='PostCalendar' name='pcEventsOpenInNewWindow' assign='in_new_window']-->
+<!--[secauthaction comp="::" inst=".*" level="ACCESS_ADD" assign="ACCESS_ADD"]-->
+<!--[modgetvar module='PostCalendar' name='pcEventsOpenInNewWindow' assign='in_new_window']-->
 <!--[formutil_getpassedvalue name="theme" source="get" assign="theme" default=false]-->
 <!--[ assign var="PRINT_VIEW" value=0 ]-->
 <!--[if $theme eq "Printer"]-->
@@ -49,7 +49,7 @@
                     <!--[ /if ]-->
                 </span>
                 <!--[ if ($ACCESS_ADD eq true) && ($PRINT_VIEW eq false) ]-->
-                <span class="new_icon"><a href="<!--[ pc_url action=submit date=$date ]-->"><!--[ pnimg src='new.gif' ]--></a></span>
+                <span class="new_icon"><a href="<!--[ pc_url action=submit date=$date ]-->"><!--[ img src='new.gif' ]--></a></span>
                 <!--[ /if ]-->
             </div>
             <div class="monthview_events">
@@ -77,13 +77,13 @@
                     <!--[ /if ]-->
 
                     <!--[ assign var="desc" value=$event.hometext|truncate:255:"..." ]-->
-                    <!--[ pc_popup bgcolor=$event.catcolor caption="`$timestamp` `$event.title`" text=$desc|pnvarprepfordisplay assign="javascript"]-->
-                    <!--[if $event.privateicon]--><!--[pnimg src='locked.png' modname='core' set='icons/extrasmall' __title="private event" __alt="private event"]--><!--[/if]-->
-                    <!--[ pc_url full=true action=detail eid=$event.eid date=$date style="font-size: 7pt; text-decoration: none;" javascript=$javascript display="$timestamp $title"|pnvarprephtmldisplay]-->
+                    <!--[ pc_popup bgcolor=$event.catcolor caption="`$timestamp` `$event.title`" text=$desc|varprepfordisplay assign="javascript"]-->
+                    <!--[if $event.privateicon]--><!--[img src='locked.png' modname='core' set='icons/extrasmall' __title="private event" __alt="private event"]--><!--[/if]-->
+                    <!--[ pc_url full=true action=detail eid=$event.eid date=$date style="font-size: 7pt; text-decoration: none;" javascript=$javascript display="$timestamp $title"|varprephtmldisplay]-->
                     <!--[ if $event.commentcount gt 0]-->
                         <!--[gt text='%s comment left' plural='%s comments left.' count=$event.commentcount tag1=$event.commentcount domain="module_postcalendar" assign="title"]-->
-                        <a href="<!--[pnmodurl modname='PostCalendar' func='view' viewtype='details' eid=$event.eid ]-->#comments" title='<!--[$title]-->'>
-                        <!--[pnimg modname=core src=comment.gif set=icons/extrasmall __alt="Comment" title=$title]--></a>
+                        <a href="<!--[modurl modname='PostCalendar' func='view' viewtype='details' eid=$event.eid ]-->#comments" title='<!--[$title]-->'>
+                        <!--[img modname=core src=comment.gif set=icons/extrasmall __alt="Comment" title=$title]--></a>
                     <!--[/if]-->
                     <br />
                     <!--[ assign var="oldCat" value=$event.catname ]-->
@@ -103,10 +103,10 @@
     <!--[ if $PRINT_VIEW eq true ]-->
         <!--[ assign var="viewtype" value=$smarty.get.viewtype ]-->
         <!--[if ((empty($smarty.get.viewtype)) or (!isset($smarty.get.viewtype)))]-->
-            <!--[pnmodgetvar module="PostCalendar" name="pcDefaultView" assign="viewtype" ]-->
+            <!--[modgetvar module="PostCalendar" name="pcDefaultView" assign="viewtype" ]-->
         <!--[/if]-->
         <!--[formutil_getpassedvalue name="Date" source="get" assign="Date" default='']-->
-        <a href="<!--[pnmodurl modname="PostCalendar" func="view" viewtype=$viewtype Date=$Date ]-->"><!--[gt text='Return']--></a>
+        <a href="<!--[modurl modname="PostCalendar" func="view" viewtype=$viewtype Date=$Date ]-->"><!--[gt text='Return']--></a>
     <!--[/if]-->
 </div>
 <!--[ include file="user/postcalendar_user_footer.htm" ]-->

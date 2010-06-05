@@ -6,9 +6,9 @@
   <!--[ foreach name=events item=event from=$S_EVENTS.$date ]-->
 <item>
 <title><!--[$date|pc_date_format]--> : <!--[$event.title|strip_tags]--> (<!--[ $event.catname ]-->)</title>
-<link><!--[pnmodurl modname=PostCalendar type=user func=view viewtype=details eid=$event.eid fqurl=true]--></link>
+<link><!--[modurl modname=PostCalendar type=user func=view viewtype=details eid=$event.eid fqurl=true]--></link>
 <description><!--[ if $event.alldayevent != true ]--><!--[ $event.startTime ]--> (<!--[ $event.duration ]--> <!--[gt text='hours']-->)<!--[ else ]-->(<!--[gt text='All-day event']-->)<!--[ /if ]--> <!--[$event.hometext|strip_tags]--></description>
-<comments><!--[pnmodurl modname='PostCalendar' func='view' viewtype='details' eid=$event.eid ]-->#comments</comments>
+<comments><!--[modurl modname='PostCalendar' func='view' viewtype='details' eid=$event.eid ]-->#comments</comments>
 </item>
   <!--[ /foreach ]-->
   <!--[ /if ]-->

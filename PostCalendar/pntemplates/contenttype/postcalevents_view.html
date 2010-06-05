@@ -19,15 +19,15 @@
                     </li>
                 <!--[ /if ]-->
                 <li class="pc_blockevent">
-                    <!--[ pc_popup bgcolor=$event.catcolor caption=$event.title text=$event.hometext|pnvarprepfordisplay assign="javascript"]-->
+                    <!--[ pc_popup bgcolor=$event.catcolor caption=$event.title text=$event.hometext|varprepfordisplay assign="javascript"]-->
                     <!--[gt text='private event' assign='p_txt' domain='module_postcalendar']-->
-                    <!--[if $event.privateicon]--><!--[pnimg src='locked.png' modname='core' set='icons/extrasmall' title=$p_txt alt=$p_txt]--><!--[/if]-->                        <!--[ pc_url full=true class="eventlink" action="detail" eid=$event.eid date=$date javascript=$javascript display="$timestamp `$event.title`"|strip_tags ]-->
+                    <!--[if $event.privateicon]--><!--[img src='locked.png' modname='core' set='icons/extrasmall' title=$p_txt alt=$p_txt]--><!--[/if]-->                        <!--[ pc_url full=true class="eventlink" action="detail" eid=$event.eid date=$date javascript=$javascript display="$timestamp `$event.title`"|strip_tags ]-->
                     <!--[ if $event.alldayevent != true ]-->&nbsp;(<!--[ $event.duration ]--> <!--[gt text='Long' domain="module_postcalendar"]-->)<!--[ /if ]-->
                     <!--[ if $event.commentcount gt 0]-->
                         <!--[gt text='%s comment left' plural='%s comments left.' count=$event.commentcount tag1=$event.commentcount domain="module_postcalendar" assign="title"]-->
-                        <a href="<!--[pnmodurl modname='PostCalendar' func='view' viewtype='details' eid=$event.eid ]-->#comments" title='<!--[$title]-->'>
+                        <a href="<!--[modurl modname='PostCalendar' func='view' viewtype='details' eid=$event.eid ]-->#comments" title='<!--[$title]-->'>
                         <!--[gt text='Comment' assign='alt' domain='module_postcalendar']-->
-                        <!--[pnimg modname=core src=comment.gif set=icons/extrasmall alt=$alt title=$title]--></a>
+                        <!--[img modname=core src=comment.gif set=icons/extrasmall alt=$alt title=$title]--></a>
                     <!--[/if]-->
                 </li>
             </ul>

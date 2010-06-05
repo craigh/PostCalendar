@@ -127,20 +127,20 @@ function smarty_function_pc_url($args, &$smarty)
                 $image_text = $labeltexts[$action];
                 $image_src = ($viewtype == $action) ? $action . '_on.gif' : $action . '.gif';
                 include_once $smarty->_get_plugin_filepath('function', 'img');
-                $pnimg_params = array(
+                $img_params = array(
                     'src'   => $image_src,
                     'alt'   => $image_text,
                     'title' => $image_text);
                 if ($action == 'print') {
-                    $pnimg_params['modname'] = 'core';
-                    $pnimg_params['set']     = 'icons/small';
-                    $pnimg_params['src']     = 'printer1.gif';
+                    $img_params['modname'] = 'core';
+                    $img_params['set']     = 'icons/small';
+                    $img_params['src']     = 'printer1.gif';
                 }
                 if ($action == 'rss') {
-                    $pnimg_params['modname'] = 'PostCalendar';
-                    $pnimg_params['src']     = 'feed.gif';
+                    $img_params['modname'] = 'PostCalendar';
+                    $img_params['src']     = 'feed.gif';
                 }
-                $display = smarty_function_img($pnimg_params, $smarty);
+                $display = smarty_function_img($img_params, $smarty);
                 $class = 'postcalendar_nav_img';
                 $title = $image_text;
             } else {

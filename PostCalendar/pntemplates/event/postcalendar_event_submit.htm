@@ -1,10 +1,10 @@
 <!--[* $Id$ *]-->
-<!--[pnmodgetvar module="PostCalendar" name="pcAllowUserCalendar" assign="pcAllowUserCalendar"]-->
+<!--[modgetvar module="PostCalendar" name="pcAllowUserCalendar" assign="pcAllowUserCalendar"]-->
 <!--[if $pcAllowUserCalendar]-->
-    <!--[pnusergetvar name="uid" assign="uid"]-->
-    <!--[pnmodapifunc modname='Groups' type='user' func='isgroupmember' uid=$uid gid=$pcAllowUserCalendar assign="ingroup"]-->
+    <!--[usergetvar name="uid" assign="uid"]-->
+    <!--[modapifunc modname='Groups' type='user' func='isgroupmember' uid=$uid gid=$pcAllowUserCalendar assign="ingroup"]-->
 <!--[else]--><!--[assign var="ingroup" value=0]--><!--[/if]-->
-<!--[pnmodgetvar module="PostCalendar" name="enablecategorization" assign="enablecats"]-->
+<!--[modgetvar module="PostCalendar" name="enablecategorization" assign="enablecats"]-->
 <!--[if $func eq "edit"]-->
     <!--[gt text='Edit' assign="titletext"]-->
     <!--[gt text='Update event' assign="submittext"]-->
@@ -23,9 +23,9 @@
 <!--[/if]-->
 <form action="<!--[ pc_url action="submit" func=$func]-->" method="post" enctype="application/x-www-form-urlencoded">
 <div style='border-color:#CCCCCC;border-style:solid;border-width:0 1px 1px;color:inherit;margin-bottom:1.25em;padding:0 1% 5px;width:auto;'>
-	<input type="hidden" name="authid" value="<!--[pnsecgenauthkey module="PostCalendar"]-->" />
+	<input type="hidden" name="authid" value="<!--[secgenauthkey module="PostCalendar"]-->" />
 
-<span style='float:right;'><!--[pnimg modname='PostCalendar' src='admin.png' __alt="PostCalendar Rocks!"]--></span>
+<span style='float:right;'><!--[img modname='PostCalendar' src='admin.png' __alt="PostCalendar Rocks!"]--></span>
 <h2 style='border-bottom:1px solid #CCCCCC;text-align:left;padding-top:1em;'><!--[$titletext]-->&nbsp;<!--[gt text='calendar event']--></h2>
 <div>
     <div id="postcalendar_addevent_leftcol">
@@ -48,7 +48,7 @@
         <br />
 
         <span style='padding-right:2em;'><label for="display_eventDate"><b><!--[gt text='Start date']--></b></label></span>
-        <!--[ pncalendarinput display=true hidden=true objectname="postcalendar_events" htmlname="eventDate" ifformat="%Y-%m-%d" dateformat=$EVENT_DATE_FORMAT defaultstring=$loaded_event.eventDatevalue defaultdate=$loaded_event.eventDate ]-->
+        <!--[ calendarinput display=true hidden=true objectname="postcalendar_events" htmlname="eventDate" ifformat="%Y-%m-%d" dateformat=$EVENT_DATE_FORMAT defaultstring=$loaded_event.eventDatevalue defaultdate=$loaded_event.eventDate ]-->
         <br /><br />
         <b><!--[gt text='Time']--></b><br />
         <input type="radio" name="postcalendar_events[alldayevent]" id="postcalendar_events_alldayevent1" value="1"<!--[$SelectedAllday]--> /><label for="postcalendar_events_alldayevent1" style='padding-left:1em;'><!--[gt text='All-day event']--></label>
@@ -114,9 +114,9 @@
             <input type="radio" name="postcalendar_events[endtype]" id="postcalendar_events_endtype1" value="1" <!--[ $SelectedEndOn ]--> />
             <span style='padding-left:1em;'>
             <!--[ if ((isset($postcalendar_events)) AND ($postcalendar_events.eventDate > $postcalendar_events.endDate)) ]-->
-                <!--[ pncalendarinput display=true hidden=true objectname="postcalendar_events" htmlname="endDate" ifformat="%Y-%m-%d" dateformat=$EVENT_DATE_FORMAT defaultstring=$loaded_event.eventDatevalue defaultdate=$loaded_event.eventDate ]--><br />
+                <!--[ calendarinput display=true hidden=true objectname="postcalendar_events" htmlname="endDate" ifformat="%Y-%m-%d" dateformat=$EVENT_DATE_FORMAT defaultstring=$loaded_event.eventDatevalue defaultdate=$loaded_event.eventDate ]--><br />
             <!--[ else ]-->
-                <!--[ pncalendarinput display=true hidden=true objectname="postcalendar_events" htmlname="endDate" ifformat="%Y-%m-%d" dateformat=$EVENT_DATE_FORMAT defaultstring=$loaded_event.endvalue defaultdate=$loaded_event.endDate ]--><br />
+                <!--[ calendarinput display=true hidden=true objectname="postcalendar_events" htmlname="endDate" ifformat="%Y-%m-%d" dateformat=$EVENT_DATE_FORMAT defaultstring=$loaded_event.endvalue defaultdate=$loaded_event.endDate ]--><br />
             <!--[ /if ]-->
             </span>
             <input type="radio" name="postcalendar_events[endtype]" id="postcalendar_events_endtype0" value="0" <!--[ $SelectedNoEnd ]--> />
@@ -164,15 +164,15 @@
 <!--[if !empty($loaded_event.data_loaded) ]--> <input type="hidden" name="postcalendar_events[data_loaded]" value="<!--[$loaded_event.data_loaded]-->" /><!--[/if]-->
 
 <!--[if $func eq "edit"]-->
-    <!--[pnmodcallhooks hookobject='item' hookaction='modify' hookid=$loaded_event.eid module='PostCalendar']-->
+    <!--[modcallhooks hookobject='item' hookaction='modify' hookid=$loaded_event.eid module='PostCalendar']-->
 <!--[else]-->
-    <!--[pnmodcallhooks hookobject='item' hookaction='new' module='PostCalendar']-->
+    <!--[modcallhooks hookobject='item' hookaction='new' module='PostCalendar']-->
 <!--[/if]-->
 <div id="postcalendar_addevent_formaction">
     <input type="submit" name="form_action" value="<!--[gt text='Preview']-->" />
     <input type="submit" name="form_action" value="<!--[gt text='Save']-->" />
     <input type="submit" name="form_action" value="<!--[gt text='Save and Add']-->" />
-    <input type="button" value="<!--[gt text='Cancel']-->" onclick="window.location.href='<!--[pnmodurl modname=PostCalendar]-->'" /> 
+    <input type="button" value="<!--[gt text='Cancel']-->" onclick="window.location.href='<!--[modurl modname=PostCalendar]-->'" /> 
 </div>
 
 </div> <!-- /page container-->

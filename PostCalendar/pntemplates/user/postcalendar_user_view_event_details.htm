@@ -1,5 +1,5 @@
 <!--[* $Id$ *]-->
-<!--[pnsecauthaction comp="::" inst=".*" level="ACCESS_ADD" assign="ACCESS_ADD"]-->
+<!--[secauthaction comp="::" inst=".*" level="ACCESS_ADD" assign="ACCESS_ADD"]-->
 <!--[formutil_getpassedvalue name="theme" source="get" assign="theme" default=false]-->
 <!--[ assign var="PRINT_VIEW" value=0 ]-->
 <!--[if $theme eq "Printer"]-->
@@ -15,20 +15,20 @@
 <!--[ if $PRINT_VIEW eq false ]-->
     <!--[ if $EVENT_CAN_EDIT ]-->
         <div>
-            <a href="<!--[pnmodurl modname="PostCalendar" type="event" func="edit" eid=$loaded_event.eid]-->"><!--[gt text='Edit event']--></a> |
-            <a href="<!--[pnmodurl modname="PostCalendar" type="event" func="copy" eid=$loaded_event.eid]-->"><!--[gt text='Copy event']--></a> |
-            <a href="<!--[pnmodurl modname="PostCalendar" type="event" func="delete" eid=$loaded_event.eid]-->"><!--[gt text='Delete event']--></a>
+            <a href="<!--[modurl modname="PostCalendar" type="event" func="edit" eid=$loaded_event.eid]-->"><!--[gt text='Edit event']--></a> |
+            <a href="<!--[modurl modname="PostCalendar" type="event" func="copy" eid=$loaded_event.eid]-->"><!--[gt text='Copy event']--></a> |
+            <a href="<!--[modurl modname="PostCalendar" type="event" func="delete" eid=$loaded_event.eid]-->"><!--[gt text='Delete event']--></a>
         </div>
     <!--[ /if ]-->
 <!--[ else ]-->
     <div style='text-align:right;'>
         <!--[ assign var="viewtype" value=$smarty.get.viewtype ]-->
         <!--[if ((empty($smarty.get.viewtype)) or (!isset($smarty.get.viewtype)))]-->
-            <!--[pnmodgetvar module="PostCalendar" name="pcDefaultView" assign="viewtype" ]-->
+            <!--[modgetvar module="PostCalendar" name="pcDefaultView" assign="viewtype" ]-->
         <!--[/if]-->
         <!--[formutil_getpassedvalue name="Date" source="get" assign="Date" default='']-->
-        <a href="<!--[pnmodurl modname="PostCalendar" func="view" viewtype=$viewtype Date=$Date eid=$loaded_event.eid ]-->"><!--[gt text='Return']--></a>
+        <a href="<!--[modurl modname="PostCalendar" func="view" viewtype=$viewtype Date=$Date eid=$loaded_event.eid ]-->"><!--[gt text='Return']--></a>
     </div>
 <!--[/if]-->
-<!--[ pnmodcallhooks hookobject=item hookaction=display hookid=$loaded_event.eid returnurl="index.php?module=PostCalendar&func=view&viewtype=details&eid=`$loaded_event.eid`" ]-->
+<!--[ modcallhooks hookobject=item hookaction=display hookid=$loaded_event.eid returnurl="index.php?module=PostCalendar&func=view&viewtype=details&eid=`$loaded_event.eid`" ]-->
 <!--[ include file="user/postcalendar_user_footer.htm" ]-->
