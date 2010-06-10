@@ -47,6 +47,13 @@ function postcalendar_user_view()
     $Date        = FormUtil::getPassedValue('Date', ModUtil::apiFunc('PostCalendar', 'user', 'getDate', $jumpargs));
     $filtercats  = FormUtil::getPassedValue('postcalendar_events');
     $func        = FormUtil::getPassedValue('func');
+    $prop        = isset($args['prop']) ? $args['prop'] : (string)FormUtil::getPassedValue('prop', null, 'GET');
+    $cat         = isset($args['cat']) ? $args['cat'] : (string)FormUtil::getPassedValue('cat', null, 'GET');
+    
+    if (empty($filtercats) && !empty($prop) && !empty($cat)) {
+        $filtercats[__CATEGORIES__][$prop] = $cat;
+    }
+
 
     return postcalendar_user_display(array(
         'viewtype' => $viewtype,
