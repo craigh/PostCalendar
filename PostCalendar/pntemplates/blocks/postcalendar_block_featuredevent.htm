@@ -1,4 +1,11 @@
 {* $Id$ *}
+{if $loaded_event.showhiddenwarning }
+    {secauthaction comp="::" inst=".*" level="ACCESS_ADMIN" assign="ACCESS_ADMIN"}
+    {if $ACCESS_ADMIN }
+        <div class="z-warningmsg" style='font-size: 8px;'>{gt text='Administrator only warning: Hidden PostCalendar Featured Event Block (ID# %s). Delete or modify.' tag1=$thisblockid domain='module_postcalendar'}<br />
+        <a href="{modurl modname='Blocks' type='admin'}">{gt text='Blocks Administration' domain='module_postcalendar'}</a></div>
+    {/if}
+{else}
 <div class='postcalendar_featuredevent'>
 {if $loaded_event.showcountdown }
 <div class='eventcountdown'>
@@ -64,3 +71,4 @@
     </div>
 </div>
 </div> <!-- end postcalendar_featuredevent -->
+{/if}

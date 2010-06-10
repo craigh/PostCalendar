@@ -53,6 +53,7 @@ function postcalendar_featuredeventblock_display($blockinfo)
     }
     $vars['showcountdown'] = empty($vars['showcountdown']) ? false : true;
     $vars['hideonexpire']  = empty($vars['hideonexpire'])  ? false : true;
+    $event['showhiddenwarning'] = false; // default to false
 
     // get the event from the DB
     pnModDBInfoLoad('PostCalendar');
@@ -72,15 +73,18 @@ function postcalendar_featuredeventblock_display($blockinfo)
     if ($vars['showcountdown']) {
         $datedifference = DateUtil::getDatetimeDiff_AsField(DateUtil::getDatetime(null, '%F'), $event['eventDate'], 3);
         $event['datedifference'] = round($datedifference);
-        if ($vars['hideonexpire'] && $event['datedifference'] < 0) {
-            return false;
-        }
         $event['showcountdown'] = true;
+    }
+    if ($vars['hideonexpire'] && $event['datedifference'] < 0) {
+        //return false;
+        $event['showhiddenwarning'] = true;
+        $blockinfo['title'] = NULL;
     }
 
     $pnRender = pnRender::getInstance('PostCalendar');
 
     $pnRender->assign('loaded_event', $event);
+    $pnRender->assign('thisblockid', $blockinfo['bid']);
 
     $blockinfo['content'] = $pnRender->fetch('blocks/postcalendar_block_featuredevent.htm');
 
