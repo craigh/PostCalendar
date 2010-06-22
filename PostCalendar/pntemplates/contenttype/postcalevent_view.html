@@ -14,7 +14,7 @@
 <h2 class="eventheader">
     {gt text='private event' assign='p_txt' domain='module_postcalendar'}
     {if $event.privateicon}{img src='locked.png' modname='core' set='icons/extrasmall' title=$p_txt alt=$p_txt}{/if}
-    { $loaded_event.title|varprephtmldisplay }
+    { $loaded_event.title|safehtml }
     <a href="{modurl modname='PostCalendar' func='view' viewtype='details' eid=$loaded_event.eid }" title='{gt text='Full event information' domain="module_postcalendar"}'>
     {gt text='Full event information' assign='title' domain='module_postcalendar'}{gt text='Info' assign='alt' domain='module_postcalendar'}
     {img modname=core src=info.gif set=icons/extrasmall alt=$alt title=$title}</a>

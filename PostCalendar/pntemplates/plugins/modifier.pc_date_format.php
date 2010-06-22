@@ -16,7 +16,7 @@ function smarty_modifier_pc_date_format($string, $format = null, $default_date =
 
     $ret_val = "";
 
-    $smarty = & pnRender::getInstance();
+    $smarty = Renderer::getInstance();
     require_once $smarty->_get_plugin_filepath('shared', 'make_timestamp');
 
     if ($string != '') {

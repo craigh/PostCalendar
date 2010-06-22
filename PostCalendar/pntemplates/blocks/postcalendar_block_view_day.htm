@@ -21,7 +21,7 @@
                     { assign var="timestamp" value="" }
                 { /if }
                 <li class="pc_blockevent">
-                    { pc_popup bgcolor=$event.catcolor caption=$event.title text=$event.hometext|varprepfordisplay assign="javascript"}
+                    { pc_popup bgcolor=$event.catcolor caption=$event.title text=$event.hometext|safetext assign="javascript"}
                     {gt text='private event' assign='p_txt' domain='module_postcalendar'}
                     {if $event.privateicon}{img src='locked.png' modname='core' set='icons/extrasmall' title=$p_txt alt=$p_txt}{/if}
                     { pc_url full=true class="eventlink" action="detail" eid=$event.eid date=$date javascript=$javascript display="$timestamp `$event.title`"|strip_tags }

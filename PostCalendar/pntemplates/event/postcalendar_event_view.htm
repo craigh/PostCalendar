@@ -1,7 +1,7 @@
 {* $Id$ *}
 <div class="postcalendar_event_view">
 <h2 class="postcalendar_header">
-    { $loaded_event.title|varprephtmldisplay }
+    { $loaded_event.title|safehtml }
     <span class='postcalendar_eid'>eid# { $loaded_event.eid }</span>
 </h2>
 <div class="calcontainer">

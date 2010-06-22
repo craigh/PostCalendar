@@ -36,24 +36,24 @@ function postcalendar_admin_modifyconfig()
     }
 
     // Turn off template caching here
-    $pnRender = pnRender::getInstance('PostCalendar', false);
+    $render = pnRender::getInstance('PostCalendar', false);
 
     $modinfo = ModUtil::getInfo(ModUtil::getIdFromName('PostCalendar'));
-    $pnRender->assign('postcalendarversion', $modinfo['version']);
+    $render->assign('postcalendarversion', $modinfo['version']);
 
     // load the category registry util
     $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
-    $pnRender->assign('catregistry', $catregistry);
+    $render->assign('catregistry', $catregistry);
 
     $props = array_keys($catregistry);
-    $pnRender->assign('firstprop', $props[0]);
+    $render->assign('firstprop', $props[0]);
     $selectedDefaultCategories = ModUtil::getVar('PostCalendar', 'pcDefaultCategories');
-    $pnRender->assign('selectedDefaultCategories', $selectedDefaultCategories);
+    $render->assign('selectedDefaultCategories', $selectedDefaultCategories);
 
-    $pnRender->assign('pcFilterYearStart', ModUtil::getVar('PostCalendar', 'pcFilterYearStart', 1));
-    $pnRender->assign('pcFilterYearEnd', ModUtil::getVar('PostCalendar', 'pcFilterYearEnd', 2));
+    $render->assign('pcFilterYearStart', ModUtil::getVar('PostCalendar', 'pcFilterYearStart', 1));
+    $render->assign('pcFilterYearEnd', ModUtil::getVar('PostCalendar', 'pcFilterYearEnd', 2));
 
-    return $pnRender->fetch('admin/postcalendar_admin_modifyconfig.htm');
+    return $render->fetch('admin/postcalendar_admin_modifyconfig.htm');
 }
 
 /**
@@ -140,23 +140,23 @@ function postcalendar_admin_showlist($args)
     $events = DBUtil::selectObjectArray('postcalendar_events', "WHERE pc_eventstatus=" . $args['type'], $sort, $offset, $offset_increment, false);
 
     // Turn off template caching here
-    $pnRender = pnRender::getInstance('PostCalendar', false);
-    $pnRender->assign('title', $args['title']);
-    $pnRender->assign('function', $args['function']);
-    $pnRender->assign('functionname', substr($args['function'], 4));
-    $pnRender->assign('events', $events);
-    $pnRender->assign('title_sort_url', ModUtil::url('PostCalendar', 'admin', $args['function'], array(
+    $render = pnRender::getInstance('PostCalendar', false);
+    $render->assign('title', $args['title']);
+    $render->assign('function', $args['function']);
+    $render->assign('functionname', substr($args['function'], 4));
+    $render->assign('events', $events);
+    $render->assign('title_sort_url', ModUtil::url('PostCalendar', 'admin', $args['function'], array(
         'sort' => 'title',
         'sdir' => $sdir)));
-    $pnRender->assign('time_sort_url', ModUtil::url('PostCalendar', 'admin', $args['function'], array(
+    $render->assign('time_sort_url', ModUtil::url('PostCalendar', 'admin', $args['function'], array(
         'sort' => 'time',
         'sdir' => $sdir)));
-    $pnRender->assign('formactions', array(
+    $render->assign('formactions', array(
         _ADMIN_ACTION_VIEW => __('List', $dom),
         _ADMIN_ACTION_APPROVE => __('Approve', $dom),
         _ADMIN_ACTION_HIDE => __('Hide', $dom),
         _ADMIN_ACTION_DELETE => __('Delete', $dom)));
-    $pnRender->assign('actionselected', _ADMIN_ACTION_VIEW);
+    $render->assign('actionselected', _ADMIN_ACTION_VIEW);
     if ($offset > 1) {
         $prevlink = ModUtil::url('PostCalendar', 'admin', $args['function'], array(
             'offset' => $offset - $offset_increment,
@@ -165,7 +165,7 @@ function postcalendar_admin_showlist($args)
     } else {
         $prevlink = false;
     }
-    $pnRender->assign('prevlink', $prevlink);
+    $render->assign('prevlink', $prevlink);
     if (count($events) >= $offset_increment) {
         $nextlink = ModUtil::url('PostCalendar', 'admin', $args['function'], array(
             'offset' => $offset + $offset_increment,
@@ -174,10 +174,10 @@ function postcalendar_admin_showlist($args)
     } else {
         $nextlink = false;
     }
-    $pnRender->assign('nextlink', $nextlink);
-    $pnRender->assign('offset_increment', $offset_increment);
+    $render->assign('nextlink', $nextlink);
+    $render->assign('offset_increment', $offset_increment);
 
-    return $pnRender->fetch('admin/postcalendar_admin_showlist.htm');
+    return $render->fetch('admin/postcalendar_admin_showlist.htm');
 }
 
 /**
@@ -246,13 +246,13 @@ function postcalendar_admin_adminevents()
     }
 
     // Turn off template caching here
-    $pnRender = pnRender::getInstance('PostCalendar', false);
+    $render = pnRender::getInstance('PostCalendar', false);
 
-    $pnRender->assign('function', $function);
-    $pnRender->assign('areyousure', $are_you_sure_text);
-    $pnRender->assign('alleventinfo', $alleventinfo);
+    $render->assign('function', $function);
+    $render->assign('areyousure', $are_you_sure_text);
+    $render->assign('alleventinfo', $alleventinfo);
 
-    return $pnRender->fetch("admin/postcalendar_admin_eventrevue.htm");
+    return $render->fetch("admin/postcalendar_admin_eventrevue.htm");
 }
 
 /**

@@ -269,17 +269,17 @@ function postcalendar_event_new($args)
     $submitformelements = ModUtil::apiFunc('PostCalendar', 'event', 'buildSubmitForm', array(
         'eventdata' => $eventdata,
         'Date' => $Date)); //sets defaults or builds selected values
-    $tpl = pnRender::getInstance('PostCalendar', false); // Turn off template caching here
+    $render = pnRender::getInstance('PostCalendar', false); // Turn off template caching here
     foreach ($submitformelements as $var => $val) {
-        $tpl->assign($var, $val);
+        $render->assign($var, $val);
     }
 
     // assign some basic settings
-    $tpl->assign('EVENT_DATE_FORMAT', _SETTING_DATE_FORMAT);
-    $tpl->assign('24HOUR_TIME', _SETTING_TIME_24HOUR);
+    $render->assign('EVENT_DATE_FORMAT', _SETTING_DATE_FORMAT);
+    $render->assign('24HOUR_TIME', _SETTING_TIME_24HOUR);
 
     // assign function in case we were editing
-    $tpl->assign('func', $func);
+    $render->assign('func', $func);
 
-    return $tpl->fetch("event/postcalendar_event_submit.htm");
+    return $render->fetch("event/postcalendar_event_submit.htm");
 }

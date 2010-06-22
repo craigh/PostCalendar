@@ -60,9 +60,9 @@ function postcalendar_adminapi_getlinks()
  */
 function postcalendar_adminapi_clearCache()
 {
-    $pnRender = pnRender::getInstance('PostCalendar');
+    $render = pnRender::getInstance('PostCalendar');
     // Do not call clear_all_cache, but only clear the cached templates of this module
-    return $pnRender->clear_cache();
+    return $render->clear_cache();
 }
 
 /**
@@ -96,14 +96,14 @@ function postcalendar_adminapi_notify($args)
     $modversion = DataUtil::formatForOS($modinfo['version']);
 
     // Turn off template caching here
-    $pnRender = pnRender::getInstance('PostCalendar', false);
-    $pnRender->assign('is_update', $is_update);
-    $pnRender->assign('modversion', $modversion);
-    $pnRender->assign('eid', $eid);
-    $pnRender->assign('link', ModUtil::url('PostCalendar', 'admin', 'adminevents', array(
+    $render = pnRender::getInstance('PostCalendar', false);
+    $render->assign('is_update', $is_update);
+    $render->assign('modversion', $modversion);
+    $render->assign('eid', $eid);
+    $render->assign('link', ModUtil::url('PostCalendar', 'admin', 'adminevents', array(
         'events' => $eid,
         'action' => _ADMIN_ACTION_VIEW), null, null, true));
-    $message = $pnRender->fetch('email/postcalendar_email_adminnotify.htm');
+    $message = $render->fetch('email/postcalendar_email_adminnotify.htm');
 
     $messagesent = ModUtil::apiFunc('Mailer', 'user', 'sendmessage', array(
         'toaddress' => _SETTING_NOTIFY_EMAIL,

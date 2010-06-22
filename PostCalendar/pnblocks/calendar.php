@@ -67,38 +67,38 @@ function postcalendar_calendarblock_display($blockinfo)
     $the_month = substr($Date, 4, 2);
     $the_day   = substr($Date, 6, 2);
 
-    $tpl = pnRender::getInstance('PostCalendar');
+    $render = pnRender::getInstance('PostCalendar');
     $output = '';
 
     // If block is cached, return cached version
-    $tpl->cache_id = $blockinfo['bid'] . ':' . UserUtil::getVar('uid');
+    $render->cache_id = $blockinfo['bid'] . ':' . UserUtil::getVar('uid');
     $templates_cached = true;
     if ($showcalendar) {
-        if (!$tpl->is_cached('blocks/postcalendar_block_view_month.htm')) {
+        if (!$render->is_cached('blocks/postcalendar_block_view_month.htm')) {
             $templates_cached = false;
         }
     }
     if ($showevents) {
-        if (!$tpl->is_cached('blocks/postcalendar_block_view_day.htm')) {
+        if (!$render->is_cached('blocks/postcalendar_block_view_day.htm')) {
             $templates_cached = false;
         }
     }
     if ($nextevents) {
-        if (!$tpl->is_cached('blocks/postcalendar_block_view_upcoming.htm')) {
+        if (!$render->is_cached('blocks/postcalendar_block_view_upcoming.htm')) {
             $templates_cached = false;
         }
     }
     if ($pcbshowsslinks) {
-        if (!$tpl->is_cached('blocks/postcalendar_block_calendarlinks.htm')) {
+        if (!$render->is_cached('blocks/postcalendar_block_calendarlinks.htm')) {
             $templates_cached = false;
         }
     }
 
     if ($templates_cached) {
-        $blockinfo['content'] = $tpl->fetch('blocks/postcalendar_block_view_month.htm');
-        $blockinfo['content'] .= $tpl->fetch('blocks/postcalendar_block_view_day.htm');
-        $blockinfo['content'] .= $tpl->fetch('blocks/postcalendar_block_view_upcoming.htm');
-        $blockinfo['content'] .= $tpl->fetch('blocks/postcalendar_block_calendarlinks.htm');
+        $blockinfo['content'] = $render->fetch('blocks/postcalendar_block_view_month.htm');
+        $blockinfo['content'] .= $render->fetch('blocks/postcalendar_block_view_day.htm');
+        $blockinfo['content'] .= $render->fetch('blocks/postcalendar_block_view_upcoming.htm');
+        $blockinfo['content'] .= $render->fetch('blocks/postcalendar_block_calendarlinks.htm');
 
         return pnBlockThemeBlock($blockinfo);
     }
@@ -175,49 +175,49 @@ function postcalendar_calendarblock_display($blockinfo)
     }
 
     if (isset($calendarView)) {
-        $tpl->assign('CAL_FORMAT', $calendarView);
+        $render->assign('CAL_FORMAT', $calendarView);
     }
 
     $countTodaysEvents = count($eventsByDate[$today_date]);
     $hideTodaysEvents  = ($hideevents && ($countTodaysEvents == 0)) ? true : false;
 
-    $tpl->assign('S_SHORT_DAY_NAMES', $sdaynames);
-    $tpl->assign('A_EVENTS',          $eventsByDate);
-    $tpl->assign('todaysEvents',      $eventsByDate[$today_date]);
-    $tpl->assign('hideTodaysEvents',  $hideTodaysEvents);
-    $tpl->assign('PREV_MONTH_URL',    $pc_prev);
-    $tpl->assign('NEXT_MONTH_URL',    $pc_next);
-    $tpl->assign('MONTH_START_DATE',  $month_view_start);
-    $tpl->assign('MONTH_END_DATE',    $month_view_end);
-    $tpl->assign('TODAY_DATE',        $today_date);
-    $tpl->assign('DATE',              $Date);
-    $tpl->assign('DISPLAY_LIMIT',     $eventslimit);
-    $tpl->assign('pc_colclasses',     $pc_colclasses);
+    $render->assign('S_SHORT_DAY_NAMES', $sdaynames);
+    $render->assign('A_EVENTS',          $eventsByDate);
+    $render->assign('todaysEvents',      $eventsByDate[$today_date]);
+    $render->assign('hideTodaysEvents',  $hideTodaysEvents);
+    $render->assign('PREV_MONTH_URL',    $pc_prev);
+    $render->assign('NEXT_MONTH_URL',    $pc_next);
+    $render->assign('MONTH_START_DATE',  $month_view_start);
+    $render->assign('MONTH_END_DATE',    $month_view_end);
+    $render->assign('TODAY_DATE',        $today_date);
+    $render->assign('DATE',              $Date);
+    $render->assign('DISPLAY_LIMIT',     $eventslimit);
+    $render->assign('pc_colclasses',     $pc_colclasses);
 
     if ($showcalendar) {
-        $output .= $tpl->fetch('blocks/postcalendar_block_view_month.htm');
+        $output .= $render->fetch('blocks/postcalendar_block_view_month.htm');
     }
 
     if ($showevents) {
         if ($showcalendar) {
-            $tpl->assign('SHOW_TITLE', 1);
+            $render->assign('SHOW_TITLE', 1);
         } else {
-            $tpl->assign('SHOW_TITLE', 0);
+            $render->assign('SHOW_TITLE', 0);
         }
-        $output .= $tpl->fetch('blocks/postcalendar_block_view_day.htm');
+        $output .= $render->fetch('blocks/postcalendar_block_view_day.htm');
     }
 
     if ($nextevents) {
         if ($showcalendar || $showevents) {
-            $tpl->assign('SHOW_TITLE', 1);
+            $render->assign('SHOW_TITLE', 1);
         } else {
-            $tpl->assign('SHOW_TITLE', 0);
+            $render->assign('SHOW_TITLE', 0);
         }
-        $output .= $tpl->fetch('blocks/postcalendar_block_view_upcoming.htm');
+        $output .= $render->fetch('blocks/postcalendar_block_view_upcoming.htm');
     }
 
     if ($pcbshowsslinks) {
-        $output .= $tpl->fetch('blocks/postcalendar_block_calendarlinks.htm');
+        $output .= $render->fetch('blocks/postcalendar_block_calendarlinks.htm');
     }
 
     $blockinfo['content'] = $output;
@@ -240,18 +240,18 @@ function postcalendar_calendarblock_modify($blockinfo)
     if (empty($vars['pcbshowsslinks']))       $vars['pcbshowsslinks']       = 0;
     if (empty($vars['pcbfiltercats']))        $vars['pcbfiltercats']        = array();
 
-    $pnRender = pnRender::getInstance('PostCalendar', false); // no caching
+    $render = pnRender::getInstance('PostCalendar', false); // no caching
 
     // load the category registry util
     $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
-    $pnRender->assign('catregistry', $catregistry);
+    $render->assign('catregistry', $catregistry);
 
     $props = array_keys($catregistry);
-    $pnRender->assign('firstprop', $props[0]);
+    $render->assign('firstprop', $props[0]);
 
-    $pnRender->assign('vars', $vars);
+    $render->assign('vars', $vars);
 
-    return $pnRender->fetch('blocks/postcalendar_block_calendar_modify.htm');
+    return $render->fetch('blocks/postcalendar_block_calendar_modify.htm');
 }
 
 /**
@@ -272,11 +272,11 @@ function postcalendar_calendarblock_update($blockinfo)
     $vars['pcbshowsslinks']       = FormUtil::getPassedValue('pcbshowsslinks',       0);
     $vars['pcbfiltercats']        = FormUtil::getPassedValue('pcbfiltercats'); //array
 
-    $pnRender = pnRender::getInstance('PostCalendar');
-    $pnRender->clear_cache('blocks/postcalendar_block_view_day.htm');
-    $pnRender->clear_cache('blocks/postcalendar_block_view_month.htm');
-    $pnRender->clear_cache('blocks/postcalendar_block_view_upcoming.htm');
-    $pnRender->clear_cache('blocks/postcalendar_block_calendarlinks.htm');
+    $render = pnRender::getInstance('PostCalendar');
+    $render->clear_cache('blocks/postcalendar_block_view_day.htm');
+    $render->clear_cache('blocks/postcalendar_block_view_month.htm');
+    $render->clear_cache('blocks/postcalendar_block_view_upcoming.htm');
+    $render->clear_cache('blocks/postcalendar_block_calendarlinks.htm');
     $blockinfo['content'] = pnBlockVarsToContent($vars);
 
     return $blockinfo;

@@ -68,11 +68,11 @@ class postcalendar_contenttypesapi_postcaleventPlugin extends contentTypeBase
             $event['showcountdown'] = true;
         }
     
-        $pnRender = pnRender::getInstance('PostCalendar');
+        $render = pnRender::getInstance('PostCalendar');
     
-        $pnRender->assign('loaded_event', $event);
+        $render->assign('loaded_event', $event);
     
-        return $pnRender->fetch('contenttype/postcalevent_view.html');
+        return $render->fetch('contenttype/postcalevent_view.html');
     }
 
     function displayEditing() {

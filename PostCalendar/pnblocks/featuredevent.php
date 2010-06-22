@@ -81,12 +81,12 @@ function postcalendar_featuredeventblock_display($blockinfo)
         $blockinfo['title'] = NULL;
     }
 
-    $pnRender = pnRender::getInstance('PostCalendar');
+    $render = pnRender::getInstance('PostCalendar');
 
-    $pnRender->assign('loaded_event', $event);
-    $pnRender->assign('thisblockid', $blockinfo['bid']);
+    $render->assign('loaded_event', $event);
+    $render->assign('thisblockid', $blockinfo['bid']);
 
-    $blockinfo['content'] = $pnRender->fetch('blocks/postcalendar_block_featuredevent.htm');
+    $blockinfo['content'] = $render->fetch('blocks/postcalendar_block_featuredevent.htm');
 
     return pnBlockThemeBlock($blockinfo);
 }
@@ -102,11 +102,11 @@ function postcalendar_featuredeventblock_modify($blockinfo)
     if (empty($vars['showcountdown'])) $vars['showcountdown'] = 0;
     if (empty($vars['hideonexpire']))  $vars['hideonexpire']  = 0;
 
-    $pnRender = pnRender::getInstance('PostCalendar', false); // no caching
+    $render = pnRender::getInstance('PostCalendar', false); // no caching
 
-    $pnRender->assign('vars', $vars);
+    $render->assign('vars', $vars);
 
-    return $pnRender->fetch('blocks/postcalendar_block_featuredevent_modify.htm');
+    return $render->fetch('blocks/postcalendar_block_featuredevent_modify.htm');
 }
 
 /**
@@ -125,8 +125,8 @@ function postcalendar_featuredeventblock_update($blockinfo)
     $blockinfo['content'] = pnBlockVarsToContent($vars);
 
     // clear the block cache
-    $pnRender = pnRender::getInstance('PostCalendar');
-    $pnRender->clear_cache('blocks/postcalendar_block_featuredevent.htm');
+    $render = pnRender::getInstance('PostCalendar');
+    $render->clear_cache('blocks/postcalendar_block_featuredevent.htm');
 
     return $blockinfo;
 }

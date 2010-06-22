@@ -83,11 +83,11 @@ function postcalendar_user_display($args)
         return LogUtil::registerError(__('Error! Required arguments not present.', $dom));
     }
 
-    $tpl = pnRender::getInstance('PostCalendar');
+    $render = pnRender::getInstance('PostCalendar');
     $modinfo = ModUtil::getInfo(ModUtil::getIdFromName('PostCalendar'));
-    $tpl->assign('postcalendarversion', $modinfo['version']);
+    $render->assign('postcalendarversion', $modinfo['version']);
 
-    $tpl->cache_id = $Date . '|' . $viewtype . '|' . $eid . '|' . UserUtil::getVar('uid');
+    $render->cache_id = $Date . '|' . $viewtype . '|' . $eid . '|' . UserUtil::getVar('uid');
 
     switch ($viewtype) {
         case 'details':
@@ -96,9 +96,9 @@ function postcalendar_user_display($args)
             }
 
             // build template and fetch:
-            if ($tpl->is_cached('user/postcalendar_user_view_event_details.htm')) {
+            if ($render->is_cached('user/postcalendar_user_view_event_details.htm')) {
                 // use cached version
-                return $tpl->fetch('user/postcalendar_user_view_event_details.htm');
+                return $render->fetch('user/postcalendar_user_view_event_details.htm');
             } else {
                 // get the event from the DB
                 $event = DBUtil::selectObjectByID('postcalendar_events', $args['eid'], 'eid');
@@ -119,20 +119,20 @@ function postcalendar_user_display($args)
                     $d = substr($args['Date'], 6, 2);
                     $event['eventDate'] = "$y-$m-$d";
                 }
-                $tpl->assign('loaded_event', $event);
+                $render->assign('loaded_event', $event);
 
                 if ($popup == true) {
-                    $tpl->display('user/postcalendar_user_view_popup.htm');
+                    $render->display('user/postcalendar_user_view_popup.htm');
                     return true; // displays template without theme wrap
                 } else {
                     if ((SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADD) && (UserUtil::getVar('uid') == $event['aid'])) || SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
-                        $tpl->assign('EVENT_CAN_EDIT', true);
+                        $render->assign('EVENT_CAN_EDIT', true);
                     } else {
-                        $tpl->assign('EVENT_CAN_EDIT', false);
+                        $render->assign('EVENT_CAN_EDIT', false);
                     }
-                    $tpl->assign('TODAY_DATE', DateUtil::getDatetime('', '%Y-%m-%d'));
-                    $tpl->assign('DATE', $Date);
-                    return $tpl->fetch('user/postcalendar_user_view_event_details.htm');
+                    $render->assign('TODAY_DATE', DateUtil::getDatetime('', '%Y-%m-%d'));
+                    $render->assign('DATE', $Date);
+                    return $render->fetch('user/postcalendar_user_view_event_details.htm');
                 }
             }
             break;
@@ -148,15 +148,15 @@ function postcalendar_user_display($args)
                 'filtercats' => $filtercats,
                 'func' => $func));
             // build template and fetch:
-            if ($tpl->is_cached('user/postcalendar_user_view_' . $viewtype . '.htm')) {
+            if ($render->is_cached('user/postcalendar_user_view_' . $viewtype . '.htm')) {
                 // use cached version
-                return $tpl->fetch('user/postcalendar_user_view_' . $viewtype . '.htm');
+                return $render->fetch('user/postcalendar_user_view_' . $viewtype . '.htm');
             } else {
                 foreach ($out as $var => $val) {
-                    $tpl->assign($var, $val);
+                    $render->assign($var, $val);
                 }
 
-                return $tpl->fetch('user/postcalendar_user_view_' . $viewtype . '.htm');
+                return $render->fetch('user/postcalendar_user_view_' . $viewtype . '.htm');
             } // end if/else
             break;
     } // end switch
