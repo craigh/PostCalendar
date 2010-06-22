@@ -957,3 +957,26 @@ function postcalendar_eventapi_geteventdates($event)
 
     return $eventdates;
 }
+/**
+ * take id from locations module and inserts data into correct fields in PostCalendar
+ * note: locations ID is discarded and not available to edit later
+ */
+function postcalendar_eventapi_correctlocationdata($event)
+{
+    if ((int) $event['location']['locations_id'] > 0) {
+        $locargs = array('locationid' => $event['location']['locations_id']);
+        $locObj = ModUtil::apiFunc('Locations','user','getLocationByID',$locargs);
+
+        $event['location']['event_location'] = $locObj['name'];
+        $event['location']['event_street1']  = $locObj['street'];
+        $event['location']['event_street2']  = $locObj[''];
+        $event['location']['event_city']     = $locObj['city'];
+        $event['location']['event_state']    = $locObj['state'];
+        $event['location']['event_postal']   = $locObj['zip'];
+
+        $event['conttel']   = isset($event['conttel'])   ? $event['conttel']   : $locObj['phone'];
+        $event['contemail'] = isset($event['contemail']) ? $event['contemail'] : $locObj['email'];
+        $event['website']   = isset($event['website'])   ? $event['website']   : $locObj['url'];
+    }
+    return $event;
+}

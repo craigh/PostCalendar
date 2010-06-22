@@ -169,6 +169,8 @@ function postcalendar_event_new($args)
     $abort = false;
     if (($form_action == 'preview') || ($form_action == 'save')) {
         $abort = ModUtil::apiFunc('PostCalendar', 'event', 'validateformdata', $submitted_event);
+        // alo correct locations data if importing from locations module
+        $submitted_event = ModUtil::apiFunc('PostCalendar', 'event', 'correctlocationdata', $submitted_event);
     }
 
     if ($func == 'new') { // triggered on form_action=preview && on brand new load
