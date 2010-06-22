@@ -61,7 +61,7 @@ function postcalendar_pasteventsblock_display($blockinfo)
     $the_month = (int) substr($Date, 4, 2);
     $the_day   = (int) substr($Date, 6, 2);
 
-    $render = pnRender::getInstance('PostCalendar');
+    $render = Renderer::getInstance('PostCalendar');
 
     // If block is cached, return cached version
     $render->cache_id = $blockinfo['bid'] . ':' . UserUtil::getVar('uid');
@@ -102,7 +102,7 @@ function postcalendar_pasteventsblock_modify($blockinfo)
     if (empty($vars['pcbeventsrange'])) $vars['pcbeventsrange'] = 6;
     if (empty($vars['pcbfiltercats']))  $vars['pcbfiltercats']  = array();
 
-    $render = pnRender::getInstance('PostCalendar', false); // no caching
+    $render = Renderer::getInstance('PostCalendar', false); // no caching
 
     // load the category registry util
     $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
@@ -128,7 +128,7 @@ function postcalendar_pasteventsblock_update($blockinfo)
     $vars['pcbeventsrange'] = FormUtil::getPassedValue('pcbeventsrange', 6);
     $vars['pcbfiltercats']  = FormUtil::getPassedValue('pcbfiltercats'); //array
 
-    $render = pnRender::getInstance('PostCalendar');
+    $render = Renderer::getInstance('PostCalendar');
     $render->clear_cache('blocks/postcalendar_block_pastevents.htm');
     $blockinfo['content'] = pnBlockVarsToContent($vars);
 

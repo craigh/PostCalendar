@@ -60,7 +60,7 @@ function postcalendar_adminapi_getlinks()
  */
 function postcalendar_adminapi_clearCache()
 {
-    $render = pnRender::getInstance('PostCalendar');
+    $render = Renderer::getInstance('PostCalendar');
     // Do not call clear_all_cache, but only clear the cached templates of this module
     return $render->clear_cache();
 }
@@ -96,7 +96,7 @@ function postcalendar_adminapi_notify($args)
     $modversion = DataUtil::formatForOS($modinfo['version']);
 
     // Turn off template caching here
-    $render = pnRender::getInstance('PostCalendar', false);
+    $render = Renderer::getInstance('PostCalendar', false);
     $render->assign('is_update', $is_update);
     $render->assign('modversion', $modversion);
     $render->assign('eid', $eid);

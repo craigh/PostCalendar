@@ -124,6 +124,8 @@
         </fieldset>
         <fieldset>
             <legend style='padding: 0 3px;'>{gt text='Location'}</legend>
+            {modapifunc modname="locations" type="user" func="getLocationsForDropdown" assign="locations"}
+            {html_options name="location" id="postcalendar_events_location" options=$locations}<br />
             <label for="postcalendar_events_location_event_location">{gt text='Name'}</label><br />
             <input class='postcal90' type="text" name="postcalendar_events[location][event_location]" id="postcalendar_events_location_event_location" value="{ $loaded_event.location_info.event_location }" /><br />
             <label for="postcalendar_events_location_event_street1">{gt text='Street'}</label><br />

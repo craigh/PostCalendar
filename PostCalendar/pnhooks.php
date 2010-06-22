@@ -20,7 +20,7 @@ function postcalendar_hooks_new($args)
 {
     $thismodule = isset($args['extrainfo']['module']) ? strtolower($args['extrainfo']['module']) : strtolower(pnModGetName()); // default to active module
 
-    $render = pnRender::getInstance('PostCalendar');
+    $render = Renderer::getInstance('PostCalendar');
     $postcalendar_admincatselected = ModUtil::getVar($thismodule, 'postcalendar_admincatselected');
     $postcalendar_optoverride = ModUtil::getVar($thismodule, 'postcalendar_optoverride', false);
 
@@ -74,7 +74,7 @@ function postcalendar_hooks_modify($args)
         $eventid = $event['eid'];
     }
 
-    $render = pnRender::getInstance('PostCalendar');
+    $render = Renderer::getInstance('PostCalendar');
     $postcalendar_admincatselected = ModUtil::getVar($module, 'postcalendar_admincatselected');
     $postcalendar_optoverride = ModUtil::getVar($module, 'postcalendar_optoverride', false);
 
@@ -109,7 +109,7 @@ function postcalendar_hooks_modify($args)
 function postcalendar_hooks_modifyconfig($args)
 {
     $thismodule = isset($args['extrainfo']['module']) ? strtolower($args['extrainfo']['module']) : strtolower(pnModGetName()); // default to active module
-    $render = pnRender::getInstance('PostCalendar');
+    $render = Renderer::getInstance('PostCalendar');
 
     $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
     $render->assign('postcalendar_catregistry', $catregistry);

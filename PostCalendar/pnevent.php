@@ -269,7 +269,7 @@ function postcalendar_event_new($args)
     $submitformelements = ModUtil::apiFunc('PostCalendar', 'event', 'buildSubmitForm', array(
         'eventdata' => $eventdata,
         'Date' => $Date)); //sets defaults or builds selected values
-    $render = pnRender::getInstance('PostCalendar', false); // Turn off template caching here
+    $render = Renderer::getInstance('PostCalendar', false); // Turn off template caching here
     foreach ($submitformelements as $var => $val) {
         $render->assign($var, $val);
     }

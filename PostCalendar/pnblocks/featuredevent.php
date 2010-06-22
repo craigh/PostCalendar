@@ -81,7 +81,7 @@ function postcalendar_featuredeventblock_display($blockinfo)
         $blockinfo['title'] = NULL;
     }
 
-    $render = pnRender::getInstance('PostCalendar');
+    $render = Renderer::getInstance('PostCalendar');
 
     $render->assign('loaded_event', $event);
     $render->assign('thisblockid', $blockinfo['bid']);
@@ -102,7 +102,7 @@ function postcalendar_featuredeventblock_modify($blockinfo)
     if (empty($vars['showcountdown'])) $vars['showcountdown'] = 0;
     if (empty($vars['hideonexpire']))  $vars['hideonexpire']  = 0;
 
-    $render = pnRender::getInstance('PostCalendar', false); // no caching
+    $render = Renderer::getInstance('PostCalendar', false); // no caching
 
     $render->assign('vars', $vars);
 
@@ -125,7 +125,7 @@ function postcalendar_featuredeventblock_update($blockinfo)
     $blockinfo['content'] = pnBlockVarsToContent($vars);
 
     // clear the block cache
-    $render = pnRender::getInstance('PostCalendar');
+    $render = Renderer::getInstance('PostCalendar');
     $render->clear_cache('blocks/postcalendar_block_featuredevent.htm');
 
     return $blockinfo;

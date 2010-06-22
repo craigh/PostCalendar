@@ -67,7 +67,7 @@ function postcalendar_calendarblock_display($blockinfo)
     $the_month = substr($Date, 4, 2);
     $the_day   = substr($Date, 6, 2);
 
-    $render = pnRender::getInstance('PostCalendar');
+    $render = Renderer::getInstance('PostCalendar');
     $output = '';
 
     // If block is cached, return cached version
@@ -240,7 +240,7 @@ function postcalendar_calendarblock_modify($blockinfo)
     if (empty($vars['pcbshowsslinks']))       $vars['pcbshowsslinks']       = 0;
     if (empty($vars['pcbfiltercats']))        $vars['pcbfiltercats']        = array();
 
-    $render = pnRender::getInstance('PostCalendar', false); // no caching
+    $render = Renderer::getInstance('PostCalendar', false); // no caching
 
     // load the category registry util
     $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
@@ -272,7 +272,7 @@ function postcalendar_calendarblock_update($blockinfo)
     $vars['pcbshowsslinks']       = FormUtil::getPassedValue('pcbshowsslinks',       0);
     $vars['pcbfiltercats']        = FormUtil::getPassedValue('pcbfiltercats'); //array
 
-    $render = pnRender::getInstance('PostCalendar');
+    $render = Renderer::getInstance('PostCalendar');
     $render->clear_cache('blocks/postcalendar_block_view_day.htm');
     $render->clear_cache('blocks/postcalendar_block_view_month.htm');
     $render->clear_cache('blocks/postcalendar_block_view_upcoming.htm');

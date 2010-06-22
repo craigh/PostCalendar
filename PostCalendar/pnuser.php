@@ -83,7 +83,7 @@ function postcalendar_user_display($args)
         return LogUtil::registerError(__('Error! Required arguments not present.', $dom));
     }
 
-    $render = pnRender::getInstance('PostCalendar');
+    $render = Renderer::getInstance('PostCalendar');
     $modinfo = ModUtil::getInfo(ModUtil::getIdFromName('PostCalendar'));
     $render->assign('postcalendarversion', $modinfo['version']);
 

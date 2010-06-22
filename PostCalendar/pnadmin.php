@@ -36,7 +36,7 @@ function postcalendar_admin_modifyconfig()
     }
 
     // Turn off template caching here
-    $render = pnRender::getInstance('PostCalendar', false);
+    $render = Renderer::getInstance('PostCalendar', false);
 
     $modinfo = ModUtil::getInfo(ModUtil::getIdFromName('PostCalendar'));
     $render->assign('postcalendarversion', $modinfo['version']);
@@ -140,7 +140,7 @@ function postcalendar_admin_showlist($args)
     $events = DBUtil::selectObjectArray('postcalendar_events', "WHERE pc_eventstatus=" . $args['type'], $sort, $offset, $offset_increment, false);
 
     // Turn off template caching here
-    $render = pnRender::getInstance('PostCalendar', false);
+    $render = Renderer::getInstance('PostCalendar', false);
     $render->assign('title', $args['title']);
     $render->assign('function', $args['function']);
     $render->assign('functionname', substr($args['function'], 4));
@@ -246,7 +246,7 @@ function postcalendar_admin_adminevents()
     }
 
     // Turn off template caching here
-    $render = pnRender::getInstance('PostCalendar', false);
+    $render = Renderer::getInstance('PostCalendar', false);
 
     $render->assign('function', $function);
     $render->assign('areyousure', $are_you_sure_text);

@@ -28,7 +28,7 @@ function postcalendar_searchapi_options($args)
     if (SecurityUtil::checkPermission('PostCalendar::', ':*', ACCESS_OVERVIEW)) {
         // Create output object - this object will store all of our output so that
         // we can return it easily when required
-        $renderer = pnRender::getInstance('PostCalendar');
+        $renderer = Renderer::getInstance('PostCalendar');
         $active = (isset($args['active']) && isset($args['active']['PostCalendar'])) || !isset($args['active']);
         $renderer->assign('active', $active);
 
