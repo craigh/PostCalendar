@@ -2,10 +2,10 @@
 /**
  * @package     PostCalendar
  * @author      $Author$
+ * @author      Jusuff (javascript)
  * @link        $HeadURL$
  * @version     $Id$
- * @copyright   Copyright (c) 2002, The PostCalendar Team
- * @copyright   Copyright (c) 2009, Craig Heydenburg, Sound Web Development
+ * @copyright   Copyright (c) 2010, Craig Heydenburg, Sound Web Development
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
  */
 function smarty_function_pc_locations($args, &$smarty)
@@ -37,9 +37,15 @@ function smarty_function_pc_locations($args, &$smarty)
         <!--//
         function postcalendar_locations_bridge()
         {
+            $('postcalendar_events_location_locations_id').getValue() != '-1') {
+                $$('[name^=postcalendar_events[location]]').invoke('disable').invoke('clear');
+            } else {
+                $$('[name^=postcalendar_events[location]]').invoke('enable').invoke('clear');
+            }
         }
         //-->";
 
+    PageUtil::addVar("javascript", "javascript/ajax/prototype.js");
     PageUtil::addVar("rawtext", "<script type='text/javascript'>$pc_loc_javascript</script>");
 
     return $display . "<br />";
