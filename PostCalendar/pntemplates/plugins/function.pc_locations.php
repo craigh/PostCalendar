@@ -27,7 +27,7 @@ function smarty_function_pc_locations($args, &$smarty)
         'name'     => "postcalendar_events[location][locations_id]",
         'id'       => "postcalendar_events_location_locations_id",
         'class'    => "postcal90",
-        'onChange' => "postcalendar_locations_bridge",
+        'onChange' => "postcalendar_locations_bridge(this)",
         'options'  => $locations,
         'selected' => '-1');
 
@@ -35,13 +35,14 @@ function smarty_function_pc_locations($args, &$smarty)
 
     $pc_loc_javascript = "
         <!--//
-        function postcalendar_locations_bridge()
+        function postcalendar_locations_bridge(x)
         {
-            $('postcalendar_events_location_locations_id').getValue() != '-1') {
+            if (x.value != '-1') {
                 $$('[name^=postcalendar_events[location]]').invoke('disable').invoke('clear');
             } else {
                 $$('[name^=postcalendar_events[location]]').invoke('enable').invoke('clear');
             }
+            x.disabled=false;
         }
         //-->";
 
