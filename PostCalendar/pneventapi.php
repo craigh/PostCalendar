@@ -958,9 +958,13 @@ function postcalendar_eventapi_geteventdates($event)
     return $eventdates;
 }
 /**
- * take id from locations module and inserts data into correct fields in PostCalendar
- * note: locations ID is discarded and not available to edit later
- */
+ * @description take id from locations module and inserts data into correct fields in PostCalendar
+ * @author      Craig Heydenburg
+ * @created     06/25/2010
+ * @params      (array) $event event array
+ * @return      (array) $event event array (modified)
+ * @note        locations ID is discarded and not available to edit later
+ **/
 function postcalendar_eventapi_correctlocationdata($event)
 {
     if ((int) $event['location']['locations_id'] > 0) {
