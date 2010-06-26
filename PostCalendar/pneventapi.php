@@ -17,6 +17,39 @@ include_once 'modules/PostCalendar/pnincludes/DateCalc.class.php';
  **/
 
 /**
+ * @description Internal callback class used to check permissions to each item
+ *              borrowed from the News module
+ * @author      Jorn Wildt
+ */
+class postcalendar_eventapi_result_checker
+{
+    var $enablecategorization;
+
+    function postcalendar_eventapi_result_checker()
+    {
+        $this->enablecategorization = ModUtil::getVar('PostCalendar', 'enablecategorization');
+    }
+
+    // This method is called by DBUtil::selectObjectArrayFilter() for each and every search result.
+    // A return value of true means "keep result" - false means "discard".
+    function checkResult(&$item)
+    {
+        //$ok = (SecurityUtil::checkPermission('News::', "$item[cr_uid]::$item[sid]", ACCESS_OVERVIEW) || 
+        //       SecurityUtil::checkPermission('Stories::Story', "$item[cr_uid]::$item[sid]", ACCESS_OVERVIEW));
+        // PostCalendar::Event // Title::eid
+        $ok = SecurityUtil::checkPermission('PostCalendar::Event', "$item[title]::$item[eid]", ACCESS_OVERVIEW); 
+
+        if ($this->enablecategorization)
+        {
+            ObjectUtil::expandObjectWithCategories($item, 'postcalendar', 'eid');
+            $ok = $ok && CategoryUtil::hasCategoryAccess($item['__CATEGORIES__'],'PostCalendar');
+        }
+
+        return $ok;
+    }
+}
+
+/**
  * postcalendar_eventapi_queryEvents //new name
  * Returns an array containing the event's information (plural or singular?)
  * @param array $args arguments. Expected keys:
@@ -145,14 +178,14 @@ function postcalendar_eventapi_queryEvents($args)
     }
 
     //if (!SecurityUtil::checkPermission('PostCalendar::Event', "{$event['title']}::{$event['eid']}", ACCESS_OVERVIEW)) {
-    $permFilter = array();
-    $permFilter[] = array(
-        'realm' => 0,
-        'component_left' => 'PostCalendar',
-        'component_right' => 'Event',
-        'instance_left' => 'title',
-        'instance_right' => 'eid',
-        'level' => ACCESS_OVERVIEW);
+    //$permFilter = array();
+    //$permFilter[] = array(
+    //    'realm' => 0,
+    //    'component_left' => 'PostCalendar',
+    //    'component_right' => 'Event',
+    //    'instance_left' => 'title',
+    //    'instance_right' => 'eid',
+    //    'level' => ACCESS_OVERVIEW);
     //$permFilter[] = array('realm'            => 0,
     //                      'component_left'   => 'Categories',
     //                      'component_right'  => 'Category',
@@ -161,7 +194,9 @@ function postcalendar_eventapi_queryEvents($args)
     //                      'instance_right'   => 'ipath',
     //                      'level'            => ACCESS_OVERVIEW);
 
-    $events = DBUtil::selectObjectArray('postcalendar_events', $where, null, null, null, null, $permFilter, $catsarray);
+    //$events = DBUtil::selectObjectArray('postcalendar_events', $where, null, null, null, null, $permFilter, $catsarray);
+    $permChecker = new postcalendar_eventapi_result_checker();
+    $events = DBUtil::selectObjectArrayFilter('postcalendar_events', $where, null, null, null, null, $permChecker, $catsarray);
 
     return $events;
 }
