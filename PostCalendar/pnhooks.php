@@ -59,7 +59,7 @@ function postcalendar_hooks_modify($args)
 
     // get the event
     // Get table info
-    $pntable = pnDBGetTables();
+    $pntable = System::dbGetTables();
     $cols = $pntable['postcalendar_events_column'];
     // build where statement
     $where = "WHERE " . $cols['hooked_modulename'] . " = '" . DataUtil::formatForStore($module) . "'

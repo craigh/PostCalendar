@@ -259,9 +259,9 @@ function postcalendar_event_new($args)
             $url_date = strftime('%Y%m%d', $sdate);
         }
         if ($addtrigger) {
-            pnRedirect(ModUtil::url('PostCalendar', 'event', 'new'));
+            System::redirect(ModUtil::url('PostCalendar', 'event', 'new'));
         } else {
-            pnRedirect(ModUtil::url('PostCalendar', 'user', 'view', array(
+            System::redirect(ModUtil::url('PostCalendar', 'user', 'view', array(
                 'viewtype' => _SETTING_DEFAULT_VIEW,
                 'Date' => $url_date)));
         }

@@ -71,7 +71,7 @@ function postcalendar_searchapi_search($args)
     }
 
     ModUtil::dbInfoLoad('Search');
-    $pntable = pnDBGetTables();
+    $pntable = System::dbGetTables();
     $postcalendartable = $pntable['postcalendar_events'];
     $postcalendarcolumn = $pntable['postcalendar_events_column'];
     $searchTable = $pntable['search_result'];
