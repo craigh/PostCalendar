@@ -34,14 +34,11 @@ class postcalendar_eventapi_result_checker
     // A return value of true means "keep result" - false means "discard".
     function checkResult(&$item)
     {
-        //$ok = (SecurityUtil::checkPermission('News::', "$item[cr_uid]::$item[sid]", ACCESS_OVERVIEW) || 
-        //       SecurityUtil::checkPermission('Stories::Story', "$item[cr_uid]::$item[sid]", ACCESS_OVERVIEW));
-        // PostCalendar::Event // Title::eid
         $ok = SecurityUtil::checkPermission('PostCalendar::Event', "$item[title]::$item[eid]", ACCESS_OVERVIEW); 
 
         if ($this->enablecategorization)
         {
-            ObjectUtil::expandObjectWithCategories($item, 'postcalendar', 'eid');
+            ObjectUtil::expandObjectWithCategories($item, 'postcalendar_events', 'eid');
             $ok = $ok && CategoryUtil::hasCategoryAccess($item['__CATEGORIES__'],'PostCalendar');
         }
 
@@ -177,24 +174,6 @@ function postcalendar_eventapi_queryEvents($args)
         $where .= "AND $s_keywords";
     }
 
-    //if (!SecurityUtil::checkPermission('PostCalendar::Event', "{$event['title']}::{$event['eid']}", ACCESS_OVERVIEW)) {
-    //$permFilter = array();
-    //$permFilter[] = array(
-    //    'realm' => 0,
-    //    'component_left' => 'PostCalendar',
-    //    'component_right' => 'Event',
-    //    'instance_left' => 'title',
-    //    'instance_right' => 'eid',
-    //    'level' => ACCESS_OVERVIEW);
-    //$permFilter[] = array('realm'            => 0,
-    //                      'component_left'   => 'Categories',
-    //                      'component_right'  => 'Category',
-    //                      'instance_left'    => 'id',
-    //                      'instance_middle'  => 'path',
-    //                      'instance_right'   => 'ipath',
-    //                      'level'            => ACCESS_OVERVIEW);
-
-    //$events = DBUtil::selectObjectArray('postcalendar_events', $where, null, null, null, null, $permFilter, $catsarray);
     $permChecker = new postcalendar_eventapi_result_checker();
     $events = DBUtil::selectObjectArrayFilter('postcalendar_events', $where, null, null, null, null, $permChecker, $catsarray);
 
