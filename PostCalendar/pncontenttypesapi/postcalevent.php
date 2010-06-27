@@ -45,7 +45,7 @@ class postcalendar_contenttypesapi_postcaleventPlugin extends contentTypeBase
         $vars['hideonexpire']  = empty($this->hideonexpire)  ? false : true;
     
         // get the event from the DB
-        pnModDBInfoLoad('PostCalendar');
+        ModUtil::dbInfoLoad('PostCalendar');
         $event = DBUtil::selectObjectByID('postcalendar_events', (int) $this->eid, 'eid');
         $event = ModUtil::apiFunc('PostCalendar', 'event', 'formateventarrayfordisplay', $event);
     

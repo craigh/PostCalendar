@@ -22,7 +22,7 @@ function postcalendar_hooksapi_delete($args)
     if ((!isset($args['objectid'])) || ((int) $args['objectid'] <= 0)) {
         return LogUtil::registerError(__f("PostCalendar: %s not provided in delete hook", 'objectid', $dom));
     }
-    $module = isset($args['extrainfo']['module']) ? strtolower($args['extrainfo']['module']) : strtolower(pnModGetName()); // default to active module
+    $module = isset($args['extrainfo']['module']) ? strtolower($args['extrainfo']['module']) : strtolower(ModUtil::getName()); // default to active module
 
     if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADD)) {
         return LogUtil::registerPermissionError();

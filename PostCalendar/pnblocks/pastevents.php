@@ -51,7 +51,7 @@ function postcalendar_pasteventsblock_display($blockinfo)
     $Date = DateUtil::getDatetime('', '%Y%m%d%H%M%S');
 
     // Get variables from content block
-    $vars = pnBlockVarsFromContent($blockinfo['content']);
+    $vars = BlockUtil::varsFromContent($blockinfo['content']);
 
     $pcbeventsrange = (int) $vars['pcbeventsrange'];
     $pcbfiltercats  = $vars['pcbfiltercats'];
@@ -67,7 +67,7 @@ function postcalendar_pasteventsblock_display($blockinfo)
     $render->cache_id = $blockinfo['bid'] . ':' . UserUtil::getVar('uid');
     if ($render->is_cached('blocks/postcalendar_block_pastevents.htm')) {
         $blockinfo['content'] = $render->fetch('blocks/postcalendar_block_pastevents.htm');
-        return pnBlockThemeBlock($blockinfo);
+        return BlockUtil::themeBlock($blockinfo);
     }
 
     if ($pcbeventsrange == 0) {
@@ -89,7 +89,7 @@ function postcalendar_pasteventsblock_display($blockinfo)
 
     $blockinfo['content'] = $render->fetch('blocks/postcalendar_block_pastevents.htm');
 
-    return pnBlockThemeBlock($blockinfo);
+    return BlockUtil::themeBlock($blockinfo);
 }
 
 /**
@@ -97,7 +97,7 @@ function postcalendar_pasteventsblock_display($blockinfo)
  */
 function postcalendar_pasteventsblock_modify($blockinfo)
 {
-    $vars = pnBlockVarsFromContent($blockinfo['content']);
+    $vars = BlockUtil::varsFromContent($blockinfo['content']);
     // Defaults
     if (empty($vars['pcbeventsrange'])) $vars['pcbeventsrange'] = 6;
     if (empty($vars['pcbfiltercats']))  $vars['pcbfiltercats']  = array();
@@ -122,7 +122,7 @@ function postcalendar_pasteventsblock_modify($blockinfo)
 function postcalendar_pasteventsblock_update($blockinfo)
 {
     // Get current content
-    $vars = pnBlockVarsFromContent($blockinfo['content']);
+    $vars = BlockUtil::varsFromContent($blockinfo['content']);
 
     // overwrite with new values
     $vars['pcbeventsrange'] = FormUtil::getPassedValue('pcbeventsrange', 6);
@@ -130,7 +130,7 @@ function postcalendar_pasteventsblock_update($blockinfo)
 
     $render = Renderer::getInstance('PostCalendar');
     $render->clear_cache('blocks/postcalendar_block_pastevents.htm');
-    $blockinfo['content'] = pnBlockVarsToContent($vars);
+    $blockinfo['content'] = BlockUtil::varsToContent($vars);
 
     return $blockinfo;
 }

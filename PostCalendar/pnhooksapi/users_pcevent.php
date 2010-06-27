@@ -24,7 +24,7 @@ function postcalendar_hooksapi_users_pcevent($args)
         return false;
     }
 
-    $user = pnUserGetVars($args['objectid'], true);
+    $user = UserUtil::getVars($args['objectid'], true);
 
     // $user['activated'] ??
     // cannot rely on 'activated' attribute as update hook is not called on user update/activation (http://code.zikula.org/core/ticket/1804)

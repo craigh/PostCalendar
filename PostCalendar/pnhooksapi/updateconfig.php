@@ -21,8 +21,8 @@ function postcalendar_hooksapi_updateconfig($args)
     if ((!isset($hookinfo['postcalendar_optoverride'])) || (empty($hookinfo['postcalendar_optoverride']))) {
         $hookinfo['postcalendar_optoverride'] = 0;
     }
-    $thismodule = isset($args['extrainfo']['module']) ? strtolower($args['extrainfo']['module']) : strtolower(pnModGetName()); // default to active module
-    pnModSetVars($thismodule, $hookinfo);
+    $thismodule = isset($args['extrainfo']['module']) ? strtolower($args['extrainfo']['module']) : strtolower(ModUtil::getName()); // default to active module
+    ModUtil::setVars($thismodule, $hookinfo);
     // ModVars: postcalendar_admincatselected, postcalendar_optoverride
 
     $dom = ZLanguage::getModuleDomain('PostCalendar');

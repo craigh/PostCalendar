@@ -70,14 +70,14 @@ function postcalendar_searchapi_search($args)
         $searchargs['filtercats']['__CATEGORIES__'] = $args['__CATEGORIES__'];
     }
 
-    pnModDBInfoLoad('Search');
+    ModUtil::dbInfoLoad('Search');
     $pntable = pnDBGetTables();
     $postcalendartable = $pntable['postcalendar_events'];
     $postcalendarcolumn = $pntable['postcalendar_events_column'];
     $searchTable = $pntable['search_result'];
     $searchColumn = $pntable['search_result_column'];
 
-    $where = search_construct_where($args, array(
+    $where = Search_Api_User::construct_where($args, array(
         $postcalendarcolumn['title'],
         $postcalendarcolumn['hometext']), null);
     if (!empty($where)) {

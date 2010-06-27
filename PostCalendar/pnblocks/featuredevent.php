@@ -45,7 +45,7 @@ function postcalendar_featuredeventblock_display($blockinfo)
     if (!ModUtil::available('PostCalendar')) {
         return;
     }
-    $vars = pnBlockVarsFromContent($blockinfo['content']);
+    $vars = BlockUtil::varsFromContent($blockinfo['content']);
 
     // Defaults
     if (empty($vars['eid'])) {
@@ -56,7 +56,7 @@ function postcalendar_featuredeventblock_display($blockinfo)
     $event['showhiddenwarning'] = false; // default to false
 
     // get the event from the DB
-    pnModDBInfoLoad('PostCalendar');
+    ModUtil::dbInfoLoad('PostCalendar');
     $event = DBUtil::selectObjectByID('postcalendar_events', (int) $vars['eid'], 'eid');
     $event = ModUtil::apiFunc('PostCalendar', 'event', 'formateventarrayfordisplay', $event);
 
@@ -88,7 +88,7 @@ function postcalendar_featuredeventblock_display($blockinfo)
 
     $blockinfo['content'] = $render->fetch('blocks/postcalendar_block_featuredevent.htm');
 
-    return pnBlockThemeBlock($blockinfo);
+    return BlockUtil::themeBlock($blockinfo);
 }
 
 /**
@@ -96,7 +96,7 @@ function postcalendar_featuredeventblock_display($blockinfo)
  */
 function postcalendar_featuredeventblock_modify($blockinfo)
 {
-    $vars = pnBlockVarsFromContent($blockinfo['content']);
+    $vars = BlockUtil::varsFromContent($blockinfo['content']);
     // Defaults
     if (empty($vars['eid']))           $vars['eid']           = '';
     if (empty($vars['showcountdown'])) $vars['showcountdown'] = 0;
@@ -114,7 +114,7 @@ function postcalendar_featuredeventblock_modify($blockinfo)
  */
 function postcalendar_featuredeventblock_update($blockinfo)
 {
-    $vars = pnBlockVarsFromContent($blockinfo['content']);
+    $vars = BlockUtil::varsFromContent($blockinfo['content']);
 
     // alter the corresponding variable
     $vars['eid']           = FormUtil::getPassedValue('eid', '', 'POST');
@@ -122,7 +122,7 @@ function postcalendar_featuredeventblock_update($blockinfo)
     $vars['hideonexpire']  = FormUtil::getPassedValue('hideonexpire', '', 'POST');
 
     // write back the new contents
-    $blockinfo['content'] = pnBlockVarsToContent($vars);
+    $blockinfo['content'] = BlockUtil::varsToContent($vars);
 
     // clear the block cache
     $render = Renderer::getInstance('PostCalendar');

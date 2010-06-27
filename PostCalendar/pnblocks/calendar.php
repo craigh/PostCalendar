@@ -51,7 +51,7 @@ function postcalendar_calendarblock_display($blockinfo)
     $Date = DateUtil::getDatetime('', '%Y%m%d%H%M%S');
 
     // Get variables from content block
-    $vars = pnBlockVarsFromContent($blockinfo['content']);
+    $vars = BlockUtil::varsFromContent($blockinfo['content']);
 
     $showcalendar   = $vars['pcbshowcalendar'];
     $showevents     = $vars['pcbeventoverview'];
@@ -100,7 +100,7 @@ function postcalendar_calendarblock_display($blockinfo)
         $blockinfo['content'] .= $render->fetch('blocks/postcalendar_block_view_upcoming.htm');
         $blockinfo['content'] .= $render->fetch('blocks/postcalendar_block_calendarlinks.htm');
 
-        return pnBlockThemeBlock($blockinfo);
+        return BlockUtil::themeBlock($blockinfo);
     }
     // end cache return
 
@@ -221,7 +221,7 @@ function postcalendar_calendarblock_display($blockinfo)
     }
 
     $blockinfo['content'] = $output;
-    return pnBlockThemeBlock($blockinfo);
+    return BlockUtil::themeBlock($blockinfo);
 }
 
 /**
@@ -229,7 +229,7 @@ function postcalendar_calendarblock_display($blockinfo)
  */
 function postcalendar_calendarblock_modify($blockinfo)
 {
-    $vars = pnBlockVarsFromContent($blockinfo['content']);
+    $vars = BlockUtil::varsFromContent($blockinfo['content']);
     // Defaults
     if (empty($vars['pcbshowcalendar']))      $vars['pcbshowcalendar']      = 0;
     if (empty($vars['pcbeventslimit']))       $vars['pcbeventslimit']       = 5;
@@ -260,7 +260,7 @@ function postcalendar_calendarblock_modify($blockinfo)
 function postcalendar_calendarblock_update($blockinfo)
 {
     // Get current content
-    $vars = pnBlockVarsFromContent($blockinfo['content']);
+    $vars = BlockUtil::varsFromContent($blockinfo['content']);
 
     // overwrite with new values
     $vars['pcbshowcalendar']      = FormUtil::getPassedValue('pcbshowcalendar',      0);
@@ -277,7 +277,7 @@ function postcalendar_calendarblock_update($blockinfo)
     $render->clear_cache('blocks/postcalendar_block_view_month.htm');
     $render->clear_cache('blocks/postcalendar_block_view_upcoming.htm');
     $render->clear_cache('blocks/postcalendar_block_calendarlinks.htm');
-    $blockinfo['content'] = pnBlockVarsToContent($vars);
+    $blockinfo['content'] = BlockUtil::varsToContent($vars);
 
     return $blockinfo;
 }

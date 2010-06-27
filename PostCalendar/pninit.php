@@ -41,7 +41,7 @@ function PostCalendar_init()
 
     // PostCalendar Default Settings
     $defaultsettings = postcalendar_init_getdefaults();
-    $result = pnModSetVars('PostCalendar', $defaultsettings);
+    $result = ModUtil::setVars('PostCalendar', $defaultsettings);
     if (!$result) {
         return LogUtil::registerError(__('Error! Could not set the default settings for PostCalendar.', $dom));
     }
@@ -97,15 +97,15 @@ function PostCalendar_upgrade($oldversion)
         case '4.0.1':
         case '4.0.2':
         case '4.0.3': // Also support upgrades from PostCalendar 4.03a (http://www.krapohl.info)
-            pnModSetVar('PostCalendar', 'pcRepeating', '0');
-            pnModSetVar('PostCalendar', 'pcMeeting', '0');
-            pnModSetVar('PostCalendar', 'pcAddressbook', '1');
+            ModUtil::setVar('PostCalendar', 'pcRepeating', '0');
+            ModUtil::setVar('PostCalendar', 'pcMeeting', '0');
+            ModUtil::setVar('PostCalendar', 'pcAddressbook', '1');
         case '5.0.0':
-            pnModSetVar('PostCalendar', 'pcTemplate', 'default');
+            ModUtil::setVar('PostCalendar', 'pcTemplate', 'default');
         case '5.0.1':
-            pnModDelVar('PostCalendar', 'pcTemplate');
+            ModUtil::delVar('PostCalendar', 'pcTemplate');
         case '5.1.0':
-            pnModSetVar('PostCalendar', 'pcNotifyAdmin2Admin', '0');
+            ModUtil::setVar('PostCalendar', 'pcNotifyAdmin2Admin', '0');
         case '5.5.0':
             if (!postcalendar_init_reset_scribite()) {
                 return '5.5.0';
@@ -113,13 +113,13 @@ function PostCalendar_upgrade($oldversion)
         case '5.5.1':
         case '5.5.2':
         case '5.5.3':
-            pnModSetVar('PostCalendar', 'pcAllowCatFilter', '1');
-            pnModSetVar('PostCalendar', 'pcEventDateFormat', '%B %e, %Y'); // added this @v6.1.0
-            pnModDelVar('PostCalendar', 'pcDayHighlightColor');
-            pnModDelVar('PostCalendar', 'pcAllowSiteWide');
-            pnModDelVar('PostCalendar', 'pcAddressbook');
-            pnModDelVar('PostCalendar', 'pcMeeting');
-            pnModDelVar('PostCalendar', 'pcUseInternationalDates');
+            ModUtil::setVar('PostCalendar', 'pcAllowCatFilter', '1');
+            ModUtil::setVar('PostCalendar', 'pcEventDateFormat', '%B %e, %Y'); // added this @v6.1.0
+            ModUtil::delVar('PostCalendar', 'pcDayHighlightColor');
+            ModUtil::delVar('PostCalendar', 'pcAllowSiteWide');
+            ModUtil::delVar('PostCalendar', 'pcAddressbook');
+            ModUtil::delVar('PostCalendar', 'pcMeeting');
+            ModUtil::delVar('PostCalendar', 'pcUseInternationalDates');
         case '5.8.0':
         case '5.8.1':
             if (!postcalendar_init_correctserialization()) {
@@ -159,20 +159,20 @@ function PostCalendar_upgrade($oldversion)
                 LogUtil::registerError(__('Error: Could not convert informant field to uid.', $dom));
                 return '5.8.2';
             }
-            pnModDelVar('PostCalendar', 'pcDisplayTopics');
-            pnModDelVar('PostCalendar', 'pcUseCache');
-            pnModDelVar('PostCalendar', 'pcCacheLifetime');
-            pnModDelVar('PostCalendar', 'pcRepeating');
-            pnModSetVar('PostCalendar', 'enablecategorization', true);
-            pnModSetVar('PostCalendar', 'enablenavimages', true);
-            pnModSetVar('PostCalendar', 'pcNavDateOrder', array(
+            ModUtil::delVar('PostCalendar', 'pcDisplayTopics');
+            ModUtil::delVar('PostCalendar', 'pcUseCache');
+            ModUtil::delVar('PostCalendar', 'pcCacheLifetime');
+            ModUtil::delVar('PostCalendar', 'pcRepeating');
+            ModUtil::setVar('PostCalendar', 'enablecategorization', true);
+            ModUtil::setVar('PostCalendar', 'enablenavimages', true);
+            ModUtil::setVar('PostCalendar', 'pcNavDateOrder', array(
                 'format' => 'MDY',
                 'D' => '%e',
                 'M' => '%B',
                 'Y' => '%Y'));
         case '6.0.0':
-            pnModSetVar('PostCalendar', 'pcFilterYearStart', 1);
-            pnModSetVar('PostCalendar', 'pcFilterYearEnd', 2);
+            ModUtil::setVar('PostCalendar', 'pcFilterYearStart', 1);
+            ModUtil::setVar('PostCalendar', 'pcFilterYearEnd', 2);
         case '6.0.1':
             // no changes
         case '6.0.2':
@@ -185,7 +185,7 @@ function PostCalendar_upgrade($oldversion)
                 LogUtil::registerError(__('Error! Could not upgrade the tables.', $dom));
                 return '6.0.1';
             }
-            pnModSetVar('PostCalendar', 'pcListMonths', 12);
+            ModUtil::setVar('PostCalendar', 'pcListMonths', 12);
         case '6.1.0':
             //future development
     }
@@ -211,10 +211,10 @@ function PostCalendar_upgrade($oldversion)
 function PostCalendar_delete()
 {
     $result = DBUtil::dropTable('postcalendar_events');
-    $result = $result && pnModDelVar('PostCalendar');
+    $result = $result && ModUtil::delVar('PostCalendar');
 
     // Delete entries from category registry
-    pnModDBInfoLoad('Categories');
+    ModUtil::dbInfoLoad('Categories');
     DBUtil::deleteWhere('categories_registry', "crg_modname='PostCalendar'");
     DBUtil::deleteWhere('categories_mapobj', "cmo_modname='PostCalendar'");
 
@@ -278,7 +278,7 @@ function postcalendar_init_reset_scribite()
 {
     $dom = ZLanguage::getModuleDomain('PostCalendar');
     // update the scribite
-    if (ModUtil::available('scribite') && pnModAPILoad('scribite', 'user') && pnModAPILoad('scribite', 'admin')) {
+    if (ModUtil::available('scribite') && ModUtil::loadApi('scribite', 'user') && ModUtil::loadApi('scribite', 'admin')) {
         $modconfig = ModUtil::apiFunc('scribite', 'user', 'getModuleConfig', array(
             'modulename' => 'PostCalendar'));
         $mid = false;
@@ -419,7 +419,7 @@ function _postcalendar_migratetopics()
         }
 
         // After an upgrade we want the legacy topic template variables to point to the Topic property
-        pnModSetVar('PostCalendar', 'topicproperty', 'Topic');
+        ModUtil::setVar('PostCalendar', 'topicproperty', 'Topic');
     } else {
         $topicsmap = $topicsidmap; // use previously migrated topics
     } // end if ((ModUtil::available('Topics')) AND (!$topicsidmap))
@@ -741,7 +741,7 @@ function _postcalendar_createcategory($catarray)
     $nCat = CategoryUtil::getCategoryByPath($catarray['rootpath'] . "/" . $catarray['name']);
 
     if (!$nCat) {
-        $cat = new PNCategory();
+        $cat = new Categories_DBObject_Category();
         $data = $cat->getData();
         $data['parent_id'] = $rootcat['id'];
         $data['name'] = $catarray['name'];
@@ -776,7 +776,7 @@ function _postcalendar_create_regentry($rootcat, $data)
     // expecting $rootcat - rootcategory info
     // expecting array(modname=>'', table=>'', property=>'')
 
-    $registry = new PNCategoryRegistry();
+    $registry = new Categories_DBObject_Registry();
     $registry->setDataField('modname',     $data['modname']);
     $registry->setDataField('table',       $data['table']);
     $registry->setDataField('property',    $data['property']);
@@ -821,33 +821,33 @@ function _postcalendar_registermodulehooks()
     $hookfunc = name of the hook function
     */
 
-    if (!pnModRegisterHook('item', 'create', 'API', 'PostCalendar', 'hooks', 'create')) {
+    if (!ModUtil::registerHook('item', 'create', 'API', 'PostCalendar', 'hooks', 'create')) {
         return LogUtil::registerError(__f('PostCalendar: Could not register %s hook.', 'create', $dom));
     }
-    if (!pnModRegisterHook('item', 'update', 'API', 'PostCalendar', 'hooks', 'update')) {
+    if (!ModUtil::registerHook('item', 'update', 'API', 'PostCalendar', 'hooks', 'update')) {
         return LogUtil::registerError(__f('PostCalendar: Could not register %s hook.', 'update', $dom));
     }
-    if (!pnModRegisterHook('item', 'delete', 'API', 'PostCalendar', 'hooks', 'delete')) {
+    if (!ModUtil::registerHook('item', 'delete', 'API', 'PostCalendar', 'hooks', 'delete')) {
         return LogUtil::registerError(__f('PostCalendar: Could not register %s hook.', 'delete', $dom));
     }
-    if (!pnModRegisterHook('item', 'new', 'GUI', 'PostCalendar', 'hooks', 'new')) {
+    if (!ModUtil::registerHook('item', 'new', 'GUI', 'PostCalendar', 'hooks', 'new')) {
         return LogUtil::registerError(__f('PostCalendar: Could not register %s hook.', 'new', $dom));
     }
-    if (!pnModRegisterHook('item', 'modify', 'GUI', 'PostCalendar', 'hooks', 'modify')) {
+    if (!ModUtil::registerHook('item', 'modify', 'GUI', 'PostCalendar', 'hooks', 'modify')) {
         return LogUtil::registerError(__f('PostCalendar: Could not register %s hook.', 'modify', $dom));
     }
-    if (!pnModRegisterHook('module', 'modifyconfig', 'GUI', 'PostCalendar', 'hooks', 'modifyconfig')) {
+    if (!ModUtil::registerHook('module', 'modifyconfig', 'GUI', 'PostCalendar', 'hooks', 'modifyconfig')) {
         return LogUtil::registerError(__f('PostCalendar: Could not register %s hook.', 'modifyconfig', $dom));
     }
-    if (!pnModRegisterHook('module', 'updateconfig', 'API', 'PostCalendar', 'hooks', 'updateconfig')) {
+    if (!ModUtil::registerHook('module', 'updateconfig', 'API', 'PostCalendar', 'hooks', 'updateconfig')) {
         return LogUtil::registerError(__f('PostCalendar: Could not register %s hook.', 'updateconfig', $dom));
     }
-    if (!pnModRegisterHook('module', 'remove', 'API', 'PostCalendar', 'hooks', 'deletemodule')) {
+    if (!ModUtil::registerHook('module', 'remove', 'API', 'PostCalendar', 'hooks', 'deletemodule')) {
         return LogUtil::registerError(__f('PostCalendar: Could not register %s hook.', 'deletemodule', $dom));
     }
     // this (working) solution has been disabled in favor of a plugin-based solution.
     // the code remains here as another possible solution if required.
-    //if (!pnModRegisterHook('zikula', 'systeminit', 'API', 'PostCalendar', 'hooks', 'scheduler')) {
+    //if (!ModUtil::registerHook('zikula', 'systeminit', 'API', 'PostCalendar', 'hooks', 'scheduler')) {
     //    return LogUtil::registerError(__f('PostCalendar: Could not register %s hook.', 'scheduler', $dom));
     //}
 

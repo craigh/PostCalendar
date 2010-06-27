@@ -202,15 +202,15 @@ function postcalendar_admin_adminevents()
         // return to where we came from
         switch ($thelist) {
             case 'listqueued':
-                return pnModFunc('PostCalendar', 'admin', 'showlist', array(
+                return ModUtil::func('PostCalendar', 'admin', 'showlist', array(
                     'type' => _EVENT_QUEUED,
                     'function' => 'showlist'));
             case 'listhidden':
-                return pnModFunc('PostCalendar', 'admin', 'showlist', array(
+                return ModUtil::func('PostCalendar', 'admin', 'showlist', array(
                     'type' => _EVENT_HIDDEN,
                     'function' => 'showlist'));
             case 'listapproved':
-                return pnModFunc('PostCalendar', 'admin', 'showlist', array(
+                return ModUtil::func('PostCalendar', 'admin', 'showlist', array(
                     'type' => _EVENT_APPROVED,
                     'function' => 'showlist'));
         }
@@ -267,16 +267,16 @@ function postcalendar_admin_resetDefaults()
         return LogUtil::registerPermissionError();
     }
 
-    $defaults = pnModFunc('PostCalendar', 'init', 'getdefaults');
+    $defaults = ModUtil::func('PostCalendar', 'init', 'getdefaults');
     if (!count($defaults)) {
         return LogUtil::registerError(__('Error! Could not load default values.', $dom));
     }
 
     // delete all the old vars
-    pnModDelVar('PostCalendar');
+    ModUtil::delVar('PostCalendar');
 
     // set the new variables
-    pnModSetVars('PostCalendar', $defaults);
+    ModUtil::setVars('PostCalendar', $defaults);
 
     // clear the cache
     ModUtil::apiFunc('PostCalendar', 'admin', 'clearCache');
@@ -297,7 +297,7 @@ function postcalendar_admin_updateconfig()
         return LogUtil::registerPermissionError();
     }
 
-    $defaults = pnModFunc('PostCalendar', 'init', 'getdefaults');
+    $defaults = ModUtil::func('PostCalendar', 'init', 'getdefaults');
     if (!count($defaults)) {
         return LogUtil::registerError(__('Error! Could not load default values.', $dom));
     }
@@ -327,10 +327,10 @@ function postcalendar_admin_updateconfig()
     $settings['pcNavDateOrder'] = ModUtil::apiFunc('PostCalendar', 'admin', 'getdateorder', $settings['pcEventDateFormat']);
 
     // delete all the old vars
-    pnModDelVar('PostCalendar');
+    ModUtil::delVar('PostCalendar');
 
     // set the new variables
-    pnModSetVars('PostCalendar', $settings);
+    ModUtil::setVars('PostCalendar', $settings);
 
     // Let any other modules know that the modules configuration has been updated
     ModUtil::callHooks('module', 'updateconfig', 'PostCalendar', array(
@@ -378,7 +378,7 @@ function postcalendar_admin_approveevents()
     }
 
     ModUtil::apiFunc('PostCalendar', 'admin', 'clearCache');
-    return pnModFunc('PostCalendar', 'admin', 'showlist', array(
+    return ModUtil::func('PostCalendar', 'admin', 'showlist', array(
         'type' => _EVENT_APPROVED,
         'function' => 'listapproved',
         'title' => __('Approved events administration', $dom)));
@@ -419,7 +419,7 @@ function postcalendar_admin_hideevents()
     }
 
     ModUtil::apiFunc('PostCalendar', 'admin', 'clearCache');
-    return pnModFunc('PostCalendar', 'admin', 'showlist', array(
+    return ModUtil::func('PostCalendar', 'admin', 'showlist', array(
         'type' => _EVENT_APPROVED,
         'function' => 'listapproved',
         'title' => __('Approved events administration', $dom)));
@@ -458,7 +458,7 @@ function postcalendar_admin_deleteevents()
     }
 
     ModUtil::apiFunc('PostCalendar', 'admin', 'clearCache');
-    return pnModFunc('PostCalendar', 'admin', 'showlist', array(
+    return ModUtil::func('PostCalendar', 'admin', 'showlist', array(
         'type' => _EVENT_APPROVED,
         'function' => 'listapproved',
         'title' => __('Approved events administration', $dom)));

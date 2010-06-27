@@ -13,7 +13,7 @@ include_once 'modules/PostCalendar/global.php';
 /**
  * This is the event handler file
  **/
-class postcalendar_event_editHandler extends pnFormHandler
+class postcalendar_event_editHandler extends Form_Handler
 {
     var $eid;
 
@@ -21,7 +21,7 @@ class postcalendar_event_editHandler extends pnFormHandler
     {
         $dom = ZLanguage::getModuleDomain('PostCalendar');
         if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADD)) {
-            return $render->pnFormSetErrorMsg(__('Sorry! Authorization has not been granted.', $dom));
+            return $render->Form_Render::setErrorMsg(__('Sorry! Authorization has not been granted.', $dom));
         }
 
         $this->eid = FormUtil::getPassedValue('eid');
@@ -37,16 +37,16 @@ class postcalendar_event_editHandler extends pnFormHandler
         // Fetch event data from DB to confirm event exists
         $event = DBUtil::selectObjectByID('postcalendar_events', $this->eid, 'eid');
         if (count($event) == 0) {
-            return $render->pnFormSetErrorMsg(__f('Error! There are no events with ID %s.', $this->eid, $dom));
+            return $render->Form_Render::setErrorMsg(__f('Error! There are no events with ID %s.', $this->eid, $dom));
         }
 
         if ($args['commandName'] == 'delete') {
             if ((SessionUtil::getVar('uid') != $event['informant']) and (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN))) {
-                return $render->pnFormSetErrorMsg(__('Sorry! You do not have authorization to delete this event.', $dom));
+                return $render->Form_Render::setErrorMsg(__('Sorry! You do not have authorization to delete this event.', $dom));
             }
             $result = DBUtil::deleteObjectByID('postcalendar_events', $this->eid, 'eid');
             if ($result === false) {
-                return $render->pnFormSetErrorMsg(__("Error! An 'unidentified error' occurred.", $dom));
+                return $render->Form_Render::setErrorMsg(__("Error! An 'unidentified error' occurred.", $dom));
             }
             LogUtil::registerStatus(__('Done! The event was deleted.', $dom));
             ModUtil::callHooks('item', 'delete', $this->eid, array(
@@ -54,7 +54,7 @@ class postcalendar_event_editHandler extends pnFormHandler
 
             $redir = ModUtil::url('PostCalendar', 'user', 'view', array(
                 'viewtype' => _SETTING_DEFAULT_VIEW));
-            return $render->pnFormRedirect($redir);
+            return $render->Form_Render::redirect($redir);
         } else if ($args['commandName'] == 'cancel') {
             $url = ModUtil::url('PostCalendar', 'user', 'view', array(
                 'eid' => $this->eid,
@@ -64,7 +64,7 @@ class postcalendar_event_editHandler extends pnFormHandler
 
         if ($url != null) {
             /*ModUtil::apiFunc('PageLock', 'user', 'releaseLock', array('lockName' => "HowtoPnFormsRecipe{$this->recipeId}")); */
-            return $render->pnFormRedirect($url);
+            return $render->Form_Render::redirect($url);
         }
 
         return true;
@@ -81,14 +81,14 @@ function postcalendar_event_delete()
         return LogUtil::registerPermissionError();
     }
     $eid    = FormUtil::getPassedValue('eid'); //  seems like this should be handled by the eventHandler
-    $render = FormUtil::newpnForm('PostCalendar');
+    $render = FormUtil::newForm('PostCalendar');
 
     // get the event from the DB
     $event = DBUtil::selectObjectByID('postcalendar_events', $eid, 'eid');
     $event = ModUtil::apiFunc('PostCalendar', 'event', 'formateventarrayfordisplay', $event);
 
     $render->assign('loaded_event', $event);
-    return $render->pnFormExecute('event/postcalendar_event_deleteeventconfirm.htm', new postcalendar_event_editHandler());
+    return $render->Form_Render::execute('event/postcalendar_event_deleteeventconfirm.htm', new postcalendar_event_editHandler());
 }
 
 /**

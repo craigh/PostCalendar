@@ -31,7 +31,7 @@ function postcalendar_needleapi_postcaldate($args)
         $icon = '';
         $link = '';
         $uselink = false;
-        $moddir = pnModGetBaseDir($modname = 'PostCalendar');
+        $moddir = ModUtil::getBaseDir($modname = 'PostCalendar');
         if (strpos($displaytype, 'I') !== false) {
             $icon = "<img src='$moddir/pnimages/smallcalicon.jpg' alt='" . __('cal icon', $dom) . "' title='" . __('PostCalendar Date', $dom) . "' /> ";
         }

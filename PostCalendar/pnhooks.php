@@ -18,7 +18,7 @@
  */
 function postcalendar_hooks_new($args)
 {
-    $thismodule = isset($args['extrainfo']['module']) ? strtolower($args['extrainfo']['module']) : strtolower(pnModGetName()); // default to active module
+    $thismodule = isset($args['extrainfo']['module']) ? strtolower($args['extrainfo']['module']) : strtolower(ModUtil::getName()); // default to active module
 
     $render = Renderer::getInstance('PostCalendar');
     $postcalendar_admincatselected = ModUtil::getVar($thismodule, 'postcalendar_admincatselected');
@@ -55,7 +55,7 @@ function postcalendar_hooks_modify($args)
     if ((!isset($args['objectid'])) || ((int) $args['objectid'] <= 0)) {
         return false;
     }
-    $module = isset($args['extrainfo']['module']) ? strtolower($args['extrainfo']['module']) : strtolower(pnModGetName()); // default to active module
+    $module = isset($args['extrainfo']['module']) ? strtolower($args['extrainfo']['module']) : strtolower(ModUtil::getName()); // default to active module
 
     // get the event
     // Get table info
@@ -108,7 +108,7 @@ function postcalendar_hooks_modify($args)
  */
 function postcalendar_hooks_modifyconfig($args)
 {
-    $thismodule = isset($args['extrainfo']['module']) ? strtolower($args['extrainfo']['module']) : strtolower(pnModGetName()); // default to active module
+    $thismodule = isset($args['extrainfo']['module']) ? strtolower($args['extrainfo']['module']) : strtolower(ModUtil::getName()); // default to active module
     $render = Renderer::getInstance('PostCalendar');
 
     $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
