@@ -54,14 +54,12 @@
         <input type="radio" name="postcalendar_events[alldayevent]" id="postcalendar_events_alldayevent1" value="1"{$Selected.allday} /><label for="postcalendar_events_alldayevent1" style='padding-left:1em;'>{gt text='All-day event'}</label>
         <br />
         <input type="radio" name="postcalendar_events[alldayevent]" id="postcalendar_events_alldayevent0" value="0"{$Selected.timed} /><label for="postcalendar_events_alldayevent0" style='padding-left:1em;'>{gt text='Timed event'}</label>
-            {html_select_time time=`$loaded_event.startTime` display_seconds=false use_24_hours=$24HOUR_TIME minute_interval=$minute_interval field_array="postcalendar_events[startTime]" prefix=""}
         <br />
         <div style='padding-left: 4em;'>
-            {gt text='Duration'}
-            {html_select_time time=`$loaded_event.duration` display_seconds=false display_minutes=false display_meridian=false use_24_hours=true field_array="postcalendar_events[duration]" prefix="" hour_extra="id='postcalendar_events_duration_hour'"}
-            <label for="postcalendar_events_duration_hour">{gt text='Hours'}</label>
-            {html_select_time time=`$loaded_event.duration` display_seconds=false display_hours=false display_meridian=false minute_interval=$minute_interval field_array="postcalendar_events[duration]" prefix="" minute_extra="id='postcalendar_events_duration_minute'"}
-            <label for="postcalendar_events_duration_minute">{gt text='Minutes'}</label>
+            {gt text='Start Time'}
+            {html_select_time time=`$loaded_event.startTime` display_seconds=false use_24_hours=$24HOUR_TIME minute_interval=$minute_interval field_array="postcalendar_events[startTime]" prefix=""}<br />
+            {gt text='End Time'}
+            {html_select_time time=`$loaded_event.endTime` display_seconds=false use_24_hours=$24HOUR_TIME minute_interval=$minute_interval field_array="postcalendar_events[endTime]" prefix=""}
         </div>
         <br />
 

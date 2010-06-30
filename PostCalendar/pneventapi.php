@@ -448,18 +448,13 @@ function postcalendar_eventapi_buildSubmitForm($args)
     $eventdata['__CATEGORIES__'] = isset($eventdata['__CATEGORIES__']) ? $eventdata['__CATEGORIES__'] : $eventDefaults['categories'];
 
     // All-day event values for radio buttons
-    $form_data['Selected'] = postcalendar_eventapi_alldayselect($eventdata['alldayevent']);
+    $form_data['Selected'] = ModUtil::apiFunc('PostCalendar', 'event', 'alldayselect', $eventdata['alldayevent']);
 
-    // StartTime
     $form_data['minute_interval'] = _SETTING_TIME_INCREMENT;
-    if (empty($eventdata['startTime'])) {
-        $eventdata['startTime'] = $eventDefaults['startTime'];
-    }
 
-    // duration
-    if (empty($eventdata['duration'])) {
-        $eventdata['duration'] = gmdate("G:i", $eventDefaults['duration']);
-    }
+    $eventdata['endTime'] = (empty($eventdata['endTime'])) ? ModUtil::apiFunc('PostCalendar', 'event', 'computeendtime', $eventDefaults) : $eventdata['endTime'];
+
+    $eventdata['startTime'] = (empty($eventdata['startTime'])) ? $eventDefaults['startTime'] : $eventdata['startTime'];
 
     // hometext
     if (empty($eventdata['HTMLorTextVal'])) {
@@ -619,7 +614,8 @@ function postcalendar_eventapi_formateventarrayfordisplay($event)
     // build sharing sentence for display
     $event['sharing_sentence'] = ($event['sharing'] == SHARING_PRIVATE) ? __('This is a private event.', $dom) : __('This is a public event. ', $dom);
 
-    // converts seconds to HH:MM for display
+    $event['endTime'] = ModUtil::apiFunc('PostCalendar', 'event', 'computeendtime', $event);
+    // converts seconds to HH:MM for display  - keep just in case duration is wanted
     $event['duration'] = gmdate("G:i", $event['duration']); // stored in DB as seconds
 
     // prepare starttime for display HH:MM or HH:MM AP
@@ -681,8 +677,10 @@ function postcalendar_eventapi_formateventarrayforDB($event)
         $event['endDate'] = $event['eventDate'];
     }
 
+    // reformat endTime to duration in seconds
+    $event['duration'] = ModUtil::apiFunc('PostCalendar', 'event', 'computeduration', $event);
+    
     // reformat times from form to 'real' 24-hour format
-    $event['duration'] = ModUtil::apiFunc('PostCalendar', 'event', 'converttimetoseconds', $event['duration']);
     $startTime = $event['startTime'];
     unset($event['startTime']); // clears the whole array
     $event['startTime'] = ModUtil::apiFunc('PostCalendar', 'event', 'convertstarttime', $startTime);
@@ -774,6 +772,16 @@ function postcalendar_eventapi_validateformdata($submitted_event)
     if (($submitted_event['endtype'] == 1) && ($edate < $sdate)) {
         LogUtil::registerError(__('Error! The selected start date falls after the selected end date.', $dom));
         return true;
+    }
+
+    // check time validity
+    if ($submitted_event['alldayevent'] == 0) {
+        $stime = ModUtil::apiFunc('PostCalendar', 'event', 'converttimetoseconds', $submitted_event['startTime']);
+        $etime = ModUtil::apiFunc('PostCalendar', 'event', 'converttimetoseconds', $submitted_event['endTime']);
+        if ($etime <= $stime) {
+            LogUtil::registerError(__('Error! The end time must be after the start time.', $dom));
+            return true;
+        }
     }
 
     return false;
@@ -1055,4 +1063,31 @@ function postcalendar_eventapi_alldayselect($alldayevent)
     $selected['timed']  = (((!isset($alldayevent)) && ($eventDefaults['alldayevent'] == 0)) || ((isset($alldayevent)) && ($alldayevent == 0))) ? " checked='checked'" : ''; //default
 
     return $selected;
+}
+/**
+ * @description compute endTime from startTime and duration
+ * @author      Craig Heydenburg
+ * @created     06/30/2010
+ * @params      (array) $event
+ * @return      (string) endTime formatted (HH:MM or HH:MM AP)
+ **/
+function postcalendar_eventapi_computeendtime($event)
+{
+    list ($h, $m, $s)   = explode(':', $event['startTime']); // HH:MM:SS
+    $startTime = ModUtil::apiFunc('PostCalendar', 'event', 'converttimetoseconds', array('Hour' => $h, 'Minute' => $m));
+    $endTime   = $startTime + $event['duration']; // duation already in seconds
+    return _SETTING_TIME_24HOUR ? gmdate('G:i', $endTime) : gmdate('g:i a', $endTime);
+}
+/**
+ * @description compute duration from startTime and endTime
+ * @author      Craig Heydenburg
+ * @created     06/30/2010
+ * @params      (array) $event
+ * @return      (string) duration in seconds
+ **/
+function postcalendar_eventapi_computeduration($event)
+{
+    $stime = ModUtil::apiFunc('PostCalendar', 'event', 'converttimetoseconds', $event['startTime']);
+    $etime = ModUtil::apiFunc('PostCalendar', 'event', 'converttimetoseconds', $event['endTime']);
+    return $etime - $stime;
 }

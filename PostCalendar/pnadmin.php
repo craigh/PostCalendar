@@ -482,7 +482,7 @@ function postcalendar_admin_modifyeventdefaults()
     $render->assign('selectedDefaultCategories', $selectedDefaultCategories);
 
     // convert duration to HH:MM
-    $eventDefaults['duration'] = gmdate("G:i", $eventDefaults['duration']);
+    $eventDefaults['endTime']  = ModUtil::apiFunc('PostCalendar', 'event', 'computeendtime', $eventDefaults);
 
     // sharing selectbox
     $render->assign('sharingselect', ModUtil::apiFunc('PostCalendar', 'event', 'sharingselect'));
@@ -511,7 +511,9 @@ function postcalendar_admin_seteventdefaults()
     $eventDefaults = ModUtil::apiFunc('postcalendar', 'event', 'correctlocationdata', $eventDefaults);
 
     //convert times to storable values
-    $eventDefaults['duration'] = ModUtil::apiFunc('PostCalendar', 'event', 'converttimetoseconds', $eventDefaults['duration']);
+    $eventDefaults['duration'] = ModUtil::apiFunc('PostCalendar', 'event', 'computeduration', $eventDefaults);
+    $eventDefaults['duration'] = ($eventDefaults['duration'] > 0) ? $eventDefaults['duration'] : 3600; //disallow duration < 0
+
     $startTime = $eventDefaults['startTime'];
     unset($eventDefaults['startTime']); // clears the whole array
     $eventDefaults['startTime'] = ModUtil::apiFunc('PostCalendar', 'event', 'convertstarttime', $startTime);

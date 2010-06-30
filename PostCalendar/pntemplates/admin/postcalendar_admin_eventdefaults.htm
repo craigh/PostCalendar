@@ -36,13 +36,8 @@
             <span id="postcalendar_eventdefaults_startTime">{html_select_time time=`$postcalendar_eventdefaults.startTime` display_seconds=false use_24_hours=$24HOUR_TIME minute_interval=$minute_interval field_array="postcalendar_eventdefaults[startTime]" prefix=""}</span>
         </div>
         <div class="z-formrow">
-            <label for="postcalendar_eventdefaults_duration">{gt text='Duration'}</label>
-            <span id="postcalendar_eventdefaults_duration">
-                {html_select_time time=`$postcalendar_eventdefaults.duration` display_seconds=false display_minutes=false display_meridian=false use_24_hours=true field_array="postcalendar_eventdefaults[duration]" prefix="" hour_extra="id='postcalendar_eventdefaults_duration_hour'"}
-                <label for="postcalendar_eventdefaults_duration_hour">{gt text='Hours'}</label>
-                {html_select_time time=`$postcalendar_eventdefaults.duration` display_seconds=false display_hours=false display_meridian=false minute_interval=$minute_interval field_array="postcalendar_eventdefaults[duration]" prefix="" minute_extra="id='postcalendar_eventdefaults_duration_minute'"}
-                <label for="postcalendar_eventdefaults_duration_minute">{gt text='Minutes'}</label>
-            </span>
+            <label for="postcalendar_eventdefaults_endTime">{gt text='End Time'}</label>
+            <span id="postcalendar_eventdefaults_endTime">{html_select_time time=`$postcalendar_eventdefaults.endTime` display_seconds=false use_24_hours=$24HOUR_TIME minute_interval=$minute_interval field_array="postcalendar_eventdefaults[endTime]" prefix=""}</span>
         </div>
 
         <div class="z-formrow">
