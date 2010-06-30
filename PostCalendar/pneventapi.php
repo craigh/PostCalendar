@@ -991,30 +991,37 @@ function postcalendar_eventapi_correctlocationdata($event)
  * @description convert time like 3:00 to seconds
  * @author      Craig Heydenburg
  * @created     06/29/2010
- * @params      (array) $duration array(Hour, Minute)
+ * @params      (array) $time array(Hour, Minute, Meridian (opt))
  * @return      (int) seconds
  **/
-function postcalendar_eventapi_converttimetoseconds($duration)
+function postcalendar_eventapi_converttimetoseconds($time)
 {
-    return (60 * 60 * $duration['Hour']) + (60 * $duration['Minute']);
+    if (isset($time['Meridian']) && !empty($time['Meridian'])) {
+        if ($time['Meridian'] == "am") {
+            $time['Hour'] = $time['Hour'] == 12 ? '00' : $time['Hour'];
+        } else {
+            $time['Hour'] = $time['Hour'] != 12 ? $time['Hour'] += 12 : $time['Hour'];
+        }
+    }
+    return (60 * 60 * $time['Hour']) + (60 * $time['Minute']);
 }
 /**
  * @description convert time array to HH:MM:SS
  * @author      Craig Heydenburg
  * @created     06/29/2010
- * @params      (array) $starttime array(Hour, Minute, Meridian)
+ * @params      (array) $time array(Hour, Minute, Meridian)
  * @return      (string) 'HH:MM:SS'
  **/
-function postcalendar_eventapi_convertstarttime($startTime)
+function postcalendar_eventapi_convertstarttime($time)
 {
     if ((bool) !_SETTING_TIME_24HOUR) {
-        if ($startTime['Meridian'] == "am") {
-            $startTime['Hour'] = $startTime['Hour'] == 12 ? '00' : $startTime['Hour'];
+        if ($time['Meridian'] == "am") {
+            $time['Hour'] = $time['Hour'] == 12 ? '00' : $time['Hour'];
         } else {
-            $startTime['Hour'] = $startTime['Hour'] != 12 ? $startTime['Hour'] += 12 : $startTime['Hour'];
+            $time['Hour'] = $time['Hour'] != 12 ? $time['Hour'] += 12 : $time['Hour'];
         }
     }
-    return sprintf('%02d', $startTime['Hour']) . ':' . sprintf('%02d', $startTime['Minute']) . ':00';
+    return sprintf('%02d', $time['Hour']) . ':' . sprintf('%02d', $time['Minute']) . ':00';
 }
 /**
  * @description create event sharing select box
