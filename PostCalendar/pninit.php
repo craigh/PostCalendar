@@ -187,6 +187,14 @@ function PostCalendar_upgrade($oldversion)
             }
             ModUtil::setVar('PostCalendar', 'pcListMonths', 12);
         case '6.1.0':
+            $oldDefaultCats = ModUtil::getVar('PostCalendar', 'pcDefaultCategories');
+            ModUtil::delVar('PostCalendar', 'pcDefaultCategories');
+            $defaults = postcalendar_init_getdefaults();
+            $defaults['pcEventDefaults']['categories'] = $oldDefaultCats;
+            ModUtil::setVar('PostCalendar', 'pcEventDefaults', $defaults['pcEventDefaults']);
+        case '6.2.0':
+            // 6.2 and 7.0 have the same changes (simultaneous release) so the upgrade code is only needed from 6.1
+        case '7.0.0':
             //future development
     }
 
@@ -254,15 +262,32 @@ function postcalendar_init_getdefaults()
         'pcAllowCatFilter'        => '1',
         'enablecategorization'    => '1',
         'enablenavimages'         => '1',
-        'pcDefaultCategories'     => $defaultcats,
         'pcFilterYearStart'       => 1,
         'pcFilterYearEnd'         => 2,
         'pcListMonths'            => 12,
         'pcNavDateOrder'          => array(
-            'format' => 'MDY',
-            'D' => '%e',
-            'M' => '%B',
-            'Y' => '%Y'));
+            'format'                  => 'MDY',
+            'D'                       => '%e',
+            'M'                       => '%B',
+            'Y'                       => '%Y'),
+        'pcEventDefaults'         => array(
+            'sharing'                 => SHARING_GLOBAL,
+            'categories'              => $defaultcats,
+            'alldayevent'             => 0,
+            'startTime'               => '01:00:00',
+            'duration'                => '3600',
+            'fee'                     => '',
+            'contname'                => '',
+            'conttel'                 => '',
+            'contemail'               => '',
+            'website'                 => '',
+            'location'                => array(
+                'event_location'          => '',
+                'event_street1'           => '',
+                'event_street2'           => '',
+                'event_city'              => '',
+                'event_state'             => '',
+                'event_postal'            => '')));
 
     return $defaults;
 }

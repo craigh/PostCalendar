@@ -28,6 +28,11 @@ function postcalendar_adminapi_getlinks()
             'url' => ModUtil::url('PostCalendar', 'admin', 'modifyconfig'),
             'text' => __('Settings', $dom));
     }
+    if (SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
+        $links[] = array(
+            'url' => ModUtil::url('PostCalendar', 'admin', 'modifyeventdefaults'),
+            'text' => __('Event default values', $dom));
+    }
     if (SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADD)) {
         $links[] = array(
             'url' => ModUtil::url('PostCalendar', 'event', 'new'),

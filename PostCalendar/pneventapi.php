@@ -400,6 +400,9 @@ function postcalendar_eventapi_buildSubmitForm($args)
 
     $eventdata = $args['eventdata']; // contains data for editing if loaded
 
+    // get event default values
+    $eventDefaults = ModUtil::getVar('PostCalendar', 'pcEventDefaults');
+
     // format date information
     if ((!isset($eventdata['endDate'])) || ($eventdata['endDate'] == '') || ($eventdata['endDate'] == '00000000') || ($eventdata['endDate'] == '0000-00-00')) {
         $eventdata['endvalue'] = ModUtil::apiFunc('PostCalendar', 'user', 'getDate', array(
@@ -442,21 +445,20 @@ function postcalendar_eventapi_buildSubmitForm($args)
     $form_data['catregistry'] = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
     $form_data['cat_count'] = count($form_data['catregistry']);
     // configure default categories
-    $eventdata['__CATEGORIES__'] = isset($eventdata['__CATEGORIES__']) ? $eventdata['__CATEGORIES__'] : ModUtil::getVar('PostCalendar', 'pcDefaultCategories');
+    $eventdata['__CATEGORIES__'] = isset($eventdata['__CATEGORIES__']) ? $eventdata['__CATEGORIES__'] : $eventDefaults['categories'];
 
     // All-day event values for radio buttons
-    $form_data['SelectedAllday'] = ((isset($eventdata['alldayevent'])) && ($eventdata['alldayevent'] == 1)) ? " checked='checked'" : '';
-    $form_data['SelectedTimed'] = ((!isset($eventdata['alldayevent'])) || ($eventdata['alldayevent'] == 0)) ? " checked='checked'" : ''; //default
+    $form_data['Selected'] = postcalendar_eventapi_alldayselect($eventdata['alldayevent']);
 
     // StartTime
     $form_data['minute_interval'] = _SETTING_TIME_INCREMENT;
     if (empty($eventdata['startTime'])) {
-        $eventdata['startTime'] = '01:00:00'; // default to 1:00 AM
+        $eventdata['startTime'] = $eventDefaults['startTime'];
     }
 
     // duration
     if (empty($eventdata['duration'])) {
-        $eventdata['duration'] = '1:00'; // default to 1:00 hours
+        $eventdata['duration'] = gmdate("G:i", $eventDefaults['duration']);
     }
 
     // hometext
@@ -469,18 +471,11 @@ function postcalendar_eventapi_buildSubmitForm($args)
         'text' => __('Plain text', $dom),
         'html' => __('HTML-formatted', $dom));
 
-    // create sharing selectbox
-    $data = array();
-    if (_SETTING_ALLOW_USER_CAL) {
-        $data[SHARING_PRIVATE] = __('Private', $dom);
-    }
-    if (SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN) || _SETTING_ALLOW_GLOBAL || !_SETTING_ALLOW_USER_CAL) {
-        $data[SHARING_GLOBAL] = __('Global', $dom);
-    }
-    $form_data['sharingselect'] = $data;
+    // sharing selectbox
+    $form_data['sharingselect'] = ModUtil::apiFunc('PostCalendar', 'event', 'sharingselect');
 
     if (!isset($eventdata['sharing'])) {
-        $eventdata['sharing'] = SHARING_GLOBAL; //default
+        $eventdata['sharing'] = $eventDefaults['sharing'];
     }
 
     // recur type radio selects
@@ -542,21 +537,21 @@ function postcalendar_eventapi_buildSubmitForm($args)
     // assign empty values to text fields that don't need changing
     $eventdata['title']     = isset($eventdata['title'])     ? $eventdata['title']     : "";
     $eventdata['hometext']  = isset($eventdata['hometext'])  ? $eventdata['hometext']  : "";
-    $eventdata['contname']  = isset($eventdata['contname'])  ? $eventdata['contname']  : "";
-    $eventdata['conttel']   = isset($eventdata['conttel'])   ? $eventdata['conttel']   : "";
-    $eventdata['contemail'] = isset($eventdata['contemail']) ? $eventdata['contemail'] : "";
-    $eventdata['website']   = isset($eventdata['website'])   ? $eventdata['website']   : "";
-    $eventdata['fee']       = isset($eventdata['fee'])       ? $eventdata['fee']       : "";
+    $eventdata['contname']  = isset($eventdata['contname'])  ? $eventdata['contname']  : $eventDefaults['contname'];
+    $eventdata['conttel']   = isset($eventdata['conttel'])   ? $eventdata['conttel']   : $eventDefaults['conttel'];
+    $eventdata['contemail'] = isset($eventdata['contemail']) ? $eventdata['contemail'] : $eventDefaults['contemail'];
+    $eventdata['website']   = isset($eventdata['website'])   ? $eventdata['website']   : $eventDefaults['website'];
+    $eventdata['fee']       = isset($eventdata['fee'])       ? $eventdata['fee']       : $eventDefaults['fee'];
 
     $eventdata['repeat']['event_repeat_freq']    = isset($eventdata['repeat']['event_repeat_freq'])    ? $eventdata['repeat']['event_repeat_freq']    : "";
     $eventdata['repeat']['event_repeat_on_freq'] = isset($eventdata['repeat']['event_repeat_on_freq']) ? $eventdata['repeat']['event_repeat_on_freq'] : "";
 
-    $eventdata['location_info']['event_location'] = isset($eventdata['location_info']['event_location']) ? $eventdata['location_info']['event_location'] : "";
-    $eventdata['location_info']['event_street1']  = isset($eventdata['location_info']['event_street1'])  ? $eventdata['location_info']['event_street1']  : "";
-    $eventdata['location_info']['event_street2']  = isset($eventdata['location_info']['event_street2'])  ? $eventdata['location_info']['event_street2']  : "";
-    $eventdata['location_info']['event_city']     = isset($eventdata['location_info']['event_city'])     ? $eventdata['location_info']['event_city']     : "";
-    $eventdata['location_info']['event_state']    = isset($eventdata['location_info']['event_state'])    ? $eventdata['location_info']['event_state']    : "";
-    $eventdata['location_info']['event_postal']   = isset($eventdata['location_info']['event_postal'])   ? $eventdata['location_info']['event_postal']   : "";
+    $eventdata['location_info']['event_location'] = isset($eventdata['location_info']['event_location']) ? $eventdata['location_info']['event_location'] : $eventDefaults['location']['event_location'];
+    $eventdata['location_info']['event_street1']  = isset($eventdata['location_info']['event_street1'])  ? $eventdata['location_info']['event_street1']  : $eventDefaults['location']['event_street1'];
+    $eventdata['location_info']['event_street2']  = isset($eventdata['location_info']['event_street2'])  ? $eventdata['location_info']['event_street2']  : $eventDefaults['location']['event_street2'];
+    $eventdata['location_info']['event_city']     = isset($eventdata['location_info']['event_city'])     ? $eventdata['location_info']['event_city']     : $eventDefaults['location']['event_city'];
+    $eventdata['location_info']['event_state']    = isset($eventdata['location_info']['event_state'])    ? $eventdata['location_info']['event_state']    : $eventDefaults['location']['event_state'];
+    $eventdata['location_info']['event_postal']   = isset($eventdata['location_info']['event_postal'])   ? $eventdata['location_info']['event_postal']   : $eventDefaults['location']['event_postal'];
 
     // assign loaded data or default values
     $form_data['loaded_event'] = $eventdata;
@@ -687,17 +682,11 @@ function postcalendar_eventapi_formateventarrayforDB($event)
     }
 
     // reformat times from form to 'real' 24-hour format
-    $event['duration'] = (60 * 60 * $event['duration']['Hour']) + (60 * $event['duration']['Minute']);
-    if ((bool) !_SETTING_TIME_24HOUR) {
-        if ($event['startTime']['Meridian'] == "am") {
-            $event['startTime']['Hour'] = $event['startTime']['Hour'] == 12 ? '00' : $event['startTime']['Hour'];
-        } else {
-            $event['startTime']['Hour'] = $event['startTime']['Hour'] != 12 ? $event['startTime']['Hour'] += 12 : $event['startTime']['Hour'];
-        }
-    }
-    $startTime = sprintf('%02d', $event['startTime']['Hour']) . ':' . sprintf('%02d', $event['startTime']['Minute']) . ':00';
+    $event['duration'] = ModUtil::apiFunc('PostCalendar', 'event', 'converttimetoseconds', $event['duration']);
+    $startTime = $event['startTime'];
     unset($event['startTime']); // clears the whole array
-    $event['startTime'] = $startTime;
+    $event['startTime'] = ModUtil::apiFunc('PostCalendar', 'event', 'convertstarttime', $startTime);
+
     // if event ADD perms are given to anonymous users...
     if (UserUtil::isLoggedIn()) {
         $event['informant'] = SessionUtil::getVar('uid');
@@ -997,4 +986,66 @@ function postcalendar_eventapi_correctlocationdata($event)
         $event['website']   = isset($event['website'])   ? $event['website']   : $locObj['url'];
     }
     return $event;
+}
+/**
+ * @description convert time like 3:00 to seconds
+ * @author      Craig Heydenburg
+ * @created     06/29/2010
+ * @params      (array) $duration array(Hour, Minute)
+ * @return      (int) seconds
+ **/
+function postcalendar_eventapi_converttimetoseconds($duration)
+{
+    return (60 * 60 * $duration['Hour']) + (60 * $duration['Minute']);
+}
+/**
+ * @description convert time array to HH:MM:SS
+ * @author      Craig Heydenburg
+ * @created     06/29/2010
+ * @params      (array) $starttime array(Hour, Minute, Meridian)
+ * @return      (string) 'HH:MM:SS'
+ **/
+function postcalendar_eventapi_convertstarttime($startTime)
+{
+    if ((bool) !_SETTING_TIME_24HOUR) {
+        if ($startTime['Meridian'] == "am") {
+            $startTime['Hour'] = $startTime['Hour'] == 12 ? '00' : $startTime['Hour'];
+        } else {
+            $startTime['Hour'] = $startTime['Hour'] != 12 ? $startTime['Hour'] += 12 : $startTime['Hour'];
+        }
+    }
+    return sprintf('%02d', $startTime['Hour']) . ':' . sprintf('%02d', $startTime['Minute']) . ':00';
+}
+/**
+ * @description create event sharing select box
+ * @author      Craig Heydenburg
+ * @created     06/29/2010
+ * @return      (array) key=>value pairs for selectbox
+ **/
+function postcalendar_eventapi_sharingselect()
+{
+    $data = array();
+    if (_SETTING_ALLOW_USER_CAL) {
+        $data[SHARING_PRIVATE] = __('Private', $dom);
+    }
+    if (SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN) || _SETTING_ALLOW_GLOBAL || !_SETTING_ALLOW_USER_CAL) {
+        $data[SHARING_GLOBAL] = __('Global', $dom);
+    }
+    return $data;
+}
+/**
+ * @description determine which event type is selected and prepare html code
+ * @author      Craig Heydenburg
+ * @created     06/29/2010
+ * @params      (bool) $alldayevent
+ * @return      (array) key=>value pairs for selectbox
+ **/
+function postcalendar_eventapi_alldayselect($alldayevent)
+{
+    $eventDefaults = ModUtil::getVar('PostCalendar', 'pcEventDefaults');
+    $selected = array();
+    $selected['allday'] = (((isset($alldayevent)) && ($alldayevent == 1)) || ((!isset($alldayevent)) && ($eventDefaults['alldayevent'] == 1))) ? " checked='checked'" : '';
+    $selected['timed']  = (((!isset($alldayevent)) && ($eventDefaults['alldayevent'] == 0)) || ((isset($alldayevent)) && ($alldayevent == 0))) ? " checked='checked'" : ''; //default
+
+    return $selected;
 }

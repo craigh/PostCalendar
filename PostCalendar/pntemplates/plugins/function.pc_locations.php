@@ -13,6 +13,9 @@ function smarty_function_pc_locations($args, &$smarty)
     if (!ModUtil::available('Locations')) {
         return "<input type='hidden' name='postcalendar_events[location][locations_id]' id='postcalendar_events_location_locations_id' value='-1'>";
     }
+    $admin = isset($args['admin']) ? $args['admin'] : false;
+    $fieldname = $admin ? "postcalendar_eventdefaults" : "postcalendar_events";
+    $display = '';
 
     $dom = ZLanguage::getModuleDomain('PostCalendar');
 
@@ -24,23 +27,25 @@ function smarty_function_pc_locations($args, &$smarty)
 
     include_once $smarty->_get_plugin_filepath('function', 'html_options');
     $options_array = array(
-        'name'     => "postcalendar_events[location][locations_id]",
-        'id'       => "postcalendar_events_location_locations_id",
+        'name'     => $fieldname . "[location][locations_id]",
+        'id'       => $fieldname . "_location_locations_id",
         'class'    => "postcal90",
         'onChange' => "postcalendar_locations_bridge(this)",
         'options'  => $locations,
         'selected' => '-1');
 
-    $display = smarty_function_html_options($options_array, $smarty);
+    $display .= $admin ? "<label for='postcalendar_eventdefaults_location_locations_id'>" . __('Location', $dom) . "</label>" : "";
+    $display .= smarty_function_html_options($options_array, $smarty);
+    $display .= $admin ? "" : "<br />";
 
     $pc_loc_javascript = "
         <!--//
         function postcalendar_locations_bridge(x)
         {
             if (x.value != '-1') {
-                $$('[name^=postcalendar_events[location]]').invoke('disable').invoke('clear');
+                $$('[name^=" . $fieldname . "[location]]').invoke('disable').invoke('clear');
             } else {
-                $$('[name^=postcalendar_events[location]]').invoke('enable').invoke('clear');
+                $$('[name^=" . $fieldname . "[location]]').invoke('enable').invoke('clear');
             }
             x.disabled=false;
         }
@@ -49,5 +54,5 @@ function smarty_function_pc_locations($args, &$smarty)
     PageUtil::addVar("javascript", "javascript/ajax/prototype.js");
     PageUtil::addVar("rawtext", "<script type='text/javascript'>$pc_loc_javascript</script>");
 
-    return $display . "<br />";
+    return $display;
 }

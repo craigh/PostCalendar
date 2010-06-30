@@ -41,15 +41,6 @@ function postcalendar_admin_modifyconfig()
     $modinfo = ModUtil::getInfo(ModUtil::getIdFromName('PostCalendar'));
     $render->assign('postcalendarversion', $modinfo['version']);
 
-    // load the category registry util
-    $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
-    $render->assign('catregistry', $catregistry);
-
-    $props = array_keys($catregistry);
-    $render->assign('firstprop', $props[0]);
-    $selectedDefaultCategories = ModUtil::getVar('PostCalendar', 'pcDefaultCategories');
-    $render->assign('selectedDefaultCategories', $selectedDefaultCategories);
-
     $render->assign('pcFilterYearStart', ModUtil::getVar('PostCalendar', 'pcFilterYearStart', 1));
     $render->assign('pcFilterYearEnd', ModUtil::getVar('PostCalendar', 'pcFilterYearEnd', 2));
 
@@ -320,11 +311,12 @@ function postcalendar_admin_updateconfig()
         'pcAllowCatFilter'        => FormUtil::getPassedValue('pcAllowCatFilter', 0),
         'enablecategorization'    => FormUtil::getPassedValue('enablecategorization', 0),
         'enablenavimages'         => FormUtil::getPassedValue('enablenavimages', 0),
-        'pcDefaultCategories'     => FormUtil::getPassedValue('pcDefaultCategories'), //array
         'pcFilterYearStart'       => abs((int) FormUtil::getPassedValue('pcFilterYearStart', $defaults['pcFilterYearStart'])), // ensures positive value
         'pcFilterYearEnd'         => abs((int) FormUtil::getPassedValue('pcFilterYearEnd', $defaults['pcFilterYearEnd'])), // ensures positive value
     );
     $settings['pcNavDateOrder'] = ModUtil::apiFunc('PostCalendar', 'admin', 'getdateorder', $settings['pcEventDateFormat']);
+    // save out event default settings so they are not cleared
+    $settings['pcEventDefaults'] = ModUtil::getVar('PostCalendar', 'pcEventDefaults');
 
     // delete all the old vars
     ModUtil::delVar('PostCalendar');
@@ -462,4 +454,71 @@ function postcalendar_admin_deleteevents()
         'type' => _EVENT_APPROVED,
         'function' => 'listapproved',
         'title' => __('Approved events administration', $dom)));
+}
+
+/**
+ * @function    postcalendar_admin_modifyeventdefaults
+ * @description present administrator options to change event default values
+ * @return      template
+ */
+function postcalendar_admin_modifyeventdefaults()
+{
+    if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
+        return LogUtil::registerPermissionError();
+    }
+
+    // Turn off template caching here
+    $render = Renderer::getInstance('PostCalendar', false);
+
+    $eventDefaults = ModUtil::getVar('PostCalendar', 'pcEventDefaults');
+
+    // load the category registry util
+    $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
+    $render->assign('catregistry', $catregistry);
+
+    $props = array_keys($catregistry);
+    $render->assign('firstprop', $props[0]);
+    $selectedDefaultCategories = $eventDefaults['categories'];
+    $render->assign('selectedDefaultCategories', $selectedDefaultCategories);
+
+    // convert duration to HH:MM
+    $eventDefaults['duration'] = gmdate("G:i", $eventDefaults['duration']);
+
+    // sharing selectbox
+    $render->assign('sharingselect', ModUtil::apiFunc('PostCalendar', 'event', 'sharingselect'));
+
+    $render->assign('Selected',  ModUtil::apiFunc('PostCalendar', 'event', 'alldayselect', $eventDefaults['alldayevent']));
+
+    $render->assign('postcalendar_eventdefaults', $eventDefaults);
+
+    return $render->fetch('admin/postcalendar_admin_eventdefaults.htm');
+}
+
+/**
+ * @function    postcalendar_admin_seteventdefaults
+ * @description sets module variables as requested by admin
+ * @return      status/error ->back to event defaults config page
+ */
+function postcalendar_admin_seteventdefaults()
+{
+    if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
+        return LogUtil::registerPermissionError();
+    }
+
+    $eventDefaults = FormUtil::getPassedValue('postcalendar_eventdefaults'); //array
+
+    // filter through locations translator
+    $eventDefaults = ModUtil::apiFunc('postcalendar', 'event', 'correctlocationdata', $eventDefaults);
+
+    //convert times to storable values
+    $eventDefaults['duration'] = ModUtil::apiFunc('PostCalendar', 'event', 'converttimetoseconds', $eventDefaults['duration']);
+    $startTime = $eventDefaults['startTime'];
+    unset($eventDefaults['startTime']); // clears the whole array
+    $eventDefaults['startTime'] = ModUtil::apiFunc('PostCalendar', 'event', 'convertstarttime', $startTime);
+
+    // save the new values
+    ModUtil::setVar('PostCalendar', 'pcEventDefaults', $eventDefaults);
+
+    LogUtil::registerStatus(__('Done! Updated the PostCalendar event default values.', $dom));
+    return postcalendar_admin_modifyeventdefaults();
 }

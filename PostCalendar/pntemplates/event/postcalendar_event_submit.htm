@@ -51,9 +51,9 @@
         { calendarinput display=true hidden=true objectname="postcalendar_events" htmlname="eventDate" ifformat="%Y-%m-%d" dateformat=$EVENT_DATE_FORMAT defaultstring=$loaded_event.eventDatevalue defaultdate=$loaded_event.eventDate }
         <br /><br />
         <b>{gt text='Time'}</b><br />
-        <input type="radio" name="postcalendar_events[alldayevent]" id="postcalendar_events_alldayevent1" value="1"{$SelectedAllday} /><label for="postcalendar_events_alldayevent1" style='padding-left:1em;'>{gt text='All-day event'}</label>
+        <input type="radio" name="postcalendar_events[alldayevent]" id="postcalendar_events_alldayevent1" value="1"{$Selected.allday} /><label for="postcalendar_events_alldayevent1" style='padding-left:1em;'>{gt text='All-day event'}</label>
         <br />
-        <input type="radio" name="postcalendar_events[alldayevent]" id="postcalendar_events_alldayevent0" value="0"{$SelectedTimed} /><label for="postcalendar_events_alldayevent0" style='padding-left:1em;'>{gt text='Timed event'}</label>
+        <input type="radio" name="postcalendar_events[alldayevent]" id="postcalendar_events_alldayevent0" value="0"{$Selected.timed} /><label for="postcalendar_events_alldayevent0" style='padding-left:1em;'>{gt text='Timed event'}</label>
             {html_select_time time=`$loaded_event.startTime` display_seconds=false use_24_hours=$24HOUR_TIME minute_interval=$minute_interval field_array="postcalendar_events[startTime]" prefix=""}
         <br />
         <div style='padding-left: 4em;'>
