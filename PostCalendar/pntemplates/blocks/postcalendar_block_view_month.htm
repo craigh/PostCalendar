@@ -41,11 +41,11 @@
                 {/if}
             {/foreach}
             {if $A_EVENTS.$date|@count}
-                {if $A_EVENTS.$date|@count > 2 }
+                {if $A_EVENTS.$date|@count > 2}
                     {assign var="classname" value="event-three"}
-                {elseif $A_EVENTS.$date|@count > 1 }
+                {elseif $A_EVENTS.$date|@count > 1}
                     {assign var="classname" value="event-two"}
-                {elseif $A_EVENTS.$date|@count > 0 }
+                {elseif $A_EVENTS.$date|@count > 0}
                     {assign var="classname" value="event-one"}
                 {else}
                     {assign var="classname" value="event-none"}

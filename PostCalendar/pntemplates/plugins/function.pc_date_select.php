@@ -24,7 +24,7 @@ function smarty_function_pc_date_select($args, &$smarty)
     $Date      = ModUtil::apiFunc('PostCalendar','user','getDate',$jumpargs);
     if (!isset($viewtype)) {
         $viewtype = _SETTING_DEFAULT_VIEW;
-    }
+   }
 
     $y = substr($Date, 0, 4);
     $m = substr($Date, 4, 2);

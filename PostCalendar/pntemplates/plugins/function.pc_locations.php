@@ -12,7 +12,7 @@ function smarty_function_pc_locations($args, &$smarty)
 {
     if (!ModUtil::available('Locations')) {
         return "<input type='hidden' name='postcalendar_events[location][locations_id]' id='postcalendar_events_location_locations_id' value='-1'>";
-    }
+   }
     $admin = isset($args['admin']) ? $args['admin'] : false;
     $fieldname = $admin ? "postcalendar_eventdefaults" : "postcalendar_events";
     $display = '';
@@ -23,7 +23,7 @@ function smarty_function_pc_locations($args, &$smarty)
     $locObj = ModUtil::apiFunc('Locations','user','getLocationsForDropdown');
     foreach ($locObj as $loc) {
         $locations[$loc['value']] = $loc['text'];
-    }
+   }
 
     include_once $smarty->_get_plugin_filepath('function', 'html_options');
     $options_array = array(
@@ -44,11 +44,11 @@ function smarty_function_pc_locations($args, &$smarty)
         {
             if (x.value != '-1') {
                 $$('[name^=" . $fieldname . "[location]]').invoke('disable').invoke('clear');
-            } else {
+           } else {
                 $$('[name^=" . $fieldname . "[location]]').invoke('enable').invoke('clear');
-            }
+           }
             x.disabled=false;
-        }
+       }
         //-->";
 
     PageUtil::addVar("javascript", "javascript/ajax/prototype.js");

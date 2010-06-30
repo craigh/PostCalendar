@@ -1,17 +1,17 @@
 {* $Id$ *}
-{if $loaded_event.showhiddenwarning }
+{if $loaded_event.showhiddenwarning}
     {secauthaction comp="::" inst=".*" level="ACCESS_ADMIN" assign="ACCESS_ADMIN"}
-    {if $ACCESS_ADMIN }
+    {if $ACCESS_ADMIN}
         <div class="z-warningmsg" style='font-size: 8px;'>{gt text='Administrator only warning: Hidden PostCalendar Featured Event Block (ID# %s). Delete or modify.' tag1=$thisblockid domain='module_postcalendar'}<br />
         <a href="{modurl modname='Blocks' type='admin'}">{gt text='Blocks Administration' domain='module_postcalendar'}</a></div>
     {/if}
 {else}
 <div class='postcalendar_featuredevent'>
-{if $loaded_event.showcountdown }
+{if $loaded_event.showcountdown}
 <div class='eventcountdown'>
-    {if $loaded_event.datedifference gt 0 }
+    {if $loaded_event.datedifference gt 0}
         {gt text='This event will occur in %s day.' plural='This event will occur in %s days.' count=$loaded_event.datedifference tag1=$loaded_event.datedifference domain="module_postcalendar"}
-    {elseif $loaded_event.datedifference eq 0 }
+    {elseif $loaded_event.datedifference eq 0}
         {gt text='This event occurs today.' domain="module_postcalendar"}
     {else}
         {gt text='This event has already occured.' domain="module_postcalendar"}
@@ -21,14 +21,14 @@
 <h2 class="eventheader">
     {gt text='private event' assign='p_txt' domain='module_postcalendar'}
     {if $event.privateicon}{img src='locked.png' modname='core' set='icons/extrasmall' title=$p_txt alt=$p_txt}{/if}
-    { $loaded_event.title|safehtml }
-    <a href="{modurl modname='PostCalendar' func='view' viewtype='details' eid=$loaded_event.eid }" title='{gt text='Full event information' domain="module_postcalendar"}'>
+    {$loaded_event.title|safehtml}
+    <a href="{modurl modname='PostCalendar' func='view' viewtype='details' eid=$loaded_event.eid}" title='{gt text='Full event information' domain="module_postcalendar"}'>
     {gt text='Full event information' assign='title' domain='module_postcalendar'}{gt text='Info' assign='alt' domain='module_postcalendar'}
     {img modname=core src=info.gif set=icons/extrasmall alt=$alt title=$title}</a>
     {if $loaded_event.commentcount gt 0}
         {gt text='%s comment left' plural='%s comments left.' count=$loaded_event.commentcount tag1=$loaded_event.commentcount domain="module_postcalendar" assign="title"}
         {gt text='Comment' assign='alt' domain='module_postcalendar'}
-        <a href="{modurl modname='PostCalendar' func='view' viewtype='details' eid=$loaded_event.eid }#comments" title='{$title}'>
+        <a href="{modurl modname='PostCalendar' func='view' viewtype='details' eid=$loaded_event.eid}#comments" title='{$title}'>
         {img modname=core src=comment.gif set=icons/extrasmall alt=$alt title=$title}</a>
     {/if}
 </h2>
@@ -41,32 +41,32 @@
     {/if}
 </div>
 <div class="eventdetails">
-    {if ($loaded_event.hometext) && ($loaded_event.hometext ne "n/a") }
+    {if ($loaded_event.hometext) && ($loaded_event.hometext ne "n/a")}
     <div>
         <h3>{gt text='Description' domain="module_postcalendar"}:</h3>
         {$loaded_event.hometext}
     </div>
     {/if}
     <div>
-        {if ($loaded_event.location_info.event_location) OR ($loaded_event.location_info.event_street1) OR ($loaded_event.location_info.event_street2) OR ($loaded_event.location_info.event_city) }
+        {if ($loaded_event.location_info.event_location) OR ($loaded_event.location_info.event_street1) OR ($loaded_event.location_info.event_street2) OR ($loaded_event.location_info.event_city)}
         <h3>{gt text='Location' domain="module_postcalendar"}:</h3>
         <span class="location">
-            { if $loaded_event.location_info.event_location }<span class="location_name">{ $loaded_event.location_info.event_location }</span><br />{/if}
-            { if $loaded_event.location_info.event_street1 }<span class="location_street1">{ $loaded_event.location_info.event_street1 }</span><br />{/if}
-            { if $loaded_event.location_info.event_street2 }<span class="location_street2">{ $loaded_event.location_info.event_street2 }</span><br />{/if}
-            { if $loaded_event.location_info.event_city }<span class="location_city_state_zip">{ $loaded_event.location_info.event_city }&nbsp;{ $loaded_event.location_info.event_state },&nbsp;{ $loaded_event.location_info.event_postal }</span><br />{/if}
+            {if $loaded_event.location_info.event_location}<span class="location_name">{$loaded_event.location_info.event_location}</span><br />{/if}
+            {if $loaded_event.location_info.event_street1}<span class="location_street1">{$loaded_event.location_info.event_street1}</span><br />{/if}
+            {if $loaded_event.location_info.event_street2}<span class="location_street2">{$loaded_event.location_info.event_street2}</span><br />{/if}
+            {if $loaded_event.location_info.event_city}<span class="location_city_state_zip">{$loaded_event.location_info.event_city}&nbsp;{$loaded_event.location_info.event_state},&nbsp;{$loaded_event.location_info.event_postal}</span><br />{/if}
         </span>
         {/if}
-        { if ($loaded_event.contname) OR ($loaded_event.conttel) OR ($loaded_event.contemail) OR ($loaded_event.website) }
+        {if ($loaded_event.contname) OR ($loaded_event.conttel) OR ($loaded_event.contemail) OR ($loaded_event.website)}
         <h3>{gt text='Contact information' domain="module_postcalendar"}:</h3>
         <ul>
-            { if $loaded_event.contname }<li>{ $loaded_event.contname }</li>{/if}
-            { if $loaded_event.conttel }<li>{ $loaded_event.conttel }</li>{/if}
-            { if $loaded_event.contemail }<li><a href="mailto:{ $loaded_event.contemail }">{ $loaded_event.contemail }</a></li>{ /if }
-            { if $loaded_event.website }<li><a href="{ $loaded_event.website }" target="_blank">{ $loaded_event.website }</a></li>{ /if }
+            {if $loaded_event.contname}<li>{$loaded_event.contname}</li>{/if}
+            {if $loaded_event.conttel}<li>{$loaded_event.conttel}</li>{/if}
+            {if $loaded_event.contemail}<li><a href="mailto:{$loaded_event.contemail}">{$loaded_event.contemail}</a></li>{/if}
+            {if $loaded_event.website}<li><a href="{$loaded_event.website}" target="_blank">{$loaded_event.website}</a></li>{/if}
         </ul>
         {/if}
-        { if $loaded_event.fee }{gt text='Fee' domain="module_postcalendar"}: { $loaded_event.fee }{/if}
+        {if $loaded_event.fee}{gt text='Fee' domain="module_postcalendar"}: {$loaded_event.fee}{/if}
     </div>
 </div>
 </div> <!-- end postcalendar_featuredevent -->

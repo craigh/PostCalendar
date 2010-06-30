@@ -13,7 +13,7 @@ function smarty_function_pc_queued_events_notify($args, &$smarty)
 {
     if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
         return;
-    }
+   }
 
     $assign = array_key_exists('assign', $args) && !empty($args['assign']) ? $args['assign'] : null;
     unset($args);
@@ -24,7 +24,7 @@ function smarty_function_pc_queued_events_notify($args, &$smarty)
 
     if (empty($count) || ($count < 1)) {
         return;
-    }
+   }
 
     $dom = ZLanguage::getModuleDomain('PostCalendar');
     $url = ModUtil::url('PostCalendar', 'admin', 'listqueued');
@@ -36,7 +36,7 @@ function smarty_function_pc_queued_events_notify($args, &$smarty)
 
     if (isset($assign)) {
         $smarty->assign($assign, $count);
-    } else {
+   } else {
         return $alert;
-    }
+   }
 }

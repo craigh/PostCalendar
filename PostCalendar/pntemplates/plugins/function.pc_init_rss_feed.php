@@ -24,13 +24,13 @@ function smarty_function_pc_init_rss_feed($args, &$smarty)
 
         PageUtil::addVar("rawtext", $pagevarvalue);
         $ret_val = true;
-    } else {
+   } else {
         $ret_val = false;
-    }
+   }
 
     if (isset($args['assign'])) {
         $smarty->assign($args['assign'], $ret_val);
-    } else {
+   } else {
         return $ret_val;
-    }
+   }
 }

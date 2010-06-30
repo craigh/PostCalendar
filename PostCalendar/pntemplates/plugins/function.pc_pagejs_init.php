@@ -18,9 +18,9 @@ function smarty_function_pc_pagejs_init($params, &$smarty)
     unset($params);
     if (_SETTING_USE_POPUPS) {
         PageUtil::addVar("javascript", "modules/PostCalendar/pnjavascript/postcalendar_overlibconfig.js");
-    }
+   }
     if (_SETTING_OPEN_NEW_WINDOW && !_SETTING_USE_POPUPS) {
         PageUtil::addVar("javascript", "modules/PostCalendar/pnjavascript/postcalendar_jspopup.js");
-    }
+   }
     return;
 }

@@ -8,7 +8,7 @@
 <h2>{gt text="Event review"}</h2>
 {assign var="popup" value=true}
 {foreach from=$alleventinfo key=eid item=loaded_event}
-	{include file="event/postcalendar_event_view.htm" }
+	{include file="event/postcalendar_event_view.htm"}
     <hr />
 	<input type="hidden" name="pc_eid[]" value="{$eid}" />
 {/foreach}

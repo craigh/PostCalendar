@@ -38,7 +38,7 @@ function smarty_function_pc_url($args, &$smarty)
     $viewtype = strtolower(FormUtil::getPassedValue('viewtype', _SETTING_DEFAULT_VIEW));
     if (FormUtil::getPassedValue('func') == 'new') {
         $viewtype = 'new';
-    }
+   }
     $pc_username = FormUtil::getPassedValue('pc_username');
 
     if (is_null($date)) {
@@ -53,7 +53,7 @@ function smarty_function_pc_url($args, &$smarty)
             'jumpmonth' => $jumpmonth,
             'jumpyear'  => $jumpyear);
         $date      = ModUtil::apiFunc('PostCalendar', 'user', 'getDate', $jumpargs);
-    }
+   }
     // some extra cleanup if necessary
     $date = str_replace('-', '', $date);
 
@@ -96,17 +96,17 @@ function smarty_function_pc_url($args, &$smarty)
                 if (_SETTING_OPEN_NEW_WINDOW && !_SETTING_USE_POPUPS) {
                     $javascript = " onClick=\"opencal('$eid','$date'); return false;\"";
                     $link = "#";
-                } else {
+               } else {
                     $link = ModUtil::url('PostCalendar', 'user', 'view', array(
                         'Date'     => $date,
                         'viewtype' => 'details',
                         'eid'      => $eid));
-                }
-            } else {
+               }
+           } else {
                 $link = '';
-            }
+           }
             break;
-    }
+   }
 
     $link = DataUtil::formatForDisplay($link);
     $title = "";
@@ -135,15 +135,15 @@ function smarty_function_pc_url($args, &$smarty)
                     $img_params['modname'] = 'core';
                     $img_params['set']     = 'icons/small';
                     $img_params['src']     = 'printer1.gif';
-                }
+               }
                 if ($action == 'rss') {
                     $img_params['modname'] = 'PostCalendar';
                     $img_params['src']     = 'feed.gif';
-                }
+               }
                 $display = smarty_function_img($img_params, $smarty);
                 $class = 'postcalendar_nav_img';
                 $title = $image_text;
-            } else {
+           } else {
                 $linkmap = array(
                     'today'  => __('Today', $dom),
                     'day'    => __('Day', $dom),
@@ -158,29 +158,29 @@ function smarty_function_pc_url($args, &$smarty)
                 $display = $linkmap[$action];
                 $class = ($viewtype == $action) ? 'postcalendar_nav_text_selected' : 'postcalendar_nav_text';
                 $title = $labeltexts[$action];
-            }
-        }
+           }
+       }
         // create string of remaining properties and values
         $props = "";
         if (!empty($args)) {
             foreach ($args as $prop => $val) {
                 $props .= " $prop='$val'";
-            }
-        }
+           }
+       }
         if ($class) {
             $class = " class='$class'";
-        }
+       }
         if ($title) {
             $title = " title='$title'";
-        }
+       }
         $ret_val = "<a href='$link'" . $class . $title . $props . $javascript . ">$display</a>";
-    } else {
+   } else {
         $ret_val = $link;
-    }
+   }
 
     if (isset($assign)) {
         $smarty->assign($assign, $ret_val);
-    } else {
+   } else {
         return $ret_val;
-    }
+   }
 }
