@@ -81,3 +81,5 @@ define('_SETTING_USENAVIMAGES',     ModUtil::getVar('PostCalendar', 'enablenavim
 
 // Setup utility classes and functions
 define('DATE_CALC_BEGIN_WEEKDAY', _SETTING_FIRST_DAY_WEEK);
+include_once dirname(__FILE__) . '/lib/vendor/DateCalc.class.php';
+

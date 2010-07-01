@@ -13,14 +13,14 @@
  * This function is called internally by the core whenever the module is
  * loaded.  It adds in the information
  */
-function postcalendar_pntables()
+function postcalendar_tables()
 {
     // Initialise table array
-    $pntable = array();
+    $table = array();
 
     $pc_events = DBUtil::getLimitedTablename('postcalendar_events');
-    $pntable['postcalendar_events'] = $pc_events;
-    $pntable['postcalendar_events_column'] = array(
+    $table['postcalendar_events'] = $pc_events;
+    $table['postcalendar_events_column'] = array(
         'eid'         => 'pc_eid',              // event ID
         'aid'         => 'pc_aid',              // participant's user ID (default:informant UID)
         'title'       => 'pc_title',            // event title
@@ -49,7 +49,7 @@ function postcalendar_pntables()
  * columns removed from previous versions:
  * catid, comments, counter, topic, recurrfreq, endTime, language, meeting_id
  */
-    $pntable['postcalendar_events_column_def'] = array(
+    $table['postcalendar_events_column_def'] = array(
         'eid'         => 'I(11) UNSIGNED AUTO PRIMARY',      // int(11) unsigned NOT NULL auto_increment
         'aid'         => 'C(30) NOTNULL DEFAULT \'\'',       // varchar(30) NOT NULL default ''
         'title'       => 'C(150) DEFAULT \'\'',              // varchar(150) default ''
@@ -74,22 +74,22 @@ function postcalendar_pntables()
         'hooked_modulename' => 'C(50) DEFAULT \'\'',         // added version 6.1
         'hooked_objectid'   => 'I(11) DEFAULT 0',            // added version 6.1
     );
-    $pntable['postcalendar_events_column_idx'] = array(
+    $table['postcalendar_events_column_idx'] = array(
         'basic_event' => array(
             'aid',
             'eventDate',
             'endDate',
             'eventstatus',
             'sharing'));
-    $pntable['postcalendar_events_db_extra_enable_categorization'] = true;
-    $pntable['postcalendar_events_primary_key_column'] = 'eid';
+    $table['postcalendar_events_db_extra_enable_categorization'] = true;
+    $table['postcalendar_events_primary_key_column'] = 'eid';
 
     // add standard data fields
-    ObjectUtil::addStandardFieldsToTableDefinition($pntable['postcalendar_events_column'], 'pc_');
-    ObjectUtil::addStandardFieldsToTableDataDefinition($pntable['postcalendar_events_column_def']);
+    ObjectUtil::addStandardFieldsToTableDefinition($table['postcalendar_events_column'], 'pc_');
+    ObjectUtil::addStandardFieldsToTableDataDefinition($table['postcalendar_events_column_def']);
 
     // old tables for upgrade/renaming purposes
-    $pntable['postcalendar_categories'] = DBUtil::getLimitedTablename('postcalendar_categories');
+    $table['postcalendar_categories'] = DBUtil::getLimitedTablename('postcalendar_categories');
 
-    return $pntable;
+    return $table;
 }
