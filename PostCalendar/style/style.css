@@ -1,0 +1,361 @@
+/* PostCalendar Stylesheet */
+/*
+ *  SVN: $Id$
+ *
+ *  @package       PostCalendar 
+ *  @lastmodified  $Date$ 
+ *  @modifiedby    $Author$ 
+ *  @HeadURL	   $HeadURL$ 
+ *  @version       $Revision$ 
+*/
+
+/********** HEADERS & CONTAINERS ***********/
+div.calcontainer {
+	margin-top:.2em;
+}
+h2.postcalendar_header {
+	text-align: center;
+	background: transparent;
+	font-size: 14pt;
+	font-weight: bold;
+	margin:1em 0 0 0;
+	border: 1px solid #BBBBBB;
+	padding: .5em;
+    position: relative;
+}
+.postcalendar_header span.postcalendar_eid {
+    position: absolute;
+    top: 0;
+    right: 0;
+    color: #cccccc;
+    font-size: 10pt;
+    background-color: #eeeeee;
+    margin: 2px;
+    padding: .2em;
+    border: 1px solid #cccccc;
+}
+h2.postcalendar_header a {
+	font-size: 14pt;
+	font-weight: bold;
+	text-decoration: none;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+#postcalendar_addevent_leftcol {
+    width: 49%;
+    float: left;
+}
+#postcalendar_addevent_rightcol {
+    margin-left: 50%;
+}
+#postcalendar_addevent_rightcol fieldset {
+    margin-bottom: 1em;
+    padding: 4px 0 1em 1em;
+    background-color: #eeeeee;
+}
+#postcalendar_addevent_rightcol fieldset legend {
+    background-color: #ffffff;
+    font-weight: bold;
+}
+input.postcal90 {
+    width: 90%;
+}
+#postcalendar_addevent_formaction {
+    padding: 1em 2em;
+    background: #cccccc;
+    border-top: 1px solid #999999;
+    margin-top: 1em;
+}
+#postcalendar_addevent_formaction input {
+    margin: 0 .3em;
+}
+#postcalendar_addevent_previewevent {
+    background-color: #eeeeee;
+    border: 2px solid #cccccc;
+    margin: 2em;
+    padding: 1em;
+}
+#postcalendar_addevent_previewevent #previewtitle {
+    border-bottom: 1px solid #999999;
+    color: navy;
+    font-style: italic;
+}
+table#postcalendar_yearview {
+    width: 100%;
+}
+table#postcalendar_yearview td.postcalendar_yearview_panel {
+    padding: 5px;
+    text-align: center;
+    vertical-align: top;
+}
+#postcalendar_footer {
+    text-align: left;
+    font-size: 8px;
+    padding: 2px;
+}
+/********** DAY ***************/
+h3.dayheader,
+h3.dayheader a,
+li.dayheader,
+li.dayheader a {
+	font-size: 1.2em;
+	font-weight: bold;
+	text-decoration: none;
+}
+ul.eventslist,
+li.eventslistitems {
+	padding-left: 10px;
+	list-style: none;
+}
+ul.eventslist:hover {
+    background-color: #eeeeee;
+}
+
+/*********** MONTH **************/
+table.postcalendar_month {
+    width: 100%;
+	border: 1px solid #BBBBBB;
+	border-collapse: collapse;
+}
+table.postcalendar_month td {
+	border: 1px solid #BBBBBB;
+    height: 85px;
+	vertical-align: top;
+    text-align: left;
+}
+table.postcalendar_month td.monthon {
+	background-color: transparent;
+}
+table.postcalendar_month td.monthoff {
+	background: #cccccc; /* Pale Grey */
+}
+table.postcalendar_month td.monthtoday { /* color assignments for TODAY */
+	background-color: #FFFFAA;
+	border: 2px dotted #999999;
+}
+table.postcalendar_month td:hover {
+    background-color: #ffffdd;
+}
+table.postcalendar_month tr.daynames td {
+	background-color: #cccccc; /* Pale Grey */
+	font-weight: normal;
+	text-decoration: none;
+    width: 14%;
+    height: 1.5em;
+    text-align: center;
+}
+table.postcalendar_month .monthview_daterow span {
+    padding: 0 2px;
+}
+table.postcalendar_month .monthview_daterow {
+    background-color: #dddddd;
+}
+table.postcalendar_month .monthview_daterow span.new_icon {
+    float: right;
+}
+table.postcalendar_month col.pcWeekend {
+    background-color: #eeeeee;
+}
+
+/*********** NAV **************/
+#postcalendar_nav_right,
+#postcalendar_nav_left {
+	border: none;
+	margin: 0;
+	padding: 0;
+    width: 50%;
+    vertical-align: top;
+}
+#postcalendar_nav_right {
+    float: right;
+    text-align: right;
+    line-height: 1.8em;
+}
+#postcalendar_nav_right ul,
+#postcalendar_nav_left ul { /* navigation icons list */
+	padding: 0;
+	margin: 0;
+}
+#postcalendar_nav_right ul li { /* navigation icons list items */
+	list-style: none;
+	display: inline;
+	padding: 0;
+	margin: 0;
+}
+#postcalendar_nav_left ul li {
+	list-style: none;
+}
+a.postcalendar_nav_text {
+    padding: 0 4px;
+    border: 1px solid;
+	text-decoration: none;
+}
+a.postcalendar_nav_text:hover {
+    background-color: #cccccc;
+	text-decoration: none;
+}
+a.postcalendar_nav_text_selected {
+    padding: 0 4px;
+    border: 1px solid;
+    background-color: #cccccc;
+	text-decoration: none;
+}
+a.postcalendar_nav_text_selected:hover {
+    background-color: #ffffff;
+	text-decoration: none;
+}
+
+/********** details **************/
+.postcalendar_event_view div.eventtime {
+	font-size: 150%;
+	font-weight: bold;
+}
+.postcalendar_event_view div.eventdetails {
+	padding: .3em 2em;
+}
+.postcalendar_event_view div.eventdetails span.location{
+    padding-left: 2em;
+    display: block;
+}
+/*********** SMALLMONTHTABLE STYLES **************/
+table.smallmonthtable {
+    width: 100%;
+	border: 1px solid #BBBBBB;
+	border-collapse: collapse;
+}
+table.smallmonthtable a {
+	text-decoration: none;
+	color: #333333;
+    font-weight: normal;
+}
+table.smallmonthtable td {
+    border: 1px solid #BBBBBB;
+    text-align: center;
+    vertical-align: middle;
+	font-size: .8em;
+    line-height: 1.8em;
+}
+table.smallmonthtable td.monthheader {
+	background-color: #eeeeee;
+	font-size: 1em;
+    padding: 3px 0;
+    line-height: normal;
+}
+table.smallmonthtable td.monthheader a {
+    color: #666666;
+	font-weight: bold;
+}
+table.smallmonthtable td.monthheader a:hover {
+    color: #000000;
+    text-decoration: none;
+}
+table.smallmonthtable td.monthon {
+	background-color: transparent;
+}
+table.smallmonthtable td.monthoff {
+	background-color: #cccccc; /* Pale gray */
+}
+table.smallmonthtable td.monthtoday { /* color assignments for TODAY */
+	background-color: #FFFFAA;
+}
+table.smallmonthtable tr.daynames td {
+	background-color: #cccccc; /* Pale gray */
+}
+table.smallmonthtable col.weeklink {
+	background-color: #cccccc; /* Pale gray */
+    width: 1em;
+}
+table.smallmonthtable td:hover {
+    background-color: #ffffdd;
+}
+table.smallmonthtable a.event-one {
+	color: #006600; /* Obscure Dull Green */
+}
+table.smallmonthtable a.event-two {
+	color: #006666; /* Obscure Dull Cyan */
+}
+table.smallmonthtable a.event-three {
+	color: #0066cc; /* Hard Dark Azure */
+}
+table.smallmonthtable col.pcWeekend {
+    background-color: #dddddd;
+}
+table.smallmonthtable col.pcWeekday {
+    background-color: #ffffff;
+}
+/*********** BLOCK STYLES **************/
+.postcalendar_block_innertitle {
+	font-size: 1.4em;
+	font-weight: bold;
+	border-bottom: 1px solid #cccccc;
+	margin: 4px 0;
+	padding: 2px 0;
+}
+.postcalendar_block_view_upcoming ul.pc_blocklist,
+.postcalendar_block_view_day ul.pc_blocklist {
+    padding: 0;
+    margin: 0;
+}
+li.eventlink,
+.eventlink a {
+	font-size: 10px;
+	font-weight: normal;
+	padding: 2px;
+	text-decoration: none;
+}
+li.pc_blockdate {
+	font-weight: bold;
+	font-size: 1.1em;
+	list-style: none;
+}
+li.pc_blockevent {
+	margin-left:2em;
+	border:none;
+	padding:0;
+	list-style: none;
+}
+div.pc_centerblocksubmitlinks {
+	text-align: center;
+	padding: 1em 0 0 0;
+}
+div.postcalendar_featuredevent {
+}
+div.postcalendar_featuredevent div.eventcountdown {
+    background: #ffffbb;
+    border: 2px solid #ffff77;
+    text-align: center;
+    margin: 2px 0;
+    padding: 2px;
+}
+div.postcalendar_featuredevent h2.eventheader {
+}
+div.postcalendar_featuredevent div.eventtime {
+    line-height: 1.2;
+    background: #eeeeee;
+    border: 1px solid #cccccc;
+    padding: 2px;
+    margin: 2px;
+}
+div.postcalendar_featuredevent div.eventdetails {
+}
+div.postcalendar_featuredevent div.eventdetails ul {
+    padding-left: 2em;
+}
+div.postcalendar_featuredevent div.eventdetails span.location{
+    padding-left: 2em;
+    display: block;
+}
+/********** last things ************/
+div#overDiv {
+    /* this should correct issues with themes changing all divs 
+    It only is a very generic view, but better than nothing */
+    background: white;
+    color: black;
+    text-align: center;
+}
+.z-calendarimg {
+    background-color: transparent;
+}
+.z-calendarimg:hover {
+    background-color: blue;
+}

@@ -1,0 +1,17 @@
+/* PostCalendar Stylesheet for popup window*/
+/*
+ *  SVN: $Id$
+ *
+ *  @package         PostCalendar 
+ *  @lastmodified    $Date$ 
+ *  @modifiedby      $Author$ 
+ *  @HeadURL	     $HeadURL$ 
+ *  @version         $Revision$ 
+*/
+body {
+    margin: 2em;
+}
+h2 {
+    text-align: center;
+    font-weight: bold;
+}
