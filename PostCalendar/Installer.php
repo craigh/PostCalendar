@@ -30,7 +30,7 @@ class PostCalendar_Installer extends Zikula_Installer
         }
     
         // insert default category
-        if (!$this->_createdefaultcategory('/__SYSTEM__/Modules/PostCalendar')) {
+        if (!$this->_createdefaultcategory()) {
             return LogUtil::registerError($this->__('Error! Could not create default category.'));
         }
     
@@ -245,13 +245,13 @@ class PostCalendar_Installer extends Zikula_Installer
      * @author  Mark West?
      * create the default category tree
      */
-    private function _createdefaultcategory($regpath = '/__SYSTEM__/Modules/Global')
+    private function _createdefaultcategory()
     {
-        if (!$cat = CategoryUtil::createCategory ('/__SYSTEM__/Modules', 'PostCalendar', null, $this->__('PostCalendar'), $this->__('Calendar for Zikula'))) {
+        if (!$cat = CategoryUtil::createCategory('/__SYSTEM__/Modules', 'PostCalendar', null, $this->__('PostCalendar'), $this->__('Calendar for Zikula'))) {
             return false;
         }
         // get the category path to insert upgraded PostCalendar categories
-        $rootcat = CategoryUtil::getCategoryByPath($regpath);
+        $rootcat = CategoryUtil::getCategoryByPath('/__SYSTEM__/Modules/PostCalendar');
         if ($rootcat) {
             // create an entry in the categories registry to the Main property
             CategoryRegistryUtil::insertEntry ('PostCalendar', 'postcalendar_events', 'Main', $rootcat['id']);
@@ -306,7 +306,7 @@ class PostCalendar_Installer extends Zikula_Installer
      */
     private function _createdefaultsubcategory()
     {
-        if (!$cat = CategoryUtil::createCategory ('/__SYSTEM__/Modules/PostCalendar', 'Events', null, $this->__('Events'), $this->__('Initial sub-category created on install'), array('color' => '#99ccff'))) {
+        if (!$cat = CategoryUtil::createCategory('/__SYSTEM__/Modules/PostCalendar', 'Events', null, $this->__('Events'), $this->__('Initial sub-category created on install'), array('color' => '#99ccff'))) {
             LogUtil::registerError($this->__('Error! Could not create an initial sub-category.'));
             return false;
         }
