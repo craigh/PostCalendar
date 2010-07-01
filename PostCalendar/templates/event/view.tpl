@@ -1,0 +1,70 @@
+{* $Id: postcalendar_event_view.htm 638 2010-06-30 22:14:17Z craigh $ *}
+<div class="postcalendar_event_view">
+<h2 class="postcalendar_header">
+    {$loaded_event.title|safehtml}
+    <span class='postcalendar_eid'>eid# {$loaded_event.eid}</span>
+</h2>
+<div class="calcontainer">
+    <div class="eventtime">
+        {$loaded_event.eventDate|pc_date_format}<br />
+        {if $loaded_event.alldayevent != true}
+            {$loaded_event.startTime} - {$loaded_event.endTime}<br />
+        {else}
+            {gt text='All day event'}
+        {/if}
+    </div>
+    <div class="eventdetails">
+        <div>
+            <h3>{gt text='Description'}:</h3>
+            {$loaded_event.hometext}
+        </div>
+        <div>
+            {if ($loaded_event.location_info.event_location) OR ($loaded_event.location_info.event_street1) OR ($loaded_event.location_info.event_street2) OR ($loaded_event.location_info.event_city)}
+            <h3>{gt text='Location'}:</h3>
+            <span class="location">
+                {if $loaded_event.location_info.event_location}<span class="location_name">{$loaded_event.location_info.event_location}</span><br />{/if}
+                {if $loaded_event.location_info.event_street1}<span class="location_street1">{$loaded_event.location_info.event_street1}</span><br />{/if}
+                {if $loaded_event.location_info.event_street2}<span class="location_street2">{$loaded_event.location_info.event_street2}</span><br />{/if}
+                {if $loaded_event.location_info.event_city}<span class="location_city_state_zip">{$loaded_event.location_info.event_city}&nbsp;{$loaded_event.location_info.event_state},&nbsp;{$loaded_event.location_info.event_postal}</span><br />{/if}
+            </span>
+            {/if}
+            {if ($loaded_event.contname) OR ($loaded_event.conttel) OR ($loaded_event.contemail) OR ($loaded_event.website)}
+            <h3>{gt text='Contact information'}:</h3>
+            <ul>
+                {if $loaded_event.contname}<li>{$loaded_event.contname}</li>{/if}
+                {if $loaded_event.conttel}<li>{$loaded_event.conttel}</li>{/if}
+                {if $loaded_event.contemail}<li><a href="mailto:{$loaded_event.contemail}">{$loaded_event.contemail}</a></li>{/if}
+                {if $loaded_event.website}<li><a href="{$loaded_event.website}" target="_blank">{$loaded_event.website}</a></li>{/if}
+            </ul>
+            {/if}
+            {if $loaded_event.fee}{gt text='Fee'}: {$loaded_event.fee}{/if}
+        </div>
+        {if !isset($popup)}
+        {if count($loaded_event.__CATEGORIES__) gt 0}
+        <div class="postcalendar_event_categoryinfo">
+            {lang assign="lang"}
+            <h3>{gt text='Categorized in'}:</h3>
+            <ul>
+                {foreach from=$loaded_event.__CATEGORIES__ key="property" item="attribute"}
+                    {if isset($attribute.__ATTRIBUTES__.textcolor)}
+                        {assign var='textcolor' value=$attribute.__ATTRIBUTES__.textcolor}
+                    {else}
+                        {assign var='textcolor' value=$attribute.__ATTRIBUTES__.color|pc_inversecolor}
+                    {/if}
+                    <li><span style='padding: 0 1em; background-color:{$attribute.__ATTRIBUTES__.color}; color:{$textcolor};'>{$attribute.display_name.$lang}</span></li>
+                {/foreach}
+            </ul>
+        </div>
+        {/if}
+        <div class="postcalendar_event_recurrinfo">
+            <h3>{gt text='Event recurrance information'}:</h3>
+            <p>{$loaded_event.recurr_sentence}</p>
+        </div>
+        <div class="postcalendar_event_sharinginfo">
+            <h3>{gt text='Event sharing information'}:</h3>
+            <p>{$loaded_event.sharing_sentence}</p>
+        </div>
+        {/if}
+    </div>
+</div>
+</div><!-- end postcalendar_event_view -->
