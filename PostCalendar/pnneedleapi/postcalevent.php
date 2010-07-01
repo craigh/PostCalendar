@@ -38,7 +38,7 @@ function postcalendar_needleapi_postcalevent($args)
         $uselink = false;
         $moddir = ModUtil::getBaseDir($modname = 'PostCalendar');
         if (strpos($displaytype, 'I') !== false) {
-            $icon = "<img src='$moddir/pnimages/smallcalicon.jpg' alt='" . __('cal icon', $dom) . "' title='" . __('PostCalendar Event', $dom) . "' /> ";
+            $icon = "<img src='$moddir/images/smallcalicon.jpg' alt='" . __('cal icon', $dom) . "' title='" . __('PostCalendar Event', $dom) . "' /> ";
         }
         $linkarray = array();
         if (strpos($displaytype, 'N') !== false) {
