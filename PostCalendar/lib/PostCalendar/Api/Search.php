@@ -26,19 +26,20 @@ class PostCalendar_Api_Search extends Zikula_Api
     public function options($args)
     {
         if (SecurityUtil::checkPermission('PostCalendar::', ':*', ACCESS_OVERVIEW)) {
+            $renderer = Renderer::getInstance('PostCalendar');
             // Create output object - this object will store all of our output so that
             // we can return it easily when required
             $active = (isset($args['active']) && isset($args['active']['PostCalendar'])) || !isset($args['active']);
-            $this->renderer->assign('active', $active);
+            $renderer->assign('active', $active);
     
             // assign category info
             $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
-            $this->renderer->assign('catregistry', $catregistry);
+            $renderer->assign('catregistry', $catregistry);
     
             $props = array_keys($catregistry);
-            $this->renderer->assign('firstprop', $props[0]);
+            $renderer->assign('firstprop', $props[0]);
     
-            return $this->renderer->fetch('search/options.tpl');
+            return $renderer->fetch('search/options.tpl');
         }
     
         return '';
@@ -69,11 +70,11 @@ class PostCalendar_Api_Search extends Zikula_Api
         }
     
         ModUtil::dbInfoLoad('Search');
-        $pntable = System::dbGetTables();
-        $postcalendartable = $pntable['postcalendar_events'];
-        $postcalendarcolumn = $pntable['postcalendar_events_column'];
-        $searchTable = $pntable['search_result'];
-        $searchColumn = $pntable['search_result_column'];
+        $dbtable = DBUtil::getTables();
+        $postcalendartable = $dbtable['postcalendar_events'];
+        $postcalendarcolumn = $dbtable['postcalendar_events_column'];
+        $searchTable = $dbtable['search_result'];
+        $searchColumn = $dbtable['search_result_column'];
     
         $where = Search_Api_User::construct_where($args, array(
             $postcalendarcolumn['title'],
@@ -91,15 +92,6 @@ class PostCalendar_Api_Search extends Zikula_Api
     
         $sessionId = session_id();
     
-        $insertSql = "INSERT INTO $searchTable
-              ($searchColumn[title],
-              $searchColumn[text],
-              $searchColumn[extra],
-              $searchColumn[created],
-              $searchColumn[module],
-              $searchColumn[session])
-            VALUES ";
-    
         // Process the result set and insert into search result table
         foreach ($eventsByDate as $date) {
             if (count($date) > 0) {
@@ -107,15 +99,14 @@ class PostCalendar_Api_Search extends Zikula_Api
                     $title = $event['title'] . " (" . DateUtil::strftime(ModUtil::getVar('PostCalendar', 'pcEventDateFormat'), strtotime($event['eventDate'])) . ")";
                     $start = $event['alldayevent'] ? "12:00:00" : $event['startTime'];
                     $created = $event['eventDate'] . " " . $start;
-                    $sql = $insertSql . '('
-                        . '\'' . DataUtil::formatForStore($title) . '\', '
-                        . '\'' . DataUtil::formatForStore($event['hometext']) . '\', '
-                        . '\'' . DataUtil::formatForStore($event['eid']) . '\', '
-                        . '\'' . DataUtil::formatForStore($created) . '\', '
-                        . '\'' . 'PostCalendar' . '\', '
-                        . '\'' . DataUtil::formatForStore($sessionId) . '\')';
+                    $items = array('title' => $title,
+                                   'text'  => $event['hometext'],
+                                   'extra' => $event['eid'],
+                                   'created' => $created,
+                                   'module'  => 'PostCalendar',
+                                   'session' => $sessionId);
                 }
-                $insertResult = DBUtil::executeSQL($sql);
+                $insertResult = DBUtil::insertObject($items, 'search_result');
                 if (!$insertResult) {
                     return LogUtil::registerError($this->__('Error! Could not load items.'));
                 }
