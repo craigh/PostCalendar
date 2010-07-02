@@ -485,9 +485,9 @@ class PostCalendar_Admin extends Zikula_Controller
         }
     
         $eventDefaults = FormUtil::getPassedValue('postcalendar_eventdefaults'); //array
-    
+
         // filter through locations translator
-        $eventDefaults = ModUtil::apiFunc('postcalendar', 'event', 'correctlocationdata', $eventDefaults);
+        $eventDefaults = ModUtil::apiFunc('PostCalendar', 'event', 'correctlocationdata', $eventDefaults);
     
         //convert times to storable values
         $eventDefaults['duration'] = ModUtil::apiFunc('PostCalendar', 'event', 'computeduration', $eventDefaults);
@@ -496,7 +496,7 @@ class PostCalendar_Admin extends Zikula_Controller
         $startTime = $eventDefaults['startTime'];
         unset($eventDefaults['startTime']); // clears the whole array
         $eventDefaults['startTime'] = ModUtil::apiFunc('PostCalendar', 'event', 'convertstarttime', $startTime);
-    
+
         // save the new values
         ModUtil::setVar('PostCalendar', 'pcEventDefaults', $eventDefaults);
     
