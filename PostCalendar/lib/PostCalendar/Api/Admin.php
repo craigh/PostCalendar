@@ -26,32 +26,38 @@ class PostCalendar_Api_Admin extends Zikula_Api
         if (SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
             $links[] = array(
                 'url' => ModUtil::url('PostCalendar', 'admin', 'modifyconfig'),
-                'text' => $this->__('Settings'));
+                'text' => $this->__('Settings'),
+                'class' => 'z-icon-es-config');
         }
         if (SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
             $links[] = array(
                 'url' => ModUtil::url('PostCalendar', 'admin', 'modifyeventdefaults'),
-                'text' => $this->__('Event default values'));
+                'text' => $this->__('Event default values'),
+                'class' => 'z-icon-es-config');
         }
         if (SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADD)) {
             $links[] = array(
                 'url' => ModUtil::url('PostCalendar', 'event', 'new'),
-                'text' => $this->__('Create new event'));
+                'text' => $this->__('Create new event'),
+                'class' => 'z-icon-es-new');
         }
         if (SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
             $links[] = array(
                 'url' => ModUtil::url('PostCalendar', 'admin', 'listapproved'),
-                'text' => $this->__('Approved events'));
+                'text' => $this->__('Approved events'),
+                'class' => 'z-icon-es-list');
         }
         if (SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
             $links[] = array(
                 'url' => ModUtil::url('PostCalendar', 'admin', 'listhidden'),
-                'text' => $this->__('Hidden events'));
+                'text' => $this->__('Hidden events'),
+                'class' => 'z-icon-es-list');
         }
         if (SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
             $links[] = array(
                 'url' => ModUtil::url('PostCalendar', 'admin', 'listqueued'),
-                'text' => $this->__('Queued events'));
+                'text' => $this->__('Queued events'),
+                'class' => 'z-icon-es-list');
         }
     
         // Return the links array back to the calling function

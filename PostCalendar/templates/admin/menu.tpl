@@ -2,7 +2,5 @@
 {admincategorymenu}
 <div class="z-adminbox">
 	<h1>{gt text="Calendar"}</h1>
-	<div class="z-menu">
-		{moduleadminlinks modname=postcalendar}
-	</div>
+    {modulelinks modname='PostCalendar' type='admin'}
 </div>
