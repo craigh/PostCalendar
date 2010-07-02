@@ -25,7 +25,7 @@ class PostCalendar_Api_Account extends Zikula_Api
         }
         if (SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADD)) {
             $items['1'] = array(
-                'url' => ModUtil::url('PostCalendar', 'event', 'new'),
+                'url' => ModUtil::url('PostCalendar', 'event', 'create'),
                 'title' => $this->__('Submit Event'),
                 'icon' => 'admin.png');
         }

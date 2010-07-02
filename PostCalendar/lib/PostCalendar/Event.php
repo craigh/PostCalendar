@@ -37,7 +37,7 @@ class PostCalendar_Event extends Zikula_Controller
     public function edit($args)
     {
         $args['eid'] = FormUtil::getPassedValue('eid');
-        return $this->new($args);
+        return $this->create($args);
     }
     /**
      * copy an event
@@ -45,10 +45,10 @@ class PostCalendar_Event extends Zikula_Controller
     public function copy($args)
     {
         $args['eid'] = FormUtil::getPassedValue('eid');
-        return $this->new($args);
+        return $this->create($args);
     }
     /**
-     * @function new
+     * @function create
      *
      *  This form can be loaded in nine states:
      *  new event (first pass): no previous values, need defaults
@@ -69,7 +69,7 @@ class PostCalendar_Event extends Zikula_Controller
      *
      * expected $args = 'eid'
      **/
-    public function new($args)
+    public function create($args)
     {
         // We need at least ADD permission to submit an event
         if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADD)) {
@@ -77,7 +77,7 @@ class PostCalendar_Event extends Zikula_Controller
         }
     
         // these items come on brand new view of this function
-        $func = FormUtil::getPassedValue('func', 'new');
+        $func = FormUtil::getPassedValue('func', 'create');
         $Date = FormUtil::getPassedValue('Date'); //typically formatted YYYYMMDD or YYYYMMDD000000
         // format to '%Y%m%d%H%M%S'
         $Date = ModUtil::apiFunc('PostCalendar', 'user', 'getDate', array(
@@ -112,7 +112,7 @@ class PostCalendar_Event extends Zikula_Controller
             $submitted_event = ModUtil::apiFunc('PostCalendar', 'event', 'correctlocationdata', $submitted_event);
         }
     
-        if ($func == 'new') { // triggered on form_action=preview && on brand new load
+        if ($func == 'create') { // triggered on form_action=preview && on brand new load
             $eventdata = array();
             // wrap all the data into array for passing to save and preview functions
             if ($submitted_event['data_loaded']) {
@@ -139,7 +139,7 @@ class PostCalendar_Event extends Zikula_Controller
         if ($func == 'copy') {
             // reset some default values that are different from 'edit'
             $form_action = '';
-            $func = "new"; // change function so data is processed as 'new' in subsequent pass
+            $func = "create"; // change function so data is processed as 'new' in subsequent pass
             unset($args['eid']);
             unset($eventdata['eid']);
             $eventdata['is_update'] = false;
@@ -198,7 +198,7 @@ class PostCalendar_Event extends Zikula_Controller
                 $url_date = strftime('%Y%m%d', $sdate);
             }
             if ($addtrigger) {
-                System::redirect(ModUtil::url('PostCalendar', 'event', 'new'));
+                System::redirect(ModUtil::url('PostCalendar', 'event', 'create'));
             } else {
                 System::redirect(ModUtil::url('PostCalendar', 'user', 'view', array(
                     'viewtype' => _SETTING_DEFAULT_VIEW,

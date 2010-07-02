@@ -20,7 +20,7 @@ function smarty_function_pc_url($args, &$smarty)
     $javascript = array_key_exists('javascript', $args) && !empty($args['javascript']) ? $args['javascript'] : null;
     $assign     = array_key_exists('assign',     $args) && !empty($args['assign'])     ? $args['assign']     : null;
     $navlink    = array_key_exists('navlink',    $args) && !empty($args['navlink'])    ? true                : false;
-    $func       = array_key_exists('func',       $args) && !empty($args['func'])       ? $args['func']       : 'new';
+    $func       = array_key_exists('func',       $args) && !empty($args['func'])       ? $args['func']       : 'create';
     unset($args['action']);
     unset($args['print']);
     unset($args['date']);
@@ -36,8 +36,8 @@ function smarty_function_pc_url($args, &$smarty)
     $dom = ZLanguage::getModuleDomain('PostCalendar');
 
     $viewtype = strtolower(FormUtil::getPassedValue('viewtype', _SETTING_DEFAULT_VIEW));
-    if (FormUtil::getPassedValue('func') == 'new') {
-        $viewtype = 'new';
+    if (FormUtil::getPassedValue('func') == 'create') {
+        $viewtype = 'create'; // this may break
    }
     $pc_username = FormUtil::getPassedValue('pc_username');
 

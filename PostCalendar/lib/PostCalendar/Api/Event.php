@@ -520,7 +520,7 @@ class PostCalendar_Api_Event extends Zikula_Api
     
         // Assign the content format (determines if scribite is in use)
         $form_data['formattedcontent'] = ModUtil::apiFunc('PostCalendar', 'event', 'isformatted', array(
-            'func' => 'new'));
+            'func' => 'create'));
     
         // assign empty values to text fields that don't need changing
         $eventdata['title']     = isset($eventdata['title'])     ? $eventdata['title']     : "";

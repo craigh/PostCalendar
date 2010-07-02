@@ -219,14 +219,14 @@ class PostCalendar_Installer extends Zikula_Installer
             $mid = false;
 
             if (count($modconfig)) {
-                $modconfig['modfuncs'] = 'new,edit,copy,submit';
+                $modconfig['modfuncs'] = 'create,edit,copy,submit';
                 $modconfig['modareas'] = 'description';
                 $mid = ModUtil::apiFunc('scribite', 'admin', 'editmodule', $modconfig);
             } else {
                 // create new module in db
                 $modconfig = array(
                     'modulename' => 'PostCalendar',
-                    'modfuncs' => 'new,edit,copy,submit',
+                    'modfuncs' => 'create,edit,copy,submit',
                     'modareas' => 'description',
                     'modeditor' => '-');
                 $mid = ModUtil::apiFunc('scribite', 'admin', 'addmodule', $modconfig);
