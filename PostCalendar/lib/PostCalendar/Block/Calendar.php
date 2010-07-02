@@ -27,7 +27,7 @@ class PostCalendar_Block_Calendar extends Zikula_Block
         return array(
             'text_type'      => 'PostCalendar',
             'module'         => 'PostCalendar',
-            'text_type_long' => $this-.__('Calendar Block'),
+            'text_type_long' => $this->__('Calendar Block'),
             'allow_multiple' => true,
             'form_content'   => false,
             'form_refresh'   => false,

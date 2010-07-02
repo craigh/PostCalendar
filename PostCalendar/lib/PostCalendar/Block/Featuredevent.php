@@ -124,3 +124,4 @@ class PostCalendar_Block_Featuredevent extends Zikula_Block
     
         return $blockinfo;
     }
+} // end class def
