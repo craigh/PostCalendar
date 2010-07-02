@@ -18,7 +18,7 @@ class PostCalendar_Hooks extends Zikula_Controller
      * @return string generated html output
      * @access public
      */
-    public function new($args)
+    public function newgui($args)
     {
         $thismodule = isset($args['extrainfo']['module']) ? strtolower($args['extrainfo']['module']) : strtolower(ModUtil::getName()); // default to active module
     
@@ -40,7 +40,7 @@ class PostCalendar_Hooks extends Zikula_Controller
         }
         $this->renderer->assign('postcalendar_optoverride', $postcalendar_optoverride);
     
-        return $this->renderer->fetch('hooks/postcalendar_hooks_new.htm');
+        return $this->renderer->fetch('hooks/new.tpl');
     }
     
     /**
@@ -96,7 +96,7 @@ class PostCalendar_Hooks extends Zikula_Controller
     
         $this->renderer->assign('postcalendar_eid', $eventid);
     
-        return $this->renderer->fetch('hooks/postcalendar_hooks_modify.htm');
+        return $this->renderer->fetch('hooks/modify.tpl');
     }
     /**
      * postcalendar_hooks_modifyconfig
@@ -115,6 +115,6 @@ class PostCalendar_Hooks extends Zikula_Controller
     
         $this->renderer->assign('postcalendar_optoverride', ModUtil::getVar($thismodule, 'postcalendar_optoverride', false));
         $this->renderer->assign('postcalendar_admincatselected', ModUtil::getVar($thismodule, 'postcalendar_admincatselected'));
-        return $this->renderer->fetch('hooks/postcalendar_hooks_modifyconfig.htm');
+        return $this->renderer->fetch('hooks/modifyconfig.tpl');
     }
 } // end class def

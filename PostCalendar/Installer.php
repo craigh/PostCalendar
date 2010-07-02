@@ -103,6 +103,8 @@ class PostCalendar_Installer extends Zikula_Installer
                 $defaults = postcalendar_init_getdefaults();
                 $defaults['pcEventDefaults']['categories'] = $oldDefaultCats;
                 ModUtil::setVar('PostCalendar', 'pcEventDefaults', $defaults['pcEventDefaults']);
+                ModUtil::unregisterHook('item', 'new', 'GUI', 'PostCalendar', 'hooks', 'new');
+                ModUtil::registerHook('item', 'new', 'GUI', 'PostCalendar', 'hooks', 'newgui');
             case '6.2.0':
                 // 6.2 and 7.0 have the same changes (simultaneous release) so the upgrade code is only needed from 6.1
             case '7.0.0':
@@ -340,7 +342,7 @@ class PostCalendar_Installer extends Zikula_Installer
         if (!ModUtil::registerHook('item', 'delete', 'API', 'PostCalendar', 'hooks', 'delete')) {
             return LogUtil::registerError($this->__f('PostCalendar: Could not register %s hook.', 'delete'));
         }
-        if (!ModUtil::registerHook('item', 'new', 'GUI', 'PostCalendar', 'hooks', 'new')) {
+        if (!ModUtil::registerHook('item', 'new', 'GUI', 'PostCalendar', 'hooks', 'newgui')) {
             return LogUtil::registerError($this->__f('PostCalendar: Could not register %s hook.', 'new'));
         }
         if (!ModUtil::registerHook('item', 'modify', 'GUI', 'PostCalendar', 'hooks', 'modify')) {

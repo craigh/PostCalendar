@@ -27,7 +27,7 @@
                         {pc_popup bgcolor=$event.catcolor caption=$event.title text=$event.hometext|safetext assign="javascript"}
                         {gt text='private event' assign='p_txt'}
                         {if $event.privateicon}{img src='locked.png' modname='core' set='icons/extrasmall' title=$p_txt alt=$p_txt}{/if}                        {pc_url full=true class="eventlink" action="detail" eid=$event.eid date=$date javascript=$javascript display="$timestamp `$event.title`"|strip_tags}
-                        {if $event.alldayevent != true}&nbsp;({gt text='until'}{$event.endTime}){/if}
+                        {if $event.alldayevent != true}&nbsp;({gt text='until'} {$event.endTime}){/if}
                         {if $event.commentcount gt 0}
                             {gt text='%s comment left' plural='%s comments left.' count=$event.commentcount tag1=$event.commentcount assign="title"}
                             <a href="{modurl modname='PostCalendar' func='view' viewtype='details' eid=$event.eid}#comments" title='{$title}'>

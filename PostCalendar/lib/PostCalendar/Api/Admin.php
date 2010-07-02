@@ -72,7 +72,7 @@ class PostCalendar_Api_Admin extends Zikula_Api
     public function clearCache()
     {
         // Do not call clear_all_cache, but only clear the cached templates of this module
-        return $this->renderer->clear_cache();
+        //return $this->renderer->clear_cache();
     }
     
     /**
