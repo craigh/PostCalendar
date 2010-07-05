@@ -9,7 +9,7 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
  */
 
-class PostCalendar_Admin extends Zikula_Controller
+class PostCalendar_Controller_Admin extends Zikula_Controller
 {
     /**
      * the main administration function

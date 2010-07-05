@@ -8,7 +8,7 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
  */
 
-class PostCalendar_Hooks extends Zikula_Controller
+class PostCalendar_Controller_Hooks extends Zikula_Controller
 {
     /**
      * postcalendar_hooks_new
