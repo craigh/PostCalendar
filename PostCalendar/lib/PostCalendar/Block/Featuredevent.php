@@ -80,10 +80,10 @@ class PostCalendar_Block_Featuredevent extends Zikula_Block
             $blockinfo['title'] = NULL;
         }
     
-        $this->renderer->assign('loaded_event', $event);
-        $this->renderer->assign('thisblockid', $blockinfo['bid']);
+        $this->view->assign('loaded_event', $event);
+        $this->view->assign('thisblockid', $blockinfo['bid']);
     
-        $blockinfo['content'] = $this->renderer->fetch('blocks/featuredevent.tpl');
+        $blockinfo['content'] = $this->view->fetch('blocks/featuredevent.tpl');
     
         return BlockUtil::themeBlock($blockinfo);
     }
@@ -99,9 +99,9 @@ class PostCalendar_Block_Featuredevent extends Zikula_Block
         if (empty($vars['showcountdown'])) $vars['showcountdown'] = 0;
         if (empty($vars['hideonexpire']))  $vars['hideonexpire']  = 0;
     
-        $this->renderer->assign('vars', $vars);
+        $this->view->assign('vars', $vars);
     
-        return $this->renderer->fetch('blocks/featuredevent_modify.tpl');
+        return $this->view->fetch('blocks/featuredevent_modify.tpl');
     }
     
     /**
@@ -120,7 +120,7 @@ class PostCalendar_Block_Featuredevent extends Zikula_Block
         $blockinfo['content'] = BlockUtil::varsToContent($vars);
     
         // clear the block cache
-        $this->renderer->clear_cache('blocks/featuredevent.tpl');
+        Zikula_View::clear_cache('blocks/featuredevent.tpl');
     
         return $blockinfo;
     }

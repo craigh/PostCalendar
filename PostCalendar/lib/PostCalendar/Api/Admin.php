@@ -72,7 +72,7 @@ class PostCalendar_Api_Admin extends Zikula_Api
     public function clearCache()
     {
         // Do not call clear_all_cache, but only clear the cached templates of this module
-        //return $this->renderer->clear_cache();
+        return Zikula_View::clear_cache();
     }
     
     /**
@@ -103,13 +103,13 @@ class PostCalendar_Api_Admin extends Zikula_Api
         $modinfo = ModUtil::getInfo(ModUtil::getIdFromName('PostCalendar'));
         $modversion = DataUtil::formatForOS($modinfo['version']);
     
-        $this->renderer->assign('is_update', $is_update);
-        $this->renderer->assign('modversion', $modversion);
-        $this->renderer->assign('eid', $eid);
-        $this->renderer->assign('link', ModUtil::url('PostCalendar', 'admin', 'adminevents', array(
+        $this->view->assign('is_update', $is_update);
+        $this->view->assign('modversion', $modversion);
+        $this->view->assign('eid', $eid);
+        $this->view->assign('link', ModUtil::url('PostCalendar', 'admin', 'adminevents', array(
             'events' => $eid,
             'action' => _ADMIN_ACTION_VIEW), null, null, true));
-        $message = $this->renderer->fetch('email/adminnotify.tpl');
+        $message = $this->view->fetch('email/adminnotify.tpl');
     
         $messagesent = ModUtil::apiFunc('Mailer', 'user', 'sendmessage', array(
             'toaddress' => _SETTING_NOTIFY_EMAIL,

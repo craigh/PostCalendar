@@ -61,9 +61,9 @@ class PostCalendar_Block_Pastevents extends Zikula_Block
         $the_day   = (int) substr($Date, 6, 2);
     
         // If block is cached, return cached version
-        $this->renderer->cache_id = $blockinfo['bid'] . ':' . UserUtil::getVar('uid');
-        if ($this->renderer->is_cached('blocks/pastevents.tpl')) {
-            $blockinfo['content'] = $this->renderer->fetch('blocks/pastevents.tpl');
+        $this->view->cache_id = $blockinfo['bid'] . ':' . UserUtil::getVar('uid');
+        if ($this->view->is_cached('blocks/pastevents.tpl')) {
+            $blockinfo['content'] = $this->view->fetch('blocks/pastevents.tpl');
             return BlockUtil::themeBlock($blockinfo);
         }
     
@@ -81,10 +81,10 @@ class PostCalendar_Block_Pastevents extends Zikula_Block
             'filtercats' => $filtercats,
             'sort'       => 'DESC'));
     
-        $this->renderer->assign('A_EVENTS',   $eventsByDate);
-        $this->renderer->assign('DATE',       $Date);
+        $this->view->assign('A_EVENTS',   $eventsByDate);
+        $this->view->assign('DATE',       $Date);
     
-        $blockinfo['content'] = $this->renderer->fetch('blocks/pastevents.tpl');
+        $blockinfo['content'] = $this->view->fetch('blocks/pastevents.tpl');
     
         return BlockUtil::themeBlock($blockinfo);
     }
@@ -101,14 +101,14 @@ class PostCalendar_Block_Pastevents extends Zikula_Block
     
         // load the category registry util
         $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
-        $this->renderer->assign('catregistry', $catregistry);
+        $this->view->assign('catregistry', $catregistry);
     
         $props = array_keys($catregistry);
-        $this->renderer->assign('firstprop', $props[0]);
+        $this->view->assign('firstprop', $props[0]);
     
-        $this->renderer->assign('vars', $vars);
+        $this->view->assign('vars', $vars);
     
-        return $this->renderer->fetch('blocks/pastevents_modify.tpl');
+        return $this->view->fetch('blocks/pastevents_modify.tpl');
     }
     
     /**
@@ -123,7 +123,7 @@ class PostCalendar_Block_Pastevents extends Zikula_Block
         $vars['pcbeventsrange'] = FormUtil::getPassedValue('pcbeventsrange', 6);
         $vars['pcbfiltercats']  = FormUtil::getPassedValue('pcbfiltercats'); //array
     
-        $this->renderer->clear_cache('blocks/pastevents.tpl');
+        Zikula_View::clear_cache('blocks/pastevents.tpl');
         $blockinfo['content'] = BlockUtil::varsToContent($vars);
     
         return $blockinfo;

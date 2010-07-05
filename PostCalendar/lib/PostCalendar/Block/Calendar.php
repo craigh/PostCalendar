@@ -69,34 +69,34 @@ class PostCalendar_Block_Calendar extends Zikula_Block
         $output = '';
     
         // If block is cached, return cached version
-        $this->renderer->cache_id = $blockinfo['bid'] . ':' . UserUtil::getVar('uid');
+        $this->view->cache_id = $blockinfo['bid'] . ':' . UserUtil::getVar('uid');
         $templates_cached = true;
         if ($showcalendar) {
-            if (!$this->renderer->is_cached('blocks/view_month.tpl')) {
+            if (!$this->view->is_cached('blocks/view_month.tpl')) {
                 $templates_cached = false;
             }
         }
         if ($showevents) {
-            if (!$this->renderer->is_cached('blocks/view_day.tpl')) {
+            if (!$this->view->is_cached('blocks/view_day.tpl')) {
                 $templates_cached = false;
             }
         }
         if ($nextevents) {
-            if (!$this->renderer->is_cached('blocks/view_upcoming.tpl')) {
+            if (!$this->view->is_cached('blocks/view_upcoming.tpl')) {
                 $templates_cached = false;
             }
         }
         if ($pcbshowsslinks) {
-            if (!$this->renderer->is_cached('blocks/calendarlinks.tpl')) {
+            if (!$this->view->is_cached('blocks/calendarlinks.tpl')) {
                 $templates_cached = false;
             }
         }
     
         if ($templates_cached) {
-            $blockinfo['content'] = $this->renderer->fetch('blocks/view_month.tpl');
-            $blockinfo['content'] .= $this->renderer->fetch('blocks/view_day.tpl');
-            $blockinfo['content'] .= $this->renderer->fetch('blocks/view_upcoming.tpl');
-            $blockinfo['content'] .= $this->renderer->fetch('blocks/calendarlinks.tpl');
+            $blockinfo['content'] = $this->view->fetch('blocks/view_month.tpl');
+            $blockinfo['content'] .= $this->view->fetch('blocks/view_day.tpl');
+            $blockinfo['content'] .= $this->view->fetch('blocks/view_upcoming.tpl');
+            $blockinfo['content'] .= $this->view->fetch('blocks/calendarlinks.tpl');
     
             return BlockUtil::themeBlock($blockinfo);
         }
@@ -173,49 +173,49 @@ class PostCalendar_Block_Calendar extends Zikula_Block
         }
     
         if (isset($calendarView)) {
-            $this->renderer->assign('CAL_FORMAT', $calendarView);
+            $this->view->assign('CAL_FORMAT', $calendarView);
         }
     
         $countTodaysEvents = count($eventsByDate[$today_date]);
         $hideTodaysEvents  = ($hideevents && ($countTodaysEvents == 0)) ? true : false;
     
-        $this->renderer->assign('S_SHORT_DAY_NAMES', $sdaynames);
-        $this->renderer->assign('A_EVENTS',          $eventsByDate);
-        $this->renderer->assign('todaysEvents',      $eventsByDate[$today_date]);
-        $this->renderer->assign('hideTodaysEvents',  $hideTodaysEvents);
-        $this->renderer->assign('PREV_MONTH_URL',    $pc_prev);
-        $this->renderer->assign('NEXT_MONTH_URL',    $pc_next);
-        $this->renderer->assign('MONTH_START_DATE',  $month_view_start);
-        $this->renderer->assign('MONTH_END_DATE',    $month_view_end);
-        $this->renderer->assign('TODAY_DATE',        $today_date);
-        $this->renderer->assign('DATE',              $Date);
-        $this->renderer->assign('DISPLAY_LIMIT',     $eventslimit);
-        $this->renderer->assign('pc_colclasses',     $pc_colclasses);
+        $this->view->assign('S_SHORT_DAY_NAMES', $sdaynames);
+        $this->view->assign('A_EVENTS',          $eventsByDate);
+        $this->view->assign('todaysEvents',      $eventsByDate[$today_date]);
+        $this->view->assign('hideTodaysEvents',  $hideTodaysEvents);
+        $this->view->assign('PREV_MONTH_URL',    $pc_prev);
+        $this->view->assign('NEXT_MONTH_URL',    $pc_next);
+        $this->view->assign('MONTH_START_DATE',  $month_view_start);
+        $this->view->assign('MONTH_END_DATE',    $month_view_end);
+        $this->view->assign('TODAY_DATE',        $today_date);
+        $this->view->assign('DATE',              $Date);
+        $this->view->assign('DISPLAY_LIMIT',     $eventslimit);
+        $this->view->assign('pc_colclasses',     $pc_colclasses);
     
         if ($showcalendar) {
-            $output .= $this->renderer->fetch('blocks/view_month.tpl');
+            $output .= $this->view->fetch('blocks/view_month.tpl');
         }
     
         if ($showevents) {
             if ($showcalendar) {
-                $this->renderer->assign('SHOW_TITLE', 1);
+                $this->view->assign('SHOW_TITLE', 1);
             } else {
-                $this->renderer->assign('SHOW_TITLE', 0);
+                $this->view->assign('SHOW_TITLE', 0);
             }
-            $output .= $this->renderer->fetch('blocks/view_day.tpl');
+            $output .= $this->view->fetch('blocks/view_day.tpl');
         }
     
         if ($nextevents) {
             if ($showcalendar || $showevents) {
-                $this->renderer->assign('SHOW_TITLE', 1);
+                $this->view->assign('SHOW_TITLE', 1);
             } else {
-                $this->renderer->assign('SHOW_TITLE', 0);
+                $this->view->assign('SHOW_TITLE', 0);
             }
-            $output .= $this->renderer->fetch('blocks/view_upcoming.tpl');
+            $output .= $this->view->fetch('blocks/view_upcoming.tpl');
         }
     
         if ($pcbshowsslinks) {
-            $output .= $this->renderer->fetch('blocks/calendarlinks.tpl');
+            $output .= $this->view->fetch('blocks/calendarlinks.tpl');
         }
     
         $blockinfo['content'] = $output;
@@ -240,14 +240,14 @@ class PostCalendar_Block_Calendar extends Zikula_Block
     
         // load the category registry util
         $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
-        $this->renderer->assign('catregistry', $catregistry);
+        $this->view->assign('catregistry', $catregistry);
     
         $props = array_keys($catregistry);
-        $this->renderer->assign('firstprop', $props[0]);
+        $this->view->assign('firstprop', $props[0]);
     
-        $this->renderer->assign('vars', $vars);
+        $this->view->assign('vars', $vars);
     
-        return $this->renderer->fetch('blocks/calendar_modify.tpl');
+        return $this->view->fetch('blocks/calendar_modify.tpl');
     }
     
     /**
@@ -268,10 +268,10 @@ class PostCalendar_Block_Calendar extends Zikula_Block
         $vars['pcbshowsslinks']       = FormUtil::getPassedValue('pcbshowsslinks',       0);
         $vars['pcbfiltercats']        = FormUtil::getPassedValue('pcbfiltercats'); //array
     
-        $this->renderer->clear_cache('blocks/view_day.tpl');
-        $this->renderer->clear_cache('blocks/view_month.tpl');
-        $this->renderer->clear_cache('blocks/view_upcoming.tpl');
-        $this->renderer->clear_cache('blocks/calendarlinks.tpl');
+        Zikula_View::clear_cache('blocks/view_day.tpl');
+        Zikula_View::clear_cache('blocks/view_month.tpl');
+        Zikula_View::clear_cache('blocks/view_upcoming.tpl');
+        Zikula_View::clear_cache('blocks/calendarlinks.tpl');
         $blockinfo['content'] = BlockUtil::varsToContent($vars);
     
         return $blockinfo;

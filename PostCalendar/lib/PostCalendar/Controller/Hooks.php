@@ -30,17 +30,17 @@ class PostCalendar_Controller_Hooks extends Zikula_Controller
         } else {
             $postcalendar_hide = false;
         }
-        $this->renderer->assign('postcalendar_hide', $postcalendar_hide);
+        $this->view->assign('postcalendar_hide', $postcalendar_hide);
     
         if ($postcalendar_admincatselected['Main'] == 0) {
             $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
-            $this->renderer->assign('postcalendar_catregistry', $catregistry);
+            $this->view->assign('postcalendar_catregistry', $catregistry);
         } else {
-            $this->renderer->assign('postcalendar_admincatselected', serialize($postcalendar_admincatselected)); // value assigned by admin
+            $this->view->assign('postcalendar_admincatselected', serialize($postcalendar_admincatselected)); // value assigned by admin
         }
-        $this->renderer->assign('postcalendar_optoverride', $postcalendar_optoverride);
+        $this->view->assign('postcalendar_optoverride', $postcalendar_optoverride);
     
-        return $this->renderer->fetch('hooks/new.tpl');
+        return $this->view->fetch('hooks/new.tpl');
     }
     
     /**
@@ -83,20 +83,20 @@ class PostCalendar_Controller_Hooks extends Zikula_Controller
         } else {
             $postcalendar_hide = false;
         }
-        $this->renderer->assign('postcalendar_hide', $postcalendar_hide);
+        $this->view->assign('postcalendar_hide', $postcalendar_hide);
     
         if ($postcalendar_admincatselected['Main'] == 0) {
             $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
-            $this->renderer->assign('postcalendar_catregistry', $catregistry);
-            $this->renderer->assign('postcalendar_selectedcategories', $selectedcategories);
+            $this->view->assign('postcalendar_catregistry', $catregistry);
+            $this->view->assign('postcalendar_selectedcategories', $selectedcategories);
         } else {
-            $this->renderer->assign('postcalendar_admincatselected', serialize($postcalendar_admincatselected)); // value assigned by admin
+            $this->view->assign('postcalendar_admincatselected', serialize($postcalendar_admincatselected)); // value assigned by admin
         }
-        $this->renderer->assign('postcalendar_optoverride', $postcalendar_optoverride);
+        $this->view->assign('postcalendar_optoverride', $postcalendar_optoverride);
     
-        $this->renderer->assign('postcalendar_eid', $eventid);
+        $this->view->assign('postcalendar_eid', $eventid);
     
-        return $this->renderer->fetch('hooks/modify.tpl');
+        return $this->view->fetch('hooks/modify.tpl');
     }
     /**
      * postcalendar_hooks_modifyconfig
@@ -111,10 +111,10 @@ class PostCalendar_Controller_Hooks extends Zikula_Controller
         $thismodule = isset($args['extrainfo']['module']) ? strtolower($args['extrainfo']['module']) : strtolower(ModUtil::getName()); // default to active module
     
         $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
-        $this->renderer->assign('postcalendar_catregistry', $catregistry);
+        $this->view->assign('postcalendar_catregistry', $catregistry);
     
-        $this->renderer->assign('postcalendar_optoverride', ModUtil::getVar($thismodule, 'postcalendar_optoverride', false));
-        $this->renderer->assign('postcalendar_admincatselected', ModUtil::getVar($thismodule, 'postcalendar_admincatselected'));
-        return $this->renderer->fetch('hooks/modifyconfig.tpl');
+        $this->view->assign('postcalendar_optoverride', ModUtil::getVar($thismodule, 'postcalendar_optoverride', false));
+        $this->view->assign('postcalendar_admincatselected', ModUtil::getVar($thismodule, 'postcalendar_admincatselected'));
+        return $this->view->fetch('hooks/modifyconfig.tpl');
     }
 } // end class def

@@ -36,12 +36,12 @@ class PostCalendar_Controller_Admin extends Zikula_Controller
         }
     
         $modinfo = ModUtil::getInfo(ModUtil::getIdFromName('PostCalendar'));
-        $this->renderer->assign('postcalendarversion', $modinfo['version']);
+        $this->view->assign('postcalendarversion', $modinfo['version']);
     
-        $this->renderer->assign('pcFilterYearStart', ModUtil::getVar('PostCalendar', 'pcFilterYearStart', 1));
-        $this->renderer->assign('pcFilterYearEnd', ModUtil::getVar('PostCalendar', 'pcFilterYearEnd', 2));
+        $this->view->assign('pcFilterYearStart', ModUtil::getVar('PostCalendar', 'pcFilterYearStart', 1));
+        $this->view->assign('pcFilterYearEnd', ModUtil::getVar('PostCalendar', 'pcFilterYearEnd', 2));
     
-        return $this->renderer->fetch('admin/modifyconfig.tpl');
+        return $this->view->fetch('admin/modifyconfig.tpl');
     }
     
     /**
@@ -123,22 +123,22 @@ class PostCalendar_Controller_Admin extends Zikula_Controller
     
         $events = DBUtil::selectObjectArray('postcalendar_events', "WHERE pc_eventstatus=" . $args['type'], $sort, $offset, $offset_increment, false);
     
-        $this->renderer->assign('title', $args['title']);
-        $this->renderer->assign('function', $args['function']);
-        $this->renderer->assign('functionname', substr($args['function'], 4));
-        $this->renderer->assign('events', $events);
-        $this->renderer->assign('title_sort_url', ModUtil::url('PostCalendar', 'admin', $args['function'], array(
+        $this->view->assign('title', $args['title']);
+        $this->view->assign('function', $args['function']);
+        $this->view->assign('functionname', substr($args['function'], 4));
+        $this->view->assign('events', $events);
+        $this->view->assign('title_sort_url', ModUtil::url('PostCalendar', 'admin', $args['function'], array(
             'sort' => 'title',
             'sdir' => $sdir)));
-        $this->renderer->assign('time_sort_url', ModUtil::url('PostCalendar', 'admin', $args['function'], array(
+        $this->view->assign('time_sort_url', ModUtil::url('PostCalendar', 'admin', $args['function'], array(
             'sort' => 'time',
             'sdir' => $sdir)));
-        $this->renderer->assign('formactions', array(
+        $this->view->assign('formactions', array(
             _ADMIN_ACTION_VIEW    => $this->__('List'),
             _ADMIN_ACTION_APPROVE => $this->__('Approve'),
             _ADMIN_ACTION_HIDE    => $this->__('Hide'),
             _ADMIN_ACTION_DELETE  => $this->__('Delete')));
-        $this->renderer->assign('actionselected', _ADMIN_ACTION_VIEW);
+        $this->view->assign('actionselected', _ADMIN_ACTION_VIEW);
         if ($offset > 1) {
             $prevlink = ModUtil::url('PostCalendar', 'admin', $args['function'], array(
                 'offset' => $offset - $offset_increment,
@@ -147,7 +147,7 @@ class PostCalendar_Controller_Admin extends Zikula_Controller
         } else {
             $prevlink = false;
         }
-        $this->renderer->assign('prevlink', $prevlink);
+        $this->view->assign('prevlink', $prevlink);
         if (count($events) >= $offset_increment) {
             $nextlink = ModUtil::url('PostCalendar', 'admin', $args['function'], array(
                 'offset' => $offset + $offset_increment,
@@ -156,10 +156,10 @@ class PostCalendar_Controller_Admin extends Zikula_Controller
         } else {
             $nextlink = false;
         }
-        $this->renderer->assign('nextlink', $nextlink);
-        $this->renderer->assign('offset_increment', $offset_increment);
+        $this->view->assign('nextlink', $nextlink);
+        $this->view->assign('offset_increment', $offset_increment);
     
-        return $this->renderer->fetch('admin/showlist.tpl');
+        return $this->view->fetch('admin/showlist.tpl');
     }
     
     /**
@@ -226,11 +226,11 @@ class PostCalendar_Controller_Admin extends Zikula_Controller
                 break;
         }
     
-        $this->renderer->assign('function', $function);
-        $this->renderer->assign('areyousure', $are_you_sure_text);
-        $this->renderer->assign('alleventinfo', $alleventinfo);
+        $this->view->assign('function', $function);
+        $this->view->assign('areyousure', $are_you_sure_text);
+        $this->view->assign('alleventinfo', $alleventinfo);
     
-        return $this->renderer->fetch("admin/eventrevue.tpl");
+        return $this->view->fetch("admin/eventrevue.tpl");
     }
     
     /**
@@ -453,24 +453,24 @@ class PostCalendar_Controller_Admin extends Zikula_Controller
     
         // load the category registry util
         $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
-        $this->renderer->assign('catregistry', $catregistry);
+        $this->view->assign('catregistry', $catregistry);
     
         $props = array_keys($catregistry);
-        $this->renderer->assign('firstprop', $props[0]);
+        $this->view->assign('firstprop', $props[0]);
         $selectedDefaultCategories = $eventDefaults['categories'];
-        $this->renderer->assign('selectedDefaultCategories', $selectedDefaultCategories);
+        $this->view->assign('selectedDefaultCategories', $selectedDefaultCategories);
     
         // convert duration to HH:MM
         $eventDefaults['endTime']  = ModUtil::apiFunc('PostCalendar', 'event', 'computeendtime', $eventDefaults);
     
         // sharing selectbox
-        $this->renderer->assign('sharingselect', ModUtil::apiFunc('PostCalendar', 'event', 'sharingselect'));
+        $this->view->assign('sharingselect', ModUtil::apiFunc('PostCalendar', 'event', 'sharingselect'));
     
-        $this->renderer->assign('Selected',  ModUtil::apiFunc('PostCalendar', 'event', 'alldayselect', $eventDefaults['alldayevent']));
+        $this->view->assign('Selected',  ModUtil::apiFunc('PostCalendar', 'event', 'alldayselect', $eventDefaults['alldayevent']));
     
-        $this->renderer->assign('postcalendar_eventdefaults', $eventDefaults);
+        $this->view->assign('postcalendar_eventdefaults', $eventDefaults);
     
-        return $this->renderer->fetch('admin/eventdefaults.tpl');
+        return $this->view->fetch('admin/eventdefaults.tpl');
     }
     
     /**

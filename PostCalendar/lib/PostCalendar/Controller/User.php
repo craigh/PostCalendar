@@ -84,9 +84,9 @@ class PostCalendar_Controller_User extends Zikula_Controller
         }
     
         $modinfo = ModUtil::getInfo(ModUtil::getIdFromName('PostCalendar'));
-        $this->renderer->assign('postcalendarversion', $modinfo['version']);
+        $this->view->assign('postcalendarversion', $modinfo['version']);
     
-        $this->renderer->cache_id = $Date . '|' . $viewtype . '|' . $eid . '|' . UserUtil::getVar('uid');
+        $this->view->cache_id = $Date . '|' . $viewtype . '|' . $eid . '|' . UserUtil::getVar('uid');
     
         switch ($viewtype) {
             case 'details':
@@ -95,9 +95,9 @@ class PostCalendar_Controller_User extends Zikula_Controller
                 }
     
                 // build template and fetch:
-                if ($this->renderer->is_cached('user/view_event_details.tpl')) {
+                if ($this->view->is_cached('user/view_event_details.tpl')) {
                     // use cached version
-                    return $this->renderer->fetch('user/view_event_details.tpl');
+                    return $this->view->fetch('user/view_event_details.tpl');
                 } else {
                     // get the event from the DB
                     $event = DBUtil::selectObjectByID('postcalendar_events', $args['eid'], 'eid');
@@ -118,20 +118,20 @@ class PostCalendar_Controller_User extends Zikula_Controller
                         $d = substr($args['Date'], 6, 2);
                         $event['eventDate'] = "$y-$m-$d";
                     }
-                    $this->renderer->assign('loaded_event', $event);
+                    $this->view->assign('loaded_event', $event);
     
                     if ($popup == true) {
-                        $this->renderer->display('user/view_popup.tpl');
+                        $this->view->display('user/view_popup.tpl');
                         return true; // displays template without theme wrap
                     } else {
                         if ((SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADD) && (UserUtil::getVar('uid') == $event['aid'])) || SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
-                            $this->renderer->assign('EVENT_CAN_EDIT', true);
+                            $this->view->assign('EVENT_CAN_EDIT', true);
                         } else {
-                            $this->renderer->assign('EVENT_CAN_EDIT', false);
+                            $this->view->assign('EVENT_CAN_EDIT', false);
                         }
-                        $this->renderer->assign('TODAY_DATE', DateUtil::getDatetime('', '%Y-%m-%d'));
-                        $this->renderer->assign('DATE', $Date);
-                        return $this->renderer->fetch('user/view_event_details.tpl');
+                        $this->view->assign('TODAY_DATE', DateUtil::getDatetime('', '%Y-%m-%d'));
+                        $this->view->assign('DATE', $Date);
+                        return $this->view->fetch('user/view_event_details.tpl');
                     }
                 }
                 break;
@@ -147,15 +147,15 @@ class PostCalendar_Controller_User extends Zikula_Controller
                     'filtercats' => $filtercats,
                     'func' => $func));
                 // build template and fetch:
-                if ($this->renderer->is_cached('user/view_' . $viewtype . '.tpl')) {
+                if ($this->view->is_cached('user/view_' . $viewtype . '.tpl')) {
                     // use cached version
-                    return $this->renderer->fetch('user/view_' . $viewtype . '.tpl');
+                    return $this->view->fetch('user/view_' . $viewtype . '.tpl');
                 } else {
                     foreach ($out as $var => $val) {
-                        $this->renderer->assign($var, $val);
+                        $this->view->assign($var, $val);
                     }
     
-                    return $this->renderer->fetch('user/view_' . $viewtype . '.tpl');
+                    return $this->view->fetch('user/view_' . $viewtype . '.tpl');
                 } // end if/else
                 break;
         } // end switch

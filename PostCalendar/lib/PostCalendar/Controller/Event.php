@@ -21,14 +21,14 @@ class PostCalendar_Controller_Event extends Zikula_Controller
             return LogUtil::registerPermissionError();
         }
         $eid    = FormUtil::getPassedValue('eid'); //  seems like this should be handled by the eventHandler
-        $this->renderer = FormUtil::newForm('PostCalendar');
+        $this->view = FormUtil::newForm('PostCalendar');
     
         // get the event from the DB
         $event = DBUtil::selectObjectByID('postcalendar_events', $eid, 'eid');
         $event = ModUtil::apiFunc('PostCalendar', 'event', 'formateventarrayfordisplay', $event);
     
-        $this->renderer->assign('loaded_event', $event);
-        return $this->renderer->execute('event/deleteeventconfirm.tpl', new PostCalendar_Form_Handler_editHandler());
+        $this->view->assign('loaded_event', $event);
+        return $this->view->execute('event/deleteeventconfirm.tpl', new PostCalendar_Form_Handler_editHandler());
     }
     
     /**
@@ -211,16 +211,16 @@ class PostCalendar_Controller_Event extends Zikula_Controller
             'eventdata' => $eventdata,
             'Date' => $Date)); //sets defaults or builds selected values
         foreach ($submitformelements as $var => $val) {
-            $this->renderer->assign($var, $val);
+            $this->view->assign($var, $val);
         }
     
         // assign some basic settings
-        $this->renderer->assign('EVENT_DATE_FORMAT', _SETTING_DATE_FORMAT);
-        $this->renderer->assign('24HOUR_TIME', _SETTING_TIME_24HOUR);
+        $this->view->assign('EVENT_DATE_FORMAT', _SETTING_DATE_FORMAT);
+        $this->view->assign('24HOUR_TIME', _SETTING_TIME_24HOUR);
     
         // assign function in case we were editing
-        $this->renderer->assign('func', $func);
+        $this->view->assign('func', $func);
     
-        return $this->renderer->fetch("event/submit.tpl");
+        return $this->view->fetch("event/submit.tpl");
     }
 } // end class def
