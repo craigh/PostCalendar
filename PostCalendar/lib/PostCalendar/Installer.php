@@ -103,10 +103,9 @@ class PostCalendar_Installer extends Zikula_Installer
                 $defaults = postcalendar_init_getdefaults();
                 $defaults['pcEventDefaults']['categories'] = $oldDefaultCats;
                 ModUtil::setVar('PostCalendar', 'pcEventDefaults', $defaults['pcEventDefaults']);
+            case '6.2.0':
                 ModUtil::unregisterHook('item', 'new', 'GUI', 'PostCalendar', 'hooks', 'new');
                 ModUtil::registerHook('item', 'new', 'GUI', 'PostCalendar', 'hooks', 'newgui');
-            case '6.2.0':
-                // 6.2 and 7.0 have the same changes (simultaneous release) so the upgrade code is only needed from 6.1
             case '7.0.0':
                 //future development
         }
