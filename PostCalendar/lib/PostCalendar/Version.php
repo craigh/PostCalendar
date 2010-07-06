@@ -1,9 +1,9 @@
 <?php
 /**
  * @package     PostCalendar
- * @author      $Author$
- * @link        $HeadURL$
- * @version     $Id$
+ * @author      $Author: craigh $
+ * @link        $HeadURL: https://code.zikula.org/svn/soundwebdevelopment/trunk/Modules/PostCalendar/Version.php $
+ * @version     $Id: Version.php 682 2010-07-06 12:41:15Z craigh $
  * @copyright   Copyright (c) 2002, The PostCalendar Team
  * @copyright   Copyright (c) 2009, Craig Heydenburg, Sound Web Development
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
@@ -18,7 +18,7 @@ class PostCalendar_Version extends Zikula_Version
         $meta['url']            = __(/*!used in URL - nospaces, no special chars, lcase*/'postcalendar', $dom);
         $meta['description']    = __('Calendar for Zikula', $dom);
         
-        $meta['id']             = '$Revision$'; // svn revision #
+        $meta['id']             = '$Revision: 682 $'; // svn revision #
         $meta['version']        = '7.0.0-dev';
         $meta['credits']        = 'http://code.zikula.org/soundwebdevelopment/wiki/PostCalendarHistoryCredits';
         $meta['changelog']      = 'http://code.zikula.org/soundwebdevelopment/wiki/PostCalendarReleaseNotes';
