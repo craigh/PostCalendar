@@ -60,7 +60,7 @@ class PostCalendar_Controller_Hooks extends Zikula_Controller
     
         // get the event
         // Get table info
-        $pntable = System::dbGetTables();
+        $pntable = DBUtil::getTables();
         $cols = $pntable['postcalendar_events_column'];
         // build where statement
         $where = "WHERE " . $cols['hooked_modulename'] . " = '" . DataUtil::formatForStore($module) . "'

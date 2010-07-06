@@ -26,7 +26,7 @@ class PostCalendar_Api_Search extends Zikula_Api
     public function options($args)
     {
         if (SecurityUtil::checkPermission('PostCalendar::', ':*', ACCESS_OVERVIEW)) {
-            $renderer = Renderer::getInstance('PostCalendar');
+            $renderer = Zikula_View::getInstance('PostCalendar');
             // Create output object - this object will store all of our output so that
             // we can return it easily when required
             $active = (isset($args['active']) && isset($args['active']['PostCalendar'])) || !isset($args['active']);

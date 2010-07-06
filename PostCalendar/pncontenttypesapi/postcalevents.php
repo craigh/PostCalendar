@@ -58,7 +58,7 @@ class postcalendar_contenttypesapi_postcaleventsPlugin extends contentTypeBase
             'end'        => $ending_date,
             'filtercats' => $filtercats));
 
-        $render = Renderer::getInstance('PostCalendar');
+        $render = Zikula_View::getInstance('PostCalendar');
         $render->assign('A_EVENTS',      $eventsByDate);
         $render->assign('DATE',          $Date);
         $render->assign('DISPLAY_LIMIT', $this->pcbeventslimit);

@@ -68,7 +68,7 @@ class postcalendar_contenttypesapi_postcaleventPlugin extends contentTypeBase
             $event['showcountdown'] = true;
         }
     
-        $render = Renderer::getInstance('PostCalendar');
+        $render = Zikula_View::getInstance('PostCalendar');
     
         $render->assign('loaded_event', $event);
     

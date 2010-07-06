@@ -87,7 +87,7 @@ class PostCalendar_Api_Hooks extends Zikula_Api
         }
     
         // Get table info
-        $pntable = System::dbGetTables();
+        $pntable = DBUtil::getTables();
         $cols = $pntable['postcalendar_events_column'];
         // build where statement
         $where = "WHERE " . $cols['hooked_modulename'] . " = '" . DataUtil::formatForStore($module) . "'
@@ -122,7 +122,7 @@ class PostCalendar_Api_Hooks extends Zikula_Api
         }
     
         // Get table info
-        $pntable = System::dbGetTables();
+        $pntable = DBUtil::getTables();
         $cols = $pntable['postcalendar_events_column'];
         // build where statement
         $where = "WHERE " . $cols['hooked_modulename'] . " = '" . DataUtil::formatForStore($module) . "'";
