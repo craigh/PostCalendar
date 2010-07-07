@@ -21,7 +21,7 @@ function smarty_function_pc_date_select($args, &$smarty)
         'jumpday' => $jumpday,
         'jumpmonth' => $jumpmonth,
         'jumpyear' => $jumpyear);
-    $Date      = ModUtil::apiFunc('PostCalendar','user','getDate',$jumpargs);
+    $Date      = PostCalendar_Util::getDate($jumpargs);
     if (!isset($viewtype)) {
         $viewtype = _SETTING_DEFAULT_VIEW;
    }

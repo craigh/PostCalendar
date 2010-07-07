@@ -42,7 +42,7 @@ function smarty_function_pc_filter($args, &$smarty)
         'jumpday' => $jumpday,
         'jumpmonth' => $jumpmonth,
         'jumpyear' => $jumpyear);
-    $Date      = ModUtil::apiFunc('PostCalendar','user','getDate',$jumpargs);
+    $Date      = PostCalendar_Util::getDate($jumpargs);
 
     $viewtype = FormUtil::getPassedValue('viewtype', _SETTING_DEFAULT_VIEW);
     if (ModUtil::getVar('PostCalendar', 'pcAllowUserCalendar')) {

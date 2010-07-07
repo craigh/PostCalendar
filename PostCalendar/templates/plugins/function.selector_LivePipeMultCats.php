@@ -44,8 +44,6 @@ function smarty_function_selector_LivePipeMultCats ($params, &$smarty)
     $sortField        = isset($params['sortField'])        ? $params['sortField']        : null;
     $doReplaceRootCat = isset($params['doReplaceRootCat']) ? $params['doReplaceRootCat'] : null;
 
-    //Loader::loadClass('CatUtil', 'modules/PostCalendar/lib/PostCalendar'); // i"m not supposed to need this I guess...
-
     // disable attribution if we don't need it
     $_pnTables = null;
     if (!$fieldIsAttribute) {

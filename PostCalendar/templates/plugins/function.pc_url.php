@@ -52,7 +52,7 @@ function smarty_function_pc_url($args, &$smarty)
             'jumpday'   => $jumpday,
             'jumpmonth' => $jumpmonth,
             'jumpyear'  => $jumpyear);
-        $date      = ModUtil::apiFunc('PostCalendar', 'user', 'getDate', $jumpargs);
+        $date      = PostCalendar_Util::getDate($jumpargs);
    }
     // some extra cleanup if necessary
     $date = str_replace('-', '', $date);
