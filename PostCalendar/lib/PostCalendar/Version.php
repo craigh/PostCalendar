@@ -14,9 +14,9 @@ class PostCalendar_Version extends Zikula_Version
     {
         $meta = array();
         $meta['name']           = 'PostCalendar';
-        $meta['displayname']    = __('PostCalendar', $dom);
-        $meta['url']            = __(/*!used in URL - nospaces, no special chars, lcase*/'postcalendar', $dom);
-        $meta['description']    = __('Calendar for Zikula', $dom);
+        $meta['displayname']    = $this->__('PostCalendar');
+        $meta['url']            = $this->__(/*!used in URL - nospaces, no special chars, lcase*/'postcalendar');
+        $meta['description']    = $this->__('Calendar for Zikula');
         
         $meta['id']             = '$Revision: 682 $'; // svn revision #
         $meta['version']        = '7.0.0-dev';
