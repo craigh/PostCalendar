@@ -38,14 +38,19 @@ class PostCalendar_Api_Hooks extends Zikula_Api
             LogUtil::registerStatus($this->__("PostCalendar: Event not created (opt out)."));
             return;
         }
-    
-        if (!$home = $this->funcisavail(array(
-            'module' => $module))) {
-            return LogUtil::registerError($this->__('Hook function not available'));;
+
+        $eventObj   = new PostCalendar_Hookutil;
+        $methodName = $module . '_pcevent';
+        $args       = array(
+            'objectid' => $args['objectid']);
+        if (is_callable(array($eventObj, $methodName))) {
+            if (!$event = $eventObj->$methodName($args)) {
+                LogUtil::registerError($this->__("PostCalendar: Could not create event (method failed)."));
+            }
+        } else {
+            LogUtil::registerError($this->__f("PostCalendar: Method %s not callable.", $eventObj . $methodName));
         }
-        $event = ModUtil::apiFunc($home, 'hooks', $module . '_pcevent', array(
-            'objectid' => $args['objectid']));
-    
+
         if ($event) {
             // add hook specific and non-changing values
             $event['hooked_modulename'] = $module;
@@ -136,36 +141,6 @@ class PostCalendar_Api_Hooks extends Zikula_Api
         return true;
     }
     /**
-     * check to see if relevent file is available in PostCalendar/pnhooksapi/ or another location
-     *
-     * @author  Craig Heydenburg
-     * @param   module     module being hooked
-     * @param   type       function type (optional) (default 'pcevent')
-     * @return  boolean    location or false
-     */
-    public function funcisavail($args)
-    {
-        if (!isset($args['module'])) return false;
-        $module    = $args['module'];
-        $modinfo   = ModUtil::getInfo(ModUtil::getIdFromName($module));
-        $homearray = array($modinfo['directory'], 'PostCalendar'); // locations to search for the function
-        $type      = isset($args['type']) ? $args['type'] : 'pcevent';
-    
-        $apidir = "pnhooksapi";
-        $func   = "{$module}_{$type}.php";
-    
-        foreach ($homearray as $home) {
-            $osdir   = DataUtil::formatForOS($home);
-            $ostype  = DataUtil::formatForOS($apidir);
-            $osfunc  = DataUtil::formatForOS($func);
-            $mosfile = "modules/$osdir/$ostype/$osfunc"; // doesn't allow oldstyle 'file' format - must be in a dir
-            if (file_exists($mosfile)) {
-                return $home;
-            }
-        }
-        return false;
-    }
-    /**
      * update action on hook
      *
      * @author  Craig Heydenburg
@@ -198,15 +173,20 @@ class PostCalendar_Api_Hooks extends Zikula_Api
             }
             return;
         }
-    
-        if (!$home = $this->funcisavail(array(
-            'module' => $module))) {
-            return LogUtil::registerError($this->__('Hook function not available'));;
-        }
-        $event = ModUtil::apiFunc($home, 'hooks', $module . '_pcevent', array(
+
+        $eventObj   = new PostCalendar_Hookutil;
+        $methodName = $module . '_pcevent';
+        $args       = array(
             'objectid' => $args['objectid'],
             'hookinfo' => $hookinfo));
-    
+        if (is_callable(array($eventObj, $methodName))) {
+            if (!$event = $eventObj->$methodName($args)) {
+                LogUtil::registerError($this->__("PostCalendar: Could not create event (method failed)."));
+            }
+        } else {
+            LogUtil::registerError($this->__f("PostCalendar: Method %s not callable.", $eventObj . $methodName));
+        }
+
         if ($event) {
             if (!empty($hookinfo['eid'])) {
                 // event already exists - just update
