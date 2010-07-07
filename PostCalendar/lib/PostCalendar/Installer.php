@@ -35,7 +35,7 @@ class PostCalendar_Installer extends Zikula_Installer
         }
     
         // PostCalendar Default Settings
-        $defaultsettings = $this->getdefaults();
+        $defaultsettings = PostCalendar_Util::getdefaults();
         $result = ModUtil::setVars('PostCalendar', $defaultsettings);
         if (!$result) {
             return LogUtil::registerError($this->__('Error! Could not set the default settings for PostCalendar.'));
@@ -100,7 +100,7 @@ class PostCalendar_Installer extends Zikula_Installer
             case '6.1.0':
                 $oldDefaultCats = ModUtil::getVar('PostCalendar', 'pcDefaultCategories');
                 ModUtil::delVar('PostCalendar', 'pcDefaultCategories');
-                $defaults = postcalendar_init_getdefaults();
+                $defaults = PostCalendar_Util::getdefaults();
                 $defaults['pcEventDefaults']['categories'] = $oldDefaultCats;
                 ModUtil::setVar('PostCalendar', 'pcEventDefaults', $defaults['pcEventDefaults']);
             case '6.2.0':
@@ -111,7 +111,7 @@ class PostCalendar_Installer extends Zikula_Installer
         }
     
         // if we get this far - clear the cache
-        ModUtil::apiFunc('PostCalendar', 'admin', 'clearCache');
+        Zikula_View::clear_cache();
     
         return true;
     }
@@ -139,69 +139,6 @@ class PostCalendar_Installer extends Zikula_Installer
         DBUtil::deleteWhere('categories_mapobj', "cmo_modname='PostCalendar'");
     
         return $result;
-    }
-    
-    /**
-     * PostCalendar Default Module Settings
-     *
-     * @author Arjen Tebbenhof
-     * @return array An associated array with key=>value pairs of the default module settings
-     */
-    public function getdefaults()
-    {
-        // figure out associated categories and assign default value of 0 (none)
-        $defaultscats = array();
-        $cats = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
-        foreach ($cats as $prop => $id) {
-            $defaultcats[$prop] = 0;
-        }
-    
-        // PostCalendar Default Settings
-        $defaults = array(
-            'pcTime24Hours'           => _TIMEFORMAT == 24 ? '1' : '0',
-            'pcEventsOpenInNewWindow' => '0',
-            'pcFirstDayOfWeek'        => '0', // Sunday
-            'pcUsePopups'             => '0',
-            'pcAllowDirectSubmit'     => '0',
-            'pcListHowManyEvents'     => '15',
-            'pcEventDateFormat'       => '%B %e, %Y', // American: e.g. July 4, 2010
-            'pcAllowUserCalendar'     => '0', // no group
-            'pcTimeIncrement'         => '15',
-            'pcDefaultView'           => 'month',
-            'pcNotifyAdmin'           => '1',
-            'pcNotifyEmail'           => System::getVar('adminmail'),
-            'pcNotifyAdmin2Admin'     => '0',
-            'pcAllowCatFilter'        => '1',
-            'enablecategorization'    => '1',
-            'enablenavimages'         => '1',
-            'pcFilterYearStart'       => 1,
-            'pcFilterYearEnd'         => 2,
-            'pcListMonths'            => 12,
-            'pcNavDateOrder'          => array(
-                'format'                  => 'MDY',
-                'D'                       => '%e',
-                'M'                       => '%B',
-                'Y'                       => '%Y'),
-            'pcEventDefaults'         => array(
-                'sharing'                 => SHARING_GLOBAL,
-                'categories'              => $defaultcats,
-                'alldayevent'             => 0,
-                'startTime'               => '01:00:00',
-                'duration'                => '3600',
-                'fee'                     => '',
-                'contname'                => '',
-                'conttel'                 => '',
-                'contemail'               => '',
-                'website'                 => '',
-                'location'                => array(
-                    'event_location'          => '',
-                    'event_street1'           => '',
-                    'event_street2'           => '',
-                    'event_city'              => '',
-                    'event_state'             => '',
-                    'event_postal'            => '')));
-    
-        return $defaults;
     }
     
     /**
@@ -362,7 +299,7 @@ class PostCalendar_Installer extends Zikula_Installer
         //    return LogUtil::registerError(__f('PostCalendar: Could not register %s hook.', 'scheduler', $dom));
         //}
     
-        LogUtil::registerStatus($this->__f('PostCalendar: All hooks registered.'));
+        LogUtil::registerStatus($this->__('PostCalendar: All hooks registered.'));
         return true;
     }
 } // end class def

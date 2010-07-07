@@ -45,7 +45,7 @@ class PostCalendar_Controller_User extends Zikula_Controller
             'jumpday' => $jumpday,
             'jumpmonth' => $jumpmonth,
             'jumpyear' => $jumpyear);
-        $Date        = FormUtil::getPassedValue('Date', ModUtil::apiFunc('PostCalendar', 'user', 'getDate', $jumpargs));
+        $Date        = FormUtil::getPassedValue('Date', PostCalendar_Util::getDate($jumpargs));
         $filtercats  = FormUtil::getPassedValue('postcalendar_events');
         $func        = FormUtil::getPassedValue('func');
         $prop        = isset($args['prop']) ? $args['prop'] : (string)FormUtil::getPassedValue('prop', null, 'GET');

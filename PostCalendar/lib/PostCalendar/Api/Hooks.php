@@ -39,7 +39,7 @@ class PostCalendar_Api_Hooks extends Zikula_Api
             return;
         }
     
-        if (!$home = ModUtil::apiFunc('PostCalendar', 'hooks', 'funcisavail', array(
+        if (!$home = $this->funcisavail(array(
             'module' => $module))) {
             return LogUtil::registerError($this->__('Hook function not available'));;
         }
@@ -218,7 +218,7 @@ class PostCalendar_Api_Hooks extends Zikula_Api
             return;
         }
     
-        if (!$home = ModUtil::apiFunc('PostCalendar', 'hooks', 'funcisavail', array(
+        if (!$home = $this->funcisavail(array(
             'module' => $module))) {
             return LogUtil::registerError($this->__('Hook function not available'));;
         }

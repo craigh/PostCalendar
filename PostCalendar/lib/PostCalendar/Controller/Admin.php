@@ -183,15 +183,15 @@ class PostCalendar_Controller_Admin extends Zikula_Controller
             // return to where we came from
             switch ($thelist) {
                 case 'listqueued':
-                    return ModUtil::func('PostCalendar', 'admin', 'showlist', array(
+                    return $this->showlist(array(
                         'type' => _EVENT_QUEUED,
                         'function' => 'showlist'));
                 case 'listhidden':
-                    return ModUtil::func('PostCalendar', 'admin', 'showlist', array(
+                    return $this->showlist(array(
                         'type' => _EVENT_HIDDEN,
                         'function' => 'showlist'));
                 case 'listapproved':
-                    return ModUtil::func('PostCalendar', 'admin', 'showlist', array(
+                    return $this->showlist(array(
                         'type' => _EVENT_APPROVED,
                         'function' => 'showlist'));
             }
@@ -244,7 +244,7 @@ class PostCalendar_Controller_Admin extends Zikula_Controller
             return LogUtil::registerPermissionError();
         }
     
-        $defaults = ModUtil::func('PostCalendar', 'init', 'getdefaults');
+        $defaults = PostCalendar_Util::getdefaults();
         if (!count($defaults)) {
             return LogUtil::registerError($this->__('Error! Could not load default values.'));
         }
@@ -256,7 +256,7 @@ class PostCalendar_Controller_Admin extends Zikula_Controller
         ModUtil::setVars('PostCalendar', $defaults);
     
         // clear the cache
-        ModUtil::apiFunc('PostCalendar', 'admin', 'clearCache');
+        $this->view->clear_cache();
     
         LogUtil::registerStatus($this->__('Done! PostCalendar configuration reset to use default values.'));
         return $this->modifyconfig();
@@ -273,7 +273,7 @@ class PostCalendar_Controller_Admin extends Zikula_Controller
             return LogUtil::registerPermissionError();
         }
     
-        $defaults = ModUtil::func('PostCalendar', 'init', 'getdefaults');
+        $defaults = PostCalendar_Util::getdefaults();
         if (!count($defaults)) {
             return LogUtil::registerError($this->__('Error! Could not load default values.'));
         }
@@ -314,7 +314,7 @@ class PostCalendar_Controller_Admin extends Zikula_Controller
             'module' => 'PostCalendar'));
     
         // clear the cache
-        ModUtil::apiFunc('PostCalendar', 'admin', 'clearCache');
+        $this->view->clear_cache();
     
         LogUtil::registerStatus($this->__('Done! Updated the PostCalendar configuration.'));
         return $this->modifyconfig();
@@ -353,8 +353,8 @@ class PostCalendar_Controller_Admin extends Zikula_Controller
             LogUtil::registerError($this->__("Error! An 'unidentified error' occurred."));
         }
     
-        ModUtil::apiFunc('PostCalendar', 'admin', 'clearCache');
-        return ModUtil::func('PostCalendar', 'admin', 'showlist', array(
+        $this->view->clear_cache();
+        return $this->showlist(array(
             'type'     => _EVENT_APPROVED,
             'function' => 'listapproved',
             'title'    => $this->__('Approved events administration')));
@@ -393,8 +393,8 @@ class PostCalendar_Controller_Admin extends Zikula_Controller
             LogUtil::registerError($this->__("Error! An 'unidentified error' occurred."));
         }
     
-        ModUtil::apiFunc('PostCalendar', 'admin', 'clearCache');
-        return ModUtil::func('PostCalendar', 'admin', 'showlist', array(
+        $this->view->clear_cache();
+        return $this->showlist(array(
             'type'     => _EVENT_APPROVED,
             'function' => 'listapproved',
             'title'    => $this->__('Approved events administration')));
@@ -431,8 +431,8 @@ class PostCalendar_Controller_Admin extends Zikula_Controller
             LogUtil::registerError($this->__("Error! An 'unidentified error' occurred."));
         }
     
-        ModUtil::apiFunc('PostCalendar', 'admin', 'clearCache');
-        return ModUtil::func('PostCalendar', 'admin', 'showlist', array(
+        $this->view->clear_cache();
+        return $this->showlist(array(
             'type'     => _EVENT_APPROVED,
             'function' => 'listapproved',
             'title'    => $this->__('Approved events administration')));

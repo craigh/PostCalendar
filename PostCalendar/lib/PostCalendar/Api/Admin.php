@@ -65,17 +65,6 @@ class PostCalendar_Api_Admin extends Zikula_Api
     }
     
     /**
-     * @function    clearCache
-     *
-     * @return bool true if all cached templates successfully cleared, false otherwise.
-     */
-    public function clearCache()
-    {
-        // Do not call clear_all_cache, but only clear the cached templates of this module
-        return Zikula_View::clear_cache();
-    }
-    
-    /**
      * @function notify
      * @purpose Send an email to admin on new event submission
      *

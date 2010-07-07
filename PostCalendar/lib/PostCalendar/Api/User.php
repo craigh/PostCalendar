@@ -265,41 +265,4 @@ class PostCalendar_Api_User extends Zikula_Api
     
         return $function_out;
     }
-    
-    /**
-     * getDate
-     *
-     * get the correct day, format it and return
-     * @param string format
-     * @param string Date
-     * @param string jumpday
-     * @param string jumpmonth
-     * @param string jumpyear
-     * @return string formatted date string
-     * @access public
-     */
-    public function getDate($args)
-    {
-        $format = (!empty($args['format'])) ? $args['format'] : '%Y%m%d%H%M%S';
-    
-        $time      = time();
-        $jumpday   = isset($args['jumpday']) ? $args['jumpday'] : strftime('%d', $time);
-        $jumpmonth = isset($args['jumpmonth']) ? $args['jumpmonth'] : strftime('%m', $time);
-        $jumpyear  = isset($args['jumpyear']) ? $args['jumpyear'] : strftime('%Y', $time);
-    
-        if (UserUtil::isLoggedIn()) {
-            $time += (UserUtil::getVar('timezone_offset') - System::getVar('timezone_offset')) * 3600;
-        }
-    
-        $Date = isset($args['Date']) ? $args['Date'] : '';
-        if (empty($Date)) {
-            // if we still don't have a date then calculate it
-            $Date = (int) "$jumpyear$jumpmonth$jumpday";
-        }
-    
-        $y = substr($Date, 0, 4);
-        $m = substr($Date, 4, 2);
-        $d = substr($Date, 6, 2);
-        return DateUtil::strftime($format, mktime(0, 0, 0, $m, $d, $y));
-    }
 } // end class def

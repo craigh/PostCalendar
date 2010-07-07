@@ -80,7 +80,7 @@ class PostCalendar_Controller_Event extends Zikula_Controller
         $func = FormUtil::getPassedValue('func', 'create');
         $Date = FormUtil::getPassedValue('Date'); //typically formatted YYYYMMDD or YYYYMMDD000000
         // format to '%Y%m%d%H%M%S'
-        $Date = ModUtil::apiFunc('PostCalendar', 'user', 'getDate', array(
+        $Date = PostCalendar_Util::getDate(array(
             'Date' => $Date));
     
         // these items come on submission of form
@@ -181,7 +181,7 @@ class PostCalendar_Controller_Event extends Zikula_Controller
                 'eventdata' => $eventdata))) {
                 LogUtil::registerError($this->__('Error! Submission failed.'));
             } else {
-                ModUtil::apiFunc('PostCalendar', 'admin', 'clearCache');
+                $this->view->clear_cache();
                 $presentation_date = DateUtil::strftime(_SETTING_DATE_FORMAT, $sdate);
                 if ($is_update) {
                     LogUtil::registerStatus($this->__f('Done! Updated the event. (event date: %s)', $presentation_date));

@@ -195,7 +195,7 @@ class PostCalendar_Api_Event extends Zikula_Api
         $Date        = isset($args['Date'])        ? $args['Date']        : '';
         $sort        = ((isset($args['sort'])) && ($args['sort'] == 'DESC')) ? 'DESC' : 'ASC';
     
-        $date = ModUtil::apiFunc('PostCalendar', 'user', 'getDate', array(
+        $date = PostCalendar_Util::getDate(array(
             'Date' => $Date)); //formats date
     
     
@@ -237,7 +237,7 @@ class PostCalendar_Api_Event extends Zikula_Api
         if (!isset($s_keywords)) {
             $s_keywords = '';
         }
-        $events = ModUtil::apiFunc('PostCalendar', 'event', 'queryEvents', array(
+        $events = $this->queryEvents(array(
             'start'       => $start_date,
             'end'         => $end_date,
             's_keywords'  => $s_keywords,
@@ -271,7 +271,7 @@ class PostCalendar_Api_Event extends Zikula_Api
         }
     
         foreach ($events as $event) {
-            $event = ModUtil::apiFunc('PostCalendar', 'event', 'formateventarrayfordisplay', $event);
+            $event = $this->formateventarrayfordisplay($event);
     
             list ($eventstartyear, $eventstartmonth, $eventstartday) = explode('-', $event['eventDate']);
     
@@ -398,32 +398,32 @@ class PostCalendar_Api_Event extends Zikula_Api
     
         // format date information
         if ((!isset($eventdata['endDate'])) || ($eventdata['endDate'] == '') || ($eventdata['endDate'] == '00000000') || ($eventdata['endDate'] == '0000-00-00')) {
-            $eventdata['endvalue'] = ModUtil::apiFunc('PostCalendar', 'user', 'getDate', array(
+            $eventdata['endvalue'] = PostCalendar_Util::getDate(array(
                 'Date' => $args['Date'],
                 'format' => _SETTING_DATE_FORMAT));
-            $eventdata['endDate'] = ModUtil::apiFunc('PostCalendar', 'user', 'getDate', array(
+            $eventdata['endDate'] = PostCalendar_Util::getDate(array(
                 'Date' => $args['Date'],
                 'format' => __(/*!ensure translation EXACTLY the same as locale definition*/'%Y-%m-%d'))); // format for JS cal - intentional use of core domain
         } else {
-            $eventdata['endvalue'] = ModUtil::apiFunc('PostCalendar', 'user', 'getDate', array(
+            $eventdata['endvalue'] = PostCalendar_Util::getDate(array(
                 'Date' => str_replace('-', '', $eventdata['endDate']),
                 'format' => _SETTING_DATE_FORMAT));
-            $eventdata['endDate'] = ModUtil::apiFunc('PostCalendar', 'user', 'getDate', array(
+            $eventdata['endDate'] = PostCalendar_Util::getDate(array(
                 'Date' => str_replace('-', '', $eventdata['endDate']),
                 'format' => __(/*!ensure translation EXACTLY the same as locale definition*/'%Y-%m-%d'))); // format for JS cal - intentional use of core domain
         }
         if ((!isset($eventdata['eventDate'])) || ($eventdata['eventDate'] == '')) {
-            $eventdata['eventDatevalue'] = ModUtil::apiFunc('PostCalendar', 'user', 'getDate', array(
+            $eventdata['eventDatevalue'] = PostCalendar_Util::getDate(array(
                 'Date' => $args['Date'],
                 'format' => _SETTING_DATE_FORMAT));
-            $eventdata['eventDate'] = ModUtil::apiFunc('PostCalendar', 'user', 'getDate', array(
+            $eventdata['eventDate'] = PostCalendar_Util::getDate(array(
                 'Date' => $args['Date'],
                 'format' => __(/*!ensure translation EXACTLY the same as locale definition*/'%Y-%m-%d'))); // format for JS cal - intentional use of core domain
         } else {
-            $eventdata['eventDatevalue'] = ModUtil::apiFunc('PostCalendar', 'user', 'getDate', array(
+            $eventdata['eventDatevalue'] = PostCalendar_Util::getDate(array(
                 'Date' => str_replace('-', '', $eventdata['eventDate']),
                 'format' => _SETTING_DATE_FORMAT));
-            $eventdata['eventDate'] = ModUtil::apiFunc('PostCalendar', 'user', 'getDate', array(
+            $eventdata['eventDate'] = PostCalendar_Util::getDate(array(
                 'Date' => str_replace('-', '', $eventdata['eventDate']),
                 'format' => __(/*!ensure translation EXACTLY the same as locale definition*/'%Y-%m-%d'))); // format for JS cal - intentional use of core domain
         }
@@ -441,11 +441,11 @@ class PostCalendar_Api_Event extends Zikula_Api
         $eventdata['__CATEGORIES__'] = isset($eventdata['__CATEGORIES__']) ? $eventdata['__CATEGORIES__'] : $eventDefaults['categories'];
     
         // All-day event values for radio buttons
-        $form_data['Selected'] = ModUtil::apiFunc('PostCalendar', 'event', 'alldayselect', $eventdata['alldayevent']);
+        $form_data['Selected'] = $this->alldayselect($eventdata['alldayevent']);
     
         $form_data['minute_interval'] = _SETTING_TIME_INCREMENT;
     
-        $eventdata['endTime'] = (empty($eventdata['endTime'])) ? ModUtil::apiFunc('PostCalendar', 'event', 'computeendtime', $eventDefaults) : $eventdata['endTime'];
+        $eventdata['endTime'] = (empty($eventdata['endTime'])) ? $this->computeendtime($eventDefaults) : $eventdata['endTime'];
     
         $eventdata['startTime'] = (empty($eventdata['startTime'])) ? $eventDefaults['startTime'] : $eventdata['startTime'];
     
@@ -460,7 +460,7 @@ class PostCalendar_Api_Event extends Zikula_Api
             'html' => $this->__('HTML-formatted'));
     
         // sharing selectbox
-        $form_data['sharingselect'] = ModUtil::apiFunc('PostCalendar', 'event', 'sharingselect');
+        $form_data['sharingselect'] = $this->sharingselect();
     
         if (!isset($eventdata['sharing'])) {
             $eventdata['sharing'] = $eventDefaults['sharing'];
@@ -519,7 +519,7 @@ class PostCalendar_Api_Event extends Zikula_Api
         $form_data['SelectedNoEnd'] = ((!isset($eventdata['endtype'])) || ((int) $eventdata['endtype'] == 0)) ? " checked='checked'" : ''; //default
     
         // Assign the content format (determines if scribite is in use)
-        $form_data['formattedcontent'] = ModUtil::apiFunc('PostCalendar', 'event', 'isformatted', array(
+        $form_data['formattedcontent'] = $this->isformatted(array(
             'func' => 'create'));
     
         // assign empty values to text fields that don't need changing
@@ -606,7 +606,7 @@ class PostCalendar_Api_Event extends Zikula_Api
         // build sharing sentence for display
         $event['sharing_sentence'] = ($event['sharing'] == SHARING_PRIVATE) ? $this->__('This is a private event.') : $this->__('This is a public event. ');
     
-        $event['endTime'] = ModUtil::apiFunc('PostCalendar', 'event', 'computeendtime', $event);
+        $event['endTime'] = $this->computeendtime($event);
         // converts seconds to HH:MM for display  - keep just in case duration is wanted
         $event['duration'] = gmdate("G:i", $event['duration']); // stored in DB as seconds
     
@@ -670,12 +670,12 @@ class PostCalendar_Api_Event extends Zikula_Api
         }
     
         // reformat endTime to duration in seconds
-        $event['duration'] = ModUtil::apiFunc('PostCalendar', 'event', 'computeduration', $event);
+        $event['duration'] = $this->computeduration($event);
         
         // reformat times from form to 'real' 24-hour format
         $startTime = $event['startTime'];
         unset($event['startTime']); // clears the whole array
-        $event['startTime'] = ModUtil::apiFunc('PostCalendar', 'event', 'convertstarttime', $startTime);
+        $event['startTime'] = $this->convertstarttime($startTime);
     
         // if event ADD perms are given to anonymous users...
         if (UserUtil::isLoggedIn()) {
@@ -765,8 +765,8 @@ class PostCalendar_Api_Event extends Zikula_Api
     
         // check time validity
         if ($submitted_event['alldayevent'] == 0) {
-            $stime = ModUtil::apiFunc('PostCalendar', 'event', 'converttimetoseconds', $submitted_event['startTime']);
-            $etime = ModUtil::apiFunc('PostCalendar', 'event', 'converttimetoseconds', $submitted_event['endTime']);
+            $stime = $this->converttimetoseconds($submitted_event['startTime']);
+            $etime = $this->converttimetoseconds($submitted_event['endTime']);
             if ($etime <= $stime) {
                 LogUtil::registerError($this->__('Error! The end time must be after the start time.'));
                 return true;
@@ -1063,7 +1063,7 @@ class PostCalendar_Api_Event extends Zikula_Api
     public function computeendtime($event)
     {
         list ($h, $m, $s)   = explode(':', $event['startTime']); // HH:MM:SS
-        $startTime = ModUtil::apiFunc('PostCalendar', 'event', 'converttimetoseconds', array('Hour' => $h, 'Minute' => $m));
+        $startTime = $this->converttimetoseconds(array('Hour' => $h, 'Minute' => $m));
         $endTime   = $startTime + $event['duration']; // duation already in seconds
         return _SETTING_TIME_24HOUR ? gmdate('G:i', $endTime) : gmdate('g:i a', $endTime);
     }
@@ -1076,8 +1076,8 @@ class PostCalendar_Api_Event extends Zikula_Api
      **/
     public function computeduration($event)
     {
-        $stime = ModUtil::apiFunc('PostCalendar', 'event', 'converttimetoseconds', $event['startTime']);
-        $etime = ModUtil::apiFunc('PostCalendar', 'event', 'converttimetoseconds', $event['endTime']);
+        $stime = $this->converttimetoseconds($event['startTime']);
+        $etime = $this->converttimetoseconds($event['endTime']);
         return $etime - $stime;
     }
 } // end class def
