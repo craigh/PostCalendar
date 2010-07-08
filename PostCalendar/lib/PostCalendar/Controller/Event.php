@@ -28,7 +28,7 @@ class PostCalendar_Controller_Event extends Zikula_Controller
         $event = ModUtil::apiFunc('PostCalendar', 'event', 'formateventarrayfordisplay', $event);
     
         $this->view->assign('loaded_event', $event);
-        return $this->view->execute('event/deleteeventconfirm.tpl', new PostCalendar_Form_Handler_editHandler());
+        return $this->view->execute('event/deleteeventconfirm.tpl', new PostCalendar_Form_Handler_EditHandler());
     }
     
     /**
