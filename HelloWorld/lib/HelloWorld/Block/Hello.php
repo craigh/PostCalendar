@@ -47,7 +47,7 @@ class HelloWorld_Block_Hello extends Zikula_Block
         }
         $vars = BlockUtil::varsFromContent($blockinfo['content']);
     
-        $this->view->assign('variable', $var);
+        $this->view->assign('vars', $vars);
     
         $blockinfo['content'] = $this->view->fetch('blocks/hello.tpl');
     
@@ -74,13 +74,13 @@ class HelloWorld_Block_Hello extends Zikula_Block
         $vars = BlockUtil::varsFromContent($blockinfo['content']);
     
         // alter the corresponding variable
-        $vars['eid']           = FormUtil::getPassedValue('eid', '', 'POST');
+        $vars['showAdminHelloWorldinBlock'] = FormUtil::getPassedValue('showAdminHelloWorldinBlock', '', 'POST');
     
         // write back the new contents
         $blockinfo['content'] = BlockUtil::varsToContent($vars);
     
         // clear the block cache
-        Zikula_View::clear_cache('blocks/hello.tpl');
+        $this->view->clear_cache('blocks/hello.tpl');
     
         return $blockinfo;
     }
