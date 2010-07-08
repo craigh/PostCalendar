@@ -24,6 +24,6 @@ class HelloWorld_Controller_User extends Zikula_Controller
             return LogUtil::registerPermissionError();
         }
     
-        return $this->view->fetch('view.tpl');
+        return $this->view->fetch('user/view.tpl');
     }
 } // end class def
