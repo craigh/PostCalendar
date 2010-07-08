@@ -74,7 +74,7 @@ class HelloWorld_Installer extends Zikula_Installer
     public function uninstall()
     {
         $result = DBUtil::dropTable('helloworld');
-        $result = $result && ModUtil::delVar('HelloWorld');
+        $result = $result && $this->delVars();
 
         return $result;
     }
