@@ -8,6 +8,9 @@
  * @license GNU/LGPLv3 (or at your option, any later version).
  */
 
+/**
+ * External Util class for example
+ */
 class HelloWorld_Util
 {
     public static function externalfunction()

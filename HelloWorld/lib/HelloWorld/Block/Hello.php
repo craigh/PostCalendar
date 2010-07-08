@@ -8,6 +8,9 @@
  * @license GNU/LGPLv3 (or at your option, any later version).
  */
 
+/**
+ * Class to control Block display and interface
+ */
 class HelloWorld_Block_Hello extends Zikula_Block
 {
     /**

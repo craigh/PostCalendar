@@ -8,6 +8,9 @@
  * @license GNU/LGPLv3 (or at your option, any later version).
  */
 
+/**
+ * Class to control Admin interface
+ */
 class HelloWorld_Controller_Admin extends Zikula_Controller
 {
     /**
@@ -82,5 +85,14 @@ class HelloWorld_Controller_Admin extends Zikula_Controller
         $this->view->assign('version', $modinfo['version']);
     
         return $this->view->fetch('admin/info.tpl');
+    }
+    /**
+     * @function    postInitialize
+     * @description set caching to false for all admin functions
+     * @return      null
+     */
+    public function postInitialize()
+    {
+        $this->view->setCaching(false);
     }
 } // end class def

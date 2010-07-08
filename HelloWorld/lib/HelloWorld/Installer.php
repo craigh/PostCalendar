@@ -8,6 +8,9 @@
  * @license GNU/LGPLv3 (or at your option, any later version).
  */
 
+/**
+ * Class to control Installer interface
+ */
 class HelloWorld_Installer extends Zikula_Installer
 {
     /**
@@ -18,11 +21,10 @@ class HelloWorld_Installer extends Zikula_Installer
      * not be called directly.
      *
      * @return  boolean    true/false
-     * @access  public
      */
     public function install()
     {
-        // create tables
+        // create table
         if (!DBUtil::createTable('helloworld')) {
             return LogUtil::registerError($this->__('Error! Could not create the table.'));
         }
@@ -37,9 +39,8 @@ class HelloWorld_Installer extends Zikula_Installer
      * of the module.  It is accessed via the Zikula
      * Admin interface and should not be called directly.
      *
-     * @return  boolean    true/false
      * @param   string    $oldversion Version we're upgrading
-     * @access  public
+     * @return  boolean   true/false
      */
     public function upgrade($oldversion)
     {
@@ -52,21 +53,17 @@ class HelloWorld_Installer extends Zikula_Installer
                 //future development
         }
     
-        // if we get this far - clear the cache
-        $this->view->clear_cache();
-    
         return true;
     }
     
     /**
-     * Deletes an install
+     * removes an install
      *
      * This function removes the module from your
      * Zikula install and should be accessed via
      * the Zikula Admin interface
      *
      * @return  boolean    true/false
-     * @access  public
      */
     public function uninstall()
     {

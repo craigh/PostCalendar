@@ -7,16 +7,18 @@
  *
  * @license GNU/LGPLv3 (or at your option, any later version).
  */
+
+/**
+ * @function    hellowworld_tables
+ * @params
+ * @return      array table defs
+ */
 function helloworld_tables()
 {
     // Initialise table array
     $table = array();
 
     $table['helloworld'] = DBUtil::getLimitedTablename('helloworld');
-    $table['helloworld_column'] = array(
-        'id'         => 'hw_eid',  // row ID
-        'text'       => 'hw_text', // row text
-    );
 
     $table['helloworld_column_def'] = array(
         'id'         => 'I(11) UNSIGNED AUTO PRIMARY',      // int(11) unsigned NOT NULL auto_increment

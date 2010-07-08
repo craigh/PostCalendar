@@ -8,6 +8,9 @@
  * @license GNU/LGPLv3 (or at your option, any later version).
  */
 
+/**
+ * Class to control User interface
+ */
 class HelloWorld_Controller_User extends Zikula_Controller
 {
     /**

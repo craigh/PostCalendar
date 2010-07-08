@@ -8,6 +8,9 @@
  * @license GNU/LGPLv3 (or at your option, any later version).
  */
 
+/**
+ * Class to control Admin interface
+ */
 class HelloWorld_Api_Admin extends Zikula_Api
 {
     /**
