@@ -48,14 +48,14 @@ class HelloWorld_Controller_Admin extends Zikula_Controller
         if (!SecurityUtil::checkPermission('HelloWorld::', '::', ACCESS_ADMIN)) {
             return LogUtil::registerPermissionError();
         }
-    
-        $variablename = FormUtil::getPassedValue('variablename', 0);
+
+        $showAdminHelloWorld = FormUtil::getPassedValue('showAdminHelloWorld', 0);
 
         // delete all the old vars
         ModUtil::delVar('HelloWorld');
     
         // set the new variables
-        ModUtil::setVar('HelloWorld', 'vairablename', $variablename);
+        ModUtil::setVar('HelloWorld', 'showAdminHelloWorld', $showAdminHelloWorld);
     
         // Let any other modules know that the modules configuration has been updated
         $this->callHooks('module', 'updateconfig', 'HelloWorld', array(

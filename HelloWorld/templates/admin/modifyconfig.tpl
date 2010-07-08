@@ -8,9 +8,9 @@
     <fieldset>
         <legend>{gt text='General settings'}</legend>
         <div class="z-formrow">
-			<label for="pcAllowDirectSubmit">{gt text='Allow submitted events to be activated without review'}</label>
-			{modgetvar module="PostCalendar" name="pcAllowDirectSubmit" assign="pcADS"}
-			<input type="checkbox" value="1" id="pcAllowDirectSubmit" name="pcAllowDirectSubmit"{if $pcADS eq true} checked="checked"{/if}/>
+			<label for="showAdminHelloWorld">{gt text='Display Admin Hello World'}</label>
+			{modgetvar module="HelloWorld" name="showAdminHelloWorld" assign="sAHW"}
+			<input type="checkbox" value="1" id="showAdminHelloWorld" name="showAdminHelloWorld"{if $sAHW eq true} checked="checked"{/if}/>
         </div>
     </fieldset>
     <div class="z-buttons z-formbuttons">
