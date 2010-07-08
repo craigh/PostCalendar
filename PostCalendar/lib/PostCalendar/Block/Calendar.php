@@ -268,10 +268,10 @@ class PostCalendar_Block_Calendar extends Zikula_Block
         $vars['pcbshowsslinks']       = FormUtil::getPassedValue('pcbshowsslinks',       0);
         $vars['pcbfiltercats']        = FormUtil::getPassedValue('pcbfiltercats'); //array
     
-        Zikula_View::clear_cache('blocks/view_day.tpl');
-        Zikula_View::clear_cache('blocks/view_month.tpl');
-        Zikula_View::clear_cache('blocks/view_upcoming.tpl');
-        Zikula_View::clear_cache('blocks/calendarlinks.tpl');
+        $this->view->clear_cache('blocks/view_day.tpl');
+        $this->view->clear_cache('blocks/view_month.tpl');
+        $this->view->clear_cache('blocks/view_upcoming.tpl');
+        $this->view->clear_cache('blocks/calendarlinks.tpl');
         $blockinfo['content'] = BlockUtil::varsToContent($vars);
     
         return $blockinfo;

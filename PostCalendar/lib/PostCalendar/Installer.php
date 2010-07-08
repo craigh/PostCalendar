@@ -111,7 +111,7 @@ class PostCalendar_Installer extends Zikula_Installer
         }
     
         // if we get this far - clear the cache
-        Zikula_View::clear_cache();
+        $this->view->clear_cache();
     
         return true;
     }

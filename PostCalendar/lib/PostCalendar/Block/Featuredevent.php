@@ -120,7 +120,7 @@ class PostCalendar_Block_Featuredevent extends Zikula_Block
         $blockinfo['content'] = BlockUtil::varsToContent($vars);
     
         // clear the block cache
-        Zikula_View::clear_cache('blocks/featuredevent.tpl');
+        $this->view->clear_cache('blocks/featuredevent.tpl');
     
         return $blockinfo;
     }

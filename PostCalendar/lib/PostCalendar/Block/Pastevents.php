@@ -123,7 +123,7 @@ class PostCalendar_Block_Pastevents extends Zikula_Block
         $vars['pcbeventsrange'] = FormUtil::getPassedValue('pcbeventsrange', 6);
         $vars['pcbfiltercats']  = FormUtil::getPassedValue('pcbfiltercats'); //array
     
-        Zikula_View::clear_cache('blocks/pastevents.tpl');
+        $this->view->clear_cache('blocks/pastevents.tpl');
         $blockinfo['content'] = BlockUtil::varsToContent($vars);
     
         return $blockinfo;
