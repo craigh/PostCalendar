@@ -1,5 +1,12 @@
 <?php
-
+/**
+ * Copyright Craig Heydenburg 2010 - HelloWorld
+ *
+ * HelloWorld
+ * Demonstration of Zikula Module
+ *
+ * @license GNU/LGPLv3 (or at your option, any later version).
+ */
 function helloworld_tables()
 {
     // Initialise table array
@@ -10,10 +17,7 @@ function helloworld_tables()
         'id'         => 'hw_eid',  // row ID
         'text'       => 'hw_text', // row text
     );
-/**
- * columns removed from previous versions:
- * catid, comments, counter, topic, recurrfreq, endTime, language, meeting_id
- */
+
     $table['helloworld_column_def'] = array(
         'id'         => 'I(11) UNSIGNED AUTO PRIMARY',      // int(11) unsigned NOT NULL auto_increment
         'text'       => 'C(150) DEFAULT \'\'',              // varchar(150) default ''
