@@ -17,7 +17,6 @@ class HelloWorld_Installer extends Zikula_Installer
      * It is accessed via the Zikula Admin interface and should
      * not be called directly.
      *
-     * @author  Craig Heydenburg
      * @return  boolean    true/false
      * @access  public
      */
@@ -38,7 +37,6 @@ class HelloWorld_Installer extends Zikula_Installer
      * of the module.  It is accessed via the Zikula
      * Admin interface and should not be called directly.
      *
-     * @author  Craig Heydenburg
      * @return  boolean    true/false
      * @param   string    $oldversion Version we're upgrading
      * @access  public
@@ -67,7 +65,6 @@ class HelloWorld_Installer extends Zikula_Installer
      * Zikula install and should be accessed via
      * the Zikula Admin interface
      *
-     * @author  Craig Heydenburg
      * @return  boolean    true/false
      * @access  public
      */
