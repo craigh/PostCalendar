@@ -109,10 +109,7 @@ class PostCalendar_Installer extends Zikula_Installer
             case '7.0.0':
                 //future development
         }
-    
-        // if we get this far - clear the cache
-        $this->view->clear_cache();
-    
+
         return true;
     }
     

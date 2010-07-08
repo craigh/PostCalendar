@@ -13,22 +13,10 @@ class PostCalendar_Version extends Zikula_Version
     public function getMetaData()
     {
         $meta = array();
-        $meta['name']           = 'PostCalendar';
         $meta['displayname']    = $this->__('PostCalendar');
         $meta['url']            = $this->__(/*!used in URL - nospaces, no special chars, lcase*/'postcalendar');
         $meta['description']    = $this->__('Calendar for Zikula');
-        
-        $meta['id']             = '$Revision: 682 $'; // svn revision #
         $meta['version']        = '7.0.0-dev';
-        $meta['credits']        = 'http://code.zikula.org/soundwebdevelopment/wiki/PostCalendarHistoryCredits';
-        $meta['changelog']      = 'http://code.zikula.org/soundwebdevelopment/wiki/PostCalendarReleaseNotes';
-        $meta['help']           = 'http://code.zikula.org/soundwebdevelopment/';
-        $meta['license']        = 'http://www.gnu.org/copyleft/gpl.html';
-        $meta['official']       = 0;
-        $meta['author']         = 'Craig Heydenburg';
-        $meta['contact']        = 'http://code.zikula.org/soundwebdevelopment/';
-        $meta['admin']          = 1;
-        $meta['user']           = 1;
 
         $meta['securityschema'] = array(
             'PostCalendar::Event' => 'Event Title::Event ID',
