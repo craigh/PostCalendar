@@ -37,7 +37,7 @@ class PostCalendar_Form_Handler_EditHandler
                 return LogUtil::registerError(__("Error! An 'unidentified error' occurred.", $dom));
             }
             LogUtil::registerStatus(__('Done! The event was deleted.', $dom));
-            $this->callHooks('item', 'delete', $this->eid, array(
+            ModUtil::callHooks('item', 'delete', $this->eid, array(
                 'module' => 'PostCalendar'));
 
             $redir = ModUtil::url('PostCalendar', 'user', 'view', array(

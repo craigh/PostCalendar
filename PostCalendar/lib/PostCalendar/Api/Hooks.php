@@ -30,10 +30,11 @@ class PostCalendar_Api_Hooks extends Zikula_Api
         }
     
         $hookinfo = FormUtil::getPassedValue('postcalendar', array(), 'POST'); // array of data from 'new' hook
-        if (DataUtil::is_serialized($hookinfo['cats'])) {
+        $hookinfo = DataUtil::cleanVar($hookinfo);
+        if (DataUtil::is_serialized($hookinfo['cats'], false)) {
             $hookinfo['cats'] = unserialize($hookinfo['cats']);
         }
-    
+
         if ((!isset($hookinfo['optin'])) || (!$hookinfo['optin'])) {
             LogUtil::registerStatus($this->__("PostCalendar: Event not created (opt out)."));
             return;
