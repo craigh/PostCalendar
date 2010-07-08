@@ -16,7 +16,7 @@ function smarty_function_pc_form_nav_open($args, &$smarty)
 
     if (isset($args['assign'])) {
         $smarty->assign($args['assign'], $ret_val);
-   } else {
+    } else {
         return $ret_val;
-   }
+    }
 }

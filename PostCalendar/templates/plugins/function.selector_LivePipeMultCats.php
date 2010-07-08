@@ -50,11 +50,11 @@ function smarty_function_selector_LivePipeMultCats ($params, &$smarty)
         $t = $_pnTables = $GLOBALS['pntables'];
         $t['categories_category_db_extra_enable_attribution'] = false;
         $GLOBALS['pntables'] = $t;
-   }
+    }
 
     if (!$category && !$path && $categoryRegistryModule && $categoryRegistryTable && $categoryRegistryProperty) {
         $category = CategoryRegistryUtil::getRegisteredModuleCategory ($categoryRegistryModule, $categoryRegistryTable, $categoryRegistryProperty);
-   }
+    }
 
     $allCats = array();
     // if we don't have a category-id we see if we can get a category by path
@@ -62,13 +62,13 @@ function smarty_function_selector_LivePipeMultCats ($params, &$smarty)
         $category = CategoryUtil::getCategoryByPath ($path, $pathfield);
 
     // check if we have a numeric category
-   } elseif (is_numeric($category)) {
+    } elseif (is_numeric($category)) {
         $category = CategoryUtil::getCategoryByID ($category);
 
     // check if we have a string/path category
-   } elseif (is_string($category) && strpos($category, '/')===0) {
+    } elseif (is_string($category) && strpos($category, '/')===0) {
         $category = CategoryUtil::getCategoryByPath ($category, $pathfield);
-   }
+    }
 
     //static $catCache;
     //if (!$catCache) {
@@ -78,7 +78,7 @@ function smarty_function_selector_LivePipeMultCats ($params, &$smarty)
     if (!isset($catCache[$cacheKey])) {
         $catCache[$cacheKey] = CategoryUtil::getSubCategoriesForCategory($category, $recurse, $relative, $includeRoot,
                                                                           $includeLeaf, $all, '', '', $attributes, $sortField);
-   }
+    }
 
     $html = PostCalendar_Catutil::getSelector_LivePipeMultCats($catCache[$cacheKey], $field, $selectedValue, $name, $defaultValue, $defaultText,
                                                   $allValue, $allText, $submit, $displayPath, $doReplaceRootCat, $fieldIsAttribute);
@@ -86,19 +86,19 @@ function smarty_function_selector_LivePipeMultCats ($params, &$smarty)
     if (!is_array($selectedValue)) {
         $selectedValue = array(
             (string) $selectedValue);
-   }
+    }
     $zLP_selectedValueList = implode(",", $selectedValue);
     $id = strtr($name, '[]', '__');
 
     if ($editLink && !empty($category) && SecurityUtil::checkPermission( 'Categories::', "$category[id]::", ACCESS_EDIT)) {
         $url = DataUtil::formatForDisplay(ModUtil::url('Categories', 'user', 'edit', array('dr' => $category['id'])));
         $html .= "&nbsp;&nbsp;<a href=\"$url\"><img src=\"".System::getBaseUrl()."images/icons/extrasmall/xedit.gif\" title=\"" . __('Edit sub-category') . '" alt="' . __('Edit sub-category') . '" /></a>';
-   }
+    }
 
     // re-enable attribution if we disabled it previously
     if ($_pnTables) {
         $GLOBALS['pntables'] = $_pnTables;
-   }
+    }
 
     $LivePipeAvailable = file_exists('javascript/livepipe/livepipe.js');
     if ($LivePipeAvailable) {
@@ -114,37 +114,37 @@ function smarty_function_selector_LivePipeMultCats ($params, &$smarty)
                     afterChange: function(){
                         if({$id} && {$id}.setSelectedRows)
                             {$id}.setSelectedRows();
-                   }
-               });
+                    }
+                });
                 {$id}.setSelectedRows = function(){
                     this.checkboxes.each(function(checkbox){
                         var tr = $(checkbox.parentNode.parentNode);
                         tr.removeClassName('selected');
                         if(checkbox.checked)
                             tr.addClassName('selected');
-                   });
-               }.bind({$id});
+                    });
+                }.bind({$id});
                 {$id}.checkboxes.each(function(checkbox){
                     $(checkbox).observe('click',{$id}.setSelectedRows);
-               });
+                });
                 {$id}.setSelectedRows();
                 $('{$id}_open').observe('click',function(event){
                     $(this.select).style.visibility = 'hidden';
                     new Effect.BlindDown(this.container,{
                         duration: 0.3
-                   });
+                    });
                     Event.stop(event);
                     return false;
-               }.bindAsEventListener({$id}));
+                }.bindAsEventListener({$id}));
                 $('{$id}_close').observe('click',function(event){
                     $(this.select).style.visibility = 'visible';
                     new Effect.BlindUp(this.container,{
                         duration: 0.3
-                   });
+                    });
                     Event.stop(event);
                     return false;
-               }.bindAsEventListener({$id}));
-           }
+                }.bindAsEventListener({$id}));
+            }
             //-->";
     
         PageUtil::addVar("javascript", "javascript/ajax/prototype.js");
@@ -152,14 +152,14 @@ function smarty_function_selector_LivePipeMultCats ($params, &$smarty)
         PageUtil::addVar("javascript", "javascript/livepipe/livepipe.js");
         PageUtil::addVar("javascript", "javascript/livepipe/selectmultiple.js");
         PageUtil::addVar("rawtext",    "<script type='text/javascript'>$zLP_javascript</script>");
-   }
+    }
 
     // add stylesheet regardless
     PageUtil::addVar("stylesheet", "modules/PostCalendar/style/zLP_selectmultiple.css");
 
     if ($assign) {
         $smarty->assign($assign, $html);
-   } else {
+    } else {
         return $html;
-   }
+    }
 }

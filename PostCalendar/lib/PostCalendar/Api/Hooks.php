@@ -178,7 +178,7 @@ class PostCalendar_Api_Hooks extends Zikula_Api
         $methodName = $module . '_pcevent';
         $args       = array(
             'objectid' => $args['objectid'],
-            'hookinfo' => $hookinfo));
+            'hookinfo' => $hookinfo);
         if (is_callable(array($eventObj, $methodName))) {
             if (!$event = $eventObj->$methodName($args)) {
                 LogUtil::registerError($this->__("PostCalendar: Could not create event (method failed)."));

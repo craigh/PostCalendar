@@ -21,12 +21,12 @@ function smarty_modifier_pc_date_format($string, $format = null, $default_date =
 
     if ($string != '') {
         $ret_val = DateUtil::strftime($format, smarty_make_timestamp($string));
-   } elseif (isset($default_date) && $default_date != '') {
+    } elseif (isset($default_date) && $default_date != '') {
         $ret_val = DateUtil::strftime($format, smarty_make_timestamp($default_date));
-   } else {
+    } else {
         // when having empty var, just return the current date/time
         $ret_val = DateUtil::strftime($format, time());
-   }
+    }
 
     return $ret_val;
 }
