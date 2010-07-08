@@ -13,20 +13,10 @@ class HelloWorld_Version extends Zikula_Version
     public function getMetaData()
     {
         $meta = array();
-        $meta['name']           = 'HelloWorld';
         $meta['displayname']    = $this->__('HelloWorld');
         $meta['url']            = $this->__(/*!used in URL - nospaces, no special chars, lcase*/'helloworld');
         $meta['description']    = $this->__('Example Zikula Module Hello World!');
-        
         $meta['version']        = '1.0.0';
-        $meta['changelog']      = 'http://code.zikula.org/soundwebdevelopment/';
-        $meta['help']           = 'http://code.zikula.org/soundwebdevelopment/';
-        $meta['license']        = 'http://www.gnu.org/licenses/lgpl.html';
-        $meta['official']       = 0;
-        $meta['author']         = 'Craig Heydenburg';
-        $meta['contact']        = 'http://code.zikula.org/soundwebdevelopment/';
-        $meta['admin']          = 1;
-        $meta['user']           = 1;
 
         $meta['securityschema'] = array(
             'HelloWorld::'      => '::');

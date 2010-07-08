@@ -8,4 +8,7 @@
  * @license GNU/LGPLv3 (or at your option, any later version).
  */
 
-define('_HELLOWORLD', "Hello World");
+/**
+ * This file loads stuff and runs on every page of your module
+ * before anythig else runs
+ **/
