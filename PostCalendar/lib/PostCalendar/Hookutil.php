@@ -89,7 +89,7 @@ class PostCalendar_Hookutil
 
         $eventstatus = 1; // approved
 
-        if (ModUtil::modAvail('Profile')) {
+        if (ModUtil::available('Profile')) {
             $hometext = ":html:" . __('Profile link: ', $dom) . "<a href='" . ModUtil::url('Profile', 'user', 'view', array('uid' => $user['uid'])) . "'>" . $user['uname'] . "</a>";
         } else {
             $hometext = ":text:" . $user['uname'];
