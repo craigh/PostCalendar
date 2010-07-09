@@ -27,8 +27,8 @@
             {modgetvar module="PostCalendar" name="pcDefaultView" assign="viewtype"}
         {/if}
         {formutil_getpassedvalue name="Date" source="get" assign="Date" default=''}
-        <a href="{modurl modname="PostCalendar" func="view" viewtype=$viewtype Date=$Date eid=$loaded_event.eid}">{gt text='Return'}</a>
+        <a href="{modurl modname="PostCalendar" func="main" viewtype=$viewtype Date=$Date eid=$loaded_event.eid}">{gt text='Return'}</a>
     </div>
 {/if}
-{modcallhooks hookobject=item hookaction=display hookid=$loaded_event.eid returnurl="index.php?module=PostCalendar&func=view&viewtype=details&eid=`$loaded_event.eid`"}
+{modcallhooks hookobject=item hookaction=display hookid=$loaded_event.eid returnurl="index.php?module=PostCalendar&func=main&viewtype=details&eid=`$loaded_event.eid`"}
 {include file="user/footer.tpl"}

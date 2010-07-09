@@ -19,16 +19,6 @@ class PostCalendar_Controller_User extends Zikula_Controller
      */
     public function main()
     {
-        return $this->view();
-    }
-    
-    /**
-     * view items
-     * This is a standard function to provide an overview of all of the items
-     * available from the module.
-     */
-    public function view()
-    {
         if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_OVERVIEW)) {
             return LogUtil::registerPermissionError();
         }

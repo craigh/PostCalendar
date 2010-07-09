@@ -22,7 +22,7 @@ function postcalendar_needleapi_postcalevent($args)
             $args['nid'] = '-' . $args['nid'];
         }
         list ($dispose, $eid, $displaytype) = explode('-', $args['nid']);
-        $link = ModUtil::url('PostCalendar', 'user', 'view', array(
+        $link = ModUtil::url('PostCalendar', 'user', 'main', array(
             'viewtype' => 'details',
             'eid' => $eid));
         $displaytype = $displaytype ? strtoupper($displaytype) : 'NLI'; // in any order: N (name) D (date) T (time) I (icon) L (uselink) - default: NL

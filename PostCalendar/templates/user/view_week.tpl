@@ -39,7 +39,7 @@
                     {pc_url full=true action=detail eid=$event.eid date=$cdate display=$event.title|strip_tags javascript=$javascript}
                     {if $event.commentcount gt 0}
                         {gt text='%s comment left' plural='%s comments left.' count=$event.commentcount tag1=$event.commentcount domain="module_postcalendar" assign="title"}
-                        <a href="{modurl modname='PostCalendar' func='view' viewtype='details' eid=$event.eid}#comments" title='{$title}'>
+                        <a href="{modurl modname='PostCalendar' func='main' viewtype='details' eid=$event.eid}#comments" title='{$title}'>
                         {img modname=core src=comment.gif set=icons/extrasmall __alt="Comment" title=$title}</a>
                     {/if}
                 </li>
@@ -56,7 +56,7 @@
             {modgetvar module="PostCalendar" name="pcDefaultView" assign="viewtype"}
         {/if}
         {formutil_getpassedvalue name="Date" source="get" assign="Date" default=''}
-        <a href="{modurl modname="PostCalendar" func="view" viewtype=$viewtype Date=$Date}">{gt text='Return'}</a>
+        <a href="{modurl modname="PostCalendar" func="main" viewtype=$viewtype Date=$Date}">{gt text='Return'}</a>
     {/if}
 </div>
 {include file="user/footer.tpl"}

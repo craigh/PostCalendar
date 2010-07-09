@@ -22,13 +22,13 @@
     {gt text='private event' assign='p_txt'}
     {if $event.privateicon}{img src='locked.png' modname='core' set='icons/extrasmall' title=$p_txt alt=$p_txt}{/if}
     {$loaded_event.title|safehtml}
-    <a href="{modurl modname='PostCalendar' func='view' viewtype='details' eid=$loaded_event.eid}" title='{gt text='Full event information'}'>
+    <a href="{modurl modname='PostCalendar' func='main' viewtype='details' eid=$loaded_event.eid}" title='{gt text='Full event information'}'>
     {gt text='Full event information' assign='title'}{gt text='Info' assign='alt'}
     {img modname=core src=info.gif set=icons/extrasmall alt=$alt title=$title}</a>
     {if $loaded_event.commentcount gt 0}
         {gt text='%s comment left' plural='%s comments left.' count=$loaded_event.commentcount tag1=$loaded_event.commentcount assign="title"}
         {gt text='Comment' assign='alt'}
-        <a href="{modurl modname='PostCalendar' func='view' viewtype='details' eid=$loaded_event.eid}#comments" title='{$title}'>
+        <a href="{modurl modname='PostCalendar' func='main' viewtype='details' eid=$loaded_event.eid}#comments" title='{$title}'>
         {img modname=core src=comment.gif set=icons/extrasmall alt=$alt title=$title}</a>
     {/if}
 </h2>

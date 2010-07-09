@@ -40,11 +40,11 @@ class PostCalendar_Form_Handler_EditHandler
             ModUtil::callHooks('item', 'delete', $this->eid, array(
                 'module' => 'PostCalendar'));
 
-            $redir = ModUtil::url('PostCalendar', 'user', 'view', array(
+            $redir = ModUtil::url('PostCalendar', 'user', 'main', array(
                 'viewtype' => _SETTING_DEFAULT_VIEW));
             return $render->redirect($redir);
         } else if ($args['commandName'] == 'cancel') {
-            $url = ModUtil::url('PostCalendar', 'user', 'view', array(
+            $url = ModUtil::url('PostCalendar', 'user', 'main', array(
                 'eid' => $this->eid,
                 'viewtype' => 'details',
                 'Date' => $event['Date']));

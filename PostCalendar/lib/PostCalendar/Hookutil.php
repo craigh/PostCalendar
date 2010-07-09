@@ -88,10 +88,16 @@ class PostCalendar_Hookutil
         // user.activated is no longer used (7/7/10) as a new system is in place moving users from one table to another...
 
         $eventstatus = 1; // approved
+
+        if (ModUtil::modAvail('Profile')) {
+            $hometext = ":html:" . __('Profile link: ', $dom) . "<a href='" . ModUtil::url('Profile', 'user', 'view', array('uid' => $user['uid'])) . "'>" . $user['uname'] . "</a>";
+        } else {
+            $hometext = ":text:" . $user['uname'];
+        }
     
         $event = array(
             'title'             => __('New user: ', $dom) . $user['uname'],
-            'hometext'          => ":html:" . __('Profile link: ', $dom) . "<a href='" . ModUtil::url('Profile', 'user', 'view', array('uid' => $user['uid'])) . "'>" . $user['uname'] . "</a>",
+            'hometext'          => $hometext,
             'aid'               => $user['uid'], // userid of creator
             'time'              => $user['user_regdate'], // mysql timestamp YYYY-MM-DD HH:MM:SS
             'informant'         => $user['uid'], // userid of creator

@@ -105,14 +105,14 @@ class PostCalendar_Block_Calendar extends Zikula_Block
         // set up the next and previous months to move to
         $prev_month = DateUtil::getDatetime_NextMonth(-1, '%Y%m%d', $the_year, $the_month, 1);
         $next_month = DateUtil::getDatetime_NextMonth(1, '%Y%m%d', $the_year, $the_month, 1);
-        $pc_prev = ModUtil::url('PostCalendar', 'user', 'view', array(
+        $pc_prev = ModUtil::url('PostCalendar', 'user', 'main', array(
             'viewtype' => 'month',
             'Date'     => $prev_month));
-        $pc_next = ModUtil::url('PostCalendar', 'user', 'view', array(
+        $pc_next = ModUtil::url('PostCalendar', 'user', 'main', array(
             'viewtype' => 'month',
             'Date'     => $next_month));
         $pc_month_name = DateUtil::strftime("%B", strtotime($Date));
-        $month_link_url = ModUtil::url('PostCalendar', 'user', 'view', array(
+        $month_link_url = ModUtil::url('PostCalendar', 'user', 'main', array(
             'viewtype' => 'month',
             'Date'     => date('Ymd', mktime(0, 0, 0, $the_month, 1, $the_year))));
         $month_link_text = $pc_month_name . ' ' . $the_year;

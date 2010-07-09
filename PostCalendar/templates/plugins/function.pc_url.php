@@ -37,7 +37,7 @@ function smarty_function_pc_url($args, &$smarty)
 
     $viewtype = strtolower(FormUtil::getPassedValue('viewtype', _SETTING_DEFAULT_VIEW));
     if (FormUtil::getPassedValue('func') == 'create') {
-        $viewtype = 'create'; // this may break
+        $viewtype = 'create';
     }
     $pc_username = FormUtil::getPassedValue('pc_username');
 
@@ -65,7 +65,7 @@ function smarty_function_pc_url($args, &$smarty)
                 'Date' => $date));
             break;
         case 'today':
-            $link = ModUtil::url('PostCalendar', 'user', 'view', array(
+            $link = ModUtil::url('PostCalendar', 'user', 'main', array(
                 'viewtype'    => $viewtype,
                 'Date'        => DateUtil::getDatetime('', '%Y%m%d000000'),
                 'pc_username' => $pc_username));
@@ -75,7 +75,7 @@ function smarty_function_pc_url($args, &$smarty)
         case 'month':
         case 'year':
         case 'list':
-            $link = ModUtil::url('PostCalendar', 'user', 'view', array(
+            $link = ModUtil::url('PostCalendar', 'user', 'main', array(
                 'viewtype'    => $action,
                 'Date'        => $date,
                 'pc_username' => $pc_username));
@@ -87,7 +87,7 @@ function smarty_function_pc_url($args, &$smarty)
             $link = System::getCurrentUrl() . "&theme=Printer";
             break;
         case 'rss':
-            $link = ModUtil::url('PostCalendar', 'user', 'view', array(
+            $link = ModUtil::url('PostCalendar', 'user', 'main', array(
                 'viewtype' => 'xml',
                 'theme'    => 'rss'));
             break;
@@ -97,7 +97,7 @@ function smarty_function_pc_url($args, &$smarty)
                     $javascript = " onClick=\"opencal('$eid','$date'); return false;\"";
                     $link = "#";
                 } else {
-                    $link = ModUtil::url('PostCalendar', 'user', 'view', array(
+                    $link = ModUtil::url('PostCalendar', 'user', 'main', array(
                         'Date'     => $date,
                         'viewtype' => 'details',
                         'eid'      => $eid));

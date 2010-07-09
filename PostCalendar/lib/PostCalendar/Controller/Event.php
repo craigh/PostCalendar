@@ -21,14 +21,14 @@ class PostCalendar_Controller_Event extends Zikula_Controller
             return LogUtil::registerPermissionError();
         }
         $eid    = FormUtil::getPassedValue('eid'); //  seems like this should be handled by the eventHandler
-        $this->view = FormUtil::newForm('PostCalendar');
-    
+        $render = FormUtil::newForm('PostCalendar');
+
         // get the event from the DB
         $event = DBUtil::selectObjectByID('postcalendar_events', $eid, 'eid');
         $event = ModUtil::apiFunc('PostCalendar', 'event', 'formateventarrayfordisplay', $event);
     
-        $this->view->assign('loaded_event', $event);
-        return $this->view->execute('event/deleteeventconfirm.tpl', new PostCalendar_Form_Handler_EditHandler());
+        $render->assign('loaded_event', $event);
+        return $render->execute('event/deleteeventconfirm.tpl', new PostCalendar_Form_Handler_EditHandler());
     }
     
     /**
@@ -200,7 +200,7 @@ class PostCalendar_Controller_Event extends Zikula_Controller
             if ($addtrigger) {
                 System::redirect(ModUtil::url('PostCalendar', 'event', 'create'));
             } else {
-                System::redirect(ModUtil::url('PostCalendar', 'user', 'view', array(
+                System::redirect(ModUtil::url('PostCalendar', 'user', 'main', array(
                     'viewtype' => _SETTING_DEFAULT_VIEW,
                     'Date' => $url_date)));
             }
