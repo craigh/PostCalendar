@@ -72,7 +72,6 @@ define('_SETTING_DIRECT_SUBMIT',    $settings['pcAllowDirectSubmit']);
 define('_SETTING_ALLOW_USER_CAL',   $settings['pcAllowUserCalendar']);
 define('_SETTING_TIME_INCREMENT',   $settings['pcTimeIncrement']);
 define('_SETTING_HOW_MANY_EVENTS',  $settings['pcListHowManyEvents']);
-define('_SETTING_EVENTS_IN_YEAR',   $settings['pcShowEventsInYear']);
 define('_SETTING_DEFAULT_VIEW',     $settings['pcDefaultView']);
 define('_SETTING_NOTIFY_ADMIN',     $settings['pcNotifyAdmin']);
 define('_SETTING_NOTIFY_EMAIL',     $settings['pcNotifyEmail']);
