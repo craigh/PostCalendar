@@ -10,7 +10,7 @@
  */
 function smarty_function_pc_locations($args, &$smarty)
 {
-    if (!ModUtil::available('Locations')) {
+    if (!ModUtil::available('Locations') || !ModUtil::getVar('PostCalendar', 'enablelocations')) {
         return "<input type='hidden' name='postcalendar_events[location][locations_id]' id='postcalendar_events_location_locations_id' value='-1'>";
     }
     $admin = isset($args['admin']) ? $args['admin'] : false;

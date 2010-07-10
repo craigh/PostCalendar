@@ -279,25 +279,26 @@ class PostCalendar_Controller_Admin extends Zikula_Controller
         }
     
         $settings = array(
-            'pcTime24Hours'           => FormUtil::getPassedValue('pcTime24Hours', 0),
-            'pcEventsOpenInNewWindow' => FormUtil::getPassedValue('pcEventsOpenInNewWindow', 0),
-            'pcFirstDayOfWeek'        => FormUtil::getPassedValue('pcFirstDayOfWeek', $defaults['pcFirstDayOfWeek']),
-            'pcUsePopups'             => FormUtil::getPassedValue('pcUsePopups', 0),
-            'pcAllowDirectSubmit'     => FormUtil::getPassedValue('pcAllowDirectSubmit', 0),
-            'pcListHowManyEvents'     => FormUtil::getPassedValue('pcListHowManyEvents', $defaults['pcListHowManyEvents']),
-            'pcEventDateFormat'       => FormUtil::getPassedValue('pcEventDateFormat', $defaults['pcEventDateFormat']),
-            'pcAllowUserCalendar'     => FormUtil::getPassedValue('pcAllowUserCalendar', 0),
-            'pcTimeIncrement'         => FormUtil::getPassedValue('pcTimeIncrement', $defaults['pcTimeIncrement']),
-            'pcDefaultView'           => FormUtil::getPassedValue('pcDefaultView', $defaults['pcDefaultView']),
-            'pcNotifyAdmin'           => FormUtil::getPassedValue('pcNotifyAdmin', 0),
-            'pcNotifyEmail'           => FormUtil::getPassedValue('pcNotifyEmail', $defaults['pcNotifyEmail']),
-            'pcListMonths'            => abs((int) FormUtil::getPassedValue('pcListMonths', $defaults['pcListMonths'])),
-            'pcNotifyAdmin2Admin'     => FormUtil::getPassedValue('pcNotifyAdmin2Admin', 0),
-            'pcAllowCatFilter'        => FormUtil::getPassedValue('pcAllowCatFilter', 0),
-            'enablecategorization'    => FormUtil::getPassedValue('enablecategorization', 0),
-            'enablenavimages'         => FormUtil::getPassedValue('enablenavimages', 0),
+            'pcTime24Hours'           => FormUtil::getPassedValue('pcTime24Hours',               0),
+            'pcEventsOpenInNewWindow' => FormUtil::getPassedValue('pcEventsOpenInNewWindow',     0),
+            'pcFirstDayOfWeek'        => FormUtil::getPassedValue('pcFirstDayOfWeek',            $defaults['pcFirstDayOfWeek']),
+            'pcUsePopups'             => FormUtil::getPassedValue('pcUsePopups',                 0),
+            'pcAllowDirectSubmit'     => FormUtil::getPassedValue('pcAllowDirectSubmit',         0),
+            'pcListHowManyEvents'     => FormUtil::getPassedValue('pcListHowManyEvents',         $defaults['pcListHowManyEvents']),
+            'pcEventDateFormat'       => FormUtil::getPassedValue('pcEventDateFormat',           $defaults['pcEventDateFormat']),
+            'pcAllowUserCalendar'     => FormUtil::getPassedValue('pcAllowUserCalendar',         0),
+            'pcTimeIncrement'         => FormUtil::getPassedValue('pcTimeIncrement',             $defaults['pcTimeIncrement']),
+            'pcDefaultView'           => FormUtil::getPassedValue('pcDefaultView',               $defaults['pcDefaultView']),
+            'pcNotifyAdmin'           => FormUtil::getPassedValue('pcNotifyAdmin',               0),
+            'pcNotifyEmail'           => FormUtil::getPassedValue('pcNotifyEmail',               $defaults['pcNotifyEmail']),
+            'pcListMonths'            => abs((int) FormUtil::getPassedValue('pcListMonths',      $defaults['pcListMonths'])),
+            'pcNotifyAdmin2Admin'     => FormUtil::getPassedValue('pcNotifyAdmin2Admin',         0),
+            'pcAllowCatFilter'        => FormUtil::getPassedValue('pcAllowCatFilter',            0),
+            'enablecategorization'    => FormUtil::getPassedValue('enablecategorization',        0),
+            'enablenavimages'         => FormUtil::getPassedValue('enablenavimages',             0),
+            'enablelocations'         => FormUtil::getPassedValue('enablelocations',             0),
             'pcFilterYearStart'       => abs((int) FormUtil::getPassedValue('pcFilterYearStart', $defaults['pcFilterYearStart'])), // ensures positive value
-            'pcFilterYearEnd'         => abs((int) FormUtil::getPassedValue('pcFilterYearEnd', $defaults['pcFilterYearEnd'])), // ensures positive value
+            'pcFilterYearEnd'         => abs((int) FormUtil::getPassedValue('pcFilterYearEnd',   $defaults['pcFilterYearEnd'])), // ensures positive value
         );
         $settings['pcNavDateOrder'] = ModUtil::apiFunc('PostCalendar', 'admin', 'getdateorder', $settings['pcEventDateFormat']);
         // save out event default settings so they are not cleared

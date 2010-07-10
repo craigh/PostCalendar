@@ -108,6 +108,14 @@
 			{modgetvar module="PostCalendar" name="enablenavimages" assign="pcENI"}
 			<input type="checkbox" value="1" id="enablenavimages" name="enablenavimages"{if $pcENI eq true} checked="checked"{/if}/>
 		</div>
+        {modavailable modname="Locations" assign="locationsAvailable"}
+        {if $locationsAvailable}
+        <div class="z-formrow">
+			<label for="enablelocations">{gt text='Enable Locations for PostCalendar'}</label>
+			{modgetvar module="PostCalendar" name="enablelocations" assign="pcEnLoc"}
+			<input type="checkbox" value="1" id="enablelocations" name="enablelocations"{if $pcEnLoc eq true} checked="checked"{/if}/>
+		</div>
+        {/if}
     </fieldset>
 	<fieldset>
         <legend>{gt text='Notification settings'}</legend>
