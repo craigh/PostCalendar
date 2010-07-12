@@ -1,5 +1,6 @@
 {* $Id: postcalendar_block_view_day.htm 638 2010-06-30 22:14:17Z craigh $ *}
 {if !$hideTodaysEvents}
+{ajaxheader module="PostCalendar" ui=true}
 {pc_pagejs_init}
 <div class="postcalendar_block_view_day">
 {if $SHOW_TITLE eq 1}
@@ -21,10 +22,9 @@
                     {assign var="timestamp" value=""}
                 {/if}
                 <li class="pc_blockevent">
-                    {pc_popup bgcolor=$event.catcolor caption=$event.title text=$event.hometext|safetext assign="javascript"}
                     {gt text='private event' assign='p_txt'}
                     {if $event.privateicon}{img src='locked.png' modname='core' set='icons/extrasmall' title=$p_txt alt=$p_txt}{/if}
-                    {pc_url full=true class="eventlink" action="detail" eid=$event.eid date=$date javascript=$javascript display="$timestamp `$event.title`"|strip_tags}
+                    {pc_url full=true class="eventlink" action="detail" eid=$event.eid date=$date title=$event.hometext|safetext display="$timestamp `$event.title`"|strip_tags}
                     {if $event.alldayevent != true}&nbsp;({gt text='until'} {$event.endTime}){/if}
                     {if $event.commentcount gt 0}
                         {gt text='%s comment left' plural='%s comments left.' count=$event.commentcount tag1=$event.commentcount assign="title"}

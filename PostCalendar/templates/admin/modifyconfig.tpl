@@ -51,7 +51,7 @@
 			<input type="checkbox" value="1" id="pcEventsOpenInNewWindow" name="pcEventsOpenInNewWindow"{if $pcEOINW eq true} checked="checked"{/if}/>
 		</div>
 		<div class="z-formrow">
-			<label for="pcUsePopups">{gt text="Show event details in 'hover' window on 'mouseover'"}<br />({gt text="overrides pop-up setting"})</label>
+			<label for="pcUsePopups">{gt text="Show event description in javascript tooltip on 'mouseover'"}</label>
 			{modgetvar module="PostCalendar" name="pcUsePopups" assign="pcUP"}
 			<input type="checkbox" value="1" id="pcUsePopups" name="pcUsePopups"{if $pcUP eq true} checked="checked"{/if}/>
 		</div>

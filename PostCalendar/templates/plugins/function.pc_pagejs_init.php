@@ -16,11 +16,19 @@
 function smarty_function_pc_pagejs_init($params, &$smarty)
 {
     unset($params);
-    if (_SETTING_USE_POPUPS) {
-        PageUtil::addVar("javascript", "modules/PostCalendar/javascript/postcalendar_overlibconfig.js");
+    $dom = ZLanguage::getModuleDomain('PostCalendar');
+    if (_SETTING_OPEN_NEW_WINDOW) {
+        $javascript = "
+            $$('.event_details').each(function(link){
+                new Zikula.UI.Window(link, {title:'" . __('PostCalendar Event', $dom) ."'});
+            });";
+        PageUtil::addVar("footer", "<script type='text/javascript'>$javascript</script>");
     }
-    if (_SETTING_OPEN_NEW_WINDOW && !_SETTING_USE_POPUPS) {
-        PageUtil::addVar("javascript", "modules/PostCalendar/javascript/postcalendar_jspopup.js");
+    if (_SETTING_USE_POPUPS) {
+        $javascript = "
+            Zikula.UI.Tooltips($$('.tooltips'));
+            ";
+        PageUtil::addVar("footer", "<script type='text/javascript'>$javascript</script>");
     }
     return;
 }

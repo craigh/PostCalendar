@@ -39,7 +39,6 @@
             {/if}
             {if $loaded_event.fee}{gt text='Fee'}: {$loaded_event.fee}{/if}
         </div>
-        {if !isset($popup)}
         {if count($loaded_event.__CATEGORIES__) gt 0}
         <div class="postcalendar_event_categoryinfo">
             {lang assign="lang"}
@@ -64,7 +63,6 @@
             <h3>{gt text='Event sharing information'}:</h3>
             <p>{$loaded_event.sharing_sentence}</p>
         </div>
-        {/if}
     </div>
 </div>
 </div><!-- end postcalendar_event_view -->

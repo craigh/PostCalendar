@@ -93,15 +93,14 @@ function smarty_function_pc_url($args, &$smarty)
             break;
         case 'detail':
             if (isset($eid)) {
-                if (_SETTING_OPEN_NEW_WINDOW && !_SETTING_USE_POPUPS) {
-                    $javascript = " onClick=\"opencal('$eid','$date'); return false;\"";
-                    $link = "#";
-                } else {
-                    $link = ModUtil::url('PostCalendar', 'user', 'main', array(
-                        'Date'     => $date,
-                        'viewtype' => 'details',
-                        'eid'      => $eid));
+                $linkparams = array(
+                    'Date'     => $date,
+                    'viewtype' => 'details',
+                    'eid'      => $eid);
+                if (_SETTING_OPEN_NEW_WINDOW) {
+                    $linkparams['popup'] = true;
                 }
+                $link = ModUtil::url('PostCalendar', 'user', 'main', $linkparams);
             } else {
                 $link = '';
             }
@@ -159,6 +158,15 @@ function smarty_function_pc_url($args, &$smarty)
                 $class = ($viewtype == $action) ? 'postcalendar_nav_text_selected' : 'postcalendar_nav_text';
                 $title = $labeltexts[$action];
             }
+        } else {
+            $classes = array($class);
+            if (_SETTING_USE_POPUPS) {
+                $classes[] = 'tooltips';
+            }
+            if (_SETTING_OPEN_NEW_WINDOW) {
+                $classes[] = 'event_details';
+            }
+            $class = implode(' ', $classes);
         }
         // create string of remaining properties and values
         $props = "";

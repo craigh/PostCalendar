@@ -11,9 +11,8 @@
 {if $PRINT_VIEW eq false}
 {include file="user/navigation.tpl"}
 {/if}
-
+{ajaxheader module="PostCalendar" ui=true}
 {pc_pagejs_init}
-
 <h2 class="postcalendar_header">
     {if $PRINT_VIEW eq false}<a href="{$PREV_MONTH_URL}">&lt;&lt;</a>{/if}
     {$DATE|pc_date_format:'%B %Y'}
@@ -77,9 +76,8 @@
                     {/if}
 
                     {assign var="desc" value=$event.hometext|truncate:255:"..."}
-                    {pc_popup bgcolor=$event.catcolor caption="`$timestamp` `$event.title`" text=$desc|safetext assign="javascript"}
                     {if $event.privateicon}{img src='locked.png' modname='core' set='icons/extrasmall' __title="private event" __alt="private event"}{/if}
-                    {pc_url full=true action=detail eid=$event.eid date=$date style="font-size: 7pt; text-decoration: none;" javascript=$javascript display="$timestamp $title"|safehtml}
+                    {pc_url full=true action=detail eid=$event.eid date=$date style="font-size: 7pt; text-decoration: none;" title=$event.hometext|safetext display="$timestamp $title"|safehtml}
                     {if $event.commentcount gt 0}
                         {gt text='%s comment left' plural='%s comments left.' count=$event.commentcount tag1=$event.commentcount domain="module_postcalendar" assign="title"}
                         <a href="{modurl modname='PostCalendar' func='main' viewtype='details' eid=$event.eid}#comments" title='{$title}'>
@@ -109,4 +107,3 @@
         <a href="{modurl modname="PostCalendar" func="main" viewtype=$viewtype Date=$Date}">{gt text='Return'}</a>
     {/if}
 </div>
-{include file="user/footer.tpl"}
