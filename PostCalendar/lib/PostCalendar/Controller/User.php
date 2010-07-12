@@ -111,7 +111,8 @@ class PostCalendar_Controller_User extends Zikula_Controller
                     $this->view->assign('loaded_event', $event);
     
                     if ($popup == true) {
-                        $this->view->display('user/view_popup.tpl');
+                        $this->view->assign('popup', $popup);
+                        $this->view->display('event/view.tpl');
                         return true; // displays template without theme wrap
                     } else {
                         if ((SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADD) && (UserUtil::getVar('uid') == $event['aid'])) || SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
