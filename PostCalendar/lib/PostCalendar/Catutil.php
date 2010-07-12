@@ -125,11 +125,8 @@ class PostCalendar_Catutil extends CategoryUtil
             $options = str_replace('__SYSTEM__', __('Root category'), $options);
         }
 
-        $LivePipeAvailable = file_exists('javascript/livepipe/livepipe.js');
-        if ($LivePipeAvailable) {
-            // add 'plus' icon to display multi-selector
-            $html .= "<a href='' id='{$id}_open'><img src='images/icons/extrasmall/edit_add.gif' alt='" . __("Select Multiple") . "' title='" . __("Select Multiple") . "' /></a>";
-        }
+        // add 'plus' icon to display multi-selector
+        $html .= "<a href='' id='{$id}_open'><img src='images/icons/extrasmall/edit_add.gif' alt='" . __("Select Multiple") . "' title='" . __("Select Multiple") . "' /></a>";
 
         //build multi-selector div
         $html .= "<div style='display:none;' id='{$id}_options' class='zLP_select_multiple_container'>  
