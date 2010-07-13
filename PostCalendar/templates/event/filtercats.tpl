@@ -19,8 +19,8 @@
     <script type="text/javascript">
         var postcalendar_events___CATEGORIES____{{$property}}_ = new Zikula.UI.SelectMultiple(
             'postcalendar_events___CATEGORIES____{{$property}}_',
-            'postcalendar_events___CATEGORIES____{{$property}}__open',
-            {value: '{{pc_implode value=$selectedValue}}'}
+            {opener: 'postcalendar_events___CATEGORIES____{{$property}}__open',
+            value: '{{pc_implode value=$selectedValue}}'}
         );
     </script>
 {/foreach}
