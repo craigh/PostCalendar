@@ -16,10 +16,11 @@ class PostCalendar_Util
         foreach ($cats as $prop => $id) {
             $defaultcats[$prop] = 0;
         }
+        $i18n = ZI18n::getInstance();
     
         // PostCalendar Default Settings
         $defaults = array(
-            'pcTime24Hours'           => _TIMEFORMAT == 24 ? '1' : '0',
+            'pcTime24Hours'           => $i18n->locale->getTimeformat() == 24 ? '1' : '0',
             'pcEventsOpenInNewWindow' => '0',
             'pcFirstDayOfWeek'        => '0', // Sunday
             'pcUsePopups'             => '0',

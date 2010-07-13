@@ -141,7 +141,7 @@ class PostCalendar_Api_Event extends Zikula_Api
     
         // convert categories array to proper filter info
         if (is_array($filtercats)) {
-            $catsarray = $filtercats['__CATEGORIES__'];
+            $catsarray = is_array($filtercats['__CATEGORIES__']) ? $filtercats['__CATEGORIES__'] : array('Main' => 0);
             foreach ($catsarray as $propname => $propid) {
                 if (is_array($propid)) { // select multiple used
                     foreach ($propid as $int_key => $int_id) {
