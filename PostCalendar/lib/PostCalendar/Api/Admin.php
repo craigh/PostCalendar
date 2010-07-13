@@ -59,7 +59,12 @@ class PostCalendar_Api_Admin extends Zikula_Api
                 'text' => $this->__('Queued events'),
                 'class' => 'z-icon-es-list');
         }
-    
+        if (SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
+            $links[] = array(
+                'url' => 'http://code.zikula.org/soundwebdevelopment/wiki/PostCalendarFeatureDocs70',
+                'text' => $this->__('Documentation'),
+                'class' => 'z-icon-es-info');
+        }
         // Return the links array back to the calling function
         return $links;
     }
