@@ -106,9 +106,8 @@ function smarty_function_pc_filter($args, &$smarty)
 
         $smarty->assign('enablecategorization', ModUtil::getVar('PostCalendar', 'enablecategorization'));
         $smarty->assign('catregistry', $catregistry);
-
+        
         $catoptions = $smarty->fetch('event/filtercats.tpl');
-
     } else {
         $catoptions = '';
         $key = array_search('category', $types);
