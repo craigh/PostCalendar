@@ -39,4 +39,4 @@
     </div>
 </div>
 </form>
-<div>{getstatusmsg|safehtml}</div>
+<div>{insert name="getstatusmsg"}</div>
