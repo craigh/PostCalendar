@@ -10,7 +10,7 @@
 <h2 style='border-bottom:1px solid #CCCCCC;text-align:left;padding-top:1em;'>{gt text='Create Event Default Values'}</h2>
 <form class="z-form" action="{modurl modname="PostCalendar" type="admin" func="seteventdefaults"}" method="post" enctype="application/x-www-form-urlencoded">
 <div>
-	<input type="hidden" name="authid" value="{generateauthkey module="PostCalendar"}" />
+	<input type="hidden" name="authid" value="{insert name="generateauthkey" module="PostCalendar"}" />
     <fieldset>
         <legend>{gt text='General'}</legend>
         <div class="z-formrow">

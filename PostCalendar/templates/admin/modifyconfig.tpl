@@ -6,7 +6,7 @@
 <h2>{gt text="PostCalendar settings"}&nbsp;({gt text="version"}&nbsp;{$postcalendarversion})</h2>
 <form class="z-form" action="{modurl modname="PostCalendar" type="admin" func="updateconfig"}" method="post" enctype="application/x-www-form-urlencoded">
     <div>
-	<input type="hidden" name="authid" value="{generateauthkey module="PostCalendar"}" />
+	<input type="hidden" name="authid" value="{insert name="generateauthkey" module="PostCalendar"}" />
     <fieldset>
         <legend>{gt text='General settings'}</legend>
         <div class="z-formrow">

@@ -1,4 +1,5 @@
 {* $Id: postcalendar_event_filtercats.htm 596 2010-06-05 01:14:46Z craigh $ *}
+{ajaxheader module="PostCalendar" ui=true}
 {gt text="All These Categories" assign="allText"}
 {nocache}
 {foreach from=$catregistry key=property item=category}
@@ -25,3 +26,4 @@
     </script>
 {/foreach}
 {/nocache}
+{* excludeValues: ['0'] *]

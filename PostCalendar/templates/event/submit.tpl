@@ -23,7 +23,7 @@
 {/if}
 <form action="{pc_url action="submit" func=$func}" method="post" enctype="application/x-www-form-urlencoded">
 <div style='border-color:#CCCCCC;border-style:solid;border-width:0 1px 1px;color:inherit;margin-bottom:1.25em;padding:0 1% 5px;width:auto;'>
-	<input type="hidden" name="authid" value="{generateauthkey module="PostCalendar"}" />
+	<input type="hidden" name="authid" value="{insert name="generateauthkey" module="PostCalendar"}" />
 
 <span style='float:right;'>{img modname='PostCalendar' src='admin.png' __alt="PostCalendar Rocks!"}</span>
 <h2 style='border-bottom:1px solid #CCCCCC;text-align:left;padding-top:1em;'>{$titletext}&nbsp;{gt text='calendar event'}</h2>
