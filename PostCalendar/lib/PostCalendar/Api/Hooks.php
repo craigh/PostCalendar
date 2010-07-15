@@ -84,7 +84,7 @@ class PostCalendar_Api_Hooks extends Zikula_Api
     public function delete($args)
     {
         if ((!isset($args['objectid'])) || ((int) $args['objectid'] <= 0)) {
-            return LogUtil::registerError($this->__f("PostCalendar: %s not provided in delete hook", 'objectid'));
+            return LogUtil::registerArgsError();
         }
         $module = isset($args['extrainfo']['module']) ? strtolower($args['extrainfo']['module']) : strtolower(ModUtil::getName()); // default to active module
     
@@ -120,7 +120,7 @@ class PostCalendar_Api_Hooks extends Zikula_Api
         if (isset($args['extrainfo']['module'])) {
             $module = strtolower($args['extrainfo']['module']);
         } else {
-            return LogUtil::registerError($this->__f('Error! Module name not present in %s hook.', 'deletemodule'));
+            return LogUtil::registerArgsError();
         }
     
         if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {

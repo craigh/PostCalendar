@@ -54,7 +54,7 @@ class PostCalendar_Controller_Hooks extends Zikula_Controller
     public function modify($args)
     {
         if ((!isset($args['objectid'])) || ((int) $args['objectid'] <= 0)) {
-            return false;
+            return LogUtil::registerArgsError();
         }
         $module = isset($args['extrainfo']['module']) ? strtolower($args['extrainfo']['module']) : strtolower(ModUtil::getName()); // default to active module
     

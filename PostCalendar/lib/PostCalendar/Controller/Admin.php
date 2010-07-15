@@ -100,7 +100,8 @@ class PostCalendar_Controller_Admin extends Zikula_Controller
     
         // $args should be array with keys 'type', 'function', 'title'
         if (!isset($args['type']) or empty($args['function'])) {
-            return false; // $title not required, type can be 1, 0, -1
+            // $title not required, type can be 1, 0, -1
+            return LogUtil::registerArgsError();
         }
     
     

@@ -70,7 +70,7 @@ class PostCalendar_Controller_User extends Zikula_Controller
         $func        = $args['func'];
     
         if (empty($Date) && empty($viewtype)) {
-            return LogUtil::registerError($this->__('Error! Required arguments not present.'));
+            return LogUtil::registerArgsError();
         }
     
         $modinfo = ModUtil::getInfo(ModUtil::getIdFromName('PostCalendar'));

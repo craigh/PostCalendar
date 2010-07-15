@@ -82,7 +82,7 @@ class PostCalendar_Api_Admin extends Zikula_Api
         $is_update = $args['is_update'];
     
         if (!isset($eid)) {
-            return LogUtil::registerError($this->__f('Error! %1$s required in %2$s.', array('eid', 'notify')));
+            return LogUtil::registerArgsError();
         }
     
         if (!(bool) _SETTING_NOTIFY_ADMIN) {

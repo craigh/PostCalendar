@@ -558,7 +558,7 @@ class PostCalendar_Api_Event extends Zikula_Api
     public function formateventarrayfordisplay($event)
     {
         if ((empty($event)) or (!is_array($event))) {
-            return LogUtil::registerError($this->__('Required argument not present.'));
+            return LogUtil::registerArgsError();
         }
     
         //remap sharing values to global/private (this sharing map converts pre-6.0 values to 6.0+ values)
