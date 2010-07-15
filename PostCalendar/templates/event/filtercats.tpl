@@ -26,4 +26,4 @@
     </script>
 {/foreach}
 {/nocache}
-{* excludeValues: ['0'] *]
+{* excludeValues: ['0'] *}

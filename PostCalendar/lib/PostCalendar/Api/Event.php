@@ -13,36 +13,6 @@
  * This is the event handler api
  **/
 
-/**
- * @description Internal callback class used to check permissions to each item
- *              borrowed from the News module
- * @author      Jorn Wildt
- */
-class postcalendar_eventapi_result_checker
-{
-    var $enablecategorization;
-
-    function postcalendar_eventapi_result_checker()
-    {
-        $this->enablecategorization = ModUtil::getVar('PostCalendar', 'enablecategorization');
-    }
-
-    // This method is called by DBUtil::selectObjectArrayFilter() for each and every search result.
-    // A return value of true means "keep result" - false means "discard".
-    function checkResult(&$item)
-    {
-        $ok = SecurityUtil::checkPermission('PostCalendar::Event', "$item[title]::$item[eid]", ACCESS_OVERVIEW); 
-
-        if ($this->enablecategorization)
-        {
-            ObjectUtil::expandObjectWithCategories($item, 'postcalendar_events', 'eid');
-            $ok = $ok && CategoryUtil::hasCategoryAccess($item['__CATEGORIES__'],'PostCalendar');
-        }
-
-        return $ok;
-    }
-}
-
 class PostCalendar_Api_Event extends Zikula_Api
 {
     /**
@@ -171,7 +141,7 @@ class PostCalendar_Api_Event extends Zikula_Api
             $where .= "AND $s_keywords";
         }
     
-        $permChecker = new postcalendar_eventapi_result_checker();
+        $permChecker = new PostCalendar_ResultChecker();
         $events = DBUtil::selectObjectArrayFilter('postcalendar_events', $where, null, null, null, null, $permChecker, $catsarray);
     
         return $events;
