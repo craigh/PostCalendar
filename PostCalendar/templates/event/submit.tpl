@@ -70,7 +70,13 @@
                 <ul>
                 {foreach from=$catregistry key=property item=category}
                     {array_field_isset assign="selectedValue" array=$loaded_event.__CATEGORIES__ field=$property returnValue=1}
-                    <li>{selector_category category=$category name="postcalendar_events[__CATEGORIES__][$property]" field="id" selectedValue=$selectedValue defaultValue="0" editLink=0}</li>
+                    <li>{selector_category 
+                            category=$category
+                            name="postcalendar_events[__CATEGORIES__][$property]"
+                            field="id"
+                            selectedValue=$selectedValue
+                            defaultValue="0"
+                            editLink=0}</li>
                 {/foreach}
                 </ul>
                 {/nocache}

@@ -21,9 +21,9 @@
         var postcalendar_events___CATEGORIES____{{$property}}_ = new Zikula.UI.SelectMultiple(
             'postcalendar_events___CATEGORIES____{{$property}}_',
             {opener: 'postcalendar_events___CATEGORIES____{{$property}}__open',
-            value: '{{pc_implode value=$selectedValue}}'}
+            value: '{{pc_implode value=$selectedValue}}',
+            excludeValues: ['0']}
         );
     </script>
 {/foreach}
 {/nocache}
-{* excludeValues: ['0'] *}
