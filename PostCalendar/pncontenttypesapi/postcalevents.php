@@ -38,7 +38,9 @@ class postcalendar_contenttypesapi_postcaleventsPlugin extends contentTypeBase
         $properties = array_keys($catregistry);
         $this->categories = array();
         foreach($properties as $prop) {
-            $this->categories[$prop] = $data['category__'.$prop];
+            if (!empty($data['category__'.$prop])) {
+                $this->categories[$prop] = $data['category__'.$prop];
+            }
         }
         return;
     }
