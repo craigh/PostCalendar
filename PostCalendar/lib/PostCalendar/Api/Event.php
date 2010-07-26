@@ -411,6 +411,7 @@ class PostCalendar_Api_Event extends Zikula_Api
         $eventdata['__CATEGORIES__'] = isset($eventdata['__CATEGORIES__']) ? $eventdata['__CATEGORIES__'] : $eventDefaults['categories'];
     
         // All-day event values for radio buttons
+        $eventdata['alldayevent'] = isset($eventdata['alldayevent']) ? $eventdata['alldayevent'] : $eventDefaults['alldayevent'];
         $form_data['Selected'] = $this->alldayselect($eventdata['alldayevent']);
     
         $form_data['minute_interval'] = _SETTING_TIME_INCREMENT;
