@@ -41,25 +41,25 @@ class PostCalendar_Api_Admin extends Zikula_Api
                 'text' => $this->__('Create new event'),
                 'class' => 'z-icon-es-new');
         }
-        if (SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
+        if (SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_DELETE)) {
             $links[] = array(
                 'url' => ModUtil::url('PostCalendar', 'admin', 'listapproved'),
                 'text' => $this->__('Approved events'),
                 'class' => 'z-icon-es-list');
         }
-        if (SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
+        if (SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_DELETE)) {
             $links[] = array(
                 'url' => ModUtil::url('PostCalendar', 'admin', 'listhidden'),
                 'text' => $this->__('Hidden events'),
                 'class' => 'z-icon-es-list');
         }
-        if (SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
+        if (SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_DELETE)) {
             $links[] = array(
                 'url' => ModUtil::url('PostCalendar', 'admin', 'listqueued'),
                 'text' => $this->__('Queued events'),
                 'class' => 'z-icon-es-list');
         }
-        if (SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
+        if (SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADD)) {
             $links[] = array(
                 'url' => 'http://code.zikula.org/soundwebdevelopment/wiki/PostCalendarFeatureDocs70',
                 'text' => $this->__('Documentation'),

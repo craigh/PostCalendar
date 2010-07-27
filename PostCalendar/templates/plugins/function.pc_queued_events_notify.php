@@ -11,7 +11,7 @@
  */
 function smarty_function_pc_queued_events_notify($args, &$smarty)
 {
-    if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
+    if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_DELETE)) {
         return;
     }
 

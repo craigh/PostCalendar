@@ -94,7 +94,7 @@ class PostCalendar_Controller_Admin extends Zikula_Controller
      */
     public function showlist($args)
     {
-        if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
+        if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_DELETE)) {
             return LogUtil::registerPermissionError();
         }
     
@@ -170,7 +170,7 @@ class PostCalendar_Controller_Admin extends Zikula_Controller
      */
     public function adminevents()
     {
-        if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
+        if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_DELETE)) {
             return LogUtil::registerPermissionError();
         }
     

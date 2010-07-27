@@ -29,7 +29,12 @@ class PostCalendar_Api_Account extends Zikula_Api
                 'title' => $this->__('Submit Event'),
                 'icon' => 'admin.png');
         }
-    
+        if (SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_DELETE)) {
+            $items['2'] = array(
+                'url' => ModUtil::url('PostCalendar', 'admin', 'listqueued'),
+                'title' => $this->__('Administrate Events'),
+                'icon' => 'admin.png');
+        }
         // Return the items
         return $items;
     }

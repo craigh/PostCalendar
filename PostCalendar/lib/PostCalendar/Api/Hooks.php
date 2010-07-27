@@ -25,9 +25,9 @@ class PostCalendar_Api_Hooks extends Zikula_Api
         }
         $module = isset($args['extrainfo']['module']) ? strtolower($args['extrainfo']['module']) : strtolower(ModUtil::getName()); // default to active module
     
-        if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADD)) {
-            return LogUtil::registerPermissionError();
-        }
+        //if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADD)) {
+        //    return LogUtil::registerPermissionError();
+        //}
     
         $hookinfo = FormUtil::getPassedValue('postcalendar', array(), 'POST'); // array of data from 'new' hook
         $hookinfo = DataUtil::cleanVar($hookinfo);
@@ -88,9 +88,9 @@ class PostCalendar_Api_Hooks extends Zikula_Api
         }
         $module = isset($args['extrainfo']['module']) ? strtolower($args['extrainfo']['module']) : strtolower(ModUtil::getName()); // default to active module
     
-        if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADD)) {
-            return LogUtil::registerPermissionError();
-        }
+        //if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADD)) {
+        //    return LogUtil::registerPermissionError();
+        //}
     
         // Get table info
         $pntable = DBUtil::getTables();
@@ -155,9 +155,9 @@ class PostCalendar_Api_Hooks extends Zikula_Api
         }
         $module = isset($args['extrainfo']['module']) ? strtolower($args['extrainfo']['module']) : strtolower(ModUtil::getName()); // default to active module
     
-        if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADD)) {
-            return LogUtil::registerPermissionError();
-        }
+        //if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADD)) {
+        //    return LogUtil::registerPermissionError();
+        //}
     
         $hookinfo = FormUtil::getPassedValue('postcalendar', array(), 'POST'); // array of data from 'new' hook
         $hookinfo = DataUtil::cleanVar($hookinfo);

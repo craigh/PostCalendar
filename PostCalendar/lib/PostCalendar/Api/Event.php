@@ -655,7 +655,7 @@ class PostCalendar_Api_Event extends Zikula_Api
             $event['informant'] = 1; // 'guest'
         }
     
-        define('PC_ACCESS_ADMIN', SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN));
+        define('PC_ACCESS_ADMIN', SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_DELETE));
     
         // determine if the event is to be published immediately or not
         if ((bool) _SETTING_DIRECT_SUBMIT || (bool) PC_ACCESS_ADMIN || ($event['sharing'] != SHARING_GLOBAL)) {
@@ -1003,7 +1003,7 @@ class PostCalendar_Api_Event extends Zikula_Api
         if (_SETTING_ALLOW_USER_CAL) {
             $data[SHARING_PRIVATE] = $this->__('Private');
         }
-        if (SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN) || _SETTING_ALLOW_GLOBAL || !_SETTING_ALLOW_USER_CAL) {
+        if (SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN) || !_SETTING_ALLOW_USER_CAL) {
             $data[SHARING_GLOBAL] = $this->__('Global');
         }
         return $data;
