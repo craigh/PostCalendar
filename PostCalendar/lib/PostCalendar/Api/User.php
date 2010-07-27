@@ -232,13 +232,13 @@ class PostCalendar_Api_User extends Zikula_Api
         }
     
         // Load the events
-        $eventsByDate = & ModUtil::apiFunc('PostCalendar', 'event', 'getEvents', array(
-            'start' => $starting_date,
-            'end' => $ending_date,
-            'filtercats' => $filtercats,
-            'Date' => $Date,
+        $eventsByDate = ModUtil::apiFunc('PostCalendar', 'event', 'getEvents', array(
+            'start'       => $starting_date,
+            'end'         => $ending_date,
+            'filtercats'  => $filtercats,
+            'Date'        => $Date,
             'pc_username' => $pc_username));
-    
+
         if (isset($calendarView)) {
             $function_out['CAL_FORMAT'] = $calendarView;
         }

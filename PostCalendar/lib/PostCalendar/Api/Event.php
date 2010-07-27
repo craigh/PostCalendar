@@ -143,7 +143,7 @@ class PostCalendar_Api_Event extends Zikula_Api
     
         $permChecker = new PostCalendar_ResultChecker();
         $events = DBUtil::selectObjectArrayFilter('postcalendar_events', $where, null, null, null, null, $permChecker, $catsarray);
-    
+
         return $events;
     }
     
@@ -164,7 +164,7 @@ class PostCalendar_Api_Event extends Zikula_Api
         $searchend   = isset($args['searchend'])   ? $args['searchend']   : '';
         $Date        = isset($args['Date'])        ? $args['Date']        : '';
         $sort        = ((isset($args['sort'])) && ($args['sort'] == 'DESC')) ? 'DESC' : 'ASC';
-    
+
         $date = PostCalendar_Util::getDate(array(
             'Date' => $Date)); //formats date
     
@@ -213,7 +213,7 @@ class PostCalendar_Api_Event extends Zikula_Api
             's_keywords'  => $s_keywords,
             'filtercats'  => $filtercats,
             'pc_username' => $pc_username));
-    
+
         //==============================================================
         // Here an array is built consisting of the date ranges
         // specific to the current view.  This array is then

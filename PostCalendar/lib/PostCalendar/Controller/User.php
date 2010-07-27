@@ -47,13 +47,13 @@ class PostCalendar_Controller_User extends Zikula_Controller
     
     
         return $this->display(array(
-            'viewtype' => $viewtype,
-            'Date' => $Date,
-            'filtercats' => $filtercats,
+            'viewtype'    => $viewtype,
+            'Date'        => $Date,
+            'filtercats'  => $filtercats,
             'pc_username' => $pc_username,
-            'popup' => $popup,
-            'eid' => $eid,
-            'func' => $func));
+            'popup'       => $popup,
+            'eid'         => $eid,
+            'func'        => $func));
     }
     
     /**
@@ -132,11 +132,11 @@ class PostCalendar_Controller_User extends Zikula_Controller
                     return LogUtil::registerPermissionError();
                 }
                 $out = ModUtil::apiFunc('PostCalendar', 'user', 'buildView', array(
-                    'Date' => $Date,
-                    'viewtype' => $viewtype,
+                    'Date'        => $Date,
+                    'viewtype'    => $viewtype,
                     'pc_username' => $pc_username,
-                    'filtercats' => $filtercats,
-                    'func' => $func));
+                    'filtercats'  => $filtercats,
+                    'func'        => $func));
                 // build template and fetch:
                 if ($this->view->is_cached('user/view_' . $viewtype . '.tpl')) {
                     // use cached version
