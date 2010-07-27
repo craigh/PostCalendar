@@ -1,5 +1,8 @@
 <?php
-/* 26 Jul 2010 Craig Heydenburg : I changed all methods to 'public' and 'static' */
+/**
+ * package v1.4.7 (stable) was downloaded from http://pear.php.net/package/Date
+ * 26 Jul 2010 Craig Heydenburg : I changed all methods to 'public' and 'static'
+ **/
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4 foldmethod=marker: */
 
 // {{{ Header
