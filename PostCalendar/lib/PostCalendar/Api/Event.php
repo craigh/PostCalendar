@@ -167,6 +167,7 @@ class PostCalendar_Api_Event extends Zikula_Api
 
         $date = PostCalendar_Util::getDate(array(
             'Date' => $Date)); //formats date
+        $Date_Calc = new Date_Calc();
     
     
         if (!empty($s_keywords)) {
@@ -193,8 +194,8 @@ class PostCalendar_Api_Event extends Zikula_Api
                 $currentmonth = $startmonth;
                 $currentday = $startday;
             }
-            $start_date = Date_Calc::dateFormat($startday, $startmonth, $startyear, '%Y-%m-%d');
-            $end_date = Date_Calc::dateFormat($endday, $endmonth, $endyear, '%Y-%m-%d');
+            $start_date = $Date_Calc->dateFormat($startday, $startmonth, $startyear, '%Y-%m-%d');
+            $end_date = $Date_Calc->dateFormat($endday, $endmonth, $endyear, '%Y-%m-%d');
         } else {
             $startmonth = $endmonth = $currentmonth;
             $startday = $endday = $currentday;
@@ -220,22 +221,22 @@ class PostCalendar_Api_Event extends Zikula_Api
         // used to build the calendar display.
         //==============================================================
         $days = array();
-        $sday = Date_Calc::dateToDays($startday, $startmonth, $startyear);
-        $eday = Date_Calc::dateToDays($endday, $endmonth, $endyear);
+        $sday = $Date_Calc->dateToDays($startday, $startmonth, $startyear);
+        $eday = $Date_Calc->dateToDays($endday, $endmonth, $endyear);
         if ($sort == 'DESC') { // format days array in date-descending order
             for ($cday = $eday; $cday >= $sday; $cday--) {
-                $d = Date_Calc::daysToDate($cday, '%d');
-                $m = Date_Calc::daysToDate($cday, '%m');
-                $y = Date_Calc::daysToDate($cday, '%Y');
-                $store_date = Date_Calc::dateFormat($d, $m, $y, '%Y-%m-%d');
+                $d = $Date_Calc->daysToDate($cday, '%d');
+                $m = $Date_Calc->daysToDate($cday, '%m');
+                $y = $Date_Calc->daysToDate($cday, '%Y');
+                $store_date = $Date_Calc->dateFormat($d, $m, $y, '%Y-%m-%d');
                 $days[$store_date] = array();
             }
         } else { // format days array in date-ascending order
             for ($cday = $sday; $cday <= $eday; $cday++) {
-                $d = Date_Calc::daysToDate($cday, '%d');
-                $m = Date_Calc::daysToDate($cday, '%m');
-                $y = Date_Calc::daysToDate($cday, '%Y');
-                $store_date = Date_Calc::dateFormat($d, $m, $y, '%Y-%m-%d');
+                $d = $Date_Calc->daysToDate($cday, '%d');
+                $m = $Date_Calc->daysToDate($cday, '%m');
+                $y = $Date_Calc->daysToDate($cday, '%Y');
+                $store_date = $Date_Calc->dateFormat($d, $m, $y, '%Y-%m-%d');
                 $days[$store_date] = array();
             }
         }
@@ -264,7 +265,7 @@ class PostCalendar_Api_Event extends Zikula_Api
                     $newyear = $eventstartyear;
                     $newmonth = $eventstartmonth;
                     $newday = $eventstartday;
-                    $occurance = Date_Calc::dateFormat($newday, $newmonth, $newyear, '%Y-%m-%d');
+                    $occurance = $Date_Calc->dateFormat($newday, $newmonth, $newyear, '%Y-%m-%d');
                     while ($occurance < $start_date) {
                         $occurance = $this->dateIncrement(array(
                             'd' => $newday, 
@@ -303,7 +304,7 @@ class PostCalendar_Api_Event extends Zikula_Api
                     while ($newyear <= $endyear) { // was $currentyear
                         $dnum = $rnum; // get day event repeats on
                         do {
-                            $occurance = Date_Calc::NWeekdayOfMonth($dnum--, $rday, $newmonth, $newyear, "%Y-%m-%d");
+                            $occurance = $Date_Calc->NWeekdayOfMonth($dnum--, $rday, $newmonth, $newyear, "%Y-%m-%d");
                         } while ($occurance === -1);
                         if (isset($days[$occurance]) && $occurance <= $stop) {
                             $days[$occurance][] = $event;
@@ -857,6 +858,8 @@ class PostCalendar_Api_Event extends Zikula_Api
         $start_date = $event['eventDate']; // maybe try today instead?
     
         $eventdates = array(); // placeholder array for all event dates
+
+        $Date_Calc = new Date_Calc();
     
         switch ($event['recurrtype']) {
             // Events that do not repeat only have a startday (eventDate)
@@ -871,7 +874,7 @@ class PostCalendar_Api_Event extends Zikula_Api
                 $newyear   = $eventstartyear;
                 $newmonth  = $eventstartmonth;
                 $newday    = $eventstartday;
-                $occurance = Date_Calc::dateFormat($newday, $newmonth, $newyear, '%Y-%m-%d');
+                $occurance = $Date_Calc->dateFormat($newday, $newmonth, $newyear, '%Y-%m-%d');
                 while ($occurance < $start_date) {
                     $occurance = $this->dateIncrement(array(
                         'd' => $newday, 
@@ -909,7 +912,7 @@ class PostCalendar_Api_Event extends Zikula_Api
                 while ($newyear <= $currentyear) {
                     $dnum = $rnum; // get day event repeats on
                     do {
-                        $occurance = Date_Calc::NWeekdayOfMonth($dnum--, $rday, $newmonth, $newyear, "%Y-%m-%d");
+                        $occurance = $Date_Calc->NWeekdayOfMonth($dnum--, $rday, $newmonth, $newyear, "%Y-%m-%d");
                     } while ($occurance === -1);
                     if ($occurance <= $stop) {
                         $eventdates[] = $occurance;

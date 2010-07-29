@@ -82,6 +82,5 @@ unset($settings);
 
 // Setup utility classes and functions
 define('DATE_CALC_BEGIN_WEEKDAY', _SETTING_FIRST_DAY_WEEK);
-//include_once dirname(__FILE__) . '/lib/vendor/DateCalc.class.php';
-include_once dirname(__FILE__) . '/lib/vendor/Calc.php';
 
+ZLoader::addAutoloader('Date', 'modules/PostCalendar/lib/vendor');

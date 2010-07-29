@@ -160,7 +160,8 @@ class PostCalendar_Block_Calendar extends Zikula_Block
             'start'      => $starting_date,
             'end'        => $ending_date,
             'filtercats' => $filtercats));
-        $calendarView = Date_Calc::getCalendarMonth($the_month, $the_year, '%Y-%m-%d');
+        $Date_Calc = new Date_Calc();
+        $calendarView = $Date_Calc->getCalendarMonth($the_month, $the_year, '%Y-%m-%d');
     
         $pc_short_day_names = explode (" ", $this->__(/*!First Letter of each Day of week*/'S M T W T F S'));
         $sdaynames = array();

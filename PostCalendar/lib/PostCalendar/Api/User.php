@@ -109,6 +109,7 @@ class PostCalendar_Api_User extends Zikula_Api
         }
     
         $function_out = array();
+        $Date_Calc = new Date_Calc();
     
         // Setup the starting and ending date ranges for pcGetEvents()
         switch ($viewtype) {
@@ -140,7 +141,7 @@ class PostCalendar_Api_User extends Zikula_Api
     
                 $starting_date = "$week_first_day_month/$week_first_day_date/$week_first_day_year";
                 $ending_date = "$week_last_day_month/$week_last_day_date/$week_last_day_year";
-                $calendarView = Date_Calc::getCalendarWeek($week_first_day_date, $week_first_day_month, $week_first_day_year, '%Y-%m-%d');
+                $calendarView = $Date_Calc->getCalendarWeek($week_first_day_date, $week_first_day_month, $week_first_day_year, '%Y-%m-%d');
     
                 $prev_week = date('Ymd', mktime(0, 0, 0, $week_first_day_month, $week_first_day_date - 7, $week_first_day_year));
                 $next_week = date('Ymd', mktime(0, 0, 0, $week_last_day_month, $week_last_day_date + 1, $week_last_day_year));
@@ -160,7 +161,7 @@ class PostCalendar_Api_User extends Zikula_Api
             case 'month':
                 $starting_date = date('m/d/Y', mktime(0, 0, 0, $the_month, 1 - $first_day, $the_year));
                 $ending_date = date('m/d/Y', mktime(0, 0, 0, $the_month, $the_last_day, $the_year));
-                $calendarView = Date_Calc::getCalendarMonth($the_month, $the_year, '%Y-%m-%d');
+                $calendarView = $Date_Calc->getCalendarMonth($the_month, $the_year, '%Y-%m-%d');
     
                 $prev_month = DateUtil::getDatetime_NextMonth(-1, '%Y%m%d', $the_year, $the_month, 1);
                 $next_month = DateUtil::getDatetime_NextMonth(1, '%Y%m%d', $the_year, $the_month, 1);
@@ -181,7 +182,7 @@ class PostCalendar_Api_User extends Zikula_Api
             case 'year':
                 $starting_date = date('m/d/Y', mktime(0, 0, 0, 1, 1, $the_year));
                 $ending_date = date('m/d/Y', mktime(0, 0, 0, 1, 1, $the_year + 1));
-                $calendarView = Date_Calc::getCalendarYear($the_year, '%Y-%m-%d');
+                $calendarView = $Date_Calc->getCalendarYear($the_year, '%Y-%m-%d');
     
                 $prev_year = date('Ymd', mktime(0, 0, 0, 1, 1, $the_year - 1));
                 $next_year = date('Ymd', mktime(0, 0, 0, 1, 1, $the_year + 1));
