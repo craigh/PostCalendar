@@ -2,7 +2,7 @@
 /**
  * This is the event handler file
  **/
-class PostCalendar_Form_Handler_EditHandler
+class PostCalendar_Form_Handler_EditHandler extends Form_Handler
 {
     var $eid;
 
