@@ -177,7 +177,7 @@ class PostCalendar_Api_Event extends Zikula_Api
     
         // update news-hooked stories that have been published since last pageload
         if (ModUtil::isHooked('postcalendar', 'news')) {
-            PostCalendar_Hookutil::scheduler();
+            PostCalendar_PostCalendarEvent_News::scheduler();
         }
     
         $currentyear  = substr($date, 0, 4);

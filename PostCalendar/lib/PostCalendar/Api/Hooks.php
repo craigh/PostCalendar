@@ -1,7 +1,7 @@
 <?php
 /**
  * @package     PostCalendar
- * @author      $Author: craigh $
+ * @author      Craig Heydenburg
  * @link        $HeadURL: https://code.zikula.org/svn/soundwebdevelopment/trunk/Modules/PostCalendar/lib/PostCalendar/Api/User.php $
  * @version     $Id: User.php 641 2010-07-01 21:22:06Z craigh $
  * @copyright   Copyright (c) 2002, The PostCalendar Team
@@ -14,21 +14,16 @@ class PostCalendar_Api_Hooks extends Zikula_Api
     /**
      * create action on hook
      *
-     * @author  Craig Heydenburg
      * @return  boolean    true/false
-     * @access  public
      */
     public function create($args)
     {
+        LogUtil::registerStatus($this->__("PostCalendar <em>create</em> hook called."));
         if ((!isset($args['objectid'])) || ((int) $args['objectid'] <= 0)) {
             return false;
         }
-        $module = isset($args['extrainfo']['module']) ? strtolower($args['extrainfo']['module']) : strtolower(ModUtil::getName()); // default to active module
-    
-        //if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADD)) {
-        //    return LogUtil::registerPermissionError();
-        //}
-    
+        $module = isset($args['extrainfo']['module']) ? $args['extrainfo']['module'] : ModUtil::getName(); // default to active module
+
         $hookinfo = FormUtil::getPassedValue('postcalendar', array(), 'POST'); // array of data from 'new' hook
         $hookinfo = DataUtil::cleanVar($hookinfo);
         if (DataUtil::is_serialized($hookinfo['cats'], false)) {
@@ -40,46 +35,34 @@ class PostCalendar_Api_Hooks extends Zikula_Api
             return;
         }
 
-        $eventObj   = new PostCalendar_Hookutil;
-        $methodName = $module . '_pcevent';
-        $args       = array(
-            'objectid' => $args['objectid']);
-        if (is_callable(array($eventObj, $methodName))) {
-            if (!$event = $eventObj->$methodName($args)) {
+        if (!$eventObj = $this->_getClassObject($module)) {
+            LogUtil::registerError($this->__("PostCalendar: Could not create Object."));
+        }
+        if (is_callable(array($eventObj, 'makeEvent'))) {
+            $args = array(
+                'objectid' => $args['objectid']);
+            if($eventObj->makeEvent($args)) {
+                $eventObj->setHooked_objectid($args['objectid']);
+                $eventObj->__CATEGORIES__ = $hookinfo['cats'];
+                $event = $eventObj->toArray();
+                // write event to postcal table
+                if (DBUtil::insertObject($event, 'postcalendar_events', 'eid')) {
+                    LogUtil::registerStatus($this->__("PostCalendar: Event created."));
+                    return true;
+                }
+            } else {
                 LogUtil::registerError($this->__("PostCalendar: Could not create event (method failed)."));
             }
         } else {
-            LogUtil::registerError($this->__f("PostCalendar: Method %s not callable.", $eventObj . $methodName));
+            LogUtil::registerError($this->__f("PostCalendar: Extended class for %s not found.", $module));
         }
 
-        if ($event) {
-            // add hook specific and non-changing values
-            $event['hooked_modulename'] = $module;
-            $event['hooked_objectid']   = $args['objectid'];
-            $event['__CATEGORIES__']    = $hookinfo['cats'];
-            $event['__META__']          = array('module' => 'PostCalendar');
-            $event['recurrtype']        = 0; // norepeat
-            $event['recurrspec']        = 'a:5:{s:17:"event_repeat_freq";s:0:"";s:22:"event_repeat_freq_type";s:1:"0";s:19:"event_repeat_on_num";s:1:"1";s:19:"event_repeat_on_day";s:1:"0";s:20:"event_repeat_on_freq";s:0:"";}'; // default recurrance info - serialized (not used)
-            $event['location']          = 'a:6:{s:14:"event_location";s:0:"";s:13:"event_street1";s:0:"";s:13:"event_street2";s:0:"";s:10:"event_city";s:0:"";s:11:"event_state";s:0:"";s:12:"event_postal";s:0:"";}'; // default location info - serialized (not used)
-    
-            // write event to postcal table
-            if (DBUtil::insertObject($event, 'postcalendar_events', 'eid')) {
-                LogUtil::registerStatus($this->__("PostCalendar: Event created."));
-                return true;
-            }
-        } else {
-            // if the _pcevent function returns false, it means that an event is not desired, so quietly exit
-            return;
-        }
-    
         return LogUtil::registerError($this->__('Error! PostCalender: Could not create an event.'));
     }
     /**
      * delete action on hook
      *
-     * @author  Craig Heydenburg
      * @return  boolean    true/false
-     * @access  public
      */
     public function delete($args)
     {
@@ -88,18 +71,15 @@ class PostCalendar_Api_Hooks extends Zikula_Api
         }
         $module = isset($args['extrainfo']['module']) ? strtolower($args['extrainfo']['module']) : strtolower(ModUtil::getName()); // default to active module
     
-        //if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADD)) {
-        //    return LogUtil::registerPermissionError();
-        //}
-    
         // Get table info
-        $pntable = DBUtil::getTables();
-        $cols = $pntable['postcalendar_events_column'];
+        $table = DBUtil::getTables();
+        $cols = $table['postcalendar_events_column'];
         // build where statement
         $where = "WHERE " . $cols['hooked_modulename'] . " = '" . DataUtil::formatForStore($module) . "'
                   AND "   . $cols['hooked_objectid']   . " = '" . DataUtil::formatForStore($args['objectid']) . "'";
     
         //return (bool)DBUtil::deleteWhere('postcalendar_events', $where);
+        // TODO THIS IS NOT DELETING THE ROW IN categories_mapobj table!!!! (it should!)
         if (!DBUtil::deleteObject(array(), 'postcalendar_events', $where, 'eid')) {
             return LogUtil::registerError($this->__('Error! Could not delete associated PostCalendar event.'));
         }
@@ -111,9 +91,7 @@ class PostCalendar_Api_Hooks extends Zikula_Api
      * deletemodule action on hook
      * this function is called when a hooked module is uninstalled
      *
-     * @author  Craig Heydenburg
      * @return  boolean    true/false
-     * @access  public
      */
     public function deletemodule($args)
     {
@@ -144,20 +122,16 @@ class PostCalendar_Api_Hooks extends Zikula_Api
     /**
      * update action on hook
      *
-     * @author  Craig Heydenburg
      * @return  boolean    true/false
-     * @access  public
      */
     public function update($args)
     {
+        LogUtil::registerStatus($this->__("PostCalendar <em>update</em> hook called."));
+        LogUtil::registerError($this->__("PostCalendar <em>update</em> hook called."));
         if ((!isset($args['objectid'])) || ((int) $args['objectid'] <= 0)) {
             return false;
         }
-        $module = isset($args['extrainfo']['module']) ? strtolower($args['extrainfo']['module']) : strtolower(ModUtil::getName()); // default to active module
-    
-        //if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADD)) {
-        //    return LogUtil::registerPermissionError();
-        //}
+        $module = isset($args['extrainfo']['module']) ? $args['extrainfo']['module'] : ModUtil::getName(); // default to active module
     
         $hookinfo = FormUtil::getPassedValue('postcalendar', array(), 'POST'); // array of data from 'new' hook
         $hookinfo = DataUtil::cleanVar($hookinfo);
@@ -176,47 +150,44 @@ class PostCalendar_Api_Hooks extends Zikula_Api
             return;
         }
 
-        $eventObj   = new PostCalendar_Hookutil;
-        $methodName = $module . '_pcevent';
-        $args       = array(
-            'objectid' => $args['objectid'],
-            'hookinfo' => $hookinfo);
-        if (is_callable(array($eventObj, $methodName))) {
-            if (!$event = $eventObj->$methodName($args)) {
+        if (!$eventObj = $this->_getClassObject($module)) {
+            LogUtil::registerError($this->__("PostCalendar: Could not create Object."));
+        }
+        if (is_callable(array($eventObj, 'makeEvent'))) {
+            $args = array(
+                'objectid' => $args['objectid']);
+            if ($eventObj->makeEvent($args)) {
+                $eventObj->setHooked_objectid($args['objectid']);
+                $eventObj->__CATEGORIES__ = $hookinfo['cats'];
+                if (!empty($hookinfo['eid'])) {
+                    // event already exists - just update
+                    $eventObj->setEid($hookinfo['eid']);
+                    $event = $eventObj->toArray();
+                    if (DBUtil::updateObject($event, 'postcalendar_events', NULL, 'eid')) {
+                        LogUtil::registerStatus($this->__("PostCalendar: Associated Calendar event updated."));
+                        return true;
+                    }
+                } else {
+                    // create a new event
+                    $event = $eventObj->toArray();
+                    if (DBUtil::insertObject($event, 'postcalendar_events', 'eid')) {
+                        LogUtil::registerStatus($this->__("PostCalendar: Event created."));
+                        return true;
+                    }
+                }
+            } else {
                 LogUtil::registerError($this->__("PostCalendar: Could not create event (method failed)."));
             }
         } else {
-            LogUtil::registerError($this->__f("PostCalendar: Method %s not callable.", $eventObj . $methodName));
+            LogUtil::registerError($this->__f("PostCalendar: Extended class for %s not found.", $module));
         }
 
-        if ($event) {
-            if (!empty($hookinfo['eid'])) {
-                // event already exists - just update
-                $event['eid'] = $hookinfo['eid'];
-                if (DBUtil::updateObject($event, 'postcalendar_events', NULL, 'eid')) {
-                    LogUtil::registerStatus($this->__("PostCalendar: Associated Calendar event updated."));
-                    return true;
-                }
-            } else {
-                // create a new event
-                if (DBUtil::insertObject($event, 'postcalendar_events', 'eid')) {
-                    LogUtil::registerStatus($this->__("PostCalendar: Event created."));
-                    return true;
-                }
-            }
-        } else {
-            // if the _pcevent function returns false, it means that an event is not desired, so quietly exit
-            return;
-        }
-    
         return LogUtil::registerError($this->__('Error! Could not update the associated Calendar event.'));
     }
     /**
      * updateconfig action on hook
      *
-     * @author  Craig Heydenburg
      * @return  boolean    true/false
-     * @access  public
      */
     public function updateconfig($args)
     {
@@ -231,5 +202,29 @@ class PostCalendar_Api_Hooks extends Zikula_Api
         LogUtil::registerStatus($this->__("PostCalendar: module config updated."));
     
         return;
+    }
+
+    /**
+     * Find Class and instantiate
+     *
+     * @param string $module Module name
+     * @return instantiated object of found class
+     */
+    private function _getClassObject($module) {
+        if (empty($module)) {
+            return false;
+        }
+
+        $locations = array($module, 'PostCalendar'); // locations to search for the class
+        foreach ($locations as $location) {
+            $classname = $location . '_PostCalendarEvent_' . $module;
+            if (class_exists($classname)) {
+                $instance = new $classname($module);
+                if ($instance instanceof PostCalendar_PostCalendarEvent_Base) {
+                    return $instance;
+                }
+            }
+        }
+        return false;
     }
 } // end class def
