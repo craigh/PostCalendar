@@ -88,7 +88,7 @@
         {if $formattedcontent eq 0}
             {* SCRIBITE NOT IN USE *}
             {html_options name="postcalendar_events[html_or_text]" options=$EventHTMLorText selected=$loaded_event.HTMLorTextVal}
-            <div class="z-warningmsg" id="html_warning" style="width:77%;"><b>{gt text='Permitted HTML tags'}</b><br />{allowedhtml}</div>
+            <div class="z-warningmsg" id="html_warning" style="width:77%;"><b>{gt text='Permitted HTML tags'}</b><br />{pc_allowedhtml}</div>
         {else}
             {* SCRIBITE IN USE *}
             <input type="hidden" name="postcalendar_events[html_or_text]" value="html" />
