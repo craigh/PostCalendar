@@ -9,9 +9,14 @@ class PostCalendar_Handlers {
 
     public static function pendingContent(Zikula_Event $event)
     {
-        $collection = new Zikula_Collection_Container('PostCalendar');
-        $collection->add(new Zikula_Provider_AggregateItem('submission', __('pending event'), 1, 'admin', 'listqueued'));
-        $event->getSubject()->add($collection);
+        $dom = ZLanguage::getModuleDomain('PostCalendar');
+        ModUtil::dbInfoLoad('PostCalendar');
+        $count = DBUtil::selectObjectCount('postcalendar_events', 'WHERE pc_eventstatus=0');
+        if ($count > 0) {
+            $collection = new Zikula_Collection_Container('PostCalendar');
+            $collection->add(new Zikula_Provider_AggregateItem('submission', _n('Calendar event', 'Calendar events', $count, $dom), $count, 'admin', 'listqueued'));
+            $event->getSubject()->add($collection);
+        }
     }
 
 }
