@@ -300,6 +300,7 @@ class PostCalendar_Controller_Admin extends Zikula_Controller
             'enablelocations'         => FormUtil::getPassedValue('enablelocations',             0),
             'pcFilterYearStart'       => abs((int) FormUtil::getPassedValue('pcFilterYearStart', $defaults['pcFilterYearStart'])), // ensures positive value
             'pcFilterYearEnd'         => abs((int) FormUtil::getPassedValue('pcFilterYearEnd',   $defaults['pcFilterYearEnd'])), // ensures positive value
+            'pcNotifyPending'         => FormUtil::getPassedValue('pcNotifyPending',             0),
         );
         $settings['pcNavDateOrder'] = ModUtil::apiFunc('PostCalendar', 'admin', 'getdateorder', $settings['pcEventDateFormat']);
         // save out event default settings so they are not cleared

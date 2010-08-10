@@ -120,6 +120,11 @@
 	<fieldset>
         <legend>{gt text='Notification settings'}</legend>
 		<div class="z-formrow">
+			<label for="pcNotifyPending">{gt text='Notify administrator about pending content in template'}</label>
+			{modgetvar module="PostCalendar" name="pcNotifyPending" assign="pcNotifyPending"}
+			<input type="checkbox" value="1" id="pcNotifyPending" name="pcNotifyPending"{if $pcNotifyPending eq true} checked="checked"{/if}/>
+		</div>
+		<div class="z-formrow">
 			<label for="pcNotifyAdmin">{gt text='Notify administrator about user event submission/change'}</label>
 			{modgetvar module="PostCalendar" name="pcNotifyAdmin" assign="pcNA"}
 			<input type="checkbox" value="1" id="pcNotifyAdmin" name="pcNotifyAdmin"{if $pcNA eq true} checked="checked"{/if}/>

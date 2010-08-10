@@ -14,11 +14,12 @@ function smarty_function_pc_queued_events_notify($args, &$smarty)
     if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_DELETE)) {
         return;
     }
+    if (!ModUtil::getVar('PostCalendar', 'pcNotifyPending')) {
+        return;
+    }
 
     $assign = array_key_exists('assign', $args) && !empty($args['assign']) ? $args['assign'] : null;
     unset($args);
-
-    $prefix = System::getVar('prefix');
 
     $count = DBUtil::selectObjectCount('postcalendar_events', 'WHERE pc_eventstatus=0');
 

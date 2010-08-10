@@ -33,6 +33,7 @@ class PostCalendar_Util
             'pcNotifyAdmin'           => '1',
             'pcNotifyEmail'           => System::getVar('adminmail'),
             'pcNotifyAdmin2Admin'     => '0',
+            'pcNotifyPending'         => '1',
             'pcAllowCatFilter'        => '1',
             'enablecategorization'    => '1',
             'enablenavimages'         => '1',
