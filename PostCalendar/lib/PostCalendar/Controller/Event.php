@@ -193,6 +193,9 @@ class PostCalendar_Controller_Event extends Zikula_Controller
                     ModUtil::apiFunc('PostCalendar', 'admin', 'notify', array(
                         'eid' => $eid,
                         'is_update' => $is_update)); //notify admin
+                    // notify event manager
+                    $event = new Zikula_Event('get.pending_content', new Zikula_Collection_Container('pending_content'));
+                    $pendingCollection = EventUtil::getManager()->notify($event)->getSubject();
                 }
                 // format startdate for redirect on success
                 $url_date = strftime('%Y%m%d', $sdate);

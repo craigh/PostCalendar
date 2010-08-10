@@ -45,6 +45,9 @@ class PostCalendar_Installer extends Zikula_Installer
         $this->_createdefaultsubcategory();
         $this->_createinstallevent();
         $this->_registermodulehooks();
+
+        // register handlers
+        EventUtil::registerPersistentModuleHandler('PostCalendar', 'get.pending_content', array('PostCalendar_Handlers', 'pendingContent'));
     
         return true;
     }
@@ -106,6 +109,8 @@ class PostCalendar_Installer extends Zikula_Installer
             case '6.2.0':
                 ModUtil::unregisterHook('item', 'new', 'GUI', 'PostCalendar', 'hooks', 'new');
                 ModUtil::registerHook('item', 'new', 'GUI', 'PostCalendar', 'hooks', 'newgui');
+                // register handlers
+                EventUtil::registerPersistentModuleHandler('PostCalendar', 'get.pending_content', array('PostCalendar_Handlers', 'pendingContent'));
             case '7.0.0':
                 //future development
         }
@@ -134,7 +139,10 @@ class PostCalendar_Installer extends Zikula_Installer
         ModUtil::dbInfoLoad('Categories');
         DBUtil::deleteWhere('categories_registry', "crg_modname='PostCalendar'");
         DBUtil::deleteWhere('categories_mapobj', "cmo_modname='PostCalendar'");
-    
+
+        // unregister handlers
+        EventUtil::unregisterPersistentModuleHandler('PostCalendar', 'get.pending_content', array('PostCalendar_Handlers', 'pendingContent'));
+
         return $result;
     }
     
