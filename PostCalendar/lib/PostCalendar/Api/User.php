@@ -1,7 +1,7 @@
 <?php
 /**
  * @package     PostCalendar
- * @author      $Author$
+ * @author      Craig Heydenburg
  * @link        $HeadURL$
  * @version     $Id$
  * @copyright   Copyright (c) 2002, The PostCalendar Team
@@ -12,12 +12,13 @@
 class PostCalendar_Api_User extends Zikula_Api
 {
     /**
-     * buildView
-     *
      * Builds the calendar display
-     * @param string $Date mm/dd/yyyy format (we should use timestamps)
+     * @param string $Date mm/dd/yyyy format
+     * @param string viewtype
+     * @param int pc_username
+     * @param array filtercats
+     * @param string func
      * @return string generated html output
-     * @access public
      */
     public function buildView($args)
     {

@@ -1,7 +1,7 @@
 <?php
 /**
  * @package     PostCalendar
- * @author      $Author$
+ * @author      Craig Heydenburg
  * @link        $HeadURL$
  * @version     $Id$
  * @copyright   Copyright (c) 2009, Craig Heydenburg, Sound Web Development
@@ -9,7 +9,7 @@
  */
 
 /**
- * event needle
+ * Multihook needle to display PostCalendar event as link
  * @param $args['nid'] needle id
  * @return link
  */

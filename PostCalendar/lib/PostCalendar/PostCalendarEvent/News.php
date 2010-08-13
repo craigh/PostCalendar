@@ -10,7 +10,7 @@ class PostCalendar_PostCalendarEvent_News extends PostCalendar_PostCalendarEvent
     /**
      * get news info for Postcalendar event creation
      *
-     * @args    array(objectid) news id
+     * @param   array(objectid) news id
      * @return  array() event info or false if no desire to publish event
      */
     public function makeEvent($args) {

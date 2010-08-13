@@ -1,6 +1,7 @@
 <?php
 /**
- * This is the event handler file
+ * This is the Form event handler file
+ * used in the delete event sequence
  **/
 class PostCalendar_Form_Handler_EditHandler extends Form_Handler
 {

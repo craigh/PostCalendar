@@ -1,9 +1,9 @@
 <?php
 
 /**
- * post pending content to Event handler
+ * post pending content to pending_content Event handler
  *
- * @author craig
+ * @author Craig Heydenburg
  */
 class PostCalendar_Handlers {
 

@@ -1,7 +1,7 @@
 <?php
 /**
  * @package     PostCalendar
- * @author      $Author$
+ * @author      Craig Heydenburg
  * @link        $HeadURL$
  * @version     $Id$
  * @copyright   Copyright (c) 2002, The PostCalendar Team
@@ -16,8 +16,7 @@
 class PostCalendar_Api_Event extends Zikula_Api
 {
     /**
-     * postcalendar_eventapi_queryEvents //new name
-     * Returns an array containing the event's information (plural or singular?)
+     * Returns an array containing the event's information
      * @param array $args arguments. Expected keys:
      *              eventstatus: -1 == hidden ; 0 == queued ; 1 == approved (default)
      *              start: Events start date (default today)
@@ -149,7 +148,7 @@ class PostCalendar_Api_Event extends Zikula_Api
     
     /**
      * This function returns an array of events sorted by date
-     * expected args (from postcalendar_userapi_buildView): start, end
+     * expected args (from PostCalendar_Controller_User->buildView): start, end
      *    if either is present, both must be present. else uses today's/jumped date.
      * expected args (from search/postcalendar_search_options): s_keywords, filtercats, seachstart, searchend
      **/
@@ -319,7 +318,6 @@ class PostCalendar_Api_Event extends Zikula_Api
     }
     
     /**
-     * writeEvent()
      * write an event to the DB
      * @param $args array of event data
      * @return bool true on success : false on failure;
@@ -354,11 +352,11 @@ class PostCalendar_Api_Event extends Zikula_Api
     }
     
     /**
-     * buildSubmitForm()
      * generate information to help build the submit form
      * this is also used on a preview of event function, so $eventdata is passed from that if 'loaded'
-     * args: 'eventdata','Date'
-     * @return $form_data (array) key, val pairs to be assigned to the template, including default event data
+     * @param eventdata
+     * @param Date
+     * @return array form_data : key, val pairs to be assigned to the template, including default event data
      */
     public function buildSubmitForm($args)
     {
@@ -520,12 +518,9 @@ class PostCalendar_Api_Event extends Zikula_Api
     }
     
     /**
-     * @function    formateventarrayfordisplay()
-     * @description This function reformats the information in an event array for proper display in detail
-     * @args        $event (array) event array as pulled from the DB
-     * @author      Craig Heydenburg
-     *
-     * @return      $event (array) modified array for display
+     * @desc This function reformats the information in an event array for proper display in detail
+     * @param array $event event array as pulled from the DB
+     * @return array $event modified array for display
      */
     public function formateventarrayfordisplay($event)
     {
@@ -622,12 +617,9 @@ class PostCalendar_Api_Event extends Zikula_Api
     }
     
     /**
-     * @function    formateventarrayforDB()
-     * @description This function reformats the information in an event array for insert/update in DB
-     * @args        $event (array) event array as pulled from the new/edit event form
-     * @author      Craig Heydenburg
-     *
-     * @return      $event (array) modified array for DB insert/update
+     * @desc This function reformats the information in an event array for insert/update in DB
+     * @param array $event event array as pulled from the new/edit event form
+     * @return array $event modified array for DB insert/update
      */
     public function formateventarrayforDB($event)
     {
@@ -683,18 +675,15 @@ class PostCalendar_Api_Event extends Zikula_Api
         }
         $event['recurrspec'] = serialize($event['repeat']);
     
-        $event['url'] = isset($event['url']) ? makeValidURL($event['url']) : '';
+        $event['url'] = isset($event['url']) ? $this->_makeValidURL($event['url']) : '';
     
         return $event;
     }
     
     /**
-     * @function    validateformdata()
-     * @description This function validates the data that has been submitted in the new/edit event form
-     * @args        $submitted_event (array) event array as submitted
-     * @author      Craig Heydenburg
-     *
-     * @return      $abort (bool) default=false. true if data does not validate.
+     * @desc This function validates the data that has been submitted in the new/edit event form
+     * @param array $submitted_event event array as submitted
+     * @return bool $abort default=false. true if data does not validate.
      */
     public function validateformdata($submitted_event)
     {
@@ -749,14 +738,13 @@ class PostCalendar_Api_Event extends Zikula_Api
     }
     
     /**
-     * makeValidURL()
      * returns 'improved' url based on input string
      * checks to make sure scheme is present
-     * @private
-     * @returns string
+     * @param string url
+     * @return string
      */
     
-    public function makeValidURL($s)
+    private function _makeValidURL($s)
     {
         if (empty($s)) {
             return '';
@@ -768,10 +756,10 @@ class PostCalendar_Api_Event extends Zikula_Api
     }
     
     /**
-     * dateIncrement()
      * returns the next valid date for an event based on the
      * current day,month,year,freq and type
-     * @returns string YYYY-MM-DD
+     * @param array args
+     * @return string YYYY-MM-DD
      */
     public function dateIncrement($args)
     {
@@ -792,14 +780,11 @@ class PostCalendar_Api_Event extends Zikula_Api
     }
     
     /**
-     * isformatted
      * This function is copied directly from the News module
      * credits to Jorn Wildt, Mark West, Philipp Niethammer or whoever wrote it
-     *
-     * @purpose analyze if the module has an Scribite! editor assigned
-     * @param string func the function to check
+     * purpose analyze if the module has an Scribite! editor assigned
+     * @param array args - func the function to check
      * @return bool
-     * @access public
      */
     public function isformatted($args)
     {
@@ -825,7 +810,7 @@ class PostCalendar_Api_Event extends Zikula_Api
     }
     
     /**
-     * @description generate the inverse color
+     * @desc generate the inverse color
      * @author      Jonas John
      * @link        http://www.jonasjohn.de/snippets/php/color-inverse.htm
      * @license     public domain
@@ -847,7 +832,12 @@ class PostCalendar_Api_Event extends Zikula_Api
         }
         return '#' . $rgb;
     }
-    
+
+    /**
+     * find all occurances of an event between start and stop dates of event
+     * @param array $event
+     * @return array dates
+     */
     public function geteventdates($event)
     {
         list ($eventstartyear, $eventstartmonth, $eventstartday) = explode('-', $event['eventDate']);
@@ -931,12 +921,12 @@ class PostCalendar_Api_Event extends Zikula_Api
     
         return $eventdates;
     }
+
     /**
-     * @description take id from locations module and inserts data into correct fields in PostCalendar
-     * @author      Craig Heydenburg
-     * @created     06/25/2010
-     * @params      (array) $event event array
-     * @return      (array) $event event array (modified)
+     * @desc take id from locations module and inserts data into correct fields in PostCalendar
+     * @since     06/25/2010
+     * @params      array $event event array
+     * @return      array $event event array (modified)
      * @note        locations ID is discarded and not available to edit later
      **/
     public function correctlocationdata($event)
@@ -959,11 +949,10 @@ class PostCalendar_Api_Event extends Zikula_Api
         return $event;
     }
     /**
-     * @description convert time like 3:00 to seconds
-     * @author      Craig Heydenburg
-     * @created     06/29/2010
-     * @params      (array) $time array(Hour, Minute, Meridian (opt))
-     * @return      (int) seconds
+     * @desc convert time like 3:00 to seconds
+     * @since     06/29/2010
+     * @params      array $time array(Hour, Minute, Meridian (opt))
+     * @return      int seconds
      **/
     public function converttimetoseconds($time)
     {
@@ -977,11 +966,10 @@ class PostCalendar_Api_Event extends Zikula_Api
         return (60 * 60 * $time['Hour']) + (60 * $time['Minute']);
     }
     /**
-     * @description convert time array to HH:MM:SS
-     * @author      Craig Heydenburg
-     * @created     06/29/2010
-     * @params      (array) $time array(Hour, Minute, Meridian)
-     * @return      (string) 'HH:MM:SS'
+     * @desc convert time array to HH:MM:SS
+     * @since     06/29/2010
+     * @params      array $time array(Hour, Minute, Meridian)
+     * @return      string 'HH:MM:SS'
      **/
     public function convertstarttime($time)
     {
@@ -995,10 +983,9 @@ class PostCalendar_Api_Event extends Zikula_Api
         return sprintf('%02d', $time['Hour']) . ':' . sprintf('%02d', $time['Minute']) . ':00';
     }
     /**
-     * @description create event sharing select box
-     * @author      Craig Heydenburg
-     * @created     06/29/2010
-     * @return      (array) key=>value pairs for selectbox
+     * @desc create event sharing select box
+     * @since     06/29/2010
+     * @return      array key=>value pairs for selectbox
      **/
     public function sharingselect()
     {
@@ -1012,11 +999,10 @@ class PostCalendar_Api_Event extends Zikula_Api
         return $data;
     }
     /**
-     * @description determine which event type is selected and prepare html code
-     * @author      Craig Heydenburg
-     * @created     06/29/2010
-     * @params      (bool) $alldayevent
-     * @return      (array) key=>value pairs for selectbox
+     * @desc determine which event type is selected and prepare html code
+     * @since     06/29/2010
+     * @params      bool $alldayevent
+     * @return      array key=>value pairs for selectbox
      **/
     public function alldayselect($alldayevent)
     {
@@ -1028,11 +1014,10 @@ class PostCalendar_Api_Event extends Zikula_Api
         return $selected;
     }
     /**
-     * @description compute endTime from startTime and duration
-     * @author      Craig Heydenburg
-     * @created     06/30/2010
-     * @params      (array) $event
-     * @return      (string) endTime formatted (HH:MM or HH:MM AP)
+     * @desc compute endTime from startTime and duration
+     * @since     06/30/2010
+     * @params      array $event
+     * @return      string endTime formatted (HH:MM or HH:MM AP)
      **/
     public function computeendtime($event)
     {
@@ -1042,11 +1027,10 @@ class PostCalendar_Api_Event extends Zikula_Api
         return _SETTING_TIME_24HOUR ? gmdate('G:i', $endTime) : gmdate('g:i a', $endTime);
     }
     /**
-     * @description compute duration from startTime and endTime
-     * @author      Craig Heydenburg
-     * @created     06/30/2010
-     * @params      (array) $event
-     * @return      (string) duration in seconds
+     * @desc compute duration from startTime and endTime
+     * @since     06/30/2010
+     * @params      array $event
+     * @return      string duration in seconds
      **/
     public function computeduration($event)
     {

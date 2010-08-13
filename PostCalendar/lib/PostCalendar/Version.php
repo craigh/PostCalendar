@@ -1,15 +1,19 @@
 <?php
 /**
  * @package     PostCalendar
- * @author      $Author: craigh $
- * @link        $HeadURL: https://code.zikula.org/svn/soundwebdevelopment/trunk/Modules/PostCalendar/Version.php $
- * @version     $Id: Version.php 682 2010-07-06 12:41:15Z craigh $
+ * @author      Craig Heydenburg
+ * @link        $HeadURL$
+ * @version     $Id$
  * @copyright   Copyright (c) 2002, The PostCalendar Team
  * @copyright   Copyright (c) 2009, Craig Heydenburg, Sound Web Development
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
  */
 class PostCalendar_Version extends Zikula_Version
 {
+    /**
+     *
+     * @return array module metadata
+     */
     public function getMetaData()
     {
         $meta = array();

@@ -12,10 +12,7 @@
 class PostCalendar_Controller_User extends Zikula_Controller
 {
     /**
-     * main
-     *
      * main view function for end user
-     * @access public
      */
     public function main()
     {
@@ -57,7 +54,7 @@ class PostCalendar_Controller_User extends Zikula_Controller
     }
     
     /**
-     * display item available from the module.
+     * display calendar events in requested viewtype
      */
     public function display($args)
     {

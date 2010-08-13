@@ -1,7 +1,7 @@
 <?php
 /**
  * @package     PostCalendar
- * @author      $Author$
+ * @author      Craig Heydenburg
  * @link        $HeadURL$
  * @version     $Id$
  * @copyright   Copyright (c) 2002, The PostCalendar Team

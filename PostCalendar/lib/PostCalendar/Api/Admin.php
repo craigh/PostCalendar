@@ -1,7 +1,7 @@
 <?php
 /**
  * @package     PostCalendar
- * @author      $Author$
+ * @author      Craig Heydenburg
  * @link        $HeadURL$
  * @version     $Id$
  * @copyright   Copyright (c) 2002, The PostCalendar Team
@@ -70,8 +70,7 @@ class PostCalendar_Api_Admin extends Zikula_Api
     }
     
     /**
-     * @function notify
-     * @purpose Send an email to admin on new event submission
+     * Send an email to admin on new event submission
      *
      * @param array $args array with arguments. Expected keys: is_update, eid
      * @return bool True if successfull, False otherwise

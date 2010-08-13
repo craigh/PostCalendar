@@ -1,7 +1,7 @@
 <?php
 /**
  * @package     PostCalendar
- * @author      $Author$
+ * @author      Craig Heydenburg
  * @link        $HeadURL$
  * @version     $Id$
  * @copyright   Copyright (c) 2002, The PostCalendar Team
@@ -48,7 +48,7 @@ class PostCalendar_Controller_Event extends Zikula_Controller
         return $this->create($args);
     }
     /**
-     * @function create
+     * @desc create an event
      *
      *  This form can be loaded in nine states:
      *  new event (first pass): no previous values, need defaults

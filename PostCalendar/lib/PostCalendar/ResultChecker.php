@@ -1,7 +1,7 @@
 <?php
 /**
  * @package     PostCalendar
- * @author      $Author: craigh $
+ * @author      Craig Heydenburg
  * @link        $HeadURL: https://code.zikula.org/svn/soundwebdevelopment/trunk/Modules/PostCalendar/lib/PostCalendar/Api/Event.php $
  * @version     $Id: Event.php 735 2010-07-15 01:07:35Z craigh $
  * @copyright   Copyright (c) 2002, The PostCalendar Team

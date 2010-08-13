@@ -1,7 +1,8 @@
 <?php
 /**
  * @package     PostCalendar
- * @author      $Author$
+ * @author      Craig Heydenburg
+ * @author      Arjen Tebbenhof
  * @link        $HeadURL$
  * @version     $Id$
  * @copyright   Copyright (c) 2002, The PostCalendar Team
@@ -18,9 +19,7 @@ class PostCalendar_Installer extends Zikula_Installer
      * It is accessed via the Zikula Admin interface and should
      * not be called directly.
      *
-     * @author  Arjen Tebbenhof
      * @return  boolean    true/false
-     * @access  public
      */
     public function install()
     {
@@ -59,11 +58,8 @@ class PostCalendar_Installer extends Zikula_Installer
      * of PostCalendar.  It is accessed via the Zikula
      * Admin interface and should not be called directly.
      *
-     * @author  Arjen Tebbenhof
-     * @return  boolean    true/false
      * @param   string    $oldversion Version we're upgrading
-     * @access  public
-     * @copyright    The PostCalendar Team 2009
+     * @return  boolean    true/false
      */
     public function upgrade($oldversion)
     {
@@ -125,10 +121,7 @@ class PostCalendar_Installer extends Zikula_Installer
      * Zikula install and should be accessed via
      * the Zikula Admin interface
      *
-     * @author Arjen Tebbenhof
      * @return  boolean    true/false
-     * @access  public
-     * @copyright    The PostCalendar Team 2009
      */
     public function uninstall()
     {
@@ -149,9 +142,10 @@ class PostCalendar_Installer extends Zikula_Installer
     /**
      * Reset scribite config for PostCalendar module.
      *
-     * @author Arjen Tebbenhof
      * Since we updated the functionname for creating / editing a new event from func=submit to func=new,
      * scribite doesn't load any editor. If we force it to our new function.
+     *
+     * @return boolean
      */
     private function _reset_scribite()
     {
@@ -184,9 +178,10 @@ class PostCalendar_Installer extends Zikula_Installer
     }
     
     /**
+     * create the default category tree
      * copied and adapted from News module
      * @author  Mark West?
-     * create the default category tree
+     * @return boolean
      */
     private function _createdefaultcategory()
     {
@@ -207,7 +202,6 @@ class PostCalendar_Installer extends Zikula_Installer
     
     /**
      * create initial calendar event
-     * @author Craig Heydenburg
      */
     private function _createinstallevent()
     {
@@ -245,7 +239,7 @@ class PostCalendar_Installer extends Zikula_Installer
     
     /**
      * create initial category on first install
-     * @author Craig Heydenburg
+     * @return boolean
      */
     private function _createdefaultsubcategory()
     {
@@ -260,7 +254,7 @@ class PostCalendar_Installer extends Zikula_Installer
     
     /**
      * register module hooks
-     * @author Craig Heydenburg
+     * @return boolean
      */
     private function _registermodulehooks()
     {

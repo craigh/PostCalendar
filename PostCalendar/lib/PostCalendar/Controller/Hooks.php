@@ -16,7 +16,6 @@ class PostCalendar_Controller_Hooks extends Zikula_Controller
      * display PostCalendar related information on hooked new item
      * @param array $args
      * @return string generated html output
-     * @access public
      */
     public function newgui($args)
     {
@@ -49,7 +48,6 @@ class PostCalendar_Controller_Hooks extends Zikula_Controller
      * display PostCalendar related information on hooked modify item
      * @param array $args
      * @return string generated html output
-     * @access public
      */
     public function modify($args)
     {
@@ -104,7 +102,6 @@ class PostCalendar_Controller_Hooks extends Zikula_Controller
      * display PostCalendar related information on hooked module admin modify
      * @param array $args
      * @return string generated html output
-     * @access public
      */
     public function modifyconfig($args)
     {

@@ -9,7 +9,7 @@
  */
 
 /**
- * event needle info
+ * Multihook event needle info
  * @param none
  * @return array()
  */

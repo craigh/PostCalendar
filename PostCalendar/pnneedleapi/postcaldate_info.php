@@ -1,7 +1,8 @@
 <?php
 /**
  * @package     PostCalendar
- * @author      $Author$
+ * @author      Arjen Tebbenhof
+ * @author      Craig Heydenburg
  * @link        $HeadURL$
  * @version     $Id$
  * @copyright   Copyright (c) 2009, Craig Heydenburg, Sound Web Development
@@ -9,7 +10,7 @@
  */
 
 /**
- * pcdate needle info
+ * Multihook pcdate needle info
  * @param none
  * @return array()
  */

@@ -6,6 +6,7 @@ class PostCalendar_Util
      * PostCalendar Default Module Settings
      *
      * @author Arjen Tebbenhof
+     * @author Craig Heydenburg
      * @return array An associated array with key=>value pairs of the default module settings
      */
     public static function getdefaults()
@@ -68,8 +69,6 @@ class PostCalendar_Util
         return $defaults;
     }
     /**
-     * getDate
-     *
      * get the correct day, format it and return
      * @param string format
      * @param string Date
@@ -77,7 +76,6 @@ class PostCalendar_Util
      * @param string jumpmonth
      * @param string jumpyear
      * @return string formatted date string
-     * @access public
      */
     public static function getDate($args)
     {

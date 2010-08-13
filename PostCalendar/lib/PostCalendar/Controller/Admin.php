@@ -12,7 +12,6 @@
 class PostCalendar_Controller_Admin extends Zikula_Controller
 {
     /**
-     * the main administration function
      * This function is the default function, and is called whenever the
      * module is initiated without defining arguments.
      */
@@ -25,9 +24,8 @@ class PostCalendar_Controller_Admin extends Zikula_Controller
     }
     
     /**
-     * @function    modifyconfig
-     * @description present administrator options to change module configuration
-     * @return      config template
+     * @desc present administrator options to change module configuration
+     * @return string config template
      */
     public function modifyconfig()
     {
@@ -45,9 +43,8 @@ class PostCalendar_Controller_Admin extends Zikula_Controller
     }
     
     /**
-     * @function    listapproved
      * @description list all events that have been previously approved
-     * @return      list of events
+     * @return string html template
      */
     public function listapproved()
     {
@@ -59,9 +56,8 @@ class PostCalendar_Controller_Admin extends Zikula_Controller
     }
     
     /**
-     * @function    listhidden
-     * @description list all events that are currently hidden
-     * @return      list of events
+     * @desc list all events that are currently hidden
+     * @return string html template
      */
     public function listhidden()
     {
@@ -73,9 +69,8 @@ class PostCalendar_Controller_Admin extends Zikula_Controller
     }
     
     /**
-     * @function    listqueued
-     * @description list all events that are awaiting approval
-     * @return      list of events
+     * @desc list all events that are awaiting approval
+     * @return string html template
      */
     public function listqueued()
     {
@@ -87,10 +82,9 @@ class PostCalendar_Controller_Admin extends Zikula_Controller
     }
     
     /**
-     * @function    showlist
-     * @description list events as requested/filtered
+     * @desc list events as requested/filtered
      *              send list to template
-     * @return      showlist template
+     * @return string showlist template
      */
     public function showlist($args)
     {
@@ -164,9 +158,8 @@ class PostCalendar_Controller_Admin extends Zikula_Controller
     }
     
     /**
-     * @function    adminevents
-     * @description allows admin to revue selected events then take action
-     * @return      adminrevue template
+     * @desc allows admin to revue selected events then take action
+     * @return string html template adminrevue template
      */
     public function adminevents()
     {
@@ -235,8 +228,7 @@ class PostCalendar_Controller_Admin extends Zikula_Controller
     }
     
     /**
-     * @function    resetDefaults
-     * @description reset all module variables to default values as defined in pninit.php
+     * @desc reset all module variables to default values as defined in pninit.php
      * @return      status/error ->back to modify config page
      */
     public function resetDefaults()
@@ -264,8 +256,7 @@ class PostCalendar_Controller_Admin extends Zikula_Controller
     }
     
     /**
-     * @function    updateconfig
-     * @description sets module variables as requested by admin
+     * @desc sets module variables as requested by admin
      * @return      status/error ->back to modify config page
      */
     public function updateconfig()
@@ -323,10 +314,9 @@ class PostCalendar_Controller_Admin extends Zikula_Controller
         return $this->modifyconfig();
     }
     
-    /*
-     * approveevents
+    /**
      * update status of events so that they are viewable by users
-     *
+     * @return string html template
      */
     public function approveevents()
     {
@@ -363,10 +353,9 @@ class PostCalendar_Controller_Admin extends Zikula_Controller
             'title'    => $this->__('Approved events administration')));
     }
     
-    /*
-     * hideevents
+    /**
      * update status of events so that they are hidden from view
-     *
+     * @return string html template
      */
     public function hideevents()
     {
@@ -403,10 +392,9 @@ class PostCalendar_Controller_Admin extends Zikula_Controller
             'title'    => $this->__('Approved events administration')));
     }
     
-    /*
-     * deleteevents
+    /**
      * delete array of events
-     *
+     * @return string html template
      */
     public function deleteevents()
     {
@@ -442,9 +430,8 @@ class PostCalendar_Controller_Admin extends Zikula_Controller
     }
     
     /**
-     * @function    modifyeventdefaults
-     * @description present administrator options to change event default values
-     * @return      template
+     * @desc present administrator options to change event default values
+     * @return string html template
      */
     public function modifyeventdefaults()
     {
@@ -477,8 +464,7 @@ class PostCalendar_Controller_Admin extends Zikula_Controller
     }
     
     /**
-     * @function    seteventdefaults
-     * @description sets module variables as requested by admin
+     * @desc sets module variables as requested by admin
      * @return      status/error ->back to event defaults config page
      */
     public function seteventdefaults()
