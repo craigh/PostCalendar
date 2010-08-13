@@ -284,7 +284,7 @@ class PostCalendar_Installer extends Zikula_Installer
             return LogUtil::registerError($this->__f('PostCalendar: Could not register %s hook.', 'delete'));
         }
         if (!ModUtil::registerHook('item', 'new', 'GUI', 'PostCalendar', 'hooks', 'newgui')) {
-            return LogUtil::registerError($this->__f('PostCalendar: Could not register %s hook.', 'new'));
+            return LogUtil::registerError($this->__f('PostCalendar: Could not register %s hook.', 'newgui'));
         }
         if (!ModUtil::registerHook('item', 'modify', 'GUI', 'PostCalendar', 'hooks', 'modify')) {
             return LogUtil::registerError($this->__f('PostCalendar: Could not register %s hook.', 'modify'));
