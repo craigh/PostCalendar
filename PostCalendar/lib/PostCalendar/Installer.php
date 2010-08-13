@@ -41,7 +41,7 @@ class PostCalendar_Installer extends Zikula_Installer
             return LogUtil::registerError($this->__('Error! Could not set the default settings for PostCalendar.'));
         }
     
-        $this->reset_scribite();
+        $this->_reset_scribite();
         $this->_createdefaultsubcategory();
         $this->_createinstallevent();
         $this->_registermodulehooks();
@@ -153,7 +153,7 @@ class PostCalendar_Installer extends Zikula_Installer
      * Since we updated the functionname for creating / editing a new event from func=submit to func=new,
      * scribite doesn't load any editor. If we force it to our new function.
      */
-    public function reset_scribite()
+    private function _reset_scribite()
     {
         // update the scribite
         if (ModUtil::available('scribite') && ModUtil::loadApi('scribite', 'user') && ModUtil::loadApi('scribite', 'admin')) {

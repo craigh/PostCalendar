@@ -8,26 +8,126 @@
  */
 abstract class PostCalendar_PostCalendarEvent_Base {
 
+    /**
+     * Hooked module name
+     * @var string
+     */
     private $hooked_modulename;
+    /**
+     * ID of hooked object (e.g. user ID or Story ID)
+     * @var integer
+     */
     private $hooked_objectid;
+    /**
+     * Event ID
+     * @var integer
+     */
     private $eid;
+    /**
+     * Metadata for category creation
+     * @var array
+     */
     private $__META__ = array('module' => 'PostCalendar');
-    private $recurrtype = 0; // norepeat
-    private $recurrspec = 'a:5:{s:17:"event_repeat_freq";s:0:"";s:22:"event_repeat_freq_type";s:1:"0";s:19:"event_repeat_on_num";s:1:"1";s:19:"event_repeat_on_day";s:1:"0";s:20:"event_repeat_on_freq";s:0:"";}'; // default recurrance info - serialized (not used)
-    private $location = 'a:6:{s:14:"event_location";s:0:"";s:13:"event_street1";s:0:"";s:13:"event_street2";s:0:"";s:10:"event_city";s:0:"";s:11:"event_state";s:0:"";s:12:"event_postal";s:0:"";}'; // default location info - serialized (not used)
+    /**
+     * event recurrance type
+     * norepeat = 0
+     * repeat = 1
+     * repeat on = 2
+     * @var integer
+     */
+    protected $recurrtype = 0;
+    /**
+     * serialized array of recurrance information
+     * default value = null values for each key
+     * @var string
+     */
+    protected $recurrspec = 'a:5:{s:17:"event_repeat_freq";s:0:"";s:22:"event_repeat_freq_type";s:1:"0";s:19:"event_repeat_on_num";s:1:"1";s:19:"event_repeat_on_day";s:1:"0";s:20:"event_repeat_on_freq";s:0:"";}';
+    /**
+     * serialized array of location information
+     * default value = null values for each key
+     * @var string
+     */
+    protected $location = 'a:6:{s:14:"event_location";s:0:"";s:13:"event_street1";s:0:"";s:13:"event_street2";s:0:"";s:10:"event_city";s:0:"";s:11:"event_state";s:0:"";s:12:"event_postal";s:0:"";}';
+    /**
+     * Event title
+     * @var string
+     */
     protected $title;
+    /**
+     * Event Description
+     * @var string
+     */
     protected $hometext;
+    /**
+     * User ID of event creator
+     * @see informant
+     * @var integer
+     */
     protected $aid;
+    /**
+     * MySQL timestamp for event creation
+     * @var string YYYY-MM-DD 00:00:00
+     */
     protected $time;
+    /**
+     * User ID of event creator
+     * @see aid
+     * @var integer
+     */
     protected $informant;
+    /**
+     * Event Date
+     * @var datetime YYYY-MM-DD
+     */
     protected $eventDate;
-    protected $duration = 3600; // one hour
+    /**
+     * Event duration in seconds
+     * default value = 3600 (one hour)
+     * @var integer
+     */
+    protected $duration = 3600;
+    /**
+     * Event start time
+     * default value = '01:00:00'
+     * @var string 00:00:00
+     */
     protected $startTime = '01:00:00';
-    protected $alldayevent = 1; // yes
-    protected $eventstatus = 1; // approved
-    protected $sharing = 3; // global
-    public $__CATEGORIES__;
+    /**
+     * All day event
+     * yes = 1
+     * no = 0
+     * default value = 1 = yes
+     * @var integer/boolean
+     */
+    protected $alldayevent = 1;
+    /**
+     * Event status
+     * approved = 1
+     * queued = 0
+     * hidden = -1
+     * default value = 1 = approved
+     * @var integer
+     */
+    protected $eventstatus = 1;
+    /**
+     * Event sharing
+     * private = 0
+     * global = 3
+     * default value = 3
+     * @var integer
+     */
+    protected $sharing = 3;
+    /**
+     * Event categories
+     * @var array
+     */
+    protected $__CATEGORIES__;
 
+    /**
+     * Constructor
+     * set the hooked module name
+     * @param string $module
+     */
     public function __construct($module) {
         $this->hooked_modulename = $module;
     }
@@ -54,14 +154,34 @@ abstract class PostCalendar_PostCalendarEvent_Base {
      */
     abstract public function makeEvent($param);
 
+    /**
+     *
+     * @param integer $hooked_objectid
+     */
     public function setHooked_objectid($hooked_objectid) {
         $this->hooked_objectid = $hooked_objectid;
     }
 
+    /**
+     *
+     * @param integer $eid
+     */
     public function setEid($eid) {
         $this->eid = $eid;
     }
 
+    /**
+     *
+     * @param array $__CATEGORIES__
+     */
+    public function set__CATEGORIES__($__CATEGORIES__) {
+        $this->__CATEGORIES__ = $__CATEGORIES__;
+    }
+
+    /**
+     *
+     * @return array
+     */
     public function toArray() {
         $meta = array();
         $meta['hooked_modulename'] = $this->hooked_modulename;

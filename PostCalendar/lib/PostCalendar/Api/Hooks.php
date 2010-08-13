@@ -43,7 +43,7 @@ class PostCalendar_Api_Hooks extends Zikula_Api
                 'objectid' => $args['objectid']);
             if($eventObj->makeEvent($args)) {
                 $eventObj->setHooked_objectid($args['objectid']);
-                $eventObj->__CATEGORIES__ = $hookinfo['cats'];
+                $eventObj->set__CATEGORIES__($hookinfo['cats']);
                 $event = $eventObj->toArray();
                 // write event to postcal table
                 if (DBUtil::insertObject($event, 'postcalendar_events', 'eid')) {
@@ -158,7 +158,7 @@ class PostCalendar_Api_Hooks extends Zikula_Api
                 'objectid' => $args['objectid']);
             if ($eventObj->makeEvent($args)) {
                 $eventObj->setHooked_objectid($args['objectid']);
-                $eventObj->__CATEGORIES__ = $hookinfo['cats'];
+                $eventObj->set__CATEGORIES__($hookinfo['cats']);
                 if (!empty($hookinfo['eid'])) {
                     // event already exists - just update
                     $eventObj->setEid($hookinfo['eid']);
