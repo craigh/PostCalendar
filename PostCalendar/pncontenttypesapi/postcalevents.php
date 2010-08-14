@@ -29,7 +29,7 @@ class postcalendar_contenttypesapi_postcaleventsPlugin extends contentTypeBase
         return __('Displays a list of PostCalendar events.', $dom);
     }
 
-    function loadData($data) {
+    function loadData(&$data) {
         $this->pcbeventsrange = $data['pcbeventsrange'];
         $this->pcbeventslimit = $data['pcbeventslimit'];
 
@@ -60,23 +60,23 @@ class postcalendar_contenttypesapi_postcaleventsPlugin extends contentTypeBase
             'end'        => $ending_date,
             'filtercats' => $filtercats));
 
-        $render = Zikula_View::getInstance('PostCalendar');
-        $render->assign('A_EVENTS',      $eventsByDate);
-        $render->assign('DATE',          $Date);
-        $render->assign('DISPLAY_LIMIT', $this->pcbeventslimit);
+        $view = Zikula_View::getInstance('PostCalendar');
+        $view->assign('A_EVENTS',      $eventsByDate);
+        $view->assign('DATE',          $Date);
+        $view->assign('DISPLAY_LIMIT', $this->pcbeventslimit);
 
-        return $render->fetch('contenttype/postcalevents_view.html');
+        return $view->fetch('contenttype/postcalevents_view.html');
     }
 
-    function startEditing(&$render) {
+    function startEditing(&$view) {
         $dom = ZLanguage::getModuleDomain('PostCalendar');
 
         $enablecategorization = ModUtil::getVar('PostCalendar', 'enablecategorization');
         if ($enablecategorization) {
             $catregistry  = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
-            $render->assign('catregistry', $catregistry);
+            $view->assign('catregistry', $catregistry);
         }
-        $render->assign('enablecategorization', $enablecategorization);
+        $view->assign('enablecategorization', $enablecategorization);
 
         return;
     }

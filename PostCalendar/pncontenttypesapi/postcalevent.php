@@ -29,7 +29,7 @@ class postcalendar_contenttypesapi_postcaleventPlugin extends contentTypeBase
         return __('Displays one event from PostCalendar.', $dom);
     }
 
-    function loadData($data) {
+    function loadData(&$data) {
         $this->eid = $data['eid'];
         $this->showcountdown = $data['showcountdown'];
         $this->hideonexpire = $data['hideonexpire'];
@@ -68,11 +68,11 @@ class postcalendar_contenttypesapi_postcaleventPlugin extends contentTypeBase
             $event['showcountdown'] = true;
         }
     
-        $render = Zikula_View::getInstance('PostCalendar');
+        $view = Zikula_View::getInstance('PostCalendar');
     
-        $render->assign('loaded_event', $event);
+        $view->assign('loaded_event', $event);
     
-        return $render->fetch('contenttype/postcalevent_view.html');
+        return $view->fetch('contenttype/postcalevent_view.html');
     }
 
     function displayEditing() {
