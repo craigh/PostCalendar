@@ -29,7 +29,7 @@ function smarty_function_pc_locations($args, &$smarty)
     $options_array = array(
         'name'     => $fieldname . "[location][locations_id]",
         'id'       => $fieldname . "_location_locations_id",
-        'class'    => "postcal90",
+        'class'    => "z-w90",
         'onChange' => "postcalendar_locations_bridge(this)",
         'options'  => $locations,
         'selected' => '-1');

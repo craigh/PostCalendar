@@ -1,13 +1,13 @@
 /* PostCalendar Stylesheet */
-/*
+/**
  *  SVN: $Id$
  *
  *  @package       PostCalendar 
  *  @lastmodified  $Date$ 
- *  @modifiedby    $Author$ 
+ *  @author        Craig Heydenburg
  *  @HeadURL	   $HeadURL$ 
  *  @version       $Revision$ 
-*/
+ */
 
 /********** HEADERS & CONTAINERS ***********/
 div.calcontainer {
@@ -57,9 +57,6 @@ h2.postcalendar_header a {
 #postcalendar_addevent_leftcol fieldset legend {
     background-color: #ffffff;
     padding: 0 3px;
-}
-input.postcal90 {
-    width: 90%;
 }
 #postcalendar_addevent_previewevent {
     background-color: #eeeeee;
@@ -338,18 +335,4 @@ div.postcalendar_featuredevent div.eventdetails ul {
 div.postcalendar_featuredevent div.eventdetails span.location{
     padding-left: 2em;
     display: block;
-}
-/********** last things ************/
-div#overDiv {
-    /* this should correct issues with themes changing all divs 
-    It only is a very generic view, but better than nothing */
-    background: white;
-    color: black;
-    text-align: center;
-}
-.z-calendarimg {
-    background-color: transparent;
-}
-.z-calendarimg:hover {
-    background-color: blue;
 }

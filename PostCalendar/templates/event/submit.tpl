@@ -32,7 +32,7 @@
         <fieldset>
             <legend>{gt text='General settings'}</legend>
             <label for="postcalendar_events_title"><b>{gt text='Title'}</b></label><span style='color:red;padding-left:5em;'>*{gt text='Required'}</span><br />
-            <input type="text" class='postcal90' name="postcalendar_events[title]" id="postcalendar_events_title" value="{$loaded_event.title}" /><br /><br />
+            <input type="text" class='z-w90' name="postcalendar_events[title]" id="postcalendar_events_title" value="{$loaded_event.title}" /><br /><br />
 
             {if ((isset($users)) AND (is_array($users)) AND ($ingroup))}
                 <label for="postcalendar_events_aid"><b>{gt text='For user'}</b></label><span style='color:red;padding-left:5em;'>*{gt text='Required'}</span><br />
@@ -133,10 +133,10 @@
             <legend>{gt text='Location'}</legend>
             {pc_locations}
             <label for="postcalendar_events_location_event_location">{gt text='Name'}</label><br />
-            <input class='postcal90' type="text" name="postcalendar_events[location][event_location]" id="postcalendar_events_location_event_location" value="{$loaded_event.location_info.event_location}" /><br />
+            <input class='z-w90' type="text" name="postcalendar_events[location][event_location]" id="postcalendar_events_location_event_location" value="{$loaded_event.location_info.event_location}" /><br />
             <label for="postcalendar_events_location_event_street1">{gt text='Street'}</label><br />
-            <input class='postcal90' type="text" name="postcalendar_events[location][event_street1]" id="postcalendar_events_location_event_street1" value="{$loaded_event.location_info.event_street1}" /><br />
-            <input class='postcal90' type="text" name="postcalendar_events[location][event_street2]" id="postcalendar_events_location_event_street2" value="{$loaded_event.location_info.event_street2}" /><br />
+            <input class='z-w90' type="text" name="postcalendar_events[location][event_street1]" id="postcalendar_events_location_event_street1" value="{$loaded_event.location_info.event_street1}" /><br />
+            <input class='z-w90' type="text" name="postcalendar_events[location][event_street2]" id="postcalendar_events_location_event_street2" value="{$loaded_event.location_info.event_street2}" /><br />
             <table cellspacing="0" style='width:90%;'>
                 <tr>
                     <td style='width:40%'><label for="postcalendar_events_location_event_city">{gt text='City'}</label></td>
@@ -144,22 +144,22 @@
                     <td style='width:30%'><label for="postcalendar_events_location_event_postal">{gt text='Zipcode'}</label></td>
                 </tr>
                 <tr>
-                    <td><input class='postcal90' type="text" name="postcalendar_events[location][event_city]" id="postcalendar_events_location_event_city" value="{$loaded_event.location_info.event_city}" /></td>
-                    <td><input class='postcal90' type="text" name="postcalendar_events[location][event_state]" id="postcalendar_events_location_event_state" value="{$loaded_event.location_info.event_state}" /></td>
-                    <td><input class='postcal90' type="text" name="postcalendar_events[location][event_postal]" id="postcalendar_events_location_event_postal" value="{$loaded_event.location_info.event_postal}" /></td>
+                    <td><input class='z-w90' type="text" name="postcalendar_events[location][event_city]" id="postcalendar_events_location_event_city" value="{$loaded_event.location_info.event_city}" /></td>
+                    <td><input class='z-w90' type="text" name="postcalendar_events[location][event_state]" id="postcalendar_events_location_event_state" value="{$loaded_event.location_info.event_state}" /></td>
+                    <td><input class='z-w90' type="text" name="postcalendar_events[location][event_postal]" id="postcalendar_events_location_event_postal" value="{$loaded_event.location_info.event_postal}" /></td>
                 </tr>
             </table>
         </fieldset>
         <fieldset>
             <legend>{gt text='Contact'}</legend>
             <label for="postcalendar_events_contname">{gt text='Name'}</label><br />
-            <input class='postcal90' type="text" name="postcalendar_events[contname]" id="postcalendar_events_contname" value="{$loaded_event.contname}" /><br />
+            <input class='z-w90' type="text" name="postcalendar_events[contname]" id="postcalendar_events_contname" value="{$loaded_event.contname}" /><br />
             <label for="postcalendar_events_conttel">{gt text='Phone number'}</label><br />
-            <input class='postcal90' type="text" name="postcalendar_events[conttel]" id="postcalendar_events_conttel" value="{$loaded_event.conttel}" /><br />
+            <input class='z-w90' type="text" name="postcalendar_events[conttel]" id="postcalendar_events_conttel" value="{$loaded_event.conttel}" /><br />
             <label for="postcalendar_events_contemail">{gt text='E-mail address'}</label><br />
-            <input class='postcal90' type="text" name="postcalendar_events[contemail]" id="postcalendar_events_contemail" value="{$loaded_event.contemail}" /><br />
+            <input class='z-w90' type="text" name="postcalendar_events[contemail]" id="postcalendar_events_contemail" value="{$loaded_event.contemail}" /><br />
             <label for="postcalendar_events_website">{gt text='Web site'}</label><br />
-            <input class='postcal90' type="text" name="postcalendar_events[website]" id="postcalendar_events_website" value="{$loaded_event.website}" /><br />
+            <input class='z-w90' type="text" name="postcalendar_events[website]" id="postcalendar_events_website" value="{$loaded_event.website}" /><br />
         </fieldset>
         <label for="postcalendar_events_fee"><b>{gt text='Fee'}</b></label>
         <input style='margin-left: 1em;' type="text" name="postcalendar_events[fee]" id="postcalendar_events_fee" value="{$loaded_event.fee}" /><br />
