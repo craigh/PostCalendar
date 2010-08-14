@@ -18,7 +18,6 @@ class PostCalendar_Api_Hooks extends Zikula_Api
      */
     public function create($args)
     {
-        LogUtil::registerStatus($this->__("PostCalendar <em>create</em> hook called."));
         if ((!isset($args['objectid'])) || ((int) $args['objectid'] <= 0)) {
             return false;
         }
@@ -126,8 +125,6 @@ class PostCalendar_Api_Hooks extends Zikula_Api
      */
     public function update($args)
     {
-        LogUtil::registerStatus($this->__("PostCalendar <em>update</em> hook called."));
-        LogUtil::registerError($this->__("PostCalendar <em>update</em> hook called."));
         if ((!isset($args['objectid'])) || ((int) $args['objectid'] <= 0)) {
             return false;
         }
