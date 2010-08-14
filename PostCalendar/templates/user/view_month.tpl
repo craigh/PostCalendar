@@ -107,3 +107,4 @@
         <a href="{modurl modname="PostCalendar" func="main" viewtype=$viewtype Date=$Date}">{gt text='Return'}</a>
     {/if}
 </div>
+{include file="user/footer.tpl"}
