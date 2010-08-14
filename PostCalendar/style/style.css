@@ -184,6 +184,8 @@ table.postcalendar_month col.pcWeekend {
 }
 #postcalendar_nav_left ul li {
 	list-style: none;
+    margin: 0;
+    padding: 0;
 }
 a.postcalendar_nav_text {
     padding: 0 4px;

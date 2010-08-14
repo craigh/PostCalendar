@@ -27,7 +27,7 @@
 
 <span style='float:right;'>{img modname='PostCalendar' src='admin.png' __alt="PostCalendar Rocks!"}</span>
 <h2 style='border-bottom:1px solid #CCCCCC;text-align:left;padding-top:1em;'>{$titletext}&nbsp;{gt text='calendar event'}</h2>
-<div>
+<div style='padding-top:.5em'>
     <div id="postcalendar_addevent_leftcol">
         <label for="postcalendar_events_title"><b>{gt text='Title'}</b></label><span style='color:red;padding-left:5em;'>*{gt text='Required'}</span><br />
         <input type="text" class='postcal90' name="postcalendar_events[title]" id="postcalendar_events_title" value="{$loaded_event.title}" /><br /><br />
