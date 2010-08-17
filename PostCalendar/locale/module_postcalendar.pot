@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Zikula 1.2.x\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-08-13 18:51+0000\n"
+"POT-Creation-Date: 2010-08-17 03:52+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -164,7 +164,7 @@ msgid "Manual entry"
 msgstr ""
 
 #: templates/plugins/function.pc_locations.php:37
-#: templates/admin/eventdefaults.tpl:72 templates/event/submit.tpl:130
+#: templates/admin/eventdefaults.tpl:72 templates/event/submit.tpl:133
 #: templates/event/view.tpl:23 templates/contenttype/postcalevent_view.html:45
 #: templates/blocks/featuredevent.tpl:52
 msgid "Location"
@@ -287,72 +287,64 @@ msgstr ""
 msgid "Error! Could not load items."
 msgstr ""
 
-#: lib/PostCalendar/Api/Hooks.php:21
-msgid "PostCalendar <em>create</em> hook called."
-msgstr ""
-
-#: lib/PostCalendar/Api/Hooks.php:34
+#: lib/PostCalendar/Api/Hooks.php:33
 msgid "PostCalendar: Event not created (opt out)."
 msgstr ""
 
-#: lib/PostCalendar/Api/Hooks.php:39 lib/PostCalendar/Api/Hooks.php:154
+#: lib/PostCalendar/Api/Hooks.php:38 lib/PostCalendar/Api/Hooks.php:151
 msgid "PostCalendar: Could not create Object."
 msgstr ""
 
-#: lib/PostCalendar/Api/Hooks.php:50 lib/PostCalendar/Api/Hooks.php:174
+#: lib/PostCalendar/Api/Hooks.php:49 lib/PostCalendar/Api/Hooks.php:171
 msgid "PostCalendar: Event created."
 msgstr ""
 
-#: lib/PostCalendar/Api/Hooks.php:54 lib/PostCalendar/Api/Hooks.php:179
+#: lib/PostCalendar/Api/Hooks.php:53 lib/PostCalendar/Api/Hooks.php:176
 msgid "PostCalendar: Could not create event (method failed)."
 msgstr ""
 
-#: lib/PostCalendar/Api/Hooks.php:57 lib/PostCalendar/Api/Hooks.php:182
+#: lib/PostCalendar/Api/Hooks.php:56 lib/PostCalendar/Api/Hooks.php:179
 #, php-format
 msgid "PostCalendar: Extended class for %s not found."
 msgstr ""
 
-#: lib/PostCalendar/Api/Hooks.php:60
+#: lib/PostCalendar/Api/Hooks.php:59
 msgid "Error! PostCalender: Could not create an event."
 msgstr ""
 
-#: lib/PostCalendar/Api/Hooks.php:84
+#: lib/PostCalendar/Api/Hooks.php:83
 msgid "Error! Could not delete associated PostCalendar event."
 msgstr ""
 
-#: lib/PostCalendar/Api/Hooks.php:87
+#: lib/PostCalendar/Api/Hooks.php:86
 msgid "Associated PostCalendar event also deleted."
 msgstr ""
 
-#: lib/PostCalendar/Api/Hooks.php:116
+#: lib/PostCalendar/Api/Hooks.php:115
 msgid "Error! Could not delete associated PostCalendar events."
 msgstr ""
 
-#: lib/PostCalendar/Api/Hooks.php:119
+#: lib/PostCalendar/Api/Hooks.php:118
 msgid "ALL associated PostCalendar events also deleted."
 msgstr ""
 
-#: lib/PostCalendar/Api/Hooks.php:129 lib/PostCalendar/Api/Hooks.php:130
-msgid "PostCalendar <em>update</em> hook called."
-msgstr ""
-
-#: lib/PostCalendar/Api/Hooks.php:146
+#: lib/PostCalendar/Api/Hooks.php:143
 msgid "PostCalendar: Existing event deleted (opt out)."
 msgstr ""
 
-#: lib/PostCalendar/Api/Hooks.php:148
+#: lib/PostCalendar/Api/Hooks.php:145
 msgid "PostCalendar: News event not created (opt out)."
 msgstr ""
 
-#: lib/PostCalendar/Api/Hooks.php:167
+#: lib/PostCalendar/Api/Hooks.php:164
 msgid "PostCalendar: Associated Calendar event updated."
 msgstr ""
 
-#: lib/PostCalendar/Api/Hooks.php:185
+#: lib/PostCalendar/Api/Hooks.php:182
 msgid "Error! Could not update the associated Calendar event."
 msgstr ""
 
-#: lib/PostCalendar/Api/Hooks.php:202
+#: lib/PostCalendar/Api/Hooks.php:199
 msgid "PostCalendar: module config updated."
 msgstr ""
 
@@ -450,7 +442,7 @@ msgid "Private"
 msgstr ""
 
 #: lib/PostCalendar/Api/Event.php:997 templates/admin/eventdefaults.tpl:21
-#: templates/event/submit.tpl:46
+#: templates/event/submit.tpl:48
 msgid "Global"
 msgstr ""
 
@@ -692,15 +684,15 @@ msgstr ""
 
 #: lib/PostCalendar/Controller/Event.php:95
 #: templates/admin/eventdefaults.tpl:123 templates/admin/modifyconfig.tpl:143
-#: templates/event/submit.tpl:178
+#: templates/event/submit.tpl:181
 msgid "Save"
 msgstr ""
 
-#: lib/PostCalendar/Controller/Event.php:96 templates/event/submit.tpl:179
+#: lib/PostCalendar/Controller/Event.php:96 templates/event/submit.tpl:182
 msgid "Save and Add"
 msgstr ""
 
-#: lib/PostCalendar/Controller/Event.php:97 templates/event/submit.tpl:177
+#: lib/PostCalendar/Controller/Event.php:97 templates/event/submit.tpl:180
 msgid "Preview"
 msgstr ""
 
@@ -748,7 +740,7 @@ msgid "Yes"
 msgstr ""
 
 #: templates/admin/eventrevue.tpl:20 templates/admin/eventdefaults.tpl:124
-#: templates/admin/modifyconfig.tpl:144 templates/event/submit.tpl:180
+#: templates/admin/modifyconfig.tpl:144 templates/event/submit.tpl:183
 msgid "Cancel"
 msgstr ""
 
@@ -760,7 +752,7 @@ msgstr ""
 msgid "General"
 msgstr ""
 
-#: templates/admin/eventdefaults.tpl:17 templates/event/submit.tpl:42
+#: templates/admin/eventdefaults.tpl:17 templates/event/submit.tpl:44
 msgid "Sharing"
 msgstr ""
 
@@ -768,25 +760,25 @@ msgstr ""
 msgid "Event Type"
 msgstr ""
 
-#: templates/admin/eventdefaults.tpl:29 templates/event/submit.tpl:54
+#: templates/admin/eventdefaults.tpl:29 templates/event/submit.tpl:56
 #: templates/user/view_week.tpl:35 templates/user/view_list.tpl:33
 #: templates/user/view_xml.tpl:10 templates/user/view_day.tpl:30
 msgid "All-day event"
 msgstr ""
 
-#: templates/admin/eventdefaults.tpl:31 templates/event/submit.tpl:56
+#: templates/admin/eventdefaults.tpl:31 templates/event/submit.tpl:58
 msgid "Timed event"
 msgstr ""
 
-#: templates/admin/eventdefaults.tpl:35 templates/event/submit.tpl:59
+#: templates/admin/eventdefaults.tpl:35 templates/event/submit.tpl:61
 msgid "Start Time"
 msgstr ""
 
-#: templates/admin/eventdefaults.tpl:39 templates/event/submit.tpl:61
+#: templates/admin/eventdefaults.tpl:39 templates/event/submit.tpl:63
 msgid "End Time"
 msgstr ""
 
-#: templates/admin/eventdefaults.tpl:44 templates/event/submit.tpl:161
+#: templates/admin/eventdefaults.tpl:44 templates/event/submit.tpl:164
 #: templates/event/view.tpl:40 templates/contenttype/postcalevent_view.html:62
 #: templates/blocks/featuredevent.tpl:69
 msgid "Fee"
@@ -801,11 +793,11 @@ msgid "No Default Category"
 msgstr ""
 
 #: templates/admin/eventdefaults.tpl:77 templates/admin/eventdefaults.tpl:104
-#: templates/event/submit.tpl:132 templates/event/submit.tpl:152
+#: templates/event/submit.tpl:135 templates/event/submit.tpl:155
 msgid "Name"
 msgstr ""
 
-#: templates/admin/eventdefaults.tpl:81 templates/event/submit.tpl:134
+#: templates/admin/eventdefaults.tpl:81 templates/event/submit.tpl:137
 msgid "Street"
 msgstr ""
 
@@ -813,31 +805,31 @@ msgstr ""
 msgid "Street Line 2"
 msgstr ""
 
-#: templates/admin/eventdefaults.tpl:89 templates/event/submit.tpl:139
+#: templates/admin/eventdefaults.tpl:89 templates/event/submit.tpl:142
 msgid "City"
 msgstr ""
 
-#: templates/admin/eventdefaults.tpl:93 templates/event/submit.tpl:140
+#: templates/admin/eventdefaults.tpl:93 templates/event/submit.tpl:143
 msgid "State"
 msgstr ""
 
-#: templates/admin/eventdefaults.tpl:97 templates/event/submit.tpl:141
+#: templates/admin/eventdefaults.tpl:97 templates/event/submit.tpl:144
 msgid "Zipcode"
 msgstr ""
 
-#: templates/admin/eventdefaults.tpl:102 templates/event/submit.tpl:151
+#: templates/admin/eventdefaults.tpl:102 templates/event/submit.tpl:154
 msgid "Contact"
 msgstr ""
 
-#: templates/admin/eventdefaults.tpl:108 templates/event/submit.tpl:154
+#: templates/admin/eventdefaults.tpl:108 templates/event/submit.tpl:157
 msgid "Phone number"
 msgstr ""
 
-#: templates/admin/eventdefaults.tpl:112 templates/event/submit.tpl:156
+#: templates/admin/eventdefaults.tpl:112 templates/event/submit.tpl:159
 msgid "E-mail address"
 msgstr ""
 
-#: templates/admin/eventdefaults.tpl:116 templates/event/submit.tpl:158
+#: templates/admin/eventdefaults.tpl:116 templates/event/submit.tpl:161
 msgid "Web site"
 msgstr ""
 
@@ -850,7 +842,7 @@ msgstr ""
 msgid "Select"
 msgstr ""
 
-#: templates/admin/showlist.tpl:16 templates/event/submit.tpl:32
+#: templates/admin/showlist.tpl:16 templates/event/submit.tpl:34
 msgid "Title"
 msgstr ""
 
@@ -882,7 +874,7 @@ msgstr ""
 msgid "version"
 msgstr ""
 
-#: templates/admin/modifyconfig.tpl:11
+#: templates/admin/modifyconfig.tpl:11 templates/event/submit.tpl:33
 msgid "General settings"
 msgstr ""
 
@@ -1055,67 +1047,67 @@ msgstr ""
 msgid "calendar event"
 msgstr ""
 
-#: templates/event/submit.tpl:32 templates/event/submit.tpl:36
+#: templates/event/submit.tpl:34 templates/event/submit.tpl:38
 msgid "Required"
 msgstr ""
 
-#: templates/event/submit.tpl:36
+#: templates/event/submit.tpl:38
 msgid "For user"
 msgstr ""
 
-#: templates/event/submit.tpl:50
+#: templates/event/submit.tpl:52
 msgid "Start date"
 msgstr ""
 
-#: templates/event/submit.tpl:53
+#: templates/event/submit.tpl:55
 msgid "Time"
 msgstr ""
 
-#: templates/event/submit.tpl:68
+#: templates/event/submit.tpl:70
 msgid "Category"
 msgid_plural "Categories"
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/event/submit.tpl:86 templates/event/view.tpl:18
+#: templates/event/submit.tpl:88 templates/event/view.tpl:18
 #: templates/contenttype/postcalevent_view.html:39
 #: templates/blocks/featuredevent.tpl:46
 msgid "Description"
 msgstr ""
 
-#: templates/event/submit.tpl:91
+#: templates/event/submit.tpl:93
 msgid "Permitted HTML tags"
 msgstr ""
 
-#: templates/event/submit.tpl:99
+#: templates/event/submit.tpl:102
 msgid "Repetition settings"
 msgstr ""
 
-#: templates/event/submit.tpl:101
+#: templates/event/submit.tpl:104
 msgid "One-time event"
 msgstr ""
 
-#: templates/event/submit.tpl:104
+#: templates/event/submit.tpl:107
 msgid "Repeats every"
 msgstr ""
 
-#: templates/event/submit.tpl:109
+#: templates/event/submit.tpl:112
 msgid "Repeats on"
 msgstr ""
 
-#: templates/event/submit.tpl:112
+#: templates/event/submit.tpl:115
 msgid "of the month, every"
 msgstr ""
 
-#: templates/event/submit.tpl:114
+#: templates/event/submit.tpl:117
 msgid "month(s)"
 msgstr ""
 
-#: templates/event/submit.tpl:117
+#: templates/event/submit.tpl:120
 msgid "End date"
 msgstr ""
 
-#: templates/event/submit.tpl:127
+#: templates/event/submit.tpl:130
 msgid "No end date"
 msgstr ""
 
