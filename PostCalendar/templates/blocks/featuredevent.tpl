@@ -1,6 +1,6 @@
 {* $Id: postcalendar_block_featuredevent.htm 639 2010-06-30 22:16:08Z craigh $ *}
 {if $loaded_event.showhiddenwarning}
-    {checkpermission comp="::" inst=".*" level="ACCESS_ADMIN" assign="ACCESS_ADMIN"}
+    {checkpermission component="::" instance=".*" level="ACCESS_ADMIN" assign="ACCESS_ADMIN"}
     {if $ACCESS_ADMIN}
         <div class="z-warningmsg" style='font-size: 8px;'>{gt text='Administrator only warning: Hidden PostCalendar Featured Event Block (ID# %s). Delete or modify.' tag1=$thisblockid}<br />
         <a href="{modurl modname='Blocks' type='admin'}">{gt text='Blocks Administration'}</a></div>

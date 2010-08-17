@@ -1,5 +1,5 @@
 {* $Id: postcalendar_user_view_event_details.htm 639 2010-06-30 22:16:08Z craigh $ *}
-{checkpermission comp="::" inst=".*" level="ACCESS_ADD" assign="ACCESS_ADD"}
+{checkpermission component="::" instance=".*" level="ACCESS_ADD" assign="ACCESS_ADD"}
 {formutil_getpassedvalue name="theme" source="get" assign="theme" default=false}
 {assign var="PRINT_VIEW" value=0}
 {if $theme eq "Printer"}
