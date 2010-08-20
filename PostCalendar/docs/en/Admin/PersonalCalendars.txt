@@ -1,0 +1,7 @@
+## PostCalendar v7.0.0 Personal Calendars
+
+PostCalendar allows the administrator to define one Zikula group that is allowed to have personal calendars. First, use the Group manager to create a group and add whomever you wish to that group. Then select that group in the PostCalendar settings admin panel. If you wish, you can use pre-existing groups like 'Admins' or 'Users' (use of Users is discouraged). One can also select 'no group' which disables this feature for everyone.
+
+If you choose a group other than 'no group', an additional selectbox will be added to the PostCalendar header that will allow the users in that group to choose to filter their display to their own events only, global events only or global plus their events. In addition, admins (only) will be able to select any user with personal events and view those events.
+
+Private events are indicated by a 'lock' icon in the user-display.

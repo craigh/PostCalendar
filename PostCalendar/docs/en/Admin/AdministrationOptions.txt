@@ -1,0 +1,46 @@
+## PostCalendar v7.0.0 Administration Options
+
+#### General Settings
+
+Item                       |Description
+---------------------------|-----------
+Reset All...               |This resets all admin-definable options to the default settings
+...Activated without review|Do not queue up event for admin approval
+Enable categorization...   |Allows categorization of events utilizing the Zikula Categories module
+...Personal Calendars...   |Personal Calendars allow users to create events that only they can see. Choose a Zikula Group allowed to do so (or no group)
+
+#### Display Settings
+
+Item                             |Description
+---------------------------------|-----------
+Number of events...              |The number of events displayed in Admin list view (Queued/Hidden/Approved)
+Use 24 Hour time format          |Display 13:30 instead of 1:30 PM
+Time Increment...                |Used in dropdown on new event form for possible event lengths and start time
+Popup Window                     |changes functionality to popup a new window with event details instead of linking to full display
+Event details in tooltip...      |Use Javascript to display event description in tooltip on mouseover
+Date Display Format              |Choose format Dates will be displayed as (uses php's [*strftime* format][link1])
+First Day of Week                |Which Day weeks begin with
+Default Calendar View            |Which calendar view is displayed with no arguments in link to module
+...months ... in list/rss        |how many months into the future (from today) to display in list/rss view
+Filter Event Display             |Allow users to filter events by category/user (if option available)
+...jump date... year(s) before...|Number of years to display before current year in jump date selector
+...jump date... year(s) after... |Number of years to display after current year in jump date selector
+Enable images...                 |Show images in the PostCalendar navigation header (or just show text links)
+Enable Locations...              |*(option only displays if Locations module is active)* Enable use of Locations in PostCalendar
+
+#### Notification Settings
+
+Item                         |Description
+-----------------------------|-----------
+Notify about Pending Content |Posts notice in PostCalendar user templates when events queued for review
+Notify about USER submission |Sends email to admin on USER submission
+Notify about ADMIN submission|Sends email to admin on ADMIN submission
+Admin email Address          |enter the email address to send notifications to
+
+
+## Event Default Values
+
+The values entered here will be automatically entered in the new event form. They can be changed there if needed again, but this provides a good start to quick event creation.
+
+[link1]: <http://php.net/strftime>
+    "PHP Docs"

@@ -1,0 +1,26 @@
+## PostCalendar v7.0.0 Customization: Overriding PostCalendar Templates and Stylesheets
+
+### Overriding Stylesheets (css)
+
+This is the easiest and most quickly beneficial customization you can make to your installation of PostCalendar. If the only thing you want to change is colors, this is all you need to do. You do need to understand css a little. The colors are clearly labeled in the stylesheet.
+
+*   Create a directory in your theme `themes/<yourthemename>/style/PostCalendar/`
+*   Copy `modules/PostCalendar/style/style.css` to `themes/<yourthemename>/style/PostCalendar/style.css`
+
+Now, you can modify the PostCalendar stylesheet in your theme all you like. ([make sure your changes will be seen immediately][link1])
+
+### Overriding Templates
+
+This is a bit more complicated and will require a working knowledge of Smarty and HTML. See [this page in the Zikula documentation][link2] for more information on template overrides.
+
+Please note that all the template names changed in PostCalendar v7.0.0 to use the now-standard .tpl suffix. This will break existing template overrides. Additionally, the template names have been shortened to eliminate the module name and type. Please see the /templates directory for more information.
+
+### Warning
+
+When you upgrade PostCalendar, you have to remember to remove your overrides and then check them to see if they are still valid before using them with a new version.
+
+[link1]: <http://community.zikula.org/index.php?module=Wiki&tag=XanthiaCompilSettings>
+    "Zikula.org Wiki Docs"
+
+[link2]: <http://community.zikula.org/index.php?module=Wiki&tag=TemplateOverridng>
+    "Zikula.org Wiki Docs"

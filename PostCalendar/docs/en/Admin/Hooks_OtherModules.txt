@@ -1,0 +1,67 @@
+## PostCalendar v7.0.0 Hooks and Support for Other Modules
+
+
+## Hooks Support
+
+### General Hook Support
+
+PostCalendar supports the following hooks:
+
+*   Item Transform Hooks (API)
+*   Item Display Hooks (GUI)
+*   Item Create Hooks (API)
+*   Item Update Hooks (API)
+*   Item Delete Hooks (API)
+*   Item New Hooks (GUI)
+*   Item Modify Hooks (GUI)
+*   Module Configuration Hooks (modifyconfig (GUI)/upgdateconfig (API))
+
+Therefore, any module that offers a hook is available in PostCalendar. This includes, but is not limited to:
+
+*   EZComments (PostCalendar includes special graphical notification of events with comments)
+*   bbsmile/bbcode
+*   MultiHook (see below)
+
+### Provided Hooks
+
+PostCalendar provides an event-create hook that is useful for other modules. Support is included for the News and Users module. In each case, the admin and/or item creator is able to assign the PostCalendar category or able to opt-out of the hook.
+
+*   **News:** when hooked, will create an event per article published. Scheduled publishing of articles is supported.
+*   **Users:** when hooked, will create an event upon user creation.
+
+Other modules can create their own API to create events as well. See the [Developer Docs][link1] for more information.
+
+### Needle Usage (MultiHook)
+
+PostCalendar provides two needles that can be used in any module hooked with the MultiHook module. In order to use these (or any needles) you must have the MultiHook module installed and then hook MultiHook to that other module (for example, News). Then in that other module, you can type these needles and they will be auto-replaced by this content.
+
+*   **POSTCALEVENT-{eventid-displaytype}** (example: *POSTCALEVENT-263-NDL*) replaces needle with a PostCalendar event title and link. Can include the date and time of the event with an icon if desired. Date is presented in PostCalendar-defined format.
+    *   eventid = the integer event id of the event you wish to insert. this is shown in the browser addressbar as eid=####. It is also shown in the title header of each event when viewing the event details.
+    *   displaytype = any or all of the following capital letters, in any order.(default: NLI)
+        *   N (shows the event name)
+        *   D (shows the date of the event)
+        *   T (shows the time of the event)
+        *   I (adds a small icon)
+        *   L (replaced content is a link instead of just text)
+*   **POSTCALDATE-{date-displaytype}** (example: *POSTCALDATE-20091225-DL*) replaces needle with a PostCalendar date and link. Can include an icon if desired. Date is presented in PostCalendar-defined format.
+    *   date = the date you wish to link to in format 'YYYYMMDD'
+    *   displaytype = any or all of the following capital letters, in any order.(default: DIL)
+        *   D (shows the date of the event)
+        *   I (adds a small icon)
+        *   L (replaced content is a link instead of just text)
+
+## Content Support
+
+PostCalendar provides support for the Content Module API with two block types.
+
+*   Upcoming Events
+*   Featured Event
+
+These two block types are identical in function to standard the Zikula blocks documented above with the exception that the Upcoming block merges today's events with all upcoming events and does not display the navigation calendar.
+
+## Locations Support
+
+PostCalendar proves integration support with the Locations module. Once the Locations module is active and it is enabled in the PostCalendar module config, a drop-down menu will appear in the event create/edit form as well as the event defaults form. *Technical note: the link to the locations data is not maintained, the data is simply copied to the PostCalendar fields.*
+
+[link1]: <http://code.zikula.org/soundwebdevelopment/wiki/PostCalendarHookDev70>
+   "PostCalendar Developer Documentation"

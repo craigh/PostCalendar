@@ -1,0 +1,5 @@
+## PostCalendar v7.0.0 Adding PostCalendar to Pending Content Module
+
+As of Zikula 1.3.0, the Pending Content Module has been replaced with a new Pending Content model. This model is implemented in PostCalendar v7.x+ and is therefore automatically available. Create a new Pending Content Block and it will be available.
+
+In addition, PostCalendar will notify an Administrator via email if set to do so (see `AdministrationOptions.txt`). PostCalendar will also post a notification to administrators only in the templates if events are queued for review (if set to do so), so using Pending Content is not required.

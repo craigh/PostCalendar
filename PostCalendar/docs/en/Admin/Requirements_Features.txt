@@ -1,0 +1,36 @@
+## PostCalendar v7.0.0 Requirements & Features
+
+PostCalendar is a standard calendar module for Zikula with multiple views, private calendars, MultiHook needles, Content and Locations Module support and much more. PostCalendar is completely converted to the new Zikula 1.3 model (OOP).
+
+#### Software Requirements
+
+*   Zikula >= 1.3
+*   php5
+
+#### Features
+
+*   Multiple views (Year, Month, Week, Day, List, RSS)
+*   100% W3C-valid XHTML 1.1 templates - fully customizable with optional navigation images
+*   Repeating events
+*   Categorization of events using Zikula category system
+    *   Category-based permissions allow group-based or multiple calendars
+*   Content module support
+*   Locations module support
+*   MultiHook Needles provided
+*   Supports all available hooks
+*   Provides event-creation hook
+*   **Date/Time Formats**
+    *   Admin-definable date format for entire module
+    *   24 or 12 hour format
+    *   Monday/Sunday/Saturday week start
+*   Print any view using Printer theme
+*   **Blocks**
+    *   Upcoming Events, Today's Events and calendar view blocks (optional category filter)
+    *   Featured Event block with daily countdown
+    *   Past Events
+*   Admin notification on Event Submission, option to disable, also option to disable on admin-only submission.
+*   Users can create private and/or global events (admin defined by Zikula group)
+*   Events can be queued or immediately submitted (admin defined)
+*   Events can be filtered by category or user (if personal calendar is enabled)
+*   Hovering event information using JavaScript
+*   Admin definable event default values

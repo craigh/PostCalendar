@@ -1,0 +1,27 @@
+## PostCalendar v7.0.0 Blocks
+
+### Calendar
+
+This is the main Calendar block for PostCalendar. This can display any or all of three main elements:
+
+1.  Small 'month view' navigation calendar
+2.  Today's events
+3.  Upcoming events
+
+One can also limit the display to one category by selecting it in the block administration. Select 'all categories' to not limit the display.
+
+One can choose to hide the "Today's Events" portion of the block if there are no events for today.
+
+Optionally display a submit and search link in the block and modify the amount of events to display in the upcoming events area.
+
+The block becomes more useful if the 'popup' or 'hover' options are selected in the admin settings.
+
+### Featured Event
+
+The featured event block allows a site admin to call attention to a specific event in a block. The block requires the event ID to function. In addition, one can optionally display a daily countdown to that event and also optionally hide the block when the event 'expires'. *note: the block is not deleted it is simply hidden.* An admin-only notice will be displayed if a featured event block has been hidden.
+
+### Past Events
+
+The past events block is useful as an archive of events as they have already passed. This is especially useful if you are using PostCalendar in *hooks mode* to archive your News stories or User registrations.
+
+Similar to the Upcoming Events block, one can filter the block to display only events in a certain Category (e.g. News). One can also limit the number of months into the past that events are displayed.
