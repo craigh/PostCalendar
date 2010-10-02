@@ -1,0 +1,13 @@
+This file contains a list of vendor libraries distributed with PostCalendar
+---------------------------------------------------------------------------
+
+PHP LIBRARIES
+-------------
+Date v1.4.7 (stable)
+    Vendor website: http://pear.php.net/package/Date
+    Downloaded from: http://pear.php.net/package/Date/download
+    License: BSD
+    Location in PostCalendar: modules/PostCalendar/lib/vendor/Date
+    Patch details:
+        Removed all subdirectories except /Date
+        Removed all files except Calc.php
