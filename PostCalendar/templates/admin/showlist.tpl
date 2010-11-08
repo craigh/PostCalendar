@@ -9,7 +9,7 @@
 	<form class="z-adminform" action="{modurl modname="PostCalendar" type="admin" func="adminEvents"}" method="post" enctype="application/x-www-form-urlencoded">
 		<div>
 			<input type="hidden" name="authid" value="{insert name="generateauthkey" module="PostCalendar"}" />
-			<table class="z-admintable">
+			<table class="z-datatable">
                 <thead>
     				<tr>
     					<th>{gt text='Select'}</th>
