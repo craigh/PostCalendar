@@ -14,43 +14,9 @@ class PostCalendar_Controller_User extends Zikula_Controller
     /**
      * main view function for end user
      */
-    public function main()
+    public function main($args)
     {
-        if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_OVERVIEW)) {
-            return LogUtil::registerPermissionError();
-        }
-    
-        // get the vars that were passed in
-        $popup       = FormUtil::getPassedValue('popup');
-        $pc_username = FormUtil::getPassedValue('pc_username');
-        $eid         = FormUtil::getPassedValue('eid');
-        $viewtype    = FormUtil::getPassedValue('viewtype', _SETTING_DEFAULT_VIEW);
-        $jumpday     = FormUtil::getPassedValue('jumpDay');
-        $jumpmonth   = FormUtil::getPassedValue('jumpMonth');
-        $jumpyear    = FormUtil::getPassedValue('jumpYear');
-        $jumpargs    = array(
-            'jumpday' => $jumpday,
-            'jumpmonth' => $jumpmonth,
-            'jumpyear' => $jumpyear);
-        $Date        = FormUtil::getPassedValue('Date', PostCalendar_Util::getDate($jumpargs));
-        $filtercats  = FormUtil::getPassedValue('postcalendar_events');
-        $func        = FormUtil::getPassedValue('func');
-        $prop        = isset($args['prop']) ? $args['prop'] : (string)FormUtil::getPassedValue('prop', null, 'GET');
-        $cat         = isset($args['cat']) ? $args['cat'] : (string)FormUtil::getPassedValue('cat', null, 'GET');
-        
-        if (empty($filtercats) && !empty($prop) && !empty($cat)) {
-            $filtercats[__CATEGORIES__][$prop] = $cat;
-        }
-    
-    
-        return $this->display(array(
-            'viewtype'    => $viewtype,
-            'Date'        => $Date,
-            'filtercats'  => $filtercats,
-            'pc_username' => $pc_username,
-            'popup'       => $popup,
-            'eid'         => $eid,
-            'func'        => $func));
+        return $this->display($args);
     }
     
     /**
@@ -58,13 +24,33 @@ class PostCalendar_Controller_User extends Zikula_Controller
      */
     public function display($args)
     {
-        $viewtype    = $args['viewtype'];
-        $Date        = $args['Date'];
-        $filtercats  = $args['filtercats'];
-        $pc_username = $args['pc_username'];
-        $popup       = $args['popup'];
-        $eid         = $args['eid'];
-        $func        = $args['func'];
+        if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_OVERVIEW)) {
+            return LogUtil::registerPermissionError();
+        }
+
+        // get the vars that were passed in
+        $popup       = FormUtil::getPassedValue('popup');
+        $pc_username = FormUtil::getPassedValue('pc_username');
+        $eid         = FormUtil::getPassedValue('eid');
+        $jumpday     = FormUtil::getPassedValue('jumpDay');
+        $jumpmonth   = FormUtil::getPassedValue('jumpMonth');
+        $jumpyear    = FormUtil::getPassedValue('jumpYear');
+        $jumpargs    = array(
+            'jumpday' => $jumpday,
+            'jumpmonth' => $jumpmonth,
+            'jumpyear' => $jumpyear);
+        $filtercats  = FormUtil::getPassedValue('postcalendar_events');
+        $func        = FormUtil::getPassedValue('func');
+
+        // the following are pulled from getPassedValue unless presented in the $args array (via Content module for example)
+        $viewtype    = isset($args['viewtype']) ? $args['viewtype'] : FormUtil::getPassedValue('viewtype', _SETTING_DEFAULT_VIEW);
+        $Date        = isset($args['Date']) ? $args['Date'] : FormUtil::getPassedValue('Date', PostCalendar_Util::getDate($jumpargs));
+        $prop        = isset($args['prop']) ? $args['prop'] : (string)FormUtil::getPassedValue('prop', null, 'GET');
+        $cat         = isset($args['cat']) ? $args['cat'] : (string)FormUtil::getPassedValue('cat', null, 'GET');
+
+        if (empty($filtercats) && !empty($prop) && !empty($cat)) {
+            $filtercats[__CATEGORIES__][$prop] = $cat;
+        }
     
         if (empty($Date) && empty($viewtype)) {
             return LogUtil::registerArgsError();
