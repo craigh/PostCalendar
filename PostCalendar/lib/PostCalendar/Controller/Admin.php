@@ -304,7 +304,7 @@ class PostCalendar_Controller_Admin extends Zikula_Controller
         ModUtil::setVars('PostCalendar', $settings);
     
         // Let any other modules know that the modules configuration has been updated
-        $this->callHooks('module', 'updateconfig', 'PostCalendar', array(
+        ModUtil::callHooks('module', 'updateconfig', 'PostCalendar', array(
             'module' => 'PostCalendar'));
     
         // clear the cache

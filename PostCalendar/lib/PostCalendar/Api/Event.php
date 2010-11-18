@@ -334,14 +334,14 @@ class PostCalendar_Api_Event extends Zikula_Api
             $obj = array(
                 $eventdata['eid'] => $eventdata);
             $result = DBUtil::updateObjectArray($obj, 'postcalendar_events', 'eid');
-            $this->callHooks('item', 'update', $eventdata['eid'], array(
+            ModUtil::callHooks('item', 'update', $eventdata['eid'], array(
                 'module' => 'PostCalendar'));
         } else { //new event
             unset($eventdata['eid']); //be sure that eid is not set on insert op to autoincrement value
             unset($eventdata['is_update']);
             $eventdata['time'] = date("Y-m-d H:i:s"); //current date for timestamp on event
             $result = DBUtil::insertObject($eventdata, 'postcalendar_events', 'eid');
-            $this->callHooks('item', 'create', $result['eid'], array(
+            ModUtil::callHooks('item', 'create', $result['eid'], array(
                 'module' => 'PostCalendar'));
         }
         if ($result === false) {
@@ -600,7 +600,7 @@ class PostCalendar_Api_Event extends Zikula_Api
         $event['hometext'] = DataUtil::formatForDisplayHTML($hometext); //add hometext back into array with HTML formatting
     
         // Hooks filtering should be after formatForDisplay to allow Hook transforms
-        list ($event['hometext']) = $this->callHooks('item', 'transform', '', array(
+        list ($event['hometext']) = ModUtil::callHooks('item', 'transform', '', array(
             $event['hometext']));
     
         // Check for comments
