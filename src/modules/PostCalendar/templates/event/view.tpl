@@ -1,4 +1,3 @@
-{* $Id: postcalendar_event_view.htm 638 2010-06-30 22:14:17Z craigh $ *}
 <div class="postcalendar_event_view">
 <h2 class="postcalendar_header">
     {$loaded_event.title|safehtml}

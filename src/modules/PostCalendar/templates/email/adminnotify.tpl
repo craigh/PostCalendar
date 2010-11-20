@@ -1,4 +1,3 @@
-{* $Id: postcalendar_email_adminnotify.htm 612 2010-06-22 15:15:51Z craigh $ *}
 <h2>{gt text="Notice: PostCalendar submission/change"}</h2>
 
 {if $is_update eq true}

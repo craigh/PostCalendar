@@ -1,4 +1,3 @@
-{* $Id: postcalendar_block_view_upcoming.htm 638 2010-06-30 22:14:17Z craigh $ *}
 {pc_queued_events_notify}
 {ajaxheader module="PostCalendar" ui=true}
 {pc_pagejs_init}

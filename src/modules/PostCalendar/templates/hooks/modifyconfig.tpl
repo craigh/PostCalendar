@@ -1,4 +1,3 @@
-{*  $Id: postcalendar_hooks_modifyconfig.htm 596 2010-06-05 01:14:46Z craigh $  *}
 <fieldset>
     <legend>{gt text='PostCalendar hook settings' domain="module_postcalendar"}</legend>
     <div class="z-formrow">

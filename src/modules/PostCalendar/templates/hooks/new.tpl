@@ -1,4 +1,3 @@
-{*  $Id: postcalendar_hooks_new.htm 612 2010-06-22 15:15:51Z craigh $  *}
 {if $postcalendar_hide}
     <input type="hidden" value="1" name='postcalendar[optin]' />
     <input type="hidden" value="{$postcalendar_admincatselected|safetext}" name='postcalendar[cats]' />
