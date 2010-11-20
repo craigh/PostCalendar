@@ -1,9 +1,6 @@
 <?php
 /**
  * @package     PostCalendar
- * @author      $Author: craigh $
- * @link        $HeadURL: https://code.zikula.org/svn/soundwebdevelopment/trunk/Modules/PostCalendar/pntemplates/plugins/function.pc_init_rss_feed.php $
- * @version     $Id: function.pc_init_rss_feed.php 639 2010-06-30 22:16:08Z craigh $
  * @description add rss pagevar if pnRender doesn't mess up the template
  * @return      bool
  * @copyright   Copyright (c) 2009, Craig Heydenburg, Sound Web Development

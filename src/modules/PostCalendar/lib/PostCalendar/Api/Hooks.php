@@ -2,8 +2,6 @@
 /**
  * @package     PostCalendar
  * @author      Craig Heydenburg
- * @link        $HeadURL: https://code.zikula.org/svn/soundwebdevelopment/trunk/Modules/PostCalendar/lib/PostCalendar/Api/User.php $
- * @version     $Id: User.php 641 2010-07-01 21:22:06Z craigh $
  * @copyright   Copyright (c) 2002, The PostCalendar Team
  * @copyright   Copyright (c) 2009, Craig Heydenburg, Sound Web Development
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License

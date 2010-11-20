@@ -1,9 +1,6 @@
 <?php
 /**
  * @package     PostCalendar
- * @author      $Author: craigh $
- * @link        $HeadURL: https://code.zikula.org/svn/soundwebdevelopment/trunk/Modules/PostCalendar/pntemplates/plugins/function.pc_queued_events_notify.php $
- * @version     $Id: function.pc_queued_events_notify.php 639 2010-06-30 22:16:08Z craigh $
  * @description determine if there are queued events and format a notice
  * @return      if (assign) return count, else return formatted alert notice
  * @copyright   Copyright (c) 2009, Craig Heydenburg, Sound Web Development

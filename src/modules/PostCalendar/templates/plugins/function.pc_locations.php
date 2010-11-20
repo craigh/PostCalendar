@@ -1,10 +1,7 @@
 <?php
 /**
  * @package     PostCalendar
- * @author      $Author: craigh $
  * @author      Jusuff (javascript)
- * @link        $HeadURL: https://code.zikula.org/svn/soundwebdevelopment/trunk/Modules/PostCalendar/pntemplates/plugins/function.pc_locations.php $
- * @version     $Id: function.pc_locations.php 639 2010-06-30 22:16:08Z craigh $
  * @copyright   Copyright (c) 2010, Craig Heydenburg, Sound Web Development
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
  */

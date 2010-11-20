@@ -1,9 +1,6 @@
 <?php
 /**
  * @package     PostCalendar
- * @author      $Author: craigh $
- * @link        $HeadURL: https://code.zikula.org/svn/soundwebdevelopment/trunk/Modules/PostCalendar/pntemplates/plugins/function.pc_html_select_date.php $
- * @version     $Id: function.pc_html_select_date.php 639 2010-06-30 22:16:08Z craigh $
  * @description modified html_select_date plugin
  * @return      bool
  * @copyright   Copyright (c) 2009, Craig Heydenburg, Sound Web Development
