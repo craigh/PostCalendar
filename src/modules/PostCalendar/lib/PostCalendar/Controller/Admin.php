@@ -1,9 +1,6 @@
 <?php
 /**
  * @package     PostCalendar
- * @author      $Author$
- * @link        $HeadURL$
- * @version     $Id$
  * @copyright   Copyright (c) 2002, The PostCalendar Team
  * @copyright   Copyright (c) 2009, Craig Heydenburg, Sound Web Development
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
@@ -17,9 +14,6 @@ class PostCalendar_Controller_Admin extends Zikula_Controller
      */
     public function main()
     {
-        if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
-            return LogUtil::registerPermissionError();
-        }
         return $this->modifyconfig();
     }
     
@@ -43,61 +37,31 @@ class PostCalendar_Controller_Admin extends Zikula_Controller
     }
     
     /**
-     * @description list all events that have been previously approved
-     * @return string html template
-     */
-    public function listapproved()
-    {
-        $args = array();
-        $args['type']     = _EVENT_APPROVED;
-        $args['function'] = 'listapproved';
-        $args['title']    = $this->__('Approved events administration');
-        return $this->showlist($args);
-    }
-    
-    /**
-     * @desc list all events that are currently hidden
-     * @return string html template
-     */
-    public function listhidden()
-    {
-        $args = array();
-        $args['type']     = _EVENT_HIDDEN;
-        $args['function'] = 'listhidden';
-        $args['title']    = $this->__('Hidden events administration');
-        return $this->showlist($args);
-    }
-    
-    /**
-     * @desc list all events that are awaiting approval
-     * @return string html template
-     */
-    public function listqueued()
-    {
-        $args = array();
-        $args['type']     = _EVENT_QUEUED;
-        $args['function'] = 'listqueued';
-        $args['title']    = $this->__('Queued events administration');
-        return $this->showlist($args);
-    }
-    
-    /**
      * @desc list events as requested/filtered
      *              send list to template
      * @return string showlist template
      */
-    public function showlist($args)
+    public function listevents(array $args)
     {
         if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_DELETE)) {
             return LogUtil::registerPermissionError();
         }
     
-        // $args should be array with keys 'type', 'function', 'title'
-        if (!isset($args['type']) or empty($args['function'])) {
-            // $title not required, type can be 1, 0, -1
-            return LogUtil::registerArgsError();
-        }
-    
+        $type = isset($args['listtype']) ? $args['listtype'] : FormUtil::getPassedValue('listtype', _EVENT_APPROVED);
+        switch ($type) {
+            case _EVENT_HIDDEN:
+                $functionname = "hidden";
+                $title = $this->__('Hidden events administration');
+                break;
+            case _EVENT_QUEUED:
+                $functionname = "queued";
+                $title = $this->__('Queued events administration');
+                break;
+            case _EVENT_APPROVED:
+            default:
+                $functionname = "approved";
+                $title = $this->__('Approved events administration');
+            }
     
         $offset_increment = _SETTING_HOW_MANY_EVENTS;
         if (empty($offset_increment)) {
@@ -116,26 +80,33 @@ class PostCalendar_Controller_Admin extends Zikula_Controller
             $sort .= ' ASC';
         }
     
-        $events = DBUtil::selectObjectArray('postcalendar_events', "WHERE pc_eventstatus=" . $args['type'], $sort, $offset, $offset_increment, false);
+        $events = DBUtil::selectObjectArray('postcalendar_events', "WHERE pc_eventstatus=" . $type, $sort, $offset, $offset_increment, false);
     
-        $this->view->assign('title', $args['title']);
-        $this->view->assign('function', $args['function']);
-        $this->view->assign('functionname', substr($args['function'], 4));
+        $this->view->assign('title', $title);
+        $this->view->assign('functionname', $functionname);
         $this->view->assign('events', $events);
-        $this->view->assign('title_sort_url', ModUtil::url('PostCalendar', 'admin', $args['function'], array(
+        $this->view->assign('title_sort_url', ModUtil::url('PostCalendar', 'admin', 'listevents', array(
+            'listtype' => $type,
             'sort' => 'title',
             'sdir' => $sdir)));
-        $this->view->assign('time_sort_url', ModUtil::url('PostCalendar', 'admin', $args['function'], array(
+        $this->view->assign('time_sort_url', ModUtil::url('PostCalendar', 'admin', 'listevents', array(
+            'listtype' => $type,
             'sort' => 'time',
             'sdir' => $sdir)));
         $this->view->assign('formactions', array(
-            _ADMIN_ACTION_VIEW    => $this->__('List'),
+            _ADMIN_ACTION_VIEW    => $this->__('View'),
             _ADMIN_ACTION_APPROVE => $this->__('Approve'),
             _ADMIN_ACTION_HIDE    => $this->__('Hide'),
             _ADMIN_ACTION_DELETE  => $this->__('Delete')));
         $this->view->assign('actionselected', _ADMIN_ACTION_VIEW);
+        $this->view->assign('listtypes', array(
+            _EVENT_APPROVED => $this->__('Approved Events'),
+            _EVENT_HIDDEN   => $this->__('Hidden Events'),
+            _EVENT_QUEUED   => $this->__('Queued Events')));
+        $this->view->assign('listtypeselected', $type);
         if ($offset > 1) {
-            $prevlink = ModUtil::url('PostCalendar', 'admin', $args['function'], array(
+            $prevlink = ModUtil::url('PostCalendar', 'admin', 'listevents', array(
+                'listtype' => $type,
                 'offset' => $offset - $offset_increment,
                 'sort' => $sort,
                 'sdir' => $original_sdir));
@@ -144,7 +115,8 @@ class PostCalendar_Controller_Admin extends Zikula_Controller
         }
         $this->view->assign('prevlink', $prevlink);
         if (count($events) >= $offset_increment) {
-            $nextlink = ModUtil::url('PostCalendar', 'admin', $args['function'], array(
+            $nextlink = ModUtil::url('PostCalendar', 'admin', 'listevents', array(
+                'listtype' => $type,
                 'offset' => $offset + $offset_increment,
                 'sort' => $sort,
                 'sdir' => $original_sdir));
@@ -167,28 +139,13 @@ class PostCalendar_Controller_Admin extends Zikula_Controller
             return LogUtil::registerPermissionError();
         }
     
-        $action  = FormUtil::getPassedValue('action');
-        $events  = FormUtil::getPassedValue('events'); // could be an array or single val
-        $thelist = FormUtil::getPassedValue('thelist');
+        $action = FormUtil::getPassedValue('action');
+        $events = FormUtil::getPassedValue('events'); // could be an array or single val
     
         if (!isset($events)) {
             LogUtil::registerError($this->__('Please select an event.'));
-    
             // return to where we came from
-            switch ($thelist) {
-                case 'listqueued':
-                    return $this->showlist(array(
-                        'type' => _EVENT_QUEUED,
-                        'function' => 'showlist'));
-                case 'listhidden':
-                    return $this->showlist(array(
-                        'type' => _EVENT_HIDDEN,
-                        'function' => 'showlist'));
-                case 'listapproved':
-                    return $this->showlist(array(
-                        'type' => _EVENT_APPROVED,
-                        'function' => 'showlist'));
-            }
+            return $this->listevents(array('type' => _EVENT_QUEUED));
         }
     
         if (!is_array($events)) {
@@ -204,23 +161,15 @@ class PostCalendar_Controller_Admin extends Zikula_Controller
         }
     
         $count = count($events);
-        $function = '';
-        switch ($action) {
-            case _ADMIN_ACTION_APPROVE:
-                $function = 'approveevents';
-                $are_you_sure_text = $this->_n('Do you really want to approve this event?', 'Do you really want to approve these events?', $count);
-                break;
-            case _ADMIN_ACTION_HIDE:
-                $function = 'hideevents';
-                $are_you_sure_text = $this->_n('Do you really want to hide this event?', 'Do you really want to hide these events?', $count);
-                break;
-            case _ADMIN_ACTION_DELETE:
-                $function = 'deleteevents';
-                $are_you_sure_text = $this->_n('Do you really want to delete this event?', 'Do you really want to delete these events?', $count);
-                break;
-        }
-    
-        $this->view->assign('function', $function);
+        $texts = array(
+            _ADMIN_ACTION_VIEW => "view",
+            _ADMIN_ACTION_APPROVE => "approve",
+            _ADMIN_ACTION_HIDE => "hide",
+            _ADMIN_ACTION_DELETE => "delete");
+
+        $this->view->assign('actiontext', $texts[$action]);
+        $this->view->assign('action', $action);
+        $are_you_sure_text = $this->_fn('Do you really want to %s this event?', 'Do you really want to %s these events?', $count, $texts[$action]);
         $this->view->assign('areyousure', $are_you_sure_text);
         $this->view->assign('alleventinfo', $alleventinfo);
     
@@ -304,8 +253,9 @@ class PostCalendar_Controller_Admin extends Zikula_Controller
         ModUtil::setVars('PostCalendar', $settings);
     
         // Let any other modules know that the modules configuration has been updated
-        ModUtil::callHooks('module', 'updateconfig', 'PostCalendar', array(
-            'module' => 'PostCalendar'));
+        //ModUtil::callHooks('module', 'updateconfig', 'PostCalendar', array(
+        //    'module' => 'PostCalendar'));
+        $this->notifyHooks('postcalendar.hook.process.updateconfig', $this);
     
         // clear the cache
         $this->view->clear_cache();
@@ -315,120 +265,60 @@ class PostCalendar_Controller_Admin extends Zikula_Controller
     }
     
     /**
-     * update status of events so that they are viewable by users
+     * update status of events to approve, hide or delete
      * @return string html template
      */
-    public function approveevents()
+    public function updateevents()
     {
         if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADD)) {
             return LogUtil::registerPermissionError();
         }
-    
+
         $pc_eid = FormUtil::getPassedValue('pc_eid');
+        $action = FormUtil::getPassedValue('action');
         if (!is_array($pc_eid)) {
-            return $this->__("Error! An 'unidentified error' occurred.");
+            return $this->__("Error! An the eid must be passed as an array.");
         }
-    
+        $state = array (
+            _ADMIN_ACTION_APPROVE => _EVENT_APPROVED,
+            _ADMIN_ACTION_HIDE => _EVENT_HIDDEN,
+            _ADMIN_ACTION_DELETE => 5); // just a random value for deleted
+
         // structure array for DB interaction
         $eventarray = array();
         foreach ($pc_eid as $eid) {
             $eventarray[$eid] = array(
                 'eid' => $eid,
-                'eventstatus' => _EVENT_APPROVED);
+                'eventstatus' => $state[$action]); // field not used in delete action
         }
         $count = count($pc_eid);
-    
+
         // update the DB
-        $res = DBUtil::updateObjectArray($eventarray, 'postcalendar_events', 'eid');
+        switch ($action) {
+            case _ADMIN_ACTION_APPROVE:
+                $res = DBUtil::updateObjectArray($eventarray, 'postcalendar_events', 'eid');
+                $words = array('approve', 'approved');
+                break;
+            case _ADMIN_ACTION_HIDE:
+                $res = DBUtil::updateObjectArray($eventarray, 'postcalendar_events', 'eid');
+                $words = array('hide', 'hidden');
+                break;
+            case _ADMIN_ACTION_DELETE:
+                $res = DBUtil::deleteObjectsFromKeyArray($eventarray, 'postcalendar_events', 'eid');
+                $words = array('delete', 'deleted');
+                break;
+        }
         if ($res) {
-            LogUtil::registerStatus($this->_fn('Done! %s event approved.', 'Done! %s events approved.', $count, $count));
+            LogUtil::registerStatus($this->_fn('Done! %1$s event %2$s.', 'Done! %1$s events %2$s.', $count, array($count, $words[1])));
         } else {
-            LogUtil::registerError($this->__("Error! An 'unidentified error' occurred."));
+            LogUtil::registerError($this->__fn("Error! Could not %s event.", "Error! Could not %s events.", $count, $words[0]));
         }
-    
+
         $this->view->clear_cache();
-        return $this->showlist(array(
-            'type'     => _EVENT_APPROVED,
-            'function' => 'listapproved',
-            'title'    => $this->__('Approved events administration')));
+        return $this->listevents(array(
+            'type' => _EVENT_APPROVED));
     }
-    
-    /**
-     * update status of events so that they are hidden from view
-     * @return string html template
-     */
-    public function hideevents()
-    {
-        if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_EDIT)) {
-            return LogUtil::registerPermissionError();
-        }
-    
-        $pc_eid = FormUtil::getPassedValue('pc_eid');
-        if (!is_array($pc_eid)) {
-            return $this->__("Error! An 'unidentified error' occurred.");
-        }
-    
-        // structure array for DB interaction
-        $eventarray = array();
-        foreach ($pc_eid as $eid) {
-            $eventarray[$eid] = array(
-                'eid' => $eid,
-                'eventstatus' => _EVENT_HIDDEN);
-        }
-        $count = count($pc_eid);
-    
-        // update the DB
-        $res = DBUtil::updateObjectArray($eventarray, 'postcalendar_events', 'eid');
-        if ($res) {
-            LogUtil::registerStatus($this->_fn('Done! %s event was hidden.', 'Done! %s events were hidden.', $count, $count));
-        } else {
-            LogUtil::registerError($this->__("Error! An 'unidentified error' occurred."));
-        }
-    
-        $this->view->clear_cache();
-        return $this->showlist(array(
-            'type'     => _EVENT_APPROVED,
-            'function' => 'listapproved',
-            'title'    => $this->__('Approved events administration')));
-    }
-    
-    /**
-     * delete array of events
-     * @return string html template
-     */
-    public function deleteevents()
-    {
-        if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_DELETE)) {
-            return LogUtil::registerPermissionError();
-        }
-    
-        $pc_eid = FormUtil::getPassedValue('pc_eid');
-        if (!is_array($pc_eid)) {
-            return $this->__("Error! An 'unidentified error' occurred.");
-        }
-    
-        // structure array for DB interaction
-        $eventarray = array();
-        foreach ($pc_eid as $eid) {
-            $eventarray[$eid] = $eid;
-        }
-        $count = count($pc_eid);
-    
-        // update the DB
-        $res = DBUtil::deleteObjectsFromKeyArray($eventarray, 'postcalendar_events', 'eid');
-        if ($res) {
-            LogUtil::registerStatus($this->_fn('Done! %s event deleted.', 'Done! %s events deleted.', $count, $count));
-        } else {
-            LogUtil::registerError($this->__("Error! An 'unidentified error' occurred."));
-        }
-    
-        $this->view->clear_cache();
-        return $this->showlist(array(
-            'type'     => _EVENT_APPROVED,
-            'function' => 'listapproved',
-            'title'    => $this->__('Approved events administration')));
-    }
-    
+
     /**
      * @desc present administrator options to change event default values
      * @return string html template

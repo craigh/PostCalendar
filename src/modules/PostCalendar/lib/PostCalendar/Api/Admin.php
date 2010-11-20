@@ -2,8 +2,6 @@
 /**
  * @package     PostCalendar
  * @author      Craig Heydenburg
- * @link        $HeadURL$
- * @version     $Id$
  * @copyright   Copyright (c) 2002, The PostCalendar Team
  * @copyright   Copyright (c) 2009, Craig Heydenburg, Sound Web Development
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
@@ -35,29 +33,17 @@ class PostCalendar_Api_Admin extends Zikula_Api
                 'text' => $this->__('Event default values'),
                 'class' => 'z-icon-es-config');
         }
+        if (SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_DELETE)) {
+            $links[] = array(
+                'url' => ModUtil::url('PostCalendar', 'admin', 'listevents'),
+                'text' => $this->__('Event List'),
+                'class' => 'z-icon-es-list');
+        }
         if (SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADD)) {
             $links[] = array(
                 'url' => ModUtil::url('PostCalendar', 'event', 'create'),
                 'text' => $this->__('Create new event'),
                 'class' => 'z-icon-es-new');
-        }
-        if (SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_DELETE)) {
-            $links[] = array(
-                'url' => ModUtil::url('PostCalendar', 'admin', 'listapproved'),
-                'text' => $this->__('Approved events'),
-                'class' => 'z-icon-es-list');
-        }
-        if (SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_DELETE)) {
-            $links[] = array(
-                'url' => ModUtil::url('PostCalendar', 'admin', 'listhidden'),
-                'text' => $this->__('Hidden events'),
-                'class' => 'z-icon-es-list');
-        }
-        if (SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_DELETE)) {
-            $links[] = array(
-                'url' => ModUtil::url('PostCalendar', 'admin', 'listqueued'),
-                'text' => $this->__('Queued events'),
-                'class' => 'z-icon-es-list');
         }
         if (SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADD)) {
             $links[] = array(

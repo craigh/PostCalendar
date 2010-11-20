@@ -1,7 +1,7 @@
-{*  $Id: postcalendar_admin_eventrevue.htm 639 2010-06-30 22:16:08Z craigh $  *}
 {include file="admin/menu.tpl"}
-{if (!empty($function))}
-	<form action="{modurl modname="PostCalendar" type="admin" func=$function}" method="post">
+{if ($actiontext != "view")}
+	<form action="{modurl modname="PostCalendar" type="admin" func="updateevents"}" method="post">
+        <input type="hidden" name="action" value="{$action}">
 {/if}
 <div class="z-admincontainer">
 <div class="z-adminpageicon">{img modname='PostCalendar' src='admin.png'}</div>
@@ -13,11 +13,11 @@
 	<input type="hidden" name="pc_eid[]" value="{$eid}" />
 {/foreach}
 </div><!-- /z-admincontainer -->
-{if (!empty($function))}
-	<div>{$areyousure}</div>
-    <div class="z-formbuttons">
-        {button src=button_ok.gif set=icons/small __alt="Yes" __title="Yes"}
-        <a href="{modurl modname=PostCalendar type=admin func=listqueued}">{img modname=core src=button_cancel.gif set=icons/small __alt="Cancel" __title="Cancel"}</a>
+{if ($actiontext != "view")}
+	<div class='z-warningmsg'>{$areyousure}</div>
+    <div class="z-buttons z-formbuttons">
+        {button src="button_ok.gif" set="icons/extrasmall" class='z-btgreen' __alt="Yes" __title="Yes" __text="Yes"}
+        <a class='z-btred' href="{modurl modname="PostCalendar" type="admin" func=listevents}" title="{gt text="Cancel"}">{img modname=core src="button_cancel.gif" set="icons/extrasmall" __alt="Cancel" __title="Cancel"} {gt text="Cancel"}</a>
     </div>
 	</form>
 {/if}
