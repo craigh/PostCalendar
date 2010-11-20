@@ -1,4 +1,3 @@
-{* $Id: postcalendar_block_featuredevent.htm 639 2010-06-30 22:16:08Z craigh $ *}
 {if $loaded_event.showhiddenwarning}
     {checkpermission component="::" instance=".*" level="ACCESS_ADMIN" assign="ACCESS_ADMIN"}
     {if $ACCESS_ADMIN}

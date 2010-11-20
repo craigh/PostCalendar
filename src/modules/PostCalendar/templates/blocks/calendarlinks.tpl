@@ -1,4 +1,3 @@
-{* $Id: postcalendar_block_calendarlinks.htm 596 2010-06-05 01:14:46Z craigh $ *}
 {checkpermission component="::" instance=".*" level="ACCESS_ADD" assign="ACCESS_ADD"}
 <div class="pc_centerblocksubmitlinks">
     {if $ACCESS_ADD}

@@ -1,4 +1,3 @@
-{* $Id: postcalendar_block_view_day.htm 638 2010-06-30 22:14:17Z craigh $ *}
 {if !$hideTodaysEvents}
 {ajaxheader module="PostCalendar" ui=true}
 {pc_pagejs_init}

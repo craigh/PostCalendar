@@ -1,4 +1,3 @@
-{* $Id: postcalendar_block_featuredevent_modify.htm 596 2010-06-05 01:14:46Z craigh $ *}
 <div class="z-formrow">
     <label for="postcalendar_eid">{gt text="Event ID (eid)"}</label>
     <input id="postcalendar_eid" type="text" name="eid" value="{$vars.eid}" size="5" /><br />

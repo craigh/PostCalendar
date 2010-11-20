@@ -1,4 +1,3 @@
-{* $Id: postcalendar_block_calendar_modify.htm 596 2010-06-05 01:14:46Z craigh $ *}
 <div class="z-formrow">
 	<label for="pcbshowcalendar">{gt text="Display the calendar in the block"}</label>
 	<input id="pcbshowcalendar" type="checkbox" {if $vars.pcbshowcalendar eq 1}checked="checked" {/if}value="1" name="pcbshowcalendar" />

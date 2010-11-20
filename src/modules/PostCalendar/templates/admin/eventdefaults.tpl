@@ -1,4 +1,3 @@
-{* $Id: postcalendar_admin_eventdefaults.htm 639 2010-06-30 22:16:08Z craigh $ *}
 {include file="admin/menu.tpl"}
 
 {modgetvar module="PostCalendar" name="pcAllowUserCalendar" assign="pcAllowUserCalendar"}

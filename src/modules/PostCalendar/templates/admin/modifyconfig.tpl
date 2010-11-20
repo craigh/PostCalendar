@@ -1,4 +1,3 @@
-{*  $Id: postcalendar_admin_modifyconfig.htm 630 2010-06-30 01:16:58Z craigh $  *}
 {include file="admin/menu.tpl"}
 
 <div class="z-admincontainer">

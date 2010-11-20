@@ -1,4 +1,3 @@
-{* $Id: postcalendar_block_view_month.htm 639 2010-06-30 22:16:08Z craigh $ *}
 {ajaxheader module="PostCalendar" ui=true}
 {pc_pagejs_init}
 <div class="postcalendar_block_view_month">

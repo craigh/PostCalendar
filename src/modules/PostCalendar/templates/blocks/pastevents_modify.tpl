@@ -1,4 +1,3 @@
-{* $Id: postcalendar_block_pastevents_modify.htm 596 2010-06-05 01:14:46Z craigh $ *}
 <div class="z-formrow">
     <label for="pcbfiltercats_{$firstprop}_">{gt text='Only display events in category(s)'}</label>
     {gt text="All Categories" assign="allText"}
