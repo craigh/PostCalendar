@@ -1,4 +1,3 @@
-{* $Id: postcalendar_user_view_xml.htm 638 2010-06-30 22:14:17Z craigh $ *}
 {pc_sort_events var="S_EVENTS" sort="time" order="asc" value=$A_EVENTS}
 {foreach name=dates item=events key=date from=$S_EVENTS}
   {pc_sort_events var="S_EVENTS" sort="time" order="asc" value=$A_EVENTS}

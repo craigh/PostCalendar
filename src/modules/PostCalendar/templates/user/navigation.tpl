@@ -1,4 +1,3 @@
-{* $Id: postcalendar_user_navigation.htm 639 2010-06-30 22:16:08Z craigh $ *}
 {pc_queued_events_notify}
 {pc_form_nav_open}
 {pc_init_rss_feed assign="rss"}

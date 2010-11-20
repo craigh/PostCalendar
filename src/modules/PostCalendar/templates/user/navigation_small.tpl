@@ -1,4 +1,3 @@
-{* $Id: postcalendar_user_navigation_small.htm 639 2010-06-30 22:16:08Z craigh $ *}
 {pc_queued_events_notify}
 {pc_form_nav_open}
 <div class="z-clearfix">

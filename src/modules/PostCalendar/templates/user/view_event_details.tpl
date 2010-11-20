@@ -1,4 +1,3 @@
-{* $Id: postcalendar_user_view_event_details.htm 639 2010-06-30 22:16:08Z craigh $ *}
 {checkpermission component="::" instance=".*" level="ACCESS_ADD" assign="ACCESS_ADD"}
 {formutil_getpassedvalue name="theme" source="get" assign="theme" default=false}
 {assign var="PRINT_VIEW" value=0}
@@ -30,5 +29,6 @@
         <a href="{modurl modname="PostCalendar" func="main" viewtype=$viewtype Date=$Date eid=$loaded_event.eid}">{gt text='Return'}</a>
     </div>
 {/if}
-{modcallhooks hookobject=item hookaction=display hookid=$loaded_event.eid returnurl="index.php?module=PostCalendar&func=main&viewtype=details&eid=`$loaded_event.eid`"}
+{* modcallhooks hookobject=item hookaction=display hookid=$loaded_event.eid returnurl="index.php?module=PostCalendar&func=main&viewtype=details&eid=`$loaded_event.eid`" *}
+{calldisplayhooks hooktype='ui.view' subject=$loaded_event.eid module=$module assign='display_hooks'}{$display_hooks}
 {include file="user/footer.tpl"}

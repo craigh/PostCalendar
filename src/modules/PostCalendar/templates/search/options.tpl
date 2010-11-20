@@ -1,4 +1,3 @@
-{* $Id: postcalendar_search_options.htm 596 2010-06-05 01:14:46Z craigh $ *}
 <div>
 	<input type="checkbox" id="active_postcalendar" name="active[PostCalendar]" value="1"{if $active} checked="checked"{/if} />
 	<label for="active_postcalendar">{gt text="Calendar"}</label>

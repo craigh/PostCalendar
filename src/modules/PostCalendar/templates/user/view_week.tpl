@@ -1,4 +1,3 @@
-{* $Id: postcalendar_user_view_week.htm 638 2010-06-30 22:14:17Z craigh $ *}
 {checkpermission component="::" instance=".*" level="ACCESS_ADD" assign="ACCESS_ADD"}
 {formutil_getpassedvalue name="theme" source="get" assign="theme" default=false}
 {assign var="PRINT_VIEW" value=0}

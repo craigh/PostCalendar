@@ -1,4 +1,3 @@
-{* $Id: postcalendar_user_view_month.htm 639 2010-06-30 22:16:08Z craigh $ *}
 {checkpermission component="::" instance=".*" level="ACCESS_ADD" assign="ACCESS_ADD"}
 {modgetvar module='PostCalendar' name='pcEventsOpenInNewWindow' assign='in_new_window'}
 {formutil_getpassedvalue name="theme" source="get" assign="theme" default=false}
