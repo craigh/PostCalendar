@@ -4,6 +4,9 @@
 <div class="z-clearfix">
     <div id="postcalendar_nav_right">
         <ul>
+            {checkpermissionblock component='PostCalendar::' instance="::" level=ACCESS_ADMIN}
+            <li><a href='{modurl modname='PostCalendar' type='admin'}'>{img src=configure.gif modname=core set=icons/small __alt="Admin" __title="Admin"}</a></li>
+            {/checkpermissionblock}
             {if $DATE|truncate:8:"" ne $TODAY_DATE|replace:'-':''}
                 <li>{pc_url action='today' full=true navlink=true}</li>
             {/if}
