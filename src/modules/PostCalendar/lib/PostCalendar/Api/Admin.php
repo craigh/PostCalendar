@@ -37,7 +37,15 @@ class PostCalendar_Api_Admin extends Zikula_Api
             $links[] = array(
                 'url' => ModUtil::url('PostCalendar', 'admin', 'listevents'),
                 'text' => $this->__('Event List'),
-                'class' => 'z-icon-es-list');
+                'class' => 'z-icon-es-list',
+                'links' => array(
+                    array('url' => ModUtil::url('PostCalendar', 'admin', 'listevents', array('listtype'=>_EVENT_APPROVED)),
+                        'text' => $this->__('Approved Events')),
+                    array('url' => ModUtil::url('PostCalendar', 'admin', 'listevents', array('listtype'=>_EVENT_HIDDEN)),
+                        'text' => $this->__('Hidden Events')),
+                    array('url' => ModUtil::url('PostCalendar', 'admin', 'listevents', array('listtype'=>_EVENT_QUEUED)),
+                        'text' => $this->__('Queued Events'))
+                ));
         }
         if (SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADD)) {
             $links[] = array(
