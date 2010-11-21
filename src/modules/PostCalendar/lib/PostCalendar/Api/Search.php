@@ -69,10 +69,7 @@ class PostCalendar_Api_Search extends Zikula_Api
     
         ModUtil::dbInfoLoad('Search');
         $dbtable = DBUtil::getTables();
-        $postcalendartable = $dbtable['postcalendar_events'];
         $postcalendarcolumn = $dbtable['postcalendar_events_column'];
-        $searchTable = $dbtable['search_result'];
-        $searchColumn = $dbtable['search_result_column'];
     
         $where = Search_Api_User::construct_where($args, array(
             $postcalendarcolumn['title'],
@@ -120,9 +117,9 @@ class PostCalendar_Api_Search extends Zikula_Api
      * Access checking is ignored since access check has
      * already been done. But we do add a URL to the found user
      */
-    public function search_check(&$args)
+    public function search_check($args)
     {
-        $datarow = &$args['datarow'];
+        $datarow = $args['datarow'];
         $eid = $datarow['extra'];
         $date = str_replace("-", "", substr($datarow['created'], 0, 10));
     
