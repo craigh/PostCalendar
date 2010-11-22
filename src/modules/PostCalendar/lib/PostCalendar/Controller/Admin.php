@@ -47,8 +47,8 @@ class PostCalendar_Controller_Admin extends Zikula_Controller
             return LogUtil::registerPermissionError();
         }
     
-        $type = isset($args['listtype']) ? $args['listtype'] : FormUtil::getPassedValue('listtype', _EVENT_APPROVED);
-        switch ($type) {
+        $listtype = isset($args['listtype']) ? $args['listtype'] : FormUtil::getPassedValue('listtype', _EVENT_APPROVED);
+        switch ($listtype) {
             case _EVENT_HIDDEN:
                 $functionname = "hidden";
                 $title = $this->__('Hidden events administration');
@@ -67,6 +67,9 @@ class PostCalendar_Controller_Admin extends Zikula_Controller
         if (empty($offset_increment)) {
             $offset_increment = 15;
         }
+        $sortcolclasses = array(
+            'title' => 'z-order-unsorted',
+            'time'  => 'z-order-unsorted');
     
         $offset = FormUtil::getPassedValue('offset', 0);
         $sort   = FormUtil::getPassedValue('sort', 'time');
@@ -74,23 +77,26 @@ class PostCalendar_Controller_Admin extends Zikula_Controller
         $original_sdir = $sdir;
         $sdir = $sdir ? 0 : 1; //if true change to false, if false change to true
         if ($sdir == 0) {
+            $sortcolclasses[$sort] = 'z-order-desc';
             $sort .= ' DESC';
         }
         if ($sdir == 1) {
+            $sortcolclasses[$sort] = 'z-order-asc';
             $sort .= ' ASC';
         }
+        $this->view->assign('sortcolclasses', $sortcolclasses);
     
-        $events = DBUtil::selectObjectArray('postcalendar_events', "WHERE pc_eventstatus=" . $type, $sort, $offset, $offset_increment, false);
+        $events = DBUtil::selectObjectArray('postcalendar_events', "WHERE pc_eventstatus=" . $listtype, $sort, $offset, $offset_increment, false);
     
         $this->view->assign('title', $title);
         $this->view->assign('functionname', $functionname);
         $this->view->assign('events', $events);
         $this->view->assign('title_sort_url', ModUtil::url('PostCalendar', 'admin', 'listevents', array(
-            'listtype' => $type,
+            'listtype' => $listtype,
             'sort' => 'title',
             'sdir' => $sdir)));
         $this->view->assign('time_sort_url', ModUtil::url('PostCalendar', 'admin', 'listevents', array(
-            'listtype' => $type,
+            'listtype' => $listtype,
             'sort' => 'time',
             'sdir' => $sdir)));
         $this->view->assign('formactions', array(
@@ -103,10 +109,10 @@ class PostCalendar_Controller_Admin extends Zikula_Controller
             _EVENT_APPROVED => $this->__('Approved Events'),
             _EVENT_HIDDEN   => $this->__('Hidden Events'),
             _EVENT_QUEUED   => $this->__('Queued Events')));
-        $this->view->assign('listtypeselected', $type);
+        $this->view->assign('listtypeselected', $listtype);
         if ($offset > 1) {
             $prevlink = ModUtil::url('PostCalendar', 'admin', 'listevents', array(
-                'listtype' => $type,
+                'listtype' => $listtype,
                 'offset' => $offset - $offset_increment,
                 'sort' => $sort,
                 'sdir' => $original_sdir));
@@ -116,7 +122,7 @@ class PostCalendar_Controller_Admin extends Zikula_Controller
         $this->view->assign('prevlink', $prevlink);
         if (count($events) >= $offset_increment) {
             $nextlink = ModUtil::url('PostCalendar', 'admin', 'listevents', array(
-                'listtype' => $type,
+                'listtype' => $listtype,
                 'offset' => $offset + $offset_increment,
                 'sort' => $sort,
                 'sdir' => $original_sdir));
@@ -145,7 +151,7 @@ class PostCalendar_Controller_Admin extends Zikula_Controller
         if (!isset($events)) {
             LogUtil::registerError($this->__('Please select an event.'));
             // return to where we came from
-            return $this->listevents(array('type' => _EVENT_QUEUED));
+            return $this->listevents(array('listtype' => _EVENT_QUEUED));
         }
     
         if (!is_array($events)) {
@@ -316,7 +322,7 @@ class PostCalendar_Controller_Admin extends Zikula_Controller
 
         $this->view->clear_cache();
         return $this->listevents(array(
-            'type' => _EVENT_APPROVED));
+            'listtype' => _EVENT_APPROVED));
     }
 
     /**

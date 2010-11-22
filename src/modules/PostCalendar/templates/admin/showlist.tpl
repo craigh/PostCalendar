@@ -14,8 +14,8 @@
                 <thead>
                     <tr>
                         <th class='z-w10'>{gt text='Select'}</th>
-                        <th class='z-w60'><a href='{$title_sort_url|safetext}'>{gt text='Title'}</a></th>
-                        <th class='z-w30'><a href='{$time_sort_url|safetext}'>{gt text='Time stamp'}</a></th>
+                        <th class='z-w60'><a class='{$sortcolclasses.title}' href='{$title_sort_url|safetext}'>{gt text='Title'}</a></th>
+                        <th class='z-w30'><a class='{$sortcolclasses.time}' href='{$time_sort_url|safetext}'>{gt text='Time stamp'}</a></th>
                     </tr>
                 </thead>
                 <tbody>
