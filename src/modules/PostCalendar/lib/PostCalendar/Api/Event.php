@@ -332,13 +332,11 @@ class PostCalendar_Api_Event extends Zikula_Api
             $obj = array(
                 $eventdata['eid'] => $eventdata);
             $result = DBUtil::updateObjectArray($obj, 'postcalendar_events', 'eid');
-            $this->notifyHooks('postcalendar.hook.events.articles.edit', $eventdata, $eventdata['eid']);
         } else { //new event
             unset($eventdata['eid']); //be sure that eid is not set on insert op to autoincrement value
             unset($eventdata['is_update']);
             $eventdata['time'] = date("Y-m-d H:i:s"); //current date for timestamp on event
             $result = DBUtil::insertObject($eventdata, 'postcalendar_events', 'eid');
-            $this->notifyHooks('postcalendar.hook.events.articles.edit', $result, $result['eid']);
         }
         if ($result === false) {
             return false;
