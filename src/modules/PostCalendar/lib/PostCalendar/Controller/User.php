@@ -70,7 +70,7 @@ class PostCalendar_Controller_User extends Zikula_Controller
                     return $this->view->fetch('user/view_event_details.tpl');
                 } else {
                     // get the event from the DB
-                    $event = DBUtil::selectObjectByID('postcalendar_events', $args['eid'], 'eid');
+                    $event = DBUtil::selectObjectByID('postcalendar_events', $eid, 'eid');
                     $event = ModUtil::apiFunc('PostCalendar', 'event', 'formateventarrayfordisplay', $event);
     
                     // is event allowed for this user?
