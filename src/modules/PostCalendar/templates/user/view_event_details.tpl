@@ -29,6 +29,6 @@
         <a href="{modurl modname="PostCalendar" func="main" viewtype=$viewtype Date=$Date eid=$loaded_event.eid}">{gt text='Return'}</a>
     </div>
 {/if}
-{* modcallhooks hookobject=item hookaction=display hookid=$loaded_event.eid returnurl="index.php?module=PostCalendar&func=main&viewtype=details&eid=`$loaded_event.eid`" *}
-{calldisplayhooks hooktype='ui.view' subject=$loaded_event.eid module=$module assign='display_hooks'}{$display_hooks}
+{modurl modname='PostCalendar' func='display' viewtype='details' eid=$loaded_event.eid assign='returnurl'}
+{notifydisplayhooks eventname='postcalendar.hook.events.ui.view' area='modulehook_area.postcalendar.events' subject=$loaded_event id=$loaded_event.eid returnurl=$returnurl}
 {include file="user/footer.tpl"}

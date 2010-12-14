@@ -3,8 +3,6 @@
  * @package     PostCalendar
  * @author      Craig Heydenburg
  * @author      Arjen Tebbenhof
- * @link        $HeadURL$
- * @version     $Id$
  * @copyright   Copyright (c) 2002, The PostCalendar Team
  * @copyright   Copyright (c) 2009, Craig Heydenburg, Sound Web Development
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
@@ -43,7 +41,8 @@ class PostCalendar_Installer extends Zikula_Installer
         $this->_reset_scribite();
         $this->_createdefaultsubcategory();
         $this->_createinstallevent();
-        $this->_registermodulehooks();
+
+        HookUtil::registerHookSubscriberBundles($this->version);
 
         // register handlers
         EventUtil::registerPersistentModuleHandler('PostCalendar', 'get.pending_content', array('PostCalendar_Handlers', 'pendingContent'));
@@ -107,6 +106,9 @@ class PostCalendar_Installer extends Zikula_Installer
                 ModUtil::registerHook('item', 'new', 'GUI', 'PostCalendar', 'hooks', 'newgui');
                 // register handlers
                 EventUtil::registerPersistentModuleHandler('PostCalendar', 'get.pending_content', array('PostCalendar_Handlers', 'pendingContent'));
+
+                HookUtil::registerHookSubscriberBundles($this->version);
+
             case '7.0.0':
                 //future development
         }
@@ -251,7 +253,7 @@ class PostCalendar_Installer extends Zikula_Installer
         LogUtil::registerStatus($this->__("PostCalendar: Initial sub-category created (Events)."));
         return true;
     }
-    
+
     /**
      * register module hooks
      * @return boolean
@@ -267,7 +269,7 @@ class PostCalendar_Installer extends Zikula_Installer
         $hooktype = name of the hook type (==admin && (area==API) = function is located in pnadminapi.php)
         $hookfunc = name of the hook function
         */
-    
+        /*
         if (!ModUtil::registerHook('item', 'create', 'API', 'PostCalendar', 'hooks', 'create')) {
             return LogUtil::registerError($this->__f('PostCalendar: Could not register %s hook.', 'create'));
         }
@@ -294,6 +296,7 @@ class PostCalendar_Installer extends Zikula_Installer
         }
     
         LogUtil::registerStatus($this->__('PostCalendar: All hooks registered.'));
+        */
         return true;
     }
 } // end class def

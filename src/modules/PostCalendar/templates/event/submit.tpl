@@ -1,4 +1,3 @@
-{* $Id: postcalendar_event_submit.htm 639 2010-06-30 22:16:08Z craigh $ *}
 {modgetvar module="PostCalendar" name="pcAllowUserCalendar" assign="pcAllowUserCalendar"}
 {if $pcAllowUserCalendar}
     {usergetvar name="uid" assign="uid"}
@@ -172,9 +171,9 @@
 {if !empty($loaded_event.data_loaded)} <input type="hidden" name="postcalendar_events[data_loaded]" value="{$loaded_event.data_loaded}" />{/if}
 
 {if $func eq "edit"}
-    {modcallhooks hookobject='item' hookaction='modify' hookid=$loaded_event.eid module='PostCalendar'}
+    {notifydisplayhooks eventname='postcalendar.hook.events.ui.edit' area='modulehook_area.postcalendar.events' subject=$loaded_event id=$loaded_event.eid caller="PostCalendar"}
 {else}
-    {modcallhooks hookobject='item' hookaction='new' module='PostCalendar'}
+    {notifydisplayhooks eventname='postcalendar.hook.events.ui.edit' area='modulehook_area.postcalendar.events' subject=null id=null caller="PostCalendar"}
 {/if}
 <div class="z-buttons z-formbuttons">
     {button src="14_layer_visible.gif" set="icons/extrasmall" class='z-btblue' __alt="Preview" __title="Preview" __text="Preview" name="form_action" __value="Preview"}

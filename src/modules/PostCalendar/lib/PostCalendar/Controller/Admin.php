@@ -261,7 +261,7 @@ class PostCalendar_Controller_Admin extends Zikula_Controller
         // Let any other modules know that the modules configuration has been updated
         //ModUtil::callHooks('module', 'updateconfig', 'PostCalendar', array(
         //    'module' => 'PostCalendar'));
-        $this->notifyHooks('postcalendar.hook.process.updateconfig', $this);
+        //$this->notifyHooks('postcalendar.hook.process.updateconfig', $this);
     
         // clear the cache
         $this->view->clear_cache();
@@ -388,4 +388,5 @@ class PostCalendar_Controller_Admin extends Zikula_Controller
         LogUtil::registerStatus($this->__('Done! Updated the PostCalendar event default values.'));
         return $this->modifyeventdefaults();
     }
+
 } // end class def

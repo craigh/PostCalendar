@@ -2,8 +2,6 @@
 /**
  * @package     PostCalendar
  * @author      Craig Heydenburg
- * @link        $HeadURL$
- * @version     $Id$
  * @copyright   Copyright (c) 2002, The PostCalendar Team
  * @copyright   Copyright (c) 2009, Craig Heydenburg, Sound Web Development
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
@@ -175,7 +173,7 @@ class PostCalendar_Api_Event extends Zikula_Api
         } // clear start and end dates for search
     
         // update news-hooked stories that have been published since last pageload
-        if (ModUtil::isHooked('postcalendar', 'news')) {
+        if (HookUtil::hasProvider('news.hook.articles.articles.edit')) {
             PostCalendar_PostCalendarEvent_News::scheduler();
         }
     
@@ -334,15 +332,13 @@ class PostCalendar_Api_Event extends Zikula_Api
             $obj = array(
                 $eventdata['eid'] => $eventdata);
             $result = DBUtil::updateObjectArray($obj, 'postcalendar_events', 'eid');
-            ModUtil::callHooks('item', 'update', $eventdata['eid'], array(
-                'module' => 'PostCalendar'));
+            $this->notifyHooks('postcalendar.hook.events.articles.edit', $eventdata, $eventdata['eid']);
         } else { //new event
             unset($eventdata['eid']); //be sure that eid is not set on insert op to autoincrement value
             unset($eventdata['is_update']);
             $eventdata['time'] = date("Y-m-d H:i:s"); //current date for timestamp on event
             $result = DBUtil::insertObject($eventdata, 'postcalendar_events', 'eid');
-            ModUtil::callHooks('item', 'create', $result['eid'], array(
-                'module' => 'PostCalendar'));
+            $this->notifyHooks('postcalendar.hook.events.articles.edit', $result, $result['eid']);
         }
         if ($result === false) {
             return false;
@@ -600,11 +596,12 @@ class PostCalendar_Api_Event extends Zikula_Api
         $event['hometext'] = DataUtil::formatForDisplayHTML($hometext); //add hometext back into array with HTML formatting
     
         // Hooks filtering should be after formatForDisplay to allow Hook transforms
-        list ($event['hometext']) = ModUtil::callHooks('item', 'transform', '', array(
-            $event['hometext']));
-    
+        $view = Zikula_View::getInstance('PostCalendar');
+        $z_event = new Zikula_Event('postcalendar.hook.eventsfilter.ui.filter', $view, array('caller' => $this->getName()), $event['hometext']);
+        $event['hometext'] = $this->eventManager->notify($z_event)->getData();
+
         // Check for comments
-        if (ModUtil::available('EZComments') && ModUtil::isHooked('EZComments', 'PostCalendar')) {
+        if (ModUtil::available('EZComments') && HookUtil::hasProvider('hookhandler.ezcomments.ui.view')) {
             $event['commentcount'] = ModUtil::apiFunc('EZComments', 'user', 'countitems', array(
                 'mod' => 'PostCalendar',
                 'objectid' => $event['eid'],
