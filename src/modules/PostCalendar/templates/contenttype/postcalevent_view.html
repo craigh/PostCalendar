@@ -36,7 +36,7 @@
     {if ($loaded_event.hometext) && ($loaded_event.hometext ne "n/a")}
     <div>
         <h3>{gt text='Description' domain="module_postcalendar"}:</h3>
-        {$loaded_event.hometext}
+        {$loaded_event.hometext|notifyfilters:'postcalendar.hook.eventsfilter.ui.filter':$zikula_view|safetext}
     </div>
     {/if}
     <div>

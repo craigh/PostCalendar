@@ -593,11 +593,6 @@ class PostCalendar_Api_Event extends Zikula_Api
         $event = DataUtil::formatForDisplay($event);
         $event['hometext'] = DataUtil::formatForDisplayHTML($hometext); //add hometext back into array with HTML formatting
     
-        // Hooks filtering should be after formatForDisplay to allow Hook transforms
-        $view = Zikula_View::getInstance('PostCalendar');
-        $z_event = new Zikula_Event('postcalendar.hook.eventsfilter.ui.filter', $view, array('caller' => $this->getName()), $event['hometext']);
-        $event['hometext'] = $this->eventManager->notify($z_event)->getData();
-
         // Check for comments
         if (ModUtil::available('EZComments') && HookUtil::hasProvider('hookhandler.ezcomments.ui.view')) {
             $event['commentcount'] = ModUtil::apiFunc('EZComments', 'user', 'countitems', array(
