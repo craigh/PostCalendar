@@ -11,7 +11,7 @@ class PostCalendar_PostCalendarEvent_News extends PostCalendar_PostCalendarEvent
      * get news info for Postcalendar event creation
      *
      * @param   array(objectid) news id
-     * @return  array() event info or false if no desire to publish event
+     * @return  boolean
      */
     public function makeEvent($args) {
         $dom = ZLanguage::getModuleDomain('PostCalendar');
@@ -35,9 +35,9 @@ class PostCalendar_PostCalendarEvent_News extends PostCalendar_PostCalendarEvent
 
         $this->title = __('News: ', $dom) . $article['title'];
         $this->hometext = ":html:" . __('Article link: ', $dom) . "<a href='" . ModUtil::url('News', 'user', 'display', array('sid' => $article['sid'])) . "'>" . substr($article['hometext'], 0, 32) . "...</a>";
-        $this->aid = $article['aid']; // userid of creator
-        $this->time = $article['time']; // mysql timestamp YYYY-MM-DD HH:MM:SS
-        $this->informant = $article['aid']; // userid of creator
+        $this->aid = $article['cr_uid']; // userid of creator
+        $this->time = $article['cr_date']; // mysql timestamp YYYY-MM-DD HH:MM:SS
+        $this->informant = $article['cr_uid']; // userid of creator
         $this->eventDate = substr($article['from'], 0, 10); // date of event: YYYY-MM-DD
         $this->startTime = substr($article['from'], -8); // time of event: HH:MM:SS
         $this->eventstatus = $eventstatus;
