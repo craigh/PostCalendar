@@ -15,7 +15,7 @@
     <div class="eventdetails">
         <div>
             <h3>{gt text='Description'}:</h3>
-            {$loaded_event.hometext|notifyfilters:'postcalendar.hook.eventsfilter.ui.filter':$zikula_view|safetext}
+            {$loaded_event.hometext|notifyfilters:'postcalendar.hook.eventsfilter.ui.filter':$zikula_view|safehtml}
         </div>
         <div>
             {if ($loaded_event.location_info.event_location) OR ($loaded_event.location_info.event_street1) OR ($loaded_event.location_info.event_street2) OR ($loaded_event.location_info.event_city)}
