@@ -182,7 +182,7 @@ class PostCalendar_Controller_Event extends Zikula_Controller
                 'eventdata' => $eventdata))) {
                 LogUtil::registerError($this->__('Error! Submission failed.'));
             } else {
-                $this->notifyHooks('postcalendar.hook.events.articles.edit', $eventdata, $eventdata['eid']);
+                $this->notifyHooks('postcalendar.hook.events.process.edit', $eventdata, $eventdata['eid']);
                 $this->view->clear_cache();
                 $presentation_date = DateUtil::strftime(_SETTING_DATE_FORMAT, $sdate);
                 if ($is_update) {

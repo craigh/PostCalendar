@@ -42,7 +42,8 @@ class PostCalendar_Installer extends Zikula_Installer
         $this->_createdefaultsubcategory();
         $this->_createinstallevent();
 
-        HookUtil::registerHookSubscriberBundles($this->version);
+        //HookUtil::registerHookSubscriberBundles($this->version);
+        HookUtil::registerHookProviderBundles($this->version);
 
         // register handlers
         EventUtil::registerPersistentModuleHandler('PostCalendar', 'get.pending_content', array('PostCalendar_Handlers', 'pendingContent'));
@@ -71,6 +72,8 @@ class PostCalendar_Installer extends Zikula_Installer
             $modversion = array(
                 'version' => 'unknown');
             // Receive the current version information, where $modversion will be overwritten
+            // TODO
+            // THIS MUST BE REDONE
             require 'modules/PostCalendar/pnversion.php';
     
             // Inform user about error, and how he can upgrade to $modversion['version']
@@ -107,7 +110,8 @@ class PostCalendar_Installer extends Zikula_Installer
                 // register handlers
                 EventUtil::registerPersistentModuleHandler('PostCalendar', 'get.pending_content', array('PostCalendar_Handlers', 'pendingContent'));
 
-                HookUtil::registerHookSubscriberBundles($this->version);
+                //HookUtil::registerHookSubscriberBundles($this->version);
+                HookUtil::registerHookProviderBundles($this->version);
 
             case '7.0.0':
                 //future development
@@ -137,6 +141,9 @@ class PostCalendar_Installer extends Zikula_Installer
 
         // unregister handlers
         EventUtil::unregisterPersistentModuleHandler('PostCalendar', 'get.pending_content', array('PostCalendar_Handlers', 'pendingContent'));
+
+        //HookUtil::unregisterHookSubscriberBundles($this->version);
+        HookUtil::unregisterHookProviderBundles($this->version);
 
         return $result;
     }
