@@ -47,7 +47,8 @@ class PostCalendar_Installer extends Zikula_Installer
 
         // register handlers
         EventUtil::registerPersistentModuleHandler('PostCalendar', 'get.pending_content', array('PostCalendar_Handlers', 'pendingContent'));
-    
+        EventUtil::registerPersistentModuleHandler('PostCalendar', 'installer.module.uninstalled', array('PostCalendar_HookHandlers', 'moduleDelete'));
+
         return true;
     }
     

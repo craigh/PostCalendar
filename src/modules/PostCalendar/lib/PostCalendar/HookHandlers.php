@@ -398,6 +398,31 @@ class PostCalendar_HookHandlers extends Zikula_HookHandler
     }
 
     /**
+     * Handle module uninstall event "installer.module.uninstalled".
+     * Receives $modinfo as $args
+     *
+     * @param Zikula_Event $event
+     *
+     * @return void
+     */
+    public static function moduleDelete(Zikula_Event $event)
+    {
+        $module = strtolower($event['name']);
+
+        // Get table info
+        ModUtil::dbInfoLoad('PostCalendar');
+        $dbtable = DBUtil::getTables();
+        $cols = $dbtable['postcalendar_events_column'];
+        // build where statement
+        $where = "WHERE " . $cols['hooked_modulename'] . " = '" . DataUtil::formatForStore($module) . "'";
+
+        if (DBUtil::deleteObject(array(), 'postcalendar_events', $where, 'eid')) {
+            LogUtil::registerStatus($this->__('ALL associated PostCalendar events also deleted.'));
+        }
+        LogUtil::registerError($this->__('Error! Could not delete associated PostCalendar events.'));
+    }
+
+    /**
      * Find Class and instantiate
      *
      * @param string $module Module name
