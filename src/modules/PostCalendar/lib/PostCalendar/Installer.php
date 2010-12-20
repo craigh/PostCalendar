@@ -42,7 +42,7 @@ class PostCalendar_Installer extends Zikula_Installer
         $this->_createdefaultsubcategory();
         $this->_createinstallevent();
 
-        //HookUtil::registerHookSubscriberBundles($this->version);
+        HookUtil::registerHookSubscriberBundles($this->version);
         HookUtil::registerHookProviderBundles($this->version);
 
         // register handlers
@@ -110,7 +110,7 @@ class PostCalendar_Installer extends Zikula_Installer
                 // register handlers
                 EventUtil::registerPersistentModuleHandler('PostCalendar', 'get.pending_content', array('PostCalendar_Handlers', 'pendingContent'));
 
-                //HookUtil::registerHookSubscriberBundles($this->version);
+                HookUtil::registerHookSubscriberBundles($this->version);
                 HookUtil::registerHookProviderBundles($this->version);
 
             case '7.0.0':
@@ -142,7 +142,7 @@ class PostCalendar_Installer extends Zikula_Installer
         // unregister handlers
         EventUtil::unregisterPersistentModuleHandler('PostCalendar', 'get.pending_content', array('PostCalendar_Handlers', 'pendingContent'));
 
-        //HookUtil::unregisterHookSubscriberBundles($this->version);
+        HookUtil::unregisterHookSubscriberBundles($this->version);
         HookUtil::unregisterHookProviderBundles($this->version);
 
         return $result;
@@ -261,49 +261,4 @@ class PostCalendar_Installer extends Zikula_Installer
         return true;
     }
 
-    /**
-     * register module hooks
-     * @return boolean
-     */
-    private function _registermodulehooks()
-    {
-        /*
-        ($hookobject, $hookaction, $hookarea, $hookmodule, $hooktype, $hookfunc)
-        $hookobject = 'item', 'category' or 'module'
-        $hookaction = 'new' (GUI), 'create' (API), 'modify' (GUI), 'update' (API), 'delete' (API), 'transform', 'display' (GUI), 'modifyconfig', 'updateconfig'
-        $hookarea = 'GUI' or 'API'
-        $hookmodule = name of the hook module
-        $hooktype = name of the hook type (==admin && (area==API) = function is located in pnadminapi.php)
-        $hookfunc = name of the hook function
-        */
-        /*
-        if (!ModUtil::registerHook('item', 'create', 'API', 'PostCalendar', 'hooks', 'create')) {
-            return LogUtil::registerError($this->__f('PostCalendar: Could not register %s hook.', 'create'));
-        }
-        if (!ModUtil::registerHook('item', 'update', 'API', 'PostCalendar', 'hooks', 'update')) {
-            return LogUtil::registerError($this->__f('PostCalendar: Could not register %s hook.', 'update'));
-        }
-        if (!ModUtil::registerHook('item', 'delete', 'API', 'PostCalendar', 'hooks', 'delete')) {
-            return LogUtil::registerError($this->__f('PostCalendar: Could not register %s hook.', 'delete'));
-        }
-        if (!ModUtil::registerHook('item', 'new', 'GUI', 'PostCalendar', 'hooks', 'newgui')) {
-            return LogUtil::registerError($this->__f('PostCalendar: Could not register %s hook.', 'newgui'));
-        }
-        if (!ModUtil::registerHook('item', 'modify', 'GUI', 'PostCalendar', 'hooks', 'modify')) {
-            return LogUtil::registerError($this->__f('PostCalendar: Could not register %s hook.', 'modify'));
-        }
-        if (!ModUtil::registerHook('module', 'modifyconfig', 'GUI', 'PostCalendar', 'hooks', 'modifyconfig')) {
-            return LogUtil::registerError($this->__f('PostCalendar: Could not register %s hook.', 'modifyconfig'));
-        }
-        if (!ModUtil::registerHook('module', 'updateconfig', 'API', 'PostCalendar', 'hooks', 'updateconfig')) {
-            return LogUtil::registerError($this->__f('PostCalendar: Could not register %s hook.', 'updateconfig'));
-        }
-        if (!ModUtil::registerHook('module', 'remove', 'API', 'PostCalendar', 'hooks', 'deletemodule')) {
-            return LogUtil::registerError($this->__f('PostCalendar: Could not register %s hook.', 'deletemodule'));
-        }
-    
-        LogUtil::registerStatus($this->__('PostCalendar: All hooks registered.'));
-        */
-        return true;
-    }
 } // end class def
