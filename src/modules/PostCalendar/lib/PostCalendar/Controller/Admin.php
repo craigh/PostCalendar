@@ -87,6 +87,7 @@ class PostCalendar_Controller_Admin extends Zikula_Controller
         $this->view->assign('sortcolclasses', $sortcolclasses);
     
         $events = DBUtil::selectObjectArray('postcalendar_events', "WHERE pc_eventstatus=" . $listtype, $sort, $offset, $offset_increment, false);
+        $events = $this->_appendObjectActions($events);
     
         $this->view->assign('title', $title);
         $this->view->assign('functionname', $functionname);
@@ -317,7 +318,7 @@ class PostCalendar_Controller_Admin extends Zikula_Controller
         if ($res) {
             LogUtil::registerStatus($this->_fn('Done! %1$s event %2$s.', 'Done! %1$s events %2$s.', $count, array($count, $words[1])));
         } else {
-            LogUtil::registerError($this->__fn("Error! Could not %s event.", "Error! Could not %s events.", $count, $words[0]));
+            LogUtil::registerError($this->_fn("Error! Could not %s event.", "Error! Could not %s events.", $count, $words[0]));
         }
 
         $this->view->clear_cache();
@@ -387,6 +388,40 @@ class PostCalendar_Controller_Admin extends Zikula_Controller
     
         LogUtil::registerStatus($this->__('Done! Updated the PostCalendar event default values.'));
         return $this->modifyeventdefaults();
+    }
+
+    private function _appendObjectActions($events)
+    {
+        foreach($events as $key => $event) {
+            $options = array();
+            $truncated_title = StringUtil::getTruncatedString($event['title'], 25);
+            $options[] = array('url' => ModUtil::url('PostCalendar', 'user', 'display', array('viewtype' => 'details', 'eid' => $event['eid'])),
+                    'image' => '14_layer_visible.gif',
+                    'title' => $this->__f('View \'%s\'', $truncated_title));
+
+            if (SecurityUtil::checkPermission('PostCalendar::Event', "{$event['title']}::{$event['eid']}", ACCESS_EDIT)) {
+                if ($event['eventstatus'] == _EVENT_APPROVED) {
+                    $options[] = array('url' => ModUtil::url('PostCalendar', 'admin', 'adminevents', array('action' => _ADMIN_ACTION_HIDE, 'events' => $event['eid'])),
+                            'image' => 'db_remove.gif',
+                            'title' => $this->__f('Hide \'%s\'', $truncated_title));
+                } else {
+                    $options[] = array('url' => ModUtil::url('PostCalendar', 'admin', 'adminevents', array('action' => _ADMIN_ACTION_APPROVE, 'events' => $event['eid'])),
+                            'image' => 'ok.gif',
+                            'title' => $this->__f('Approve \'%s\'', $truncated_title));
+                }
+                $options[] = array('url' => ModUtil::url('PostCalendar', 'event', 'edit', array('eid' => $event['eid'])),
+                        'image' => 'xedit.gif',
+                        'title' => $this->__f('Edit \'%s\'', $truncated_title));
+            }
+
+            if (SecurityUtil::checkPermission('PostCalendar::Event', "{$event['title']}::{$event['eid']}", ACCESS_DELETE)) {
+                $options[] = array('url' => ModUtil::url('PostCalendar', 'event', 'delete', array('eid' => $event['eid'])),
+                    'image' => '14_layer_deletelayer.gif',
+                    'title' => $this->__f('Delete \'%s\'', $truncated_title));
+            }
+            $events[$key]['options'] = $options;
+        }
+        return $events;
     }
 
 } // end class def
