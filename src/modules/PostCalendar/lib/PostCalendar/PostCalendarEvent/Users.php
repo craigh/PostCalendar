@@ -22,10 +22,11 @@ class PostCalendar_PostCalendarEvent_Users extends PostCalendar_PostCalendarEven
 
         $user = UserUtil::getVars($args['objectid'], true);
 
-        if (ModUtil::available('Profile')) {
-            $hometext = ":html:" . __('Profile link: ', $dom) . "<a href='" . ModUtil::url('Profile', 'user', 'view', array('uid' => $user['uid'])) . "'>" . $user['uname'] . "</a>";
+        $profileModName = System::getVar('profilemodule', '');
+        if (ModUtil::available($profileModName)) {
+            $hometext = ":html:" . __('Profile link: ', $dom) . "<a href='" . ModUtil::url($profileModName, 'user', 'view', array('uid' => $user['uid'])) . "'>" . $user['uname'] . "</a>" . " " . __('registered on this day', $dom);
         } else {
-            $hometext = ":text:" . $user['uname'];
+            $hometext = ":text:" . $user['uname'] . " " . __('registered on this day', $dom);
         }
 
         $this->title = __('New user: ', $dom) . $user['uname'];
