@@ -171,9 +171,10 @@ class PostCalendar_Api_Event extends Zikula_Api
             unset($start);
             unset($end);
         } // clear start and end dates for search
-    
+
         // update news-hooked stories that have been published since last pageload
-        if (HookUtil::hasProvider('news.hook.articles.articles.edit')) {
+        $bindings = HookUtil::bindingsBetweenProviderAndSubscriber('News', 'PostCalendar');
+        if (!empty($bindings)) {
             PostCalendar_PostCalendarEvent_News::scheduler();
         }
     
@@ -594,7 +595,7 @@ class PostCalendar_Api_Event extends Zikula_Api
         $event['hometext'] = DataUtil::formatForDisplayHTML($hometext); //add hometext back into array with HTML formatting
     
         // Check for comments
-        if (ModUtil::available('EZComments') && HookUtil::hasProvider('hookhandler.ezcomments.ui.view')) {
+        if (ModUtil::available('EZComments')) {
             $event['commentcount'] = ModUtil::apiFunc('EZComments', 'user', 'countitems', array(
                 'mod' => 'PostCalendar',
                 'objectid' => $event['eid'],

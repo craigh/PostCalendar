@@ -46,6 +46,10 @@ class PostCalendar_HookHandlers extends Zikula_HookHandler
         // get data from $event
         $module = isset($z_event['caller']) ? $z_event['caller'] : ModUtil::getName(); // default to active module
         $objectid = $z_event['id']; // id of hooked item
+
+        if (!$objectid) {
+            return;
+        }
         
         ModUtil::dbInfoLoad('PostCalendar');
         $dbtable = DBUtil::getTables();
@@ -53,9 +57,13 @@ class PostCalendar_HookHandlers extends Zikula_HookHandler
         // build where statement
         $where = "WHERE " . $cols['hooked_modulename'] . " = '" . DataUtil::formatForStore($module) . "'
                   AND "   . $cols['hooked_objectid']   . " = '" . DataUtil::formatForStore($objectid) . "'";
-        $pcevent = DBUtil::selectObject('postcalendar_events', $where, array('eid'));
+        $pc_event = DBUtil::selectObject('postcalendar_events', $where, array('eid'));
 
-        $this->view->assign('eid', $pcevent['eid']);
+        if (!$pc_event) {
+            return;
+        }
+
+        $this->view->assign('eid', $pc_event['eid']);
 
         // add this response to the event stack
         $area = 'modulehook_area.postcalendar.event';
