@@ -1,9 +1,7 @@
-{modgetvar module="PostCalendar" name="pcAllowUserCalendar" assign="pcAllowUserCalendar"}
-{if $pcAllowUserCalendar}
+{if $modvars.PostCalendar.pcAllowUserCalendar}
     {usergetvar name="uid" assign="uid"}
-    {modapifunc modname='Groups' type='user' func='isgroupmember' uid=$uid gid=$pcAllowUserCalendar assign="ingroup"}
+    {modapifunc modname='Groups' type='user' func='isgroupmember' uid=$uid gid=$modvars.PostCalendar.pcAllowUserCalendar assign="ingroup"}
 {else}{assign var="ingroup" value=0}{/if}
-{modgetvar module="PostCalendar" name="enablecategorization" assign="enablecats"}
 {if $func eq "edit"}
     {gt text='Edit' assign="titletext"}
     {gt text='Update event' assign="submittext"}
@@ -49,7 +47,7 @@
             <br />
 
             <span style='padding-right:2em;'><label for="display_eventDate"><b>{gt text='Start date'}</b></label></span>
-            {calendarinput display=true hidden=true objectname="postcalendar_events" htmlname="eventDate" ifformat="%Y-%m-%d" dateformat=$EVENT_DATE_FORMAT defaultstring=$loaded_event.eventDatevalue defaultdate=$loaded_event.eventDate}
+            {calendarinput display=true hidden=true objectname="postcalendar_events" htmlname="eventDate" ifformat="%Y-%m-%d" dateformat=$modvars.PostCalendar.pcEventDateFormat defaultstring=$loaded_event.eventDatevalue defaultdate=$loaded_event.eventDate}
             <br /><br />
             <b>{gt text='Time'}</b><br />
             <input type="radio" name="postcalendar_events[alldayevent]" id="postcalendar_events_alldayevent1" value="1"{$Selected.allday} /><label for="postcalendar_events_alldayevent1" style='padding-left:1em;'>{gt text='All-day event'}</label>
@@ -58,13 +56,13 @@
             <br />
             <div style='padding-left: 4em;'>
                 {gt text='Start Time'}
-                {html_select_time time=`$loaded_event.startTime` display_seconds=false use_24_hours=$24HOUR_TIME minute_interval=$minute_interval field_array="postcalendar_events[startTime]" prefix=""}<br />
+                {html_select_time time=`$loaded_event.startTime` display_seconds=false use_24_hours=$modvars.PostCalendar.pcTime24Hours minute_interval=$modvars.PostCalendar.pcTimeIncrement field_array="postcalendar_events[startTime]" prefix=""}<br />
                 {gt text='End Time'}
-                {html_select_time time=`$loaded_event.endTime` display_seconds=false use_24_hours=$24HOUR_TIME minute_interval=$minute_interval field_array="postcalendar_events[endTime]" prefix=""}
+                {html_select_time time=`$loaded_event.endTime` display_seconds=false use_24_hours=$modvars.PostCalendar.pcTime24Hours minute_interval=$modvars.PostCalendar.pcTimeIncrement field_array="postcalendar_events[endTime]" prefix=""}
             </div>
             <br />
 
-            {if $enablecats}
+            {if $modvars.PostCalendar.enablecategorization}
                 <div>
                     <b>{gt text='Category' plural="Categories" count=$cat_count}</b>
                     {nocache}
@@ -120,9 +118,9 @@
             <input type="radio" name="postcalendar_events[endtype]" id="postcalendar_events_endtype1" value="1" {$SelectedEndOn} />
             <span style='padding-left:1em;'>
             {if ((isset($postcalendar_events)) AND ($postcalendar_events.eventDate > $postcalendar_events.endDate))}
-                {calendarinput display=true hidden=true objectname="postcalendar_events" htmlname="endDate" ifformat="%Y-%m-%d" dateformat=$EVENT_DATE_FORMAT defaultstring=$loaded_event.eventDatevalue defaultdate=$loaded_event.eventDate}<br />
+                {calendarinput display=true hidden=true objectname="postcalendar_events" htmlname="endDate" ifformat="%Y-%m-%d" dateformat=$modvars.PostCalendar.pcEventDateFormat defaultstring=$loaded_event.eventDatevalue defaultdate=$loaded_event.eventDate}<br />
             {else}
-                {calendarinput display=true hidden=true objectname="postcalendar_events" htmlname="endDate" ifformat="%Y-%m-%d" dateformat=$EVENT_DATE_FORMAT defaultstring=$loaded_event.endvalue defaultdate=$loaded_event.endDate}<br />
+                {calendarinput display=true hidden=true objectname="postcalendar_events" htmlname="endDate" ifformat="%Y-%m-%d" dateformat=$modvars.PostCalendar.pcEventDateFormat defaultstring=$loaded_event.endvalue defaultdate=$loaded_event.endDate}<br />
             {/if}
             </span>
             <input type="radio" name="postcalendar_events[endtype]" id="postcalendar_events_endtype0" value="0" {$SelectedNoEnd} />

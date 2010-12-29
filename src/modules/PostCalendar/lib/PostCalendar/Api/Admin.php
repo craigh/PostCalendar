@@ -78,7 +78,7 @@ class PostCalendar_Api_Admin extends Zikula_Api
             return LogUtil::registerArgsError();
         }
     
-        if (!(bool) _SETTING_NOTIFY_ADMIN) {
+        if (!(bool) $this->getVar('pcNotifyAdmin')) {
             return true;
         }
         $isadmin = SecurityUtil::checkPermission('PostCalendar::', 'null::null', ACCESS_ADMIN);
@@ -101,7 +101,7 @@ class PostCalendar_Api_Admin extends Zikula_Api
         $message = $renderer->fetch('email/adminnotify.tpl');
     
         $messagesent = ModUtil::apiFunc('Mailer', 'user', 'sendmessage', array(
-            'toaddress' => _SETTING_NOTIFY_EMAIL,
+            'toaddress' => $this->getVar('pcNotifyEmail'),
             'subject'   => $this->__('Notice: PostCalendar submission/change'),
             'body'      => $message,
             'html'      => true));

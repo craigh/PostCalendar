@@ -216,10 +216,6 @@ class PostCalendar_Controller_Event extends Zikula_Controller
             $this->view->assign($var, $val);
         }
     
-        // assign some basic settings
-        $this->view->assign('EVENT_DATE_FORMAT', _SETTING_DATE_FORMAT);
-        $this->view->assign('24HOUR_TIME', _SETTING_TIME_24HOUR);
-    
         // assign function in case we were editing
         $this->view->assign('func', $func);
     

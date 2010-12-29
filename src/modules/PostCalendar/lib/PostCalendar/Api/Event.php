@@ -408,8 +408,6 @@ class PostCalendar_Api_Event extends Zikula_Api
         $eventdata['alldayevent'] = isset($eventdata['alldayevent']) ? $eventdata['alldayevent'] : $eventDefaults['alldayevent'];
         $form_data['Selected'] = $this->alldayselect($eventdata['alldayevent']);
     
-        $form_data['minute_interval'] = _SETTING_TIME_INCREMENT;
-    
         $eventdata['endTime'] = (empty($eventdata['endTime'])) ? $this->computeendtime($eventDefaults) : $eventdata['endTime'];
     
         $eventdata['startTime'] = (empty($eventdata['startTime'])) ? $eventDefaults['startTime'] : $eventdata['startTime'];
@@ -642,7 +640,7 @@ class PostCalendar_Api_Event extends Zikula_Api
         define('PC_ACCESS_ADMIN', SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_DELETE));
     
         // determine if the event is to be published immediately or not
-        if ((bool) _SETTING_DIRECT_SUBMIT || (bool) PC_ACCESS_ADMIN || ($event['sharing'] != SHARING_GLOBAL)) {
+        if ((bool) $this->getVar('pcAllowDirectSubmit') || (bool) PC_ACCESS_ADMIN || ($event['sharing'] != SHARING_GLOBAL)) {
             $event['eventstatus'] = _EVENT_APPROVED;
         } else {
             $event['eventstatus'] = _EVENT_QUEUED;

@@ -202,7 +202,7 @@ class PostCalendar_Api_User extends Zikula_Api
                 break;
             case 'xml':
             case 'list':
-                $listmonths    = ModUtil::getVar('PostCalendar', 'pcListMonths');
+                $listmonths    = $this->getVar('pcListMonths');
                 $listyears     = floor($listmonths/12);
                 $listendyears  = (int) $the_year + (int) $listyears;
                 $listmonths    = $listmonths % 12;

@@ -53,9 +53,6 @@ class PostCalendar_Controller_User extends Zikula_Controller
             return LogUtil::registerArgsError();
         }
     
-        $modinfo = ModUtil::getInfo(ModUtil::getIdFromName('PostCalendar'));
-        $this->view->assign('postcalendarversion', $modinfo['version']);
-    
         $this->view->cache_id = $Date . '|' . $viewtype . '|' . $eid . '|' . UserUtil::getVar('uid');
     
         switch ($viewtype) {

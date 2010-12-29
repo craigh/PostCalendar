@@ -27,12 +27,6 @@ class PostCalendar_Controller_Admin extends Zikula_Controller
             return LogUtil::registerPermissionError();
         }
     
-        $modinfo = ModUtil::getInfo(ModUtil::getIdFromName('PostCalendar'));
-        $this->view->assign('postcalendarversion', $modinfo['version']);
-    
-        $this->view->assign('pcFilterYearStart', ModUtil::getVar('PostCalendar', 'pcFilterYearStart', 1));
-        $this->view->assign('pcFilterYearEnd', ModUtil::getVar('PostCalendar', 'pcFilterYearEnd', 2));
-    
         return $this->view->fetch('admin/modifyconfig.tpl');
     }
     
@@ -251,13 +245,13 @@ class PostCalendar_Controller_Admin extends Zikula_Controller
         );
         $settings['pcNavDateOrder'] = ModUtil::apiFunc('PostCalendar', 'admin', 'getdateorder', $settings['pcEventDateFormat']);
         // save out event default settings so they are not cleared
-        $settings['pcEventDefaults'] = ModUtil::getVar('PostCalendar', 'pcEventDefaults');
+        $settings['pcEventDefaults'] = $this->getVar('pcEventDefaults');
     
         // delete all the old vars
-        ModUtil::delVar('PostCalendar');
+        $this->delVars();
     
         // set the new variables
-        ModUtil::setVars('PostCalendar', $settings);
+        $this->setVars($settings);
     
         // Let any other modules know that the modules configuration has been updated
         //ModUtil::callHooks('module', 'updateconfig', 'PostCalendar', array(
@@ -336,26 +330,16 @@ class PostCalendar_Controller_Admin extends Zikula_Controller
             return LogUtil::registerPermissionError();
         }
 
-        $eventDefaults = ModUtil::getVar('PostCalendar', 'pcEventDefaults');
-    
         // load the category registry util
         $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
         $this->view->assign('catregistry', $catregistry);
     
-        $props = array_keys($catregistry);
-        $this->view->assign('firstprop', $props[0]);
-        $selectedDefaultCategories = $eventDefaults['categories'];
-        $this->view->assign('selectedDefaultCategories', $selectedDefaultCategories);
-    
+        $eventDefaults = $this->getVar('pcEventDefaults');
         // convert duration to HH:MM
-        $eventDefaults['endTime']  = ModUtil::apiFunc('PostCalendar', 'event', 'computeendtime', $eventDefaults);
+        $this->view->assign('endTime', ModUtil::apiFunc('PostCalendar', 'event', 'computeendtime', $eventDefaults));
     
-        // sharing selectbox
         $this->view->assign('sharingselect', ModUtil::apiFunc('PostCalendar', 'event', 'sharingselect'));
-    
         $this->view->assign('Selected',  ModUtil::apiFunc('PostCalendar', 'event', 'alldayselect', $eventDefaults['alldayevent']));
-    
-        $this->view->assign('postcalendar_eventdefaults', $eventDefaults);
     
         return $this->view->fetch('admin/eventdefaults.tpl');
     }
@@ -384,7 +368,7 @@ class PostCalendar_Controller_Admin extends Zikula_Controller
         $eventDefaults['startTime'] = ModUtil::apiFunc('PostCalendar', 'event', 'convertstarttime', $startTime);
 
         // save the new values
-        ModUtil::setVar('PostCalendar', 'pcEventDefaults', $eventDefaults);
+        $this->setVar('pcEventDefaults', $eventDefaults);
     
         LogUtil::registerStatus($this->__('Done! Updated the PostCalendar event default values.'));
         return $this->modifyeventdefaults();
