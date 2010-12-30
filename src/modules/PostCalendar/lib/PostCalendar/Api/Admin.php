@@ -82,7 +82,7 @@ class PostCalendar_Api_Admin extends Zikula_Api
             return true;
         }
         $isadmin = SecurityUtil::checkPermission('PostCalendar::', 'null::null', ACCESS_ADMIN);
-        $notifyadmin2admin = ModUtil::getVar('PostCalendar', 'pcNotifyAdmin2Admin');
+        $notifyadmin2admin = $this->getVar('pcNotifyAdmin2Admin');
         if ($isadmin && !$notifyadmin2admin) {
             return true;
         }

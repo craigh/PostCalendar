@@ -358,7 +358,7 @@ class PostCalendar_Api_Event extends Zikula_Api
         $eventdata = $args['eventdata']; // contains data for editing if loaded
     
         // get event default values
-        $eventDefaults = ModUtil::getVar('PostCalendar', 'pcEventDefaults');
+        $eventDefaults = $this->getVar('pcEventDefaults');
     
         // format date information
         if ((!isset($eventdata['endDate'])) || ($eventdata['endDate'] == '') || ($eventdata['endDate'] == '00000000') || ($eventdata['endDate'] == '0000-00-00')) {
@@ -995,7 +995,7 @@ class PostCalendar_Api_Event extends Zikula_Api
      **/
     public function alldayselect($alldayevent)
     {
-        $eventDefaults = ModUtil::getVar('PostCalendar', 'pcEventDefaults');
+        $eventDefaults = $this->getVar('pcEventDefaults');
         $selected = array();
         $selected['allday'] = (((isset($alldayevent)) && ($alldayevent == 1)) || ((!isset($alldayevent)) && ($eventDefaults['alldayevent'] == 1))) ? " checked='checked'" : '';
         $selected['timed']  = (((!isset($alldayevent)) && ($eventDefaults['alldayevent'] == 0)) || ((isset($alldayevent)) && ($alldayevent == 0))) ? " checked='checked'" : ''; //default

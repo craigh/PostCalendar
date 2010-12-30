@@ -91,7 +91,7 @@ class PostCalendar_Api_Search extends Zikula_Api
         foreach ($eventsByDate as $date) {
             if (count($date) > 0) {
                 foreach ($date as $event) {
-                    $title = $event['title'] . " (" . DateUtil::strftime(ModUtil::getVar('PostCalendar', 'pcEventDateFormat'), strtotime($event['eventDate'])) . ")";
+                    $title = $event['title'] . " (" . DateUtil::strftime($this->getVar('pcEventDateFormat'), strtotime($event['eventDate'])) . ")";
                     $start = $event['alldayevent'] ? "12:00:00" : $event['startTime'];
                     $created = $event['eventDate'] . " " . $start;
                     $items = array('title' => $title,
