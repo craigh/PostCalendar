@@ -47,7 +47,7 @@
                     {/if}
                 </span>
                 {if ($ACCESS_ADD eq true) && ($PRINT_VIEW eq false)}
-                <span class="new_icon"><a href="{pc_url action=submit date=$date}">{img src='new.gif'}</a></span>
+                <span class="new_icon"><a href="{pc_url action=submit date=$date}">{img modname='PostCalendar' src='new.gif'}</a></span>
                 {/if}
             </div>
             <div class="monthview_events">

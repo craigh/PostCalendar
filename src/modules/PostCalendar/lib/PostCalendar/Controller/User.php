@@ -9,9 +9,14 @@
 class PostCalendar_Controller_User extends Zikula_Controller
 {
     /**
-     * main view function for end user
+     * main view functions for end user
      */
     public function main($args)
+    {
+        return $this->display($args);
+    }
+
+    public function view($args)
     {
         return $this->display($args);
     }
@@ -40,13 +45,13 @@ class PostCalendar_Controller_User extends Zikula_Controller
         $func        = FormUtil::getPassedValue('func');
 
         // the following are pulled from getPassedValue unless presented in the $args array (via Content module for example)
-        $viewtype    = isset($args['viewtype']) ? $args['viewtype'] : FormUtil::getPassedValue('viewtype', _SETTING_DEFAULT_VIEW);
+        $viewtype    = isset($args['viewtype']) ? strtolower($args['viewtype']) : strtolower(FormUtil::getPassedValue('viewtype', _SETTING_DEFAULT_VIEW));
         $Date        = isset($args['Date']) ? $args['Date'] : FormUtil::getPassedValue('Date', PostCalendar_Util::getDate($jumpargs));
         $prop        = isset($args['prop']) ? $args['prop'] : (string)FormUtil::getPassedValue('prop', null, 'GET');
         $cat         = isset($args['cat']) ? $args['cat'] : (string)FormUtil::getPassedValue('cat', null, 'GET');
 
         if (empty($filtercats) && !empty($prop) && !empty($cat)) {
-            $filtercats[__CATEGORIES__][$prop] = $cat;
+            $filtercats['__CATEGORIES__'][$prop] = $cat;
         }
     
         if (empty($Date) && empty($viewtype)) {
