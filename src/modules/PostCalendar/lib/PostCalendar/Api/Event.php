@@ -920,7 +920,7 @@ class PostCalendar_Api_Event extends Zikula_Api
      **/
     public function correctlocationdata($event)
     {
-        if ((int) $event['location']['locations_id'] > 0) {
+        if (isset($event['location']['locations_id']) && ((int) $event['location']['locations_id'] > 0)) {
             $locargs = array('locationid' => $event['location']['locations_id']);
             $locObj = ModUtil::apiFunc('Locations','user','getLocationByID',$locargs);
     
