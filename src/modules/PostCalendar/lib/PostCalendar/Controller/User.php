@@ -59,6 +59,8 @@ class PostCalendar_Controller_User extends Zikula_Controller
         }
     
         $this->view->cache_id = $Date . '|' . $viewtype . '|' . $eid . '|' . UserUtil::getVar('uid');
+
+        $this->view->assign('viewtypeselected', $viewtype);
     
         switch ($viewtype) {
             case 'details':

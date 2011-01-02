@@ -19,6 +19,7 @@ function smarty_function_pc_url($args, &$smarty)
     $assign = array_key_exists('assign', $args) && !empty($args['assign']) ? $args['assign'] : null;
     $navlink = array_key_exists('navlink', $args) && !empty($args['navlink']) ? true : false;
     $func = array_key_exists('func', $args) && !empty($args['func']) ? $args['func'] : 'create';
+    $viewtype = array_key_exists('viewtype', $args) && !empty($args['viewtype']) ? $args['viewtype'] : strtolower(FormUtil::getPassedValue('viewtype', _SETTING_DEFAULT_VIEW));
     unset($args['action']);
     unset($args['print']);
     unset($args['date']);
@@ -30,10 +31,10 @@ function smarty_function_pc_url($args, &$smarty)
     unset($args['assign']);
     unset($args['navlink']);
     unset($args['func']);
+    unset($args['viewtype']);
 
     $dom = ZLanguage::getModuleDomain('PostCalendar');
 
-    $viewtype = strtolower(FormUtil::getPassedValue('viewtype', _SETTING_DEFAULT_VIEW));
     if (FormUtil::getPassedValue('func') == 'create') {
         $viewtype = 'create';
     }

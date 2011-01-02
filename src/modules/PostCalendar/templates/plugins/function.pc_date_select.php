@@ -8,7 +8,6 @@
 function smarty_function_pc_date_select($args, &$smarty)
 {
     $dom       = ZLanguage::getModuleDomain('PostCalendar');
-    $viewtype  = FormUtil::getPassedValue('viewtype');
     $jumpday   = FormUtil::getPassedValue('jumpDay');
     $jumpmonth = FormUtil::getPassedValue('jumpMonth');
     $jumpyear  = FormUtil::getPassedValue('jumpYear');
@@ -19,9 +18,6 @@ function smarty_function_pc_date_select($args, &$smarty)
         'jumpmonth' => $jumpmonth,
         'jumpyear' => $jumpyear);
     $Date      = PostCalendar_Util::getDate($jumpargs);
-    if (!isset($viewtype)) {
-        $viewtype = _SETTING_DEFAULT_VIEW;
-    }
 
     $y = substr($Date, 0, 4);
     $m = substr($Date, 4, 2);
@@ -37,7 +33,6 @@ function smarty_function_pc_date_select($args, &$smarty)
     $smarty->assign('dateorderinfo', ModUtil::getVar('PostCalendar', 'pcNavDateOrder'));
     $smarty->assign('currentjumpdate', $y . '-' . $m . '-' . $d);
     $smarty->assign('viewtypeselector', $sel_data);
-    $smarty->assign('viewtypeselected', $viewtype);
 
     return;
 }

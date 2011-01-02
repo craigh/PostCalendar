@@ -6,13 +6,13 @@
             {checkpermissionblock component='PostCalendar::' instance="::" level=ACCESS_ADMIN}
             <li><a href='{modurl modname='PostCalendar' type='admin'}'>{img src=configure.gif modname=core set=icons/small __alt="Admin" __title="Admin"}</a></li>
             {/checkpermissionblock}
-            <li>{pc_url action='day' full=true navlink=true}</li>
-            <li>{pc_url action='week' full=true navlink=true}</li>
-            <li>{pc_url action='month' full=true navlink=true}</li>
-            <li>{pc_url action='year' full=true navlink=true}</li>
-            <li>{pc_url action='list' full=true navlink=true}</li>
-            <li>{pc_url action='search' full=true navlink=true}</li>
-            <li>{pc_url action='print' full=true navlink=true}</li>
+            <li>{pc_url action='day' full=true navlink=true viewtype=$viewtypeselected}</li>
+            <li>{pc_url action='week' full=true navlink=true viewtype=$viewtypeselected}</li>
+            <li>{pc_url action='month' full=true navlink=true viewtype=$viewtypeselected}</li>
+            <li>{pc_url action='year' full=true navlink=true viewtype=$viewtypeselected}</li>
+            <li>{pc_url action='list' full=true navlink=true viewtype=$viewtypeselected}</li>
+            <li>{pc_url action='search' full=true navlink=true viewtype=$viewtypeselected}</li>
+            <li>{pc_url action='print' full=true navlink=true viewtype=$viewtypeselected}</li>
         </ul>
     </div>
     <div id="postcalendar_nav_left">
