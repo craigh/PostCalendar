@@ -33,8 +33,7 @@
         <td class="{$stylesheet}" onclick="window.location.href='{pc_url action=day date=$date}';">
             {assign var="titles" value=""}
             {assign var="numberofevents" value=$A_EVENTS.$date|@count}
-            {modgetvar module="PostCalendar" name="pcUsePopups" assign="pcUsePopups"}
-            {if $pcUsePopups}
+            {if $modvars.PostCalendar.pcUsePopups}
                 {foreach name=events item=event from=$A_EVENTS.$date}
                     {if $event.alldayevent != true}
                         {assign var="titles" value="$titles<b>`$event.startTime`-`$event.endTime`</b> `$event.title`<br /><br />"}

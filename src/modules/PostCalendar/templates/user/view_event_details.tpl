@@ -23,7 +23,7 @@
     <div style='text-align:right;'>
         {assign var="viewtype" value=$smarty.get.viewtype}
         {if ((empty($smarty.get.viewtype)) or (!isset($smarty.get.viewtype)))}
-            {modgetvar module="PostCalendar" name="pcDefaultView" assign="viewtype"}
+            {assign var="viewtype" value=$modvars.PostCalendar.pcDefaultView}
         {/if}
         {formutil_getpassedvalue name="Date" source="get" assign="Date" default=''}
         <a href="{modurl modname="PostCalendar" func="main" viewtype=$viewtype Date=$Date eid=$loaded_event.eid}">{gt text='Return'}</a>

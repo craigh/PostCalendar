@@ -1,5 +1,4 @@
 {checkpermission component="::" instance=".*" level="ACCESS_ADD" assign="ACCESS_ADD"}
-{modgetvar module='PostCalendar' name='pcEventsOpenInNewWindow' assign='in_new_window'}
 {formutil_getpassedvalue name="theme" source="get" assign="theme" default=false}
 {assign var="PRINT_VIEW" value=0}
 {if $theme eq "Printer"}
@@ -39,7 +38,7 @@
         {else}
             {assign var="stylesheet" value="monthon"}
         {/if}
-        <td class="{$stylesheet}"{if $in_new_window eq false} onclick="window.location.href='{pc_url action=day date=$date}';"{/if}>
+        <td class="{$stylesheet}"{if $modvars.PostCalendar.pcEventsOpenInNewWindow eq false} onclick="window.location.href='{pc_url action=day date=$date}';"{/if}>
             <div class="monthview_daterow">
                 <span class="date_number"><a href="{pc_url action=day date=$date}">{$date|date_format:"%e"}</a>
                     {if $smarty.foreach.days.iteration == 1}
@@ -100,7 +99,7 @@
     {if $PRINT_VIEW eq true}
         {assign var="viewtype" value=$smarty.get.viewtype}
         {if ((empty($smarty.get.viewtype)) or (!isset($smarty.get.viewtype)))}
-            {modgetvar module="PostCalendar" name="pcDefaultView" assign="viewtype"}
+            {assign var="viewtype" value=$modvars.PostCalendar.pcDefaultView}
         {/if}
         {formutil_getpassedvalue name="Date" source="get" assign="Date" default=''}
         <a href="{modurl modname="PostCalendar" func="main" viewtype=$viewtype Date=$Date}">{gt text='Return'}</a>
