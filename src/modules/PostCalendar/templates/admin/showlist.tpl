@@ -14,18 +14,20 @@
                 <thead>
                     <tr>
                         <th class='z-w10'>{gt text='Select'}</th>
-                        <th class='z-w50'><a class='{$sortcolclasses.title}' href='{$title_sort_url|safetext}'>{gt text='Title'}</a></th>
-                        <th class='z-w25'><a class='{$sortcolclasses.time}' href='{$time_sort_url|safetext}'>{gt text='Time stamp'}</a></th>
-                        <th class='z-w15'>{gt text='Actions'}</th>
+                        <th class='z-w40'><a class='{$sortcolclasses.title}' href='{$title_sort_url|safetext}'>{gt text='Title'}</a></th>
+                        <th class='z-w20'>{gt text='Categories'}</th>
+                        <th class='z-w20'><a class='{$sortcolclasses.time}' href='{$time_sort_url|safetext}'>{gt text='Time stamp'}</a></th>
+                        <th class='z-w10'>{gt text='Actions'}</th>
                     </tr>
                 </thead>
                 <tbody>
 				{section name=event loop=$events}
                     <tr class="{cycle values="z-odd,z-even"}">
                         <td class='z-w10'><input type="checkbox" value="{$events[event].eid}" id="events_{$events[event].eid}" name="events[]" /></td>
-                        <td class='z-w50'>{$events[event].title|safetext}</td>
-                        <td class='z-w25'>{$events[event].time}</td>
-                        <td class='z-w15'>
+                        <td class='z-w40'>{$events[event].title|safetext}</td>
+                        <td class='z-w20'>{assignedcategorieslist item=$events[event]}</td>
+                        <td class='z-w20'>{$events[event].time}</td>
+                        <td class='z-w10'>
                             {assign var='options' value=$events[event].options}
                             {section name='options' loop=$options}
                             <a href="{$options[options].url|safetext}">{img modname='core' set='icons/extrasmall' src=$options[options].image title=$options[options].title alt=$options[options].title class='tooltips'}</a>
