@@ -218,6 +218,7 @@ class PostCalendar_Controller_Event extends Zikula_Controller
     
         // assign function in case we were editing
         $this->view->assign('func', $func);
+        $this->view->assign('viewtypeselected', _SETTING_DEFAULT_VIEW);
     
         return $this->view->fetch("event/submit.tpl");
     }
