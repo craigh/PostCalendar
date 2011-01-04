@@ -44,12 +44,17 @@
             <h3>{gt text='Categorized in'}:</h3>
             <ul>
                 {foreach from=$loaded_event.__CATEGORIES__ key="property" item="attribute"}
-                    {if isset($attribute.__ATTRIBUTES__.textcolor)}
+                    {if isset($attribute.__ATTRIBUTES__.textcolor) && isset($attribute.__ATTRIBUTES__.color)}
                         {assign var='textcolor' value=$attribute.__ATTRIBUTES__.textcolor}
-                    {else}
+                        {assign var='bgcolor' value=$attribute.__ATTRIBUTES__.color}
+                    {elseif !isset($attribute.__ATTRIBUTES__.textcolor) && isset($attribute.__ATTRIBUTES__.color)}
                         {assign var='textcolor' value=$attribute.__ATTRIBUTES__.color|pc_inversecolor}
+                        {assign var='bgcolor' value=$attribute.__ATTRIBUTES__.color}
+                    {else}
+                        {assign var='textcolor' value='#000000'}
+                        {assign var='bgcolor' value='#ffffff'}
                     {/if}
-                    <li><span style='padding: 0 1em; background-color:{$attribute.__ATTRIBUTES__.color}; color:{$textcolor};'>{$attribute.display_name.$lang}</span></li>
+                    <li><span style='padding: 0 1em; background-color:{$bgcolor}; color:{$textcolor};'>{$attribute.display_name.$lang}</span></li>
                 {/foreach}
             </ul>
         </div>
