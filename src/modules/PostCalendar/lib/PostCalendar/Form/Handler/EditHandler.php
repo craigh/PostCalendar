@@ -7,7 +7,7 @@ class PostCalendar_Form_Handler_EditHandler extends Form_Handler
 {
     var $eid;
 
-    function initialize(&$render)
+    function initialize($view)
     {
         if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADD)) {
             return LogUtil::registerPermissionError();
@@ -18,7 +18,7 @@ class PostCalendar_Form_Handler_EditHandler extends Form_Handler
         return true;
     }
 
-    function handleCommand(&$render, &$args)
+    function handleCommand($view, &$args)
     {
         $dom = ZLanguage::getModuleDomain('PostCalendar');
         $url = null;
@@ -39,11 +39,16 @@ class PostCalendar_Form_Handler_EditHandler extends Form_Handler
             }
             LogUtil::registerStatus(__('Done! The event was deleted.', $dom));
 
-            $this->notifyHooks('postcalendar.hook.events.process.delete', $event, $this->eid);
+            //$this->notifyHooks('postcalendar.hook.events.process.delete', $event, $this->eid);
+            $hookEventArgs = array(
+                'id' => $this->eid,
+                'caller' => 'PostCalendar');
+            $hookEvent = new Zikula_Event('postcalendar.hook.events.process.delete', $event, $hookEventArgs);
+            EventUtil::notify($hookEvent);
 
             $redir = ModUtil::url('PostCalendar', 'user', 'main', array(
                 'viewtype' => _SETTING_DEFAULT_VIEW));
-            return $render->redirect($redir);
+            return $view->redirect($redir);
         } else if ($args['commandName'] == 'cancel') {
             $url = ModUtil::url('PostCalendar', 'user', 'main', array(
                 'eid' => $this->eid,
@@ -53,7 +58,7 @@ class PostCalendar_Form_Handler_EditHandler extends Form_Handler
 
         if ($url != null) {
             /*ModUtil::apiFunc('PageLock', 'user', 'releaseLock', array('lockName' => "HowtoPnFormsRecipe{$this->recipeId}")); */
-            return $render->redirect($url);
+            return $view->redirect($url);
         }
 
         return true;
