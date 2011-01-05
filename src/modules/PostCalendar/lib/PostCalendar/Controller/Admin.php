@@ -95,11 +95,12 @@ class PostCalendar_Controller_Admin extends Zikula_Controller
             'sort' => 'time',
             'sdir' => $sdir)));
         $this->view->assign('formactions', array(
+            '-1'                  => $this->__('With selected:'),
             _ADMIN_ACTION_VIEW    => $this->__('View'),
             _ADMIN_ACTION_APPROVE => $this->__('Approve'),
             _ADMIN_ACTION_HIDE    => $this->__('Hide'),
             _ADMIN_ACTION_DELETE  => $this->__('Delete')));
-        $this->view->assign('actionselected', _ADMIN_ACTION_VIEW);
+        $this->view->assign('actionselected', '-1');
         $this->view->assign('listtypes', array(
             _EVENT_APPROVED => $this->__('Approved Events'),
             _EVENT_HIDDEN   => $this->__('Hidden Events'),

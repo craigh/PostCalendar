@@ -7,7 +7,7 @@
         {html_options name=listtype options=$listtypes selected=$listtypeselected}
         <input type="submit" value="{gt text="Change Lists"}" />
     </form>
-    <form class="z-adminform" action="{modurl modname="postcalendar" type="admin" func="adminevents"}" method="post" enctype="application/x-www-form-urlencoded">
+    <form id='pc_form_bulkaction' class="z-adminform" action="{modurl modname="postcalendar" type="admin" func="adminevents"}" method="post" enctype="application/x-www-form-urlencoded">
         <div>
             <input type="hidden" name="authid" value="{insert name="generateauthkey" module="PostCalendar"}" />
             <table class="z-datatable">
@@ -39,10 +39,23 @@
                 {/section}
                 </tbody>
             </table>
-            <div style='text-align: left;'>
-				{html_options name=action options=$formactions selected=$actionselected}
-                <input type="submit" value="{gt text="Perform this action"}" />
+            <div  id='pc_bulkaction_control' style='text-align: left;'>
+                {img modname='core' set='icons/extrasmall' src='2uparrow.gif' __alt='doubleuparrow'}<a href="javascript:void(0);" id="select_all">{gt text="Check all"}</a> / <a href="javascript:void(0);" id="deselect_all">{gt text="Uncheck all"}</a>
+				{html_options name=action id='pc_bulkaction' options=$formactions selected=$actionselected}
             </div>
+            <script type="text/javascript">
+                $('select_all').observe('click', function(e){
+                    Zikula.toggleInput('pc_form_bulkaction', true);
+                    e.stop()
+                });
+                $('deselect_all').observe('click', function(e){
+                    Zikula.toggleInput('pc_form_bulkaction', false);
+                    e.stop()
+                });
+                $('pc_bulkaction').observe('change', function(event){
+                    document.forms["pc_form_bulkaction"].submit();
+                });
+            </script>
             <div id="listmanipulator" style='text-align: center; background-color:#cccccc; padding:.5em; margin-top:.5em;'>
 				{if !empty($prevlink)}
                 << <a href="{$prevlink|safetext}">{gt text="Previous"} {$offset_increment} {gt text="Events"}</a>

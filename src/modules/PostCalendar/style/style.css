@@ -331,3 +331,17 @@ div.postcalendar_featuredevent div.eventdetails span.location{
     padding-left: 2em;
     display: block;
 }
+
+/*********** ADMIN ***************/
+#pc_bulkaction_control {
+    padding: 0 10px;
+    margin: 0 0 1em;
+}
+
+#pc_bulkaction_control img {
+    margin: 0 1em 0 0;
+}
+
+#pc_bulkaction_control select {
+    margin-left: 2em;
+}
