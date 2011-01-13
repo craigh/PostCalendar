@@ -20,6 +20,7 @@
         var postcalendar_events___CATEGORIES____{{$property}}_ = new Zikula.UI.SelectMultiple(
             'postcalendar_events___CATEGORIES____{{$property}}_',
             {opener: 'postcalendar_events___CATEGORIES____{{$property}}__open',
+            title: Zikula.__('Select multiple categories','module_PostCalendar'),
             value: '{{pc_implode value=$selectedValue}}',
             excludeValues: ['0']}
         );

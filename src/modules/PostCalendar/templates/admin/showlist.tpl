@@ -53,7 +53,7 @@
                     e.stop()
                 });
                 $('pc_bulkaction').observe('change', function(event){
-                    document.forms["pc_form_bulkaction"].submit();
+                    $('pc_form_bulkaction').submit()
                 });
             </script>
             <div id="listmanipulator" style='text-align: center; background-color:#cccccc; padding:.5em; margin-top:.5em;'>
