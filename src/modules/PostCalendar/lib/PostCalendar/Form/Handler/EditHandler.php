@@ -39,12 +39,7 @@ class PostCalendar_Form_Handler_EditHandler extends Form_Handler
             }
             LogUtil::registerStatus(__('Done! The event was deleted.', $dom));
 
-            //$this->notifyHooks('postcalendar.hook.events.process.delete', $event, $this->eid);
-            $hookEventArgs = array(
-                'id' => $this->eid,
-                'caller' => 'PostCalendar');
-            $hookEvent = new Zikula_Event('postcalendar.hook.events.process.delete', $event, $hookEventArgs);
-            EventUtil::notify($hookEvent);
+            $this->notifyHooks('postcalendar.hook.events.process.delete', $event, $this->eid);
 
             $redir = ModUtil::url('PostCalendar', 'user', 'main', array(
                 'viewtype' => _SETTING_DEFAULT_VIEW));

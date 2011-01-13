@@ -19,7 +19,7 @@ class PostCalendar_Controller_Event extends Zikula_Controller
             return LogUtil::registerPermissionError();
         }
         $eid    = FormUtil::getPassedValue('eid'); //  seems like this should be handled by the eventHandler
-        $render = FormUtil::newForm('PostCalendar');
+        $render = FormUtil::newForm('PostCalendar', $this);
 
         // get the event from the DB
         $event = DBUtil::selectObjectByID('postcalendar_events', $eid, 'eid');
