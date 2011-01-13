@@ -279,7 +279,8 @@ class PostCalendar_HookHandlers extends Zikula_HookHandler
         if (!$this->validation) {
             return;
         }
-
+        
+        $dom = ZLanguage::getModuleDomain('PostCalendar');
         $module = isset($z_event['caller']) ? $z_event['caller'] : ModUtil::getName(); // default to active module
         $objectid = $z_event['id']; // id of hooked item
 
@@ -293,15 +294,15 @@ class PostCalendar_HookHandlers extends Zikula_HookHandler
             // check to see if event currently exists - delete if so
             if (!empty($hookinfo['eid'])) {
                 DBUtil::deleteObjectByID('postcalendar_events', $hookinfo['eid'], 'eid');
-                LogUtil::registerStatus($this->__("PostCalendar: Existing event deleted (opt out)."));
+                LogUtil::registerStatus(__("PostCalendar: Existing event deleted (opt out).", $dom));
             } else {
-                LogUtil::registerStatus($this->__("PostCalendar: News event not created (opt out)."));
+                LogUtil::registerStatus(__("PostCalendar: News event not created (opt out).", $dom));
             }
             return;
         }
 
         if (!$postCalendarEventInstance = $this->_getClassInstance($module)) {
-            LogUtil::registerError($this->__f("PostCalendar: Could not create %s class instance.", $module));
+            LogUtil::registerError(__f("PostCalendar: Could not create %s class instance.", $module, $dom));
         }
         if (is_callable(array($postCalendarEventInstance, 'makeEvent'))) {
             $args = array(
@@ -315,24 +316,24 @@ class PostCalendar_HookHandlers extends Zikula_HookHandler
                     $postCalendarEventInstance->setEid($hookinfo['eid']);
                     $pc_event = $postCalendarEventInstance->toArray();
                     if (DBUtil::updateObject($pc_event, 'postcalendar_events', NULL, 'eid')) {
-                        LogUtil::registerStatus($this->__("PostCalendar: Associated Calendar event updated."));
+                        LogUtil::registerStatus(__("PostCalendar: Associated Calendar event updated.", $dom));
                         return true;
                     }
                 } else {
                     // create a new event
                     $pc_event = $postCalendarEventInstance->toArray();
                     if (DBUtil::insertObject($pc_event, 'postcalendar_events', 'eid')) {
-                        LogUtil::registerStatus($this->__("PostCalendar: Event created."));
+                        LogUtil::registerStatus(__("PostCalendar: Event created.", $dom));
                         return true;
                     }
                 }
             } else {
-                LogUtil::registerError($this->__("PostCalendar: Could not create event (method failed)."));
+                LogUtil::registerError(__("PostCalendar: Could not create event (method failed).", $dom));
             }
         } else {
-            LogUtil::registerError($this->__f("PostCalendar: Extended class for %s not found.", $module));
+            LogUtil::registerError(__f("PostCalendar: Extended class for %s not found.", $module, $dom));
         }
-        LogUtil::registerError($this->__('Error! Could not update the associated Calendar event.'));
+        LogUtil::registerError(__('Error! Could not update the associated Calendar event.', $dom));
     }
 
     /**
@@ -348,6 +349,8 @@ class PostCalendar_HookHandlers extends Zikula_HookHandler
      */
     public function process_delete(Zikula_Event $z_event)
     {
+        $dom = ZLanguage::getModuleDomain('PostCalendar');
+
         $module = isset($z_event['caller']) ? $z_event['caller'] : ModUtil::getName(); // default to active module
         $objectid = $z_event['id']; // id of hooked item
 
@@ -362,48 +365,72 @@ class PostCalendar_HookHandlers extends Zikula_HookHandler
         //return (bool)DBUtil::deleteWhere('postcalendar_events', $where);
         // TODO THIS IS NOT DELETING THE ROW IN categories_mapobj table!!!! (it should!)
         if (!DBUtil::deleteObject(array(), 'postcalendar_events', $where, 'eid')) {
-            return LogUtil::registerError($this->__('Error! Could not delete associated PostCalendar event.'));
+            return LogUtil::registerError(__('Error! Could not delete associated PostCalendar event.', $dom));
         }
 
-        LogUtil::registerStatus($this->__('Associated PostCalendar event also deleted.'));
+        LogUtil::registerStatus(__('Associated PostCalendar event also deleted.', $dom));
     }
 
     /**
-     * add config options to hooked module's module config
+     * add hook config options to hooked module's module config
      *
      * @param Zikula_Event $z_event
      */
-    public function config_ui_edit(Zikula_Event $z_event)
+    public static function postcalendarhookconfig(Zikula_Event $z_event)
     {
-        $module = isset($z_event['caller']) ? $z_event['caller'] : ModUtil::getName(); // default to active module
-    
-        $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
-        $this->view->assign('postcalendar_catregistry', $catregistry);
-    
-        $this->view->assign('postcalendar_optoverride', ModUtil::getVar($module, 'postcalendar_optoverride', false));
-        $this->view->assign('postcalendar_admincatselected', ModUtil::getVar($module, 'postcalendar_admincatselected'));
+        // check if this is for this handler
+        $subject = $z_event->getSubject();
+        if (!($z_event['method'] == 'postcalendarhookconfig' && strrpos(get_class($subject), '_Controller_Admin'))) {
+           return;
+        }
+        $moduleName = $subject->getName();
+        if (!SecurityUtil::checkPermission($moduleName.'::', '::', ACCESS_ADMIN)) {
+            return LogUtil::registerPermissionError();
+        }
+        $view = Zikula_View::getInstance('PostCalendar', false);
 
-        // add this response to the event stack
-        $area = 'modulehook_area.postcalendar.event';
-        $z_event->data[$area] = new Zikula_Response_DisplayHook($area, $this->view, 'hooks/modifyconfig.tpl');
+        $view->assign('ActiveModule', $moduleName);
+        
+        $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
+        $view->assign('postcalendar_catregistry', $catregistry);
+    
+        $view->assign('postcalendar_optoverride', ModUtil::getVar($moduleName, 'postcalendar_optoverride', false));
+        $view->assign('postcalendar_admincatselected', ModUtil::getVar($moduleName, 'postcalendar_admincatselected'));
+
+        $z_event->setData($view->fetch('hooks/modifyconfig.tpl'));
+        $z_event->setNotified();
     }
 
     /**
-     * process results of config_ui_edit
+     * process results of postCalendarHookConfig
      * 
      * @param Zikula_Event $z_event
      */
-    public function config_process_edit(Zikula_Event $z_event)
+    public static function postcalendarhookconfigprocess(Zikula_Event $z_event)
     {
+        // check if this is for this handler
+        $subject = $z_event->getSubject();
+        if (!($z_event['method'] == 'postcalendarhookconfigprocess' && strrpos(get_class($subject), '_Controller_Admin'))) {
+           return;
+        }
+        $moduleName = $subject->getName();
+        if (!SecurityUtil::checkPermission($moduleName.'::', '::', ACCESS_ADMIN)) {
+            return LogUtil::registerPermissionError();
+        }
+        
         $hookinfo = FormUtil::getPassedValue('postcalendar', array(), 'POST');
         if ((!isset($hookinfo['postcalendar_optoverride'])) || (empty($hookinfo['postcalendar_optoverride']))) {
             $hookinfo['postcalendar_optoverride'] = 0;
         }
-        $module = isset($z_event['caller']) ? $z_event['caller'] : ModUtil::getName(); // default to active module
-        ModUtil::setVars($module, $hookinfo);
+        ModUtil::setVars($moduleName, $hookinfo);
         // ModVars: postcalendar_admincatselected, postcalendar_optoverride
 
-        LogUtil::registerStatus($this->__("PostCalendar: module config updated."));
+        $dom = ZLanguage::getModuleDomain('PostCalendar');
+        LogUtil::registerStatus(__("PostCalendar: Hook option settings updated.", $dom));
+
+        $z_event->setData(true);
+        $z_event->setNotified();
+        return System::redirect(ModUtil::url($moduleName, 'admin', 'main'));
     }
 
     /**
@@ -417,6 +444,7 @@ class PostCalendar_HookHandlers extends Zikula_HookHandler
     public static function moduleDelete(Zikula_Event $z_event)
     {
         $module = $z_event['name'];
+        $dom = ZLanguage::getModuleDomain('PostCalendar');
 
         // Get table info
         ModUtil::dbInfoLoad('PostCalendar');
@@ -426,9 +454,9 @@ class PostCalendar_HookHandlers extends Zikula_HookHandler
         $where = "WHERE " . $cols['hooked_modulename'] . " = '" . DataUtil::formatForStore($module) . "'";
 
         if (DBUtil::deleteObject(array(), 'postcalendar_events', $where, 'eid')) {
-            LogUtil::registerStatus($this->__('ALL associated PostCalendar events also deleted.'));
+            LogUtil::registerStatus(__('ALL associated PostCalendar events also deleted.', $dom));
         }
-        LogUtil::registerError($this->__('Error! Could not delete associated PostCalendar events.'));
+        LogUtil::registerError(__('Error! Could not delete associated PostCalendar events.', $dom));
     }
 
     /**
@@ -453,5 +481,18 @@ class PostCalendar_HookHandlers extends Zikula_HookHandler
             }
         }
         return new PostCalendar_PostCalendarEvent_Generic($module);
+    }
+
+    /**
+     * populate Services menu with hook option link
+     *
+     * @param Zikula_Event $event
+     */
+    public static function servicelinks(Zikula_Event $event)
+    {
+        $module = ModUtil::getName();
+        if (HookUtil::isSubscriberCapable(ModUtil::getName()) && ($module <> 'PostCalendar')) {
+            $event->data[] = array('url' => ModUtil::url($module, 'admin', 'postcalendarhookconfig'), 'text' => __('PostCalendar Hook Options'));
+        }
     }
 }

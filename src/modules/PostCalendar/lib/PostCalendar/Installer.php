@@ -48,6 +48,9 @@ class PostCalendar_Installer extends Zikula_Installer
         // register handlers
         EventUtil::registerPersistentModuleHandler('PostCalendar', 'get.pending_content', array('PostCalendar_Handlers', 'pendingContent'));
         EventUtil::registerPersistentModuleHandler('PostCalendar', 'installer.module.uninstalled', array('PostCalendar_HookHandlers', 'moduleDelete'));
+        EventUtil::registerPersistentModuleHandler('PostCalendar', 'module_dispatch.service_links', array('PostCalendar_HookHandlers', 'servicelinks'));
+        EventUtil::registerPersistentModuleHandler('PostCalendar', 'controller.method_not_found', array('PostCalendar_HookHandlers', 'postcalendarhookconfig'));
+        EventUtil::registerPersistentModuleHandler('PostCalendar', 'controller.method_not_found', array('PostCalendar_HookHandlers', 'postcalendarhookconfigprocess'));
 
         return true;
     }
@@ -107,9 +110,13 @@ class PostCalendar_Installer extends Zikula_Installer
                 ModUtil::setVar('PostCalendar', 'pcEventDefaults', $defaults['pcEventDefaults']);
             case '6.2.0':
                 ModUtil::unregisterHook('item', 'new', 'GUI', 'PostCalendar', 'hooks', 'new');
-                ModUtil::registerHook('item', 'new', 'GUI', 'PostCalendar', 'hooks', 'newgui');
+
                 // register handlers
                 EventUtil::registerPersistentModuleHandler('PostCalendar', 'get.pending_content', array('PostCalendar_Handlers', 'pendingContent'));
+                EventUtil::registerPersistentModuleHandler('PostCalendar', 'module_dispatch.service_links', array('PostCalendar_HookHandlers', 'servicelinks'));
+                EventUtil::registerPersistentModuleHandler('PostCalendar', 'module_dispatch.service_links', array('PostCalendar_HookHandlers', 'servicelinks'));
+                EventUtil::registerPersistentModuleHandler('PostCalendar', 'controller.method_not_found', array('PostCalendar_HookHandlers', 'postcalendarhookconfig'));
+                EventUtil::registerPersistentModuleHandler('PostCalendar', 'controller.method_not_found', array('PostCalendar_HookHandlers', 'postcalendarhookconfigprocess'));
 
                 HookUtil::registerHookSubscriberBundles($this->version);
                 HookUtil::registerHookProviderBundles($this->version);
@@ -141,7 +148,7 @@ class PostCalendar_Installer extends Zikula_Installer
         DBUtil::deleteWhere('categories_mapobj', "cmo_modname='PostCalendar'");
 
         // unregister handlers
-        EventUtil::unregisterPersistentModuleHandler('PostCalendar', 'get.pending_content', array('PostCalendar_Handlers', 'pendingContent'));
+        EventUtil::unregisterPersistentModuleHandlers('PostCalendar');
 
         HookUtil::unregisterHookSubscriberBundles($this->version);
         HookUtil::unregisterHookProviderBundles($this->version);

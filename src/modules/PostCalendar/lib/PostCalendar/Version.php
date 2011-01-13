@@ -47,11 +47,6 @@ class PostCalendar_Version extends Zikula_Version
         $bundle->addHook('hookhandler.postcalendar.process.delete', 'process.delete', 'PostCalendar_HookHandlers', 'process_delete', 'postcalendar.service', 10);
         $this->registerHookProviderBundle($bundle);
 
-//        $bundle = new Zikula_Version_HookProviderBundle('modulehook_area.postcalendar.config', $this->__('PostCalendar Module Config Hook Handlers'));
-//        $bundle->addHook('hookhandler.postcalendar.config.ui.edit', 'ui.edit', 'PostCalendar_HookHandlers', 'config_ui_edit', 'postcalendar.service', 10);
-//        $bundle->addHook('hookhandler.postcalendar.config.process.edit', 'process.edit', 'PostCalendar_HookHandlers', 'config_process_edit', 'postcalendar.service', 10);
-//        $this->registerHookProviderBundle($bundle);
-
         $bundle = new Zikula_Version_HookSubscriberBundle('modulehook_area.postcalendar.events', $this->__('PostCalendar Events'));
         $bundle->addType('ui.view', 'postcalendar.hook.events.ui.view');
         $bundle->addType('ui.edit', 'postcalendar.hook.events.ui.edit');
