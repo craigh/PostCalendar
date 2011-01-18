@@ -222,15 +222,12 @@ class PostCalendar_HookHandlers extends Zikula_HookHandler
         // get data from post
         $data = FormUtil::getPassedValue('postcalendar', null, 'POST');
 
+        $modname = $z_event->getSubject()->getName();
+        $data['optin'] = isset($data['optin']) ? $data['optin'] : ModUtil::gevar($modname, 'postcalendar_optoverride');
+        $data['cats'] = isset($data['optin']) ? $data['optin'] : ModUtil::gevar($modname, 'postcalendar_admincatselected');
+
         // create a new hook validation object and assign it to $this->validation
         $this->validation = new Zikula_Provider_HookValidation('data', $data);
-
-        // do the actual validation
-        // for this example, the validation passes if our dummydata is a number between 1 and 9
-        // otherwise the validation fais
-//        if (!is_numeric($mhp_data['dummydata']) || ((int)$mhp_data['dummydata'] < 1 || (int)$mhp_data['dummydata'] > 9)) {
-//            $this->validation->addError('dummydata', 'You must fill a number between 1 and 9.');
-//        }
 
         $z_event->data->set('hookhandler.postcalendar.ui.edit', $this->validation);
     }
