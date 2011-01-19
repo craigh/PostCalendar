@@ -20,8 +20,19 @@ class PostCalendar_PostCalendarEvent_Users extends PostCalendar_PostCalendarEven
             return false;
         }
 
+        $eventstatus = -1; // pending
         $user = UserUtil::getVars($args['objectid'], true);
-
+        if (!$user) {
+            // user is a pending registration
+            $user = UserUtil::getVars($args['objectid'], true, '', true);
+        }
+        if (($user['activated'] == UserUtil::ACTIVATED_ACTIVE)
+                || ($user['activated'] == UserUtil::ACTIVATED_INACTIVE_PWD)
+                || ($user['activated'] == UserUtil::ACTIVATED_INACTIVE_TOUPP)
+                || ($user['activated'] == UserUtil::ACTIVATED_INACTIVE_PWD_TOUPP)) {
+            $eventstatus = 1; // approved
+        }
+        
         $profileModName = System::getVar('profilemodule', '');
         if (ModUtil::available($profileModName)) {
             $hometext = ":html:" . __('Profile link: ', $dom) . "<a href='" . ModUtil::url($profileModName, 'user', 'view', array('uid' => $user['uid'])) . "'>" . $user['uname'] . "</a>" . " " . __('registered on this day', $dom);
@@ -36,8 +47,23 @@ class PostCalendar_PostCalendarEvent_Users extends PostCalendar_PostCalendarEven
         $this->informant = $user['uid']; // userid of creator
         $this->eventDate = substr($user['user_regdate'], 0, 10); // date of event: YYYY-MM-DD
         $this->startTime = substr($user['user_regdate'], -8); // time of event: HH:MM:SS
+        $this->eventstatus = $eventstatus;
 
         return true;
     }
 
+    public static function createEvent(Zikula_Event $z_event) {
+        $userObj = $z_event->getSubject();
+        // does event already exist?
+        ModUtil::dbInfoLoad('PostCalendar');
+        $where = "WHERE pc_hooked_modulename = 'Users'
+                  AND pc_hooked_objectid = '{$userObj['uid']}'";
+        $result = DBUtil::selectObject('postcalendar_events', $where);
+        if (($result) && ($result['eventstatus'] <> 1)) {
+            $obj['eventstatus'] = 1;
+            DBUtil::updateObject($obj, 'postcalendar_events', $where, 'eid');
+        } else {
+            // create event
+        }
+    }
 }

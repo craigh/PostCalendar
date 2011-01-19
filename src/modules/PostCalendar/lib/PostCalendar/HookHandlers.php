@@ -222,10 +222,6 @@ class PostCalendar_HookHandlers extends Zikula_HookHandler
         // get data from post
         $data = FormUtil::getPassedValue('postcalendar', null, 'POST');
 
-        $modname = $z_event->getSubject()->getName();
-        $data['optin'] = isset($data['optin']) ? $data['optin'] : ModUtil::gevar($modname, 'postcalendar_optoverride');
-        $data['cats'] = isset($data['optin']) ? $data['optin'] : ModUtil::gevar($modname, 'postcalendar_admincatselected');
-
         // create a new hook validation object and assign it to $this->validation
         $this->validation = new Zikula_Provider_HookValidation('data', $data);
 
@@ -281,16 +277,16 @@ class PostCalendar_HookHandlers extends Zikula_HookHandler
         $module = isset($z_event['caller']) ? $z_event['caller'] : ModUtil::getName(); // default to active module
         $objectid = $z_event['id']; // id of hooked item
 
-        $hookinfo = $this->validation->getObject();
-        $hookinfo = DataUtil::cleanVar($hookinfo);
-        if (DataUtil::is_serialized($hookinfo['cats'], false)) {
-            $hookinfo['cats'] = unserialize($hookinfo['cats']);
+        $hookdata = $this->validation->getObject();
+        $hookdata = DataUtil::cleanVar($hookdata);
+        if (DataUtil::is_serialized($hookdata['cats'], false)) {
+            $hookdata['cats'] = unserialize($hookdata['cats']);
         }
 
-        if ((!isset($hookinfo['optin'])) || (!$hookinfo['optin'])) {
+        if ((!isset($hookdata['optin'])) || (!$hookdata['optin'])) {
             // check to see if event currently exists - delete if so
-            if (!empty($hookinfo['eid'])) {
-                DBUtil::deleteObjectByID('postcalendar_events', $hookinfo['eid'], 'eid');
+            if (!empty($hookdata['eid'])) {
+                DBUtil::deleteObjectByID('postcalendar_events', $hookdata['eid'], 'eid');
                 LogUtil::registerStatus(__("PostCalendar: Existing event deleted (opt out).", $dom));
             } else {
                 LogUtil::registerStatus(__("PostCalendar: News event not created (opt out).", $dom));
@@ -306,11 +302,11 @@ class PostCalendar_HookHandlers extends Zikula_HookHandler
                 'objectid' => $objectid);
             if ($postCalendarEventInstance->makeEvent($args)) {
                 $postCalendarEventInstance->setHooked_objectid($objectid);
-                $postCalendarEventInstance->set__CATEGORIES__($hookinfo['cats']);
+                $postCalendarEventInstance->set__CATEGORIES__($hookdata['cats']);
                 ModUtil::dbInfoLoad('PostCalendar');
-                if (!empty($hookinfo['eid'])) {
+                if (!empty($hookdata['eid'])) {
                     // event already exists - just update
-                    $postCalendarEventInstance->setEid($hookinfo['eid']);
+                    $postCalendarEventInstance->setEid($hookdata['eid']);
                     $pc_event = $postCalendarEventInstance->toArray();
                     if (DBUtil::updateObject($pc_event, 'postcalendar_events', NULL, 'eid')) {
                         LogUtil::registerStatus(__("PostCalendar: Associated Calendar event updated.", $dom));
@@ -415,11 +411,11 @@ class PostCalendar_HookHandlers extends Zikula_HookHandler
             return LogUtil::registerPermissionError();
         }
         
-        $hookinfo = FormUtil::getPassedValue('postcalendar', array(), 'POST');
-        if ((!isset($hookinfo['postcalendar_optoverride'])) || (empty($hookinfo['postcalendar_optoverride']))) {
-            $hookinfo['postcalendar_optoverride'] = 0;
+        $hookdata = FormUtil::getPassedValue('postcalendar', array(), 'POST');
+        if ((!isset($hookdata['postcalendar_optoverride'])) || (empty($hookdata['postcalendar_optoverride']))) {
+            $hookdata['postcalendar_optoverride'] = 0;
         }
-        ModUtil::setVars($moduleName, $hookinfo);
+        ModUtil::setVars($moduleName, $hookdata);
         // ModVars: postcalendar_admincatselected, postcalendar_optoverride
 
         $dom = ZLanguage::getModuleDomain('PostCalendar');

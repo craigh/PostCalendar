@@ -30,7 +30,7 @@ class PostCalendar_PostCalendarEvent_News extends PostCalendar_PostCalendarEvent
         $now = DateUtil::getDatetime(null, '%Y-%m-%d %H:%M:%S');
         $diff = DateUtil::getDatetimeDiff_AsField($now, $article['from'], 6);
         if ($diff > 0) {
-            $eventstatus = -1; // hide published events
+            $eventstatus = -1; // hide published but pending events
         }
 
         $this->title = __('News: ', $dom) . $article['title'];
@@ -52,6 +52,7 @@ class PostCalendar_PostCalendarEvent_News extends PostCalendar_PostCalendarEvent
     {
         $today = DateUtil::getDatetime(null, '%Y-%m-%d');
         $time = DateUtil::getDatetime(null, '%H:%M:%S');
+        ModUtil::dbInfoLoad('PostCalendar');
         $where = "WHERE pc_hooked_modulename = 'news'
                   AND pc_eventstatus = -1
                   AND pc_eventDate <= '$today'
