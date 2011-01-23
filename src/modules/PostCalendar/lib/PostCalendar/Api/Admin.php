@@ -21,18 +21,6 @@ class PostCalendar_Api_Admin extends Zikula_Api
     
         // Check the users permissions to each avaiable action within the admin panel
         // and populate the links array if the user has permission
-        if (SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
-            $links[] = array(
-                'url' => ModUtil::url('PostCalendar', 'admin', 'modifyconfig'),
-                'text' => $this->__('Settings'),
-                'class' => 'z-icon-es-config');
-        }
-        if (SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
-            $links[] = array(
-                'url' => ModUtil::url('PostCalendar', 'admin', 'modifyeventdefaults'),
-                'text' => $this->__('Event default values'),
-                'class' => 'z-icon-es-config');
-        }
         if (SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_DELETE)) {
             $links[] = array(
                 'url' => ModUtil::url('PostCalendar', 'admin', 'listevents'),
@@ -53,11 +41,17 @@ class PostCalendar_Api_Admin extends Zikula_Api
                 'text' => $this->__('Create new event'),
                 'class' => 'z-icon-es-new');
         }
-        if (SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADD)) {
+        if (SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
             $links[] = array(
-                'url' => 'http://code.zikula.org/soundwebdevelopment/wiki/PostCalendarFeatureDocs70',
-                'text' => $this->__('Documentation'),
-                'class' => 'z-icon-es-info');
+                'url' => ModUtil::url('PostCalendar', 'admin', 'modifyconfig'),
+                'text' => $this->__('Settings'),
+                'class' => 'z-icon-es-config');
+        }
+        if (SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
+            $links[] = array(
+                'url' => ModUtil::url('PostCalendar', 'admin', 'modifyeventdefaults'),
+                'text' => $this->__('Event default values'),
+                'class' => 'z-icon-es-config');
         }
         // Return the links array back to the calling function
         return $links;

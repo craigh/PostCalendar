@@ -14,7 +14,7 @@ class PostCalendar_Controller_Admin extends Zikula_Controller
      */
     public function main()
     {
-        return $this->modifyconfig();
+        return $this->listevents(array());
     }
     
     /**
@@ -375,6 +375,12 @@ class PostCalendar_Controller_Admin extends Zikula_Controller
         return $this->modifyeventdefaults();
     }
 
+    /**
+     * Add object actions to each item
+     * e.g. view, hide, approve, edit, delete
+     * @param array $events
+     * @return array
+     */
     private function _appendObjectActions($events)
     {
         foreach($events as $key => $event) {
