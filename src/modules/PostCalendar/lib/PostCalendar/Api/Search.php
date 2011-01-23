@@ -66,6 +66,9 @@ class PostCalendar_Api_Search extends Zikula_Api
         if (!empty($args['__CATEGORIES__'])) {
             $searchargs['filtercats']['__CATEGORIES__'] = $args['__CATEGORIES__'];
         }
+        $searchargs['searchstart'] = isset($args['searchstart']) ? $args['searchstart'] : 0;
+        $args['searchend'] = isset($args['searchend']) ? $args['searchend'] : 2;
+        $searchargs['searchend'] = ($searchargs['searchstart'] == $args['searchend']) ? 2 : $args['searchend'];
     
         ModUtil::dbInfoLoad('Search');
         $dbtable = DBUtil::getTables();
@@ -77,9 +80,6 @@ class PostCalendar_Api_Search extends Zikula_Api
         if (!empty($where)) {
             $searchargs['s_keywords'] = trim(substr(trim($where), 1, -1));
         }
-    
-        $searchargs['searchstart'] = (!isset($args['searchstart'])) ? 0 : $args['searchstart'];
-        $searchargs['searchend'] = (($args['searchstart'] == $args['searchend']) || (!isset($args['searchend']))) ? 2 : $args['searchend']; // user set both options to 'now'
     
         $eventsByDate = ModUtil::apiFunc('PostCalendar', 'event', 'getEvents', $searchargs);
         // $eventsByDate = array(Date[YYYY-MM-DD]=>array(key[int]=>array(assockey[name]=>values)))
