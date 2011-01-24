@@ -345,3 +345,9 @@ div.postcalendar_featuredevent div.eventdetails span.location{
 #pc_bulkaction_control select {
     margin-left: 2em;
 }
+
+/*********** ADD CORE STYLING **********/
+.z-icon-es-copy {
+    background: url("../../../images/icons/extrasmall/editcopy.gif") no-repeat scroll 0 50% transparent;
+    padding: 2px 0 2px 20px;
+}

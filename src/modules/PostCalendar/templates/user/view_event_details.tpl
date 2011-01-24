@@ -14,9 +14,9 @@
 {if $PRINT_VIEW eq false}
     {if $EVENT_CAN_EDIT}
         <div>
-            <a href="{modurl modname="PostCalendar" type="event" func="edit" eid=$loaded_event.eid}">{gt text='Edit event'}</a> |
-            <a href="{modurl modname="PostCalendar" type="event" func="copy" eid=$loaded_event.eid}">{gt text='Copy event'}</a> |
-            <a href="{modurl modname="PostCalendar" type="event" func="delete" eid=$loaded_event.eid}">{gt text='Delete event'}</a>
+            <a class='z-icon-es-edit' href="{modurl modname="PostCalendar" type="event" func="edit" eid=$loaded_event.eid}">{gt text='Edit event'}</a> |
+            <a class='z-icon-es-copy' href="{modurl modname="PostCalendar" type="event" func="copy" eid=$loaded_event.eid}">{gt text='Copy event'}</a> |
+            <a class='z-icon-es-delete' href="{modurl modname="PostCalendar" type="event" func="delete" eid=$loaded_event.eid}">{gt text='Delete event'}</a>
         </div>
     {/if}
 {else}
