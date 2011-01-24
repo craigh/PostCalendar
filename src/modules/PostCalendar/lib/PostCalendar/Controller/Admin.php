@@ -42,19 +42,21 @@ class PostCalendar_Controller_Admin extends Zikula_Controller
         }
     
         $listtype = isset($args['listtype']) ? $args['listtype'] : FormUtil::getPassedValue('listtype', _EVENT_APPROVED);
+        $where = "WHERE pc_eventstatus=" . $listtype;
         switch ($listtype) {
+            case _EVENT_ALL:
+                $functionname = "all";
+                $where = '';
+                break;
             case _EVENT_HIDDEN:
                 $functionname = "hidden";
-                $title = $this->__('Hidden events administration');
                 break;
             case _EVENT_QUEUED:
                 $functionname = "queued";
-                $title = $this->__('Queued events administration');
                 break;
             case _EVENT_APPROVED:
             default:
                 $functionname = "approved";
-                $title = $this->__('Approved events administration');
             }
     
         $offset_increment = _SETTING_HOW_MANY_EVENTS;
@@ -81,10 +83,9 @@ class PostCalendar_Controller_Admin extends Zikula_Controller
         }
         $this->view->assign('sortcolclasses', $sortcolclasses);
     
-        $events = DBUtil::selectObjectArray('postcalendar_events', "WHERE pc_eventstatus=" . $listtype, $sort, $offset, $offset_increment, false);
-        $events = $this->_appendObjectActions($events);
+        $events = DBUtil::selectObjectArray('postcalendar_events', $where, $sort, $offset, $offset_increment, false);
+        $events = $this->_appendObjectActions($events, $listtype);
     
-        $this->view->assign('title', $title);
         $this->view->assign('functionname', $functionname);
         $this->view->assign('events', $events);
         $sorturls = array('title', 'time', 'eventDate');
@@ -102,6 +103,7 @@ class PostCalendar_Controller_Admin extends Zikula_Controller
             _ADMIN_ACTION_DELETE  => $this->__('Delete')));
         $this->view->assign('actionselected', '-1');
         $this->view->assign('listtypes', array(
+            _EVENT_ALL      => $this->__('All Events'),
             _EVENT_APPROVED => $this->__('Approved Events'),
             _EVENT_HIDDEN   => $this->__('Hidden Events'),
             _EVENT_QUEUED   => $this->__('Queued Events')));
@@ -381,8 +383,13 @@ class PostCalendar_Controller_Admin extends Zikula_Controller
      * @param array $events
      * @return array
      */
-    private function _appendObjectActions($events)
+    private function _appendObjectActions($events, $listtype=_EVENT_APPROVED)
     {
+        $statusmap = array(
+            _EVENT_QUEUED => ' (Queued)',
+            _EVENT_HIDDEN => ' (Hidden)',
+            _EVENT_APPROVED => ''
+        );
         foreach($events as $key => $event) {
             $options = array();
             $truncated_title = StringUtil::getTruncatedString($event['title'], 25);
@@ -411,6 +418,7 @@ class PostCalendar_Controller_Admin extends Zikula_Controller
                     'title' => $this->__f('Delete \'%s\'', $truncated_title));
             }
             $events[$key]['options'] = $options;
+            $events[$key]['title'] = ($listtype == _EVENT_ALL) ? $event['title'] . $statusmap[$event['eventstatus']] : $event['title'];
         }
         return $events;
     }

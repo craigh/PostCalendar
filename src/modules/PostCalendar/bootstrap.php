@@ -15,6 +15,7 @@ define('_IS_SATURDAY',          6);
 define('_EVENT_APPROVED',       1);
 define('_EVENT_QUEUED',         0);
 define('_EVENT_HIDDEN',        -1);
+define('_EVENT_ALL',            100);
 // $event_repeat
 define('NO_REPEAT',             0);
 define('REPEAT',                1);
