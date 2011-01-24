@@ -22,7 +22,7 @@
                     <tr>
                         <th class='z-w5'>{gt text='Select'}</th>
                         <th class='z-w35'><a class='{$sortcolclasses.title}' href='{$title_sort_url|safetext}'>{gt text='Title'}</a></th>
-                        <th class='z-w15'>{gt text='Event Date'}</th>
+                        <th class='z-w15'><a class='{$sortcolclasses.eventDate}' href='{$eventDate_sort_url|safetext}'>{gt text='Event Date'}</a></th>
                         <th class='z-w20'>{gt text='Categories'}</th>
                         <th class='z-w15'><a class='{$sortcolclasses.time}' href='{$time_sort_url|safetext}'>{gt text='Time stamp'}</a></th>
                         <th class='z-w10'>{gt text='Actions'}</th>

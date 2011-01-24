@@ -63,7 +63,8 @@ class PostCalendar_Controller_Admin extends Zikula_Controller
         }
         $sortcolclasses = array(
             'title' => 'z-order-unsorted',
-            'time'  => 'z-order-unsorted');
+            'time'  => 'z-order-unsorted',
+            'eventDate' => 'z-order-unsorted');
     
         $offset = FormUtil::getPassedValue('offset', 0);
         $sort   = FormUtil::getPassedValue('sort', 'time');
@@ -86,14 +87,13 @@ class PostCalendar_Controller_Admin extends Zikula_Controller
         $this->view->assign('title', $title);
         $this->view->assign('functionname', $functionname);
         $this->view->assign('events', $events);
-        $this->view->assign('title_sort_url', ModUtil::url('PostCalendar', 'admin', 'listevents', array(
-            'listtype' => $listtype,
-            'sort' => 'title',
-            'sdir' => $sdir)));
-        $this->view->assign('time_sort_url', ModUtil::url('PostCalendar', 'admin', 'listevents', array(
-            'listtype' => $listtype,
-            'sort' => 'time',
-            'sdir' => $sdir)));
+        $sorturls = array('title', 'time', 'eventDate');
+        foreach ($sorturls as $sorturl) {
+            $this->view->assign($sorturl . '_sort_url', ModUtil::url('PostCalendar', 'admin', 'listevents', array(
+                'listtype' => $listtype,
+                'sort' => $sorturl,
+                'sdir' => $sdir)));
+        }
         $this->view->assign('formactions', array(
             '-1'                  => $this->__('With selected:'),
             _ADMIN_ACTION_VIEW    => $this->__('View'),
