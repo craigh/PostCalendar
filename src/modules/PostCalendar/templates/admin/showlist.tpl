@@ -1,32 +1,41 @@
 {include file="admin/menu.tpl"}
 <div class="z-admincontainer">
     <div class="z-adminpageicon">{img modname='PostCalendar' src='admin.png'}</div>
-    <h2>{gt text="$title"}</h2>
-    <form class="z-adminform" action="{modurl modname="PostCalendar" type="admin" func="listevents"}" method="post" enctype="application/x-www-form-urlencoded">
-        <input type="hidden" name="authid" value="{insert name="generateauthkey" module="PostCalendar"}" />
-        {html_options name=listtype options=$listtypes selected=$listtypeselected}
-        <input type="submit" value="{gt text="Change Lists"}" />
+    <h2>{gt text="Event List"}</h2>
+    <form class="z-form" action="{modurl modname="PostCalendar" type="admin" func="listevents"}" method="post" enctype="application/x-www-form-urlencoded">
+        <fieldset id="postcalendar_listfilter">
+            <legend>{gt text="Filter"}</legend>
+            <input type="hidden" name="authid" value="{insert name="generateauthkey" module="PostCalendar"}" />
+            <label for="listtype">{gt text='Status'}</label>
+            {html_options id='listtype' name=listtype options=$listtypes selected=$listtypeselected}
+            &nbsp;&nbsp;
+            <span class="z-nowrap z-buttons">
+                <input type="submit" value="{gt text="Filter"}" />
+            </span>
+        </fieldset>
     </form>
-    <form id='pc_form_bulkaction' class="z-adminform" action="{modurl modname="postcalendar" type="admin" func="adminevents"}" method="post" enctype="application/x-www-form-urlencoded">
+    <form id='pc_form_bulkaction' class="z-form" action="{modurl modname="postcalendar" type="admin" func="adminevents"}" method="post" enctype="application/x-www-form-urlencoded">
         <div>
             <input type="hidden" name="authid" value="{insert name="generateauthkey" module="PostCalendar"}" />
             <table class="z-datatable">
                 <thead>
                     <tr>
-                        <th class='z-w10'>{gt text='Select'}</th>
-                        <th class='z-w40'><a class='{$sortcolclasses.title}' href='{$title_sort_url|safetext}'>{gt text='Title'}</a></th>
+                        <th class='z-w5'>{gt text='Select'}</th>
+                        <th class='z-w35'><a class='{$sortcolclasses.title}' href='{$title_sort_url|safetext}'>{gt text='Title'}</a></th>
+                        <th class='z-w15'>{gt text='Event Date'}</th>
                         <th class='z-w20'>{gt text='Categories'}</th>
-                        <th class='z-w20'><a class='{$sortcolclasses.time}' href='{$time_sort_url|safetext}'>{gt text='Time stamp'}</a></th>
+                        <th class='z-w15'><a class='{$sortcolclasses.time}' href='{$time_sort_url|safetext}'>{gt text='Time stamp'}</a></th>
                         <th class='z-w10'>{gt text='Actions'}</th>
                     </tr>
                 </thead>
                 <tbody>
 				{section name=event loop=$events}
                     <tr class="{cycle values="z-odd,z-even"}">
-                        <td class='z-w10'><input type="checkbox" value="{$events[event].eid}" id="events_{$events[event].eid}" name="events[]" /></td>
-                        <td class='z-w40'>{$events[event].title|safetext}</td>
+                        <td class='z-w5'><input type="checkbox" value="{$events[event].eid}" id="events_{$events[event].eid}" name="events[]" /></td>
+                        <td class='z-w35'>{$events[event].title|safetext}</td>
+                        <td class='z-w15'>{$events[event].eventDate|pc_date_format}</td>
                         <td class='z-w20'>{assignedcategorieslist item=$events[event]}</td>
-                        <td class='z-w20'>{$events[event].time}</td>
+                        <td class='z-w15'>{$events[event].time}</td>
                         <td class='z-w10'>
                             {assign var='options' value=$events[event].options}
                             {section name='options' loop=$options}
