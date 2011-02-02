@@ -106,34 +106,8 @@ class PostCalendar_Api_Event extends Zikula_Api
                 $where .= "OR pc_sharing = '" . SHARING_PUBLIC . "') "; //deprecated
         }
     
-        // convert categories array to proper filter info
-        if (is_array($filtercats)) {
-            $catsarray = is_array($filtercats['__CATEGORIES__']) ? $filtercats['__CATEGORIES__'] : array('Main' => 0);
-            foreach ($catsarray as $propname => $propid) {
-                if (is_array($propid)) { // select multiple used
-                    foreach ($propid as $int_key => $int_id) {
-                        if ($int_id <= 0) {
-                            unset($catsarray[$propname][$int_key]); // removes categories set to 'all' (0)
-                        }
-                        if (empty($catsarray[$propname])) {
-                            unset($catsarray[$propname]);
-                        }
-                    }
-                } elseif (strstr($propid, ',')) { // category zLP_multiselctor used
-                    $catsarray[$propname] = explode(',', $propid);
-                    // no propid should be '0' in this case
-                } else { // single selectbox used
-                    if ($propid <= 0) {
-                        unset($catsarray[$propname]); // removes categories set to 'all' (0)
-                    }
-                }
-            }
-            if (!empty($catsarray)) {
-                $catsarray['__META__']['module'] = "PostCalendar"; // required for search operation
-            }
-        } else {
-            $catsarray = array();
-        }
+        $catsarray = self::formatCategoryFilter($filtercats);
+
         if (!empty($s_keywords)) {
             $where .= "AND $s_keywords";
         }
@@ -1026,5 +1000,42 @@ class PostCalendar_Api_Event extends Zikula_Api
         $stime = $this->converttimetoseconds($event['startTime']);
         $etime = $this->converttimetoseconds($event['endTime']);
         return $etime - $stime;
+    }
+
+    /**
+     * convert categories array to proper filter info
+     * @param array $filtercats
+     * @return array
+     */
+    public static function formatCategoryFilter($filtercats)
+    {
+        if (is_array($filtercats)) {
+            $catsarray = is_array($filtercats['__CATEGORIES__']) ? $filtercats['__CATEGORIES__'] : array('Main' => 0);
+            foreach ($catsarray as $propname => $propid) {
+                if (is_array($propid)) { // select multiple used
+                    foreach ($propid as $int_key => $int_id) {
+                        if ($int_id <= 0) {
+                            unset($catsarray[$propname][$int_key]); // removes categories set to 'all' (0)
+                        }
+                        if (empty($catsarray[$propname])) {
+                            unset($catsarray[$propname]);
+                        }
+                    }
+                } elseif (strstr($propid, ',')) { // category zLP_multiselctor used
+                    $catsarray[$propname] = explode(',', $propid);
+                    // no propid should be '0' in this case
+                } else { // single selectbox used
+                    if ($propid <= 0) {
+                        unset($catsarray[$propname]); // removes categories set to 'all' (0)
+                    }
+                }
+            }
+            if (!empty($catsarray)) {
+                $catsarray['__META__']['module'] = "PostCalendar"; // required for search operation
+            }
+        } else {
+            $catsarray = array();
+        }
+        return $catsarray;
     }
 } // end class def

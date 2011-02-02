@@ -69,8 +69,11 @@ class PostCalendar_Controller_Admin extends Zikula_Controller
             'eventDate' => 'z-order-unsorted');
     
         $offset = FormUtil::getPassedValue('offset', 0);
-        $sort   = FormUtil::getPassedValue('sort', 'time');
-        $sdir   = FormUtil::getPassedValue('sdir', 1);
+        $sort = FormUtil::getPassedValue('sort', 'time');
+        $sdir = FormUtil::getPassedValue('sdir', 1);
+        $this->view->assign('offset', $offset);
+        $this->view->assign('sort', $sort);
+        $this->view->assign('sdir', $sdir);
         $original_sdir = $sdir;
         $sdir = $sdir ? 0 : 1; //if true change to false, if false change to true
         if ($sdir == 0) {
@@ -82,8 +85,13 @@ class PostCalendar_Controller_Admin extends Zikula_Controller
             $sort .= ' ASC';
         }
         $this->view->assign('sortcolclasses', $sortcolclasses);
-    
-        $events = DBUtil::selectObjectArray('postcalendar_events', $where, $sort, $offset, $offset_increment, false);
+
+        $filtercats = FormUtil::getPassedValue('postcalendar_events');
+        $filtercats_serialized = FormUtil::getPassedValue('filtercats_serialized', false);
+        $filtercats = $filtercats_serialized ? unserialize($filtercats_serialized) : $filtercats;
+        $catsarray = PostCalendar_Api_Event::formatCategoryFilter($filtercats);
+
+        $events = DBUtil::selectObjectArray('postcalendar_events', $where, $sort, $offset, $offset_increment, false, null, $catsarray);
         $events = $this->_appendObjectActions($events, $listtype);
     
         $this->view->assign('functionname', $functionname);
@@ -92,6 +100,7 @@ class PostCalendar_Controller_Admin extends Zikula_Controller
         foreach ($sorturls as $sorturl) {
             $this->view->assign($sorturl . '_sort_url', ModUtil::url('PostCalendar', 'admin', 'listevents', array(
                 'listtype' => $listtype,
+                'filtercats_serialized' => serialize($filtercats),
                 'sort' => $sorturl,
                 'sdir' => $sdir)));
         }
@@ -129,7 +138,20 @@ class PostCalendar_Controller_Admin extends Zikula_Controller
         }
         $this->view->assign('nextlink', $nextlink);
         $this->view->assign('offset_increment', $offset_increment);
-    
+
+        $this->view->assign('catregistry', CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events'));
+        // convert categories array to proper filter info
+        $selectedcategories = array();
+        if (is_array($filtercats)) {
+            $catsarray = $filtercats['__CATEGORIES__'];
+            foreach ($catsarray as $propname => $propid) {
+                if ($propid > 0) {
+                    $selectedcategories[$propname] = $propid; // removes categories set to 'all'
+                }
+            }
+        }
+        $this->view->assign('selectedcategories', $selectedcategories);
+
         return $this->view->fetch('admin/showlist.tpl');
     }
     
