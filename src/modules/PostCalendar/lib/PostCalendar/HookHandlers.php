@@ -449,7 +449,6 @@ class PostCalendar_HookHandlers extends Zikula_HookHandler
         if (DBUtil::deleteObject(array(), 'postcalendar_events', $where, 'eid')) {
             LogUtil::registerStatus(__('ALL associated PostCalendar events also deleted.', $dom));
         }
-        LogUtil::registerError(__('Error! Could not delete associated PostCalendar events.', $dom));
     }
 
     /**
