@@ -25,6 +25,7 @@
     <form id='pc_form_bulkaction' class="z-form" action="{modurl modname="postcalendar" type="admin" func="adminevents"}" method="post" enctype="application/x-www-form-urlencoded">
         <div>
             <input type="hidden" name="authid" value="{insert name="generateauthkey" module="PostCalendar"}" />
+            <input type="hidden" name="listtype" value="{$listtypeselected}" />
             <table class="z-datatable">
                 <thead>
                     <tr>

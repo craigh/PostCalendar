@@ -155,7 +155,8 @@ class PostCalendar_Controller_Admin extends Zikula_Controller
         if (!isset($events)) {
             LogUtil::registerError($this->__('Please select an event.'));
             // return to where we came from
-            return $this->listevents(array('listtype' => _EVENT_QUEUED));
+            $listtype = FormUtil::getPassedValue('listtype', _EVENT_APPROVED);
+            return $this->listevents(array('listtype' => $listtype));
         }
     
         if (!is_array($events)) {
