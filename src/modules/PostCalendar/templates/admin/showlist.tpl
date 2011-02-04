@@ -21,6 +21,7 @@
             </span>
         </fieldset>
     </form>
+    <p>{gt text='Total events: %s (post filter)' tag1=$total_events}</p>
     <form id='pc_form_bulkaction' class="z-form" action="{modurl modname="postcalendar" type="admin" func="adminevents"}" method="post" enctype="application/x-www-form-urlencoded">
         <div>
             <input type="hidden" name="authid" value="{insert name="generateauthkey" module="PostCalendar"}" />
@@ -72,19 +73,7 @@
                     $('pc_form_bulkaction').submit()
                 });
             </script>
-            <div id="listmanipulator" style='text-align: center; background-color:#cccccc; padding:.5em; margin-top:.5em;'>
-				{if !empty($prevlink)}
-                << <a href="{$prevlink|safetext}">{gt text="Previous"} {$offset_increment} {gt text="Events"}</a>
-				{else}
-					{gt text="Previous"}
-				{/if}
-                &nbsp;|&nbsp;
-				{if !empty($nextlink)}
-                <a href="{$nextlink|safetext}">{gt text="Next"} {$offset_increment} {gt text="Events"}</a> >>
-				{else}
-					{gt text="Next"}
-				{/if}
-            </div>
+            {pager rowcount=$total_events limit=$modvars.PostCalendar.pcListHowManyEvents posvar='offset'}
         </div>
     </form>
 </div><!-- /z-admincontainer -->
