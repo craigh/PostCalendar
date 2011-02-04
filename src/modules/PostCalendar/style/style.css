@@ -351,3 +351,10 @@ div.postcalendar_featuredevent div.eventdetails span.location{
     background: url("../../../images/icons/extrasmall/editcopy.gif") no-repeat scroll 0 50% transparent;
     padding: 2px 0 2px 20px;
 }
+.nofilter {
+    background: #DFF2BF url('../../../images/icons/extrasmall/database.gif') 13px 50% no-repeat !important;
+    border: 1px solid #99CC99 !important;
+    color: #264409 !important;
+    padding: 5px 5px 5px 36px !important;
+    margin: 5px 0 !important;
+}

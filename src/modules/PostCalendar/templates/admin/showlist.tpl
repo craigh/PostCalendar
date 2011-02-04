@@ -5,6 +5,9 @@
     <form class="z-form" action="{modurl modname="PostCalendar" type="admin" func="listevents"}" method="post" enctype="application/x-www-form-urlencoded">
         <fieldset id="postcalendar_listfilter">
             <legend>{gt text="Filter"}</legend>
+            <span class='{if $filter_active}z-warningmsg{else}nofilter{/if}'>
+            <strong>{gt text='Total events: %s' tag1=$total_events}</strong>
+            {if $filter_active}&nbsp;Filter Active{/if}</span>&nbsp;
             <input type="hidden" name="authid" value="{insert name="generateauthkey" module="PostCalendar"}" />
             <input type="hidden" name="offset" value="{$offset}" />
             <input type="hidden" name="sort" value="{$sort}" />
@@ -21,7 +24,6 @@
             </span>
         </fieldset>
     </form>
-    <p>{gt text='Total events: %s (post filter)' tag1=$total_events}</p>
     <form id='pc_form_bulkaction' class="z-form" action="{modurl modname="postcalendar" type="admin" func="adminevents"}" method="post" enctype="application/x-www-form-urlencoded">
         <div>
             <input type="hidden" name="authid" value="{insert name="generateauthkey" module="PostCalendar"}" />

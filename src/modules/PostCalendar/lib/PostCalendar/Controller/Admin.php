@@ -99,6 +99,8 @@ class PostCalendar_Controller_Admin extends Zikula_Controller
         $total_events = DBUtil::selectObjectCount('postcalendar_events', $where, '1', false, $catsarray);
         $this->view->assign('total_events', $total_events);
 
+        $this->view->assign('filter_active', (empty($where) && empty($catsarray)) ? false : true);
+
         $this->view->assign('functionname', $functionname);
         $this->view->assign('events', $events);
         $sorturls = array('title', 'time', 'eventDate');
