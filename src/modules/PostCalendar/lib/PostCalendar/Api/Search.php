@@ -119,7 +119,7 @@ class PostCalendar_Api_Search extends Zikula_Api
      */
     public function search_check($args)
     {
-        $datarow = $args['datarow'];
+        $datarow = &$args['datarow'];
         $eid = $datarow['extra'];
         $date = str_replace("-", "", substr($datarow['created'], 0, 10));
     
