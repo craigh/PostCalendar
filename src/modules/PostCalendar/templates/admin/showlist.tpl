@@ -3,11 +3,14 @@
     <div class="z-adminpageicon">{img modname='PostCalendar' src='admin.png'}</div>
     <h2>{gt text="Event List"}</h2>
     <form class="z-form" action="{modurl modname="PostCalendar" type="admin" func="listevents"}" method="post" enctype="application/x-www-form-urlencoded">
-        <fieldset id="postcalendar_listfilter">
-            <legend>{gt text="Filter"}</legend>
-            <span class='{if $filter_active}z-warningmsg{else}nofilter{/if}'>
-            <strong>{gt text='Total events: %s' tag1=$total_events}</strong>
-            {if $filter_active}&nbsp;Filter Active{/if}</span>&nbsp;
+        <fieldset id="postcalendar_listfilter"{if $filter_active} class='filteractive'{/if}>
+            <legend>{gt text="Filter"} {if $filter_active}({gt text='Active'}){else}({gt text='Inactive'}){/if}</legend>
+            {if $filter_active}
+                {img modname='PostCalendar' src='filter.png' __title='Filter active' __alt='filter' style='vertical-align:middle;'}
+            {else}
+                {img modname='core' set='icons/medium' src='database.gif' __title='Fitler inactive' __alt='database' style='vertical-align:middle;'}
+            {/if}
+            <strong>{gt text='Events Listed: %s' tag1=$total_events}</strong>&nbsp;
             <input type="hidden" name="authid" value="{insert name="generateauthkey" module="PostCalendar"}" />
             <input type="hidden" name="offset" value="{$offset}" />
             <input type="hidden" name="sort" value="{$sort}" />
