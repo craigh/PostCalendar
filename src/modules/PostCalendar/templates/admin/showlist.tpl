@@ -4,13 +4,7 @@
     <h2>{gt text="Event List"}</h2>
     <form class="z-form" action="{modurl modname="PostCalendar" type="admin" func="listevents"}" method="post" enctype="application/x-www-form-urlencoded">
         <fieldset id="postcalendar_listfilter"{if $filter_active} class='filteractive'{/if}>
-            <legend>{gt text="Filter"} {if $filter_active}({gt text='Active'}){else}({gt text='Inactive'}){/if}</legend>
-            {if $filter_active}
-                {img modname='PostCalendar' src='filter.png' __title='Filter active' __alt='filter' style='vertical-align:middle;'}
-            {else}
-                {img modname='core' set='icons/medium' src='database.gif' __title='Fitler inactive' __alt='database' style='vertical-align:middle;'}
-            {/if}
-            <strong>{gt text='Events Listed: %s' tag1=$total_events}</strong>&nbsp;
+            <legend>{gt text="Filter"} ({if $filter_active}{gt text='Active'}{else}{gt text='Inactive'}{/if} :: {gt text='Events listed: %s' tag1=$total_events})</legend>
             <input type="hidden" name="authid" value="{insert name="generateauthkey" module="PostCalendar"}" />
             <input type="hidden" name="offset" value="{$offset}" />
             <input type="hidden" name="sort" value="{$sort}" />
@@ -22,7 +16,7 @@
             <span id='categoryfilter'>{include file='event/filtercats.tpl'}</span>
             &nbsp;&nbsp;
             <span class="z-nowrap z-buttons">
-                <input type="submit" value="{gt text="Filter"}" />
+                <input type="submit" class='z-bt-filter' value="{gt text="Filter"}" />
                 <a href="{modurl modname="PostCalendar" type='admin' func='listevents' listtype='100'}" title="{gt text="Clear"}">{img modname=core src="button_cancel.gif" set="icons/extrasmall" __alt="Clear" __title="Clear"} {gt text="Clear Filter"}</a>
             </span>
         </fieldset>
