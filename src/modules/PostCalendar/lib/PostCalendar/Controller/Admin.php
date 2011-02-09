@@ -66,13 +66,12 @@ class PostCalendar_Controller_Admin extends Zikula_Controller
     
         $offset = FormUtil::getPassedValue('offset', 0);
         $sort = FormUtil::getPassedValue('sort', 'time');
-        $sdir = FormUtil::getPassedValue('sdir', 1);
+        $original_sdir = FormUtil::getPassedValue('sdir', 1);
         $this->view->assign('offset', $offset);
         $this->view->assign('sort', $sort);
-        $this->view->assign('sdir', $sdir);
-        $original_sdir = $sdir;
+        $this->view->assign('sdir', $original_sdir);
         $original_sort = $sort;
-        $sdir = $sdir ? 0 : 1; //if true change to false, if false change to true
+        $sdir = $original_sdir ? 0 : 1; //if true change to false, if false change to true
         // setup sort col name
         ModUtil::dbInfoLoad('PostCalendar');
         $dbtable = DBUtil::getTables();
@@ -88,8 +87,8 @@ class PostCalendar_Controller_Admin extends Zikula_Controller
         }
         $this->view->assign('sortcolclasses', $sortcolclasses);
 
-        $filtercats = FormUtil::getPassedValue('postcalendar_events');
-        $filtercats_serialized = FormUtil::getPassedValue('filtercats_serialized', false);
+        $filtercats = FormUtil::getPassedValue('postcalendar_events', array(), 'POST');
+        $filtercats_serialized = FormUtil::getPassedValue('filtercats_serialized', false, 'GET');
         $filtercats = $filtercats_serialized ? unserialize($filtercats_serialized) : $filtercats;
         $catsarray = PostCalendar_Api_Event::formatCategoryFilter($filtercats);
 
