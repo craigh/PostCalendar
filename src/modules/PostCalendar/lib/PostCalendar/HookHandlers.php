@@ -299,7 +299,8 @@ class PostCalendar_HookHandlers extends Zikula_HookHandler
         }
         if (is_callable(array($postCalendarEventInstance, 'makeEvent'))) {
             $args = array(
-                'objectid' => $objectid);
+                'objectid' => $objectid,
+                'module' => $module);
             if ($postCalendarEventInstance->makeEvent($args)) {
                 $postCalendarEventInstance->setHooked_objectid($objectid);
                 $postCalendarEventInstance->set__CATEGORIES__($hookdata['cats']);

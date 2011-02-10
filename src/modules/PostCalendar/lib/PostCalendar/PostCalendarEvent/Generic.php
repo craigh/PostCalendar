@@ -21,8 +21,8 @@ class PostCalendar_PostCalendarEvent_Generic extends PostCalendar_PostCalendarEv
         }
         $date = DateUtil::getDatetime();
 
-        $this->title = __('New item', $dom);
-        $this->hometext = ":text:" .  __('New item', $dom);
+        $this->title = __f('New %1$s item (#%2$s)', array($args['module'], $args['objectid']), $dom);
+        $this->hometext = ":text:" .  __f('New %1$s item (#%2$s)', array($args['module'], $args['objectid']), $dom);
         $this->aid = $args['objectid'];
         $this->time = $date; // mysql timestamp YYYY-MM-DD HH:MM:SS
         $this->informant = $args['objectid'];

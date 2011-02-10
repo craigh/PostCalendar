@@ -19,8 +19,9 @@ class PostCalendar_PostCalendarEvent_News extends PostCalendar_PostCalendarEvent
         if ((!isset($args['objectid'])) || ((int) $args['objectid'] <= 0)) {
             return false;
         }
-        $args['SQLcache'] = false;
-        $article = ModUtil::apiFunc('News', 'user', 'get', $args);
+        $funcargs = array('objectid' => $args['objectid'],
+            'SQLcache' => false);
+        $article = ModUtil::apiFunc('News', 'user', 'get', $funcargs);
 
         $eventstatus = 1; // approved
         if ($article['published_status'] != 0) { // article not published yet (draft, etc)

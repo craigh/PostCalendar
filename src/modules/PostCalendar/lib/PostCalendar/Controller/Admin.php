@@ -87,7 +87,7 @@ class PostCalendar_Controller_Admin extends Zikula_Controller
         }
         $this->view->assign('sortcolclasses', $sortcolclasses);
 
-        $filtercats = FormUtil::getPassedValue('postcalendar_events', array(), 'POST');
+        $filtercats = FormUtil::getPassedValue('postcalendar_events', null, 'POST');
         $filtercats_serialized = FormUtil::getPassedValue('filtercats_serialized', false, 'GET');
         $filtercats = $filtercats_serialized ? unserialize($filtercats_serialized) : $filtercats;
         $catsarray = PostCalendar_Api_Event::formatCategoryFilter($filtercats);
