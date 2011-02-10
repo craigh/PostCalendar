@@ -345,35 +345,3 @@ div.postcalendar_featuredevent div.eventdetails span.location{
 #pc_bulkaction_control select {
     margin-left: 2em;
 }
-
-/*********** ADD CORE STYLING **********/
-.z-icon-es-copy {
-    background: url("../../../images/icons/extrasmall/editcopy.gif") no-repeat scroll 0 50% transparent;
-    padding: 2px 0 2px 20px;
-}
-.filteractive {
-    border: 1px solid #99CC99 !important;
-    background: #DFF2BF !important;
-}
-
-.z-buttons input.z-bt-filter {
-    padding: 5px 7px 5px 32px;
-}
-.z-buttons input.z-bt-filter {
-    background: url("../images/filter.png") #dfdfdf 10px 50% no-repeat; /*non-CSS3 browsers*/
-    background: url("../images/filter.png") 10px 50% no-repeat, -moz-linear-gradient(center top , #ffffff, #dfdfdf) repeat scroll 0 0 transparent; /*gecko*/
-    background: url("../images/filter.png") 10px 50% no-repeat, -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#dfdfdf)) repeat scroll 0 0 transparent; /*webkit*/
-    background: url("../images/filter.png") 10px 50% no-repeat, linear-gradient(#ffffff, #dfdfdf); /*CSS3*/
-}
-.z-buttons input.z-bt-filter:hover {
-    background: url("../images/filter.png") #cfcfcf 10px 50% no-repeat; /*non-CSS3 browsers*/
-    background: url("../images/filter.png") 10px 50% no-repeat, -moz-linear-gradient(top,  #fafafa, #cfcfcf) repeat scroll 0 0 transparent; /*gecko*/
-    background: url("../images/filter.png") 10px 50% no-repeat, -webkit-gradient(linear, left top, left bottom, from(#fafafa), to(#cfcfcf)) repeat scroll 0 0 transparent; /*webkit*/
-    background: url("../images/filter.png") 10px 50% no-repeat, linear-gradient(#fafafa, #cfcfcf); /*CSS3*/
-}
-.z-buttons input.z-bt-filter:active {
-    background: url("../images/filter.png") #fafafa 10px 50% no-repeat; /*non-CSS3 browsers*/
-    background: url("../images/filter.png") 10px 50% no-repeat, -moz-linear-gradient(top,  #cfcfcf, #fafafa) repeat scroll 0 0 transparent; /*gecko*/
-    background: url("../images/filter.png") 10px 50% no-repeat, -webkit-gradient(linear, left top, left bottom, from(#cfcfcf), to(#fafafa)) repeat scroll 0 0 transparent; /*webkit*/
-    background: url("../images/filter.png") 10px 50% no-repeat, linear-gradient(#cfcfcf, #fafafa); /*CSS3*/
-}
