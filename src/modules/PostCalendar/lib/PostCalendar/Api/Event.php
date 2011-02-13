@@ -1021,7 +1021,7 @@ class PostCalendar_Api_Event extends Zikula_Api
                             unset($catsarray[$propname]);
                         }
                     }
-                } elseif (strstr($propid, ',')) { // category zLP_multiselctor used
+                } elseif (strstr($propid, ',')) { // category Zikula.UI.SelectMultiple used
                     $catsarray[$propname] = explode(',', $propid);
                     // no propid should be '0' in this case
                 } else { // single selectbox used
