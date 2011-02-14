@@ -45,7 +45,7 @@
     <div style='padding: .5em'>
         <a href="{$PREV_LIST_URL}">{img src='previous.png' modname='core' set='icons/extrasmall' __title="previous list" __alt="previous list"}&nbsp;{gt text='previous list'}</a>
         &nbsp;::&nbsp;
-        <a href="{$NEXT_LIST_URL}">{gt text='next list'}&nbsp;{img src='next.png' modname='core' set='icons/extrasmall' __title="next list" __alt="next list"}</a>
+        <a href="{$NEXT_LIST_URL}">{gt text='next list'}&nbsp;{img src='forward.png' modname='core' set='icons/extrasmall' __title="next list" __alt="next list"}</a>
     </div>
 </div><!-- end calcontainer -->
 <div style='text-align:right;'>
