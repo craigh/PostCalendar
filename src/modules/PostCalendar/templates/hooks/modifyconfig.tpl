@@ -39,8 +39,8 @@
         </div>
     </fieldset>
     <div class="z-buttons z-formbuttons">
-        {button src="button_ok.gif" set="icons/extrasmall" class='z-btgreen' __alt="Save" __title="Save" __text="Save"}
-        <a class='z-btred' href="{modurl modname=$ActiveModule type="admin"}" title="{gt text="Cancel"}">{img modname=core src="button_cancel.gif" set="icons/extrasmall" __alt="Cancel" __title="Cancel"} {gt text="Cancel"}</a>
+        {button src="button_ok.png" set="icons/extrasmall" class='z-btgreen' __alt="Save" __title="Save" __text="Save"}
+        <a class='z-btred' href="{modurl modname=$ActiveModule type="admin"}" title="{gt text="Cancel"}">{img modname=core src="button_cancel.png" set="icons/extrasmall" __alt="Cancel" __title="Cancel"} {gt text="Cancel"}</a>
     </div>
     </div>
 </form>

@@ -133,7 +133,7 @@ function smarty_function_pc_url($args, &$smarty)
                 if ($action == 'print') {
                     $img_params['modname'] = 'core';
                     $img_params['set'] = 'icons/small';
-                    $img_params['src'] = 'printer1.gif';
+                    $img_params['src'] = 'printer.png';
                 }
                 if ($action == 'rss') {
                     $img_params['modname'] = 'PostCalendar';

@@ -34,7 +34,7 @@
             {if $event.commentcount gt 0}
                 {gt text='%s comment left' plural='%s comments left.' count=$event.commentcount tag1=$event.commentcount domain="module_postcalendar" assign="title"}
                 <a href="{modurl modname='PostCalendar' func='main' viewtype='details' eid=$event.eid}#comments" title='{$title}'>
-                {img modname=core src=comment.gif set=icons/extrasmall __alt="Comment" title=$title}</a>
+                {img modname=core src=comment.png set=icons/extrasmall __alt="Comment" title=$title}</a>
             {/if}
         </li>
     {/foreach}
@@ -43,9 +43,9 @@
     {/foreach}
 
     <div style='padding: .5em'>
-        <a href="{$PREV_LIST_URL}">{img src='previous.gif' modname='core' set='icons/extrasmall' __title="previous list" __alt="previous list"}&nbsp;{gt text='previous list'}</a>
+        <a href="{$PREV_LIST_URL}">{img src='previous.png' modname='core' set='icons/extrasmall' __title="previous list" __alt="previous list"}&nbsp;{gt text='previous list'}</a>
         &nbsp;::&nbsp;
-        <a href="{$NEXT_LIST_URL}">{gt text='next list'}&nbsp;{img src='next.gif' modname='core' set='icons/extrasmall' __title="next list" __alt="next list"}</a>
+        <a href="{$NEXT_LIST_URL}">{gt text='next list'}&nbsp;{img src='next.png' modname='core' set='icons/extrasmall' __title="next list" __alt="next list"}</a>
     </div>
 </div><!-- end calcontainer -->
 <div style='text-align:right;'>

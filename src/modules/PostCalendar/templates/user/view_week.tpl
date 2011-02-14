@@ -37,7 +37,7 @@
                     {if $event.commentcount gt 0}
                         {gt text='%s comment left' plural='%s comments left.' count=$event.commentcount tag1=$event.commentcount domain="module_postcalendar" assign="title"}
                         <a href="{modurl modname='PostCalendar' func='main' viewtype='details' eid=$event.eid}#comments" title='{$title}'>
-                        {img modname=core src=comment.gif set=icons/extrasmall __alt="Comment" title=$title}</a>
+                        {img modname=core src=comment.png set=icons/extrasmall __alt="Comment" title=$title}</a>
                     {/if}
                 </li>
             {foreachelse}

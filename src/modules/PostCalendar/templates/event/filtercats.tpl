@@ -14,7 +14,7 @@
         allText=$allText
         allValue=0}
     <a href='' id='postcalendar_events___CATEGORIES____{$property}__open'>
-        {img modname="core" src="edit_add.gif" set="icons/extrasmall" __alt="Select Multiple" __title="Select Multiple"}
+        {img modname="core" src="xedit.png" set="icons/extrasmall" __alt="Select Multiple" __title="Select Multiple"}
     </a>
     <script type="text/javascript">
         var postcalendar_events___CATEGORIES____{{$property}}_ = new Zikula.UI.SelectMultiple(

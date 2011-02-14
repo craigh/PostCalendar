@@ -402,27 +402,27 @@ class PostCalendar_Controller_Admin extends Zikula_Controller
             $options = array();
             $truncated_title = StringUtil::getTruncatedString($event['title'], 25);
             $options[] = array('url' => ModUtil::url('PostCalendar', 'user', 'display', array('viewtype' => 'details', 'eid' => $event['eid'])),
-                    'image' => '14_layer_visible.gif',
+                    'image' => '14_layer_visible.png',
                     'title' => $this->__f('View \'%s\'', $truncated_title));
 
             if (SecurityUtil::checkPermission('PostCalendar::Event', "{$event['title']}::{$event['eid']}", ACCESS_EDIT)) {
                 if ($event['eventstatus'] == _EVENT_APPROVED) {
                     $options[] = array('url' => ModUtil::url('PostCalendar', 'admin', 'adminevents', array('action' => _ADMIN_ACTION_HIDE, 'events' => $event['eid'])),
-                            'image' => 'db_remove.gif',
+                            'image' => 'db_remove.png',
                             'title' => $this->__f('Hide \'%s\'', $truncated_title));
                 } else {
                     $options[] = array('url' => ModUtil::url('PostCalendar', 'admin', 'adminevents', array('action' => _ADMIN_ACTION_APPROVE, 'events' => $event['eid'])),
-                            'image' => 'ok.gif',
+                            'image' => 'ok.png',
                             'title' => $this->__f('Approve \'%s\'', $truncated_title));
                 }
                 $options[] = array('url' => ModUtil::url('PostCalendar', 'event', 'edit', array('eid' => $event['eid'])),
-                        'image' => 'xedit.gif',
+                        'image' => 'xedit.png',
                         'title' => $this->__f('Edit \'%s\'', $truncated_title));
             }
 
             if (SecurityUtil::checkPermission('PostCalendar::Event', "{$event['title']}::{$event['eid']}", ACCESS_DELETE)) {
                 $options[] = array('url' => ModUtil::url('PostCalendar', 'event', 'delete', array('eid' => $event['eid'])),
-                    'image' => '14_layer_deletelayer.gif',
+                    'image' => '14_layer_deletelayer.png',
                     'title' => $this->__f('Delete \'%s\'', $truncated_title));
             }
             $events[$key]['options'] = $options;

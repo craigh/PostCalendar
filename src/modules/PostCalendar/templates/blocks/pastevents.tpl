@@ -26,7 +26,7 @@
                     {gt text='%s comment left' plural='%s comments left.' count=$event.commentcount tag1=$event.commentcount assign="title"}
                     <a href="{modurl modname='PostCalendar' func='main' viewtype='details' eid=$event.eid}#comments" title='{$title}'>
                     {gt text='Comment' assign='alt'}
-                    {img modname=core src=comment.gif set=icons/extrasmall alt=$alt title=$title}</a>
+                    {img modname=core src=comment.png set=icons/extrasmall alt=$alt title=$title}</a>
                 {/if}
             </li>
         </ul>

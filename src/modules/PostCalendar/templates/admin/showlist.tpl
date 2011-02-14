@@ -18,7 +18,7 @@
             &nbsp;&nbsp;
             <span class="z-nowrap z-buttons">
                 <input type="submit" class='z-bt-filter' value="{gt text="Filter"}" />
-                <a href="{modurl modname="PostCalendar" type='admin' func='listevents' listtype='100'}" title="{gt text="Clear"}">{img modname=core src="button_cancel.gif" set="icons/extrasmall" __alt="Clear" __title="Clear"} {gt text="Clear Filter"}</a>
+                <a href="{modurl modname="PostCalendar" type='admin' func='listevents' listtype='100'}" title="{gt text="Clear"}">{img modname=core src="button_cancel.png" set="icons/extrasmall" __alt="Clear" __title="Clear"} {gt text="Clear Filter"}</a>
             </span>
         </fieldset>
     </form>
@@ -58,7 +58,7 @@
                 </tbody>
             </table>
             <div  id='pc_bulkaction_control' style='text-align: left;'>
-                {img modname='core' set='icons/extrasmall' src='2uparrow.gif' __alt='doubleuparrow'}<a href="javascript:void(0);" id="select_all">{gt text="Check all"}</a> / <a href="javascript:void(0);" id="deselect_all">{gt text="Uncheck all"}</a>
+                {img modname='core' set='icons/extrasmall' src='2uparrow.png' __alt='doubleuparrow'}<a href="javascript:void(0);" id="select_all">{gt text="Check all"}</a> / <a href="javascript:void(0);" id="deselect_all">{gt text="Uncheck all"}</a>
 				{html_options name=action id='pc_bulkaction' options=$formactions selected=$actionselected}
             </div>
             <script type="text/javascript">

@@ -23,7 +23,7 @@
 			<label for="pcAllowUserCalendar">{gt text='Group allowed to publish personal calendars'}</label>
             {gt text="No group" assign="nogroup"}
 			<span>{selector_group selectedValue=$modvars.PostCalendar.pcAllowUserCalendar defaultValue=0 allValue=0 allText=$nogroup name="pcAllowUserCalendar" id="pcAllowUserCalendar"}
-                &nbsp;&nbsp;<a href="{modurl modname="Groups" type="admin" func="view"}">{img src=xedit.gif modname=core set=icons/extrasmall __title="Edit groups" __alt="Edit groups"}</a></span>
+                &nbsp;&nbsp;<a href="{modurl modname="Groups" type="admin" func="view"}">{img src=xedit.png modname=core set=icons/extrasmall __title="Edit groups" __alt="Edit groups"}</a></span>
 		</div>
     </fieldset>
 	<fieldset>
@@ -125,8 +125,8 @@
 		</div>
     </fieldset>
     <div class="z-buttons z-formbuttons">
-        {button src="button_ok.gif" set="icons/extrasmall" class='z-btgreen' __alt="Save" __title="Save" __text="Save"}
-        <a class='z-btred' href="{modurl modname="PostCalendar" type="admin"}" title="{gt text="Cancel"}">{img modname=core src="button_cancel.gif" set="icons/extrasmall" __alt="Cancel" __title="Cancel"} {gt text="Cancel"}</a>
+        {button src="button_ok.png" set="icons/extrasmall" class='z-btgreen' __alt="Save" __title="Save" __text="Save"}
+        <a class='z-btred' href="{modurl modname="PostCalendar" type="admin"}" title="{gt text="Cancel"}">{img modname=core src="button_cancel.png" set="icons/extrasmall" __alt="Cancel" __title="Cancel"} {gt text="Cancel"}</a>
     </div>
     </div>
 </form>

@@ -174,10 +174,10 @@
     {notifydisplayhooks eventname='postcalendar.hook.events.ui.edit' area='modulehook_area.postcalendar.events' subject=null id=null caller="PostCalendar"}
 {/if}
 <div class="z-buttons z-formbuttons">
-    {button src="14_layer_visible.gif" set="icons/extrasmall" class='z-btblue' __alt="Preview" __title="Preview" __text="Preview" name="form_action" __value="Preview"}
-    {button src="button_ok.gif" set="icons/extrasmall" class='z-btgreen' __alt="Save" __title="Save" __text="Save" name="form_action" __value="Save"}
-    {button src="button_ok.gif" set="icons/extrasmall" class='z-btgreen' __alt="Save and Add" __title="Save and Add" __text="Save and Add" name="form_action" __value="Save and Add"}
-    <a class='z-btred' href="{modurl modname="PostCalendar"}" title="{gt text="Cancel"}">{img modname=core src="button_cancel.gif" set="icons/extrasmall" __alt="Cancel" __title="Cancel"} {gt text="Cancel"}</a>
+    {button src="14_layer_visible.png" set="icons/extrasmall" class='z-btblue' __alt="Preview" __title="Preview" __text="Preview" name="form_action" __value="Preview"}
+    {button src="button_ok.png" set="icons/extrasmall" class='z-btgreen' __alt="Save" __title="Save" __text="Save" name="form_action" __value="Save"}
+    {button src="button_ok.png" set="icons/extrasmall" class='z-btgreen' __alt="Save and Add" __title="Save and Add" __text="Save and Add" name="form_action" __value="Save and Add"}
+    <a class='z-btred' href="{modurl modname="PostCalendar"}" title="{gt text="Cancel"}">{img modname=core src="button_cancel.png" set="icons/extrasmall" __alt="Cancel" __title="Cancel"} {gt text="Cancel"}</a>
 </div>
 
 </div> <!-- /page container-->
