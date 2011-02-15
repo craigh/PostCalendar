@@ -20,24 +20,23 @@ class PostCalendar_Form_Handler_EditHandler extends Zikula_Form_Handler
 
     function handleCommand($view, &$args)
     {
-        $dom = ZLanguage::getModuleDomain('PostCalendar');
         $url = null;
 
         // Fetch event data from DB to confirm event exists
         $event = DBUtil::selectObjectByID('postcalendar_events', $this->eid, 'eid');
         if (count($event) == 0) {
-            return LogUtil::registerError(__f('Error! There are no events with ID %s.', $this->eid, $dom));
+            return LogUtil::registerError($this->__f('Error! There are no events with ID %s.', $this->eid));
         }
 
         if ($args['commandName'] == 'delete') {
             if ((SessionUtil::getVar('uid') != $event['informant']) and (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN))) {
-                return LogUtil::registerError(__('Sorry! You do not have authorization to delete this event.', $dom));
+                return LogUtil::registerError($this->__('Sorry! You do not have authorization to delete this event.'));
             }
             $result = DBUtil::deleteObjectByID('postcalendar_events', $this->eid, 'eid');
             if ($result === false) {
-                return LogUtil::registerError(__("Error! An 'unidentified error' occurred.", $dom));
+                return LogUtil::registerError($this->__("Error! An 'unidentified error' occurred."));
             }
-            LogUtil::registerStatus(__('Done! The event was deleted.', $dom));
+            LogUtil::registerStatus($this->__('Done! The event was deleted.'));
 
             $this->notifyHooks('postcalendar.hook.events.process.delete', $event, $this->eid);
 
