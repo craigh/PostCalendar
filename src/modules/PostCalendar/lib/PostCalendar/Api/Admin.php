@@ -25,7 +25,7 @@ class PostCalendar_Api_Admin extends Zikula_Api
             $links[] = array(
                 'url' => ModUtil::url('PostCalendar', 'admin', 'listevents'),
                 'text' => $this->__('Event List'),
-                'class' => 'z-icon-es-list',
+                'class' => 'z-icon-es-view',
                 'links' => array(
                     array('url' => ModUtil::url('PostCalendar', 'admin', 'listevents', array('listtype'=>_EVENT_APPROVED)),
                         'text' => $this->__('Approved Events')),
