@@ -13,14 +13,16 @@
         all=1
         allText=$allText
         allValue=0}
-    <a href='' id='postcalendar_events___CATEGORIES____{$property}__open'>
+    <a href='#' id='postcalendar_events___CATEGORIES____{$property}__open'>
         {img modname="core" src="xedit.png" set="icons/extrasmall" __alt="Select Multiple" __title="Select Multiple"}
     </a>
     <script type="text/javascript">
         var postcalendar_events___CATEGORIES____{{$property}}_ = new Zikula.UI.SelectMultiple(
             'postcalendar_events___CATEGORIES____{{$property}}_',
             {opener: 'postcalendar_events___CATEGORIES____{{$property}}__open',
-            title: Zikula.__('Select multiple categories','module_PostCalendar'),
+            title: Zikula.__('Click to open Select multiple categories','module_PostCalendar'),
+            windowTitle: Zikula.__('Select multiple categories','module_PostCalendar'),
+            okLabel: Zikula.__('Done!','module_PostCalendar'),
             value: '{{pc_implode value=$selectedValue}}',
             excludeValues: ['0']}
         );
