@@ -123,6 +123,8 @@ class PostCalendar_Installer extends Zikula_Installer
                 HookUtil::registerHookSubscriberBundles($this->version);
                 HookUtil::registerHookProviderBundles($this->version);
 
+                Content_Installer::updateContentType('PostCalendar');
+
             case '7.0.0':
                 //future development
         }
@@ -269,6 +271,15 @@ class PostCalendar_Installer extends Zikula_Installer
     
         LogUtil::registerStatus($this->__("PostCalendar: Initial sub-category created (Events)."));
         return true;
+    }
+
+    protected function LegacyContentTypeMap()
+    {
+        $oldToNew = array(
+            'postcalevent' => 'PostCalEvent',
+            'postcalevents' => 'PostCalEvents'
+        );
+        return $oldToNew;
     }
 
 } // end class def

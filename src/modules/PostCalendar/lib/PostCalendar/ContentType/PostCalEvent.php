@@ -6,37 +6,28 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
  */
 
-class postcalendar_contenttypesapi_postcaleventPlugin extends contentTypeBase
+class PostCalendar_ContentType_PostCalEvent extends Content_ContentType
 {
-    var $eid; // event id
-    var $showcountdown;
-    var $hideonexpire;
+    protected $eid; // event id
+    protected $showcountdown;
+    protected $hideonexpire;
 
-    function getModule() {
-        return 'PostCalendar';
+    public function getTitle() {
+        return $this->__('PostCalendar Featured Event');
     }
-    function getName() {
-        return 'postcalevent';
-    }
-    function getTitle() {
-        $dom = ZLanguage::getModuleDomain('PostCalendar');
-        return __('PostCalendar Featured Event', $dom);
-    }
-    function getDescription() {
-        $dom = ZLanguage::getModuleDomain('PostCalendar');
-        return __('Displays one event from PostCalendar.', $dom);
+    public function getDescription() {
+        return $this->__('Displays one event from PostCalendar.');
     }
 
-    function loadData(&$data) {
+    public function loadData(&$data) {
         $this->eid = $data['eid'];
         $this->showcountdown = $data['showcountdown'];
         $this->hideonexpire = $data['hideonexpire'];
     }
 
-    function display() {
-        $dom = ZLanguage::getModuleDomain('PostCalendar');
+    public function display() {
         if (!isset($this->eid) || $this->eid == 0) {
-            return LogUtil::RegisterError (__('PostCalendar: No event ID set.', $dom));
+            return LogUtil::RegisterError ($this->__('PostCalendar: No event ID set.'));
         }
         $vars = array();
         $vars['showcountdown'] = empty($this->showcountdown) ? false : true;
@@ -66,31 +57,24 @@ class postcalendar_contenttypesapi_postcaleventPlugin extends contentTypeBase
             $event['showcountdown'] = true;
         }
     
-        $view = Zikula_View::getInstance('PostCalendar');
+        $this->view->assign('loaded_event', $event);
     
-        $view->assign('loaded_event', $event);
-    
-        return $view->fetch('contenttype/postcalevent_view.html');
+        return $this->view->fetch($this->getTemplate());
     }
 
-    function displayEditing() {
-        $dom = ZLanguage::getModuleDomain('PostCalendar');
-        return __('Display featured event', $dom) . ' #' . $this->eid;
+    public function displayEditing() {
+        return $this->__('Display featured event') . ' #' . $this->eid;
     }
 
-    function getDefaultData() {
+    public function getDefaultData() {
         return array(
             'eid'           => 0,
             'hideonexpire'  => 0,
             'showcountdown' => 0);
     }
 
-    function getSearchableText() {
+    public function getSearchableText() {
         return; // html_entity_decode(strip_tags($this->text));
     }
 
-}
-
-function postcalendar_contenttypesapi_postcalevent($args) {
-    return new postcalendar_contenttypesapi_postcaleventPlugin($args['data']);
 }

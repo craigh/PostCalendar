@@ -1,4 +1,4 @@
-{if $enablecategorization}
+{if $modvars.PostCalendar.enablecategorization}
 <div id="category" class="z-formrow">
     {formlabel for='category' __text='Only display events in category(s)'}
     {nocache}
