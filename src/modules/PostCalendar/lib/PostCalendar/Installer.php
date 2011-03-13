@@ -52,6 +52,7 @@ class PostCalendar_Installer extends Zikula_Installer
         EventUtil::registerPersistentModuleHandler('PostCalendar', 'controller.method_not_found', array('PostCalendar_HookHandlers', 'postcalendarhookconfig'));
         EventUtil::registerPersistentModuleHandler('PostCalendar', 'controller.method_not_found', array('PostCalendar_HookHandlers', 'postcalendarhookconfigprocess'));
         EventUtil::registerPersistentModuleHandler('PostCalendar', 'user.create', array('PostCalendar_PostCalendarEvent_Users', 'createEvent'));
+        EventUtil::registerPersistentModuleHandler('PostCalendar', 'module.content.getTypes', array('PostCalendar_Handlers', 'getTypes'));
 
         return true;
     }
@@ -119,6 +120,7 @@ class PostCalendar_Installer extends Zikula_Installer
                 EventUtil::registerPersistentModuleHandler('PostCalendar', 'controller.method_not_found', array('PostCalendar_HookHandlers', 'postcalendarhookconfig'));
                 EventUtil::registerPersistentModuleHandler('PostCalendar', 'controller.method_not_found', array('PostCalendar_HookHandlers', 'postcalendarhookconfigprocess'));
                 EventUtil::registerPersistentModuleHandler('PostCalendar', 'user.create', array('PostCalendar_PostCalendarEvent_Users', 'createEvent'));
+                EventUtil::registerPersistentModuleHandler('PostCalendar', 'module.content.getTypes', array('PostCalendar_Handlers', 'getTypes'));
 
                 HookUtil::registerHookSubscriberBundles($this->version);
                 HookUtil::registerHookProviderBundles($this->version);

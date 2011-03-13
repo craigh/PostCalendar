@@ -18,5 +18,9 @@ class PostCalendar_Handlers {
             $event->getSubject()->add($collection);
         }
     }
-
+    public static function getTypes(Zikula_Event $event) {
+        $types = $event->getSubject();
+        $types->add('PostCalendar_ContentType_PostCalEvent');
+        $types->add('PostCalendar_ContentType_PostCalEvents');
+    }
 }
