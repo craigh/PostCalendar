@@ -125,8 +125,10 @@ class PostCalendar_Installer extends Zikula_Installer
                 HookUtil::registerHookSubscriberBundles($this->version);
                 HookUtil::registerHookProviderBundles($this->version);
 
-                Content_Installer::updateContentType('PostCalendar');
-
+                if (ModUtil::available('Content')) {
+                    Content_Installer::updateContentType('PostCalendar');
+                }
+                
             case '7.0.0':
                 //future development
         }
