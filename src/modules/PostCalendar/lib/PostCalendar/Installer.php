@@ -277,7 +277,7 @@ class PostCalendar_Installer extends Zikula_Installer
         return true;
     }
 
-    public function LegacyContentTypeMap()
+    public static function LegacyContentTypeMap()
     {
         $oldToNew = array(
             'postcalevent' => 'PostCalEvent',
