@@ -5,7 +5,7 @@
  * @copyright   Copyright (c) 2009, Craig Heydenburg, Sound Web Development
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
  */
-class PostCalendar_Block_Featuredevent extends Zikula_Controller_Block
+class PostCalendar_Block_Featuredevent extends Zikula_Controller_AbstractBlock
 {
     /**
      * initialise block

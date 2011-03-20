@@ -8,7 +8,7 @@
  * information regarding copyright and licensing.
  */
 
-class PostCalendar_HookHandlers extends Zikula_HookHandler
+class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
 {
     /**
      * Zikula_View instance

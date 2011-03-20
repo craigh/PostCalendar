@@ -7,7 +7,7 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
  */
 
-class PostCalendar_Api_Admin extends Zikula_Api
+class PostCalendar_Api_Admin extends Zikula_AbstractApi
 {
     /**
      * Get available admin panel links

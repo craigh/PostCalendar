@@ -7,7 +7,7 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
  */
 
-class PostCalendar_Controller_Event extends Zikula_Controller
+class PostCalendar_Controller_Event extends Zikula_AbstractController
 {
     /**
      * This is a user form 'are you sure' display

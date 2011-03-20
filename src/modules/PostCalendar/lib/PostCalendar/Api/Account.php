@@ -6,7 +6,7 @@
  * @copyright   Copyright (c) 2009, Craig Heydenburg, Sound Web Development
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
  */
-class PostCalendar_Api_Account extends Zikula_Api
+class PostCalendar_Api_Account extends Zikula_AbstractApi
 {
     /**
      * Return an array of items to show in the your account panel

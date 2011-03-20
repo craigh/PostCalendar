@@ -7,7 +7,7 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
  */
 
-class PostCalendar_Block_Pastevents extends Zikula_Controller_Block
+class PostCalendar_Block_Pastevents extends Zikula_Controller_AbstractBlock
 {
     /**
      * initialise block

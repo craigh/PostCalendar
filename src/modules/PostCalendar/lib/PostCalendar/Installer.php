@@ -8,7 +8,7 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
  */
 
-class PostCalendar_Installer extends Zikula_Installer
+class PostCalendar_Installer extends Zikula_AbstractInstaller
 {
     /**
      * Initializes a new install of PostCalendar

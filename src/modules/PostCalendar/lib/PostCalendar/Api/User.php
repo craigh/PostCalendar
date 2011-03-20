@@ -7,7 +7,7 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
  */
 
-class PostCalendar_Api_User extends Zikula_Api
+class PostCalendar_Api_User extends Zikula_AbstractApi
 {
     /**
      * Builds the calendar display

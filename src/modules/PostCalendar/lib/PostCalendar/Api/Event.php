@@ -11,7 +11,7 @@
  * This is the event handler api
  **/
 
-class PostCalendar_Api_Event extends Zikula_Api
+class PostCalendar_Api_Event extends Zikula_AbstractApi
 {
     /**
      * Returns an array containing the event's information
