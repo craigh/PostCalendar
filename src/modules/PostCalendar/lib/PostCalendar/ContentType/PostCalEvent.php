@@ -6,7 +6,7 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
  */
 
-class PostCalendar_ContentType_PostCalEvent extends Content_ContentType
+class PostCalendar_ContentType_PostCalEvent extends Content_AbstractContentType
 {
     protected $eid; // event id
     protected $showcountdown;

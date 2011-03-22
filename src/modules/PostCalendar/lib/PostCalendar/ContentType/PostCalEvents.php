@@ -6,7 +6,7 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
  */
 
-class PostCalendar_ContentType_PostCalEvents extends Content_ContentType
+class PostCalendar_ContentType_PostCalEvents extends Content_AbstractContentType
 {
     protected $pcbeventsrange;
     protected $pcbeventslimit;
