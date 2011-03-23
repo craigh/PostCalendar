@@ -26,10 +26,7 @@ class PostCalendar_PostCalendarEvent_Users extends PostCalendar_PostCalendarEven
             // user is a pending registration
             $user = UserUtil::getVars($args['objectid'], true, '', true);
         }
-        if (($user['activated'] == UserUtil::ACTIVATED_ACTIVE)
-                || ($user['activated'] == UserUtil::ACTIVATED_INACTIVE_PWD)
-                || ($user['activated'] == UserUtil::ACTIVATED_INACTIVE_TOUPP)
-                || ($user['activated'] == UserUtil::ACTIVATED_INACTIVE_PWD_TOUPP)) {
+        if ($user['activated'] == Users_Constant::ACTIVATED_ACTIVE) {
             $eventstatus = 1; // approved
         }
         
