@@ -5,7 +5,7 @@
  *
  * @author craig heydenburg
  */
-class PostCalendar_PostCalendarEvent_News extends PostCalendar_PostCalendarEvent_Base {
+class PostCalendar_PostCalendarEvent_News extends PostCalendar_PostCalendarEvent_AbstractBase {
 
     /**
      * get news info for Postcalendar event creation

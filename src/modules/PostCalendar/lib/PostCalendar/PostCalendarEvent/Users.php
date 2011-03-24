@@ -5,7 +5,7 @@
  *
  * @author craig heydenburg
  */
-class PostCalendar_PostCalendarEvent_Users extends PostCalendar_PostCalendarEvent_Base {
+class PostCalendar_PostCalendarEvent_Users extends PostCalendar_PostCalendarEvent_AbstractBase {
 
     /**
      * get users info for Postcalendar event creation
@@ -56,19 +56,10 @@ class PostCalendar_PostCalendarEvent_Users extends PostCalendar_PostCalendarEven
         $where = "WHERE pc_hooked_modulename = 'Users'
                   AND pc_hooked_objectid = '{$userObj['uid']}'";
         $result = DBUtil::selectObject('postcalendar_events', $where);
+        // only update existing events. do not create new.
         if (($result) && ($result['eventstatus'] <> 1)) {
             $obj['eventstatus'] = 1;
             DBUtil::updateObject($obj, 'postcalendar_events', $where, 'eid');
-        } else {
-            // create event
-            $pcEventObject = new PostCalendar_PostCalendarEvent_Users('Users');
-            $args = array(
-                'objectid' => $userObj['uid']);
-            $pcEventObject->makeEvent($args);
-            $pcEventObject->setHooked_objectid($userObj['uid']);
-            $pcEventObject->set__CATEGORIES__(ModUtil::getVar('Users', 'postcalendar_admincatselected'));
-            $pc_event = $pcEventObject->toArray();
-            DBUtil::insertObject($pc_event, 'postcalendar_events', 'eid');
         }
     }
 }

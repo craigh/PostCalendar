@@ -6,7 +6,7 @@
  *
  * @author craig heydenburg
  */
-abstract class PostCalendar_PostCalendarEvent_Base {
+abstract class PostCalendar_PostCalendarEvent_AbstractBase {
 
     /**
      * Hooked module name

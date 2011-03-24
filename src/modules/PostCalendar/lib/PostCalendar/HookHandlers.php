@@ -196,11 +196,13 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
                   AND "   . $cols['hooked_objectid']   . " = '" . DataUtil::formatForStore($objectid) . "'";
         $pc_event = DBUtil::selectObject('postcalendar_events', $where, array('eid'));
 
-        $this->view->assign('eid', $pc_event['eid']);
+        if (!empty($pc_event)) {
+            $this->view->assign('eid', $pc_event['eid']);
 
-        // add this response to the event stack
-        $area = 'modulehook_area.postcalendar.event';
-        $z_event->data[$area] = new Zikula_Response_DisplayHook($area, $this->view, 'hooks/delete.tpl');
+            // add this response to the event stack
+            $area = 'modulehook_area.postcalendar.event';
+            $z_event->data[$area] = new Zikula_Response_DisplayHook($area, $this->view, 'hooks/delete.tpl');
+        }
     }
 
     /**
@@ -447,8 +449,10 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
         // build where statement
         $where = "WHERE " . $cols['hooked_modulename'] . " = '" . DataUtil::formatForStore($module) . "'";
 
-        if (DBUtil::deleteObject(array(), 'postcalendar_events', $where, 'eid')) {
-            LogUtil::registerStatus(__('ALL associated PostCalendar events also deleted.', $dom));
+        $delete = DBUtil::deleteObject(array(), 'postcalendar_events', $where, 'eid');
+
+        if (!empty($delete)) {
+            LogUtil::registerStatus(__f('ALL associated PostCalendar events also deleted. (%s)', $delete, $dom));
         }
     }
 
@@ -468,7 +472,7 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
             $classname = $location . '_PostCalendarEvent_' . $module;
             if (class_exists($classname)) {
                 $instance = new $classname($module);
-                if ($instance instanceof PostCalendar_PostCalendarEvent_Base) {
+                if ($instance instanceof PostCalendar_PostCalendarEvent_AbstractBase) {
                     return $instance;
                 }
             }
