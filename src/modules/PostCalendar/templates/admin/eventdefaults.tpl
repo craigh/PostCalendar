@@ -45,7 +45,7 @@
 			<label for="postcalendar_eventdefaults_categories">{gt text='Default categories'}</label>
                {gt text="No Default Category" assign="allText"}
                {nocache}
-               <span id='postcalendar_eventdefaults_categories'>{foreach from=$catregistry key=property item=category}
+               <span id='postcalendar_eventdefaults_categories'>{foreach from=$catregistry key='property' item='category'}
                    {array_field_isset assign="selectedValue" array=$modvars.PostCalendar.pcEventDefaults.categories field=$property returnValue=1}
                    {selector_category 
                    editLink=true 
@@ -116,7 +116,7 @@
 
 <div class="z-buttons z-formbuttons">
     {button src="button_ok.png" set="icons/extrasmall" class='z-btgreen' __alt="Save" __title="Save" __text="Save"}
-    <a class='z-btred' href="{modurl modname="PostCalendar" type="admin"}" title="{gt text="Cancel"}">{img modname=core src="button_cancel.png" set="icons/extrasmall" __alt="Cancel" __title="Cancel"} {gt text="Cancel"}</a>
+    <a class='z-btred' href="{modurl modname="PostCalendar" type="admin"}" title="{gt text="Cancel"}">{img modname='core' src="button_cancel.png" set="icons/extrasmall" __alt="Cancel" __title="Cancel"} {gt text="Cancel"}</a>
 </div>
 
 </form>

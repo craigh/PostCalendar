@@ -4,7 +4,7 @@
     <div id="postcalendar_nav_right">
         <ul>
             {checkpermissionblock component='PostCalendar::' instance="::" level=ACCESS_ADMIN}
-            <li><a href='{modurl modname='PostCalendar' type='admin'}'>{img src=configure.png modname=core set=icons/small __alt="Admin" __title="Admin"}</a></li>
+            <li><a href='{modurl modname='PostCalendar' type='admin'}'>{img src='configure.png' modname='core' set='icons/small' __alt="Admin" __title="Admin"}</a></li>
             {/checkpermissionblock}
             <li>{pc_url action='day' full=true navlink=true viewtype=$viewtypeselected}</li>
             <li>{pc_url action='week' full=true navlink=true viewtype=$viewtypeselected}</li>

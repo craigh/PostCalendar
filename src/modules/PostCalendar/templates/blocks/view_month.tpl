@@ -15,14 +15,14 @@
     </tr>
     <tr class="daynames">
         <td>&nbsp;</td>
-        {foreach name=daynames item=day from=$S_SHORT_DAY_NAMES}
+        {foreach name='daynames' item='day' from=$S_SHORT_DAY_NAMES}
         <td>{$day}</td>
         {/foreach}
     </tr>
-    {foreach name=weeks item=days from=$CAL_FORMAT}
+    {foreach name='weeks' item='days' from=$CAL_FORMAT}
     <tr>
-        <td><a href="{pc_url action=week date=$days[0]}">&gt;</a></td>
-        {foreach name=day item=date from=$days}
+        <td><a href="{pc_url action='week' date=$days[0]}">&gt;</a></td>
+        {foreach name='day' item='date' from=$days}
         {if $date == $TODAY_DATE}
             {assign var="stylesheet" value="monthtoday"}
         {elseif ($date < $MONTH_START_DATE || $date > $MONTH_END_DATE)}
@@ -30,11 +30,11 @@
         {else}
             {assign var="stylesheet" value="monthon"}
         {/if}
-        <td class="{$stylesheet}" onclick="window.location.href='{pc_url action=day date=$date}';">
+        <td class="{$stylesheet}" onclick="window.location.href='{pc_url action='day' date=$date}';">
             {assign var="titles" value=""}
             {assign var="numberofevents" value=$A_EVENTS.$date|@count}
             {if $modvars.PostCalendar.pcUsePopups}
-                {foreach name=events item=event from=$A_EVENTS.$date}
+                {foreach name='events' item='event' from=$A_EVENTS.$date}
                     {if $event.alldayevent != true}
                         {assign var="titles" value="$titles<b>`$event.startTime`-`$event.endTime`</b> `$event.title`<br /><br />"}
                     {else}

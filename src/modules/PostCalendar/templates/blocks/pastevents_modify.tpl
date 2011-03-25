@@ -2,7 +2,7 @@
     <label for="pcbfiltercats_{$firstprop}_">{gt text='Only display events in category(s)'}</label>
     {gt text="All Categories" assign="allText"}
     {nocache}
-    <span>{foreach from=$catregistry key=property item=category}
+    <span>{foreach from=$catregistry key='property' item='category'}
         {array_field_isset assign="selectedValue" array=$vars.pcbfiltercats field=$property returnValue=1}
         {selector_category 
             editLink=false 

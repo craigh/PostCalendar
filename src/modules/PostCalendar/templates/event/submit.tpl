@@ -67,7 +67,7 @@
                     <b>{gt text='Category' plural="Categories" count=$cat_count}</b>
                     {nocache}
                     <ul>
-                    {foreach from=$catregistry key=property item=category}
+                    {foreach from=$catregistry key='property' item='category'}
                         {array_field_isset assign="selectedValue" array=$loaded_event.__CATEGORIES__ field=$property returnValue=1}
                         <li>{selector_category
                                 category=$category
@@ -177,7 +177,7 @@
     {button src="14_layer_visible.png" set="icons/extrasmall" class='z-btblue' __alt="Preview" __title="Preview" __text="Preview" name="form_action" __value="Preview"}
     {button src="button_ok.png" set="icons/extrasmall" class='z-btgreen' __alt="Save" __title="Save" __text="Save" name="form_action" __value="Save"}
     {button src="button_ok.png" set="icons/extrasmall" class='z-btgreen' __alt="Save and Add" __title="Save and Add" __text="Save and Add" name="form_action" __value="Save and Add"}
-    <a class='z-btred' href="{modurl modname="PostCalendar"}" title="{gt text="Cancel"}">{img modname=core src="button_cancel.png" set="icons/extrasmall" __alt="Cancel" __title="Cancel"} {gt text="Cancel"}</a>
+    <a class='z-btred' href="{modurl modname="PostCalendar"}" title="{gt text="Cancel"}">{img modname='core' src="button_cancel.png" set="icons/extrasmall" __alt="Cancel" __title="Cancel"} {gt text="Cancel"}</a>
 </div>
 
 </div> <!-- /page container-->

@@ -16,7 +16,7 @@
     <div class="z-formrow">
         <label for="postcalendar_cats">{gt text="Assign to PostCalendar categories:" domain="module_postcalendar"}</label>
         {nocache}
-        <span>{foreach from=$postcalendar_catregistry key=property item=category}
+        <span>{foreach from=$postcalendar_catregistry key='property' item='category'}
             {array_field_isset assign="selectedValue" array=$postcalendar_selectedcategories field=$property returnValue=1}
             {selector_category
                 editLink=false

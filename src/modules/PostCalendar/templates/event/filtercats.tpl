@@ -1,7 +1,7 @@
 {ajaxheader module="PostCalendar" ui=true}
 {gt text="All These Categories" assign="allText"}
 {nocache}
-{foreach from=$catregistry key=property item=category}
+{foreach from=$catregistry key='property' item='category'}
     {array_field_isset assign="selectedValue" array=$selectedcategories field=$property returnValue=1}
     {selector_category
         editLink=0

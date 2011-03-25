@@ -23,7 +23,7 @@
             <label for="postcalendar_cats">{gt text="Assign all events to category:" domain="module_postcalendar"}</label>
             {gt text="Allow creator to select" domain="module_postcalendar" assign="allText"}
             {nocache}
-            <span>{foreach from=$postcalendar_catregistry key=property item=category}
+            <span>{foreach from=$postcalendar_catregistry key='property' item='category'}
                 {array_field_isset assign="selectedValue" array=$postcalendar_admincatselected field=$property returnValue=1}
                 {selector_category
                     editLink=true
@@ -40,7 +40,7 @@
     </fieldset>
     <div class="z-buttons z-formbuttons">
         {button src="button_ok.png" set="icons/extrasmall" class='z-btgreen' __alt="Save" __title="Save" __text="Save"}
-        <a class='z-btred' href="{modurl modname=$ActiveModule type="admin"}" title="{gt text="Cancel"}">{img modname=core src="button_cancel.png" set="icons/extrasmall" __alt="Cancel" __title="Cancel"} {gt text="Cancel"}</a>
+        <a class='z-btred' href="{modurl modname=$ActiveModule type="admin"}" title="{gt text="Cancel"}">{img modname='core' src="button_cancel.png" set="icons/extrasmall" __alt="Cancel" __title="Cancel"} {gt text="Cancel"}</a>
     </div>
     </div>
 </form>

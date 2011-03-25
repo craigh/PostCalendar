@@ -19,18 +19,18 @@
 
 <div class="calcontainer">
 <table class="postcalendar_month">
-    {foreach from=$pc_colclasses item=colclassname}
+    {foreach from=$pc_colclasses item='colclassname'}
     <col class='{$colclassname}' />
     {/foreach}
     <tr class="daynames">
-        {foreach from=$S_LONG_DAY_NAMES item=day}
+        {foreach from=$S_LONG_DAY_NAMES item='day'}
         <td>{$day}</td>
         {/foreach}
     </tr>
     {* CREATE THE CALENDAR *}
-    {foreach name=weeks item=days from=$CAL_FORMAT}
+    {foreach name='weeks' item='days' from=$CAL_FORMAT}
     <tr>
-        {foreach name=days item=date from=$days}
+        {foreach name='days' item='date' from=$days}
         {if $date == $TODAY_DATE}
             {assign var="stylesheet" value="monthtoday"}
         {elseif ($date < $MONTH_START_DATE || $date > $MONTH_END_DATE)}
@@ -42,11 +42,11 @@
             <div class="monthview_daterow">
                 <span class="date_number"><a href="{pc_url action=day date=$date}">{$date|date_format:"%e"}</a>
                     {if $smarty.foreach.days.iteration == 1}
-                    <a href="{pc_url action=week date=$date}">[{gt text="week"}]</a>
+                    <a href="{pc_url action='week' date=$date}">[{gt text="week"}]</a>
                     {/if}
                 </span>
                 {if ($ACCESS_ADD eq true) && ($PRINT_VIEW eq false)}
-                <span class="new_icon"><a href="{pc_url action=submit date=$date}">{img modname='PostCalendar' src='new.gif'}</a></span>
+                <span class="new_icon"><a href="{pc_url action='submit' date=$date}">{img modname='PostCalendar' src='new.gif'}</a></span>
                 {/if}
             </div>
             <div class="monthview_events">
@@ -55,7 +55,7 @@
                 {assign var="oldCat" value=""}
                 {assign var="javascript" value=""}
                 {if isset($S_EVENTS)}
-                {foreach name=events item=event from=$S_EVENTS.$date}
+                {foreach name='events' item='event' from=$S_EVENTS.$date}
                     {assign var="cCat" value=$event.catname}
                     {if $oldCat != $cCat}
                         {if $smarty.foreach.events.first != true}
@@ -79,7 +79,7 @@
                     {if $event.commentcount gt 0}
                         {gt text='%s comment left' plural='%s comments left.' count=$event.commentcount tag1=$event.commentcount domain="module_postcalendar" assign="title"}
                         <a href="{modurl modname='PostCalendar' func='main' viewtype='details' eid=$event.eid}#comments" title='{$title}'>
-                        {img modname=core src=comment.png set=icons/extrasmall __alt="Comment" title=$title}</a>
+                        {img modname='core' src='comment.png' set='icons/extrasmall' __alt="Comment" title=$title}</a>
                     {/if}
                     <br />
                     {assign var="oldCat" value=$event.catname}

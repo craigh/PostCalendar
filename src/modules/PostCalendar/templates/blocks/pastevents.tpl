@@ -4,8 +4,8 @@
 <div class="postcalendar_block_pastevents">
 {counter start=0 assign=eventcount}
 {pc_sort_events var="S_EVENTS" sort="time" order="desc" value=$A_EVENTS}
-{foreach name=dates item=events key=date from=$S_EVENTS}
-    {foreach name=eventloop key=id item=event from=$events}
+{foreach name='dates' item='events' key='date' from=$S_EVENTS}
+    {foreach name='eventloop' key='id' item='event' from=$events}
         {if $event.alldayevent != true}
             {assign var="timestamp" value=$event.startTime}
         {else}
@@ -26,7 +26,7 @@
                     {gt text='%s comment left' plural='%s comments left.' count=$event.commentcount tag1=$event.commentcount assign="title"}
                     <a href="{modurl modname='PostCalendar' func='main' viewtype='details' eid=$event.eid}#comments" title='{$title}'>
                     {gt text='Comment' assign='alt'}
-                    {img modname=core src=comment.png set=icons/extrasmall alt=$alt title=$title}</a>
+                    {img modname='core' src='comment.png' set='icons/extrasmall' alt=$alt title=$title}</a>
                 {/if}
             </li>
         </ul>

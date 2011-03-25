@@ -11,14 +11,14 @@
             <input type="hidden" name="sort" value="{$sort}" />
             <input type="hidden" name="sdir" value="{$sdir}" />
             <label for="listtype">{gt text='Status'}</label>
-            {html_options id='listtype' name=listtype options=$listtypes selected=$listtypeselected}
+            {html_options id='listtype' name='listtype' options=$listtypes selected=$listtypeselected}
             &nbsp;&nbsp;
             <label for="categoryfilter">{gt text='Categories'}</label>
             <span id='categoryfilter'>{include file='event/filtercats.tpl'}</span>
             &nbsp;&nbsp;
             <span class="z-nowrap z-buttons">
                 <input type="submit" class='z-bt-filter' value="{gt text="Filter"}" />
-                <a href="{modurl modname="PostCalendar" type='admin' func='listevents' listtype='100'}" title="{gt text="Clear"}">{img modname=core src="button_cancel.png" set="icons/extrasmall" __alt="Clear" __title="Clear"} {gt text="Clear Filter"}</a>
+                <a href="{modurl modname="PostCalendar" type='admin' func='listevents' listtype='100'}" title="{gt text="Clear"}">{img modname='core' src="button_cancel.png" set="icons/extrasmall" __alt="Clear" __title="Clear"} {gt text="Clear Filter"}</a>
             </span>
         </fieldset>
     </form>

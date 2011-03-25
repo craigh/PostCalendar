@@ -11,7 +11,7 @@
         <li class="pc_blockdate">
             {$TODAY_DATE|pc_date_format}
         </li>
-        {foreach name=eventloop key=id item=event from=$todaysEvents}
+        {foreach name='eventloop' key='id' item='event' from=$todaysEvents}
             {assign var="eventtotal" value=$eventtotal+1}
             {if $eventcount < $DISPLAY_LIMIT}
                 {assign var="eventcount" value=$eventcount+1}
@@ -29,7 +29,7 @@
                         {gt text='%s comment left' plural='%s comments left.' count=$event.commentcount tag1=$event.commentcount assign="title"}
                         <a href="{modurl modname='PostCalendar' func='main' viewtype='details' eid=$event.eid}#comments" title='{$title}'>
                         {gt text='Comment' assign='alt'}                        
-                        {img modname=core src=comment.png set=icons/extrasmall alt=$alt title=$title}</a>
+                        {img modname='core' src='comment.png' set='icons/extrasmall' alt=$alt title=$title}</a>
                     {/if}
                 </li>
             {/if}
@@ -39,7 +39,7 @@
         {/foreach}
     </ul>
 {if ($eventtotal > $DISPLAY_LIMIT)}
-  <a href="{pc_url action=day eid=$event.eid date=$TODAY_DATE}">{$eventtotal}&nbsp{$EVENTS_TOTAL_LINK}</a>
+  <a href="{pc_url action='day' eid=$event.eid date=$TODAY_DATE}">{$eventtotal}&nbsp{$EVENTS_TOTAL_LINK}</a>
 {/if}
 </div>
 {/if}

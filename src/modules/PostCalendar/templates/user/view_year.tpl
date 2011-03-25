@@ -21,7 +21,7 @@
 <div class="calcontainer">
 	<table id="postcalendar_yearview" style="border-collapse:separate;">  
 		{* Loop through each month of the year *}
-		{foreach name=months item=month key=monthnum from=$CAL_FORMAT}
+		{foreach name='months' item='month' key='monthnum' from=$CAL_FORMAT}
 		{* check to see if we're starting a new row *}
 		{if $smarty.foreach.months.iteration %4 eq 1 }
 		<tr>
@@ -36,7 +36,7 @@
 		{* create our link to the month *}
 		<table class="smallmonthtable">
             <col class='weeklink' />
-            {foreach from=$pc_colclasses item=colclassname}
+            {foreach from=$pc_colclasses item='colclassname'}
             <col class='{$colclassname}' />
             {/foreach}
 			<tr>
@@ -46,16 +46,16 @@
 			</tr>
 			<tr class="daynames">
 				<td>&nbsp;</td>
-				{foreach name=daynames item=day from=$S_SHORT_DAY_NAMES}
+				{foreach name='daynames' item='day' from=$S_SHORT_DAY_NAMES}
 				<td>{$day}</td>
 				{/foreach}
 			</tr>
-			{foreach name=weeks item=days from=$month}
+			{foreach name='weeks' item='days' from=$month}
 			<tr>
 				<td>
 					<a href="{pc_url action="week" date=$days[0]}">&gt;</a>
 				</td>
-				{foreach name=day item=date from=$days}
+				{foreach name='day' item='date' from=$days}
     				{assign var="themonth" value=$date|date_format:"%m"}
     				{if $date == $TODAY_DATE && $themonth == $smarty.foreach.months.iteration}
     					{assign var="stylesheet" value="monthtoday"}
@@ -75,7 +75,7 @@
         						{assign var="classname" value="event-one"}
         					{/if} 																 		   
     					{/if}
-    					{pc_url full=true class=$classname action=day date=$date display=$date|date_format:"%d"}
+    					{pc_url full=true class=$classname action='day' date=$date display=$date|date_format:"%d"}
                     </td>
 				{/foreach}{* foreach name=day *}
 			</tr>
