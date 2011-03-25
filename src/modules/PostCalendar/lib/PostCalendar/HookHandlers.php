@@ -404,6 +404,14 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
      */
     public static function postcalendarhookconfigprocess(Zikula_Event $z_event)
     {
+        $dom = ZLanguage::getModuleDomain('PostCalendar');
+
+        $hookdata = FormUtil::getPassedValue('postcalendar', array(), 'POST');
+        $token = isset($hookdata['postcalendar_csrftoken']) ? $hookdata['postcalendar_csrftoken'] : null;
+        if (!SecurityUtil::validateCsrfToken($token)) {
+            throw new Zikula_Exception_Forbidden(__('Security token validation failed', $dom));
+        }
+
         // check if this is for this handler
         $subject = $z_event->getSubject();
         if (!($z_event['method'] == 'postcalendarhookconfigprocess' && strrpos(get_class($subject), '_Controller_Admin'))) {
@@ -414,14 +422,12 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
             return LogUtil::registerPermissionError();
         }
         
-        $hookdata = FormUtil::getPassedValue('postcalendar', array(), 'POST');
         if ((!isset($hookdata['postcalendar_optoverride'])) || (empty($hookdata['postcalendar_optoverride']))) {
             $hookdata['postcalendar_optoverride'] = 0;
         }
         ModUtil::setVars($moduleName, $hookdata);
         // ModVars: postcalendar_admincatselected, postcalendar_optoverride
 
-        $dom = ZLanguage::getModuleDomain('PostCalendar');
         LogUtil::registerStatus(__("PostCalendar: Hook option settings updated.", $dom));
 
         $z_event->setData(true);

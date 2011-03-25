@@ -6,7 +6,7 @@
         <fieldset id="postcalendar_listfilter"{if $filter_active} class='filteractive'{/if}>
             {if $filter_active}{gt text='active' assign=filteractive}{else}{gt text='inactive" assign=filteractive}{/if}
             <legend>{gt text='Filter %1$s, %2$s event listed' plural='Filter %1$s, %2$s events listed' count=$total_events tag1=$filteractive tag2=$total_events}</legend>
-            <input type="hidden" name="authid" value="{insert name="generateauthkey" module="PostCalendar"}" />
+            <input type="hidden" name="csrftoken" value="{insert name="csrftoken"}" />
             <input type="hidden" name="offset" value="{$offset}" />
             <input type="hidden" name="sort" value="{$sort}" />
             <input type="hidden" name="sdir" value="{$sdir}" />
@@ -24,7 +24,7 @@
     </form>
     <form id='pc_form_bulkaction' class="z-form" action="{modurl modname="postcalendar" type="admin" func="adminevents"}" method="post" enctype="application/x-www-form-urlencoded">
         <div>
-            <input type="hidden" name="authid" value="{insert name="generateauthkey" module="PostCalendar"}" />
+            <input type="hidden" name="csrftoken" value="{insert name="csrftoken"}" />
             <input type="hidden" name="listtype" value="{$listtypeselected}" />
             <table class="z-datatable">
                 <thead>

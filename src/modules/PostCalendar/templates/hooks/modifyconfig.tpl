@@ -9,7 +9,7 @@
 <h2>{gt text="PostCalendar settings for %s" tag1=$ActiveModule}</h2>
 <form class="z-form" action="{modurl modname=$ActiveModule type="admin" func="postcalendarhookconfigprocess"}" method="post" enctype="application/x-www-form-urlencoded">
     <div>
-	<input type="hidden" name="authid" value="{insert name="generateauthkey" module=$ActiveModule}" />
+	<input type="hidden" name="postcalendar[postcalendar_csrftoken]" value="{insert name="csrftoken"}" />
 	<input type="hidden" name="ActiveModule" value="{$ActiveModule}" />
 
     <fieldset>

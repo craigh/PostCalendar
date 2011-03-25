@@ -222,6 +222,8 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
      */
     public function updateconfig()
     {
+        $this->checkCsrfToken();
+
         if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
             return LogUtil::registerPermissionError();
         }
@@ -264,11 +266,6 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
         // set the new variables
         $this->setVars($settings);
     
-        // Let any other modules know that the modules configuration has been updated
-        //ModUtil::callHooks('module', 'updateconfig', 'PostCalendar', array(
-        //    'module' => 'PostCalendar'));
-        //$this->notifyHooks('postcalendar.hook.process.updateconfig', $this);
-    
         // clear the cache
         $this->view->clear_cache();
     
@@ -282,6 +279,8 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
      */
     public function updateevents()
     {
+        $this->checkCsrfToken();
+
         if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADD)) {
             return LogUtil::registerPermissionError();
         }
@@ -361,6 +360,7 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
      */
     public function seteventdefaults()
     {
+        $this->checkCsrfToken();
         if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
             return LogUtil::registerPermissionError();
         }
@@ -403,27 +403,27 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
             $truncated_title = StringUtil::getTruncatedString($event['title'], 25);
             $options[] = array('url' => ModUtil::url('PostCalendar', 'user', 'display', array('viewtype' => 'details', 'eid' => $event['eid'])),
                     'image' => '14_layer_visible.png',
-                    'title' => $this->__f('View \'%s\'', $truncated_title));
+                    'title' => $this->__f("View '%s'", $truncated_title));
 
             if (SecurityUtil::checkPermission('PostCalendar::Event', "{$event['title']}::{$event['eid']}", ACCESS_EDIT)) {
                 if ($event['eventstatus'] == _EVENT_APPROVED) {
                     $options[] = array('url' => ModUtil::url('PostCalendar', 'admin', 'adminevents', array('action' => _ADMIN_ACTION_HIDE, 'events' => $event['eid'])),
                             'image' => 'db_remove.png',
-                            'title' => $this->__f('Hide \'%s\'', $truncated_title));
+                            'title' => $this->__f("Hide '%s'", $truncated_title));
                 } else {
                     $options[] = array('url' => ModUtil::url('PostCalendar', 'admin', 'adminevents', array('action' => _ADMIN_ACTION_APPROVE, 'events' => $event['eid'])),
-                            'image' => 'ok.png',
-                            'title' => $this->__f('Approve \'%s\'', $truncated_title));
+                            'image' => 'button_ok.png',
+                            'title' => $this->__f("Approve '%s'", $truncated_title));
                 }
                 $options[] = array('url' => ModUtil::url('PostCalendar', 'event', 'edit', array('eid' => $event['eid'])),
                         'image' => 'xedit.png',
-                        'title' => $this->__f('Edit \'%s\'', $truncated_title));
+                        'title' => $this->__f("Edit '%s'", $truncated_title));
             }
 
             if (SecurityUtil::checkPermission('PostCalendar::Event', "{$event['title']}::{$event['eid']}", ACCESS_DELETE)) {
                 $options[] = array('url' => ModUtil::url('PostCalendar', 'event', 'delete', array('eid' => $event['eid'])),
                     'image' => '14_layer_deletelayer.png',
-                    'title' => $this->__f('Delete \'%s\'', $truncated_title));
+                    'title' => $this->__f("Delete '%s'", $truncated_title));
             }
             $events[$key]['options'] = $options;
             $events[$key]['title'] = ($listtype == _EVENT_ALL) ? $event['title'] . $statusmap[$event['eventstatus']] : $event['title'];

@@ -85,7 +85,6 @@ class PostCalendar_Controller_Event extends Zikula_AbstractController
         $submitted_event = FormUtil::getPassedValue('postcalendar_events', NULL);
         $is_update       = FormUtil::getPassedValue('is_update', false);
         $form_action     = FormUtil::getPassedValue('form_action', NULL);
-        $authid          = FormUtil::getPassedValue('authid');
     
         // compensate for translation of input values
         if (isset($form_action)) {
@@ -172,9 +171,7 @@ class PostCalendar_Controller_Event extends Zikula_AbstractController
         // Enter the event into the DB
         if ($form_action == 'save') {
             $sdate = strtotime($submitted_event['eventDate']);
-            if (!SecurityUtil::confirmAuthKey()) {
-                return LogUtil::registerAuthidError(ModUtil::url('postcalendar', 'admin', 'main'));
-            }
+            $this->checkCsrfToken();
     
             $eventdata = ModUtil::apiFunc('PostCalendar', 'event', 'formateventarrayforDB', $eventdata);
     

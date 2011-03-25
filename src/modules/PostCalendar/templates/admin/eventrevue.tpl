@@ -1,6 +1,7 @@
 {include file="admin/menu.tpl"}
 {if ($actiontext != "view")}
 	<form action="{modurl modname="PostCalendar" type="admin" func="updateevents"}" method="post">
+    	<input type="hidden" name="csrftoken" value="{insert name="csrftoken"}" />
         <input type="hidden" name="action" value="{$action}">
 {/if}
 <div class="z-admincontainer">
