@@ -381,7 +381,7 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
         }
         $moduleName = $subject->getName();
         if (!SecurityUtil::checkPermission($moduleName.'::', '::', ACCESS_ADMIN)) {
-            return LogUtil::registerPermissionError();
+            throw new Zikula_Exception_Forbidden(LogUtil::getErrorMsgPermission());
         }
         $view = Zikula_View::getInstance('PostCalendar', false);
 
@@ -419,7 +419,7 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
         }
         $moduleName = $subject->getName();
         if (!SecurityUtil::checkPermission($moduleName.'::', '::', ACCESS_ADMIN)) {
-            return LogUtil::registerPermissionError();
+            throw new Zikula_Exception_Forbidden(LogUtil::getErrorMsgPermission());
         }
         
         if ((!isset($hookdata['postcalendar_optoverride'])) || (empty($hookdata['postcalendar_optoverride']))) {

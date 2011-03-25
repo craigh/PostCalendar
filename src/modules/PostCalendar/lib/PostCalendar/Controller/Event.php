@@ -15,9 +15,8 @@ class PostCalendar_Controller_Event extends Zikula_AbstractController
      */
     public function delete()
     {
-        if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADD)) {
-            return LogUtil::registerPermissionError();
-        }
+        $this->throwForbiddenUnless(SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADD), LogUtil::getErrorMsgPermission());
+
         $eid    = FormUtil::getPassedValue('eid'); //  seems like this should be handled by the eventHandler
         $render = FormUtil::newForm('PostCalendar', $this);
 
@@ -70,10 +69,8 @@ class PostCalendar_Controller_Event extends Zikula_AbstractController
     public function create($args)
     {
         // We need at least ADD permission to submit an event
-        if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADD)) {
-            return LogUtil::registerPermissionError();
-        }
-    
+        $this->throwForbiddenUnless(SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADD), LogUtil::getErrorMsgPermission());
+
         // these items come on brand new view of this function
         $func = FormUtil::getPassedValue('func', 'create');
         $Date = FormUtil::getPassedValue('Date'); //typically formatted YYYYMMDD or YYYYMMDD000000

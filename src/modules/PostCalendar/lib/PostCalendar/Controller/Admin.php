@@ -23,9 +23,7 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
      */
     public function modifyconfig()
     {
-        if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
-            return LogUtil::registerPermissionError();
-        }
+        $this->throwForbiddenUnless(SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN), LogUtil::getErrorMsgPermission());
     
         return $this->view->fetch('admin/modifyconfig.tpl');
     }
@@ -37,9 +35,7 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
      */
     public function listevents(array $args)
     {
-        if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_DELETE)) {
-            return LogUtil::registerPermissionError();
-        }
+        $this->throwForbiddenUnless(SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_DELETE), LogUtil::getErrorMsgPermission());
     
         $listtype = isset($args['listtype']) ? $args['listtype'] : FormUtil::getPassedValue('listtype', _EVENT_APPROVED);
         $where = "WHERE pc_eventstatus=" . $listtype;
@@ -146,9 +142,7 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
      */
     public function adminevents()
     {
-        if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_DELETE)) {
-            return LogUtil::registerPermissionError();
-        }
+        $this->throwForbiddenUnless(SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_DELETE), LogUtil::getErrorMsgPermission());
     
         $action = FormUtil::getPassedValue('action');
         $events = FormUtil::getPassedValue('events'); // could be an array or single val
@@ -194,9 +188,7 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
      */
     public function resetDefaults()
     {
-        if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
-            return LogUtil::registerPermissionError();
-        }
+        $this->throwForbiddenUnless(SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN), LogUtil::getErrorMsgPermission());
     
         $defaults = PostCalendar_Util::getdefaults();
         if (!count($defaults)) {
@@ -224,9 +216,7 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
     {
         $this->checkCsrfToken();
 
-        if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
-            return LogUtil::registerPermissionError();
-        }
+        $this->throwForbiddenUnless(SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN), LogUtil::getErrorMsgPermission());
     
         $defaults = PostCalendar_Util::getdefaults();
         if (!count($defaults)) {
@@ -281,9 +271,7 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
     {
         $this->checkCsrfToken();
 
-        if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADD)) {
-            return LogUtil::registerPermissionError();
-        }
+        $this->throwForbiddenUnless(SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADD), LogUtil::getErrorMsgPermission());
 
         $pc_eid = FormUtil::getPassedValue('pc_eid');
         $action = FormUtil::getPassedValue('action');
@@ -336,9 +324,7 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
      */
     public function modifyeventdefaults()
     {
-        if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
-            return LogUtil::registerPermissionError();
-        }
+        $this->throwForbiddenUnless(SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN), LogUtil::getErrorMsgPermission());
 
         // load the category registry util
         $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
@@ -361,9 +347,7 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
     public function seteventdefaults()
     {
         $this->checkCsrfToken();
-        if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
-            return LogUtil::registerPermissionError();
-        }
+        $this->throwForbiddenUnless(SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN), LogUtil::getErrorMsgPermission());
     
         $eventDefaults = FormUtil::getPassedValue('postcalendar_eventdefaults'); //array
 

@@ -26,9 +26,7 @@ class PostCalendar_Controller_User extends Zikula_AbstractController
      */
     public function display($args)
     {
-        if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_OVERVIEW)) {
-            return LogUtil::registerPermissionError();
-        }
+        $this->throwForbiddenUnless(SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_OVERVIEW), LogUtil::getErrorMsgPermission());
 
         // get the vars that were passed in
         $popup       = FormUtil::getPassedValue('popup');
@@ -64,9 +62,7 @@ class PostCalendar_Controller_User extends Zikula_AbstractController
     
         switch ($viewtype) {
             case 'details':
-                if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_READ)) {
-                    return LogUtil::registerPermissionError();
-                }
+                $this->throwForbiddenUnless(SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_READ), LogUtil::getErrorMsgPermission());
     
                 // build template and fetch:
                 if ($this->view->is_cached('user/view_event_details.tpl')) {
@@ -112,9 +108,8 @@ class PostCalendar_Controller_User extends Zikula_AbstractController
                 break;
     
             default:
-                if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_OVERVIEW)) {
-                    return LogUtil::registerPermissionError();
-                }
+                $this->throwForbiddenUnless(SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_OVERVIEW), LogUtil::getErrorMsgPermission());
+
                 $out = ModUtil::apiFunc('PostCalendar', 'user', 'buildView', array(
                     'Date'        => $Date,
                     'viewtype'    => $viewtype,

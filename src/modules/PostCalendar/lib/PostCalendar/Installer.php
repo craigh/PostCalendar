@@ -69,9 +69,7 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
      */
     public function upgrade($oldversion)
     {
-        if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
-            return LogUtil::registerPermissionError();
-        }
+        $this->throwForbiddenUnless(SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN), LogUtil::getErrorMsgPermission());
     
         // We only support upgrade from version 4 and up. Notify users if they have a version below that one.
         if (version_compare($oldversion, '6', '<')) {
