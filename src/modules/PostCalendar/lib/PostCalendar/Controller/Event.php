@@ -143,7 +143,7 @@ class PostCalendar_Controller_Event extends Zikula_AbstractController
             unset($args['eid']);
             unset($eventdata['eid']);
             $eventdata['is_update'] = false;
-            $eventdata['informant'] = SessionUtil::getVar('uid');
+            $eventdata['informant'] = UserUtil::getVar('uid');
         }
     
         if ($abort) {

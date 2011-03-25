@@ -235,9 +235,9 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
         $event = array(
             'title'          => $this->__('PostCalendar Installed'),
             'hometext'       => $this->__(':text:On this date, the PostCalendar module was installed. Thank you for trying PostCalendar! This event can be safely deleted if you wish.'),
-            'aid'            => SessionUtil::getVar('uid'),
+            'aid'            => UserUtil::getVar('uid'),
             'time'           => date("Y-m-d H:i:s"),
-            'informant'      => SessionUtil::getVar('uid'),
+            'informant'      => UserUtil::getVar('uid'),
             'eventDate'      => date('Y-m-d'),
             'duration'       => 3600,
             'recurrtype'     => 0,  //norepeat

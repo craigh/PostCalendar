@@ -29,7 +29,7 @@ class PostCalendar_Form_Handler_EditHandler extends Zikula_Form_AbstractHandler
         }
 
         if ($args['commandName'] == 'delete') {
-            if ((SessionUtil::getVar('uid') != $event['informant']) and (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN))) {
+            if ((UserUtil::getVar('uid') != $event['informant']) and (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN))) {
                 return LogUtil::registerError($this->__('Sorry! You do not have authorization to delete this event.'));
             }
             $result = DBUtil::deleteObjectByID('postcalendar_events', $this->eid, 'eid');

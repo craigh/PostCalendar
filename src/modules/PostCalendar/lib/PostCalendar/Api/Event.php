@@ -606,7 +606,7 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
     
         // if event ADD perms are given to anonymous users...
         if (UserUtil::isLoggedIn()) {
-            $event['informant'] = SessionUtil::getVar('uid');
+            $event['informant'] = UserUtil::getVar('uid');
         } else {
             $event['informant'] = 1; // 'guest'
         }
