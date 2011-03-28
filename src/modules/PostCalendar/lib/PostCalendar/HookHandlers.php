@@ -455,7 +455,7 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
         // build where statement
         $where = "WHERE " . $cols['hooked_modulename'] . " = '" . DataUtil::formatForStore($module) . "'";
 
-        $delete = DBUtil::deleteObject(array(), 'postcalendar_events', $where, 'eid');
+        $delete = DBUtil::deleteObject(array(), 'postcalendar_events', $where, $cols['eid']);
 
         if (!empty($delete)) {
             LogUtil::registerStatus(__f('ALL associated PostCalendar events also deleted. (%s)', $delete, $dom));
