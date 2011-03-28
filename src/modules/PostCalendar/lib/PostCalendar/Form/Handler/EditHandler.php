@@ -9,8 +9,10 @@ class PostCalendar_Form_Handler_EditHandler extends Zikula_Form_AbstractHandler
 
     function initialize($view)
     {
-        $this->throwForbiddenUnless(SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADD), LogUtil::getErrorMsgPermission());
-
+        if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADD)) {
+            throw new Zikula_Exception_Forbidden(LogUtil::getErrorMsgPermission());
+        }
+        
         $this->eid = FormUtil::getPassedValue('eid');
 
         return true;
