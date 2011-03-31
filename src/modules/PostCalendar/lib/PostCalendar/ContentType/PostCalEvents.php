@@ -50,7 +50,6 @@ class PostCalendar_ContentType_PostCalEvents extends Content_AbstractContentType
             'end'        => $ending_date,
             'filtercats' => $filtercats));
 
-//        echo "<pre>"; print_r($eventsByDate); echo "</pre>";
         $this->view->assign('A_EVENTS',      $eventsByDate);
         $this->view->assign('DATE',          $Date);
         $this->view->assign('DISPLAY_LIMIT', $this->pcbeventslimit);
@@ -88,10 +87,28 @@ class PostCalendar_ContentType_PostCalEvents extends Content_AbstractContentType
     }
 
     public function getDefaultData() {
-        return array(
+        $defaultdata = array(
             'pcbeventsrange' => 6,
             'pcbeventslimit' => 5,
             'categories'     => null);
+        // Get the registered categories for the News module
+        $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
+        $properties = array_keys($catregistry);
+
+        // set a default category based on page category
+        foreach ($properties as $prop) {
+            $subcats_fulldata = CategoryUtil::getCategoriesByParentID($catregistry[$prop]);
+            $subcats = array();
+            foreach ($subcats_fulldata as $subcat_fulldata) {
+                $subcats[] = $subcat_fulldata['id'];
+            }
+            if (in_array($this->getPageCategoryId(), $subcats)) {
+                // this awkward array format iswhat $this->loadData() interprets to set category
+                $defaultdata['category__' . $prop] = $this->getPageCategoryId();
+            }
+        }
+
+        return $defaultdata;
     }
 
     public function getSearchableText() {
