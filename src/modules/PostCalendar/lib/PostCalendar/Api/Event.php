@@ -341,14 +341,16 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
                 'format' => _SETTING_DATE_FORMAT));
             $eventdata['endDate'] = PostCalendar_Util::getDate(array(
                 'Date' => $args['Date'],
-                'format' => __(/*!ensure translation EXACTLY the same as locale definition*/'%Y-%m-%d'))); // format for JS cal - intentional use of core domain
+//                'format' => __(/*!ensure translation EXACTLY the same as locale definition*/'%Y-%m-%d'))); // format for JS cal - intentional use of core domain
+                'format' => '%Y-%m-%d'));
         } else {
             $eventdata['endvalue'] = PostCalendar_Util::getDate(array(
                 'Date' => str_replace('-', '', $eventdata['endDate']),
                 'format' => _SETTING_DATE_FORMAT));
             $eventdata['endDate'] = PostCalendar_Util::getDate(array(
                 'Date' => str_replace('-', '', $eventdata['endDate']),
-                'format' => __(/*!ensure translation EXACTLY the same as locale definition*/'%Y-%m-%d'))); // format for JS cal - intentional use of core domain
+//                'format' => __(/*!ensure translation EXACTLY the same as locale definition*/'%Y-%m-%d'))); // format for JS cal - intentional use of core domain
+                'format' => '%Y-%m-%d'));
         }
         if ((!isset($eventdata['eventDate'])) || ($eventdata['eventDate'] == '')) {
             $eventdata['eventDatevalue'] = PostCalendar_Util::getDate(array(
@@ -356,14 +358,16 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
                 'format' => _SETTING_DATE_FORMAT));
             $eventdata['eventDate'] = PostCalendar_Util::getDate(array(
                 'Date' => $args['Date'],
-                'format' => __(/*!ensure translation EXACTLY the same as locale definition*/'%Y-%m-%d'))); // format for JS cal - intentional use of core domain
+//                'format' => __(/*!ensure translation EXACTLY the same as locale definition*/'%Y-%m-%d'))); // format for JS cal - intentional use of core domain
+                'format' => '%Y-%m-%d'));
         } else {
             $eventdata['eventDatevalue'] = PostCalendar_Util::getDate(array(
                 'Date' => str_replace('-', '', $eventdata['eventDate']),
                 'format' => _SETTING_DATE_FORMAT));
             $eventdata['eventDate'] = PostCalendar_Util::getDate(array(
                 'Date' => str_replace('-', '', $eventdata['eventDate']),
-                'format' => __(/*!ensure translation EXACTLY the same as locale definition*/'%Y-%m-%d'))); // format for JS cal - intentional use of core domain
+//                'format' => __(/*!ensure translation EXACTLY the same as locale definition*/'%Y-%m-%d'))); // format for JS cal - intentional use of core domain
+                'format' => '%Y-%m-%d'));
         }
     
         if ((SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) && (_SETTING_ALLOW_USER_CAL)) {
@@ -555,7 +559,7 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
     
         // compensate for changeover to new categories system
         $lang = ZLanguage::getLanguageCode();
-        $event['catname']      = $event['__CATEGORIES__']['Main']['display_name'][$lang];
+        $event['catname']      = isset($event['__CATEGORIES__']['Main']['display_name'][$lang]) ? $event['__CATEGORIES__']['Main']['display_name'][$lang] : $event['__CATEGORIES__']['Main']['name'];
         $event['catcolor']     = isset($event['__CATEGORIES__']['Main']['__ATTRIBUTES__']['color'])     ? $event['__CATEGORIES__']['Main']['__ATTRIBUTES__']['color']     : '#eeeeee';
         $event['cattextcolor'] = isset($event['__CATEGORIES__']['Main']['__ATTRIBUTES__']['textcolor']) ? $event['__CATEGORIES__']['Main']['__ATTRIBUTES__']['textcolor'] : $this->color_inverse($event['catcolor']);
     
@@ -586,15 +590,17 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
      */
     public function formateventarrayforDB($event)
     {
+//        echo "<pre>"; var_dump($event);
         // convert dates to YYYY-MM-DD for DB
-        $parseddatevalue    = DateUtil::parseUIDate($event['eventDate']);
-        $event['eventDate'] = DateUtil::transformInternalDate($parseddatevalue);
-        $parseddatevalue    = DateUtil::parseUIDate($event['endDate']);
-        $event['endDate']   = DateUtil::transformInternalDate($parseddatevalue);
+//        $parseddatevalue    = DateUtil::parseUIDate($event['eventDate']);
+//        $event['eventDate'] = DateUtil::transformInternalDate($parseddatevalue);
+//        $parseddatevalue    = DateUtil::parseUIDate($event['endDate']);
+//        $event['endDate']   = DateUtil::transformInternalDate($parseddatevalue);
     
         if (substr($event['endDate'], 0, 4) == '0000') {
             $event['endDate'] = $event['eventDate'];
         }
+//        var_dump($event); echo "</pre>"; die;
     
         // reformat endTime to duration in seconds
         $event['duration'] = $this->computeduration($event);
