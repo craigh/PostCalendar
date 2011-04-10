@@ -40,11 +40,11 @@ class PostCalendar_Form_Handler_EditHandler extends Zikula_Form_AbstractHandler
 
             $this->notifyHooks('postcalendar.hook.events.process.delete', $event, $this->eid);
 
-            $redir = ModUtil::url('PostCalendar', 'user', 'main', array(
+            $redir = ModUtil::url('PostCalendar', 'user', 'display', array(
                 'viewtype' => _SETTING_DEFAULT_VIEW));
             return $view->redirect($redir);
         } else if ($args['commandName'] == 'cancel') {
-            $url = ModUtil::url('PostCalendar', 'user', 'main', array(
+            $url = ModUtil::url('PostCalendar', 'user', 'display', array(
                 'eid' => $this->eid,
                 'viewtype' => 'details',
                 'Date' => $event['Date']));

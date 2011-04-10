@@ -123,7 +123,7 @@ class PostCalendar_Api_Search extends Zikula_AbstractApi
         $eid = $datarow['extra'];
         $date = str_replace("-", "", substr($datarow['created'], 0, 10));
     
-        $datarow['url'] = ModUtil::url('PostCalendar', 'user', 'main', array(
+        $datarow['url'] = ModUtil::url('PostCalendar', 'user', 'display', array(
             'Date' => $date,
             'eid' => $eid,
             'viewtype' => 'details'));

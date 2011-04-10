@@ -14,13 +14,13 @@
     {gt text='private event' assign='p_txt' domain='module_postcalendar'}
     {if $loaded_event.privateicon}{img src='locked.png' modname='core' set='icons/extrasmall' title=$p_txt alt=$p_txt}{/if}
     {$loaded_event.title|safehtml}
-    <a href="{modurl modname='PostCalendar' func='main' viewtype='details' eid=$loaded_event.eid}" title='{gt text='Full event information' domain="module_postcalendar"}'>
+    <a href="{modurl modname='PostCalendar' type='user' func='display' viewtype='details' eid=$loaded_event.eid}" title='{gt text='Full event information' domain="module_postcalendar"}'>
     {gt text='Full event information' assign='title' domain='module_postcalendar'}{gt text='Info' assign='alt' domain='module_postcalendar'}
     {img modname='core' src='info.png' set='icons/extrasmall' alt=$alt title=$title}</a>
     {if $loaded_event.commentcount gt 0}
         {gt text='%s comment left' plural='%s comments left.' count=$loaded_event.commentcount tag1=$loaded_event.commentcount domain="module_postcalendar" assign="title"}
         {gt text='Comment' assign='alt' domain='module_postcalendar'}
-        <a href="{modurl modname='PostCalendar' func='main' viewtype='details' eid=$loaded_event.eid}#comments" title='{$title}'>
+        <a href="{modurl modname='PostCalendar' type='user' func='display' viewtype='details' eid=$loaded_event.eid}#comments" title='{$title}'>
         {img modname='core' src='comment.png' set='icons/extrasmall' alt=$alt title=$title}</a>
     {/if}
 </h2>

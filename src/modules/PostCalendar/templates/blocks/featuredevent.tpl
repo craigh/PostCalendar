@@ -2,7 +2,7 @@
     {checkpermission component="::" instance=".*" level="ACCESS_ADMIN" assign="ACCESS_ADMIN"}
     {if $ACCESS_ADMIN}
         <div class="z-warningmsg" style='font-size: 8px;'>{gt text='Administrator only warning: Hidden PostCalendar Featured Event Block (ID# %s). Delete or modify.' tag1=$thisblockid}<br />
-        <a href="{modurl modname='Blocks' type='admin'}">{gt text='Blocks Administration'}</a></div>
+        <a href="{modurl modname='Blocks' type='admin' func='view'}">{gt text='Blocks Administration'}</a></div>
     {/if}
 {else}
 <div class='postcalendar_featuredevent'>
@@ -21,13 +21,13 @@
     {gt text='private event' assign='p_txt'}
     {if $event.privateicon}{img src='locked.png' modname='core' set='icons/extrasmall' title=$p_txt alt=$p_txt}{/if}
     {$loaded_event.title|safehtml}
-    <a href="{modurl modname='PostCalendar' func='main' viewtype='details' eid=$loaded_event.eid}" title='{gt text='Full event information'}'>
+    <a href="{modurl modname='PostCalendar' type='user' func='display' viewtype='details' eid=$loaded_event.eid}" title='{gt text='Full event information'}'>
     {gt text='Full event information' assign='title'}{gt text='Info' assign='alt'}
     {img modname='core' src='info.png' set='icons/extrasmall' alt=$alt title=$title}</a>
     {if $loaded_event.commentcount gt 0}
         {gt text='%s comment left' plural='%s comments left.' count=$loaded_event.commentcount tag1=$loaded_event.commentcount assign="title"}
         {gt text='Comment' assign='alt'}
-        <a href="{modurl modname='PostCalendar' func='main' viewtype='details' eid=$loaded_event.eid}#comments" title='{$title}'>
+        <a href="{modurl modname='PostCalendar' type='user' func='display' viewtype='details' eid=$loaded_event.eid}#comments" title='{$title}'>
         {img modname='core' src='comment.png' set='icons/extrasmall' alt=$alt title=$title}</a>
     {/if}
 </h2>

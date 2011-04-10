@@ -9,7 +9,7 @@
 function smarty_function_pc_init_rss_feed($args, &$smarty)
 {
     if (!ModUtil::getVar('pnRender', 'expose_template')) {
-        $rsslink = ModUtil::url('PostCalendar', 'user', 'main', array(
+        $rsslink = ModUtil::url('PostCalendar', 'user', 'display', array(
             'viewtype' => 'xml',
             'theme'    => 'rss'));
         $rsslink      = DataUtil::formatForDisplay($rsslink);

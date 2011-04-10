@@ -13,12 +13,12 @@ class PostCalendar_Controller_User extends Zikula_AbstractController
      */
     public function main($args)
     {
-        return $this->display($args);
+		$this->redirect(ModUtil::url('PostCalendar', 'user', 'display', $args));
     }
 
     public function view($args)
     {
-        return $this->display($args);
+		$this->redirect(ModUtil::url('PostCalendar', 'user', 'display', $args));
     }
     
     /**

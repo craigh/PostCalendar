@@ -78,7 +78,7 @@
                     {pc_url full=true action=detail eid=$event.eid date=$date style="font-size: 7pt; text-decoration: none;" title=$event.hometext|notifyfilters:'postcalendar.hook.eventsfilter.ui.filter'|safehtml display="$timestamp $title"|safehtml}
                     {if $event.commentcount gt 0}
                         {gt text='%s comment left' plural='%s comments left.' count=$event.commentcount tag1=$event.commentcount domain="module_postcalendar" assign="title"}
-                        <a href="{modurl modname='PostCalendar' func='main' viewtype='details' eid=$event.eid}#comments" title='{$title}'>
+                        <a href="{modurl modname='PostCalendar' type='user' func='display' viewtype='details' eid=$event.eid}#comments" title='{$title}'>
                         {img modname='core' src='comment.png' set='icons/extrasmall' __alt="Comment" title=$title}</a>
                     {/if}
                     <br />
@@ -102,7 +102,7 @@
             {assign var="viewtype" value=$modvars.PostCalendar.pcDefaultView}
         {/if}
         {formutil_getpassedvalue name="Date" source="get" assign="Date" default=''}
-        <a href="{modurl modname="PostCalendar" func="main" viewtype=$viewtype Date=$Date}">{gt text='Return'}</a>
+        <a href="{modurl modname="PostCalendar" type='user' func='display' viewtype=$viewtype Date=$Date}">{gt text='Return'}</a>
     {/if}
 </div>
 {include file="user/footer.tpl"}

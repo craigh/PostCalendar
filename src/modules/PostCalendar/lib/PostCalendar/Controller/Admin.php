@@ -14,7 +14,7 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
      */
     public function main()
     {
-        return $this->listevents(array());
+		$this->redirect(ModUtil::url('PostCalendar', 'admin', 'listevents'));
     }
     
     /**

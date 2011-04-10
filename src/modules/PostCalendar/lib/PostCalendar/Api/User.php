@@ -118,12 +118,12 @@ class PostCalendar_Api_User extends Zikula_AbstractApi
     
                 $prev_day = DateUtil::getDatetime_NextDay(-1, '%Y%m%d', $the_year, $the_month, $the_day);
                 $next_day = DateUtil::getDatetime_NextDay(1, '%Y%m%d', $the_year, $the_month, $the_day);
-                $pc_prev_day = ModUtil::url('PostCalendar', 'user', 'main', array(
+                $pc_prev_day = ModUtil::url('PostCalendar', 'user', 'display', array(
                     'viewtype' => 'day',
                     'Date' => $prev_day,
                     'pc_username' => $pc_username,
                     'filtercats' => $filtercats));
-                $pc_next_day = ModUtil::url('PostCalendar', 'user', 'main', array(
+                $pc_next_day = ModUtil::url('PostCalendar', 'user', 'display', array(
                     'viewtype' => 'day',
                     'Date' => $next_day,
                     'pc_username' => $pc_username,
@@ -144,12 +144,12 @@ class PostCalendar_Api_User extends Zikula_AbstractApi
     
                 $prev_week = date('Ymd', mktime(0, 0, 0, $week_first_day_month, $week_first_day_date - 7, $week_first_day_year));
                 $next_week = date('Ymd', mktime(0, 0, 0, $week_last_day_month, $week_last_day_date + 1, $week_last_day_year));
-                $pc_prev_week = ModUtil::url('PostCalendar', 'user', 'main', array(
+                $pc_prev_week = ModUtil::url('PostCalendar', 'user', 'display', array(
                     'viewtype' => 'week',
                     'Date' => $prev_week,
                     'pc_username' => $pc_username,
                     'filtercats' => $filtercats));
-                $pc_next_week = ModUtil::url('PostCalendar', 'user', 'main', array(
+                $pc_next_week = ModUtil::url('PostCalendar', 'user', 'display', array(
                     'viewtype' => 'week',
                     'Date' => $next_week,
                     'pc_username' => $pc_username,
@@ -164,12 +164,12 @@ class PostCalendar_Api_User extends Zikula_AbstractApi
     
                 $prev_month = DateUtil::getDatetime_NextMonth(-1, '%Y%m%d', $the_year, $the_month, 1);
                 $next_month = DateUtil::getDatetime_NextMonth(1, '%Y%m%d', $the_year, $the_month, 1);
-                $pc_prev_month = ModUtil::url('PostCalendar', 'user', 'main', array(
+                $pc_prev_month = ModUtil::url('PostCalendar', 'user', 'display', array(
                     'viewtype' => $viewtype,
                     'Date' => $prev_month,
                     'pc_username' => $pc_username,
                     'filtercats' => $filtercats));
-                $pc_next_month = ModUtil::url('PostCalendar', 'user', 'main', array(
+                $pc_next_month = ModUtil::url('PostCalendar', 'user', 'display', array(
                     'viewtype' => $viewtype,
                     'Date' => $next_month,
                     'pc_username' => $pc_username,
@@ -185,12 +185,12 @@ class PostCalendar_Api_User extends Zikula_AbstractApi
     
                 $prev_year = date('Ymd', mktime(0, 0, 0, 1, 1, $the_year - 1));
                 $next_year = date('Ymd', mktime(0, 0, 0, 1, 1, $the_year + 1));
-                $pc_prev_year = ModUtil::url('PostCalendar', 'user', 'main', array(
+                $pc_prev_year = ModUtil::url('PostCalendar', 'user', 'display', array(
                     'viewtype' => 'year',
                     'Date' => $prev_year,
                     'pc_username' => $pc_username,
                     'filtercats' => $filtercats));
-                $pc_next_year = ModUtil::url('PostCalendar', 'user', 'main', array(
+                $pc_next_year = ModUtil::url('PostCalendar', 'user', 'display', array(
                     'viewtype' => 'year',
                     'Date' => $next_year,
                     'pc_username' => $pc_username,
@@ -216,12 +216,12 @@ class PostCalendar_Api_User extends Zikula_AbstractApi
     
                 $prev_list = date('Ymd', mktime(0, 0, 0, $the_month - $listmonths, $the_day, $the_year));
                 $next_list = date('Ymd', mktime(0, 0, 0, $listendmonths, $the_day, $listendyears));
-                $pc_prev_list = ModUtil::url('PostCalendar', 'user', 'main', array(
+                $pc_prev_list = ModUtil::url('PostCalendar', 'user', 'display', array(
                     'viewtype' => 'list',
                     'Date' => $prev_list,
                     'pc_username' => $pc_username,
                     'filtercats' => $filtercats));
-                $pc_next_list = ModUtil::url('PostCalendar', 'user', 'main', array(
+                $pc_next_list = ModUtil::url('PostCalendar', 'user', 'display', array(
                     'viewtype' => 'list',
                     'Date' => $next_list,
                     'pc_username' => $pc_username,

@@ -96,7 +96,7 @@
             {assign var="viewtype" value=$modvars.PostCalendar.pcDefaultView}
 		{/if}
         {formutil_getpassedvalue name="Date" source="get" assign="Date" default=''}
-		<a href="{modurl modname="PostCalendar" func="main" viewtype=$viewtype Date=$Date}">{gt text='Return'}</a>
+		<a href="{modurl modname="PostCalendar" type='user' func='display' viewtype=$viewtype Date=$Date}">{gt text='Return'}</a>
 	{/if}
 </div>
 {include file="user/footer.tpl"}

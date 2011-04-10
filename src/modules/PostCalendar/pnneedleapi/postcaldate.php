@@ -37,7 +37,7 @@ function postcalendar_needleapi_postcaldate($args)
             $uselink = true;
         }
         if (strpos($displaytype, 'D') !== false) {
-            $link = ModUtil::url('PostCalendar', 'user', 'main', array(
+            $link = ModUtil::url('PostCalendar', 'user', 'display', array(
                 'viewtype' => 'day',
                 'Date'     => $date));
             $linktext = DateUtil::strftime(ModUtil::getVar('PostCalendar', 'pcEventDateFormat'), strtotime($date));

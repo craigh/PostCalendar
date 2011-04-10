@@ -4,5 +4,5 @@
         [<a href='{modurl modname="PostCalendar" type="event" func="create"}'>{gt text='Create New'}</a>]
         &nbsp;
     {/if}
-    [<a href='{modurl modname="Search"}'>{gt text='Search'}</a>]
+    [<a href='{modurl modname="Search" type='user' func='form'}'>{gt text='Search'}</a>]
 </div>

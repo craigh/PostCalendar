@@ -7,7 +7,7 @@
  */
 function smarty_function_pc_form_nav_open($args, &$smarty)
 {
-    $formaction = ModUtil::url('PostCalendar', 'user', 'main');
+    $formaction = ModUtil::url('PostCalendar', 'user', 'display');
     $formaction = DataUtil::formatForDisplay($formaction);
     $ret_val = '<form action="' . $formaction . '"' . ' method="post"' . ' enctype="application/x-www-form-urlencoded">';
 

@@ -64,7 +64,7 @@ function smarty_function_pc_url($args, &$smarty)
                         'Date' => $date));
             break;
         case 'today':
-            $link = ModUtil::url('PostCalendar', 'user', 'main', array(
+            $link = ModUtil::url('PostCalendar', 'user', 'display', array(
                         'viewtype' => $viewtype,
                         'Date' => DateUtil::getDatetime('', '%Y%m%d000000'),
                         'pc_username' => $pc_username));
@@ -74,19 +74,19 @@ function smarty_function_pc_url($args, &$smarty)
         case 'month':
         case 'year':
         case 'list':
-            $link = ModUtil::url('PostCalendar', 'user', 'main', array(
+            $link = ModUtil::url('PostCalendar', 'user', 'display', array(
                         'viewtype' => $action,
                         'Date' => $date,
                         'pc_username' => $pc_username));
             break;
         case 'search':
-            $link = ModUtil::url('Search');
+            $link = ModUtil::url('Search', 'user', 'form');
             break;
         case 'print':
             $link = System::getCurrentUrl() . "&theme=Printer";
             break;
         case 'rss':
-            $link = ModUtil::url('PostCalendar', 'user', 'main', array(
+            $link = ModUtil::url('PostCalendar', 'user', 'display', array(
                         'viewtype' => 'xml',
                         'theme' => 'rss'));
             break;
@@ -99,7 +99,7 @@ function smarty_function_pc_url($args, &$smarty)
                 if (_SETTING_OPEN_NEW_WINDOW) {
                     $linkparams['popup'] = true;
                 }
-                $link = ModUtil::url('PostCalendar', 'user', 'main', $linkparams);
+                $link = ModUtil::url('PostCalendar', 'user', 'display', $linkparams);
             } else {
                 $link = '';
             }

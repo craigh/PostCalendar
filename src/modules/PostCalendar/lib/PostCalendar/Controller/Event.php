@@ -196,7 +196,7 @@ class PostCalendar_Controller_Event extends Zikula_AbstractController
             if ($addtrigger) {
                 System::redirect(ModUtil::url('PostCalendar', 'event', 'create'));
             } else {
-                System::redirect(ModUtil::url('PostCalendar', 'user', 'main', array(
+                System::redirect(ModUtil::url('PostCalendar', 'user', 'display', array(
                     'viewtype' => _SETTING_DEFAULT_VIEW,
                     'Date' => $url_date)));
             }
