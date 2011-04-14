@@ -49,7 +49,7 @@ function smarty_function_pc_locations($args, &$smarty)
         //-->";
 
     PageUtil::addVar("javascript", "javascript/ajax/prototype.js");
-    PageUtil::addVar("rawtext", "<script type='text/javascript'>$pc_loc_javascript</script>");
+    PageUtil::addVar("header", "<script type='text/javascript'>$pc_loc_javascript</script>");
 
     return $display;
 }

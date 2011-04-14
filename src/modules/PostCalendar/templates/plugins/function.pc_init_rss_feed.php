@@ -19,7 +19,7 @@ function smarty_function_pc_init_rss_feed($args, &$smarty)
         $title        = DataUtil::formatForDisplay($sitename . " " . $modname);
         $pagevarvalue = "<link rel='alternate' href='$rsslink' type='application/rss+xml' title='$title' />";
 
-        PageUtil::addVar("rawtext", $pagevarvalue);
+        PageUtil::addVar("header", $pagevarvalue);
         $ret_val = true;
     } else {
         $ret_val = false;
