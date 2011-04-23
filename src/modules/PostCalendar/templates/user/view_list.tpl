@@ -8,9 +8,6 @@
 {if $PRINT_VIEW eq false}
 {include file="user/navigation.tpl"}
 {/if}
-
-{pc_pagejs_init}
-
 <h2>{gt text='List view'}</h2>
 
 <div class="calcontainer">

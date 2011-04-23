@@ -1,3 +1,4 @@
+{nocache}{ajaxheader module="PostCalendar" ui=true}{pc_pagejs_init}{/nocache}
 {pc_queued_events_notify}
 {pc_form_nav_open}
 {pc_init_rss_feed assign="rss"}

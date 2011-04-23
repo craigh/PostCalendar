@@ -8,6 +8,11 @@
 
 class PostCalendar_Controller_Admin extends Zikula_AbstractController
 {
+    public function postInitialize()
+    {
+        $this->view->setCaching(false);
+    }
+
     /**
      * This function is the default function, and is called whenever the
      * module is initiated without defining arguments.

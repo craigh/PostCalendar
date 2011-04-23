@@ -9,6 +9,11 @@
 
 class PostCalendar_Controller_Event extends Zikula_AbstractController
 {
+    public function postInitialize()
+    {
+        $this->view->setCaching(false);
+    }
+
     /**
      * This is a user form 'are you sure' display
      * to delete an event

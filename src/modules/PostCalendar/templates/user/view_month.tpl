@@ -9,8 +9,6 @@
 {if $PRINT_VIEW eq false}
 {include file="user/navigation.tpl"}
 {/if}
-{ajaxheader module="PostCalendar" ui=true}
-{pc_pagejs_init}
 <h2 class="postcalendar_header">
     {if $PRINT_VIEW eq false}<a href="{$PREV_MONTH_URL}">&lt;&lt;</a>{/if}
     {$DATE|pc_date_format:'%B %Y'}

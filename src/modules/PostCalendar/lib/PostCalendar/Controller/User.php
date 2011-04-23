@@ -55,79 +55,102 @@ class PostCalendar_Controller_User extends Zikula_AbstractController
         if (empty($Date) && empty($viewtype)) {
             return LogUtil::registerArgsError();
         }
-    
-        $this->view->cache_id = $Date . '|' . $viewtype . '|' . $eid . '|' . UserUtil::getVar('uid');
 
         $this->view->assign('viewtypeselected', $viewtype);
     
         switch ($viewtype) {
             case 'details':
                 $this->throwForbiddenUnless(SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_READ), LogUtil::getErrorMsgPermission());
-    
-                // build template and fetch:
-                if ($this->view->is_cached('user/view_event_details.tpl')) {
-                    // use cached version
-                    return $this->view->fetch('user/view_event_details.tpl');
+
+                // get the event from the DB
+                $event = DBUtil::selectObjectByID('postcalendar_events', $eid, 'eid');
+                $event = ModUtil::apiFunc('PostCalendar', 'event', 'formateventarrayfordisplay', $event);
+
+                // is event allowed for this user?
+                if ($event['sharing'] == SHARING_PRIVATE && $event['aid'] != UserUtil::getVar('uid') && !SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
+                    // if event is PRIVATE and user is not assigned event ID (aid) and user is not Admin event should not be seen
+                    return LogUtil::registerError($this->__('You do not have permission to view this event.'));
+                }
+
+                $this->view->setCache_Id($eid);
+                // caching won't help much in this case because security check comes 
+                // after fetch from db, so don't use is_cached, just fetch after
+                // normal routine.
+
+                // since recurrevents are dynamically calculcated, we need to change the date
+                // to ensure that the correct/current date is being displayed (rather than the
+                // date on which the recurring booking was executed).
+                if ($event['recurrtype']) {
+                    $y = substr($args['Date'], 0, 4);
+                    $m = substr($args['Date'], 4, 2);
+                    $d = substr($args['Date'], 6, 2);
+                    $event['eventDate'] = "$y-$m-$d";
+                }
+                $this->view->assign('loaded_event', $event);
+
+                if ($popup == true) {
+                    $this->view->assign('popup', $popup);
+                    $this->view->display('event/view.tpl');
+                    return true; // displays template without theme wrap
                 } else {
-                    // get the event from the DB
-                    $event = DBUtil::selectObjectByID('postcalendar_events', $eid, 'eid');
-                    $event = ModUtil::apiFunc('PostCalendar', 'event', 'formateventarrayfordisplay', $event);
-    
-                    // is event allowed for this user?
-                    if ($event['sharing'] == SHARING_PRIVATE && $event['aid'] != UserUtil::getVar('uid') && !SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
-                        // if event is PRIVATE and user is not assigned event ID (aid) and user is not Admin event should not be seen
-                        return LogUtil::registerError($this->__('You do not have permission to view this event.'));
-                    }
-    
-                    // since recurrevents are dynamically calculcated, we need to change the date
-                    // to ensure that the correct/current date is being displayed (rather than the
-                    // date on which the recurring booking was executed).
-                    if ($event['recurrtype']) {
-                        $y = substr($args['Date'], 0, 4);
-                        $m = substr($args['Date'], 4, 2);
-                        $d = substr($args['Date'], 6, 2);
-                        $event['eventDate'] = "$y-$m-$d";
-                    }
-                    $this->view->assign('loaded_event', $event);
-    
-                    if ($popup == true) {
-                        $this->view->assign('popup', $popup);
-                        $this->view->display('event/view.tpl');
-                        return true; // displays template without theme wrap
+                    if ((SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADD) && (UserUtil::getVar('uid') == $event['aid'])) || SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
+                        $this->view->assign('EVENT_CAN_EDIT', true);
                     } else {
-                        if ((SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADD) && (UserUtil::getVar('uid') == $event['aid'])) || SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
-                            $this->view->assign('EVENT_CAN_EDIT', true);
-                        } else {
-                            $this->view->assign('EVENT_CAN_EDIT', false);
-                        }
-                        $this->view->assign('TODAY_DATE', DateUtil::getDatetime('', '%Y-%m-%d'));
-                        $this->view->assign('DATE', $Date);
-                        return $this->view->fetch('user/view_event_details.tpl');
+                        $this->view->assign('EVENT_CAN_EDIT', false);
                     }
+                    $this->view->assign('TODAY_DATE', DateUtil::getDatetime('', '%Y-%m-%d'));
+                    $this->view->assign('DATE', $Date);
+                    return $this->view->fetch('user/view_event_details.tpl');
                 }
                 break;
     
             default:
                 $this->throwForbiddenUnless(SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_OVERVIEW), LogUtil::getErrorMsgPermission());
-
-                $out = ModUtil::apiFunc('PostCalendar', 'user', 'buildView', array(
-                    'Date'        => $Date,
-                    'viewtype'    => $viewtype,
-                    'pc_username' => $pc_username,
-                    'filtercats'  => $filtercats,
-                    'func'        => $func));
-                // build template and fetch:
-                if ($this->view->is_cached('user/view_' . $viewtype . '.tpl')) {
-                    // use cached version
-                    return $this->view->fetch('user/view_' . $viewtype . '.tpl');
-                } else {
+                $cacheTagDate = $this->computeCacheTagDate($Date, $viewtype);
+                $this->view->setCache_Id($cacheTagDate . '|' . UserUtil::getVar('uid'));
+                if (!$this->view->is_cached('user/view_' . $viewtype . '.tpl')) {
+                    $out = ModUtil::apiFunc('PostCalendar', 'user', 'buildView', array(
+                        'Date'        => $Date,
+                        'viewtype'    => $viewtype,
+                        'pc_username' => $pc_username,
+                        'filtercats'  => $filtercats,
+                        'func'        => $func));
                     foreach ($out as $var => $val) {
                         $this->view->assign($var, $val);
                     }
-    
-                    return $this->view->fetch('user/view_' . $viewtype . '.tpl');
-                } // end if/else
+                }
+                return $this->view->fetch('user/view_' . $viewtype . '.tpl');
                 break;
         } // end switch
+    }
+
+    /**
+     * compute the minimal information needed for a cacheid based on viewtype and date
+     * @param string $Date
+     * @param string $viewtype
+     * @return string
+     */
+    private function computeCacheTagDate($Date, $viewtype)
+    {
+        switch ($viewtype) {
+            case 'year':
+                $tag = substr($Date, 0, 4); // year only YYYY
+                break;
+            case 'month':
+                $tag = substr($Date, 0, 6); // year and month YYYYMM
+                break;
+            case 'week':
+                // first day of week
+                $Date_Calc = new Date_Calc();
+                $tag = $Date_Calc->beginOfWeek(substr($Date, 6, 2), substr($Date, 4, 2), substr($Date, 0, 4), '%Y%m%d');
+                break;
+            case 'day':
+            case 'list':
+            case 'xml':
+            default:
+                $tag = substr($Date, 0, 8); // full date YYYYMMDD
+                break;
+        }
+        return $tag;
     }
 } // end class def

@@ -8,8 +8,6 @@
 {if $PRINT_VIEW eq false}
 {include file="user/navigation.tpl"}
 {/if}
-{ajaxheader module="PostCalendar" ui=true}
-{pc_pagejs_init}
 <h2 class="postcalendar_header">
     {if $PRINT_VIEW eq false}<a href="{$PREV_WEEK_URL}">&lt;&lt;</a>{/if}
     {pc_week_range date=$DATE}

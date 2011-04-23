@@ -8,9 +8,6 @@
 {if $PRINT_VIEW != 1}
 {include file="user/navigation.tpl"}
 {/if}
-
-{pc_pagejs_init}
-
 <h2 class="postcalendar_header">
     {if $PRINT_VIEW eq false}<a href="{$PREV_YEAR_URL}">&lt;&lt;</a>{/if}
     {$DATE|date_format:'%Y'}

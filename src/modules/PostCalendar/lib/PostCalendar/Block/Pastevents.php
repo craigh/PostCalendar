@@ -59,7 +59,7 @@ class PostCalendar_Block_Pastevents extends Zikula_Controller_AbstractBlock
         $the_day   = (int) substr($Date, 6, 2);
     
         // If block is cached, return cached version
-        $this->view->cache_id = $blockinfo['bid'] . ':' . UserUtil::getVar('uid');
+        $this->view->setCache_Id($blockinfo['bid'] . ':' . UserUtil::getVar('uid'));
         if ($this->view->is_cached('blocks/pastevents.tpl')) {
             $blockinfo['content'] = $this->view->fetch('blocks/pastevents.tpl');
             return BlockUtil::themeBlock($blockinfo);
