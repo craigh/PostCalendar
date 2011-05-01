@@ -432,7 +432,7 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
 
         $z_event->setData(true);
         $z_event->setNotified();
-        return System::redirect(ModUtil::url($moduleName, 'admin', 'listevents'));
+        return System::redirect(ModUtil::url($moduleName, 'admin', 'main'));
     }
 
     /**
