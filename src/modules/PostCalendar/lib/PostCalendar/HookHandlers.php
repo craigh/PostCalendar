@@ -33,24 +33,24 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
      * args[id] is the id of the object.
      * args[caller] the module who notified of this event.
      *
-     * @param Zikula_Event $z_event
+     * @param Zikula_Event $hook
      *
      * @return void
      */
-    public function ui_view(Zikula_Event $z_event)
+    public function ui_view(Zikula_DisplayHook $hook)
     {
         // Security check
         if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_READ)) {
             return;
         }
         // get data from $event
-        $module = isset($z_event['caller']) ? $z_event['caller'] : ModUtil::getName(); // default to active module
-        $objectid = $z_event['id']; // id of hooked item
+        $module = $hook->getCaller();
+        $objectid = $hook->getId(); // id of hooked item
 
         if (!$objectid) {
             return;
         }
-        
+
         ModUtil::dbInfoLoad('PostCalendar');
         $dbtable = DBUtil::getTables();
         $cols = $dbtable['postcalendar_events_column'];
@@ -67,7 +67,7 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
 
         // add this response to the event stack
         $area = 'modulehook_area.postcalendar.event';
-        $z_event->data[$area] = new Zikula_Response_DisplayHook($area, $this->view, 'hooks/view.tpl');
+        $hook->setResponse(new Zikula_Response_DisplayHook($area, $this->view, 'hooks/view.tpl'));
     }
 
      /**
@@ -77,15 +77,15 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
      * args[id] Is the ID of the subject.
      * args[caller] the module who notified of this event.
      *
-     * @param Zikula_Event $z_event
+     * @param Zikula_Event $hook
      *
      * @return void
      */
-    public function ui_edit(Zikula_Event $z_event)
+    public function ui_edit(Zikula_DisplayHook $hook)
     {
         // get data from $event
-        $module = isset($z_event['caller']) ? $z_event['caller'] : ModUtil::getName(); // default to active module
-        $objectid = $z_event['id']; // id of hooked item
+        $module = $hook->getCaller(); // default to active module
+        $objectid = $hook->getId(); // id of hooked item
 
         if (!$objectid) {
             $access_type = ACCESS_ADD;
@@ -93,10 +93,10 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
             $access_type = ACCESS_EDIT;
         }
         // special ACCESS case for users module new registration
-        if ($module == "Users" && (isset($z_event['userregistration']) && $z_event['userregistration'])) {
+        if ($module == "Users" && (isset($hook['userregistration']) && $hook['userregistration'])) {
             $access_type = ACCESS_READ;
         }
-        
+
         // Security check
         if (!SecurityUtil::checkPermission('PostCalendar::', '::', $access_type)) {
             return;
@@ -163,7 +163,7 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
 
         // add this response to the event stack
         $area = 'modulehook_area.postcalendar.event';
-        $z_event->data[$area] = new Zikula_Response_DisplayHook($area, $this->view, 'hooks/edit.tpl');
+        $hook->setResponse(new Zikula_Response_DisplayHook($area, $this->view, 'hooks/edit.tpl'));
     }
 
     /**
@@ -173,11 +173,11 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
      * args[id] Is the ID of the subject.
      * args[caller] the module who notified of this event.
      *
-     * @param Zikula_Event $z_event
+     * @param Zikula_Event $hook
      *
      * @return void
      */
-    public function ui_delete(Zikula_Event $z_event)
+    public function ui_delete(Zikula_DisplayHook $hook)
     {
         // Security check
         if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_DELETE)) {
@@ -185,8 +185,8 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
         }
 
         // get data from $z_event
-        $module = isset($z_event['caller']) ? $z_event['caller'] : ModUtil::getName(); // default to active module
-        $objectid = $z_event['id']; // id of hooked item
+        $module = $hook->getCaller(); // default to active module
+        $objectid = $hook->getId(); // id of hooked item
 
         ModUtil::dbInfoLoad('PostCalendar');
         $dbtable = DBUtil::getTables();
@@ -201,7 +201,7 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
 
             // add this response to the event stack
             $area = 'modulehook_area.postcalendar.event';
-            $z_event->data[$area] = new Zikula_Response_DisplayHook($area, $this->view, 'hooks/delete.tpl');
+            $hook->setResponse(new Zikula_Response_DisplayHook($area, $this->view, 'hooks/delete.tpl'));
         }
     }
 
@@ -215,11 +215,11 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
      * so the information is available to the ui_edit method if validation fails,
      * and so the process_* can write the validated data to the database.
      *
-     * @param Zikula_Event $z_event
+     * @param Zikula_Event $hook
      *
      * @return void
      */
-    public function validate_edit(Zikula_Event $z_event)
+    public function validate_edit(Zikula_ValidationHook $hook)
     {
         // get data from post
         $data = FormUtil::getPassedValue('postcalendar', null, 'POST');
@@ -227,7 +227,7 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
         // create a new hook validation object and assign it to $this->validation
         $this->validation = new Zikula_Provider_HookValidation('data', $data);
 
-        $z_event->data->set('hookhandler.postcalendar.ui.edit', $this->validation);
+        $hook->setValidator('hookhandler.postcalendar.ui.edit', $this->validation);
     }
 
     /**
@@ -240,11 +240,11 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
      * so the information is available to the ui_edit method if validation fails,
      * and so the process_* can write the validated data to the database.
      *
-     * @param Zikula_Event $z_event
+     * @param Zikula_Event $hook
      *
      * @return void
      */
-    public function validate_delete(Zikula_Event $z_event)
+    public function validate_delete(Zikula_ValidationHook $hook)
     {
         // nothing to do here really, just return
         // if however i wanted to check for something, i would do it like the
@@ -264,20 +264,21 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
      * args[id] Is the ID of the subject.
      * args[caller] the module who notified of this event.
      *
-     * @param Zikula_Event $z_event
+     * @param Zikula_Event $hook
      *
      * @return void
      */
-    public function process_edit(Zikula_Event $z_event)
+    public function process_edit(Zikula_ProcessHook $hook)
     {
         // check for validation here
         if (!$this->validation) {
             return;
         }
-        
+
         $dom = ZLanguage::getModuleDomain('PostCalendar');
-        $module = isset($z_event['caller']) ? $z_event['caller'] : ModUtil::getName(); // default to active module
-        $objectid = $z_event['id']; // id of hooked item
+        $module = $hook->getCaller(); // default to active module
+        $objectid = $hook->getId(); // id of hooked item
+        $areaId = $hook->getAreaId();
 
         $hookdata = $this->validation->getObject();
         $hookdata = DataUtil::cleanVar($hookdata);
@@ -343,12 +344,13 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
      *
      * @return void
      */
-    public function process_delete(Zikula_Event $z_event)
+    public function process_delete(Zikula_ProcessHook $z_event)
     {
         $dom = ZLanguage::getModuleDomain('PostCalendar');
 
-        $module = isset($z_event['caller']) ? $z_event['caller'] : ModUtil::getName(); // default to active module
-        $objectid = $z_event['id']; // id of hooked item
+        $module = $hook->getCaller(); // default to active module
+        $objectid = $hook->getId(); // id of hooked item
+        $areaId = $hook->getAreaId();
 
         // Get table info
         ModUtil::dbInfoLoad('PostCalendar');
@@ -386,20 +388,20 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
         $view = Zikula_View::getInstance('PostCalendar', false);
 
         $view->assign('ActiveModule', $moduleName);
-        
+
         $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
         $view->assign('postcalendar_catregistry', $catregistry);
-    
+
         $view->assign('postcalendar_optoverride', ModUtil::getVar($moduleName, 'postcalendar_optoverride', false));
         $view->assign('postcalendar_admincatselected', ModUtil::getVar($moduleName, 'postcalendar_admincatselected'));
 
         $z_event->setData($view->fetch('hooks/modifyconfig.tpl'));
-        $z_event->setNotified();
+        $z_event->stop();
     }
 
     /**
      * process results of postCalendarHookConfig
-     * 
+     *
      * @param Zikula_Event $z_event
      */
     public static function postcalendarhookconfigprocess(Zikula_Event $z_event)
@@ -421,7 +423,7 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
         if (!SecurityUtil::checkPermission($moduleName.'::', '::', ACCESS_ADMIN)) {
             throw new Zikula_Exception_Forbidden(LogUtil::getErrorMsgPermission());
         }
-        
+
         if ((!isset($hookdata['postcalendar_optoverride'])) || (empty($hookdata['postcalendar_optoverride']))) {
             $hookdata['postcalendar_optoverride'] = 0;
         }
@@ -431,7 +433,7 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
         LogUtil::registerStatus(__("PostCalendar: Hook option settings updated.", $dom));
 
         $z_event->setData(true);
-        $z_event->setNotified();
+        $z_event->stop();
         return System::redirect(ModUtil::url($moduleName, 'admin', 'main'));
     }
 
