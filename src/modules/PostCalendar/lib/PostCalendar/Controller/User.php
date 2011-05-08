@@ -72,7 +72,7 @@ class PostCalendar_Controller_User extends Zikula_AbstractController
                     return LogUtil::registerError($this->__('You do not have permission to view this event.'));
                 }
 
-                $this->view->setCache_Id($eid);
+                $this->view->setCacheId($eid);
                 // caching won't help much in this case because security check comes 
                 // after fetch from db, so don't use is_cached, just fetch after
                 // normal routine.
@@ -107,7 +107,7 @@ class PostCalendar_Controller_User extends Zikula_AbstractController
             default:
                 $this->throwForbiddenUnless(SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_OVERVIEW), LogUtil::getErrorMsgPermission());
                 $cacheTagDate = $this->computeCacheTagDate($Date, $viewtype);
-                $this->view->setCache_Id($cacheTagDate . '|' . UserUtil::getVar('uid'));
+                $this->view->setCacheId($cacheTagDate . '|' . UserUtil::getVar('uid'));
                 if (!$this->view->is_cached('user/view_' . $viewtype . '.tpl')) {
                     $out = ModUtil::apiFunc('PostCalendar', 'user', 'buildView', array(
                         'Date'        => $Date,
