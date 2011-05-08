@@ -182,7 +182,7 @@ class PostCalendar_Controller_Event extends Zikula_AbstractController
                 'eventdata' => $eventdata))) {
                 LogUtil::registerError($this->__('Error! Submission failed.'));
             } else {
-                $url = new Zikula_ModUrl('PostCalendar', 'user', 'view', ZLanguage::getLanguageCode(), array('eid' => $eventdata['eid']));
+                $url = new Zikula_ModUrl('PostCalendar', 'user', 'display', ZLanguage::getLanguageCode(), array('viewtype' => 'details', 'eid' => $eventdata['eid']));
                 $this->notifyHooks(new Zikula_ProcessHook('postcalendar.hook.events.process.edit', $eventdata['eid'], $url));
                 $this->view->clear_cache();
                 $presentation_date = DateUtil::strftime(_SETTING_DATE_FORMAT, $sdate);
