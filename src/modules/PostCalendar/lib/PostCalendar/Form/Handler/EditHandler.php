@@ -12,7 +12,7 @@ class PostCalendar_Form_Handler_EditHandler extends Zikula_Form_AbstractHandler
         if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADD)) {
             throw new Zikula_Exception_Forbidden(LogUtil::getErrorMsgPermission());
         }
-        
+
         $this->eid = FormUtil::getPassedValue('eid');
 
         return true;
@@ -38,7 +38,7 @@ class PostCalendar_Form_Handler_EditHandler extends Zikula_Form_AbstractHandler
             }
             LogUtil::registerStatus($this->__('Done! The event was deleted.'));
 
-            $this->notifyHooks('postcalendar.hook.events.process.delete', $event, $this->eid);
+            $this->notifyHooks(new Zikula_ProcessHook('postcalendar.hook.events.process.delete', $this->eid));
 
             $redir = ModUtil::url('PostCalendar', 'user', 'display', array(
                 'viewtype' => _SETTING_DEFAULT_VIEW));

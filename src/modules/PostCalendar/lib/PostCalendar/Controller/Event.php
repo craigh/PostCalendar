@@ -28,11 +28,11 @@ class PostCalendar_Controller_Event extends Zikula_AbstractController
         // get the event from the DB
         $event = DBUtil::selectObjectByID('postcalendar_events', $eid, 'eid');
         $event = ModUtil::apiFunc('PostCalendar', 'event', 'formateventarrayfordisplay', $event);
-    
+
         $render->assign('loaded_event', $event);
         return $render->execute('event/deleteeventconfirm.tpl', new PostCalendar_Form_Handler_EditHandler());
     }
-    
+
     /**
      * edit an event
      */
@@ -82,12 +82,12 @@ class PostCalendar_Controller_Event extends Zikula_AbstractController
         // format to '%Y%m%d%H%M%S'
         $Date = PostCalendar_Util::getDate(array(
             'Date' => $Date));
-    
+
         // these items come on submission of form
         $submitted_event = FormUtil::getPassedValue('postcalendar_events', NULL);
         $is_update       = FormUtil::getPassedValue('is_update', false);
         $form_action     = FormUtil::getPassedValue('form_action', NULL);
-    
+
         // compensate for translation of input values
         if (isset($form_action)) {
             $formactionarraymap = array(
@@ -96,24 +96,25 @@ class PostCalendar_Controller_Event extends Zikula_AbstractController
                 $this->__('Preview')      => 'preview');
             $form_action = $formactionarraymap[$form_action];
         }
-    
+
         $addtrigger = false;
         if ($form_action == 'save and add') {
             $form_action = 'save';
             $addtrigger = true;
         }
-    
+
         // VALIDATE form data if form action is preview or save
         $abort = false;
         if (($form_action == 'preview') || ($form_action == 'save')) {
             $abort = ModUtil::apiFunc('PostCalendar', 'event', 'validateformdata', $submitted_event);
             // check hooked modules for validation
-            $hookvalidators = $this->notifyHooks('postcalendar.hook.events.validate.edit', $submitted_event, $submitted_event['eid'], array(), new Zikula_Hook_ValidationProviders())->getData();
+            $hook = new Zikula_ProcessHook('postcalendar.hook.events.validate.edit', new Zikula_Hook_ValidationProviders());
+            $hookvalidators = $this->notifyHooks($hook)->getValidators();
             $abort = $abort || $hookvalidators->hasErrors() ? true : false;
             // also correct locations data if importing from locations module
             $submitted_event = ModUtil::apiFunc('PostCalendar', 'event', 'correctlocationdata', $submitted_event);
         }
-    
+
         if ($func == 'create') { // triggered on form_action=preview && on brand new load
             $eventdata = array();
             // wrap all the data into array for passing to save and preview functions
@@ -122,7 +123,7 @@ class PostCalendar_Controller_Event extends Zikula_AbstractController
             }
             $eventdata['is_update'] = $is_update;
             $eventdata['data_loaded'] = true;
-    
+
         } else { // func=edit or func=copy (we are editing an existing event or copying an existing event)
             if ($submitted_event['data_loaded']) {
                 $eventdata = $submitted_event; // reloaded event when editing
@@ -137,7 +138,7 @@ class PostCalendar_Controller_Event extends Zikula_AbstractController
             $eventdata['is_update'] = true;
             $eventdata['data_loaded'] = true;
         }
-    
+
         if ($func == 'copy') {
             // reset some default values that are different from 'edit'
             $form_action = '';
@@ -147,12 +148,12 @@ class PostCalendar_Controller_Event extends Zikula_AbstractController
             $eventdata['is_update'] = false;
             $eventdata['informant'] = UserUtil::getVar('uid');
         }
-    
+
         if ($abort) {
             $form_action = 'preview'; // data not sufficient for save. force preview and correct.
         }
-    
-    
+
+
         // Preview the event
         if ($form_action == 'preview') {
             $eventdata['preview'] = true;
@@ -169,19 +170,20 @@ class PostCalendar_Controller_Event extends Zikula_AbstractController
         } else {
             $eventdata['preview'] = "";
         }
-    
+
         // Enter the event into the DB
         if ($form_action == 'save') {
             $sdate = strtotime($submitted_event['eventDate']);
             $this->checkCsrfToken();
-    
+
             $eventdata = ModUtil::apiFunc('PostCalendar', 'event', 'formateventarrayforDB', $eventdata);
-    
+
             if (!$eid = ModUtil::apiFunc('PostCalendar', 'event', 'writeEvent', array(
                 'eventdata' => $eventdata))) {
                 LogUtil::registerError($this->__('Error! Submission failed.'));
             } else {
-                $this->notifyHooks('postcalendar.hook.events.process.edit', $eventdata, $eventdata['eid']);
+                $url = new Zikula_ModUrl('PostCalendar', 'user', 'view', ZLanguage::getLanguageCode(), array('eid' => $eventdata['eid']));
+                $this->notifyHooks(new Zikula_ProcessHook('postcalendar.hook.events.process.edit', $eventdata['eid'], $url));
                 $this->view->clear_cache();
                 $presentation_date = DateUtil::strftime(_SETTING_DATE_FORMAT, $sdate);
                 if ($is_update) {
@@ -207,18 +209,18 @@ class PostCalendar_Controller_Event extends Zikula_AbstractController
             }
             return true;
         }
-    
+
         $submitformelements = ModUtil::apiFunc('PostCalendar', 'event', 'buildSubmitForm', array(
             'eventdata' => $eventdata,
             'Date' => $Date)); //sets defaults or builds selected values
         foreach ($submitformelements as $var => $val) {
             $this->view->assign($var, $val);
         }
-    
+
         // assign function in case we were editing
         $this->view->assign('func', $func);
         $this->view->assign('viewtypeselected', _SETTING_DEFAULT_VIEW);
-    
+
         return $this->view->fetch("event/submit.tpl");
     }
 } // end class def

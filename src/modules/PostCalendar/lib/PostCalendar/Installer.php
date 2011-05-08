@@ -25,25 +25,25 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
         if (!DBUtil::createTable('postcalendar_events')) {
             return LogUtil::registerError($this->__('Error! Could not create the table.'));
         }
-    
+
         // insert default category
         if (!$this->_createdefaultcategory()) {
             return LogUtil::registerError($this->__('Error! Could not create default category.'));
         }
-    
+
         // PostCalendar Default Settings
         $defaultsettings = PostCalendar_Util::getdefaults();
         $result = ModUtil::setVars('PostCalendar', $defaultsettings);
         if (!$result) {
             return LogUtil::registerError($this->__('Error! Could not set the default settings for PostCalendar.'));
         }
-    
+
         $this->_reset_scribite();
         $this->_createdefaultsubcategory();
         $this->_createinstallevent();
 
-        HookUtil::registerHookSubscriberBundles($this->version);
-        HookUtil::registerHookProviderBundles($this->version);
+        HookUtil::registerSubscriberBundles($this->version->getHookSubscriberBundles());
+        HookUtil::registerProviderBundles($this->version->getHookProviderBundles());
 
         // register handlers
         EventUtil::registerPersistentModuleHandler('PostCalendar', 'get.pending_content', array('PostCalendar_Handlers', 'pendingContent'));
@@ -56,7 +56,7 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
 
         return true;
     }
-    
+
     /**
      * Upgrades an old install of PostCalendar
      *
@@ -70,7 +70,7 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
     public function upgrade($oldversion)
     {
         $this->throwForbiddenUnless(SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN), LogUtil::getErrorMsgPermission());
-    
+
         // We only support upgrade from version 4 and up. Notify users if they have a version below that one.
         if (version_compare($oldversion, '6', '<')) {
             $modversion = array(
@@ -79,13 +79,13 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
             // TODO
             // THIS MUST BE REDONE
             require 'modules/PostCalendar/pnversion.php';
-    
+
             // Inform user about error, and how he can upgrade to $modversion['version']
             return LogUtil::registerError($this->__f('Notice: This version does not support upgrades from PostCalendar 5.x and earlier. Please see detailed upgrade instructions at <a href="http://code.zikula.org/soundwebdevelopment/wiki/PostCalendar#Upgrade">code.zikula.org/soundwebdevelopment</a>). After upgrading, you can install PostCalendar %s and perform this upgrade.', $modversion));
         }
-    
+
         switch ($oldversion) {
-    
+
             case '6.0.0':
                 ModUtil::setVar('PostCalendar', 'pcFilterYearStart', 1);
                 ModUtil::setVar('PostCalendar', 'pcFilterYearEnd', 2);
@@ -120,20 +120,20 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
                 EventUtil::registerPersistentModuleHandler('PostCalendar', 'user.account.create', array('PostCalendar_PostCalendarEvent_Users', 'createEvent'));
                 EventUtil::registerPersistentModuleHandler('PostCalendar', 'module.content.gettypes', array('PostCalendar_Handlers', 'getTypes'));
 
-                HookUtil::registerHookSubscriberBundles($this->version);
-                HookUtil::registerHookProviderBundles($this->version);
+                HookUtil::registerSubscriberBundles($this->version->getHookSubscriberBundles());
+                HookUtil::registerProviderBundles($this->version->getHookProviderBundles());
 
                 if (ModUtil::available('Content')) {
                     Content_Installer::updateContentType('PostCalendar');
                 }
-                
+
             case '7.0.0':
                 //future development
         }
 
         return true;
     }
-    
+
     /**
      * Deletes an install of PostCalendar
      *
@@ -147,7 +147,7 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
     {
         $result = DBUtil::dropTable('postcalendar_events');
         $result = $result && ModUtil::delVar('PostCalendar');
-    
+
         // Delete entries from category registry
         ModUtil::dbInfoLoad('Categories');
         DBUtil::deleteWhere('categories_registry', "crg_modname='PostCalendar'");
@@ -156,12 +156,12 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
         // unregister handlers
         EventUtil::unregisterPersistentModuleHandlers('PostCalendar');
 
-        HookUtil::unregisterHookSubscriberBundles($this->version);
-        HookUtil::unregisterHookProviderBundles($this->version);
+        HookUtil::unregisterSubscriberBundles($this->version->getHookSubscriberBundles());
+        HookUtil::unregisterProviderBundles($this->version->getHookProviderBundles());
 
         return $result;
     }
-    
+
     /**
      * Reset scribite config for PostCalendar module.
      *
@@ -199,7 +199,7 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
         }
         return true;
     }
-    
+
     /**
      * create the default category tree
      * copied and adapted from News module
@@ -222,14 +222,14 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
         LogUtil::registerStatus($this->__("PostCalendar: 'Main' category created."));
         return true;
     }
-    
+
     /**
      * create initial calendar event
      */
     private function _createinstallevent()
     {
         $cat = CategoryUtil::getCategoryByPath('/__SYSTEM__/Modules/PostCalendar/Events');
-    
+
         $event = array(
             'title'          => $this->__('PostCalendar Installed'),
             'hometext'       => $this->__(':text:On this date, the PostCalendar module was installed. Thank you for trying PostCalendar! This event can be safely deleted if you wish.'),
@@ -250,16 +250,16 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
                 'Main' => $cat['id']),
             '__META__'       => array(
                 'module' => 'PostCalendar'));
-    
+
         if (DBUtil::insertObject($event, 'postcalendar_events', 'eid')) {
             LogUtil::registerStatus($this->__("PostCalendar: Installation event created."));
             return true;
         }
-    
+
         return LogUtil::registerError($this->__('Error! Could not create an installation event.'));
-    
+
     }
-    
+
     /**
      * create initial category on first install
      * @return boolean
@@ -270,7 +270,7 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
             LogUtil::registerError($this->__('Error! Could not create an initial sub-category.'));
             return false;
         }
-    
+
         LogUtil::registerStatus($this->__("PostCalendar: Initial sub-category created (Events)."));
         return true;
     }

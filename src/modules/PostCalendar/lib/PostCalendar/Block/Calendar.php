@@ -67,7 +67,7 @@ class PostCalendar_Block_Calendar extends Zikula_Controller_AbstractBlock
         $output = '';
     
         // If block is cached, return cached version
-        $this->view->setCache_Id($blockinfo['bid'] . ':' . UserUtil::getVar('uid'));
+        $this->view->setCacheId($blockinfo['bid'] . ':' . UserUtil::getVar('uid'));
         $templates_cached = true;
         if ($showcalendar) {
             if (!$this->view->is_cached('blocks/view_month.tpl')) {
