@@ -211,7 +211,7 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
      * The property $z_event->data is an instance of Zikula_Collection_HookValidationProviders
      * Use the $z_event->data->set() method to log the validation response.
      *
-     * This method populates this hookhandler object with a Zikula_Provider_HookValidation
+     * This method populates this hookhandler object with a Zikula_Hook_ValidationReponse
      * so the information is available to the ui_edit method if validation fails,
      * and so the process_* can write the validated data to the database.
      *
@@ -225,7 +225,7 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
         $data = FormUtil::getPassedValue('postcalendar', null, 'POST');
 
         // create a new hook validation object and assign it to $this->validation
-        $this->validation = new Zikula_Provider_HookValidation('data', $data);
+        $this->validation = new Zikula_Hook_ValidationReponse('data', $data);
 
         $hook->setValidator('hookhandler.postcalendar.ui.edit', $this->validation);
     }
@@ -236,7 +236,7 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
      * The property $z_event->data is an instance of Zikula_Collection_HookValidationProviders
      * Use the $z_event->data->set() method to log the validation response.
      *
-     * This method populates this hookhandler object with a Zikula_Provider_HookValidation
+     * This method populates this hookhandler object with a Zikula_Hook_ValidationReponse
      * so the information is available to the ui_edit method if validation fails,
      * and so the process_* can write the validated data to the database.
      *
