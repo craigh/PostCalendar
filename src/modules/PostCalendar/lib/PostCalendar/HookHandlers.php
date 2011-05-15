@@ -66,7 +66,7 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
         $this->view->assign('eid', $pc_event['eid']);
 
         // add this response to the event stack
-        $area = 'modulehook_area.postcalendar.event';
+        $area = 'provider_area.ui.postcalendar.event';
         $hook->setResponse(new Zikula_Response_DisplayHook($area, $this->view, 'hooks/view.tpl'));
     }
 
@@ -162,7 +162,7 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
         $this->view->assign('postcalendar_eid', $pceventid);
 
         // add this response to the event stack
-        $area = 'modulehook_area.postcalendar.event';
+        $area = 'provider_area.ui.postcalendar.event';
         $hook->setResponse(new Zikula_Response_DisplayHook($area, $this->view, 'hooks/edit.tpl'));
     }
 
@@ -200,7 +200,7 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
             $this->view->assign('eid', $pc_event['eid']);
 
             // add this response to the event stack
-            $area = 'modulehook_area.postcalendar.event';
+            $area = 'provider_area.ui.postcalendar.event';
             $hook->setResponse(new Zikula_Response_DisplayHook($area, $this->view, 'hooks/delete.tpl'));
         }
     }
