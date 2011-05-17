@@ -48,17 +48,17 @@ class PostCalendar_Version extends Zikula_AbstractVersion
         $this->registerHookProviderBundle($bundle);
 
         $bundle = new Zikula_HookManager_SubscriberBundle($this->name, 'subscriber.postcalendar.ui_hooks.events', 'ui_hooks', $this->__('PostCalendar Events'));
-        $bundle->addType('display_view', 'postcalendar.ui_hooks.events.ui_view');
-        $bundle->addType('form_edit', 'postcalendar.ui_hooks.events.ui_edit');
-        $bundle->addType('form_delete', 'postcalendar.ui_hooks.events.ui_delete');
-        $bundle->addType('validate_edit', 'postcalendar.ui_hooks.events.validate_edit');
-        $bundle->addType('validate_delete', 'postcalendar.ui_hooks.events.validate_delete');
-        $bundle->addType('process_edit', 'postcalendar.ui_hooks.events.process_edit');
-        $bundle->addType('process_delete', 'postcalendar.ui_hooks.events.process_delete');
+        $bundle->addEvent('display_view', 'postcalendar.ui_hooks.events.ui_view');
+        $bundle->addEvent('form_edit', 'postcalendar.ui_hooks.events.ui_edit');
+        $bundle->addEvent('form_delete', 'postcalendar.ui_hooks.events.ui_delete');
+        $bundle->addEvent('validate_edit', 'postcalendar.ui_hooks.events.validate_edit');
+        $bundle->addEvent('validate_delete', 'postcalendar.ui_hooks.events.validate_delete');
+        $bundle->addEvent('process_edit', 'postcalendar.ui_hooks.events.process_edit');
+        $bundle->addEvent('process_delete', 'postcalendar.ui_hooks.events.process_delete');
         $this->registerHookSubscriberBundle($bundle);
 
         $bundle = new Zikula_HookManager_SubscriberBundle($this->name, 'subscriber.postcalendar.filter_hooks.eventcontent', 'filter_hooks', $this->__('PostCalendar Event Filters'));
-        $bundle->addType('filter', 'postcalendar.filter_hooks.eventsfilter.filter');
+        $bundle->addEvent('filter', 'postcalendar.filter_hooks.eventsfilter.filter');
         $this->registerHookSubscriberBundle($bundle);
     }
 
