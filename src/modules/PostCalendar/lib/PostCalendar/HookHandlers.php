@@ -29,11 +29,7 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
     /**
      * Display hook for view.
      *
-     * Subject is the object being viewed that we're attaching to.
-     * args[id] is the id of the object.
-     * args[caller] the module who notified of this event.
-     *
-     * @param Zikula_Event $hook
+     * @param Zikula_DisplayHook $hook
      *
      * @return void
      */
@@ -73,11 +69,7 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
      /**
      * Display hook for edit views.
      *
-     * Subject is the object being created/edited that we're attaching to.
-     * args[id] Is the ID of the subject.
-     * args[caller] the module who notified of this event.
-     *
-     * @param Zikula_Event $hook
+     * @param Zikula_DisplayHook $hook
      *
      * @return void
      */
@@ -169,11 +161,7 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
     /**
      * Display hook for delete views.
      *
-     * Subject is the object being created/edited that we're attaching to.
-     * args[id] Is the ID of the subject.
-     * args[caller] the module who notified of this event.
-     *
-     * @param Zikula_Event $hook
+     * @param Zikula_DisplayHook $hook
      *
      * @return void
      */
@@ -206,16 +194,9 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
     }
 
     /**
-     * validation handler for validate.edit hook type.
+     * validation handler for validate_edit hook type.
      *
-     * The property $z_event->data is an instance of Zikula_Collection_HookValidationProviders
-     * Use the $z_event->data->set() method to log the validation response.
-     *
-     * This method populates this hookhandler object with a Zikula_Hook_ValidationResponse
-     * so the information is available to the ui_edit method if validation fails,
-     * and so the process_* can write the validated data to the database.
-     *
-     * @param Zikula_Event $hook
+     * @param Zikula_ValidationHook $hook
      *
      * @return void
      */
@@ -231,16 +212,9 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
     }
 
     /**
-     * validation handler for validate.delete hook type.
+     * validation handler for validate_delete hook type.
      *
-     * The property $z_event->data is an instance of Zikula_Collection_HookValidationProviders
-     * Use the $z_event->data->set() method to log the validation response.
-     *
-     * This method populates this hookhandler object with a Zikula_Hook_ValidationResponse
-     * so the information is available to the ui_edit method if validation fails,
-     * and so the process_* can write the validated data to the database.
-     *
-     * @param Zikula_Event $hook
+     * @param Zikula_ValidationHook $hook
      *
      * @return void
      */
@@ -256,15 +230,7 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
     /**
      * process edit hook handler.
      *
-     * This should be executed only if the validation has succeeded.
-     * This is used for both new and edit actions.  We can determine which
-     * by the presence of an ID field or not.
-     *
-     * Subject is the object being created/edited that we're attaching to.
-     * args[id] Is the ID of the subject.
-     * args[caller] the module who notified of this event.
-     *
-     * @param Zikula_Event $hook
+     * @param Zikula_ProcessHook $hook
      *
      * @return void
      */
@@ -336,11 +302,7 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
     /**
      * delete process hook handler.
      *
-     * The subject should be the object that was deleted.
-     * args[id] Is the is of the object
-     * args[caller] is the name of who notified this event.
-     *
-     * @param Zikula_Event $z_event
+     * @param Zikula_ProcessHook $z_event
      *
      * @return void
      */
