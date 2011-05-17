@@ -37,7 +37,7 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
      *
      * @return void
      */
-    public function ui_view(Zikula_DisplayHook $hook)
+    public function uiView(Zikula_DisplayHook $hook)
     {
         // Security check
         if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_READ)) {
@@ -66,7 +66,7 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
         $this->view->assign('eid', $pc_event['eid']);
 
         // add this response to the event stack
-        $area = 'provider_area.ui.postcalendar.event';
+        $area = 'provider.postcalendar.ui_hooks.event';
         $hook->setResponse(new Zikula_Response_DisplayHook($area, $this->view, 'hooks/view.tpl'));
     }
 
@@ -81,7 +81,7 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
      *
      * @return void
      */
-    public function ui_edit(Zikula_DisplayHook $hook)
+    public function uiEdit(Zikula_DisplayHook $hook)
     {
         // get data from $event
         $module = $hook->getCaller(); // default to active module
@@ -162,7 +162,7 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
         $this->view->assign('postcalendar_eid', $pceventid);
 
         // add this response to the event stack
-        $area = 'provider_area.ui.postcalendar.event';
+        $area = 'provider.postcalendar.ui_hooks.event';
         $hook->setResponse(new Zikula_Response_DisplayHook($area, $this->view, 'hooks/edit.tpl'));
     }
 
@@ -177,7 +177,7 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
      *
      * @return void
      */
-    public function ui_delete(Zikula_DisplayHook $hook)
+    public function uiDelete(Zikula_DisplayHook $hook)
     {
         // Security check
         if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_DELETE)) {
@@ -200,7 +200,7 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
             $this->view->assign('eid', $pc_event['eid']);
 
             // add this response to the event stack
-            $area = 'provider_area.ui.postcalendar.event';
+            $area = 'provider.postcalendar.ui_hooks.event';
             $hook->setResponse(new Zikula_Response_DisplayHook($area, $this->view, 'hooks/delete.tpl'));
         }
     }
@@ -219,7 +219,7 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
      *
      * @return void
      */
-    public function validate_edit(Zikula_ValidationHook $hook)
+    public function validateEdit(Zikula_ValidationHook $hook)
     {
         // get data from post
         $data = FormUtil::getPassedValue('postcalendar', null, 'POST');
@@ -227,7 +227,7 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
         // create a new hook validation object and assign it to $this->validation
         $this->validation = new Zikula_Hook_ValidationResponse('data', $data);
 
-        $hook->setValidator('hookhandler.postcalendar.ui.edit', $this->validation);
+        $hook->setValidator('provider.postcalendar.ui_hooks.event', $this->validation);
     }
 
     /**
@@ -244,7 +244,7 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
      *
      * @return void
      */
-    public function validate_delete(Zikula_ValidationHook $hook)
+    public function validateDelete(Zikula_ValidationHook $hook)
     {
         // nothing to do here really, just return
         // if however i wanted to check for something, i would do it like the
@@ -268,7 +268,7 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
      *
      * @return void
      */
-    public function process_edit(Zikula_ProcessHook $hook)
+    public function processEdit(Zikula_ProcessHook $hook)
     {
         // check for validation here
         if (!$this->validation) {
@@ -297,7 +297,7 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
             return;
         }
 
-        if (!$postCalendarEventInstance = $this->_getClassInstance($module)) {
+        if (!$postCalendarEventInstance = $this->getClassInstance($module)) {
             LogUtil::registerError(__f("PostCalendar: Could not create %s class instance.", $module, $dom));
         }
         if (is_callable(array($postCalendarEventInstance, 'makeEvent'))) {
@@ -344,7 +344,7 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
      *
      * @return void
      */
-    public function process_delete(Zikula_ProcessHook $z_event)
+    public function processDelete(Zikula_ProcessHook $z_event)
     {
         $dom = ZLanguage::getModuleDomain('PostCalendar');
 
@@ -470,7 +470,7 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
      * @param string $module Module name
      * @return instantiated object of found class
      */
-    private function _getClassInstance($module) {
+    private function getClassInstance($module) {
         if (empty($module)) {
             return false;
         }

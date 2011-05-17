@@ -169,9 +169,9 @@
 {if !empty($loaded_event.data_loaded)} <input type="hidden" name="postcalendar_events[data_loaded]" value="{$loaded_event.data_loaded}" />{/if}
 
 {if $func eq "edit"}
-    {notifydisplayhooks eventname='postcalendar.hook.events.ui.edit' id=$loaded_event.eid"}
+    {notifydisplayhooks eventname='postcalendar.ui_hooks.events.ui_edit' id=$loaded_event.eid"}
 {else}
-    {notifydisplayhooks eventname='postcalendar.hook.events.ui.edit' id=null"}
+    {notifydisplayhooks eventname='postcalendar.ui_hooks.events.ui_edit' id=null"}
 {/if}
 <div class="z-buttons z-formbuttons">
     {button src="14_layer_visible.png" set="icons/extrasmall" class='z-btblue' __alt="Preview" __title="Preview" __text="Preview" name="form_action" __value="Preview"}

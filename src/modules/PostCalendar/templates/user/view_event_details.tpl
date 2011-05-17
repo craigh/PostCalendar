@@ -30,5 +30,5 @@
     </div>
 {/if}
 {modurl modname='PostCalendar' type='user' func='display' viewtype='details' eid=$loaded_event.eid assign='returnurl'}
-{notifydisplayhooks eventname='postcalendar.hook.events.ui.view' id=$loaded_event.eid}
+{notifydisplayhooks eventname='postcalendar.ui_hooks.events.ui_view' id=$loaded_event.eid}
 {include file="user/footer.tpl"}

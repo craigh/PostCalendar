@@ -37,28 +37,28 @@ class PostCalendar_Version extends Zikula_AbstractVersion
 
     protected function setupHookBundles()
     {
-        $bundle = new Zikula_HookManager_ProviderBundle($this->name, 'provider_area.ui.postcalendar.event', 'ui', $this->__('PostCalendar Event Maker'));
-        $bundle->addHook('hookhandler.postcalendar.ui.view', 'ui.view', 'PostCalendar_HookHandlers', 'ui_view', 'postcalendar.service', 10);
-        $bundle->addHook('hookhandler.postcalendar.ui.edit', 'ui.edit', 'PostCalendar_HookHandlers', 'ui_edit', 'postcalendar.service', 10);
-        $bundle->addHook('hookhandler.postcalendar.ui.delete', 'ui.delete', 'PostCalendar_HookHandlers', 'ui_delete', 'postcalendar.service', 10);
-        $bundle->addHook('hookhandler.postcalendar.validate.edit', 'validate.edit', 'PostCalendar_HookHandlers', 'validate_edit', 'postcalendar.service', 10);
-        $bundle->addHook('hookhandler.postcalendar.validate.delete', 'validate.delete', 'PostCalendar_HookHandlers', 'validate_delete', 'postcalendar.service', 10);
-        $bundle->addHook('hookhandler.postcalendar.process.edit', 'process.edit', 'PostCalendar_HookHandlers', 'process_edit', 'postcalendar.service', 10);
-        $bundle->addHook('hookhandler.postcalendar.process.delete', 'process.delete', 'PostCalendar_HookHandlers', 'process_delete', 'postcalendar.service', 10);
+        $bundle = new Zikula_HookManager_ProviderBundle($this->name, 'provider.postcalendar.ui_hooks.event', 'ui_hooks', $this->__('PostCalendar Event Maker'));
+        $bundle->addServiceHandler('display_view', 'PostCalendar_HookHandlers', 'uiView', 'postcalendar.service');
+        $bundle->addServiceHandler('form_edit', 'PostCalendar_HookHandlers', 'uiEdit', 'postcalendar.service');
+        $bundle->addServiceHandler('form_delete', 'PostCalendar_HookHandlers', 'uiDelete', 'postcalendar.service');
+        $bundle->addServiceHandler('validate_edit', 'PostCalendar_HookHandlers', 'validateEdit', 'postcalendar.service');
+        $bundle->addServiceHandler('validate_delete', 'PostCalendar_HookHandlers', 'validateDelete', 'postcalendar.service');
+        $bundle->addServiceHandler('process_edit', 'PostCalendar_HookHandlers', 'processEdit', 'postcalendar.service');
+        $bundle->addServiceHandler('process_delete', 'PostCalendar_HookHandlers', 'processDelete', 'postcalendar.service');
         $this->registerHookProviderBundle($bundle);
 
-        $bundle = new Zikula_HookManager_SubscriberBundle($this->name, 'subscriber_area.ui.postcalendar.events', 'ui', $this->__('PostCalendar Events'));
-        $bundle->addType('ui.view', 'postcalendar.hook.events.ui.view');
-        $bundle->addType('ui.edit', 'postcalendar.hook.events.ui.edit');
-        $bundle->addType('ui.delete', 'postcalendar.hook.events.ui.delete');
-        $bundle->addType('validate.edit', 'postcalendar.hook.events.validate.edit');
-        $bundle->addType('validate.delete', 'postcalendar.hook.events.validate.delete');
-        $bundle->addType('process.edit', 'postcalendar.hook.events.process.edit');
-        $bundle->addType('process.delete', 'postcalendar.hook.events.process.delete');
+        $bundle = new Zikula_HookManager_SubscriberBundle($this->name, 'subscriber.postcalendar.ui_hooks.events', 'ui_hooks', $this->__('PostCalendar Events'));
+        $bundle->addType('display_view', 'postcalendar.ui_hooks.events.ui_view');
+        $bundle->addType('form_edit', 'postcalendar.ui_hooks.events.ui_edit');
+        $bundle->addType('form_delete', 'postcalendar.ui_hooks.events.ui_delete');
+        $bundle->addType('validate_edit', 'postcalendar.ui_hooks.events.validate_edit');
+        $bundle->addType('validate_delete', 'postcalendar.ui_hooks.events.validate_delete');
+        $bundle->addType('process_edit', 'postcalendar.ui_hooks.events.process_edit');
+        $bundle->addType('process_delete', 'postcalendar.ui_hooks.events.process_delete');
         $this->registerHookSubscriberBundle($bundle);
 
-        $bundle = new Zikula_HookManager_SubscriberBundle($this->name, 'subscriber_area.filter.postcalendar.eventcontent', 'filter', $this->__('PostCalendar Event Filters'));
-        $bundle->addType('ui.filter', 'postcalendar.hook.eventsfilter.ui.filter');
+        $bundle = new Zikula_HookManager_SubscriberBundle($this->name, 'subscriber.postcalendar.filter_hooks.eventcontent', 'filter_hooks', $this->__('PostCalendar Event Filters'));
+        $bundle->addType('filter', 'postcalendar.filter_hooks.eventsfilter.filter');
         $this->registerHookSubscriberBundle($bundle);
     }
 
