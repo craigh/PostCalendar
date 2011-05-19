@@ -108,7 +108,7 @@ class PostCalendar_Controller_Event extends Zikula_AbstractController
         if (($form_action == 'preview') || ($form_action == 'save')) {
             $abort = ModUtil::apiFunc('PostCalendar', 'event', 'validateformdata', $submitted_event);
             // check hooked modules for validation
-            $hook = new Zikula_ProcessHook('postcalendar.hook.events.validate.edit', new Zikula_Hook_ValidationProviders());
+            $hook = new Zikula_ProcessHook('postcalendar.ui_hooks.events.validate_edit', new Zikula_Hook_ValidationProviders());
             $hookvalidators = $this->notifyHooks($hook)->getValidators();
             $abort = $abort || $hookvalidators->hasErrors() ? true : false;
             // also correct locations data if importing from locations module
@@ -183,7 +183,7 @@ class PostCalendar_Controller_Event extends Zikula_AbstractController
                 LogUtil::registerError($this->__('Error! Submission failed.'));
             } else {
                 $url = new Zikula_ModUrl('PostCalendar', 'user', 'display', ZLanguage::getLanguageCode(), array('viewtype' => 'details', 'eid' => $eventdata['eid']));
-                $this->notifyHooks(new Zikula_ProcessHook('postcalendar.hook.events.process.edit', $eventdata['eid'], $url));
+                $this->notifyHooks(new Zikula_ProcessHook('postcalendar.ui_hooks.events.process_edit', $eventdata['eid'], $url));
                 $this->view->clear_cache();
                 $presentation_date = DateUtil::strftime(_SETTING_DATE_FORMAT, $sdate);
                 if ($is_update) {

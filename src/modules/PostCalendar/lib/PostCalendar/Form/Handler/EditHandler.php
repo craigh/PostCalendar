@@ -38,7 +38,7 @@ class PostCalendar_Form_Handler_EditHandler extends Zikula_Form_AbstractHandler
             }
             LogUtil::registerStatus($this->__('Done! The event was deleted.'));
 
-            $this->notifyHooks(new Zikula_ProcessHook('postcalendar.hook.events.process.delete', $this->eid));
+            $this->notifyHooks(new Zikula_ProcessHook('postcalendar.ui_hooks.events.process_delete', $this->eid));
 
             $redir = ModUtil::url('PostCalendar', 'user', 'display', array(
                 'viewtype' => _SETTING_DEFAULT_VIEW));
