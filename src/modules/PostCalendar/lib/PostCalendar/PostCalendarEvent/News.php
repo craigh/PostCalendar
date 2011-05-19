@@ -16,7 +16,7 @@ class PostCalendar_PostCalendarEvent_News extends PostCalendar_PostCalendarEvent
     public function makeEvent($args) {
         $dom = ZLanguage::getModuleDomain('PostCalendar');
 
-        if ((!isset($args['objectid'])) || ((int) $args['objectid'] <= 0)) {
+        if ((!isset($args['objectid'])) || ((int)$args['objectid'] <= 0)) {
             return false;
         }
         $funcargs = array('objectid' => $args['objectid'],
