@@ -68,7 +68,7 @@
                     {nocache}
                     <ul>
                     {foreach from=$catregistry key='property' item='category'}
-                        {array_field assign="selectedValue" array=$loaded_event.__CATEGORIES__ field=$property returnValue=1}
+                        {array_field assign="selectedValue" array=$loaded_event.__CATEGORIES__ field=$property}
                         <li>{selector_category
                                 category=$category
                                 name="postcalendar_events[__CATEGORIES__][$property]"
