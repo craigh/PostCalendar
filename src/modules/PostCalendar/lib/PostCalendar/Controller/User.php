@@ -81,9 +81,9 @@ class PostCalendar_Controller_User extends Zikula_AbstractController
                 // to ensure that the correct/current date is being displayed (rather than the
                 // date on which the recurring booking was executed).
                 if ($event['recurrtype']) {
-                    $y = substr($args['Date'], 0, 4);
-                    $m = substr($args['Date'], 4, 2);
-                    $d = substr($args['Date'], 6, 2);
+                    $y = substr($Date, 0, 4);
+                    $m = substr($Date, 4, 2);
+                    $d = substr($Date, 6, 2);
                     $event['eventDate'] = "$y-$m-$d";
                 }
                 $this->view->assign('loaded_event', $event);
