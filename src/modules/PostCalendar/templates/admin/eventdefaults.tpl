@@ -46,7 +46,7 @@
                {gt text="No Default Category" assign="allText"}
                {nocache}
                <span id='postcalendar_eventdefaults_categories'>{foreach from=$catregistry key='property' item='category'}
-                   {array_field_isset assign="selectedValue" array=$modvars.PostCalendar.pcEventDefaults.categories field=$property returnValue=1}
+                   {array_field assign="selectedValue" array=$modvars.PostCalendar.pcEventDefaults.categories field=$property returnValue=1}
                    {selector_category 
                    editLink=true 
                    category=$category 

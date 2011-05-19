@@ -24,7 +24,7 @@
             {gt text="Allow creator to select" domain="module_postcalendar" assign="allText"}
             {nocache}
             <span>{foreach from=$postcalendar_catregistry key='property' item='category'}
-                {array_field_isset assign="selectedValue" array=$postcalendar_admincatselected field=$property returnValue=1}
+                {array_field assign="selectedValue" array=$postcalendar_admincatselected field=$property returnValue=1}
                 {selector_category
                     editLink=true
                     category=$category

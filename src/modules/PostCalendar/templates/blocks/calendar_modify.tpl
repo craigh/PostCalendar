@@ -19,7 +19,7 @@
     {gt text="All Categories" assign="allText"}
     {nocache}
     <span>{foreach from=$catregistry key='property' item='category'}
-        {array_field_isset assign="selectedValue" array=$vars.pcbfiltercats field=$property returnValue=1}
+        {array_field assign="selectedValue" array=$vars.pcbfiltercats field=$property returnValue=1}
         {selector_category 
             editLink=false 
             category=$category 
