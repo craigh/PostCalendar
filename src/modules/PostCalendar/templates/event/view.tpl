@@ -54,7 +54,12 @@
                         {assign var='textcolor' value='#000000'}
                         {assign var='bgcolor' value='#ffffff'}
                     {/if}
-                    <li><span style='padding: 0 1em; background-color:{$bgcolor}; color:{$textcolor};'>{$attribute.display_name.$lang}</span></li>
+                {if isset($attribute.display_name.$lang)}
+                    {assign var='catname' value=$attribute.display_name.$lang}
+                {else}
+                    {assign var='catname' value=$attribute.name}
+                {/if}
+                    <li><span style='padding: 0 1em; background-color:{$bgcolor}; color:{$textcolor};'>{$catname}</span></li>
                 {/foreach}
             </ul>
         </div>
