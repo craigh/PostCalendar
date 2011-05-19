@@ -244,7 +244,8 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
         $dom = ZLanguage::getModuleDomain('PostCalendar');
         $module = $hook->getCaller(); // default to active module
         $objectid = $hook->getId(); // id of hooked item
-        $areaId = $hook->getAreaId();
+        $areaId = $hook->getAreaId(); // hook areaid
+        $objUrl = $hook->getUrl(); // objecturl provided by subscriber
 
         $hookdata = $this->validation->getObject();
         $hookdata = DataUtil::cleanVar($hookdata);
