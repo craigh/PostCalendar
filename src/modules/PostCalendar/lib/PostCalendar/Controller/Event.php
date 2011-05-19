@@ -108,9 +108,12 @@ class PostCalendar_Controller_Event extends Zikula_AbstractController
         if (($form_action == 'preview') || ($form_action == 'save')) {
             $abort = ModUtil::apiFunc('PostCalendar', 'event', 'validateformdata', $submitted_event);
             // check hooked modules for validation
-            $hook = new Zikula_ProcessHook('postcalendar.ui_hooks.events.validate_edit', new Zikula_Hook_ValidationProviders());
+            $hook = new Zikula_ValidationHook('postcalendar.ui_hooks.events.validate_edit', new Zikula_Hook_ValidationProviders());
             $hookvalidators = $this->notifyHooks($hook)->getValidators();
             $abort = $abort || $hookvalidators->hasErrors() ? true : false;
+            if ($hookvalidators->hasErrors()) {
+                LogUtil::registerError($this->__('Error! Hooked content does not validate.'));
+            }
             // also correct locations data if importing from locations module
             $submitted_event = ModUtil::apiFunc('PostCalendar', 'event', 'correctlocationdata', $submitted_event);
         }
