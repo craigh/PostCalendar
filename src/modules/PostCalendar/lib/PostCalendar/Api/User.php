@@ -31,9 +31,9 @@ class PostCalendar_Api_User extends Zikula_AbstractApi
         }
     
         // finish setting things up
-        $the_year  = substr($Date, 0, 4);
-        $the_month = substr($Date, 4, 2);
-        $the_day   = substr($Date, 6, 2);
+        $the_year  = (int)substr($Date, 0, 4);
+        $the_month = (int)substr($Date, 4, 2);
+        $the_day   = (int)substr($Date, 6, 2);
         $last_day  = DateUtil::getDaysInMonth($the_month, $the_year);
     
         $pc_colclasses = array(

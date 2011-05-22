@@ -95,9 +95,9 @@ class PostCalendar_Util
             $Date = (int) "$jumpyear$jumpmonth$jumpday";
         }
     
-        $y = substr($Date, 0, 4);
-        $m = substr($Date, 4, 2);
-        $d = substr($Date, 6, 2);
+        $y = (int)substr($Date, 0, 4);
+        $m = (int)substr($Date, 4, 2);
+        $d = (int)substr($Date, 6, 2);
         return DateUtil::strftime($format, mktime(0, 0, 0, $m, $d, $y));
     }
 
