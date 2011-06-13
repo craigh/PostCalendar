@@ -36,7 +36,7 @@
         {else}
             {assign var="stylesheet" value="monthon"}
         {/if}
-        <td class="{$stylesheet}"{if $modvars.PostCalendar.pcEventsOpenInNewWindow eq false} onclick="window.location.href='{pc_url action=day date=$date}';"{/if}>
+        <td class="{$stylesheet}">
             <div class="monthview_daterow">
                 <span class="date_number"><a href="{pc_url action=day date=$date}">{$date|date_format:"%e"}</a>
                     {if $smarty.foreach.days.iteration == 1}
