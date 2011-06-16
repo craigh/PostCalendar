@@ -75,7 +75,7 @@ class PostCalendar_ContentType_PostCalEvents extends Content_AbstractContentType
         if ($enablecategorization && $this->categories) {
             foreach ($this->categories['Main'] as $id) {
                 $thiscat = CategoryUtil::getCategoryByID($id);
-                $cats[]  = $thiscat['display_name'][$lang];
+                $cats[]  = isset($thiscat['display_name'][$lang]) ? $thiscat['display_name'][$lang] : $thiscat['name'];
             }
             $catlist = implode (', ', $cats);
             $output .= $this->__('Display event list from catgories') . '<br />';
