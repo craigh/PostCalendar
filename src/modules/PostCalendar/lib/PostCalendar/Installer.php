@@ -51,7 +51,6 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
         EventUtil::registerPersistentModuleHandler('PostCalendar', 'module_dispatch.service_links', array('PostCalendar_HookHandlers', 'servicelinks'));
         EventUtil::registerPersistentModuleHandler('PostCalendar', 'controller.method_not_found', array('PostCalendar_HookHandlers', 'postcalendarhookconfig'));
         EventUtil::registerPersistentModuleHandler('PostCalendar', 'controller.method_not_found', array('PostCalendar_HookHandlers', 'postcalendarhookconfigprocess'));
-        EventUtil::registerPersistentModuleHandler('PostCalendar', 'user.account.create', array('PostCalendar_PostCalendarEvent_Users', 'createEvent'));
         EventUtil::registerPersistentModuleHandler('PostCalendar', 'module.content.gettypes', array('PostCalendar_Handlers', 'getTypes'));
 
         return true;
@@ -125,6 +124,11 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
 
                 if (ModUtil::available('Content')) {
                     Content_Installer::updateContentType('PostCalendar');
+                }
+                // upgrade table structure
+                if (!DBUtil::changeTable('postcalendar_events')) {
+                    LogUtil::registerError($this->__('Error! Could not upgrade the tables.'));
+                    return '6.2.0';
                 }
 
             case '7.0.0':

@@ -2,29 +2,23 @@
 
 /**
  * Implements Base class to allow for Event creation on News Story creation
- *
- * @author craig heydenburg
  */
 class PostCalendar_PostCalendarEvent_News extends PostCalendar_PostCalendarEvent_AbstractBase {
 
     /**
      * get news info for Postcalendar event creation
      *
-     * @param   array(objectid) news id
      * @return  boolean
      */
-    public function makeEvent($args) {
+    public function makeEvent() {
         $dom = ZLanguage::getModuleDomain('PostCalendar');
 
-        if ((!isset($args['objectid'])) || ((int)$args['objectid'] <= 0)) {
-            return false;
-        }
-        $funcargs = array('objectid' => $args['objectid'],
+        $funcargs = array('objectid' => $this->getHooked_objectid(),
             'SQLcache' => false);
         $article = ModUtil::apiFunc('News', 'user', 'get', $funcargs);
 
         $eventstatus = 1; // approved
-        if ($article['published_status'] != 0) { // article not published yet (draft, etc)
+        if ($article['published_status'] != News_Api_User::STATUS_PUBLISHED) { // article not published yet (draft, etc)
             return false;
         }
 

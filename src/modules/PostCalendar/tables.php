@@ -41,6 +41,7 @@ function postcalendar_tables()
         'sharing'     => 'pc_sharing',          // event sharing (global, private, etc)
         'hooked_modulename' => 'pc_hooked_modulename', // module name hooked to PC
         'hooked_objectid'   => 'pc_hooked_objectid',   // object id hooked to PC
+        'hooked_area' => 'pc_hooked_area',      // module area hooked to PC
     );
 /**
  * columns removed from previous versions:
@@ -70,6 +71,7 @@ function postcalendar_tables()
         'sharing'     => 'I NOTNULL DEFAULT 0',              // int(11) NOT NULL default 0
         'hooked_modulename' => 'C(50) DEFAULT \'\'',         // added version 6.1
         'hooked_objectid'   => 'I(11) DEFAULT 0',            // added version 6.1
+        'hooked_area' => "C(64) DEFAULT ''",                 // added in version 7.0
     );
     $table['postcalendar_events_column_idx'] = array(
         'basic_event' => array(

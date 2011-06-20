@@ -24,10 +24,9 @@ Therefore, any module that offers a hook is available in PostCalendar. This incl
 
 ### Provided Hooks
 
-PostCalendar provides an event-create hook that is useful for other modules. Support is included for the News and Users module. In each case, the admin and/or item creator is able to assign the PostCalendar category or able to opt-out of the hook.
+PostCalendar provides an event-create hook that is useful for other modules. Support is included for the News module. In this case, the admin and/or item creator is able to assign the PostCalendar category or able to opt-out of the hook.
 
 *   **News:** when hooked, will create an event per article published. Scheduled publishing of articles is supported.
-*   **Users:** when hooked, will create an event upon user creation.
 
 Other modules can create their own API to create events as well. See the [Developer Docs][link1] for more information.
 

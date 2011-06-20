@@ -6,12 +6,10 @@
 
 PostCalendar provides create, update and delete hooks that can be utilized and
 customized by any modules that wishes to create a calendar event along with
-their own item creation. PostCalendar ships with two examples of this
-technology: _News_ and _Users_. You can find these examples as follows:
+their own item creation. PostCalendar ships with an example of this
+technology: _News_. You can find these examples as follows:
 
     modules/PostCalendar/lib/PostCalendar/PostCalendarEvent/News.php
-
-    modules/PostCalendar/lib/PostCalendar/PostCalendarEvent/Users.php
 
 each of these functions _could_ be located in their respective module's own
 directory if the developer so chooses. Any additional functions that are
@@ -30,8 +28,7 @@ within that class, you must create at least the following _required_ method:
 
 Again, look in the PostCalendar module for examples.
 
-Your makeEvent method must accept an **objectid** argument and set the
-following properties that will form the event:
+Your makeEvent method must set the following properties that will form the event:
 
         $this->title
         $this->hometext

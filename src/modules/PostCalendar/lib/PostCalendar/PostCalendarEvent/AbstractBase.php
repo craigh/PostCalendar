@@ -19,6 +19,17 @@ abstract class PostCalendar_PostCalendarEvent_AbstractBase {
      */
     private $hooked_objectid;
     /**
+     * url of hooked object
+     * not required to be provided
+     * @var string
+     */
+    private $hooked_objecturl;
+    /**
+     * ID of hooked area
+     * @var string
+     */
+    private $hooked_area;
+    /**
      * Event ID
      * @var integer
      */
@@ -152,7 +163,7 @@ abstract class PostCalendar_PostCalendarEvent_AbstractBase {
      *     'eventstatus'  1 = approved, 0 = queued, -1 = hidden
      *     'sharing' =>   3 = global, 0 = private
      */
-    abstract public function makeEvent($param);
+    abstract public function makeEvent();
 
     /**
      *
@@ -161,7 +172,29 @@ abstract class PostCalendar_PostCalendarEvent_AbstractBase {
     public function setHooked_objectid($hooked_objectid) {
         $this->hooked_objectid = $hooked_objectid;
     }
+    
+    public function getHooked_objectid() {
+        return $this->hooked_objectid;
+    }
 
+    public function setHooked_objecturl($hooked_objecturl) {
+        $this->hooked_objecturl = $hooked_objecturl;
+    }
+    
+    public function getHooked_objecturl() {
+        return $this->hooked_objecturl;
+    }
+
+    public function getHooked_modulename() {
+        return $this->hooked_modulename;
+    }
+    /**
+     *
+     * @param string $hooked_area 
+     */
+    public function setHooked_area($hooked_area) {
+        $this->hooked_area = $hooked_area;
+    }
     /**
      *
      * @param integer $eid
@@ -190,6 +223,7 @@ abstract class PostCalendar_PostCalendarEvent_AbstractBase {
         $meta['recurrspec'] = $this->recurrspec;
         $meta['location'] = $this->location;
         $meta['hooked_objectid'] = $this->hooked_objectid;
+        $meta['hooked_area'] = $this->hooked_area;
         $meta['title'] = $this->title;
         $meta['hometext'] = $this->hometext;
         $meta['aid'] = $this->aid;
