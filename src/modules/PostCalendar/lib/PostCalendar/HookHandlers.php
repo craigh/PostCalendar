@@ -473,7 +473,8 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
     {
         $module = ModUtil::getName();
         $bindingCount = count(HookUtil::getBindingsBetweenOwners($module, 'PostCalendar'));
-        if (($bindingCount > 0) && ($module <> 'PostCalendar')) {
+        if (($bindingCount > 0) && ($module <> 'PostCalendar') && (empty($event->data) || (is_array($event->data)
+                && !in_array(array('url' => ModUtil::url($module, 'admin', 'postcalendarhookconfig'), 'text' => __('PostCalendar Hook Options')), $event->data)))) {
             $event->data[] = array('url' => ModUtil::url($module, 'admin', 'postcalendarhookconfig'), 'text' => __('PostCalendar Hook Options'));
         }
     }
