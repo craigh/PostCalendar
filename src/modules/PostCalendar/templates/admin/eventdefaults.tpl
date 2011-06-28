@@ -1,8 +1,9 @@
-{include file="admin/menu.tpl"}
+{adminheader}
+<div class="z-admin-content-pagetitle">
+    {icon type="config" size="small"}
+    <h3>{gt text='Event default values'}</h3>
+</div>
 
-<div class="z-admincontainer">
-<div class="z-adminpageicon">{img modname='PostCalendar' src='admin.png'}</div>
-<h2 style='border-bottom:1px solid #CCCCCC;text-align:left;padding-top:1em;'>{gt text='Create Event Default Values'}</h2>
 <form class="z-form" action="{modurl modname="PostCalendar" type="admin" func="seteventdefaults"}" method="post" enctype="application/x-www-form-urlencoded">
 <div>
 	<input type="hidden" name="csrftoken" value="{insert name="csrftoken"}" />
@@ -120,4 +121,4 @@
 </div>
 
 </form>
-</div> <!-- /z-admincontainer container-->
+{adminfooter}

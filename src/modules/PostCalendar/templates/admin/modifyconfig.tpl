@@ -1,8 +1,9 @@
-{include file="admin/menu.tpl"}
+{adminheader}
+<div class="z-admin-content-pagetitle">
+    {icon type="config" size="small"}
+    <h3>{gt text='Modify settings'}</h3>
+</div>
 
-<div class="z-admincontainer">
-<div class="z-adminpageicon">{img modname='PostCalendar' src='admin.png'}</div>
-<h2>{gt text="PostCalendar settings"}&nbsp;({gt text="version"}&nbsp;{$modinfo.version})</h2>
 <form class="z-form" action="{modurl modname="PostCalendar" type="admin" func="updateconfig"}" method="post" enctype="application/x-www-form-urlencoded">
     <div>
 	<input type="hidden" name="csrftoken" value="{insert name="csrftoken"}" />
@@ -130,4 +131,4 @@
     </div>
     </div>
 </form>
-</div><!-- /z-admincontainer -->
+{adminfooter}
