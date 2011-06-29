@@ -172,7 +172,7 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
             return;
         }
 
-        // get data from $z_event
+        // get data from $hook
         $module = $hook->getCaller(); // default to active module
         $objectid = $hook->getId(); // id of hooked item
         $callerArea = Doctrine_Core::getTable('Zikula_Doctrine_Model_HookArea')->find($hook->getAreaId())->get('areaname');
@@ -299,11 +299,11 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
     /**
      * delete process hook handler.
      *
-     * @param Zikula_ProcessHook $z_event
+     * @param Zikula_ProcessHook $hook
      *
      * @return void
      */
-    public function processDelete(Zikula_ProcessHook $z_event)
+    public function processDelete(Zikula_ProcessHook $hook)
     {
         $dom = ZLanguage::getModuleDomain('PostCalendar');
 
