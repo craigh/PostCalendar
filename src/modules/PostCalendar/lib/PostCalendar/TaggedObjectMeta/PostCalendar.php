@@ -17,8 +17,10 @@ class PostCalendar_TaggedObjectMeta_PostCalendar extends Tag_AbstractTaggedObjec
 
         ModUtil::dbInfoLoad('PostCalendar');
         $pc_event = DBUtil::selectObjectByID('postcalendar_events', $this->getObjectId(), 'eid');
-        
-        if ($pc_event) {
+        // check for permission and status
+        $permission = SecurityUtil::checkPermission('PostCalendar::Event', "$pc_event[title]::$pc_event[eid]", ACCESS_OVERVIEW);
+        $private = ($pc_event['sharing'] == 0 && $pc_event['aid'] != UserUtil::getVar('uid') && !SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN));
+        if ($pc_event && $permission && !$private) {
             $this->setObjectAuthor("");
             $date = DateUtil::formatDatetime($pc_event['eventDate'], 'datebrief', false);
             $time = DateUtil::formatDatetime($pc_event['startTime'], 'timebrief', false);
