@@ -214,7 +214,7 @@ class PostCalendar_Api_User extends Zikula_AbstractApi
                 $starting_date = "$the_month/$the_day/$the_year";
                 $ending_date   = "$listendmonths/$the_day/$listendyears";
     
-                $prev_list = date('Ymd', mktime(0, 0, 0, $the_month - $listmonths, $the_day, $the_year));
+                $prev_list = date('Ymd', mktime(0, 0, 0, $the_month - $listmonths, $the_day, $the_year - $listyears));
                 $next_list = date('Ymd', mktime(0, 0, 0, $listendmonths, $the_day, $listendyears));
                 $pc_prev_list = ModUtil::url('PostCalendar', 'user', 'display', array(
                     'viewtype' => 'list',
