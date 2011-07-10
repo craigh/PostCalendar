@@ -153,8 +153,8 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
 
         // Delete entries from category registry
         ModUtil::dbInfoLoad('Categories');
-        DBUtil::deleteWhere('categories_registry', "crg_modname='PostCalendar'");
-        DBUtil::deleteWhere('categories_mapobj', "cmo_modname='PostCalendar'");
+        DBUtil::deleteWhere('categories_registry', "modname='PostCalendar'");
+        DBUtil::deleteWhere('categories_mapobj', "modname='PostCalendar'");
 
         // unregister handlers
         EventUtil::unregisterPersistentModuleHandlers('PostCalendar');
