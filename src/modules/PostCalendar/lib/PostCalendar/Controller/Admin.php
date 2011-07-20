@@ -43,7 +43,9 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
         $this->throwForbiddenUnless(SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_DELETE), LogUtil::getErrorMsgPermission());
     
         $listtype = isset($args['listtype']) ? $args['listtype'] : FormUtil::getPassedValue('listtype', _EVENT_APPROVED);
-        $where = "WHERE pc_eventstatus=" . $listtype;
+        $dbtables = DBUtil::getTables();
+        $columns = $dbtables['postcalendar_events_column'];
+        $where = "WHERE $columns[eventstatus]=" . $listtype;
         switch ($listtype) {
             case _EVENT_ALL:
                 $functionname = "all";

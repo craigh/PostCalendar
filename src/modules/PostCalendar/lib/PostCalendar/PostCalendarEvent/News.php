@@ -48,11 +48,13 @@ class PostCalendar_PostCalendarEvent_News extends PostCalendar_PostCalendarEvent
         $today = DateUtil::getDatetime(null, '%Y-%m-%d');
         $time = DateUtil::getDatetime(null, '%H:%M:%S');
         ModUtil::dbInfoLoad('PostCalendar');
-        $where = "WHERE pc_hooked_modulename = 'news'
-                  AND pc_eventstatus = -1
-                  AND pc_eventDate <= '$today'
-                  AND pc_startTime <= '$time'";
-        $object['eventstatus'] = 1;
+        $dbtables = DBUtil::getTables();
+        $columns = $dbtables['postcalendar_events_column'];
+        $where = "WHERE $columns[hooked_modulename] = 'news'
+                  AND $columns[eventstatus] = -1
+                  AND $columns[eventDate] <= '$today'
+                  AND $columns[startTime] <= '$time'";
+        $object = array('eventstatus' => 1);
         DBUtil::updateObject($object, 'postcalendar_events', $where, 'eid');
     }
 

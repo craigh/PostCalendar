@@ -17,8 +17,10 @@ function smarty_function_pc_queued_events_notify($args, &$smarty)
 
     $assign = array_key_exists('assign', $args) && !empty($args['assign']) ? $args['assign'] : null;
     unset($args);
-
-    $count = DBUtil::selectObjectCount('postcalendar_events', 'WHERE pc_eventstatus=0');
+    
+    $dbtables = DBUtil::getTables();
+    $columns = $dbtables['postcalendar_events_column'];
+    $count = DBUtil::selectObjectCount('postcalendar_events', "WHERE $columns[eventstatus]=0");
 
     if (empty($count) || ($count < 1)) {
         return;

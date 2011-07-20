@@ -70,12 +70,13 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
         }
 
         list ($startyear, $startmonth, $startday) = explode('-', $start);
-
-        $where = "WHERE pc_eventstatus=$eventstatus
-                  AND (pc_endDate>='$start'
-                  OR (pc_endDate='0000-00-00' AND pc_recurrtype<>'0')
-                  OR pc_eventDate>='$start')
-                  AND pc_eventDate<='$end' ";
+        $dbtables = DBUtil::getTables();
+        $columns = $dbtables['postcalendar_events_column'];
+        $where = "WHERE $columns[eventstatus]=$eventstatus
+                  AND ($columns[endDate]>='$start'
+                  OR ($columns[endDate]='0000-00-00' AND $columns[recurrtype]<>'0')
+                  OR $columns[eventDate]>='$start')
+                  AND $columns[eventDate]<='$end' ";
 
         // filter event display based on selection
         /* possible event sharing values @v5.8
@@ -87,23 +88,23 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
         */
         switch ($pc_username) {
             case _PC_FILTER_PRIVATE: // show just private events
-                $where .= "AND pc_aid = $ruserid ";
-                $where .= "AND (pc_sharing = '" . SHARING_PRIVATE . "' ";
-                $where .= "OR pc_sharing = '" . SHARING_BUSY . "' "; //deprecated
-                $where .= "OR pc_sharing = '" . SHARING_HIDEDESC . "') "; //deprecated
+                $where .= "AND $columns[aid] = $ruserid ";
+                $where .= "AND ($columns[sharing] = '" . SHARING_PRIVATE . "' ";
+                $where .= "OR $columns[sharing] = '" . SHARING_BUSY . "' "; //deprecated
+                $where .= "OR $columns[sharing] = '" . SHARING_HIDEDESC . "') "; //deprecated
                 break;
             case _PC_FILTER_ALL: // show all public/global AND private events
-                $where .= "AND (pc_aid = $ruserid ";
-                $where .= "AND (pc_sharing = '" . SHARING_PRIVATE . "' ";
-                $where .= "OR pc_sharing = '" . SHARING_BUSY . "' "; //deprecated
-                $where .= "OR pc_sharing = '" . SHARING_HIDEDESC . "') "; //deprecated
-                $where .= "OR (pc_sharing = '" . SHARING_GLOBAL . "' ";
-                $where .= "OR pc_sharing = '" . SHARING_PUBLIC . "')) "; //deprecated
+                $where .= "AND ($columns[aid] = $ruserid ";
+                $where .= "AND ($columns[sharing] = '" . SHARING_PRIVATE . "' ";
+                $where .= "OR $columns[sharing] = '" . SHARING_BUSY . "' "; //deprecated
+                $where .= "OR $columns[sharing] = '" . SHARING_HIDEDESC . "') "; //deprecated
+                $where .= "OR ($columns[sharing] = '" . SHARING_GLOBAL . "' ";
+                $where .= "OR $columns[sharing] = '" . SHARING_PUBLIC . "')) "; //deprecated
                 break;
             case _PC_FILTER_GLOBAL: // show all public/global events
             default:
-                $where .= "AND (pc_sharing = '" . SHARING_GLOBAL . "' ";
-                $where .= "OR pc_sharing = '" . SHARING_PUBLIC . "') "; //deprecated
+                $where .= "AND ($columns[sharing] = '" . SHARING_GLOBAL . "' ";
+                $where .= "OR $columns[sharing] = '" . SHARING_PUBLIC . "') "; //deprecated
         }
 
         $catsarray = self::formatCategoryFilter($filtercats);

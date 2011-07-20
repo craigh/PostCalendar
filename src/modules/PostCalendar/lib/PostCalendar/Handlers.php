@@ -11,7 +11,9 @@ class PostCalendar_Handlers {
     {
         $dom = ZLanguage::getModuleDomain('PostCalendar');
         ModUtil::dbInfoLoad('PostCalendar');
-        $count = DBUtil::selectObjectCount('postcalendar_events', 'WHERE pc_eventstatus=0');
+        $dbtables = DBUtil::getTables();
+        $columns = $dbtables['postcalendar_events_column'];
+        $count = DBUtil::selectObjectCount('postcalendar_events', "WHERE $columns[eventstatus]=0");
         if ($count > 0) {
             $collection = new Zikula_Collection_Container('PostCalendar');
             $collection->add(new Zikula_Provider_AggregateItem('submission', _n('Calendar event', 'Calendar events', $count, $dom), $count, 'admin', 'listevents'));
