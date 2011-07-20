@@ -124,6 +124,7 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
                 if (ModUtil::available('Content')) {
                     Content_Installer::updateContentType('PostCalendar');
                 }
+                $this->removeTableColumnPrefixes();
                 // upgrade table structure
                 if (!DBUtil::changeTable('postcalendar_events')) {
                     LogUtil::registerError($this->__('Error! Could not upgrade the tables.'));
@@ -276,6 +277,54 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
 
         LogUtil::registerStatus($this->__("PostCalendar: Initial sub-category created (Events)."));
         return true;
+    }
+    
+    private function removeTableColumnPrefixes()
+    {
+        $prefix = $this->serviceManager['prefix'];
+        $connection = Doctrine_Manager::getInstance()->getConnection('default');
+        $sqlStatements = array();
+        // N.B. statements generated with PHPMyAdmin
+        $sqlStatements[] = 'RENAME TABLE ' . $prefix . '_postcalendar_events' . " TO `postcalendar_events`";
+        // this removes the prefixes but also changes hideonindex to displayonindex and disallowcomments to allowcomments
+        // because 'from' and 'to' are reserved sql words, the column names are changed to ffrom and tto respectively
+        $sqlStatements[] = "ALTER TABLE `postcalendar_events` 
+CHANGE `pc_eid` `eid` BIGINT( 20 ) UNSIGNED NOT NULL AUTO_INCREMENT ,
+CHANGE `pc_aid` `aid` VARCHAR( 30 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+CHANGE `pc_title` `title` VARCHAR( 150 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ,
+CHANGE `pc_time` `ttime` DATETIME NULL DEFAULT NULL ,
+CHANGE `pc_hometext` `hometext` LONGTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ,
+CHANGE `pc_informant` `informant` VARCHAR( 20 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+CHANGE `pc_eventDate` `eventDate` DATE NOT NULL DEFAULT '0000-00-00',
+CHANGE `pc_duration` `duration` BIGINT( 20 ) NOT NULL DEFAULT '0',
+CHANGE `pc_endDate` `endDate` DATE NOT NULL DEFAULT '0000-00-00',
+CHANGE `pc_recurrtype` `recurrtype` TINYINT( 4 ) NOT NULL DEFAULT '0',
+CHANGE `pc_recurrspec` `recurrspec` LONGTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL, 
+CHANGE `pc_startTime` `startTime` VARCHAR(8) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '00:00:00', 
+CHANGE `pc_alldayevent` `alldayevent` TINYINT(4) NOT NULL DEFAULT '0', 
+CHANGE `pc_location` `location` LONGTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL, 
+CHANGE `pc_conttel` `conttel` VARCHAR(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL, 
+CHANGE `pc_contname` `contname` VARCHAR(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL, 
+CHANGE `pc_contemail` `contemail` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL, 
+CHANGE `pc_website` `website` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL, 
+CHANGE `pc_fee` `fee` VARCHAR(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL, 
+CHANGE `pc_eventstatus` `eventstatus` INT(11) NOT NULL DEFAULT '0',
+CHANGE `pc_sharing` `sharing` INT( 11 ) NOT NULL DEFAULT '0',
+CHANGE `pc_hooked_modulename` `hooked_modulename` VARCHAR( 50 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ,
+CHANGE `pc_hooked_objectid` `hooked_objectid` BIGINT( 20 ) NULL DEFAULT '0',
+CHANGE `pc_hooked_area` `hooked_area` VARCHAR( 64 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ,
+CHANGE `pc_obj_status` `obj_status` VARCHAR( 1 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'A',
+CHANGE `pc_cr_date` `cr_date` DATETIME NOT NULL DEFAULT '1970-01-01 00:00:00',
+CHANGE `pc_cr_uid` `cr_uid` INT( 11 ) NOT NULL DEFAULT '0',
+CHANGE `pc_lu_date` `lu_date` DATETIME NOT NULL DEFAULT '1970-01-01 00:00:00',
+CHANGE `pc_lu_uid` `lu_uid` INT( 11 ) NOT NULL DEFAULT '0'";
+        foreach ($sqlStatements as $sql) {
+            $stmt = $connection->prepare($sql);
+            try {
+                $stmt->execute();
+            } catch (Exception $e) {
+            }   
+        }
     }
 
     public static function LegacyContentTypeMap()

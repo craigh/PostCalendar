@@ -15,33 +15,32 @@ function postcalendar_tables()
     // Initialise table array
     $table = array();
 
-    $pc_events = DBUtil::getLimitedTablename('postcalendar_events');
-    $table['postcalendar_events'] = $pc_events;
+    $table['postcalendar_events'] = 'postcalendar_events';
     $table['postcalendar_events_column'] = array(
-        'eid'         => 'pc_eid',              // event ID
-        'aid'         => 'pc_aid',              // participant's user ID (default:informant UID)
-        'title'       => 'pc_title',            // event title
-        'time'        => 'pc_time',             // record timestamp
-        'hometext'    => 'pc_hometext',         // event description
-        'informant'   => 'pc_informant',        // uid of event submittor
-        'eventDate'   => 'pc_eventDate',        // YYYY-MM-DD event start date
-        'duration'    => 'pc_duration',         // event duration (in seconds)
-        'endDate'     => 'pc_endDate',          // YYYY-MM-DD event end date (optional)
-        'recurrtype'  => 'pc_recurrtype',       // type of recurrance (0,1,2)
-        'recurrspec'  => 'pc_recurrspec',       // (serialized)
-        'startTime'   => 'pc_startTime',        // HH:MM:SS event start time
-        'alldayevent' => 'pc_alldayevent',      // bool event all day or not
-        'location'    => 'pc_location',         // (serialized) event location
-        'conttel'     => 'pc_conttel',          // event contact phone
-        'contname'    => 'pc_contname',         // event contact name
-        'contemail'   => 'pc_contemail',        // event contact email
-        'website'     => 'pc_website',          // event website
-        'fee'         => 'pc_fee',              // event fee
-        'eventstatus' => 'pc_eventstatus',      // event status (approved, pending)
-        'sharing'     => 'pc_sharing',          // event sharing (global, private, etc)
-        'hooked_modulename' => 'pc_hooked_modulename', // module name hooked to PC
-        'hooked_objectid'   => 'pc_hooked_objectid',   // object id hooked to PC
-        'hooked_area' => 'pc_hooked_area',      // module area hooked to PC
+        'eid'         => 'eid',              // event ID
+        'aid'         => 'aid',              // participant's user ID (default:informant UID)
+        'title'       => 'title',            // event title
+        'time'        => 'ttime',            // record timestamp - NOT A TYPO! `time` is a reserved sql word
+        'hometext'    => 'hometext',         // event description
+        'informant'   => 'informant',        // uid of event submittor
+        'eventDate'   => 'eventDate',        // YYYY-MM-DD event start date
+        'duration'    => 'duration',         // event duration (in seconds)
+        'endDate'     => 'endDate',          // YYYY-MM-DD event end date (optional)
+        'recurrtype'  => 'recurrtype',       // type of recurrance (0,1,2)
+        'recurrspec'  => 'recurrspec',       // (serialized)
+        'startTime'   => 'startTime',        // HH:MM:SS event start time
+        'alldayevent' => 'alldayevent',      // bool event all day or not
+        'location'    => 'location',         // (serialized) event location
+        'conttel'     => 'conttel',          // event contact phone
+        'contname'    => 'contname',         // event contact name
+        'contemail'   => 'contemail',        // event contact email
+        'website'     => 'website',          // event website
+        'fee'         => 'fee',              // event fee
+        'eventstatus' => 'eventstatus',      // event status (approved, pending)
+        'sharing'     => 'sharing',          // event sharing (global, private, etc)
+        'hooked_modulename' => 'hooked_modulename', // module name hooked to PC
+        'hooked_objectid'   => 'hooked_objectid',   // object id hooked to PC
+        'hooked_area' => 'hooked_area',      // module area hooked to PC
     );
 /**
  * columns removed from previous versions:
@@ -84,7 +83,7 @@ function postcalendar_tables()
     $table['postcalendar_events_primary_key_column'] = 'eid';
 
     // add standard data fields
-    ObjectUtil::addStandardFieldsToTableDefinition($table['postcalendar_events_column'], 'pc_');
+    ObjectUtil::addStandardFieldsToTableDefinition($table['postcalendar_events_column']);
     ObjectUtil::addStandardFieldsToTableDataDefinition($table['postcalendar_events_column_def']);
 
     // old tables for upgrade/renaming purposes
