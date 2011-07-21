@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Zikula 1.x\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-06-21 20:18+0000\n"
+"POT-Creation-Date: 2011-07-21 21:09+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -120,30 +120,30 @@ msgstr ""
 
 #: templates/plugins/function.pc_url.php:148
 #: templates/plugins/function.pc_date_select.php:27
-#: templates/admin/modifyconfig.tpl:71
+#: templates/admin/modifyconfig.tpl:72
 msgid "Day"
 msgstr ""
 
 #: templates/plugins/function.pc_url.php:149
 #: templates/plugins/function.pc_date_select.php:28
-#: templates/admin/modifyconfig.tpl:72
+#: templates/admin/modifyconfig.tpl:73
 msgid "Week"
 msgstr ""
 
 #: templates/plugins/function.pc_url.php:150
 #: templates/plugins/function.pc_date_select.php:29
-#: templates/admin/modifyconfig.tpl:73
+#: templates/admin/modifyconfig.tpl:74
 msgid "Month"
 msgstr ""
 
 #: templates/plugins/function.pc_url.php:151
 #: templates/plugins/function.pc_date_select.php:30
-#: templates/admin/modifyconfig.tpl:74
+#: templates/admin/modifyconfig.tpl:75
 msgid "Year"
 msgstr ""
 
 #: templates/plugins/function.pc_url.php:152
-#: templates/admin/modifyconfig.tpl:75
+#: templates/admin/modifyconfig.tpl:76
 msgid "List"
 msgstr ""
 
@@ -164,13 +164,13 @@ msgid "Manual entry"
 msgstr ""
 
 #: templates/plugins/function.pc_locations.php:34
-#: templates/admin/eventdefaults.tpl:67 templates/event/submit.tpl:130
+#: templates/admin/eventdefaults.tpl:68 templates/event/submit.tpl:130
 #: templates/event/view.tpl:22 templates/contenttype/postcalevent_view.tpl:44
 #: templates/blocks/featuredevent.tpl:51
 msgid "Location"
 msgstr ""
 
-#: templates/plugins/function.pc_queued_events_notify.php:30
+#: templates/plugins/function.pc_queued_events_notify.php:32
 #, php-format
 msgid "There is %s queued calendar event awaiting your review."
 msgid_plural "There are %s queued calendar events awaiting your review."
@@ -178,7 +178,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. !This is link text
-#: templates/plugins/function.pc_queued_events_notify.php:31
+#: templates/plugins/function.pc_queued_events_notify.php:33
 msgid "Review queued events"
 msgstr ""
 
@@ -218,12 +218,12 @@ msgstr ""
 msgid "PostCalendar: Hook option settings updated."
 msgstr ""
 
-#: lib/PostCalendar/HookHandlers.php:439
+#: lib/PostCalendar/HookHandlers.php:443
 #, php-format
 msgid "ALL associated PostCalendar events also deleted. (%s)"
 msgstr ""
 
-#: lib/PostCalendar/HookHandlers.php:477
+#: lib/PostCalendar/HookHandlers.php:481 lib/PostCalendar/HookHandlers.php:482
 msgid "PostCalendar Hook Options"
 msgstr ""
 
@@ -250,19 +250,19 @@ msgstr ""
 msgid "Administrate Events"
 msgstr ""
 
-#: lib/PostCalendar/Api/Admin.php:27 templates/admin/showlist.tpl:4
+#: lib/PostCalendar/Api/Admin.php:27
 msgid "Event List"
 msgstr ""
 
-#: lib/PostCalendar/Api/Admin.php:31 lib/PostCalendar/Controller/Admin.php:123
+#: lib/PostCalendar/Api/Admin.php:31 lib/PostCalendar/Controller/Admin.php:125
 msgid "Approved Events"
 msgstr ""
 
-#: lib/PostCalendar/Api/Admin.php:33 lib/PostCalendar/Controller/Admin.php:124
+#: lib/PostCalendar/Api/Admin.php:33 lib/PostCalendar/Controller/Admin.php:126
 msgid "Hidden Events"
 msgstr ""
 
-#: lib/PostCalendar/Api/Admin.php:35 lib/PostCalendar/Controller/Admin.php:125
+#: lib/PostCalendar/Api/Admin.php:35 lib/PostCalendar/Controller/Admin.php:127
 msgid "Queued Events"
 msgstr ""
 
@@ -274,7 +274,7 @@ msgstr ""
 msgid "Settings"
 msgstr ""
 
-#: lib/PostCalendar/Api/Admin.php:53
+#: lib/PostCalendar/Api/Admin.php:53 templates/admin/eventdefaults.tpl:4
 msgid "Event default values"
 msgstr ""
 
@@ -294,103 +294,112 @@ msgstr ""
 msgid "Error! Could not load items."
 msgstr ""
 
-#: lib/PostCalendar/Api/Event.php:396
+#: lib/PostCalendar/Api/Event.php:397
 msgid "Plain text"
 msgstr ""
 
-#: lib/PostCalendar/Api/Event.php:397
+#: lib/PostCalendar/Api/Event.php:398
 msgid "HTML-formatted"
 msgstr ""
 
-#: lib/PostCalendar/Api/Event.php:412 lib/PostCalendar/Api/Event.php:524
+#: lib/PostCalendar/Api/Event.php:413 lib/PostCalendar/Api/Event.php:525
 msgid "Day(s)/Week(s)/Month(s)/Year(s)"
 msgstr ""
 
-#: lib/PostCalendar/Api/Event.php:421
+#: lib/PostCalendar/Api/Event.php:422
 msgid "First/Second/Third/Fourth/Last"
 msgstr ""
 
-#: lib/PostCalendar/Api/Event.php:431 lib/PostCalendar/Api/Event.php:526
+#: lib/PostCalendar/Api/Event.php:432 lib/PostCalendar/Api/Event.php:527
 msgid "Sun Mon Tue Wed Thu Fri Sat"
 msgstr ""
 
-#: lib/PostCalendar/Api/Event.php:525
+#: lib/PostCalendar/Api/Event.php:526
 msgid "err/First/Second/Third/Fourth/Last"
 msgstr ""
 
-#: lib/PostCalendar/Api/Event.php:528
+#: lib/PostCalendar/Api/Event.php:529
 #, php-format
 msgid "Event recurs every %s"
 msgstr ""
 
-#: lib/PostCalendar/Api/Event.php:530 lib/PostCalendar/Api/Event.php:535
+#: lib/PostCalendar/Api/Event.php:531 lib/PostCalendar/Api/Event.php:536
 #: templates/contenttype/postcalevents_view.tpl:25
 #: templates/blocks/view_upcoming.tpl:30 templates/blocks/view_day.tpl:27
 #: templates/blocks/pastevents.tpl:24
 msgid "until"
 msgstr ""
 
-#: lib/PostCalendar/Api/Event.php:532
+#: lib/PostCalendar/Api/Event.php:533
 msgid "Event recurs on"
 msgstr ""
 
-#: lib/PostCalendar/Api/Event.php:534
+#: lib/PostCalendar/Api/Event.php:535
 #, php-format
 msgid "of the month, every %s months"
 msgstr ""
 
-#: lib/PostCalendar/Api/Event.php:537
+#: lib/PostCalendar/Api/Event.php:538
 msgid "This event does not recur."
 msgstr ""
 
-#: lib/PostCalendar/Api/Event.php:541
+#: lib/PostCalendar/Api/Event.php:542
 msgid "This is a private event."
 msgstr ""
 
-#: lib/PostCalendar/Api/Event.php:541
+#: lib/PostCalendar/Api/Event.php:542
 msgid "This is a public event. "
 msgstr ""
 
 #. !(abbr) not applicable or not available
-#: lib/PostCalendar/Api/Event.php:624
+#: lib/PostCalendar/Api/Event.php:625
 msgid "n/a"
 msgstr ""
 
 #. !This is the field name from templates/event/submit.tpl:22
-#: lib/PostCalendar/Api/Event.php:649
+#: lib/PostCalendar/Api/Event.php:650
 msgid "'Title' is a required field."
 msgstr ""
 
-#: lib/PostCalendar/Api/Event.php:656 lib/PostCalendar/Api/Event.php:665
+#: lib/PostCalendar/Api/Event.php:657 lib/PostCalendar/Api/Event.php:666
 msgid "Error! The repetition frequency must be an integer."
 msgstr ""
 
-#: lib/PostCalendar/Api/Event.php:660 lib/PostCalendar/Api/Event.php:669
+#: lib/PostCalendar/Api/Event.php:661 lib/PostCalendar/Api/Event.php:670
 msgid "Error! The repetition frequency must be at least 1."
 msgstr ""
 
-#: lib/PostCalendar/Api/Event.php:680
+#: lib/PostCalendar/Api/Event.php:681
 msgid "Error! The selected start date falls after the selected end date."
 msgstr ""
 
-#: lib/PostCalendar/Api/Event.php:689
+#: lib/PostCalendar/Api/Event.php:690
 msgid "Error! The end time must be after the start time."
 msgstr ""
 
-#: lib/PostCalendar/Api/Event.php:951
+#: lib/PostCalendar/Api/Event.php:952
 msgid "Private"
 msgstr ""
 
-#: lib/PostCalendar/Api/Event.php:954 templates/admin/eventdefaults.tpl:16
+#: lib/PostCalendar/Api/Event.php:955 templates/admin/eventdefaults.tpl:17
 #: templates/event/submit.tpl:45
 msgid "Global"
 msgstr ""
 
-#: lib/PostCalendar/Handlers.php:17
+#: lib/PostCalendar/Handlers.php:19
 msgid "Calendar event"
 msgid_plural "Calendar events"
 msgstr[0] ""
 msgstr[1] ""
+
+#: lib/PostCalendar/TaggedObjectMeta/PostCalendar.php:56
+msgid "on"
+msgstr ""
+
+#: lib/PostCalendar/TaggedObjectMeta/PostCalendar.php:57
+#: templates/email/adminnotify.tpl:9
+msgid "Event"
+msgstr ""
 
 #: lib/PostCalendar/ContentType/PostCalEvents.php:16
 msgid "PostCalendar Event List"
@@ -559,104 +568,104 @@ msgstr ""
 msgid "You do not have permission to view this event."
 msgstr ""
 
-#: lib/PostCalendar/Controller/Admin.php:115
+#: lib/PostCalendar/Controller/Admin.php:117
 msgid "With selected:"
 msgstr ""
 
-#: lib/PostCalendar/Controller/Admin.php:116
+#: lib/PostCalendar/Controller/Admin.php:118
 msgid "View"
 msgstr ""
 
-#: lib/PostCalendar/Controller/Admin.php:117
+#: lib/PostCalendar/Controller/Admin.php:119
 msgid "Approve"
 msgstr ""
 
-#: lib/PostCalendar/Controller/Admin.php:118
+#: lib/PostCalendar/Controller/Admin.php:120
 msgid "Hide"
 msgstr ""
 
-#: lib/PostCalendar/Controller/Admin.php:119
+#: lib/PostCalendar/Controller/Admin.php:121
 #: templates/event/deleteeventconfirm.tpl:7
 msgid "Delete"
 msgstr ""
 
-#: lib/PostCalendar/Controller/Admin.php:122
+#: lib/PostCalendar/Controller/Admin.php:124
 msgid "All Events"
 msgstr ""
 
-#: lib/PostCalendar/Controller/Admin.php:156
+#: lib/PostCalendar/Controller/Admin.php:158
 msgid "Please select an event."
 msgstr ""
 
-#: lib/PostCalendar/Controller/Admin.php:183
+#: lib/PostCalendar/Controller/Admin.php:185
 #, php-format
 msgid "Do you really want to %s this event?"
 msgid_plural "Do you really want to %s these events?"
 msgstr[0] ""
 msgstr[1] ""
 
-#: lib/PostCalendar/Controller/Admin.php:200
-#: lib/PostCalendar/Controller/Admin.php:228
+#: lib/PostCalendar/Controller/Admin.php:202
+#: lib/PostCalendar/Controller/Admin.php:230
 msgid "Error! Could not load default values."
 msgstr ""
 
-#: lib/PostCalendar/Controller/Admin.php:212
+#: lib/PostCalendar/Controller/Admin.php:214
 msgid "Done! PostCalendar configuration reset to use default values."
 msgstr ""
 
-#: lib/PostCalendar/Controller/Admin.php:267
+#: lib/PostCalendar/Controller/Admin.php:269
 msgid "Done! Updated the PostCalendar configuration."
 msgstr ""
 
-#: lib/PostCalendar/Controller/Admin.php:284
+#: lib/PostCalendar/Controller/Admin.php:286
 msgid "Error! An the eid must be passed as an array."
 msgstr ""
 
-#: lib/PostCalendar/Controller/Admin.php:316
+#: lib/PostCalendar/Controller/Admin.php:318
 #, php-format
 msgid "Done! %1$s event %2$s."
 msgid_plural "Done! %1$s events %2$s."
 msgstr[0] ""
 msgstr[1] ""
 
-#: lib/PostCalendar/Controller/Admin.php:318
+#: lib/PostCalendar/Controller/Admin.php:320
 #, php-format
 msgid "Error! Could not %s event."
 msgid_plural "Error! Could not %s events."
 msgstr[0] ""
 msgstr[1] ""
 
-#: lib/PostCalendar/Controller/Admin.php:373
+#: lib/PostCalendar/Controller/Admin.php:375
 msgid "Done! Updated the PostCalendar event default values."
 msgstr ""
 
-#: lib/PostCalendar/Controller/Admin.php:395
+#: lib/PostCalendar/Controller/Admin.php:397
 #, php-format
 msgid "View '%s'"
 msgstr ""
 
-#: lib/PostCalendar/Controller/Admin.php:401
+#: lib/PostCalendar/Controller/Admin.php:403
 #, php-format
 msgid "Hide '%s'"
 msgstr ""
 
-#: lib/PostCalendar/Controller/Admin.php:405
+#: lib/PostCalendar/Controller/Admin.php:407
 #, php-format
 msgid "Approve '%s'"
 msgstr ""
 
-#: lib/PostCalendar/Controller/Admin.php:409
+#: lib/PostCalendar/Controller/Admin.php:411
 #, php-format
 msgid "Edit '%s'"
 msgstr ""
 
-#: lib/PostCalendar/Controller/Admin.php:415
+#: lib/PostCalendar/Controller/Admin.php:417
 #, php-format
 msgid "Delete '%s'"
 msgstr ""
 
 #: lib/PostCalendar/Controller/Event.php:94
-#: templates/admin/eventdefaults.tpl:118 templates/admin/modifyconfig.tpl:128
+#: templates/admin/eventdefaults.tpl:119 templates/admin/modifyconfig.tpl:129
 #: templates/event/submit.tpl:178 templates/hooks/modifyconfig.tpl:44
 msgid "Save"
 msgstr ""
@@ -720,331 +729,323 @@ msgstr ""
 msgid "Past Events Block"
 msgstr ""
 
-#: templates/admin/eventrevue.tpl:9
+#: templates/admin/eventrevue.tpl:4
 msgid "Event review"
 msgstr ""
 
-#: templates/admin/eventrevue.tpl:20
+#: templates/admin/eventrevue.tpl:21
 msgid "Yes"
 msgstr ""
 
-#: templates/admin/eventrevue.tpl:21 templates/admin/eventdefaults.tpl:119
-#: templates/admin/modifyconfig.tpl:129 templates/event/submit.tpl:180
+#: templates/admin/eventrevue.tpl:22 templates/admin/eventdefaults.tpl:120
+#: templates/admin/modifyconfig.tpl:130 templates/event/submit.tpl:180
 #: templates/hooks/modifyconfig.tpl:45
 msgid "Cancel"
 msgstr ""
 
-#: templates/admin/eventdefaults.tpl:5
-msgid "Create Event Default Values"
-msgstr ""
-
-#: templates/admin/eventdefaults.tpl:10
+#: templates/admin/eventdefaults.tpl:11
 msgid "General"
 msgstr ""
 
-#: templates/admin/eventdefaults.tpl:12 templates/event/submit.tpl:41
+#: templates/admin/eventdefaults.tpl:13 templates/event/submit.tpl:41
 msgid "Sharing"
 msgstr ""
 
-#: templates/admin/eventdefaults.tpl:21
+#: templates/admin/eventdefaults.tpl:22
 msgid "Event Type"
 msgstr ""
 
-#: templates/admin/eventdefaults.tpl:24 templates/event/submit.tpl:53
+#: templates/admin/eventdefaults.tpl:25 templates/event/submit.tpl:53
 #: templates/user/view_week.tpl:32 templates/user/view_list.tpl:28
 #: templates/user/view_xml.tpl:9 templates/user/view_day.tpl:26
 msgid "All-day event"
 msgstr ""
 
-#: templates/admin/eventdefaults.tpl:26 templates/event/submit.tpl:55
+#: templates/admin/eventdefaults.tpl:27 templates/event/submit.tpl:55
 msgid "Timed event"
 msgstr ""
 
-#: templates/admin/eventdefaults.tpl:30 templates/event/submit.tpl:58
+#: templates/admin/eventdefaults.tpl:31 templates/event/submit.tpl:58
 msgid "Start Time"
 msgstr ""
 
-#: templates/admin/eventdefaults.tpl:34 templates/event/submit.tpl:60
+#: templates/admin/eventdefaults.tpl:35 templates/event/submit.tpl:60
 msgid "End Time"
 msgstr ""
 
-#: templates/admin/eventdefaults.tpl:39 templates/event/submit.tpl:161
+#: templates/admin/eventdefaults.tpl:40 templates/event/submit.tpl:161
 #: templates/event/view.tpl:39 templates/contenttype/postcalevent_view.tpl:61
 #: templates/blocks/featuredevent.tpl:68
 msgid "Fee"
 msgstr ""
 
-#: templates/admin/eventdefaults.tpl:45
+#: templates/admin/eventdefaults.tpl:46
 msgid "Default categories"
 msgstr ""
 
-#: templates/admin/eventdefaults.tpl:46
+#: templates/admin/eventdefaults.tpl:47
 msgid "No Default Category"
 msgstr ""
 
-#: templates/admin/eventdefaults.tpl:72 templates/admin/eventdefaults.tpl:99
+#: templates/admin/eventdefaults.tpl:73 templates/admin/eventdefaults.tpl:100
 #: templates/event/submit.tpl:132 templates/event/submit.tpl:152
 msgid "Name"
 msgstr ""
 
-#: templates/admin/eventdefaults.tpl:76 templates/event/submit.tpl:134
+#: templates/admin/eventdefaults.tpl:77 templates/event/submit.tpl:134
 msgid "Street"
 msgstr ""
 
-#: templates/admin/eventdefaults.tpl:80
+#: templates/admin/eventdefaults.tpl:81
 msgid "Street Line 2"
 msgstr ""
 
-#: templates/admin/eventdefaults.tpl:84 templates/event/submit.tpl:139
+#: templates/admin/eventdefaults.tpl:85 templates/event/submit.tpl:139
 msgid "City"
 msgstr ""
 
-#: templates/admin/eventdefaults.tpl:88 templates/event/submit.tpl:140
+#: templates/admin/eventdefaults.tpl:89 templates/event/submit.tpl:140
 msgid "State"
 msgstr ""
 
-#: templates/admin/eventdefaults.tpl:92 templates/event/submit.tpl:141
+#: templates/admin/eventdefaults.tpl:93 templates/event/submit.tpl:141
 msgid "Zipcode"
 msgstr ""
 
-#: templates/admin/eventdefaults.tpl:97 templates/event/submit.tpl:151
+#: templates/admin/eventdefaults.tpl:98 templates/event/submit.tpl:151
 msgid "Contact"
 msgstr ""
 
-#: templates/admin/eventdefaults.tpl:103 templates/event/submit.tpl:154
+#: templates/admin/eventdefaults.tpl:104 templates/event/submit.tpl:154
 msgid "Phone number"
 msgstr ""
 
-#: templates/admin/eventdefaults.tpl:107 templates/event/submit.tpl:156
+#: templates/admin/eventdefaults.tpl:108 templates/event/submit.tpl:156
 msgid "E-mail address"
 msgstr ""
 
-#: templates/admin/eventdefaults.tpl:111 templates/event/submit.tpl:158
+#: templates/admin/eventdefaults.tpl:112 templates/event/submit.tpl:158
 msgid "Web site"
 msgstr ""
 
-#: templates/admin/showlist.tpl:7
+#: templates/admin/showlist.tpl:4
+msgid "Event list"
+msgstr ""
+
+#: templates/admin/showlist.tpl:9
 msgid "active"
 msgstr ""
 
-#: templates/admin/showlist.tpl:7
+#: templates/admin/showlist.tpl:9
 msgid "inactive\" assign=filteractive"
 msgstr ""
 
-#: templates/admin/showlist.tpl:8
+#: templates/admin/showlist.tpl:10
 #, php-format
 msgid "Filter %1$s, %2$s event listed"
 msgid_plural "Filter %1$s, %2$s events listed"
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/admin/showlist.tpl:13
+#: templates/admin/showlist.tpl:15
 msgid "Status"
 msgstr ""
 
-#: templates/admin/showlist.tpl:16 templates/admin/showlist.tpl:35
+#: templates/admin/showlist.tpl:18 templates/admin/showlist.tpl:37
 msgid "Categories"
 msgstr ""
 
-#: templates/admin/showlist.tpl:20 templates/user/navigation.tpl:31
+#: templates/admin/showlist.tpl:22 templates/user/navigation.tpl:31
 msgid "Filter"
 msgstr ""
 
-#: templates/admin/showlist.tpl:21
+#: templates/admin/showlist.tpl:23
 msgid "Clear"
 msgstr ""
 
-#: templates/admin/showlist.tpl:21
+#: templates/admin/showlist.tpl:23
 msgid "Clear Filter"
 msgstr ""
 
-#: templates/admin/showlist.tpl:33 templates/event/submit.tpl:31
+#: templates/admin/showlist.tpl:35 templates/event/submit.tpl:31
 msgid "Title"
 msgstr ""
 
-#: templates/admin/showlist.tpl:34
+#: templates/admin/showlist.tpl:36
 msgid "Event Date"
 msgstr ""
 
-#: templates/admin/showlist.tpl:36
+#: templates/admin/showlist.tpl:38
 msgid "Time stamp"
 msgstr ""
 
-#: templates/admin/showlist.tpl:37
+#: templates/admin/showlist.tpl:39
 msgid "Actions"
 msgstr ""
 
-#: templates/admin/showlist.tpl:56
+#: templates/admin/showlist.tpl:58
 #, php-format
 msgid "There are no %s events."
 msgstr ""
 
-#: templates/admin/showlist.tpl:61
+#: templates/admin/showlist.tpl:63
 msgid "doubleuparrow"
 msgstr ""
 
-#: templates/admin/showlist.tpl:61
+#: templates/admin/showlist.tpl:63
 msgid "Check all"
 msgstr ""
 
-#: templates/admin/showlist.tpl:61
+#: templates/admin/showlist.tpl:63
 msgid "Uncheck all"
 msgstr ""
 
-#: templates/admin/menu.tpl:3 templates/search/options.tpl:3
-msgid "Calendar"
+#: templates/admin/modifyconfig.tpl:4
+msgid "Modify settings"
 msgstr ""
 
-#: templates/admin/modifyconfig.tpl:5
-msgid "PostCalendar settings"
-msgstr ""
-
-#: templates/admin/modifyconfig.tpl:5
-msgid "version"
-msgstr ""
-
-#: templates/admin/modifyconfig.tpl:10 templates/event/submit.tpl:30
+#: templates/admin/modifyconfig.tpl:11 templates/event/submit.tpl:30
 msgid "General settings"
 msgstr ""
 
-#: templates/admin/modifyconfig.tpl:12
+#: templates/admin/modifyconfig.tpl:13
 msgid "Reset ALL Settings to Defaults (clears event defaults also)"
 msgstr ""
 
-#: templates/admin/modifyconfig.tpl:15
+#: templates/admin/modifyconfig.tpl:16
 msgid "Allow submitted events to be activated without review"
 msgstr ""
 
-#: templates/admin/modifyconfig.tpl:19
+#: templates/admin/modifyconfig.tpl:20
 msgid "Enable categorization of events"
 msgstr ""
 
-#: templates/admin/modifyconfig.tpl:23
+#: templates/admin/modifyconfig.tpl:24
 msgid "Group allowed to publish personal calendars"
 msgstr ""
 
-#: templates/admin/modifyconfig.tpl:24
+#: templates/admin/modifyconfig.tpl:25
 msgid "No group"
 msgstr ""
 
-#: templates/admin/modifyconfig.tpl:26
+#: templates/admin/modifyconfig.tpl:27
 msgid "Edit groups"
 msgstr ""
 
-#: templates/admin/modifyconfig.tpl:30
+#: templates/admin/modifyconfig.tpl:31
 msgid "Display settings"
 msgstr ""
 
-#: templates/admin/modifyconfig.tpl:32
+#: templates/admin/modifyconfig.tpl:33
 msgid "Number of events to list on administration pages"
 msgstr ""
 
-#: templates/admin/modifyconfig.tpl:36
+#: templates/admin/modifyconfig.tpl:37
 msgid "Use 24-hour time format"
 msgstr ""
 
-#: templates/admin/modifyconfig.tpl:40
+#: templates/admin/modifyconfig.tpl:41
 msgid "Time increment for new event creation (1-60 minutes)"
 msgstr ""
 
-#: templates/admin/modifyconfig.tpl:44
+#: templates/admin/modifyconfig.tpl:45
 msgid "View event details in a pop-up window"
 msgstr ""
 
-#: templates/admin/modifyconfig.tpl:48
+#: templates/admin/modifyconfig.tpl:49
 msgid "Show event description in javascript tooltip on 'mouseover'"
 msgstr ""
 
-#: templates/admin/modifyconfig.tpl:52
+#: templates/admin/modifyconfig.tpl:53
 msgid "Date Display Format"
 msgstr ""
 
-#: templates/admin/modifyconfig.tpl:52
+#: templates/admin/modifyconfig.tpl:53
 #, php-format
 msgid "uses %s format"
 msgstr ""
 
-#: templates/admin/modifyconfig.tpl:54
+#: templates/admin/modifyconfig.tpl:55
 msgid "Or choose a preset:"
 msgstr ""
 
-#: templates/admin/modifyconfig.tpl:55
+#: templates/admin/modifyconfig.tpl:56
 msgid "Month Day, Year"
 msgstr ""
 
-#: templates/admin/modifyconfig.tpl:56
+#: templates/admin/modifyconfig.tpl:57
 msgid "Day Month Year"
 msgstr ""
 
-#: templates/admin/modifyconfig.tpl:57
+#: templates/admin/modifyconfig.tpl:58
 msgid "YYYY-MM-DD"
 msgstr ""
 
-#: templates/admin/modifyconfig.tpl:60
+#: templates/admin/modifyconfig.tpl:61
 msgid "First day of the week"
 msgstr ""
 
-#: templates/admin/modifyconfig.tpl:62
+#: templates/admin/modifyconfig.tpl:63
 msgid "Sunday"
 msgstr ""
 
-#: templates/admin/modifyconfig.tpl:63
+#: templates/admin/modifyconfig.tpl:64
 msgid "Monday"
 msgstr ""
 
-#: templates/admin/modifyconfig.tpl:64
+#: templates/admin/modifyconfig.tpl:65
 msgid "Saturday"
 msgstr ""
 
-#: templates/admin/modifyconfig.tpl:69
+#: templates/admin/modifyconfig.tpl:70
 msgid "Default calendar view"
 msgstr ""
 
-#: templates/admin/modifyconfig.tpl:79
+#: templates/admin/modifyconfig.tpl:80
 msgid "Number of months to display in list/rss view"
 msgstr ""
 
-#: templates/admin/modifyconfig.tpl:83
+#: templates/admin/modifyconfig.tpl:84
 msgid "Allow users to filter event display by category"
 msgstr ""
 
-#: templates/admin/modifyconfig.tpl:87 templates/admin/modifyconfig.tpl:92
+#: templates/admin/modifyconfig.tpl:88 templates/admin/modifyconfig.tpl:93
 msgid "In jump date selector, display"
 msgstr ""
 
-#: templates/admin/modifyconfig.tpl:89
+#: templates/admin/modifyconfig.tpl:90
 msgid "year(s) before current year."
 msgstr ""
 
-#: templates/admin/modifyconfig.tpl:94
+#: templates/admin/modifyconfig.tpl:95
 msgid "year(s) after current year."
 msgstr ""
 
-#: templates/admin/modifyconfig.tpl:97
+#: templates/admin/modifyconfig.tpl:98
 msgid "Enable images in navigation header"
 msgstr ""
 
-#: templates/admin/modifyconfig.tpl:103
+#: templates/admin/modifyconfig.tpl:104
 msgid "Enable Locations for PostCalendar"
 msgstr ""
 
-#: templates/admin/modifyconfig.tpl:109
+#: templates/admin/modifyconfig.tpl:110
 msgid "Notification settings"
 msgstr ""
 
-#: templates/admin/modifyconfig.tpl:111
+#: templates/admin/modifyconfig.tpl:112
 msgid "Notify administrator about pending content in template"
 msgstr ""
 
-#: templates/admin/modifyconfig.tpl:115
+#: templates/admin/modifyconfig.tpl:116
 msgid "Notify administrator about user event submission/change"
 msgstr ""
 
-#: templates/admin/modifyconfig.tpl:119
+#: templates/admin/modifyconfig.tpl:120
 msgid "Notify administrator about administrator event submission/change"
 msgstr ""
 
-#: templates/admin/modifyconfig.tpl:123
+#: templates/admin/modifyconfig.tpl:124
 msgid "E-mail address to send notifications"
 msgstr ""
 
@@ -1193,10 +1194,6 @@ msgstr ""
 
 #: templates/email/adminnotify.tpl:6
 msgid "The following calendar event has been added:"
-msgstr ""
-
-#: templates/email/adminnotify.tpl:9
-msgid "Event"
 msgstr ""
 
 #: templates/email/adminnotify.tpl:11
@@ -1455,6 +1452,10 @@ msgstr ""
 
 #: templates/hooks/modifyconfig.tpl:25
 msgid "Allow creator to select"
+msgstr ""
+
+#: templates/search/options.tpl:3
+msgid "Calendar"
 msgstr ""
 
 #: templates/search/options.tpl:4
