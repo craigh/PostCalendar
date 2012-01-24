@@ -421,5 +421,191 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
         }
         return $events;
     }
+    
+    /**
+     * Migrate existing tags in crpTag to Tag
+     * Migrates both Tags and Objects with relation
+     * Does not confirm existence of tagged object
+     */
+    public function migrateTimeIt()
+    {
+        $this->throwForbiddenUnless(SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN), LogUtil::getErrorMsgPermission());
+//        if ($this->getVar('pcTimeItMigrateComplete')) {
+//            LogUtil::registerError($this->__('TimeIt events have already been migrated. You can only run the migration once.'));
+//            $this->redirect(ModUtil::url('PostCalendar', 'admin', 'main'));
+//        }
 
+        // get all available TimeIt events with direct SQL
+        $prefix = System::getVar('prefix');
+        if (!empty($prefix)) {
+            $prefix = $prefix . '_';
+        }
+        $sql = "SELECT * FROM {$prefix}TimeIt_events";
+        $res = DBUtil::executeSql($sql);
+        $events = DBUtil::marshallObjects($res);
+
+        // $timeit is an PHP array with the whole database table for TimeIt_events
+        // $pc will hold the converted PostCalendar postcalendar_events table
+        $pc = array();
+        $pck = 0;
+        foreach ($events as $k => $event) {
+            $pc[$pck]['aid'] = $event['pn_cr_uid'];
+            $pc[$pck]['title'] = $event['pn_title'];
+            $pc[$pck]['ttime'] = $event['pn_cr_date'];
+            if (!empty($event['pn_text'])) {
+                $pc[$pck]['hometext'] = strpos('#plaintext#', $event['pn_text']) != false ? str_replace('#plaintext#', ':text:', $event['pn_text']) : ':html:'.$event['pn_text'];
+            } else {
+                $pc[$pck]['hometext'] = '';
+            }
+            $pc[$pck]['informant'] = $event['pn_cr_uid'];
+            $pc[$pck]['eventDate'] = $event['pn_startDate'];
+            $durtmp = explode(',', $event['pn_allDayDur']);
+            switch (count($durtmp)) {
+                case 1:
+                    $pc[$pck]['duration'] = $durtmp[0]; // normally 0
+                    break;
+                case 2:
+                    $pc[$pck]['duration'] = $durtmp[0] * 3600; // only hours
+                    break;
+                case 3:
+                    $pc[$pck]['duration'] = $durtmp[0] * 3600 + $durtmp[2] * 60; // hours + minutes
+                    break;
+            }
+            $pc[$pck]['endDate'] = $event['pn_endDate'];
+            $pc[$pck]['recurrtype'] = $event['pn_repeatType'];
+            $reptype = '';
+            switch ($event['pn_repeatSpec']) {
+                case 'day':
+                    $reptype = '0';
+                    break;
+                case 'week':
+                    $reptype = '1';
+                    break;
+                case 'month':
+                    $reptype = '2';
+                    break;
+                case 'year':
+                    $reptype = '3';
+                    break;
+            }
+            $pc[$pck]['recurrspec'] = serialize(
+                        array('event_repeat_freq' => $event['pn_repeatFrec'],
+                            'event_repeat_freq_type' => $reptype,
+                            'event_repeat_on_num' => '1',
+                            'event_repeat_on_day' => '0',
+                            'event_repeat_on_freq' => ''));
+            $pc[$pck]['startTime'] = $event['pn_allDayStart'];
+            $pc[$pck]['alldayevent'] = $event['pn_allDay'];
+            $data = unserialize($timeit[$k]['pn_data']);
+            $pc[$pck]['location'] = serialize(
+                        array('locations_id' => -1,
+                            'event_location' => $data['plugindata']['LocationTimeIt']['name'],
+                            'event_street1' => $data['plugindata']['LocationTimeIt']['street'] . ' ' . $data['plugindata']['LocationTimeIt']['houseNumber'],
+                            'event_street2' => '',
+                            'event_city' => $data['plugindata']['LocationTimeIt']['city'],
+                            'event_state' => '',
+                            'event_postal' => $data['plugindata']['LocationTimeIt']['zip']));
+            $pc[$pck]['conttel'] = $data['plugindata']['ContactTimeIt']['phoneNr'];
+            $pc[$pck]['contname'] = $data['plugindata']['ContactTimeIt']['contactPerson'];
+            $pc[$pck]['contemail'] = $data['plugindata']['ContactTimeIt']['email'];
+            $pc[$pck]['website'] = $data['plugindata']['ContactTimeIt']['website'];
+            $pc[$pck]['fee'] = '';
+            $pc[$pck]['eventstatus'] = '1'; // Active ?
+            $pc[$pck]['sharing'] = '2'; // Global
+            $pc[$pck]['cr_date'] = $event['pn_cr_date'];
+            $pc[$pck]['cr_uid'] = $event['pn_cr_uid'];
+            $pc[$pck]['lu_date'] = $event['pn_lu_date'];
+            $pc[$pck]['lu_uid'] = $event['pn_lu_uid'];
+            
+            // TODO CATEGORIES transfer
+            // TimeIt uses the Core categories. So the category stuff should be inserted as well.
+            // See News Installer
+            // See TimeIt importapi
+            
+            $pck =+ 1;
+        }
+        
+        print_r($pc[0]);
+        
+        LogUtil::registerStatus($this->__f('TimeIt events have been migrated. In total %1$s events and %2$s categories completed.', array($eventCount, $catCount)));
+        $this->setVar('pcTimeItMigrateComplete', true);
+        $this->redirect(ModUtil::url('PostCalendar', 'admin', 'main'));
+
+/*
+
+
+        $objCount = 0;
+        $tagCount = 0;
+
+        // use 'brute force' sql to obtain all tags
+        $conn = $this->entityManager->getConnection();
+        $prefix = $this->serviceManager['prefix'];
+        // get all available tags
+        $sql = "SELECT DISTINCT name from {$prefix}_crptag";
+        $tags = $conn->fetchAll($sql);
+        foreach ($tags as $tag) {
+            $word = $tag['name'];
+            $tagObject = $this->entityManager->getRepository('Tag_Entity_Tag')->findOneBy(array('tag' => $word));
+            if (!isset($tagObject)) {
+                $tagObject = new Tag_Entity_Tag();
+                $tagObject->setTag($word);
+                $this->entityManager->persist($tagObject);
+                $tagCount++;
+            }
+        }
+        $this->entityManager->flush();
+
+        // more 'brute force' sql to obtain object values
+        $sql = "SELECT DISTINCT id_module, module from {$prefix}_crptag_archive";
+        $objects = $conn->fetchAll($sql);
+        foreach ($objects as $object) {
+            // search for existing object - it SHOULDN'T exist!
+            $hookObject = $this->entityManager
+                    ->getRepository('Tag_Entity_Object')
+                    ->findOneBy(array(
+                        'module' => $object['module'],
+                        'objectId' => $object['id_module']));
+            if (isset($hookObject)) {
+                $this->entityManager->remove($hookObject);
+            }
+            // get the most likely areaID
+            // Doctrine 1.2 method because Hook Tables support only this
+            $area = Doctrine_Core::getTable('Zikula_Doctrine_Model_HookArea')->createQuery()
+                    ->where("owner = ?", $object['module'])
+                    ->andWhere("areatype = ?", 's')
+                    ->andWhere("category = ?", 'ui_hooks')
+                    ->execute()
+                    ->toArray();
+            $areaId = $area[0]['id'];
+            // no way to adequately determine URL, so insert generic module link
+            $objUrl = ModUtil::url($object['module'], 'user', 'main');
+            $hookObject = new Tag_Entity_Object($object['module'], $object['id_module'], $areaId, $objUrl);
+
+            // even more 'brute force' sql to obtain related tag values
+            $sql = "SELECT t.name FROM {$prefix}_crptag_archive a LEFT JOIN {$prefix}_crptag t" .
+                    " ON a.id_tag = t.id WHERE a.id_module=$object[id_module]";
+            $tags = $conn->fetchAll($sql);
+
+            foreach ($tags as $tag) {
+                $word = $tag['name'];
+                $tagObject = $this->entityManager->getRepository('Tag_Entity_Tag')->findOneBy(array('tag' => $word));
+                // all tags should exist - but just in case
+                if (!isset($tagObject)) {
+                    $tagObject = new Tag_Entity_Tag();
+                    $tagObject->setTag($word);
+                    $this->entityManager->persist($tagObject);
+                }
+                $hookObject->assignToTags($tagObject);
+            }
+            $this->entityManager->persist($hookObject);
+            $objCount++;
+        }
+        $this->entityManager->flush();
+        LogUtil::registerStatus($this->__f('CrpTag has been migrated. %1$s objects and %2$s tags completed.', array($objCount, $tagCount)));
+        $this->setVar('crpTagMigrateComplete', true);
+        $this->redirect(ModUtil::url('Tag', 'admin', 'view'));
+        
+        */
+    }
+   
 } // end class def
