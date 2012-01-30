@@ -63,7 +63,8 @@ class PostCalendar_Util
                     'event_street2'           => '',
                     'event_city'              => '',
                     'event_state'             => '',
-                    'event_postal'            => '')));
+                    'event_postal'            => '')),
+            'pcTimeItMigrateComplete' => false);
     
         return $defaults;
     }
