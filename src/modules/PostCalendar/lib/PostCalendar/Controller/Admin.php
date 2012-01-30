@@ -605,7 +605,7 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
         $this->setVar('crpTagMigrateComplete', true);
         $this->redirect(ModUtil::url('Tag', 'admin', 'view'));
         
-        */
     }
+        */
    
 } // end class def
