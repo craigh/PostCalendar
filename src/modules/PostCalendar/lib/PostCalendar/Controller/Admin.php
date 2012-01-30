@@ -427,13 +427,13 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
      * Migrates both Tags and Objects with relation
      * Does not confirm existence of tagged object
      */
-    public function migrateTimeIt()
+/*    public function migrateTimeIt()
     {
         $this->throwForbiddenUnless(SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN), LogUtil::getErrorMsgPermission());
-//        if ($this->getVar('pcTimeItMigrateComplete')) {
-//            LogUtil::registerError($this->__('TimeIt events have already been migrated. You can only run the migration once.'));
-//            $this->redirect(ModUtil::url('PostCalendar', 'admin', 'main'));
-//        }
+        if ($this->getVar('pcTimeItMigrateComplete')) {
+            LogUtil::registerError($this->__('TimeIt events have already been migrated. You can only run the migration once.'));
+            $this->redirect(ModUtil::url('PostCalendar', 'admin', 'main'));
+        }
 
         // get all available TimeIt events with direct SQL
         $prefix = System::getVar('prefix');
@@ -525,7 +525,7 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
             $pck =+ 1;
         }
         
-        print_r($pc[0]);
+//        print_r($pc[0]);
         
         LogUtil::registerStatus($this->__f('TimeIt events have been migrated. In total %1$s events and %2$s categories completed.', array($eventCount, $catCount)));
         $this->setVar('pcTimeItMigrateComplete', true);
