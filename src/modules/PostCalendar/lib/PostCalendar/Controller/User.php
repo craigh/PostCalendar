@@ -98,7 +98,8 @@ class PostCalendar_Controller_User extends Zikula_AbstractController
                     } else {
                         $this->view->assign('EVENT_CAN_EDIT', false);
                     }
-                    $this->view->assign('TODAY_DATE', DateUtil::getDatetime('', '%Y-%m-%d'));
+//                    $this->view->assign('TODAY_DATE', DateUtil::getDatetime('', '%Y-%m-%d'));
+                    $this->view->assign('TODAY_DATE', date('Y-m-d'));
                     $this->view->assign('DATE', $Date);
                     return $this->view->fetch('user/view_event_details.tpl');
                 }

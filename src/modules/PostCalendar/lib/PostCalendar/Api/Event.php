@@ -66,7 +66,8 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
         }
 
         if (!isset($start)) {
-            $start = DateUtil::getDatetime(null, '%Y-%m-%d');
+//            $start = DateUtil::getDatetime(null, '%Y-%m-%d');
+            $start = date('Y-m-d');
         }
 
         list ($startyear, $startmonth, $startday) = explode('-', $start);

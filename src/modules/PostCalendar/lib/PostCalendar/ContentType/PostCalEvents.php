@@ -36,7 +36,8 @@ class PostCalendar_ContentType_PostCalEvents extends Content_AbstractContentType
     }
 
     public function display() {
-        $Date       = DateUtil::getDatetime('', '%Y%m%d%H%M%S');
+//        $Date       = DateUtil::getDatetime('', '%Y%m%d%H%M%S');
+        $Date       = date('YmdHis');
         $the_year   = substr($Date, 0, 4);
         $the_month  = substr($Date, 4, 2);
         $the_day    = substr($Date, 6, 2);

@@ -45,7 +45,8 @@ class PostCalendar_Block_Pastevents extends Zikula_Controller_AbstractBlock
         }
     
         // today's date
-        $Date = DateUtil::getDatetime('', '%Y%m%d%H%M%S');
+//        $Date = DateUtil::getDatetime('', '%Y%m%d%H%M%S');
+        $Date = date('YmdHis');
     
         // Get variables from content block
         $vars = BlockUtil::varsFromContent($blockinfo['content']);

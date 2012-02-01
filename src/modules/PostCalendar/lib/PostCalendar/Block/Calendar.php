@@ -45,7 +45,8 @@ class PostCalendar_Block_Calendar extends Zikula_Controller_AbstractBlock
         }
     
         // today's date
-        $Date = DateUtil::getDatetime('', '%Y%m%d%H%M%S');
+//        $Date = DateUtil::getDatetime('', '%Y%m%d%H%M%S');
+        $Date = date('YmdHis');
     
         // Get variables from content block
         $vars = BlockUtil::varsFromContent($blockinfo['content']);
@@ -147,7 +148,8 @@ class PostCalendar_Block_Calendar extends Zikula_Controller_AbstractBlock
     
         $month_view_start = date('Y-m-d', mktime(0, 0, 0, $the_month, 1, $the_year));
         $month_view_end   = date('Y-m-t', mktime(0, 0, 0, $the_month, 1, $the_year));
-        $today_date       = DateUtil::getDatetime('', '%Y-%m-%d');
+//        $today_date       = DateUtil::getDatetime('', '%Y-%m-%d');
+        $today_date       = date('Y-m-d', mktime(0, 0, 0, $the_month, $the_day, $the_year));
         $starting_date    = date('m/d/Y', mktime(0, 0, 0, $the_month, 1 - $first_day, $the_year));
         $ending_date      = date('m/t/Y', mktime(0, 0, 0, $the_month + $pcbeventsrange, 1, $the_year));
     

@@ -259,7 +259,8 @@ class PostCalendar_Api_User extends Zikula_AbstractApi
         $function_out['selectedcategories'] = $selectedcategories;
         $function_out['MONTH_START_DATE']   = date('Y-m-d', mktime(0, 0, 0, $the_month, 1, $the_year));
         $function_out['MONTH_END_DATE']     = date('Y-m-t', mktime(0, 0, 0, $the_month, 1, $the_year));
-        $function_out['TODAY_DATE']         = DateUtil::getDatetime('', '%Y-%m-%d');
+//        $function_out['TODAY_DATE']         = DateUtil::getDatetime('', '%Y-%m-%d');
+        $function_out['TODAY_DATE']         = date('Y-m-d');
         $function_out['DATE']               = $Date;
         $function_out['pc_colclasses']      = $pc_colclasses;
     

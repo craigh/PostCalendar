@@ -15,7 +15,8 @@ class PostCalendar_PostCalendarEvent_Generic extends PostCalendar_PostCalendarEv
     public function makeEvent() {
         $dom = ZLanguage::getModuleDomain('PostCalendar');
 
-        $date = DateUtil::getDatetime();
+//        $date = DateUtil::getDatetime();
+        $date = date('Y-m-d H:i:s');
 
         $this->title = __f('New %1$s item (#%2$s)', array($this->getHooked_modulename(), $this->getHooked_objectid()), $dom);
 //        $this->hometext = ":text:" .  __f('New %1$s item (#%2$s)', array($this->getHooked_modulename(), $this->getHooked_objectid()), $dom);
