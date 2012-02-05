@@ -30,7 +30,7 @@
         {else}
             {assign var="stylesheet" value="monthon"}
         {/if}
-        <td class="{$stylesheet}" onclick="window.location.href='{pc_url action='day' date=$date}';">
+        <td class="{$stylesheet}">
             {assign var="titles" value=""}
             {assign var="numberofevents" value=$A_EVENTS.$date|@count}
             {if $modvars.PostCalendar.pcUsePopups}

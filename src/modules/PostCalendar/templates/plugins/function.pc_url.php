@@ -164,7 +164,7 @@ function smarty_function_pc_url($args, &$smarty)
             if (_SETTING_USE_POPUPS) {
                 $classes[] = 'tooltips';
             }
-            if (_SETTING_OPEN_NEW_WINDOW) {
+            if ((_SETTING_OPEN_NEW_WINDOW) && ($action == "detail")) {
                 $classes[] = 'event_details';
             }
             $class = implode(' ', $classes);
