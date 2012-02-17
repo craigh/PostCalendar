@@ -40,6 +40,50 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
      */
     public function listevents(array $args)
     {
+//        $events = $this->entityManager->getRepository('PostCalendar_Entity_CalendarEvent')->findAll();
+//        echo "<pre>"; var_dump($events); die;
+        echo "<pre>";
+        
+        $create = true;
+        $show = false;
+        $title = 'TestB8';
+
+        if ($create) {
+            $cat = CategoryUtil::getCategoryByPath('/__SYSTEM__/Modules/PostCalendar/Events');
+            $eventArray = array(
+                'title'          => $title,
+                'eventstatus'    => 1,  // approved
+                'sharing'        => 3,  // global
+                '__CATEGORIES__' => array(
+                    'Main' => $cat['id']));
+            $event = new PostCalendar_Entity_CalendarEvent();
+            $event->setFromArray($eventArray);
+            $this->entityManager->persist($event);
+            $this->entityManager->flush();
+            echo "event created<br />id: " . $event->getEid() . "<br />";
+            $regId = $this->entityManager->getRepository('Zikula_Doctrine2_Entity_CategoryRegistry')
+                ->findOneBy(array('modname' => 'PostCalendar',
+                                'tablename' => 'postcalendar_events',
+                                'property' => 'Main'))
+                ->getId();
+            echo "category: " . $event->getCategories()->get($regId)->getCategory()->getName();
+        }
+        if ($show) {
+            $event = $this->entityManager->getRepository('PostCalendar_Entity_CalendarEvent')->findOneBy(array('title' => $title));
+            $regs = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events', 'id');
+            var_dump($regs);
+            $catRegObj = $this->entityManager
+                              ->getRepository('Zikula_Doctrine2_Entity_CategoryRegistry')
+                              ->findOneBy(array('modname' => 'PostCalendar',
+                                                'tablename' => 'postcalendar_events',
+                                                'property' => 'Main'));
+            var_dump($catRegObj);
+            foreach($regs as $regId => $catId) {
+                echo "::" . $event->getCategories()->get($regId)->getCategory()->getName(); echo "::<br />";
+            }
+        }
+        die;
+        
         $this->throwForbiddenUnless(SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_DELETE), LogUtil::getErrorMsgPermission());
     
         $listtype = isset($args['listtype']) ? $args['listtype'] : FormUtil::getPassedValue('listtype', _EVENT_APPROVED);
