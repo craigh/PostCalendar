@@ -22,14 +22,18 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
     public function install()
     {
         // create tables
-        if (!DBUtil::createTable('postcalendar_events')) {
-            return LogUtil::registerError($this->__('Error! Could not create the table.'));
+        try {
+            DoctrineHelper::createSchema($this->entityManager, array('PostCalendar_Entity_CalendarEvent', 
+                                                                     'PostCalendar_Entity_EventCategory'));
+        } catch (Exception $e) {
+            return false;
         }
-
+        
         // insert default category
         if (!$this->_createdefaultcategory()) {
             return LogUtil::registerError($this->__('Error! Could not create default category.'));
         }
+        $this->_createdefaultsubcategory();
 
         // PostCalendar Default Settings
         $defaultsettings = PostCalendar_Util::getdefaults();
@@ -38,8 +42,7 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
             return LogUtil::registerError($this->__('Error! Could not set the default settings for PostCalendar.'));
         }
 
-        $this->_reset_scribite();
-        $this->_createdefaultsubcategory();
+//        $this->_reset_scribite();
         $this->_createinstallevent();
 
         HookUtil::registerSubscriberBundles($this->version->getHookSubscriberBundles());
@@ -149,8 +152,10 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
      */
     public function uninstall()
     {
-        $result = DBUtil::dropTable('postcalendar_events');
-        $result = $result && ModUtil::delVar('PostCalendar');
+        //drop the tables
+        DoctrineHelper::dropSchema($this->entityManager, array('PostCalendar_Entity_CalendarEvent', 
+                                                               'PostCalendar_Entity_EventCategory'));
+        ModUtil::delVar('PostCalendar');
 
         // Delete entries from category registry
         ModUtil::dbInfoLoad('Categories');
@@ -163,7 +168,7 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
         HookUtil::unregisterSubscriberBundles($this->version->getHookSubscriberBundles());
         HookUtil::unregisterProviderBundles($this->version->getHookProviderBundles());
 
-        return $result;
+        return true;
     }
 
     /**
@@ -234,7 +239,7 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
     {
         $cat = CategoryUtil::getCategoryByPath('/__SYSTEM__/Modules/PostCalendar/Events');
 
-        $event = array(
+        $eventArray = array(
             'title'          => $this->__('PostCalendar Installed'),
             'hometext'       => $this->__(':text:On this date, the PostCalendar module was installed. Thank you for trying PostCalendar! This event can be safely deleted if you wish.'),
             'aid'            => UserUtil::getVar('uid'),
@@ -255,13 +260,16 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
             '__META__'       => array(
                 'module' => 'PostCalendar'));
 
-        if (DBUtil::insertObject($event, 'postcalendar_events', 'eid')) {
-            LogUtil::registerStatus($this->__("PostCalendar: Installation event created."));
-            return true;
+        try {
+            $event = new PostCalendar_Entity_CalendarEvent();
+            $event->setFromArray($eventArray);
+            $this->entityManager->persist($event);
+            $this->entityManager->flush();
+        } catch (Exception $e) {
+            return LogUtil::registerError($e->getMessage());
         }
 
-        return LogUtil::registerError($this->__('Error! Could not create an installation event.'));
-
+        return true;
     }
 
     /**
