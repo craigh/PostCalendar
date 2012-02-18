@@ -44,8 +44,8 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
 //        echo "<pre>"; var_dump($events); die;
         echo "<pre>";
         
-        $create = true;
-        $show = false;
+        $create = false;
+        $show = true;
         $title = 'TestB8';
 
         if ($create) {
@@ -69,18 +69,22 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
             echo "category: " . $event->getCategories()->get($regId)->getCategory()->getName();
         }
         if ($show) {
+            $testAttr = $this->entityManager->getRepository('Zikula_Doctrine2_Entity_Attribute')->find(15);
+//            var_dump($testAttr->toArray());
+            
             $event = $this->entityManager->getRepository('PostCalendar_Entity_CalendarEvent')->findOneBy(array('title' => $title));
-            $regs = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events', 'id');
-            var_dump($regs);
-            $catRegObj = $this->entityManager
-                              ->getRepository('Zikula_Doctrine2_Entity_CategoryRegistry')
-                              ->findOneBy(array('modname' => 'PostCalendar',
-                                                'tablename' => 'postcalendar_events',
-                                                'property' => 'Main'));
-            var_dump($catRegObj);
-            foreach($regs as $regId => $catId) {
-                echo "::" . $event->getCategories()->get($regId)->getCategory()->getName(); echo "::<br />";
-            }
+            $eventArray = $event->getOldArray();
+            var_dump($eventArray);
+//            $regs = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events', 'id');
+//            var_dump($regs);
+//            $regId = $this->entityManager->getRepository('Zikula_Doctrine2_Entity_CategoryRegistry')
+//                ->findOneBy(array('modname' => 'PostCalendar',
+//                                'tablename' => 'postcalendar_events',
+//                                'property' => 'Main'))
+//                ->getId();
+//            echo "::" . $event->getCategories()->get($regId)->getCategory()->getName(); echo "::<br />";
+//            $attributes = $event->getCategories()->get($regId)->getCategory()->getAttributes();
+//            echo ">>" . $attributes->getName() . ">>" . $attributes->getValue() . "<br />";
         }
         die;
         
