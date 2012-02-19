@@ -18,9 +18,8 @@ function smarty_function_pc_queued_events_notify($args, &$smarty)
     $assign = array_key_exists('assign', $args) && !empty($args['assign']) ? $args['assign'] : null;
     unset($args);
     
-    $dbtables = DBUtil::getTables();
-    $columns = $dbtables['postcalendar_events_column'];
-    $count = DBUtil::selectObjectCount('postcalendar_events', "WHERE $columns[eventstatus]=0");
+    $em = ServiceUtil::getService('doctrine.entitymanager');
+    $count = $em->getRepository('PostCalendar_Entity_CalendarEvent')->getEventCount(PostCalendar_Entity_CalendarEvent::QUEUED);
 
     if (empty($count) || ($count < 1)) {
         return;
