@@ -132,6 +132,8 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
                 }
 
             case '7.0.0':
+                // no changes
+            case '7.0.1':
                 //future development
         }
 
