@@ -11,11 +11,11 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * Tagged object entity class. (repositoryClass="PostCalendar_Entity_Repository_CalendarEventRepository")
+ * Calendar Event entity class
  *
  * Annotations define the entity mappings to database.
  *
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="PostCalendar_Entity_Repository_CalendarEventRepository")
  * @ORM\Table(name="postcalendar_events")
  */
 class PostCalendar_Entity_CalendarEvent extends Zikula_EntityAccess
@@ -586,7 +586,7 @@ class PostCalendar_Entity_CalendarEvent extends Zikula_EntityAccess
     {
         $array = parent::toArray();
         unset($array['reflection']);
-        unset ($array['categories']);
+        unset($array['categories']);
         
         $em = ServiceUtil::getService('doctrine.entitymanager');
         $registries = $em->getRepository('Zikula_Doctrine2_Entity_CategoryRegistry')
@@ -596,10 +596,10 @@ class PostCalendar_Entity_CalendarEvent extends Zikula_EntityAccess
             $category = $this->getCategories()->get($reg->getId())->getCategory();
             $array['__CATEGORIES__'][$reg->getProperty()] = array('name' => $category->getName(),
                                                                   'id' => (string)$category->getId());
-            $array['__CATEGORIES__']['display_name'] = $category->getDisplayName();
+            $array['__CATEGORIES__'][$reg->getProperty()]['display_name'] = $category->getDisplayName();
             $categoryAttributes = $category->getAttributes();
             foreach($categoryAttributes as $attr) {
-                $array['__CATEGORIES__']['__ATTRIBUTES__'] = array($attr->getName() => $attr->getValue());
+                $array['__CATEGORIES__'][$reg->getProperty()]['__ATTRIBUTES__'] = array($attr->getName() => $attr->getValue());
             }
         }
         $array['time'] = $this->getTtime()->format('Y-m-d H:i:s');
