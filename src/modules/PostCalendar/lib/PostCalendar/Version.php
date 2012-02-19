@@ -20,7 +20,7 @@ class PostCalendar_Version extends Zikula_AbstractVersion
         $meta['displayname'] = $this->__('PostCalendar');
         $meta['url'] = $this->__(/* !used in URL - nospaces, no special chars, lcase */'postcalendar');
         $meta['description'] = $this->__('Calendar for Zikula');
-        $meta['version'] = '7.0.0';
+        $meta['version'] = '7.0.1';
 
         $meta['securityschema'] = array(
             'PostCalendar::Event' => 'Event Title::Event ID',
