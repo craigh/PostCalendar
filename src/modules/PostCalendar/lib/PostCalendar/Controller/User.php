@@ -63,7 +63,7 @@ class PostCalendar_Controller_User extends Zikula_AbstractController
                 $this->throwForbiddenUnless(SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_READ), LogUtil::getErrorMsgPermission());
 
                 // get the event from the DB
-                $event = DBUtil::selectObjectByID('postcalendar_events', $eid, 'eid');
+                $event = $this->entityManager->getRepository('PostCalendar_Entity_CalendarEvent')->find($eid)->getOldArray();
                 $event = ModUtil::apiFunc('PostCalendar', 'event', 'formateventarrayfordisplay', $event);
 
                 // is event allowed for this user?
