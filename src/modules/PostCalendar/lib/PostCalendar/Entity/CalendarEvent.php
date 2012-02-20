@@ -599,7 +599,7 @@ class PostCalendar_Entity_CalendarEvent extends Zikula_EntityAccess
             $array['__CATEGORIES__'][$reg->getProperty()]['display_name'] = $category->getDisplayName();
             $categoryAttributes = $category->getAttributes();
             foreach($categoryAttributes as $attr) {
-                $array['__CATEGORIES__'][$reg->getProperty()]['__ATTRIBUTES__'] = array($attr->getName() => $attr->getValue());
+                $array['__CATEGORIES__'][$reg->getProperty()]['__ATTRIBUTES__'][$attr->getName()] = $attr->getValue();
             }
         }
         $array['time'] = $this->getTtime()->format('Y-m-d H:i:s');
