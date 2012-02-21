@@ -26,6 +26,9 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
             DoctrineHelper::createSchema($this->entityManager, array('PostCalendar_Entity_CalendarEvent', 
                                                                      'PostCalendar_Entity_EventCategory'));
         } catch (Exception $e) {
+            echo "<pre>";
+            var_dump($e->getMessage());
+            die;
             return false;
         }
         
@@ -137,6 +140,9 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
             case '7.0.0':
                 // no changes
             case '7.0.1':
+                // update category registry data to change tablename to EntityName
+                // move relations from categories_mapobj to postcalendar_calendarevent_category
+            case '7.1.0':
                 //future development
         }
 
@@ -226,7 +232,7 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
         $rootcat = CategoryUtil::getCategoryByPath('/__SYSTEM__/Modules/PostCalendar');
         if ($rootcat) {
             // create an entry in the categories registry to the Main property
-            CategoryRegistryUtil::insertEntry ('PostCalendar', 'postcalendar_events', 'Main', $rootcat['id']);
+            CategoryRegistryUtil::insertEntry ('PostCalendar', 'CalendarEvent', 'Main', $rootcat['id']);
         } else {
             return false;
         }

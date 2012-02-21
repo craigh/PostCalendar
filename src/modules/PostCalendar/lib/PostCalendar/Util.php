@@ -12,7 +12,7 @@ class PostCalendar_Util
     {
         // figure out associated categories and assign default value of 0 (none)
         $defaultscats = array();
-        $cats = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
+        $cats = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'CalendarEvent');
         foreach ($cats as $prop => $id) {
             $defaultcats[$prop] = 0;
         }
