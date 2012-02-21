@@ -543,18 +543,13 @@ class PostCalendar_Entity_CalendarEvent extends Zikula_EntityAccess
         }
         if (isset($array['__CATEGORIES__'])) {
             $em = ServiceUtil::getService('doctrine.entitymanager');
+            $regIds = CategoryRegistryUtil::getRegisteredModuleCategoriesIds('PostCalendar', 'CalendarEvent');
             foreach ($array['__CATEGORIES__'] as $propName => $catId) {
-                $tableName = $em->getClassMetadata(get_class($this))->getTableName();
-                $regId = $em->getRepository('Zikula_Doctrine2_Entity_CategoryRegistry')
-                    ->findOneBy(array('modname' => 'PostCalendar',
-                                    'tablename' => $tableName,
-                                    'property' => $propName))
-                    ->getId();
                 $category = $em->find('Zikula_Doctrine2_Entity_Category', $catId);
-                if ($this->getCategories()->get($regId)) {
-                    $this->getCategories()->get($regId)->setCategory($category);
+                if ($this->getCategories()->get($regIds[$propName])) {
+                    $this->getCategories()->get($regIds[$propName])->setCategory($category);
                 } else {
-                    $this->getCategories()->set($regId, new PostCalendar_Entity_EventCategory($regId, $category, $this));
+                    $this->getCategories()->set($regIds[$propName], new PostCalendar_Entity_EventCategory($regIds[$propName], $category, $this));
                 }
             }
 
@@ -588,18 +583,15 @@ class PostCalendar_Entity_CalendarEvent extends Zikula_EntityAccess
         unset($array['reflection']);
         unset($array['categories']);
         
-        $em = ServiceUtil::getService('doctrine.entitymanager');
-        $registries = $em->getRepository('Zikula_Doctrine2_Entity_CategoryRegistry')
-            ->findBy(array('modname' => 'PostCalendar',
-                           'tablename' => 'postcalendar_events'));
-        foreach ($registries as $reg) {
-            $category = $this->getCategories()->get($reg->getId())->getCategory();
-            $array['__CATEGORIES__'][$reg->getProperty()] = array('name' => $category->getName(),
+        $regIds = CategoryRegistryUtil::getRegisteredModuleCategoriesIds('PostCalendar', 'CalendarEvent');
+        foreach ($regIds as $propName => $regId) {
+            $category = $this->getCategories()->get($regId)->getCategory();
+            $array['__CATEGORIES__'][$propName] = array('name' => $category->getName(),
                                                                   'id' => (string)$category->getId());
-            $array['__CATEGORIES__'][$reg->getProperty()]['display_name'] = $category->getDisplayName();
+            $array['__CATEGORIES__'][$propName]['display_name'] = $category->getDisplayName();
             $categoryAttributes = $category->getAttributes();
             foreach($categoryAttributes as $attr) {
-                $array['__CATEGORIES__'][$reg->getProperty()]['__ATTRIBUTES__'][$attr->getName()] = $attr->getValue();
+                $array['__CATEGORIES__'][$propName]['__ATTRIBUTES__'][$attr->getName()] = $attr->getValue();
             }
         }
         $array['time'] = $this->getTtime()->format('Y-m-d H:i:s');
