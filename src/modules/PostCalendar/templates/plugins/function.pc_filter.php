@@ -99,7 +99,7 @@ function smarty_function_pc_filter($args, &$smarty)
     // build the category filter pulldown
     //================================================================
     if (in_array('category', $types) && _SETTING_ALLOW_CAT_FILTER && _SETTING_ENABLECATS) {
-        $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
+        $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'CalendarEvent');
 
         $smarty->assign('enablecategorization', ModUtil::getVar('PostCalendar', 'enablecategorization'));
         $smarty->assign('catregistry', $catregistry);
