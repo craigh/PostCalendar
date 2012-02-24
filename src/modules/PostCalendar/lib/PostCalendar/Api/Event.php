@@ -7,6 +7,9 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
  */
 
+use PostCalendar_Entity_Repository_CalendarEventRepository as EventRepo;
+use PostCalendar_Entity_CalendarEvent as CalendarEvent;
+
 /**
  * This is the event handler api
  **/
@@ -33,32 +36,25 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
         $pc_username = $args['pc_username'];
         $eventstatus = isset($args['eventstatus']) ? $args['eventstatus'] : 1;
 
-        if (_SETTING_ALLOW_USER_CAL) {
-            $filterdefault = _PC_FILTER_ALL;
-        } else {
-            $filterdefault = _PC_FILTER_GLOBAL;
-        }
         if (empty($pc_username)) {
-            $pc_username = $filterdefault;
+            $pc_username = (_SETTING_ALLOW_USER_CAL) ? EventRepo::FILTER_ALL : EventRepo::FILTER_GLOBAL;
         }
         if (!UserUtil::isLoggedIn()) {
-            $pc_username = _PC_FILTER_GLOBAL;
+            $pc_username = EventRepo::FILTER_GLOBAL;
         }
-
-        $userid = UserUtil::getVar('uid');
 
         // convert $pc_username to useable information
         /* possible values:
-        _PC_FILTER_GLOBAL (-1)  = all public events
-        _PC_FILTER_ALL (-2)     = all public events + my events
-        _PC_FILTER_PRIVATE (-3) = just my private events
+        FILTER_GLOBAL (-1)  = all public events
+        FILTER_ALL (-2)     = all public events + my events
+        FILTER_PRIVATE (-3) = just my private events
         */
         if ($pc_username > 0) {
             // possible values: a user id - only an admin can use this
             $ruserid = $pc_username; // keep the id
-            $pc_username = _PC_FILTER_PRIVATE;
+            $pc_username = EventRepo::FILTER_PRIVATE;
         } else {
-            $ruserid = $userid; // use current user's ID
+            $ruserid = UserUtil::getVar('uid'); // use current user's ID
         }
 
         if (!isset($eventstatus) || ((int) $eventstatus < -1 || (int) $eventstatus > 1)) {
@@ -66,57 +62,21 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
         }
 
         if (!isset($start)) {
-//            $start = DateUtil::getDatetime(null, '%Y-%m-%d');
             $start = date('Y-m-d');
-        }
-
-        list ($startyear, $startmonth, $startday) = explode('-', $start);
-        $dbtables = DBUtil::getTables();
-        $columns = $dbtables['postcalendar_events_column'];
-        $where = "WHERE $columns[eventstatus]=$eventstatus
-                  AND ($columns[endDate]>='$start'
-                  OR ($columns[endDate]='0000-00-00' AND $columns[recurrtype]<>'0')
-                  OR $columns[eventDate]>='$start')
-                  AND $columns[eventDate]<='$end' ";
-
-        // filter event display based on selection
-        /* possible event sharing values @v5.8
-        'SHARING_PRIVATE',       0);
-        'SHARING_PUBLIC',        1); //remove in v6.0 - convert to SHARING_GLOBAL
-        'SHARING_BUSY',          2); //remove in v6.0 - convert to SHARING_PRIVATE
-        'SHARING_GLOBAL',        3);
-        'SHARING_HIDEDESC',      4); //remove in v6.0 - convert to SHARING_PRIVATE
-        */
-        switch ($pc_username) {
-            case _PC_FILTER_PRIVATE: // show just private events
-                $where .= "AND $columns[aid] = $ruserid ";
-                $where .= "AND ($columns[sharing] = '" . SHARING_PRIVATE . "' ";
-                $where .= "OR $columns[sharing] = '" . SHARING_BUSY . "' "; //deprecated
-                $where .= "OR $columns[sharing] = '" . SHARING_HIDEDESC . "') "; //deprecated
-                break;
-            case _PC_FILTER_ALL: // show all public/global AND private events
-                $where .= "AND ($columns[aid] = $ruserid ";
-                $where .= "AND ($columns[sharing] = '" . SHARING_PRIVATE . "' ";
-                $where .= "OR $columns[sharing] = '" . SHARING_BUSY . "' "; //deprecated
-                $where .= "OR $columns[sharing] = '" . SHARING_HIDEDESC . "') "; //deprecated
-                $where .= "OR ($columns[sharing] = '" . SHARING_GLOBAL . "' ";
-                $where .= "OR $columns[sharing] = '" . SHARING_PUBLIC . "')) "; //deprecated
-                break;
-            case _PC_FILTER_GLOBAL: // show all public/global events
-            default:
-                $where .= "AND ($columns[sharing] = '" . SHARING_GLOBAL . "' ";
-                $where .= "OR $columns[sharing] = '" . SHARING_PUBLIC . "') "; //deprecated
         }
 
         $catsarray = self::formatCategoryFilter($filtercats);
 
-        if (!empty($s_keywords)) {
-            $where .= "AND $s_keywords";
-        }
-
-        $permChecker = new PostCalendar_ResultChecker();
-        $events = DBUtil::selectObjectArrayFilter('postcalendar_events', $where, null, null, null, null, $permChecker, $catsarray);
-
+//        if (!empty($s_keywords)) {
+//            $where .= "AND $s_keywords";
+//        }
+//
+//        $permChecker = new PostCalendar_ResultChecker();
+//        $events = DBUtil::selectObjectArrayFilter('postcalendar_events', $where, null, null, null, null, $permChecker, $catsarray);
+        
+        $events = $this->entityManager->getRepository('PostCalendar_Entity_CalendarEvent')
+                ->getEventCollection($eventstatus, $start, $end, $pc_username, $ruserid, $catsarray);
+        
         return $events;
     }
 
@@ -216,7 +176,7 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
         }
 
         foreach ($events as $event) {
-            $event = $this->formateventarrayfordisplay($event);
+            $event = $this->formateventarrayfordisplay($event->getOldArray());
 
             list ($eventstartyear, $eventstartmonth, $eventstartday) = explode('-', $event['eventDate']);
 
@@ -499,14 +459,14 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
 
         //remap sharing values to global/private (this sharing map converts pre-6.0 values to 6.0+ values)
         $sharingmap = array(
-            SHARING_PRIVATE  => SHARING_PRIVATE,
-            SHARING_PUBLIC   => SHARING_GLOBAL,
-            SHARING_BUSY     => SHARING_PRIVATE,
-            SHARING_GLOBAL   => SHARING_GLOBAL,
-            SHARING_HIDEDESC => SHARING_PRIVATE);
+            CalendarEvent::SHARING_PRIVATE  => CalendarEvent::SHARING_PRIVATE,
+            CalendarEvent::SHARING_PUBLIC   => CalendarEvent::SHARING_GLOBAL,
+            SHARING_BUSY                    => CalendarEvent::SHARING_PRIVATE,
+            CalendarEvent::SHARING_GLOBAL   => CalendarEvent::SHARING_GLOBAL,
+            SHARING_HIDEDESC                => CalendarEvent::SHARING_PRIVATE);
         $event['sharing'] = $sharingmap[$event['sharing']];
 
-        $event['privateicon'] = ($event['sharing'] == SHARING_PRIVATE) ? true : false;
+        $event['privateicon'] = ($event['sharing'] == CalendarEvent::SHARING_PRIVATE) ? true : false;
 
         // prep hometext for display
         if ($event['hometext'] == 'n/a') {
@@ -540,7 +500,7 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
         }
 
         // build sharing sentence for display
-        $event['sharing_sentence'] = ($event['sharing'] == SHARING_PRIVATE) ? $this->__('This is a private event.') : $this->__('This is a public event. ');
+        $event['sharing_sentence'] = ($event['sharing'] == CalendarEvent::SHARING_PRIVATE) ? $this->__('This is a private event.') : $this->__('This is a public event. ');
 
         $event['endTime'] = $this->computeendtime($event);
         // converts seconds to HH:MM for display  - keep just in case duration is wanted
@@ -610,10 +570,10 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
         define('PC_ACCESS_ADMIN', SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_DELETE));
 
         // determine if the event is to be published immediately or not
-        if ((bool) $this->getVar('pcAllowDirectSubmit') || (bool) PC_ACCESS_ADMIN || ($event['sharing'] != SHARING_GLOBAL)) {
-            $event['eventstatus'] = _EVENT_APPROVED;
+        if ((bool) $this->getVar('pcAllowDirectSubmit') || (bool) PC_ACCESS_ADMIN || ($event['sharing'] != CalendarEvent::SHARING_GLOBAL)) {
+            $event['eventstatus'] = CalendarEvent::APPROVED;
         } else {
-            $event['eventstatus'] = _EVENT_QUEUED;
+            $event['eventstatus'] = CalendarEvent::QUEUED;
         }
 
         $event['endDate'] = $event['endtype'] == 1 ? $event['endDate'] : '0000-00-00';
@@ -630,7 +590,7 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
 
         $event['location'] = serialize($event['location']);
         if (!isset($event['recurrtype'])) {
-            $event['recurrtype'] = NO_REPEAT;
+            $event['recurrtype'] = CalendarEvent::RECURRTYPE_NONE;
         }
         $event['recurrspec'] = serialize($event['repeat']);
 
@@ -653,7 +613,7 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
         }
 
         // check repeating frequencies
-        if ($submitted_event['recurrtype'] == REPEAT) {
+        if ($submitted_event['recurrtype'] == CalendarEvent::RECURRTYPE_REPEAT) {
             if (!is_numeric($submitted_event['repeat']['event_repeat_freq'])) {
                 LogUtil::registerError($this->__('Error! The repetition frequency must be an integer.'));
                 return true;
@@ -662,7 +622,7 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
                 LogUtil::registerError($this->__('Error! The repetition frequency must be at least 1.'));
                 return true;
             }
-        } elseif ($submitted_event['recurrtype'] == REPEAT_ON) {
+        } elseif ($submitted_event['recurrtype'] == CalendarEvent::RECURRTYPE_REPEAT_ON) {
             if (!is_numeric($submitted_event['repeat']['event_repeat_on_freq'])) {
                 LogUtil::registerError($this->__('Error! The repetition frequency must be an integer.'));
                 return true;
@@ -812,10 +772,10 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
 
         switch ($event['recurrtype']) {
             // Events that do not repeat only have a startday (eventDate)
-            case NO_REPEAT:
+            case CalendarEvent::RECURRTYPE_NONE:
                 return array($event['eventDate']); // there is only one date - return it
                 break;
-            case REPEAT:
+            case CalendarEvent::RECURRTYPE_REPEAT:
                 $rfreq = $event['repeat']['event_repeat_freq']; // could be any int
                 $rtype = $event['repeat']['event_repeat_freq_type']; // REPEAT_EVERY_DAY (0), REPEAT_EVERY_WEEK (1), REPEAT_EVERY_MONTH (2), REPEAT_EVERY_YEAR (3)
                 // we should bring the event up to date to make this a tad bit faster
@@ -844,7 +804,7 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
                     list ($newyear, $newmonth, $newday) = explode('-', $occurance);
                 }
                 break;
-            case REPEAT_ON:
+            case CalendarEvent::RECURRTYPE_REPEAT_ON:
                 $rfreq = $event['repeat']['event_repeat_on_freq'];
                 $rnum = $event['repeat']['event_repeat_on_num'];
                 $rday = $event['repeat']['event_repeat_on_day'];
@@ -950,10 +910,10 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
     {
         $data = array();
         if (_SETTING_ALLOW_USER_CAL) {
-            $data[SHARING_PRIVATE] = $this->__('Private');
+            $data[CalendarEvent::SHARING_PRIVATE] = $this->__('Private');
         }
         if (SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN) || !_SETTING_ALLOW_USER_CAL) {
-            $data[SHARING_GLOBAL] = $this->__('Global');
+            $data[CalendarEvent::SHARING_GLOBAL] = $this->__('Global');
         }
         return $data;
     }
@@ -1025,9 +985,6 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
                         unset($catsarray[$propname]); // removes categories set to 'all' (0)
                     }
                 }
-            }
-            if (!empty($catsarray)) {
-                $catsarray['__META__']['module'] = "PostCalendar"; // required for search operation
             }
         } else {
             $catsarray = array();
