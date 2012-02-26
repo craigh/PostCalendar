@@ -31,7 +31,7 @@ class PostCalendar_Api_Search extends Zikula_AbstractApi
             $renderer->assign('active', $active);
     
             // assign category info
-            $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
+            $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'CalendarEvent');
             $renderer->assign('catregistry', $catregistry);
     
             $props = array_keys($catregistry);
@@ -71,12 +71,12 @@ class PostCalendar_Api_Search extends Zikula_AbstractApi
         $searchargs['searchend'] = ($searchargs['searchstart'] == $args['searchend']) ? 2 : $args['searchend'];
     
         ModUtil::dbInfoLoad('Search');
-        $dbtable = DBUtil::getTables();
-        $postcalendarcolumn = $dbtable['postcalendar_events_column'];
-    
+
+        // this is a bit of a hacky way to ustilize this API for Doctrine calls.
+        // the 'a' prefix is the table alias in CalendarEventRepository
         $where = Search_Api_User::construct_where($args, array(
-            $postcalendarcolumn['title'],
-            $postcalendarcolumn['hometext']), null);
+            'a.title',
+            'a.hometext'), null);
         if (!empty($where)) {
             $searchargs['s_keywords'] = trim(substr(trim($where), 1, -1));
         }
