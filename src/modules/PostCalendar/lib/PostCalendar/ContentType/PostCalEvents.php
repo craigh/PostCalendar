@@ -24,7 +24,7 @@ class PostCalendar_ContentType_PostCalEvents extends Content_AbstractContentType
         $this->pcbeventslimit = $data['pcbeventslimit'];
 
         // Get the registrered categories for the module
-        $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories ('PostCalendar', 'postcalendar_events');
+        $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories ('PostCalendar', 'CalendarEvent');
         $properties = array_keys($catregistry);
         $this->categories = array();
         foreach($properties as $prop) {
@@ -61,7 +61,7 @@ class PostCalendar_ContentType_PostCalEvents extends Content_AbstractContentType
     public function startEditing() {
         $enablecategorization = ModUtil::getVar('PostCalendar', 'enablecategorization');
         if ($enablecategorization) {
-            $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
+            $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'CalendarEvent');
             $this->view->assign('catregistry', $catregistry);
         }
 
@@ -93,7 +93,7 @@ class PostCalendar_ContentType_PostCalEvents extends Content_AbstractContentType
             'pcbeventslimit' => 5,
             'categories'     => null);
         // Get the registered categories for the News module
-        $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
+        $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'CalendarEvent');
         $properties = array_keys($catregistry);
 
         // set a default category based on page category

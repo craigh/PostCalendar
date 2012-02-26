@@ -99,7 +99,7 @@ class PostCalendar_Block_Pastevents extends Zikula_Controller_AbstractBlock
         if (empty($vars['pcbfiltercats']))  $vars['pcbfiltercats']  = array();
     
         // load the category registry util
-        $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
+        $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'CalendarEvent');
         $this->view->assign('catregistry', $catregistry);
     
         $props = array_keys($catregistry);

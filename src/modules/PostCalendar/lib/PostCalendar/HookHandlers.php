@@ -143,7 +143,7 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
         $this->view->assign('postcalendar_hide', $postcalendar_hide);
 
         if ($postcalendar_admincatselected['Main'] == 0) {
-            $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
+            $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'CalendarEvent');
             $this->view->assign('postcalendar_catregistry', $catregistry);
             $this->view->assign('postcalendar_selectedcategories', $selectedcategories);
         } else {
@@ -364,7 +364,7 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
 
         $view->assign('ActiveModule', $moduleName);
 
-        $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
+        $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'CalendarEvent');
         $view->assign('postcalendar_catregistry', $catregistry);
 
         $z_event->setData($view->fetch('hooks/modifyconfig.tpl'));
