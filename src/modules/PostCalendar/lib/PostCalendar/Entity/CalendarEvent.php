@@ -57,9 +57,9 @@ class PostCalendar_Entity_CalendarEvent extends Zikula_EntityAccess
      * timestamp for event creation
      * NOT a typo - 'time' is a reserved SQL word
      * 
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", name="ttime")
      */
-    private $ttime;
+    private $time;
     /**
      * Event description
      * 
@@ -207,7 +207,7 @@ class PostCalendar_Entity_CalendarEvent extends Zikula_EntityAccess
     {
         $this->categories = new ArrayCollection();
         $this->setEventDate(new DateTime());
-        $this->setTtime(new DateTime());
+        $this->setTime(new DateTime());
         $blankdate = new DateTime();
         $blankdate->setDate(0000, 00, 00);
         $this->setEndDate($blankdate);
@@ -245,14 +245,14 @@ class PostCalendar_Entity_CalendarEvent extends Zikula_EntityAccess
         $this->title = $title;
     }
 
-    public function getTtime()
+    public function getTime()
     {
-        return $this->ttime;
+        return $this->time;
     }
 
-    public function setTtime($ttime)
+    public function setTime($time)
     {
-        $this->ttime = $ttime;
+        $this->time = $time;
     }
 
     public function getHometext()
@@ -480,31 +480,22 @@ class PostCalendar_Entity_CalendarEvent extends Zikula_EntityAccess
             $this->setAid($array['aid']);
         }
         if (isset($array['time'])) {
-            $uTime = new DateTime();
-            $parts = explode(" ", $array['time']);
-            list($year, $month, $day) = explode("-", $parts[0]);
-            $uTime->setDate($year, $month, $day);
-            list($hour, $minute, $second) = explode(":", $parts[1]);
-            $uTime->setTime($hour, $minute, $second);
-            $this->setTtime($uTime);
+            $uTime = DateTime::createFromFormat('Y-m-d H:i:s', $array['time']);
+            $this->setTime($uTime);
         }
         if (isset($array['informant'])) {
             $this->setInformant($array['informant']);
         }
         if (isset($array['eventDate'])) {
-            $eventDate = new DateTime();
-            list($year, $month, $day) = explode("-", $array['eventDate']);
-            $eventDate->setDate($year, $month, $day);
+            $eventDate = DateTime::createFromFormat('Y-m-d', $array['eventDate']);
             $this->setEventDate($eventDate);
         }
         if (isset($array['duration'])) {
             $this->setDuration($array['duration']);
         }
         if (isset($array['endDate'])) {
-            $endDate = new DateTime();
-            list($year, $month, $day) = explode("-", $array['endDate']);
-            $endDate->setDate($year, $month, $day);
-            $this->setEventDate($endDate);
+            $endDate = DateTime::createFromFormat('Y-m-d', $array['endDate']);
+            $this->setEndDate($endDate);
         }
         if (isset($array['recurrtype'])) {
             $this->setRecurrtype($array['recurrtype']);
@@ -597,7 +588,7 @@ class PostCalendar_Entity_CalendarEvent extends Zikula_EntityAccess
                 }
             }
         }
-        $array['time'] = $this->getTtime()->format('Y-m-d H:i:s');
+        $array['time'] = $this->getTime()->format('Y-m-d H:i:s');
         //reserialize the arrays
         $array['recurrspec'] = serialize($this->recurrspec);
         $array['location'] = serialize($this->location);
