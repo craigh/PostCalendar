@@ -6,6 +6,8 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
  */
 
+use PostCalendar_Entity_CalendarEvent as CalendarEvent;
+
 class PostCalendar_Controller_Admin extends Zikula_AbstractController
 {
     public function postInitialize()
@@ -42,14 +44,14 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
     {
 //        $events = $this->entityManager->getRepository('PostCalendar_Entity_CalendarEvent')->findAll();
 //        echo "<pre>"; var_dump($events); die;
-        echo "<pre>";
+//        echo "<pre>";
         
         $create = false;
-        $show = true;
-        $title = 'TestB8';
+        $show = false;
+        $title = 'TestA1';
 
         if ($create) {
-            $cat = CategoryUtil::getCategoryByPath('/__SYSTEM__/Modules/PostCalendar/Events');
+            $cat = CategoryUtil::getCategoryByPath('/__SYSTEM__/Modules/PostCalendar/OtherEvents');
             $eventArray = array(
                 'title'          => $title,
                 'eventstatus'    => 1,  // approved
@@ -60,22 +62,22 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
             $event->setFromArray($eventArray);
             $this->entityManager->persist($event);
             $this->entityManager->flush();
-            echo "event created<br />id: " . $event->getEid() . "<br />";
-            $regId = $this->entityManager->getRepository('Zikula_Doctrine2_Entity_CategoryRegistry')
-                ->findOneBy(array('modname' => 'PostCalendar',
-                                'tablename' => 'postcalendar_events',
-                                'property' => 'Main'))
-                ->getId();
-            echo "category: " . $event->getCategories()->get($regId)->getCategory()->getName();
+//            echo "event created<br />id: " . $event->getEid() . "<br />";
+//            $regId = $this->entityManager->getRepository('Zikula_Doctrine2_Entity_CategoryRegistry')
+//                ->findOneBy(array('modname' => 'PostCalendar',
+//                                'tablename' => 'postcalendar_events',
+//                                'property' => 'Main'))
+//                ->getId();
+//            echo "category: " . $event->getCategories()->get($regId)->getCategory()->getName();
         }
         if ($show) {
-            $testAttr = $this->entityManager->getRepository('Zikula_Doctrine2_Entity_Attribute')->find(15);
+//            $testAttr = $this->entityManager->getRepository('Zikula_Doctrine2_Entity_Attribute')->find(15);
 //            var_dump($testAttr->toArray());
             
             $event = $this->entityManager->getRepository('PostCalendar_Entity_CalendarEvent')->findOneBy(array('title' => $title));
             $eventArray = $event->getOldArray();
             var_dump($eventArray);
-//            $regs = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events', 'id');
+//            $regs = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'CalendarEvent', 'id');
 //            var_dump($regs);
 //            $regId = $this->entityManager->getRepository('Zikula_Doctrine2_Entity_CategoryRegistry')
 //                ->findOneBy(array('modname' => 'PostCalendar',
@@ -86,26 +88,23 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
 //            $attributes = $event->getCategories()->get($regId)->getCategory()->getAttributes();
 //            echo ">>" . $attributes->getName() . ">>" . $attributes->getValue() . "<br />";
         }
-        die;
+//        die;
         
         $this->throwForbiddenUnless(SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_DELETE), LogUtil::getErrorMsgPermission());
     
-        $listtype = isset($args['listtype']) ? $args['listtype'] : FormUtil::getPassedValue('listtype', _EVENT_APPROVED);
-        $dbtables = DBUtil::getTables();
-        $columns = $dbtables['postcalendar_events_column'];
-        $where = "WHERE $columns[eventstatus]=" . $listtype;
+        $listtype = isset($args['listtype']) ? $args['listtype'] : FormUtil::getPassedValue('listtype', CalendarEvent::APPROVED);
+
         switch ($listtype) {
-            case _EVENT_ALL:
+            case CalendarEvent::ALLSTATUS:
                 $functionname = "all";
-                $where = '';
                 break;
-            case _EVENT_HIDDEN:
+            case CalendarEvent::HIDDEN:
                 $functionname = "hidden";
                 break;
-            case _EVENT_QUEUED:
+            case CalendarEvent::QUEUED:
                 $functionname = "queued";
                 break;
-            case _EVENT_APPROVED:
+            case CalendarEvent::APPROVED:
             default:
                 $functionname = "approved";
             }
@@ -123,18 +122,14 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
         $this->view->assign('sdir', $original_sdir);
         $original_sort = $sort;
         $sdir = $original_sdir ? 0 : 1; //if true change to false, if false change to true
-        // setup sort col name
-        ModUtil::dbInfoLoad('PostCalendar');
-        $dbtable = DBUtil::getTables();
-        $cols = $dbtable['postcalendar_events_column'];
-        $sort = $cols[$sort];
+
         if ($sdir == 0) {
             $sortcolclasses[$original_sort] = 'z-order-desc';
-            $sort .= ' DESC';
+            $sort = "a.$sort DESC";
         }
         if ($sdir == 1) {
             $sortcolclasses[$original_sort] = 'z-order-asc';
-            $sort .= ' ASC';
+            $sort = "a.$sort ASC";
         }
         $this->view->assign('sortcolclasses', $sortcolclasses);
 
@@ -143,13 +138,15 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
         $filtercats = $filtercats_serialized ? unserialize($filtercats_serialized) : $filtercats;
         $catsarray = PostCalendar_Api_Event::formatCategoryFilter($filtercats);
 
-        $events = DBUtil::selectObjectArray('postcalendar_events', $where, $sort, $offset-1, _SETTING_HOW_MANY_EVENTS, false, null, $catsarray);
+        $events = $this->entityManager->getRepository('PostCalendar_Entity_CalendarEvent')
+                       ->getEventlist($listtype, $sort, $offset-1, _SETTING_HOW_MANY_EVENTS, $catsarray);
         $events = $this->_appendObjectActions($events, $listtype);
 
-        $total_events = DBUtil::selectObjectCount('postcalendar_events', $where, '1', false, $catsarray);
+        $total_events = $this->entityManager->getRepository('PostCalendar_Entity_CalendarEvent')
+                       ->getEventCount($listtype, $catsarray);
         $this->view->assign('total_events', $total_events);
 
-        $this->view->assign('filter_active', (empty($where) && empty($catsarray)) ? false : true);
+        $this->view->assign('filter_active', (($listtype == CalendarEvent::ALLSTATUS) && empty($catsarray)) ? false : true);
 
         $this->view->assign('functionname', $functionname);
         $this->view->assign('events', $events);
@@ -175,7 +172,7 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
             _EVENT_QUEUED   => $this->__('Queued Events')));
         $this->view->assign('listtypeselected', $listtype);
 
-        $this->view->assign('catregistry', CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events'));
+        $this->view->assign('catregistry', CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'CalendarEvent'));
         // convert categories array to proper filter info
         $selectedcategories = array();
         if (is_array($filtercats)) {
@@ -382,7 +379,7 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
         $this->throwForbiddenUnless(SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN), LogUtil::getErrorMsgPermission());
 
         // load the category registry util
-        $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
+        $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'CalendarEvent');
         $this->view->assign('catregistry', $catregistry);
     
         $eventDefaults = $this->getVar('pcEventDefaults');
@@ -430,14 +427,16 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
      * @param array $events
      * @return array
      */
-    private function _appendObjectActions($events, $listtype=_EVENT_APPROVED)
+    private function _appendObjectActions($events, $listtype=CalendarEvent::APPROVED)
     {
         $statusmap = array(
-            _EVENT_QUEUED => ' (Queued)',
-            _EVENT_HIDDEN => ' (Hidden)',
-            _EVENT_APPROVED => ''
+            CalendarEvent::QUEUED => ' (Queued)',
+            CalendarEvent::HIDDEN => ' (Hidden)',
+            CalendarEvent::APPROVED => ''
         );
+        $eventArray = array();
         foreach($events as $key => $event) {
+            $eventArray[$key] = $event->getOldArray();
             $options = array();
             $truncated_title = StringUtil::getTruncatedString($event['title'], 25);
             $options[] = array('url' => ModUtil::url('PostCalendar', 'user', 'display', array('viewtype' => 'details', 'eid' => $event['eid'])),
@@ -445,7 +444,7 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
                     'title' => $this->__f("View '%s'", $truncated_title));
 
             if (SecurityUtil::checkPermission('PostCalendar::Event', "{$event['title']}::{$event['eid']}", ACCESS_EDIT)) {
-                if ($event['eventstatus'] == _EVENT_APPROVED) {
+                if ($event['eventstatus'] == CalendarEvent::APPROVED) {
                     $options[] = array('url' => ModUtil::url('PostCalendar', 'admin', 'adminevents', array('action' => _ADMIN_ACTION_HIDE, 'events' => $event['eid'])),
                             'image' => 'db_remove.png',
                             'title' => $this->__f("Hide '%s'", $truncated_title));
@@ -464,10 +463,10 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
                     'image' => '14_layer_deletelayer.png',
                     'title' => $this->__f("Delete '%s'", $truncated_title));
             }
-            $events[$key]['options'] = $options;
-            $events[$key]['title'] = ($listtype == _EVENT_ALL) ? $event['title'] . $statusmap[$event['eventstatus']] : $event['title'];
+            $eventArray[$key]['options'] = $options;
+            $eventArray[$key]['title'] = ($listtype == CalendarEvent::ALLSTATUS) ? $event['title'] . $statusmap[$event['eventstatus']] : $event['title'];
         }
-        return $events;
+        return $eventArray;
     }
     
     /**

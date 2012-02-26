@@ -29,13 +29,16 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
      */
     public function queryEvents($args)
     {
-        $start       = $args['start'];
+        $start       = isset($args['start']) ? $args['start'] : date('Y-m-d');
         $end         = $args['end'] ? $args['end'] : '0000-00-00';
         $s_keywords  = $args['s_keywords'];
         $filtercats  = $args['filtercats'];
         $pc_username = $args['pc_username'];
-        $eventstatus = isset($args['eventstatus']) ? $args['eventstatus'] : 1;
-
+        $eventstatus = isset($args['eventstatus']) ? $args['eventstatus'] : CalendarEvent::APPROVED;
+        if (!isset($eventstatus) || ((int) $eventstatus < -1 || (int) $eventstatus > 1)) {
+            $eventstatus = CalendarEvent::APPROVED;
+        }
+        
         if (empty($pc_username)) {
             $pc_username = (_SETTING_ALLOW_USER_CAL) ? EventRepo::FILTER_ALL : EventRepo::FILTER_GLOBAL;
         }
@@ -44,11 +47,6 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
         }
 
         // convert $pc_username to useable information
-        /* possible values:
-        FILTER_GLOBAL (-1)  = all public events
-        FILTER_ALL (-2)     = all public events + my events
-        FILTER_PRIVATE (-3) = just my private events
-        */
         if ($pc_username > 0) {
             // possible values: a user id - only an admin can use this
             $ruserid = $pc_username; // keep the id
@@ -57,25 +55,14 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
             $ruserid = UserUtil::getVar('uid'); // use current user's ID
         }
 
-        if (!isset($eventstatus) || ((int) $eventstatus < -1 || (int) $eventstatus > 1)) {
-            $eventstatus = 1;
-        }
-
-        if (!isset($start)) {
-            $start = date('Y-m-d');
-        }
-
         $catsarray = self::formatCategoryFilter($filtercats);
 
-//        if (!empty($s_keywords)) {
-//            $where .= "AND $s_keywords";
-//        }
-//
+
 //        $permChecker = new PostCalendar_ResultChecker();
 //        $events = DBUtil::selectObjectArrayFilter('postcalendar_events', $where, null, null, null, null, $permChecker, $catsarray);
         
         $events = $this->entityManager->getRepository('PostCalendar_Entity_CalendarEvent')
-                ->getEventCollection($eventstatus, $start, $end, $pc_username, $ruserid, $catsarray);
+                ->getEventCollection($eventstatus, $start, $end, $pc_username, $ruserid, $catsarray, $s_keywords);
         
         return $events;
     }
@@ -186,12 +173,12 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
             // this switch block fills the $days array with events. It computes recurring events and adds the recurrances to the $days array also
             switch ($event['recurrtype']) {
                 // Events that do not repeat only have a startday (eventDate)
-                case NO_REPEAT:
+                case CalendarEvent::RECURRTYPE_NONE:
                     if (isset($days[$event['eventDate']])) {
                         $days[$event['eventDate']][] = $event;
                     }
                     break;
-                case REPEAT:
+                case CalendarEvent::RECURRTYPE_REPEAT:
                     $rfreq = $event['repeat']['event_repeat_freq']; // could be any int
                     $rtype = $event['repeat']['event_repeat_freq_type']; // REPEAT_EVERY_DAY (0), REPEAT_EVERY_WEEK (1), REPEAT_EVERY_MONTH (2), REPEAT_EVERY_YEAR (3)
                     // we should bring the event up to date to make this a tad bit faster
@@ -222,7 +209,7 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
                         list ($newyear, $newmonth, $newday) = explode('-', $occurance);
                     }
                     break;
-                case REPEAT_ON:
+                case CalendarEvent::RECURRTYPE_REPEAT_ON:
                     $rfreq = $event['repeat']['event_repeat_on_freq']; // could be any int
                     $rnum = $event['repeat']['event_repeat_on_num']; // REPEAT_ON_1ST (1), REPEAT_ON_2ND (2), REPEAT_ON_3RD (3), REPEAT_ON_4TH (4), REPEAT_ON_LAST(5)
                     $rday = $event['repeat']['event_repeat_on_day']; // REPEAT_ON_SUN (0), REPEAT_ON_MON (1), REPEAT_ON_TUE (2), REPEAT_ON_WED (3), REPEAT_ON_THU(4), REPEAT_ON_FRI (5), REPEAT_ON_SAT (6)
@@ -266,15 +253,28 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
 
         if ($eventdata['is_update']) {
             unset($eventdata['is_update']);
-            $obj = array(
-                $eventdata['eid'] => $eventdata);
-            $result = DBUtil::updateObjectArray($obj, 'postcalendar_events', 'eid');
+//            $obj = array(
+//                $eventdata['eid'] => $eventdata);
+//            $result = DBUtil::updateObjectArray($obj, 'postcalendar_events', 'eid');
+            $event = $this->entityManager->getRepository('PostCalendar_Entity_CalendarEvent')->find($eventdata['eid']);
         } else { //new event
             unset($eventdata['eid']); //be sure that eid is not set on insert op to autoincrement value
             unset($eventdata['is_update']);
             $eventdata['time'] = date("Y-m-d H:i:s"); //current date for timestamp on event
-            $result = DBUtil::insertObject($eventdata, 'postcalendar_events', 'eid');
+//            $result = DBUtil::insertObject($eventdata, 'postcalendar_events', 'eid');
+            $event = new PostCalendar_Entity_CalendarEvent();
         }
+        try {
+            $event->setFromArray($eventdata);
+            $this->entityManager->persist($event);
+            $this->entityManager->flush();
+            $result = $event->getEid();
+        } catch (Exception $e) {
+            echo "<pre>";
+            var_dump($e->getMessage());
+            die;
+        }
+
         if ($result === false) {
             return false;
         }
@@ -335,7 +335,7 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
         $eventdata['aid'] = isset($eventdata['aid']) ? $eventdata['aid'] : UserUtil::getVar('uid'); // set value of user-select box
         $form_data['username_selected'] = UserUtil::getVar('uname', $eventdata['aid']); // for display of username
 
-        $form_data['catregistry'] = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
+        $form_data['catregistry'] = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'CalendarEvent');
         $form_data['cat_count'] = count($form_data['catregistry']);
         // configure default categories
         $eventdata['__CATEGORIES__'] = isset($eventdata['__CATEGORIES__']) ? $eventdata['__CATEGORIES__'] : $eventDefaults['categories'];
@@ -486,11 +486,11 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
         $repeat_freq_type = explode("/", $this->__('Day(s)/Week(s)/Month(s)/Year(s)'));
         $repeat_on_num = explode("/", $this->__('err/First/Second/Third/Fourth/Last'));
         $repeat_on_day = explode(" ", $this->__('Sun Mon Tue Wed Thu Fri Sat'));
-        if ($event['recurrtype'] == REPEAT) {
+        if ($event['recurrtype'] == CalendarEvent::RECURRTYPE_REPEAT) {
             $event['recurr_sentence'] = $this->__f("Event recurs every %s", $event['repeat']['event_repeat_freq']);
             $event['recurr_sentence'] .= " " . $repeat_freq_type[$event['repeat']['event_repeat_freq_type']];
             $event['recurr_sentence'] .= " " . $this->__("until") . " " . $event['endDate'];
-        } elseif ($event['recurrtype'] == REPEAT_ON) {
+        } elseif ($event['recurrtype'] == CalendarEvent::RECURRTYPE_REPEAT_ON) {
             $event['recurr_sentence'] = $this->__("Event recurs on") . " " . $repeat_on_num[$event['repeat']['event_repeat_on_num']];
             $event['recurr_sentence'] .= " " . $repeat_on_day[$event['repeat']['event_repeat_on_day']];
             $event['recurr_sentence'] .= " " . $this->__f("of the month, every %s months", $event['repeat']['event_repeat_on_freq']);

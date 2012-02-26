@@ -133,7 +133,10 @@ class PostCalendar_Controller_Event extends Zikula_AbstractController
             } else {
                 // here were need to format the DB data to be able to load it into the form
                 $eid = $args['eid'];
-                $eventdata = DBUtil::selectObjectByID('postcalendar_events', $eid, 'eid');
+                $eventdata = $this->entityManager
+                        ->getRepository('PostCalendar_Entity_CalendarEvent')
+                        ->findOneBy(array('eid' => $eid))
+                        ->getOldArray();
                 $eventdata = ModUtil::apiFunc('PostCalendar', 'event', 'formateventarrayfordisplay', $eventdata);
             }
             // need to check each of these below to see if truly needed CAH 11/14/09
