@@ -6,6 +6,7 @@
  * @copyright   Copyright (c) 2009, Craig Heydenburg, Sound Web Development
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
  */
+use PostCalendar_Entity_CalendarEvent as CalendarEvent;
 
 class PostCalendar_Api_Admin extends Zikula_AbstractApi
 {
@@ -27,11 +28,11 @@ class PostCalendar_Api_Admin extends Zikula_AbstractApi
                 'text' => $this->__('Event List'),
                 'class' => 'z-icon-es-view',
                 'links' => array(
-                    array('url' => ModUtil::url('PostCalendar', 'admin', 'listevents', array('listtype'=>_EVENT_APPROVED)),
+                    array('url' => ModUtil::url('PostCalendar', 'admin', 'listevents', array('listtype' => CalendarEvent::APPROVED)),
                         'text' => $this->__('Approved Events')),
-                    array('url' => ModUtil::url('PostCalendar', 'admin', 'listevents', array('listtype'=>_EVENT_HIDDEN)),
+                    array('url' => ModUtil::url('PostCalendar', 'admin', 'listevents', array('listtype' => CalendarEvent::HIDDEN)),
                         'text' => $this->__('Hidden Events')),
-                    array('url' => ModUtil::url('PostCalendar', 'admin', 'listevents', array('listtype'=>_EVENT_QUEUED)),
+                    array('url' => ModUtil::url('PostCalendar', 'admin', 'listevents', array('listtype' => CalendarEvent::QUEUED)),
                         'text' => $this->__('Queued Events'))
                 ));
         }

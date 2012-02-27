@@ -6,6 +6,7 @@
  * @copyright   Copyright (c) 2009, Craig Heydenburg, Sound Web Development
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
  */
+use PostCalendar_Entity_CalendarEvent as CalendarEvent;
 
 class PostCalendar_Controller_Event extends Zikula_AbstractController
 {
@@ -197,7 +198,7 @@ class PostCalendar_Controller_Event extends Zikula_AbstractController
                 } else {
                     LogUtil::registerStatus($this->__f('Done! Submitted the event. (event date: %s)', $presentation_date));
                 }
-                if ((int) $eventdata['eventstatus'] === (int) _EVENT_QUEUED) {
+                if ((int)$eventdata['eventstatus'] === (int)CalendarEvent::QUEUED) {
                     LogUtil::registerStatus($this->__('The event has been queued for administrator approval.'));
                     ModUtil::apiFunc('PostCalendar', 'admin', 'notify', array(
                         'eid' => $eid,

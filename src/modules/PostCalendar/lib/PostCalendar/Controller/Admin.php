@@ -166,10 +166,10 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
             _ADMIN_ACTION_DELETE  => $this->__('Delete')));
         $this->view->assign('actionselected', '-1');
         $this->view->assign('listtypes', array(
-            _EVENT_ALL      => $this->__('All Events'),
-            _EVENT_APPROVED => $this->__('Approved Events'),
-            _EVENT_HIDDEN   => $this->__('Hidden Events'),
-            _EVENT_QUEUED   => $this->__('Queued Events')));
+            CalendarEvent::ALLSTATUS => $this->__('All Events'),
+            CalendarEvent::APPROVED  => $this->__('Approved Events'),
+            CalendarEvent::HIDDEN    => $this->__('Hidden Events'),
+            CalendarEvent::QUEUED    => $this->__('Queued Events')));
         $this->view->assign('listtypeselected', $listtype);
 
         $this->view->assign('catregistry', CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'CalendarEvent'));
@@ -202,7 +202,7 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
         if (!isset($events)) {
             LogUtil::registerError($this->__('Please select an event.'));
             // return to where we came from
-            $listtype = FormUtil::getPassedValue('listtype', _EVENT_APPROVED);
+            $listtype = FormUtil::getPassedValue('listtype', CalendarEvent::APPROVED);
             return $this->listevents(array('listtype' => $listtype));
         }
     
@@ -331,8 +331,8 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
             return $this->__("Error! An the eid must be passed as an array.");
         }
         $state = array (
-            _ADMIN_ACTION_APPROVE => _EVENT_APPROVED,
-            _ADMIN_ACTION_HIDE => _EVENT_HIDDEN,
+            _ADMIN_ACTION_APPROVE => CalendarEvent::APPROVED,
+            _ADMIN_ACTION_HIDE => CalendarEvent::HIDDEN,
             _ADMIN_ACTION_DELETE => 5); // just a random value for deleted
 
         // structure array for DB interaction
@@ -367,7 +367,7 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
 
         $this->view->clear_cache();
         return $this->listevents(array(
-            'listtype' => _EVENT_APPROVED));
+            'listtype' => CalendarEvent::APPROVED));
     }
 
     /**

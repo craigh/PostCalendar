@@ -80,7 +80,7 @@ function postcalendar_needleapi_eventarray($args)
     $event['eventDate'] = DateUtil::strftime(ModUtil::getVar('PostCalendar', 'pcEventDateFormat'), strtotime($event['eventDate']));
 
     // is event allowed for this user?
-    if ($event['sharing'] == SHARING_PRIVATE && $event['aid'] != UserUtil::getVar('uid') && !SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
+    if ($event['sharing'] == PostCalendar_Entity_CalendarEvent::SHARING_PRIVATE && $event['aid'] != UserUtil::getVar('uid') && !SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
         // if event is PRIVATE and user is not assigned event ID (aid) and user is not Admin event should not be seen
         return -1;
     }

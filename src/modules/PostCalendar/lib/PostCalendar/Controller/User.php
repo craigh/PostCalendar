@@ -67,7 +67,9 @@ class PostCalendar_Controller_User extends Zikula_AbstractController
                 $event = ModUtil::apiFunc('PostCalendar', 'event', 'formateventarrayfordisplay', $event);
 
                 // is event allowed for this user?
-                if ($event['sharing'] == SHARING_PRIVATE && $event['aid'] != UserUtil::getVar('uid') && !SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
+                if ($event['sharing'] == PostCalendar_Entity_CalendarEvent::SHARING_PRIVATE 
+                        && $event['aid'] != UserUtil::getVar('uid') 
+                        && !SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
                     // if event is PRIVATE and user is not assigned event ID (aid) and user is not Admin event should not be seen
                     return LogUtil::registerError($this->__('You do not have permission to view this event.'));
                 }

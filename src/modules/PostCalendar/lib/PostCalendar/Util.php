@@ -47,7 +47,7 @@ class PostCalendar_Util
                 'M'                       => '%B',
                 'Y'                       => '%Y'),
             'pcEventDefaults'         => array(
-                'sharing'                 => SHARING_GLOBAL,
+                'sharing'                 => PostCalendar_Entity_CalendarEvent::SHARING_GLOBAL,
                 'categories'              => $defaultcats,
                 'alldayevent'             => 0,
                 'startTime'               => '01:00:00',
