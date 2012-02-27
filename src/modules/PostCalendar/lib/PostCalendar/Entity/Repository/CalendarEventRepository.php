@@ -21,7 +21,7 @@ class PostCalendar_Entity_Repository_CalendarEventRepository extends EntityRepos
     /**
      * get all associated tags for an object
      * 
-     * @return Object Zikula_EntityAccess 
+     * @return Scalar 
      */
     public function getEventCount($eventStatus = CalendarEvent::APPROVED, $filterCategories = null)
     {
@@ -50,6 +50,19 @@ class PostCalendar_Entity_Repository_CalendarEventRepository extends EntityRepos
         return $query->getResult(Query::HYDRATE_SINGLE_SCALAR);
     }
     
+    /**
+     * Get collection of events for user view
+     * 
+     * @param integer $eventStatus
+     * @param string $startDate
+     * @param string $endDate
+     * @param integer $username
+     * @param integer $ruserid
+     * @param array $filterCategories
+     * @param string $search
+     * 
+     * @return Object Collection 
+     */
     public function getEventCollection($eventStatus, $startDate, $endDate, $username, $ruserid, $filterCategories, $search)
     {
         $dql = "SELECT a FROM PostCalendar_Entity_CalendarEvent a JOIN a.categories c " .
@@ -137,6 +150,17 @@ class PostCalendar_Entity_Repository_CalendarEventRepository extends EntityRepos
         
     }
     
+    /**
+     * get collection of events for admin view
+     * 
+     * @param integer $eventStatus
+     * @param string $sort
+     * @param integer $offset
+     * @param integer $amount
+     * @param array $filterCategories
+     * 
+     * @return Object Collection 
+     */
     public function getEventList($eventStatus, $sort, $offset, $amount, $filterCategories)
     {
         $dql = "SELECT a FROM PostCalendar_Entity_CalendarEvent a JOIN a.categories c ";
