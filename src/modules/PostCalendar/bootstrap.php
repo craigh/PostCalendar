@@ -12,12 +12,6 @@
 define('_IS_SUNDAY',            0);
 define('_IS_MONDAY',            1);
 define('_IS_SATURDAY',          6);
-// admin defines
-define('_ADMIN_ACTION_APPROVE', 0);
-define('_ADMIN_ACTION_HIDE',    1);
-define('_ADMIN_ACTION_EDIT',    2);
-define('_ADMIN_ACTION_VIEW',    3);
-define('_ADMIN_ACTION_DELETE',  4);
 
 //=================================================================
 // Get the global PostCalendar config settings

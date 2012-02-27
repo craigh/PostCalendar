@@ -100,7 +100,7 @@ class PostCalendar_Api_Admin extends Zikula_AbstractApi
         $renderer->assign('eid', $eid);
         $renderer->assign('link', ModUtil::url('PostCalendar', 'admin', 'adminevents', array(
             'events' => $eid,
-            'action' => _ADMIN_ACTION_VIEW), null, null, true));
+            'action' => PostCalendar_Controller_Admin::ACTION_VIEW), null, null, true));
         $message = $renderer->fetch('email/adminnotify.tpl');
     
         $messagesent = ModUtil::apiFunc('Mailer', 'user', 'sendmessage', array(

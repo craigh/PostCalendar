@@ -10,6 +10,11 @@ use PostCalendar_Entity_CalendarEvent as CalendarEvent;
 
 class PostCalendar_Controller_Admin extends Zikula_AbstractController
 {
+    const ACTION_APPROVE = 0;
+    const ACTION_HIDE = 1;
+    const ACTION_VIEW = 3;
+    const ACTION_DELETE = 4;
+    
     public function postInitialize()
     {
         $this->view->setCaching(false);
@@ -160,10 +165,10 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
         }
         $this->view->assign('formactions', array(
             '-1'                  => $this->__('With selected:'),
-            _ADMIN_ACTION_VIEW    => $this->__('View'),
-            _ADMIN_ACTION_APPROVE => $this->__('Approve'),
-            _ADMIN_ACTION_HIDE    => $this->__('Hide'),
-            _ADMIN_ACTION_DELETE  => $this->__('Delete')));
+            self::ACTION_VIEW    => $this->__('View'),
+            self::ACTION_APPROVE => $this->__('Approve'),
+            self::ACTION_HIDE    => $this->__('Hide'),
+            self::ACTION_DELETE  => $this->__('Delete')));
         $this->view->assign('actionselected', '-1');
         $this->view->assign('listtypes', array(
             CalendarEvent::ALLSTATUS => $this->__('All Events'),
@@ -220,10 +225,10 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
     
         $count = count($events);
         $texts = array(
-            _ADMIN_ACTION_VIEW => "view",
-            _ADMIN_ACTION_APPROVE => "approve",
-            _ADMIN_ACTION_HIDE => "hide",
-            _ADMIN_ACTION_DELETE => "delete");
+            self::ACTION_VIEW => "view",
+            self::ACTION_APPROVE => "approve",
+            self::ACTION_HIDE => "hide",
+            self::ACTION_DELETE => "delete");
 
         $this->view->assign('actiontext', $texts[$action]);
         $this->view->assign('action', $action);
@@ -331,9 +336,9 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
             return $this->__("Error! An the eid must be passed as an array.");
         }
         $state = array (
-            _ADMIN_ACTION_APPROVE => CalendarEvent::APPROVED,
-            _ADMIN_ACTION_HIDE => CalendarEvent::HIDDEN,
-            _ADMIN_ACTION_DELETE => 5); // just a random value for deleted
+            self::ACTION_APPROVE => CalendarEvent::APPROVED,
+            self::ACTION_HIDE => CalendarEvent::HIDDEN,
+            self::ACTION_DELETE => 5); // just a random value for deleted
 
         // structure array for DB interaction
         $eventarray = array();
@@ -346,15 +351,15 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
 
         // update the DB
         switch ($action) {
-            case _ADMIN_ACTION_APPROVE:
+            case self::ACTION_APPROVE:
                 $res = DBUtil::updateObjectArray($eventarray, 'postcalendar_events', 'eid');
                 $words = array('approve', 'approved');
                 break;
-            case _ADMIN_ACTION_HIDE:
+            case self::ACTION_HIDE:
                 $res = DBUtil::updateObjectArray($eventarray, 'postcalendar_events', 'eid');
                 $words = array('hide', 'hidden');
                 break;
-            case _ADMIN_ACTION_DELETE:
+            case self::ACTION_DELETE:
                 $res = DBUtil::deleteObjectsFromKeyArray($eventarray, 'postcalendar_events', 'eid');
                 $words = array('delete', 'deleted');
                 break;
@@ -445,11 +450,11 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
 
             if (SecurityUtil::checkPermission('PostCalendar::Event', "{$event['title']}::{$event['eid']}", ACCESS_EDIT)) {
                 if ($event['eventstatus'] == CalendarEvent::APPROVED) {
-                    $options[] = array('url' => ModUtil::url('PostCalendar', 'admin', 'adminevents', array('action' => _ADMIN_ACTION_HIDE, 'events' => $event['eid'])),
+                    $options[] = array('url' => ModUtil::url('PostCalendar', 'admin', 'adminevents', array('action' => self::ACTION_HIDE, 'events' => $event['eid'])),
                             'image' => 'db_remove.png',
                             'title' => $this->__f("Hide '%s'", $truncated_title));
                 } else {
-                    $options[] = array('url' => ModUtil::url('PostCalendar', 'admin', 'adminevents', array('action' => _ADMIN_ACTION_APPROVE, 'events' => $event['eid'])),
+                    $options[] = array('url' => ModUtil::url('PostCalendar', 'admin', 'adminevents', array('action' => self::ACTION_APPROVE, 'events' => $event['eid'])),
                             'image' => 'button_ok.png',
                             'title' => $this->__f("Approve '%s'", $truncated_title));
                 }
