@@ -9,6 +9,24 @@
 
 use PostCalendar_Entity_Repository_CalendarEventRepository as EventRepo;
 use PostCalendar_Entity_CalendarEvent as CalendarEvent;
+define('REPEAT_EVERY_DAY',      0);
+define('REPEAT_EVERY_WEEK',     1);
+define('REPEAT_EVERY_MONTH',    2);
+define('REPEAT_EVERY_YEAR',     3);
+// $event_repeat_on_num
+define('REPEAT_ON_1ST',         1);
+define('REPEAT_ON_2ND',         2);
+define('REPEAT_ON_3RD',         3);
+define('REPEAT_ON_4TH',         4);
+define('REPEAT_ON_LAST',        5);
+// $event_repeat_on_day
+define('REPEAT_ON_SUN',         0);
+define('REPEAT_ON_MON',         1);
+define('REPEAT_ON_TUE',         2);
+define('REPEAT_ON_WED',         3);
+define('REPEAT_ON_THU',         4);
+define('REPEAT_ON_FRI',         5);
+define('REPEAT_ON_SAT',         6);
 
 /**
  * This is the event handler api
@@ -168,7 +186,7 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
             list ($eventstartyear, $eventstartmonth, $eventstartday) = explode('-', $event['eventDate']);
 
             // determine the stop date for this event
-            $stop = ($event['endDate'] == '0000-00-00') ? $end_date : $event['endDate'];
+            $stop = (($event['endDate'] == '0000-00-00') || ($event['endDate'] == '-0001-11-30')) ? $end_date : $event['endDate'];
 
             // this switch block fills the $days array with events. It computes recurring events and adds the recurrances to the $days array also
             switch ($event['recurrtype']) {
@@ -253,33 +271,29 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
 
         if ($eventdata['is_update']) {
             unset($eventdata['is_update']);
-//            $obj = array(
-//                $eventdata['eid'] => $eventdata);
-//            $result = DBUtil::updateObjectArray($obj, 'postcalendar_events', 'eid');
             $event = $this->entityManager->getRepository('PostCalendar_Entity_CalendarEvent')->find($eventdata['eid']);
         } else { //new event
             unset($eventdata['eid']); //be sure that eid is not set on insert op to autoincrement value
             unset($eventdata['is_update']);
             $eventdata['time'] = date("Y-m-d H:i:s"); //current date for timestamp on event
-//            $result = DBUtil::insertObject($eventdata, 'postcalendar_events', 'eid');
             $event = new PostCalendar_Entity_CalendarEvent();
         }
         try {
             $event->setFromArray($eventdata);
             $this->entityManager->persist($event);
             $this->entityManager->flush();
-            $result = $event->getEid();
+            $eid = $event->getEid();
         } catch (Exception $e) {
             echo "<pre>";
             var_dump($e->getMessage());
             die;
         }
 
-        if ($result === false) {
+        if ($eid === false) {
             return false;
         }
 
-        return $result['eid'];
+        return $eid;
     }
 
     /**
@@ -297,7 +311,7 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
         $eventDefaults = $this->getVar('pcEventDefaults');
 
         // format date information
-        if ((!isset($eventdata['endDate'])) || ($eventdata['endDate'] == '') || ($eventdata['endDate'] == '00000000') || ($eventdata['endDate'] == '0000-00-00')) {
+        if ((!isset($eventdata['endDate'])) || ($eventdata['endDate'] == '') || ($eventdata['endDate'] == '00000000') || ($eventdata['endDate'] == '0000-00-00') || ($eventdata['endDate'] == '-0001-11-30')) {
             $eventdata['endvalue'] = PostCalendar_Util::getDate(array(
                 'Date' => $args['Date'],
                 'format' => _SETTING_DATE_FORMAT));
@@ -461,9 +475,9 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
         $sharingmap = array(
             CalendarEvent::SHARING_PRIVATE  => CalendarEvent::SHARING_PRIVATE,
             CalendarEvent::SHARING_PUBLIC   => CalendarEvent::SHARING_GLOBAL,
-            SHARING_BUSY                    => CalendarEvent::SHARING_PRIVATE,
+            2                               => CalendarEvent::SHARING_PRIVATE, // 2 was SHARING_BUSY
             CalendarEvent::SHARING_GLOBAL   => CalendarEvent::SHARING_GLOBAL,
-            SHARING_HIDEDESC                => CalendarEvent::SHARING_PRIVATE);
+            4                               => CalendarEvent::SHARING_PRIVATE); //4 was SHARING_HIDEDESC
         $event['sharing'] = $sharingmap[$event['sharing']];
 
         $event['privateicon'] = ($event['sharing'] == CalendarEvent::SHARING_PRIVATE) ? true : false;
@@ -513,7 +527,7 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
         $event['startTime'] = _SETTING_TIME_24HOUR ? gmdate('G:i', gmmktime($h, $m, $s, 0, 0, 0)) : gmdate('g:i a', gmmktime($h, $m, $s, 0, 0, 0));
 
         // format endtype for edit form
-        $event['endtype'] = $event['endDate'] == '0000-00-00' ? '0' : '1';
+        $event['endtype'] = (($event['endDate'] == '0000-00-00') || ($event['endDate'] == '-0001-11-30')) ? '0' : '1';
 
         // compensate for changeover to new categories system
         $lang = ZLanguage::getLanguageCode();
@@ -548,7 +562,7 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
      */
     public function formateventarrayforDB($event)
     {
-        if (substr($event['endDate'], 0, 4) == '0000') {
+        if ((substr($event['endDate'], 0, 4) == '0000') || (substr($event['endDate'], 0, 5) == '-0001')) {
             $event['endDate'] = $event['eventDate'];
         }
 
@@ -762,7 +776,7 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
         list ($eventstartyear, $eventstartmonth, $eventstartday) = explode('-', $event['eventDate']);
         // determine the stop date for this event
         $default_end_date = date("Y-m-d", strtotime("+2 years")); // default to only get first two years of recurrance
-        $stop = ($event['endDate'] == '0000-00-00') ? $default_end_date : $event['endDate'];
+        $stop = (($event['endDate'] == '0000-00-00') || ($event['endDate'] == '-0001-11-30')) ? $default_end_date : $event['endDate'];
 
         $start_date = $event['eventDate']; // maybe try today instead?
 
