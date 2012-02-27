@@ -6,6 +6,7 @@
  * @copyright   Copyright (c) 2009, Craig Heydenburg, Sound Web Development
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
  */
+use \PostCalendar_Api_User as UserApi;
 
 class PostCalendar_Block_Calendar extends Zikula_Controller_AbstractBlock
 {
@@ -125,19 +126,19 @@ class PostCalendar_Block_Calendar extends Zikula_Controller_AbstractBlock
             5 => "pcWeekday", 
             6 => "pcWeekday");
         switch (_SETTING_FIRST_DAY_WEEK) {
-            case _IS_MONDAY:
+            case UserApi::MONDAY_IS_FIRST:
                 $pc_array_pos = 1;
                 $first_day = date('w', mktime(0, 0, 0, $the_month, 0, $the_year));
                 $pc_colclasses[5] = "pcWeekend";
                 $pc_colclasses[6] = "pcWeekend";
                 break;
-            case _IS_SATURDAY:
+            case UserApi::SATURDAY_IS_FIRST:
                 $pc_array_pos = 6;
                 $first_day = date('w', mktime(0, 0, 0, $the_month, 2, $the_year));
                 $pc_colclasses[0] = "pcWeekend";
                 $pc_colclasses[1] = "pcWeekend";
                 break;
-            case _IS_SUNDAY:
+            case UserApi::SUNDAY_IS_FIRST:
             default:
                 $pc_array_pos = 0;
                 $first_day = date('w', mktime(0, 0, 0, $the_month, 1, $the_year));

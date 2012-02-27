@@ -9,6 +9,10 @@
 
 class PostCalendar_Api_User extends Zikula_AbstractApi
 {
+    const SUNDAY_IS_FIRST = 0;
+    const MONDAY_IS_FIRST = 1;
+    const SATURDAY_IS_FIRST = 6;
+    
     /**
      * Builds the calendar display
      * @param string $Date mm/dd/yyyy format
@@ -49,7 +53,7 @@ class PostCalendar_Api_User extends Zikula_AbstractApi
         // This helps establish the correct date ranges for each view.
         // There may be a better way to handle all this.
         switch (_SETTING_FIRST_DAY_WEEK) {
-            case _IS_MONDAY:
+            case self::MONDAY_IS_FIRST:
                 $pc_array_pos = 1;
                 $first_day = date('w', mktime(0, 0, 0, $the_month, 0, $the_year));
                 $week_day = date('w', mktime(0, 0, 0, $the_month, $the_day - 1, $the_year));
@@ -62,7 +66,7 @@ class PostCalendar_Api_User extends Zikula_AbstractApi
                 $pc_colclasses[5] = "pcWeekend";
                 $pc_colclasses[6] = "pcWeekend";
                 break;
-            case _IS_SATURDAY:
+            case self::SATURDAY_IS_FIRST:
                 $pc_array_pos = 6;
                 $first_day = date('w', mktime(0, 0, 0, $the_month, 2, $the_year));
                 $week_day = date('w', mktime(0, 0, 0, $the_month, $the_day + 1, $the_year));
@@ -77,7 +81,7 @@ class PostCalendar_Api_User extends Zikula_AbstractApi
                 $pc_colclasses[0] = "pcWeekend";
                 $pc_colclasses[1] = "pcWeekend";
                 break;
-            case _IS_SUNDAY:
+            case self::SUNDAY_IS_FIRST:
             default:
                 $pc_array_pos = 0;
                 $first_day = date('w', mktime(0, 0, 0, $the_month, 1, $the_year));

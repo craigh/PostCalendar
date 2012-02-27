@@ -7,13 +7,6 @@
  */
 
 //=================================================================
-//  define constants used to make the code more readable
-//=================================================================
-define('_IS_SUNDAY',            0);
-define('_IS_MONDAY',            1);
-define('_IS_SATURDAY',          6);
-
-//=================================================================
 // Get the global PostCalendar config settings
 // This will save us a lot of time and DB queries later
 //=================================================================
