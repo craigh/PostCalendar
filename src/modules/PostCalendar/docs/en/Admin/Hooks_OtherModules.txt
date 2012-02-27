@@ -62,5 +62,5 @@ These two block types are identical in function to standard the Zikula blocks do
 
 PostCalendar proves integration support with the Locations module. Once the Locations module is active and it is enabled in the PostCalendar module config, a drop-down menu will appear in the event create/edit form as well as the event defaults form. *Technical note: the link to the locations data is not maintained, the data is simply copied to the PostCalendar fields.*
 
-[link1]: <http://code.zikula.org/soundwebdevelopment/wiki/PostCalendarHookDev70>
+[link1]: <https://github.com/craigh/PostCalendar/wiki/Developer-Docs>
    "PostCalendar Developer Documentation"

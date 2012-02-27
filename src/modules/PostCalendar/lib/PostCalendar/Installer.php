@@ -86,7 +86,7 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
             require 'modules/PostCalendar/pnversion.php';
 
             // Inform user about error, and how he can upgrade to $modversion['version']
-            return LogUtil::registerError($this->__f('Notice: This version does not support upgrades from PostCalendar 5.x and earlier. Please see detailed upgrade instructions at <a href="http://code.zikula.org/soundwebdevelopment/wiki/PostCalendar#Upgrade">code.zikula.org/soundwebdevelopment</a>). After upgrading, you can install PostCalendar %s and perform this upgrade.', $modversion));
+            return LogUtil::registerError($this->__f('Notice: This version does not support upgrades from PostCalendar 5.x and earlier. Please see detailed upgrade instructions at <a href="https://github.com/craigh/PostCalendar/wiki/Installation-and-Upgrade">the GitHub site</a>). After upgrading, you can install PostCalendar %s and perform this upgrade.', $modversion));
         }
 
         switch ($oldversion) {
@@ -262,7 +262,7 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
             'location'       => 'a:6:{s:14:"event_location";s:0:"";s:13:"event_street1";s:0:"";s:13:"event_street2";s:0:"";s:10:"event_city";s:0:"";s:11:"event_state";s:0:"";s:12:"event_postal";s:0:"";}',
             'eventstatus'    => 1,  // approved
             'sharing'        => 3,  // global
-            'website'        => 'http://code.zikula.org/soundwebdevelopment/wiki/PostCalendar',
+            'website'        => 'https://github.com/craigh/PostCalendar/wiki',
             '__CATEGORIES__' => array(
                 'Main' => $cat['id']),
             '__META__'       => array(
