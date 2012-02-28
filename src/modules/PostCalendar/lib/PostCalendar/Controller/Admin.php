@@ -215,12 +215,14 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
             $events = array(
                 $events);
         } //create array if not already
-    
-        foreach ($events as $eid) {
+        $alleventinfo = array();
+
+        $events = $this->entityManager->getRepository('PostCalendar_Entity_CalendarEvent')->findBy(array('eid' => $events));
+        foreach ($events as $event) {
             // get event info
-            $eventitems = DBUtil::selectObjectByID('postcalendar_events', $eid, 'eid');
+            $eventitems = $event->getOldArray();
             $eventitems = ModUtil::apiFunc('PostCalendar', 'event', 'formateventarrayfordisplay', $eventitems);
-            $alleventinfo[$eid] = $eventitems;
+            $alleventinfo[$event->getEid()] = $eventitems;
         }
     
         $count = count($events);
@@ -335,32 +337,21 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
         if (!is_array($pc_eid)) {
             return $this->__("Error! An the eid must be passed as an array.");
         }
-        $state = array (
-            self::ACTION_APPROVE => CalendarEvent::APPROVED,
-            self::ACTION_HIDE => CalendarEvent::HIDDEN,
-            self::ACTION_DELETE => 5); // just a random value for deleted
-
-        // structure array for DB interaction
-        $eventarray = array();
-        foreach ($pc_eid as $eid) {
-            $eventarray[$eid] = array(
-                'eid' => $eid,
-                'eventstatus' => $state[$action]); // field not used in delete action
-        }
+        
         $count = count($pc_eid);
 
         // update the DB
         switch ($action) {
             case self::ACTION_APPROVE:
-                $res = DBUtil::updateObjectArray($eventarray, 'postcalendar_events', 'eid');
+                $res = $this->entityManager->getRepository('PostCalendar_Entity_CalendarEvent')->updateEventStatus(CalendarEvent::APPROVED, $pc_eid);
                 $words = array('approve', 'approved');
                 break;
             case self::ACTION_HIDE:
-                $res = DBUtil::updateObjectArray($eventarray, 'postcalendar_events', 'eid');
+                $res = $this->entityManager->getRepository('PostCalendar_Entity_CalendarEvent')->updateEventStatus(CalendarEvent::HIDDEN, $pc_eid);
                 $words = array('hide', 'hidden');
                 break;
             case self::ACTION_DELETE:
-                $res = DBUtil::deleteObjectsFromKeyArray($eventarray, 'postcalendar_events', 'eid');
+                $res = $this->entityManager->getRepository('PostCalendar_Entity_CalendarEvent')->deleteEvents($pc_eid);
                 $words = array('delete', 'deleted');
                 break;
         }

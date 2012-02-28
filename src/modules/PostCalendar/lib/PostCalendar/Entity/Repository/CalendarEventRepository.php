@@ -63,7 +63,7 @@ class PostCalendar_Entity_Repository_CalendarEventRepository extends EntityRepos
      * 
      * @return Object Collection 
      */
-    public function getEventCollection($eventStatus, $startDate, $endDate, $username, $ruserid, $filterCategories, $search)
+    public function getEventCollection($eventStatus, $startDate, $endDate, $username, $ruserid, array $filterCategories, $search)
     {
         $dql = "SELECT a FROM PostCalendar_Entity_CalendarEvent a JOIN a.categories c " .
                "WHERE (a.endDate >= ?2 " .
@@ -161,7 +161,7 @@ class PostCalendar_Entity_Repository_CalendarEventRepository extends EntityRepos
      * 
      * @return Object Collection 
      */
-    public function getEventList($eventStatus, $sort, $offset, $amount, $filterCategories)
+    public function getEventList($eventStatus, $sort, $offset, $amount, array $filterCategories)
     {
         $dql = "SELECT a FROM PostCalendar_Entity_CalendarEvent a JOIN a.categories c ";
         $where = array();
@@ -201,5 +201,47 @@ class PostCalendar_Entity_Repository_CalendarEventRepository extends EntityRepos
             die;
         }
         return $result;
+    }
+    
+    public function updateEventStatus($status, array $eids)
+    {
+        $dql = "UPDATE PostCalendar_Entity_CalendarEvent a " .
+               "SET a.eventstatus = :eventstatus " .
+               "WHERE a.eid IN (:eids)";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameters(array(
+            'eventstatus' => $status,
+            'eids' => $eids,
+        ));
+        try {
+            $query->getResult();
+            $this->_em->clear();
+        } catch (Exception $e) {
+            echo "<pre>";
+            var_dump($e->getMessage());
+            var_dump($query->getDQL());
+            var_dump($query->getParameters());
+            var_dump($query->getSQL());
+            die;
+        }
+        return true;
+    }
+    
+    public function deleteEvents(array $eids)
+    {
+        foreach ($eids as $eid) {
+            $event = $this->_em
+                    ->getRepository('PostCalendar_Entity_CalendarEvent')
+                    ->findOneBy(array(
+                        'eid' => $eid));
+            $this->_em->remove($event);
+        }
+        try {
+            $this->_em->flush();
+        } catch (Exception $e) {
+            echo $e->getMessage();
+            return false;
+        }
+        return true;
     }
 }
