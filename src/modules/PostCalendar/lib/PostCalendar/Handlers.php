@@ -10,10 +10,7 @@ class PostCalendar_Handlers {
     public static function pendingContent(Zikula_Event $event)
     {
         $dom = ZLanguage::getModuleDomain('PostCalendar');
-        ModUtil::dbInfoLoad('PostCalendar');
-        $dbtables = DBUtil::getTables();
-        $columns = $dbtables['postcalendar_events_column'];
-        $count = DBUtil::selectObjectCount('postcalendar_events', "WHERE $columns[eventstatus]=0");
+        $count = $this->entityManager->getRepository('PostCalendar_Entity_CalendarEvent')->getEventCount(PostCalendar_Entity_CalendarEvent::QUEUED);
         if ($count > 0) {
             $collection = new Zikula_Collection_Container('PostCalendar');
             $collection->add(new Zikula_Provider_AggregateItem('submission', _n('Calendar event', 'Calendar events', $count, $dom), $count, 'admin', 'listevents'));

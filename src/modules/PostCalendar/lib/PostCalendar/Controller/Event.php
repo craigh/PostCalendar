@@ -27,7 +27,7 @@ class PostCalendar_Controller_Event extends Zikula_AbstractController
         $render = FormUtil::newForm('PostCalendar', $this);
 
         // get the event from the DB
-        $event = DBUtil::selectObjectByID('postcalendar_events', $eid, 'eid');
+        $event = $this->entityManager->getRepository('PostCalendar_Entity_CalendarEvent')->find($eid)->getOldArray();
         $event = ModUtil::apiFunc('PostCalendar', 'event', 'formateventarrayfordisplay', $event);
 
         $render->assign('loaded_event', $event);

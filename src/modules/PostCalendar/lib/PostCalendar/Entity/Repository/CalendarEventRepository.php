@@ -244,4 +244,36 @@ class PostCalendar_Entity_Repository_CalendarEventRepository extends EntityRepos
         }
         return true;
     }
+    
+    public function getHookedEvent(object $hook, $area, $eid = null)
+    {
+        $dql = "SELECT a FROM PostCalendar_Entity_CalendarEvent a JOIN a.categories c " .
+               "WHERE a.hooked_modulename = :modulename " .
+               "AND a.hooked_objectid = :objectid " .
+               "AND a.hooked_area = :area ";
+        if (isset($eid)) {
+            $dql .= "AND a.eid = :eid ";
+        }
+        $query = $this->_em->createQuery($dql);
+        $query->setParameters(array(
+            'modulename' => $hook->getCaller(),
+            'objectid' => $hook->getId(),
+            'area' => $area,
+        ));
+        if (isset($eid)) {
+            $query->setParameter('eid', $eid);
+        }
+    
+        try {
+            $result = $query->getResult();
+        } catch (Exception $e) {
+            echo "<pre>";
+            var_dump($e->getMessage());
+            var_dump($query->getDQL());
+            var_dump($query->getParameters());
+            var_dump($query->getSQL());
+            die;
+        }
+        return $result;
+    }
 }

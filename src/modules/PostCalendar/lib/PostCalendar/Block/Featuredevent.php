@@ -54,7 +54,7 @@ class PostCalendar_Block_Featuredevent extends Zikula_Controller_AbstractBlock
     
         // get the event from the DB
         ModUtil::dbInfoLoad('PostCalendar');
-        $event = DBUtil::selectObjectByID('postcalendar_events', (int) $vars['eid'], 'eid');
+        $event = $this->entityManager->getRepository('PostCalendar_Entity_CalendarEvent')->find((int)$vars['eid'])->getOldArray();
         $event = ModUtil::apiFunc('PostCalendar', 'event', 'formateventarrayfordisplay', $event);
     
         // is event allowed for this user?

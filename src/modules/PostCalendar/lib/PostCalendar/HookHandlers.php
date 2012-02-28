@@ -40,7 +40,6 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
             return;
         }
         // get data from $event
-        $module = $hook->getCaller();
         $objectid = $hook->getId(); // id of hooked item
         $callerArea = Doctrine_Core::getTable('Zikula_Doctrine_Model_HookArea')->find($hook->getAreaId())->get('areaname');
 
@@ -48,20 +47,13 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
             return;
         }
 
-        ModUtil::dbInfoLoad('PostCalendar');
-        $dbtable = DBUtil::getTables();
-        $cols = $dbtable['postcalendar_events_column'];
-        // build where statement
-        $where = "WHERE " . $cols['hooked_modulename'] . " = '" . DataUtil::formatForStore($module) . "'
-                  AND "   . $cols['hooked_objectid']   . " = '" . DataUtil::formatForStore($objectid) . "'
-                  AND "   . $cols['hooked_area']   . " = '" . DataUtil::formatForStore($callerArea) . "'";
-        $pc_event = DBUtil::selectObject('postcalendar_events', $where, array('eid'));
+        $pc_event = $this->eventManager->getRepository('PostCalendar_Entity_CalendarEvent')->getHookedEvent($hook, $callerArea);
 
         if (!$pc_event) {
             return;
         }
 
-        $this->view->assign('eid', $pc_event['eid']);
+        $this->view->assign('eid', $pc_event->getEid());
 
         // add this response to the event stack
         $area = 'provider.postcalendar.ui_hooks.event';
@@ -103,15 +95,7 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
                 $selectedcategories = array();
             } else {
                 // get the event
-                // Get table info
-                ModUtil::dbInfoLoad('PostCalendar');
-                $dbtable = DBUtil::getTables();
-                $cols = $dbtable['postcalendar_events_column'];
-                // build where statement
-                $where = "WHERE " . $cols['hooked_modulename'] . " = '" . DataUtil::formatForStore($module) . "'
-                          AND "   . $cols['hooked_objectid']   . " = '" . DataUtil::formatForStore($objectid) . "'
-                          AND "   . $cols['hooked_area']   . " = '" . DataUtil::formatForStore($callerArea) . "'";
-                $pc_event = DBUtil::selectObject('postcalendar_events', $where);
+                $pc_event = $this->eventManager->getRepository('PostCalendar_Entity_CalendarEvent')->getHookedEvent($hook, $callerArea);
 
                 if ($pc_event) {
                     $selectedcategories = array();
@@ -172,22 +156,12 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
             return;
         }
 
-        // get data from $hook
-        $module = $hook->getCaller(); // default to active module
-        $objectid = $hook->getId(); // id of hooked item
         $callerArea = Doctrine_Core::getTable('Zikula_Doctrine_Model_HookArea')->find($hook->getAreaId())->get('areaname');
 
-        ModUtil::dbInfoLoad('PostCalendar');
-        $dbtable = DBUtil::getTables();
-        $cols = $dbtable['postcalendar_events_column'];
-        // build where statement
-        $where = "WHERE " . $cols['hooked_modulename'] . " = '" . DataUtil::formatForStore($module) . "'
-                  AND "   . $cols['hooked_objectid']   . " = '" . DataUtil::formatForStore($objectid) . "'
-                  AND "   . $cols['hooked_area']   . " = '" . DataUtil::formatForStore($callerArea) . "'";
-        $pc_event = DBUtil::selectObject('postcalendar_events', $where, array('eid'));
+        $pc_event = $this->eventManager->getRepository('PostCalendar_Entity_CalendarEvent')->getHookedEvent($hook, $callerArea);
 
         if (!empty($pc_event)) {
-            $this->view->assign('eid', $pc_event['eid']);
+            $this->view->assign('eid', $pc_event->getEid());
 
             // add this response to the event stack
             $area = 'provider.postcalendar.ui_hooks.event';
