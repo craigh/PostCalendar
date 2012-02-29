@@ -43,9 +43,9 @@ function smarty_function_pc_filter($args, &$smarty)
 
     $viewtype = FormUtil::getPassedValue('viewtype', _SETTING_DEFAULT_VIEW);
     if (ModUtil::getVar('PostCalendar', 'pcAllowUserCalendar')) {
-        $filterdefault = PostCalendar_Entity_CalendarEventRepository::FILTER_ALL;
+        $filterdefault = PostCalendar_Entity_Repository_CalendarEventRepository::FILTER_ALL;
     } else {
-        $filterdefault = PostCalendar_Entity_CalendarEventRepository::FILTER_GLOBAL;
+        $filterdefault = PostCalendar_Entity_Repository_CalendarEventRepository::FILTER_GLOBAL;
     }
     $pc_username = FormUtil::getPassedValue('pc_username', $filterdefault);
     if (!UserUtil::isLoggedIn()) {
@@ -69,9 +69,9 @@ function smarty_function_pc_filter($args, &$smarty)
         if (in_array('user', $types)) {
             //define array of filter options
             $filteroptions = array(
-                PostCalendar_Entity_CalendarEventRepository::FILTER_GLOBAL  => __('Global Events', $dom) . " " . __('Only', $dom),
-                PostCalendar_Entity_CalendarEventRepository::FILTER_PRIVATE => __('My Events', $dom) . " " . __('Only', $dom),
-                PostCalendar_Entity_CalendarEventRepository::FILTER_ALL     => __('Global Events', $dom) . " + " . __('My Events', $dom));
+                PostCalendar_Entity_Repository_CalendarEventRepository::FILTER_GLOBAL  => __('Global Events', $dom) . " " . __('Only', $dom),
+                PostCalendar_Entity_Repository_CalendarEventRepository::FILTER_PRIVATE => __('My Events', $dom) . " " . __('Only', $dom),
+                PostCalendar_Entity_Repository_CalendarEventRepository::FILTER_ALL     => __('Global Events', $dom) . " + " . __('My Events', $dom));
             // if user is admin, add list of users in allowed group
             if (IS_ADMIN) {
                 $group = ModUtil::apiFunc('Groups', 'user', 'get', array(
