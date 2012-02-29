@@ -74,10 +74,6 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
         }
 
         $catsarray = self::formatCategoryFilter($filtercats);
-
-
-//        $permChecker = new PostCalendar_ResultChecker();
-//        $events = DBUtil::selectObjectArrayFilter('postcalendar_events', $where, null, null, null, null, $permChecker, $catsarray);
         
         $events = $this->entityManager->getRepository('PostCalendar_Entity_CalendarEvent')
                 ->getEventCollection($eventstatus, $start, $end, $pc_username, $ruserid, $catsarray, $s_keywords);
@@ -306,6 +302,7 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
     public function buildSubmitForm($args)
     {
         $eventdata = $args['eventdata']; // contains data for editing if loaded
+        $form_data = array();
 
         // get event default values
         $eventDefaults = $this->getVar('pcEventDefaults');
