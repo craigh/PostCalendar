@@ -66,7 +66,6 @@ function smarty_function_pc_url($args, &$smarty)
         case 'today':
             $link = ModUtil::url('PostCalendar', 'user', 'display', array(
                         'viewtype' => $viewtype,
-//                        'Date' => DateUtil::getDatetime('', '%Y%m%d000000'),
                         'Date' => date('Ymd') . '000000',
                         'pc_username' => $pc_username));
             break;

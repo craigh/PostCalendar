@@ -22,7 +22,6 @@ class PostCalendar_PostCalendarEvent_News extends PostCalendar_PostCalendarEvent
             return false;
         }
 
-//        $now = DateUtil::getDatetime(null, '%Y-%m-%d %H:%M:%S');
         $now = date("Y-m-d H:i:s");
         $diff = DateUtil::getDatetimeDiff_AsField($now, $article['from'], 6);
         if ($diff > 0) {
@@ -46,9 +45,7 @@ class PostCalendar_PostCalendarEvent_News extends PostCalendar_PostCalendarEvent
      */
     public static function scheduler()
     {
-//        $today = DateUtil::getDatetime(null, '%Y-%m-%d');
         $today = date('Y-m-d');
-//        $time = DateUtil::getDatetime(null, '%H:%M:%S');
         $time = date('H:i:s');
         ModUtil::dbInfoLoad('PostCalendar');
         $dbtables = DBUtil::getTables();
