@@ -45,17 +45,27 @@ class PostCalendar_PostCalendarEvent_News extends PostCalendar_PostCalendarEvent
      */
     public static function scheduler()
     {
-        $today = date('Y-m-d');
-        $time = date('H:i:s');
-        ModUtil::dbInfoLoad('PostCalendar');
-        $dbtables = DBUtil::getTables();
-        $columns = $dbtables['postcalendar_events_column'];
-        $where = "WHERE $columns[hooked_modulename] = 'news'
-                  AND $columns[eventstatus] = -1
-                  AND $columns[eventDate] <= '$today'
-                  AND $columns[startTime] <= '$time'";
-        $object = array('eventstatus' => 1);
-        DBUtil::updateObject($object, 'postcalendar_events', $where, 'eid');
+        $_em = ServiceUtil::getService('doctrine.entitymanager');
+        $dql = "UPDATE PostCalendar_Entity_CalendarEvent a " .
+               "SET a.eventstatus = :newstatus " .
+               "WHERE a.hooked_modulename = :modname " .
+               "AND a.eventstatus = :oldstatus " .
+               "AND a.eventDate <= :today " .
+               "AND a.startTime <= :time";
+        $query = $_em->createQuery($dql);
+        $query->setParameters(array(
+            'newstatus' => PostCalendar_Entity_CalendarEvent::APPROVED,
+            'modname' => 'news',
+            'oldstatus' => PostCalendar_Entity_CalendarEvent::HIDDEN,
+            'today' => date('Y-m-d'), // ?does this need to be a dateTime object?
+            'time' => date('H:i:s'), // this too?
+        ));
+        try {
+            $query->getResult();
+            $_em->clear();
+        } catch (Exception $e) {
+            LogUtil::registerError($e->getMessage());
+        }
     }
 
 }

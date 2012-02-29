@@ -34,8 +34,8 @@ class PostCalendar_ContentType_PostCalEvent extends Content_AbstractContentType
         $vars['hideonexpire']  = empty($this->hideonexpire)  ? false : true;
     
         // get the event from the DB
-        ModUtil::dbInfoLoad('PostCalendar');
-        $event = DBUtil::selectObjectByID('postcalendar_events', (int) $this->eid, 'eid');
+        $entityManager = ServiceUtil::getService('doctrine.entitymanager');
+        $event = $entityManager->getRepository('PostCalendar_Entity_CalendarEvent')->find($this->eid)->getOldArray();
         $event = ModUtil::apiFunc('PostCalendar', 'event', 'formateventarrayfordisplay', $event);
     
         // is event allowed for this user?

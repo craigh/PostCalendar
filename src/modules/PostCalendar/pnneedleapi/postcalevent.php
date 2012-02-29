@@ -69,7 +69,8 @@ function postcalendar_needleapi_postcalevent($args)
 function postcalendar_needleapi_eventarray($args)
 {
     // get the event from the DB
-    $event = DBUtil::selectObjectByID('postcalendar_events', $args['eid'], 'eid');
+    $entityManager = ServiceUtil::getService('doctrine.entitymanager');
+    $event = $entityManager->getRepository('PostCalendar_Entity_CalendarEvent')->find($args['eid'])->getOldArray();
     if (!$event) {
         return false;
     }

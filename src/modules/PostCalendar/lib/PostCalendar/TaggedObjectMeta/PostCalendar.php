@@ -15,8 +15,8 @@ class PostCalendar_TaggedObjectMeta_PostCalendar extends Tag_AbstractTaggedObjec
     {
         parent::__construct($objectId, $areaId, $module, $objectUrl);
 
-        ModUtil::dbInfoLoad('PostCalendar');
-        $pc_event = DBUtil::selectObjectByID('postcalendar_events', $this->getObjectId(), 'eid');
+        $entityManager = ServiceUtil::getService('doctrine.entitymanager');
+        $pc_event = $entityManager->getRepository('PostCalendar_Entity_CalendarEvent')->find($this->getObjectId())->getOldArray();
         // check for permission and status
         $permission = SecurityUtil::checkPermission('PostCalendar::Event', "$pc_event[title]::$pc_event[eid]", ACCESS_OVERVIEW);
         $private = ($pc_event['sharing'] == 0 && $pc_event['aid'] != UserUtil::getVar('uid') && !SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN));
