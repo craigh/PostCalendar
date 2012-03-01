@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright 2010 PostCalendar Team.
+ * Copyright 2010-2012 PostCalendar Team.
  *
  * @license LPGL v2+
  *

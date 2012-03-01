@@ -1,13 +1,14 @@
 <?php
-
 /**
- * Tag - a content-tagging module for the Zikukla Application Framework
+ * PostCalendar
  * 
  * @license MIT
+ * @copyright   Copyright (c) 2012, Craig Heydenburg, Sound Web Development
  *
  * Please see the NOTICE file distributed with this source code for further
  * information regarding copyright and licensing.
  */
+
 class PostCalendar_TaggedObjectMeta_PostCalendar extends Tag_AbstractTaggedObjectMeta
 {
 

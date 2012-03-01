@@ -1,5 +1,13 @@
 <?php
-
+/**
+ * PostCalendar
+ * 
+ * @license MIT
+ * @copyright   Copyright (c) 2012, Craig Heydenburg, Sound Web Development
+ *
+ * Please see the NOTICE file distributed with this source code for further
+ * information regarding copyright and licensing.
+ */
 /**
  * abstract base class to allow other modules to extend the functionality of
  * PostCalendar and create events from within their hooked module.

@@ -1,5 +1,14 @@
 <?php
 /**
+ * PostCalendar
+ * 
+ * @license MIT
+ * @copyright   Copyright (c) 2012, Craig Heydenburg, Sound Web Development
+ *
+ * Please see the NOTICE file distributed with this source code for further
+ * information regarding copyright and licensing.
+ */
+/**
  * This is the Form event handler file
  * used in the delete event sequence
  **/
