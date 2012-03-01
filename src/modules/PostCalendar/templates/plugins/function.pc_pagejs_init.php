@@ -7,7 +7,6 @@
 /**
  * pc_pagejs_init: include the required javascript in header if needed
  *
- * @author Craig Heydenburg
  * @param  none
  */
 function smarty_function_pc_pagejs_init($params, &$smarty)

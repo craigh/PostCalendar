@@ -1,8 +1,6 @@
 <?php
 /**
  * @package     PostCalendar
- * @author      Craig Heydenburg
- * @author      Arjen Tebbenhof
  * @copyright   Copyright (c) 2002, The PostCalendar Team
  * @copyright   Copyright (c) 2009, Craig Heydenburg, Sound Web Development
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
@@ -90,6 +88,8 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
                 // add category relation table
                 // move relations from categories_mapobj to postcalendar_calendarevent_category
                 // update the DB tables
+                // change sharing values - remove any 2's and 4's
+                // update hometext values change n/a to :text:n/a
             case '7.1.0':
                 //future development
         }
@@ -125,7 +125,6 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
     /**
      * create the default category tree
      * copied and adapted from News module
-     * @author  Mark West?
      * @return boolean
      */
     private function createdefaultcategory()

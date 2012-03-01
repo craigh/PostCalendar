@@ -2,8 +2,6 @@
 
 /**
  * post pending content to pending_content Event handler
- *
- * @author Craig Heydenburg
  */
 class PostCalendar_Handlers {
 

@@ -2,8 +2,6 @@
 
 /**
  * Implements Base class to allow for Event creation in generic case
- *
- * @author craig heydenburg
  */
 class PostCalendar_PostCalendarEvent_Generic extends PostCalendar_PostCalendarEvent_AbstractBase {
 

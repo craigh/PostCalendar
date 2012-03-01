@@ -4,8 +4,6 @@ class PostCalendar_Util
 {
     /**
      * PostCalendar Default Module Settings
-     * @author Arjen Tebbenhof
-     * @author Craig Heydenburg
      * @return array An associated array with key=>value pairs of the default module settings
      */
     public static function getdefaults()
