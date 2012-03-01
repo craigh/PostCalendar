@@ -20,6 +20,7 @@ class PostCalendar_Entity_Repository_CalendarEventRepository extends EntityRepos
     
     /**
      * get all associated tags for an object
+     * This count is not filtered by Permissions
      * 
      * @return Scalar 
      */
@@ -52,6 +53,7 @@ class PostCalendar_Entity_Repository_CalendarEventRepository extends EntityRepos
     
     /**
      * Get collection of events for user view
+     * This collection is not filtered by Permissions
      * 
      * @param integer $eventStatus
      * @param string $startDate
@@ -134,8 +136,6 @@ class PostCalendar_Entity_Repository_CalendarEventRepository extends EntityRepos
             $query->setParameter('categories', $categories);
         }
 
-        // events not filtered for permissions
-
         try {
             $result = $query->getResult();
         } catch (Exception $e) {
@@ -152,6 +152,7 @@ class PostCalendar_Entity_Repository_CalendarEventRepository extends EntityRepos
     
     /**
      * get collection of events for admin view
+     * This collection is not filtered by Permissions
      * 
      * @param integer $eventStatus
      * @param string $sort

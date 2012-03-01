@@ -580,8 +580,10 @@ class PostCalendar_Entity_CalendarEvent extends Zikula_EntityAccess
             if (is_object($categoryRegistration)) {
                 $category = $categoryRegistration->getCategory();
                 $array['__CATEGORIES__'][$propName] = array('name' => $category->getName(),
-                                                                    'id' => (string)$category->getId());
-                $array['__CATEGORIES__'][$propName]['display_name'] = $category->getDisplayName();
+                    'id' => (string)$category->getId(),
+                    'path' => $category->getPath(),
+                    'ipath' => $category->getIPath(),
+                    'display_name' => $category->getDisplayName());
                 $categoryAttributes = $category->getAttributes();
                 foreach($categoryAttributes as $attr) {
                     $array['__CATEGORIES__'][$propName]['__ATTRIBUTES__'][$attr->getName()] = $attr->getValue();

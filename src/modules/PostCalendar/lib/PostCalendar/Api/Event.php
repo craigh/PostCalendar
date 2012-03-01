@@ -9,24 +9,24 @@
 
 use PostCalendar_Entity_Repository_CalendarEventRepository as EventRepo;
 use PostCalendar_Entity_CalendarEvent as CalendarEvent;
-define('REPEAT_EVERY_DAY',      0);
-define('REPEAT_EVERY_WEEK',     1);
-define('REPEAT_EVERY_MONTH',    2);
-define('REPEAT_EVERY_YEAR',     3);
+define('REPEAT_EVERY_DAY',   0);
+define('REPEAT_EVERY_WEEK',  1);
+define('REPEAT_EVERY_MONTH', 2);
+define('REPEAT_EVERY_YEAR',  3);
 // $event_repeat_on_num
-define('REPEAT_ON_1ST',         1);
-define('REPEAT_ON_2ND',         2);
-define('REPEAT_ON_3RD',         3);
-define('REPEAT_ON_4TH',         4);
-define('REPEAT_ON_LAST',        5);
+define('REPEAT_ON_1ST',      1);
+define('REPEAT_ON_2ND',      2);
+define('REPEAT_ON_3RD',      3);
+define('REPEAT_ON_4TH',      4);
+define('REPEAT_ON_LAST',     5);
 // $event_repeat_on_day
-define('REPEAT_ON_SUN',         0);
-define('REPEAT_ON_MON',         1);
-define('REPEAT_ON_TUE',         2);
-define('REPEAT_ON_WED',         3);
-define('REPEAT_ON_THU',         4);
-define('REPEAT_ON_FRI',         5);
-define('REPEAT_ON_SAT',         6);
+define('REPEAT_ON_SUN',      0);
+define('REPEAT_ON_MON',      1);
+define('REPEAT_ON_TUE',      2);
+define('REPEAT_ON_WED',      3);
+define('REPEAT_ON_THU',      4);
+define('REPEAT_ON_FRI',      5);
+define('REPEAT_ON_SAT',      6);
 
 /**
  * This is the event handler api
@@ -177,7 +177,14 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
         }
 
         foreach ($events as $event) {
-            $event = $this->formateventarrayfordisplay($event->getOldArray());
+            $event = $event->getoldArray(); // convert from Doctrine Entity
+            // check access for event
+            if ((!SecurityUtil::checkPermission('PostCalendar::Event', "$event[title]::$event[eid]", ACCESS_OVERVIEW))
+                    || (!CategoryUtil::hasCategoryAccess($event['__CATEGORIES__'], 'PostCalendar'))) {
+                continue;
+            }
+            
+            $event = $this->formateventarrayfordisplay($event);
 
             list ($eventstartyear, $eventstartmonth, $eventstartday) = explode('-', $event['eventDate']);
 
