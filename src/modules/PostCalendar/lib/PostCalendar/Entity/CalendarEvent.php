@@ -16,7 +16,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * Annotations define the entity mappings to database.
  *
  * @ORM\Entity(repositoryClass="PostCalendar_Entity_Repository_CalendarEventRepository")
- * @ORM\Table(name="postcalendar_events")
+ * @ORM\Table(name="postcalendar_events",indexes={@ORM\index(name="basic_event", columns={"aid", "eventDate", "endDate", "eventstatus", "sharing"})})
  */
 class PostCalendar_Entity_CalendarEvent extends Zikula_EntityAccess
 {
@@ -89,7 +89,7 @@ class PostCalendar_Entity_CalendarEvent extends Zikula_EntityAccess
      * Event end date
      * set to DateTime object in constructor
      * 
-     * @ORM\Column(type="date")
+     * @ORM\Column(type="date", nullable=true)
      */
     private $endDate;
     /**
