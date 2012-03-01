@@ -87,7 +87,9 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
                 // no changes
             case '7.0.1':
                 // update category registry data to change tablename to EntityName
+                // add category relation table
                 // move relations from categories_mapobj to postcalendar_calendarevent_category
+                // update the DB tables
             case '7.1.0':
                 //future development
         }
