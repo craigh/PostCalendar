@@ -88,7 +88,7 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
                 // add category relation table
                 // move relations from categories_mapobj to postcalendar_calendarevent_category
                 // update the DB tables
-                // change sharing values - remove any 2's and 4's
+                // change sharing values - 2's become 0's and  and 4's become 0's
                 // update hometext values change n/a to :text:n/a
                 // change endDate = '0000-00-00' to null
             case '7.1.0':

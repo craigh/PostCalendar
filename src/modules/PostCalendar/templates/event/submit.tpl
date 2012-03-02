@@ -102,15 +102,15 @@
 
             <input type="radio" name="postcalendar_events[recurrtype]" id="postcalendar_events_recurrtype1" value="1" {$SelectedRepeat} />
             <label for="postcalendar_events_recurrtype1" style='padding-left:1em;'>{gt text='Repeats every'}</label>
-            <input type="text" name="postcalendar_events[repeat][event_repeat_freq]" value="{$loaded_event.repeat.event_repeat_freq}" size="2" />
-            {html_options name="postcalendar_events[repeat][event_repeat_freq_type]" id="postcalendar_events_repeat_event_repeat_freq_type" options=$repeat_freq_type selected=$loaded_event.repeat.event_repeat_freq_type}<br />
+            <input type="text" name="postcalendar_events[recurrspec][event_repeat_freq]" value="{$loaded_event.recurrspec.event_repeat_freq}" size="2" />
+            {html_options name="postcalendar_events[recurrspec][event_repeat_freq_type]" id="postcalendar_events_repeat_event_repeat_freq_type" options=$repeat_freq_type selected=$loaded_event.recurrspec.event_repeat_freq_type}<br />
 
             <input type="radio" name="postcalendar_events[recurrtype]" id="postcalendar_events_recurrtype2" value="2" {$SelectedRepeatOn} />
             <label for="postcalendar_events_recurrtype2" style='padding-left:1em;'>{gt text='Repeats on'}</label>
-            {html_options name="postcalendar_events[repeat][event_repeat_on_num]" id="postcalendar_events_repeat_event_repeat_on_num" options=$repeat_on_num selected=$loaded_event.repeat.event_repeat_on_num}
-            {html_options name="postcalendar_events[repeat][event_repeat_on_day]" id="postcalendar_events_repeat_event_repeat_on_day" options=$repeat_on_day selected=$loaded_event.repeat.event_repeat_on_day}<br />
+            {html_options name="postcalendar_events[recurrspec][event_repeat_on_num]" id="postcalendar_events_repeat_event_repeat_on_num" options=$repeat_on_num selected=$loaded_event.recurrspec.event_repeat_on_num}
+            {html_options name="postcalendar_events[recurrspec][event_repeat_on_day]" id="postcalendar_events_repeat_event_repeat_on_day" options=$repeat_on_day selected=$loaded_event.recurrspec.event_repeat_on_day}<br />
             <span style='padding-left:3em;'>&nbsp;{gt text='of the month, every'}&nbsp;
-            <input type="text" name="postcalendar_events[repeat][event_repeat_on_freq]" id="postcalendar_events_repeat_event_repeat_on_freq" value="{$loaded_event.repeat.event_repeat_on_freq}" size="2" />
+            <input type="text" name="postcalendar_events[recurrspec][event_repeat_on_freq]" id="postcalendar_events_repeat_event_repeat_on_freq" value="{$loaded_event.recurrspec.event_repeat_on_freq}" size="2" />
             {gt text='month(s)'}.</span><br />
             <br />
 
@@ -130,10 +130,10 @@
             <legend>{gt text='Location'}</legend>
             {pc_locations}
             <label for="postcalendar_events_location_event_location">{gt text='Name'}</label><br />
-            <input class='z-w90' type="text" name="postcalendar_events[location][event_location]" id="postcalendar_events_location_event_location" value="{$loaded_event.location_info.event_location}" /><br />
+            <input class='z-w90' type="text" name="postcalendar_events[location][event_location]" id="postcalendar_events_location_event_location" value="{$loaded_event.location.event_location}" /><br />
             <label for="postcalendar_events_location_event_street1">{gt text='Street'}</label><br />
-            <input class='z-w90' type="text" name="postcalendar_events[location][event_street1]" id="postcalendar_events_location_event_street1" value="{$loaded_event.location_info.event_street1}" /><br />
-            <input class='z-w90' type="text" name="postcalendar_events[location][event_street2]" id="postcalendar_events_location_event_street2" value="{$loaded_event.location_info.event_street2}" /><br />
+            <input class='z-w90' type="text" name="postcalendar_events[location][event_street1]" id="postcalendar_events_location_event_street1" value="{$loaded_event.location.event_street1}" /><br />
+            <input class='z-w90' type="text" name="postcalendar_events[location][event_street2]" id="postcalendar_events_location_event_street2" value="{$loaded_event.location.event_street2}" /><br />
             <table cellspacing="0" style='width:90%;'>
                 <tr>
                     <td style='width:40%'><label for="postcalendar_events_location_event_city">{gt text='City'}</label></td>
@@ -141,9 +141,9 @@
                     <td style='width:30%'><label for="postcalendar_events_location_event_postal">{gt text='Zipcode'}</label></td>
                 </tr>
                 <tr>
-                    <td><input class='z-w90' type="text" name="postcalendar_events[location][event_city]" id="postcalendar_events_location_event_city" value="{$loaded_event.location_info.event_city}" /></td>
-                    <td><input class='z-w90' type="text" name="postcalendar_events[location][event_state]" id="postcalendar_events_location_event_state" value="{$loaded_event.location_info.event_state}" /></td>
-                    <td><input class='z-w90' type="text" name="postcalendar_events[location][event_postal]" id="postcalendar_events_location_event_postal" value="{$loaded_event.location_info.event_postal}" /></td>
+                    <td><input class='z-w90' type="text" name="postcalendar_events[location][event_city]" id="postcalendar_events_location_event_city" value="{$loaded_event.location.event_city}" /></td>
+                    <td><input class='z-w90' type="text" name="postcalendar_events[location][event_state]" id="postcalendar_events_location_event_state" value="{$loaded_event.location.event_state}" /></td>
+                    <td><input class='z-w90' type="text" name="postcalendar_events[location][event_postal]" id="postcalendar_events_location_event_postal" value="{$loaded_event.location.event_postal}" /></td>
                 </tr>
             </table>
         </fieldset>

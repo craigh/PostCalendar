@@ -202,8 +202,8 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
                     }
                     break;
                 case CalendarEvent::RECURRTYPE_REPEAT:
-                    $rfreq = $event['repeat']['event_repeat_freq']; // could be any int
-                    $rtype = $event['repeat']['event_repeat_freq_type']; // REPEAT_EVERY_DAY (0), REPEAT_EVERY_WEEK (1), REPEAT_EVERY_MONTH (2), REPEAT_EVERY_YEAR (3)
+                    $rfreq = $event['recurrspec']['event_repeat_freq']; // could be any int
+                    $rtype = $event['recurrspec']['event_repeat_freq_type']; // REPEAT_EVERY_DAY (0), REPEAT_EVERY_WEEK (1), REPEAT_EVERY_MONTH (2), REPEAT_EVERY_YEAR (3)
                     // we should bring the event up to date to make this a tad bit faster
                     // any ideas on how to do that, exactly??? dateToDays probably. (RNG <5.0)
                     $newyear = $eventstartyear;
@@ -233,9 +233,9 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
                     }
                     break;
                 case CalendarEvent::RECURRTYPE_REPEAT_ON:
-                    $rfreq = $event['repeat']['event_repeat_on_freq']; // could be any int
-                    $rnum = $event['repeat']['event_repeat_on_num']; // REPEAT_ON_1ST (1), REPEAT_ON_2ND (2), REPEAT_ON_3RD (3), REPEAT_ON_4TH (4), REPEAT_ON_LAST(5)
-                    $rday = $event['repeat']['event_repeat_on_day']; // REPEAT_ON_SUN (0), REPEAT_ON_MON (1), REPEAT_ON_TUE (2), REPEAT_ON_WED (3), REPEAT_ON_THU(4), REPEAT_ON_FRI (5), REPEAT_ON_SAT (6)
+                    $rfreq = $event['recurrspec']['event_repeat_on_freq']; // could be any int
+                    $rnum = $event['recurrspec']['event_repeat_on_num']; // REPEAT_ON_1ST (1), REPEAT_ON_2ND (2), REPEAT_ON_3RD (3), REPEAT_ON_4TH (4), REPEAT_ON_LAST(5)
+                    $rday = $event['recurrspec']['event_repeat_on_day']; // REPEAT_ON_SUN (0), REPEAT_ON_MON (1), REPEAT_ON_TUE (2), REPEAT_ON_WED (3), REPEAT_ON_THU(4), REPEAT_ON_FRI (5), REPEAT_ON_SAT (6)
                     $newmonth = $eventstartmonth;
                     $newyear = $eventstartyear;
                     $newday = $eventstartday;
@@ -423,14 +423,14 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
         $form_data['repeat_on_day'] = $selectarray;
 
         // recur defaults
-        if (empty($eventdata['repeat']['event_repeat_freq_type']) || $eventdata['repeat']['event_repeat_freq_type'] < 1) {
-            $eventdata['repeat']['event_repeat_freq_type'] = REPEAT_EVERY_DAY;
+        if (empty($eventdata['recurrspec']['event_repeat_freq_type']) || $eventdata['recurrspec']['event_repeat_freq_type'] < 1) {
+            $eventdata['recurrspec']['event_repeat_freq_type'] = REPEAT_EVERY_DAY;
         }
-        if (empty($eventdata['repeat']['event_repeat_on_num']) || $eventdata['repeat']['event_repeat_on_num'] < 1) {
-            $eventdata['repeat']['event_repeat_on_num'] = REPEAT_ON_1ST;
+        if (empty($eventdata['recurrspec']['event_repeat_on_num']) || $eventdata['recurrspec']['event_repeat_on_num'] < 1) {
+            $eventdata['recurrspec']['event_repeat_on_num'] = REPEAT_ON_1ST;
         }
-        if (empty($eventdata['repeat']['event_repeat_on_day']) || $eventdata['repeat']['event_repeat_on_day'] < 1) {
-            $eventdata['repeat']['event_repeat_on_day'] = REPEAT_ON_SUN;
+        if (empty($eventdata['recurrspec']['event_repeat_on_day']) || $eventdata['recurrspec']['event_repeat_on_day'] < 1) {
+            $eventdata['recurrspec']['event_repeat_on_day'] = REPEAT_ON_SUN;
         }
 
         // endType
@@ -450,15 +450,15 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
         $eventdata['website']   = isset($eventdata['website'])   ? $eventdata['website']   : $eventDefaults['website'];
         $eventdata['fee']       = isset($eventdata['fee'])       ? $eventdata['fee']       : $eventDefaults['fee'];
 
-        $eventdata['repeat']['event_repeat_freq']    = isset($eventdata['repeat']['event_repeat_freq'])    ? $eventdata['repeat']['event_repeat_freq']    : "";
-        $eventdata['repeat']['event_repeat_on_freq'] = isset($eventdata['repeat']['event_repeat_on_freq']) ? $eventdata['repeat']['event_repeat_on_freq'] : "";
+        $eventdata['recurrspec']['event_repeat_freq']    = isset($eventdata['recurrspec']['event_repeat_freq'])    ? $eventdata['recurrspec']['event_repeat_freq']    : "";
+        $eventdata['recurrspec']['event_repeat_on_freq'] = isset($eventdata['recurrspec']['event_repeat_on_freq']) ? $eventdata['recurrspec']['event_repeat_on_freq'] : "";
 
-        $eventdata['location_info']['event_location'] = isset($eventdata['location_info']['event_location']) ? $eventdata['location_info']['event_location'] : $eventDefaults['location']['event_location'];
-        $eventdata['location_info']['event_street1']  = isset($eventdata['location_info']['event_street1'])  ? $eventdata['location_info']['event_street1']  : $eventDefaults['location']['event_street1'];
-        $eventdata['location_info']['event_street2']  = isset($eventdata['location_info']['event_street2'])  ? $eventdata['location_info']['event_street2']  : $eventDefaults['location']['event_street2'];
-        $eventdata['location_info']['event_city']     = isset($eventdata['location_info']['event_city'])     ? $eventdata['location_info']['event_city']     : $eventDefaults['location']['event_city'];
-        $eventdata['location_info']['event_state']    = isset($eventdata['location_info']['event_state'])    ? $eventdata['location_info']['event_state']    : $eventDefaults['location']['event_state'];
-        $eventdata['location_info']['event_postal']   = isset($eventdata['location_info']['event_postal'])   ? $eventdata['location_info']['event_postal']   : $eventDefaults['location']['event_postal'];
+        $eventdata['location']['event_location'] = isset($eventdata['location']['event_location']) ? $eventdata['location']['event_location'] : $eventDefaults['location']['event_location'];
+        $eventdata['location']['event_street1']  = isset($eventdata['location']['event_street1'])  ? $eventdata['location']['event_street1']  : $eventDefaults['location']['event_street1'];
+        $eventdata['location']['event_street2']  = isset($eventdata['location']['event_street2'])  ? $eventdata['location']['event_street2']  : $eventDefaults['location']['event_street2'];
+        $eventdata['location']['event_city']     = isset($eventdata['location']['event_city'])     ? $eventdata['location']['event_city']     : $eventDefaults['location']['event_city'];
+        $eventdata['location']['event_state']    = isset($eventdata['location']['event_state'])    ? $eventdata['location']['event_state']    : $eventDefaults['location']['event_state'];
+        $eventdata['location']['event_postal']   = isset($eventdata['location']['event_postal'])   ? $eventdata['location']['event_postal']   : $eventDefaults['location']['event_postal'];
 
         // assign loaded data or default values
         $form_data['loaded_event'] = $eventdata;
@@ -477,43 +477,26 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
             return LogUtil::registerArgsError();
         }
 
-        //remap sharing values to global/private (this sharing map converts pre-6.0 values to 6.0+ values)
-        $sharingmap = array(
-            CalendarEvent::SHARING_PRIVATE  => CalendarEvent::SHARING_PRIVATE,
-            CalendarEvent::SHARING_PUBLIC   => CalendarEvent::SHARING_GLOBAL,
-            2                               => CalendarEvent::SHARING_PRIVATE, // 2 was SHARING_BUSY
-            CalendarEvent::SHARING_GLOBAL   => CalendarEvent::SHARING_GLOBAL,
-            4                               => CalendarEvent::SHARING_PRIVATE); //4 was SHARING_HIDEDESC
-        $event['sharing'] = $sharingmap[$event['sharing']];
-
         $event['privateicon'] = ($event['sharing'] == CalendarEvent::SHARING_PRIVATE) ? true : false;
 
-        // prep hometext for display
-        if ($event['hometext'] == 'n/a') {
-            $event['hometext'] = ':text:n/a'; // compenseate for my bad programming in previous versions CAH
-        }
         $event['HTMLorTextVal'] = substr($event['hometext'], 1, 4); // HTMLorTextVal needed in edit form
         $event['hometext'] = substr($event['hometext'], 6);
         if ($event['HTMLorTextVal'] == "text") {
             $event['hometext'] = nl2br(strip_tags($event['hometext']));
         }
 
-        // add unserialized info to event array
-        $event['location_info'] = DataUtil::is_serialized($event['location'], false) ? unserialize($event['location']) : $event['location']; //on preview of formdata, location is not serialized
-        $event['repeat'] = unserialize($event['recurrspec']);
-
         // build recurrance sentence for display
         $repeat_freq_type = explode("/", $this->__('Day(s)/Week(s)/Month(s)/Year(s)'));
         $repeat_on_num = explode("/", $this->__('err/First/Second/Third/Fourth/Last'));
         $repeat_on_day = explode(" ", $this->__('Sun Mon Tue Wed Thu Fri Sat'));
         if ($event['recurrtype'] == CalendarEvent::RECURRTYPE_REPEAT) {
-            $event['recurr_sentence'] = $this->__f("Event recurs every %s", $event['repeat']['event_repeat_freq']);
-            $event['recurr_sentence'] .= " " . $repeat_freq_type[$event['repeat']['event_repeat_freq_type']];
+            $event['recurr_sentence'] = $this->__f("Event recurs every %s", $event['recurrspec']['event_repeat_freq']);
+            $event['recurr_sentence'] .= " " . $repeat_freq_type[$event['recurrspec']['event_repeat_freq_type']];
             $event['recurr_sentence'] .= " " . $this->__("until") . " " . $event['endDate'];
         } elseif ($event['recurrtype'] == CalendarEvent::RECURRTYPE_REPEAT_ON) {
-            $event['recurr_sentence'] = $this->__("Event recurs on") . " " . $repeat_on_num[$event['repeat']['event_repeat_on_num']];
-            $event['recurr_sentence'] .= " " . $repeat_on_day[$event['repeat']['event_repeat_on_day']];
-            $event['recurr_sentence'] .= " " . $this->__f("of the month, every %s months", $event['repeat']['event_repeat_on_freq']);
+            $event['recurr_sentence'] = $this->__("Event recurs on") . " " . $repeat_on_num[$event['recurrspec']['event_repeat_on_num']];
+            $event['recurr_sentence'] .= " " . $repeat_on_day[$event['recurrspec']['event_repeat_on_day']];
+            $event['recurr_sentence'] .= " " . $this->__f("of the month, every %s months", $event['recurrspec']['event_repeat_on_freq']);
             $event['recurr_sentence'] .= " " . $this->__("until") . " " . $event['endDate'];
         } else {
             $event['recurr_sentence'] = $this->__("This event does not recur.");
@@ -608,11 +591,9 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
             $event['hometext'] = ':' . $event['html_or_text'] . ':' . $event['hometext']; // inserts :text:/:html: before actual content
         }
 
-        $event['location'] = serialize($event['location']);
         if (!isset($event['recurrtype'])) {
             $event['recurrtype'] = CalendarEvent::RECURRTYPE_NONE;
         }
-        $event['recurrspec'] = serialize($event['repeat']);
 
         $event['url'] = isset($event['url']) ? $this->_makeValidURL($event['url']) : '';
 
@@ -634,20 +615,20 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
 
         // check repeating frequencies
         if ($submitted_event['recurrtype'] == CalendarEvent::RECURRTYPE_REPEAT) {
-            if (!is_numeric($submitted_event['repeat']['event_repeat_freq'])) {
+            if (!is_numeric($submitted_event['recurrspec']['event_repeat_freq'])) {
                 LogUtil::registerError($this->__('Error! The repetition frequency must be an integer.'));
                 return true;
             }
-            if (!isset($submitted_event['repeat']['event_repeat_freq']) || $submitted_event['repeat']['event_repeat_freq'] < 1 || empty($submitted_event['repeat']['event_repeat_freq'])) {
+            if (!isset($submitted_event['recurrspec']['event_repeat_freq']) || $submitted_event['recurrspec']['event_repeat_freq'] < 1 || empty($submitted_event['recurrspec']['event_repeat_freq'])) {
                 LogUtil::registerError($this->__('Error! The repetition frequency must be at least 1.'));
                 return true;
             }
         } elseif ($submitted_event['recurrtype'] == CalendarEvent::RECURRTYPE_REPEAT_ON) {
-            if (!is_numeric($submitted_event['repeat']['event_repeat_on_freq'])) {
+            if (!is_numeric($submitted_event['recurrspec']['event_repeat_on_freq'])) {
                 LogUtil::registerError($this->__('Error! The repetition frequency must be an integer.'));
                 return true;
             }
-            if (!isset($submitted_event['repeat']['event_repeat_on_freq']) || $submitted_event['repeat']['event_repeat_on_freq'] < 1 || empty($submitted_event['repeat']['event_repeat_on_freq'])) {
+            if (!isset($submitted_event['recurrspec']['event_repeat_on_freq']) || $submitted_event['recurrspec']['event_repeat_on_freq'] < 1 || empty($submitted_event['recurrspec']['event_repeat_on_freq'])) {
                 LogUtil::registerError($this->__('Error! The repetition frequency must be at least 1.'));
                 return true;
             }
@@ -795,8 +776,8 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
                 return array($event['eventDate']); // there is only one date - return it
                 break;
             case CalendarEvent::RECURRTYPE_REPEAT:
-                $rfreq = $event['repeat']['event_repeat_freq']; // could be any int
-                $rtype = $event['repeat']['event_repeat_freq_type']; // REPEAT_EVERY_DAY (0), REPEAT_EVERY_WEEK (1), REPEAT_EVERY_MONTH (2), REPEAT_EVERY_YEAR (3)
+                $rfreq = $event['recurrspec']['event_repeat_freq']; // could be any int
+                $rtype = $event['recurrspec']['event_repeat_freq_type']; // REPEAT_EVERY_DAY (0), REPEAT_EVERY_WEEK (1), REPEAT_EVERY_MONTH (2), REPEAT_EVERY_YEAR (3)
                 // we should bring the event up to date to make this a tad bit faster
                 // any ideas on how to do that, exactly??? dateToDays probably. (RNG <5.0)
                 $newyear   = $eventstartyear;
@@ -824,9 +805,9 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
                 }
                 break;
             case CalendarEvent::RECURRTYPE_REPEAT_ON:
-                $rfreq = $event['repeat']['event_repeat_on_freq'];
-                $rnum = $event['repeat']['event_repeat_on_num'];
-                $rday = $event['repeat']['event_repeat_on_day'];
+                $rfreq = $event['recurrspec']['event_repeat_on_freq'];
+                $rnum = $event['recurrspec']['event_repeat_on_num'];
+                $rday = $event['recurrspec']['event_repeat_on_day'];
                 $newmonth = $eventstartmonth;
                 $newyear = $eventstartyear;
                 $newday = $eventstartday;

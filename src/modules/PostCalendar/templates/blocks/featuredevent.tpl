@@ -47,13 +47,13 @@
     </div>
     {/if}
     <div>
-        {if ($loaded_event.location_info.event_location) OR ($loaded_event.location_info.event_street1) OR ($loaded_event.location_info.event_street2) OR ($loaded_event.location_info.event_city)}
+        {if ($loaded_event.location.event_location) OR ($loaded_event.location.event_street1) OR ($loaded_event.location.event_street2) OR ($loaded_event.location.event_city)}
         <h3>{gt text='Location'}:</h3>
         <span class="location">
-            {if $loaded_event.location_info.event_location}<span class="location_name">{$loaded_event.location_info.event_location}</span><br />{/if}
-            {if $loaded_event.location_info.event_street1}<span class="location_street1">{$loaded_event.location_info.event_street1}</span><br />{/if}
-            {if $loaded_event.location_info.event_street2}<span class="location_street2">{$loaded_event.location_info.event_street2}</span><br />{/if}
-            {if $loaded_event.location_info.event_city}<span class="location_city_state_zip">{$loaded_event.location_info.event_city}&nbsp;{$loaded_event.location_info.event_state},&nbsp;{$loaded_event.location_info.event_postal}</span><br />{/if}
+            {if $loaded_event.location.event_location}<span class="location_name">{$loaded_event.location.event_location}</span><br />{/if}
+            {if $loaded_event.location.event_street1}<span class="location_street1">{$loaded_event.location.event_street1}</span><br />{/if}
+            {if $loaded_event.location.event_street2}<span class="location_street2">{$loaded_event.location.event_street2}</span><br />{/if}
+            {if $loaded_event.location.event_city}<span class="location_city_state_zip">{$loaded_event.location.event_city}&nbsp;{$loaded_event.location.event_state},&nbsp;{$loaded_event.location.event_postal}</span><br />{/if}
         </span>
         {/if}
         {if ($loaded_event.contname) OR ($loaded_event.conttel) OR ($loaded_event.contemail) OR ($loaded_event.website)}

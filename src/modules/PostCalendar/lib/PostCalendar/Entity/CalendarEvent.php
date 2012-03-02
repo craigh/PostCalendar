@@ -502,12 +502,7 @@ class PostCalendar_Entity_CalendarEvent extends Zikula_EntityAccess
             $this->setRecurrtype($array['recurrtype']);
         }
         if (isset($array['recurrspec'])) {
-            if (DataUtil::is_serialized($array['recurrspec'])) {
-                $recurrspec = unserialize($array['recurrspec']);
-            } else {
-                $recurrspec = $array['recurrspec'];
-            }
-            $this->setRecurrspec($recurrspec);
+            $this->setRecurrspec($array['recurrspec']);
         }
         if (isset($array['startTime'])) {
             $this->setStartTime($array['startTime']);
@@ -517,12 +512,7 @@ class PostCalendar_Entity_CalendarEvent extends Zikula_EntityAccess
             $this->setAlldayevent($allday);
         }
         if (isset($array['location'])) {
-            if (DataUtil::is_serialized($array['location'])) {
-                $location = unserialize($array['location']);
-            } else {
-                $location = $array['location'];
-            }
-            $this->setLocation($location);
+            $this->setLocation($array['location']);
         }
         if (isset($array['eventstatus'])) {
             $this->setEventstatus($array['eventstatus']);
@@ -592,9 +582,6 @@ class PostCalendar_Entity_CalendarEvent extends Zikula_EntityAccess
             }
         }
         $array['time'] = $this->getTime()->format('Y-m-d H:i:s');
-        //reserialize the arrays
-        $array['recurrspec'] = serialize($this->recurrspec);
-        $array['location'] = serialize($this->location);
         
         return $array;
     }
