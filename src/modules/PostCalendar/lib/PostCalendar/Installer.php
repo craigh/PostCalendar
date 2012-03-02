@@ -113,7 +113,10 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
         DoctrineHelper::dropSchema($this->entityManager, array('PostCalendar_Entity_CalendarEvent', 
                                                                'PostCalendar_Entity_EventCategory'));
         ModUtil::delVar('PostCalendar');
-
+        
+        // Delete entries from category registry
+        CategoryRegistryUtil::deleteEntry('PostCalendar');
+        
         // unregister handlers
         EventUtil::unregisterPersistentModuleHandlers('PostCalendar');
 
