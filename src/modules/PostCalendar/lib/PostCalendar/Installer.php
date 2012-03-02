@@ -90,6 +90,7 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
                 // update the DB tables
                 // change sharing values - remove any 2's and 4's
                 // update hometext values change n/a to :text:n/a
+                // change endDate = '0000-00-00' to null
             case '7.1.0':
                 //future development
         }

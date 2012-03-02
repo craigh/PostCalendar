@@ -33,12 +33,15 @@ define('REPEAT_ON_SAT',      6);
 
 class PostCalendar_Api_Event extends Zikula_AbstractApi
 {
+    const ENDTYPE_ON = 1;
+    const ENDTYPE_NONE = 0;
+    
     /**
      * Returns an array containing the event's information
      * @param array $args arguments. Expected keys:
      *              eventstatus: -1 == hidden ; 0 == queued ; 1 == approved (default)
      *              start: Events start date (default today)
-     *              end: Events end_date (default 0000-00-00)
+     *              end: Events end_date (default null)
      *              s_keywords: search info
      *              filtercats: categories to query events from
      *              pc_username: event type or user id
@@ -47,7 +50,7 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
     public function queryEvents($args)
     {
         $start       = isset($args['start']) ? $args['start'] : date('Y-m-d');
-        $end         = $args['end'] ? $args['end'] : '0000-00-00';
+        $end         = $args['end'] ? $args['end'] : null;
         $s_keywords  = $args['s_keywords'];
         $filtercats  = $args['filtercats'];
         $pc_username = $args['pc_username'];
@@ -188,7 +191,7 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
             list ($eventstartyear, $eventstartmonth, $eventstartday) = explode('-', $event['eventDate']);
 
             // determine the stop date for this event
-            $stop = (($event['endDate'] == '0000-00-00') || ($event['endDate'] == '-0001-11-30')) ? $end_date : $event['endDate'];
+            $stop = (!isset($event['endDate'])) ? $end_date : $event['endDate'];
 
             // this switch block fills the $days array with events. It computes recurring events and adds the recurrances to the $days array also
             switch ($event['recurrtype']) {
@@ -314,7 +317,7 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
         $eventDefaults = $this->getVar('pcEventDefaults');
 
         // format date information
-        if ((!isset($eventdata['endDate'])) || ($eventdata['endDate'] == '') || ($eventdata['endDate'] == '00000000') || ($eventdata['endDate'] == '0000-00-00') || ($eventdata['endDate'] == '-0001-11-30')) {
+        if ((!isset($eventdata['endDate'])) || empty($eventdata['endDate'])) {
             $eventdata['endvalue'] = PostCalendar_Util::getDate(array(
                 'Date' => $args['Date'],
                 'format' => _SETTING_DATE_FORMAT));
@@ -329,7 +332,7 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
                 'Date' => str_replace('-', '', $eventdata['endDate']),
                 'format' => '%Y-%m-%d'));
         }
-        if ((!isset($eventdata['eventDate'])) || ($eventdata['eventDate'] == '')) {
+        if ((!isset($eventdata['eventDate'])) || empty($eventdata['eventDate'])) {
             $eventdata['eventDatevalue'] = PostCalendar_Util::getDate(array(
                 'Date' => $args['Date'],
                 'format' => _SETTING_DATE_FORMAT));
@@ -431,8 +434,8 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
         }
 
         // endType
-        $form_data['SelectedEndOn'] = ((isset($eventdata['endtype']))  && ((int) $eventdata['endtype'] == 1)) ? " checked='checked'" : '';
-        $form_data['SelectedNoEnd'] = ((!isset($eventdata['endtype'])) || ((int) $eventdata['endtype'] == 0)) ? " checked='checked'" : ''; //default
+        $form_data['SelectedEndOn'] = ((isset($eventdata['endtype']))  && ((int)$eventdata['endtype'] == self::ENDTYPE_ON)) ? " checked='checked'" : '';
+        $form_data['SelectedNoEnd'] = ((!isset($eventdata['endtype'])) || ((int)$eventdata['endtype'] == self::ENDTYPE_NONE)) ? " checked='checked'" : ''; //default
 
         // Assign the content format (determines if scribite is in use)
         $form_data['formattedcontent'] = $this->isformatted(array(
@@ -530,7 +533,7 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
         $event['startTime'] = _SETTING_TIME_24HOUR ? gmdate('G:i', gmmktime($h, $m, $s, 0, 0, 0)) : gmdate('g:i a', gmmktime($h, $m, $s, 0, 0, 0));
 
         // format endtype for edit form
-        $event['endtype'] = (($event['endDate'] == '0000-00-00') || ($event['endDate'] == '-0001-11-30')) ? '0' : '1';
+        $event['endtype'] = (!isset($event['endDate'])) ? (string)self::ENDTYPE_NONE : (string)self::ENDTYPE_ON;
 
         // compensate for changeover to new categories system
         $lang = ZLanguage::getLanguageCode();
@@ -593,7 +596,7 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
             $event['eventstatus'] = CalendarEvent::QUEUED;
         }
 
-        $event['endDate'] = $event['endtype'] == 1 ? $event['endDate'] : '0000-00-00';
+        $event['endDate'] = ($event['endtype'] == self::ENDTYPE_ON) ? $event['endDate'] : null;
 
         if (!isset($event['alldayevent'])) {
             $event['alldayevent'] = 0;
@@ -653,9 +656,8 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
         // check date validity
         $sdate = strtotime($submitted_event['eventDate']);
         $edate = strtotime($submitted_event['endDate']);
-        $tdate = strtotime(date('Y-m-d'));
 
-        if (($submitted_event['endtype'] == 1) && ($edate < $sdate)) {
+        if (($submitted_event['endtype'] == self::ENDTYPE_ON) && ($edate < $sdate)) {
             LogUtil::registerError($this->__('Error! The selected start date falls after the selected end date.'));
             return true;
         }
@@ -779,7 +781,7 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
         list ($eventstartyear, $eventstartmonth, $eventstartday) = explode('-', $event['eventDate']);
         // determine the stop date for this event
         $default_end_date = date("Y-m-d", strtotime("+2 years")); // default to only get first two years of recurrance
-        $stop = (($event['endDate'] == '0000-00-00') || ($event['endDate'] == '-0001-11-30')) ? $default_end_date : $event['endDate'];
+        $stop = (!isset($event['endDate'])) ? $default_end_date : $event['endDate'];
 
         $start_date = $event['eventDate']; // maybe try today instead?
 

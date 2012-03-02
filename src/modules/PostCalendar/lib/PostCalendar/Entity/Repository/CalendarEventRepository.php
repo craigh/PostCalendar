@@ -108,7 +108,7 @@ class PostCalendar_Entity_Repository_CalendarEventRepository extends EntityRepos
         // Add query parameters
         $query->setParameters(array(
             2 => $startDate,
-            3 => '0000-00-00',
+            3 => null,
             4 => CalendarEvent::RECURRTYPE_NONE,
             5 => $startDate,
             6 => $endDate));

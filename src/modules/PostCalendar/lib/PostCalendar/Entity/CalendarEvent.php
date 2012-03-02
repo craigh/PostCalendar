@@ -92,7 +92,7 @@ class PostCalendar_Entity_CalendarEvent extends Zikula_EntityAccess
      * 
      * @ORM\Column(type="date", nullable=true)
      */
-    private $endDate;
+    private $endDate = null;
     /**
      * Type of recurrance (0, 1, 2)
      * 
@@ -209,10 +209,7 @@ class PostCalendar_Entity_CalendarEvent extends Zikula_EntityAccess
         $this->categories = new ArrayCollection();
         $this->setEventDate(new DateTime());
         $this->setTime(new DateTime());
-        $blankdate = new DateTime();
-        $blankdate->setDate(0000, 00, 00);
-        $this->setEndDate($blankdate);
-        
+
         $uid = UserUtil::getVar('uid');
         $this->setAid($uid);
         $this->setInformant($uid);
@@ -298,7 +295,10 @@ class PostCalendar_Entity_CalendarEvent extends Zikula_EntityAccess
 
     public function getEndDate($format='Y-m-d')
     {
-        return $this->endDate->format($format);
+        if (isset($this->endDate)) {
+            return $this->endDate->format($format);
+        }
+        return $this->endDate;
     }
 
     public function setEndDate(DateTime $endDate)
