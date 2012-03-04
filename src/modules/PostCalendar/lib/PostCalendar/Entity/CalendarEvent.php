@@ -43,7 +43,8 @@ class PostCalendar_Entity_CalendarEvent extends Zikula_EntityAccess
      */
     private $eid;
     /**
-     * Participant's UID (default = informant UID)
+     * Participant's UID
+     * duplicate of informant UID
      * 
      * @ORM\Column(length=30)
      */
@@ -57,6 +58,7 @@ class PostCalendar_Entity_CalendarEvent extends Zikula_EntityAccess
     /**
      * timestamp for event creation
      * NOT a typo - 'time' is a reserved SQL word
+     * set to current DateTime object in constructor
      * 
      * @ORM\Column(type="datetime", name="ttime")
      */
@@ -69,32 +71,34 @@ class PostCalendar_Entity_CalendarEvent extends Zikula_EntityAccess
     private $hometext = '';
     /**
      * UID of event submittor
+     * default 2 = admin
      * 
      * @ORM\Column(length=20)
      */
     private $informant = 2;
     /**
      * Event start date
-     * set to DateTime object in constructor
+     * set to current DateTime object in constructor
      * 
      * @ORM\Column(type="date")
      */
     private $eventDate;
     /**
      * event duration
+     * length of event in seconds
      * 
      * @ORM\Column(type="bigint")
      */
     private $duration = 0;
     /**
      * Event end date
-     * set to DateTime object in constructor
      * 
      * @ORM\Column(type="date", nullable=true)
      */
     private $endDate = null;
     /**
      * Type of recurrance (0, 1, 2)
+     * see const defs in this class
      * 
      * @ORM\Column(type="integer", length=1)
      */
@@ -166,12 +170,14 @@ class PostCalendar_Entity_CalendarEvent extends Zikula_EntityAccess
     private $fee = '';
     /**
      * Event status (approved, pending)
+     * see const defs in this class
      * 
      * @ORM\Column(type="integer", nullable=true)
      */
     private $eventstatus = self::QUEUED;
     /**
      * Event sharing (private, global)
+     * see const defs in this class
      * 
      * @ORM\Column(type="integer")
      */
