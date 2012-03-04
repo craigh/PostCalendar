@@ -49,7 +49,7 @@ function smarty_function_pc_filter($args, &$smarty)
     }
     $pc_username = FormUtil::getPassedValue('pc_username', $filterdefault);
     if (!UserUtil::isLoggedIn()) {
-        $pc_username = PostCalendar_Entity_CalendarEventRepository::FILTER_GLOBAL;
+        $pc_username = PostCalendar_Entity_Repository_CalendarEventRepository::FILTER_GLOBAL;
     }
     $types = explode(',', $args['type']);
 
