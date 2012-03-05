@@ -142,9 +142,6 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
             $end_date = $endyear . '-' . $endmonth . '-' . $endday;
         }
 
-        if (!isset($s_keywords)) {
-            $s_keywords = '';
-        }
         $events = $this->queryEvents(array(
             'start'       => $start_date,
             'end'         => $end_date,
