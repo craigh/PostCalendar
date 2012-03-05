@@ -10,6 +10,7 @@
 
 class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
 {
+    const PROVIDER_AREANAME = 'provider.postcalendar.ui_hooks.event';
     /**
      * Zikula_View instance
      * @var object
@@ -61,8 +62,7 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
         $this->view->assign('eid', $pc_event->getEid());
 
         // add this response to the event stack
-        $area = 'provider.postcalendar.ui_hooks.event';
-        $hook->setResponse(new Zikula_Response_DisplayHook($area, $this->view, 'hooks/view.tpl'));
+        $hook->setResponse(new Zikula_Response_DisplayHook(self::PROVIDER_AREANAME, $this->view, 'hooks/view.tpl'));
     }
 
      /**
@@ -77,7 +77,6 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
         // get data from $event
         $module = $hook->getCaller(); // default to active module
         $objectid = $hook->getId(); // id of hooked item
-        $callerArea = Doctrine_Core::getTable('Zikula_Doctrine_Model_HookArea')->find($hook->getAreaId())->get('areaname');
 
         if (!$objectid) {
             $access_type = ACCESS_ADD;
@@ -103,6 +102,7 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
                 $pc_event = $this->_em->getRepository('PostCalendar_Entity_CalendarEvent')->getHookedEvent($hook);
 
                 if ($pc_event) {
+                    $pc_event = $pc_event->getOldArray();
                     $selectedcategories = array();
                     foreach ($pc_event['__CATEGORIES__'] as $prop => $cats) {
                         $selectedcategories[$prop] = $cats['id'];
@@ -121,8 +121,8 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
             $data = $this->validation->getObject();
         }
         $postcalendarhookconfig = ModUtil::getVar($module, 'postcalendarhookconfig');
-        $postcalendar_admincatselected = isset($postcalendarhookconfig[$callerArea]['admincatselected']) ? $postcalendarhookconfig[$callerArea]['admincatselected'] : 0;
-        $postcalendar_optoverride = isset($postcalendarhookconfig[$callerArea]['optoverride']) ? $postcalendarhookconfig[$callerArea]['optoverride'] : false;
+        $postcalendar_admincatselected = isset($postcalendarhookconfig[$hook->getAreaId()]['admincatselected']) ? $postcalendarhookconfig[$hook->getAreaId()]['admincatselected'] : 0;
+        $postcalendar_optoverride = isset($postcalendarhookconfig[$hook->getAreaId()]['optoverride']) ? $postcalendarhookconfig[$hook->getAreaId()]['optoverride'] : false;
 
         if (($postcalendar_admincatselected['Main'] > 0) && (!$postcalendar_optoverride)) {
             $postcalendar_hide = true;
@@ -143,8 +143,7 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
         $this->view->assign('postcalendar_eid', $pceventid);
 
         // add this response to the event stack
-        $area = 'provider.postcalendar.ui_hooks.event';
-        $hook->setResponse(new Zikula_Response_DisplayHook($area, $this->view, 'hooks/edit.tpl'));
+        $hook->setResponse(new Zikula_Response_DisplayHook(self::PROVIDER_AREANAME, $this->view, 'hooks/edit.tpl'));
     }
 
     /**
@@ -167,8 +166,7 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
             $this->view->assign('eid', $pc_event->getEid());
 
             // add this response to the event stack
-            $area = 'provider.postcalendar.ui_hooks.event';
-            $hook->setResponse(new Zikula_Response_DisplayHook($area, $this->view, 'hooks/delete.tpl'));
+            $hook->setResponse(new Zikula_Response_DisplayHook(self::PROVIDER_AREANAME, $this->view, 'hooks/delete.tpl'));
         }
     }
 
@@ -187,7 +185,7 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
         // create a new hook validation object and assign it to $this->validation
         $this->validation = new Zikula_Hook_ValidationResponse('data', $data);
 
-        $hook->setValidator('provider.postcalendar.ui_hooks.event', $this->validation);
+        $hook->setValidator(self::PROVIDER_AREANAME, $this->validation);
     }
 
     /**
@@ -319,8 +317,8 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
             $areaname = $tbl->find($binding['sareaid'])->get('areaname');
             $bindingsBetweenOwners[$k]['areaname'] = $areaname;
             $bindingsBetweenOwners[$k]['areatitle'] = $view->__($moduleVersionObj->getHookSubscriberBundle($areaname)->getTitle());
-            $postcalendarhookconfig[$areaname]['admincatselected'] = isset($postcalendarhookconfig[$areaname]['admincatselected']) ? $postcalendarhookconfig[$areaname]['admincatselected'] : 0;
-            $postcalendarhookconfig[$areaname]['optoverride'] = isset($postcalendarhookconfig[$areaname]['optoverride']) ? $postcalendarhookconfig[$areaname]['optoverride'] : false;
+            $postcalendarhookconfig[$binding['sareaid']]['admincatselected'] = isset($postcalendarhookconfig[$binding['sareaid']]['admincatselected']) ? $postcalendarhookconfig[$binding['sareaid']]['admincatselected'] : 0;
+            $postcalendarhookconfig[$binding['sareaid']]['optoverride'] = isset($postcalendarhookconfig[$binding['sareaid']]['optoverride']) ? $postcalendarhookconfig[$binding['sareaid']]['optoverride'] : false;
         }
         $view->assign('areas', $bindingsBetweenOwners);
         $view->assign('postcalendarhookconfig', $postcalendarhookconfig);

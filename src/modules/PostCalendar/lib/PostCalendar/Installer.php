@@ -93,6 +93,7 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
                 // change endDate = '0000-00-00' to null
                 // change hooked_area column to integer
                 // change hooked_area values from areaname to area id
+                // update modvars where name=postcalendarhookconfig change key from areaname to iadeaid
             case '7.1.0':
                 //future development
         }
