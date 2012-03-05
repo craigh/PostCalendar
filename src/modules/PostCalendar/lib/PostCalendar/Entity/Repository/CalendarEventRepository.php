@@ -247,7 +247,7 @@ class PostCalendar_Entity_Repository_CalendarEventRepository extends EntityRepos
         return true;
     }
     
-    public function getHookedEvent(object $hook, $area, $eid = null)
+    public function getHookedEvent(Zikula_DisplayHook $hook, $area, $eid = null)
     {
         $dql = "SELECT a FROM PostCalendar_Entity_CalendarEvent a JOIN a.categories c " .
                "WHERE a.hooked_modulename = :modulename " .
@@ -276,6 +276,6 @@ class PostCalendar_Entity_Repository_CalendarEventRepository extends EntityRepos
             var_dump($query->getSQL());
             die;
         }
-        return $result;
+        return $result[0];
     }
 }
