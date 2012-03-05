@@ -197,9 +197,9 @@ class PostCalendar_Entity_CalendarEvent extends Zikula_EntityAccess
     /**
      * Area ID of Hook Target
      * 
-     * @ORM\Column(length=64, nullable=true)
+     * @ORM\Column(type="integer", nullable=true)
      */
-    private $hooked_area = '';
+    private $hooked_area = 0;
     /**
      * @ORM\OneToMany(targetEntity="PostCalendar_Entity_EventCategory", 
      *                mappedBy="entity", cascade={"all"}, 
@@ -457,7 +457,7 @@ class PostCalendar_Entity_CalendarEvent extends Zikula_EntityAccess
         return $this->hooked_area;
     }
 
-    public function setHooked_area($hooked_area = '')
+    public function setHooked_area($hooked_area = 0)
     {
         $this->hooked_area = $hooked_area;
     }

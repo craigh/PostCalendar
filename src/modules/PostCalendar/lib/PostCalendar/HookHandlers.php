@@ -47,13 +47,12 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
         }
         // get data from $event
         $objectid = $hook->getId(); // id of hooked item
-        $callerArea = Doctrine_Core::getTable('Zikula_Doctrine_Model_HookArea')->find($hook->getAreaId())->get('areaname');
 
         if (!$objectid) {
             return;
         }
 
-        $pc_event = $this->_em->getRepository('PostCalendar_Entity_CalendarEvent')->getHookedEvent($hook, $callerArea);
+        $pc_event = $this->_em->getRepository('PostCalendar_Entity_CalendarEvent')->getHookedEvent($hook);
 
         if (!$pc_event) {
             return;
@@ -101,7 +100,7 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
                 $selectedcategories = array();
             } else {
                 // get the event
-                $pc_event = $this->_em->getRepository('PostCalendar_Entity_CalendarEvent')->getHookedEvent($hook, $callerArea);
+                $pc_event = $this->_em->getRepository('PostCalendar_Entity_CalendarEvent')->getHookedEvent($hook);
 
                 if ($pc_event) {
                     $selectedcategories = array();
@@ -162,9 +161,7 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
             return;
         }
 
-        $callerArea = Doctrine_Core::getTable('Zikula_Doctrine_Model_HookArea')->find($hook->getAreaId())->get('areaname');
-
-        $pc_event = $this->_em->getRepository('PostCalendar_Entity_CalendarEvent')->getHookedEvent($hook, $callerArea);
+        $pc_event = $this->_em->getRepository('PostCalendar_Entity_CalendarEvent')->getHookedEvent($hook);
 
         if (!empty($pc_event)) {
             $this->view->assign('eid', $pc_event->getEid());
@@ -224,9 +221,6 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
         }
 
         $dom = ZLanguage::getModuleDomain('PostCalendar');
-        $module = $hook->getCaller(); // default to active module
-        $objectid = $hook->getId(); // id of hooked item
-        $callerArea = Doctrine_Core::getTable('Zikula_Doctrine_Model_HookArea')->find($hook->getAreaId())->get('areaname');
         $objUrl = $hook->getUrl()->getUrl(null, null, false, false); // objecturl provided by subscriber
         // the fourth arg is forceLang and if left to default (true) then the url is malformed - core bug as of 1.3.0
 
@@ -247,10 +241,10 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
             return;
         }
 
-        $postCalendarEventInstance = $this->getClassInstance($module);
-        $postCalendarEventInstance->setHooked_objectid($objectid);
+        $postCalendarEventInstance = $this->getClassInstance($hook->getCaller());
+        $postCalendarEventInstance->setHooked_objectid($hook->getId());
         $postCalendarEventInstance->setHooked_objecturl($objUrl);
-        $postCalendarEventInstance->setHooked_area($callerArea);
+        $postCalendarEventInstance->setHooked_area($hook->getAreaId());
         $postCalendarEventInstance->set__CATEGORIES__($hookdata['cats']);
         if (!$postCalendarEventInstance->makeEvent()) {
             return false;
@@ -288,9 +282,7 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
     {
         $dom = ZLanguage::getModuleDomain('PostCalendar');
 
-        $callerArea = Doctrine_Core::getTable('Zikula_Doctrine_Model_HookArea')->find($hook->getAreaId())->get('areaname');
-        
-        $pc_event = $this->_em->getRepository('PostCalendar_Entity_CalendarEvent')->getHookedEvent($hook, $callerArea);
+        $pc_event = $this->_em->getRepository('PostCalendar_Entity_CalendarEvent')->getHookedEvent($hook);
         $result = $this->_em->getRepository('PostCalendar_Entity_CalendarEvent')->deleteEvents(array($pc_event->getEid()));
 
         if (!$result) {

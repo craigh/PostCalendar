@@ -91,6 +91,8 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
                 // change sharing values - 2's become 0's and  and 4's become 0's
                 // update hometext values change n/a to :text:n/a
                 // change endDate = '0000-00-00' to null
+                // change hooked_area column to integer
+                // change hooked_area values from areaname to area id
             case '7.1.0':
                 //future development
         }
