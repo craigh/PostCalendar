@@ -41,30 +41,10 @@ abstract class PostCalendar_PostCalendarEvent_AbstractBase {
      */
     private $eid;
     /**
-     * Metadata for category creation
-     * @var array
-     */
-    private $__META__ = array('module' => 'PostCalendar');
-    /**
      * event recurrance type
-     * norepeat = 0
-     * repeat = 1
-     * repeat on = 2
      * @var integer
      */
-    protected $recurrtype = 0;
-    /**
-     * serialized array of recurrance information
-     * default value = null values for each key
-     * @var string
-     */
-    protected $recurrspec = 'a:5:{s:17:"event_repeat_freq";s:0:"";s:22:"event_repeat_freq_type";s:1:"0";s:19:"event_repeat_on_num";s:1:"1";s:19:"event_repeat_on_day";s:1:"0";s:20:"event_repeat_on_freq";s:0:"";}';
-    /**
-     * serialized array of location information
-     * default value = null values for each key
-     * @var string
-     */
-    protected $location = 'a:6:{s:14:"event_location";s:0:"";s:13:"event_street1";s:0:"";s:13:"event_street2";s:0:"";s:10:"event_city";s:0:"";s:11:"event_state";s:0:"";s:12:"event_postal";s:0:"";}';
+    protected $recurrtype = PostCalendar_Entity_CalendarEvent::RECURRTYPE_NONE;
     /**
      * Event title
      * @var string
@@ -224,10 +204,7 @@ abstract class PostCalendar_PostCalendarEvent_AbstractBase {
     public function toArray() {
         $meta = array();
         $meta['hooked_modulename'] = $this->hooked_modulename;
-        $meta['__META__'] = $this->__META__;
         $meta['recurrtype'] = $this->recurrtype;
-        $meta['recurrspec'] = $this->recurrspec;
-        $meta['location'] = $this->location;
         $meta['hooked_objectid'] = $this->hooked_objectid;
         $meta['hooked_area'] = $this->hooked_area;
         $meta['title'] = $this->title;
