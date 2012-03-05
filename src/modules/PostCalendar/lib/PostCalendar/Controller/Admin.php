@@ -47,54 +47,6 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
      */
     public function listevents(array $args)
     {
-//        $events = $this->entityManager->getRepository('PostCalendar_Entity_CalendarEvent')->findAll();
-//        echo "<pre>"; var_dump($events); die;
-//        echo "<pre>";
-        
-        $create = false;
-        $show = false;
-        $title = 'TestA1';
-
-        if ($create) {
-            $cat = CategoryUtil::getCategoryByPath('/__SYSTEM__/Modules/PostCalendar/OtherEvents');
-            $eventArray = array(
-                'title'          => $title,
-                'eventstatus'    => 1,  // approved
-                'sharing'        => 3,  // global
-                '__CATEGORIES__' => array(
-                    'Main' => $cat['id']));
-            $event = new PostCalendar_Entity_CalendarEvent();
-            $event->setFromArray($eventArray);
-            $this->entityManager->persist($event);
-            $this->entityManager->flush();
-//            echo "event created<br />id: " . $event->getEid() . "<br />";
-//            $regId = $this->entityManager->getRepository('Zikula_Doctrine2_Entity_CategoryRegistry')
-//                ->findOneBy(array('modname' => 'PostCalendar',
-//                                'tablename' => 'postcalendar_events',
-//                                'property' => 'Main'))
-//                ->getId();
-//            echo "category: " . $event->getCategories()->get($regId)->getCategory()->getName();
-        }
-        if ($show) {
-//            $testAttr = $this->entityManager->getRepository('Zikula_Doctrine2_Entity_Attribute')->find(15);
-//            var_dump($testAttr->toArray());
-            
-            $event = $this->entityManager->getRepository('PostCalendar_Entity_CalendarEvent')->findOneBy(array('title' => $title));
-            $eventArray = $event->getOldArray();
-            var_dump($eventArray);
-//            $regs = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'CalendarEvent', 'id');
-//            var_dump($regs);
-//            $regId = $this->entityManager->getRepository('Zikula_Doctrine2_Entity_CategoryRegistry')
-//                ->findOneBy(array('modname' => 'PostCalendar',
-//                                'tablename' => 'postcalendar_events',
-//                                'property' => 'Main'))
-//                ->getId();
-//            echo "::" . $event->getCategories()->get($regId)->getCategory()->getName(); echo "::<br />";
-//            $attributes = $event->getCategories()->get($regId)->getCategory()->getAttributes();
-//            echo ">>" . $attributes->getName() . ">>" . $attributes->getValue() . "<br />";
-        }
-//        die;
-        
         $this->throwForbiddenUnless(SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_DELETE), LogUtil::getErrorMsgPermission());
     
         $listtype = isset($args['listtype']) ? $args['listtype'] : FormUtil::getPassedValue('listtype', CalendarEvent::APPROVED);
