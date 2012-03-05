@@ -8,24 +8,6 @@
 
 use PostCalendar_Entity_Repository_CalendarEventRepository as EventRepo;
 use PostCalendar_Entity_CalendarEvent as CalendarEvent;
-define('REPEAT_EVERY_DAY',   0);
-define('REPEAT_EVERY_WEEK',  1);
-define('REPEAT_EVERY_MONTH', 2);
-define('REPEAT_EVERY_YEAR',  3);
-// $event_repeat_on_num
-define('REPEAT_ON_1ST',      1);
-define('REPEAT_ON_2ND',      2);
-define('REPEAT_ON_3RD',      3);
-define('REPEAT_ON_4TH',      4);
-define('REPEAT_ON_LAST',     5);
-// $event_repeat_on_day
-define('REPEAT_ON_SUN',      0);
-define('REPEAT_ON_MON',      1);
-define('REPEAT_ON_TUE',      2);
-define('REPEAT_ON_WED',      3);
-define('REPEAT_ON_THU',      4);
-define('REPEAT_ON_FRI',      5);
-define('REPEAT_ON_SAT',      6);
 
 /**
  * This is the event handler api
@@ -35,7 +17,25 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
 {
     const ENDTYPE_ON = 1;
     const ENDTYPE_NONE = 0;
-    
+
+    const REPEAT_EVERY_DAY = 0;
+    const REPEAT_EVERY_WEEK = 1;
+    const REPEAT_EVERY_MONTH = 2;
+    const REPEAT_EVERY_YEAR = 3;
+
+    const REPEAT_ON_1ST = 1;
+    const REPEAT_ON_2ND = 2;
+    const REPEAT_ON_3RD = 3;
+    const REPEAT_ON_4TH = 4;
+    const REPEAT_ON_LAST = 5;
+
+    const REPEAT_ON_SUN = 0;
+    const REPEAT_ON_MON = 1;
+    const REPEAT_ON_TUE = 2;
+    const REPEAT_ON_WED = 3;
+    const REPEAT_ON_THU = 4;
+    const REPEAT_ON_FRI = 5;
+    const REPEAT_ON_SAT = 6;
     /**
      * Returns an array containing the event's information
      * @param array $args arguments. Expected keys:
@@ -393,44 +393,44 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
         // recur select box arrays
         $in = explode("/", $this->__('Day(s)/Week(s)/Month(s)/Year(s)'));
         $keys = array(
-            REPEAT_EVERY_DAY,
-            REPEAT_EVERY_WEEK,
-            REPEAT_EVERY_MONTH,
-            REPEAT_EVERY_YEAR);
+            self::REPEAT_EVERY_DAY,
+            self::REPEAT_EVERY_WEEK,
+            self::REPEAT_EVERY_MONTH,
+            self::REPEAT_EVERY_YEAR);
         $selectarray = array_combine($keys, $in);
         $form_data['repeat_freq_type'] = $selectarray;
 
         $in = explode("/", $this->__('First/Second/Third/Fourth/Last'));
         $keys = array(
-            REPEAT_ON_1ST,
-            REPEAT_ON_2ND,
-            REPEAT_ON_3RD,
-            REPEAT_ON_4TH,
-            REPEAT_ON_LAST);
+            self::REPEAT_ON_1ST,
+            self::REPEAT_ON_2ND,
+            self::REPEAT_ON_3RD,
+            self::REPEAT_ON_4TH,
+            self::REPEAT_ON_LAST);
         $selectarray = array_combine($keys, $in);
         $form_data['repeat_on_num'] = $selectarray;
 
         $in = explode(" ", $this->__('Sun Mon Tue Wed Thu Fri Sat'));
         $keys = array(
-            REPEAT_ON_SUN,
-            REPEAT_ON_MON,
-            REPEAT_ON_TUE,
-            REPEAT_ON_WED,
-            REPEAT_ON_THU,
-            REPEAT_ON_FRI,
-            REPEAT_ON_SAT);
+            self::REPEAT_ON_SUN,
+            self::REPEAT_ON_MON,
+            self::REPEAT_ON_TUE,
+            self::REPEAT_ON_WED,
+            self::REPEAT_ON_THU,
+            self::REPEAT_ON_FRI,
+            self::REPEAT_ON_SAT);
         $selectarray = array_combine($keys, $in);
         $form_data['repeat_on_day'] = $selectarray;
 
         // recur defaults
         if (empty($eventdata['recurrspec']['event_repeat_freq_type']) || $eventdata['recurrspec']['event_repeat_freq_type'] < 1) {
-            $eventdata['recurrspec']['event_repeat_freq_type'] = REPEAT_EVERY_DAY;
+            $eventdata['recurrspec']['event_repeat_freq_type'] = self::REPEAT_EVERY_DAY;
         }
         if (empty($eventdata['recurrspec']['event_repeat_on_num']) || $eventdata['recurrspec']['event_repeat_on_num'] < 1) {
-            $eventdata['recurrspec']['event_repeat_on_num'] = REPEAT_ON_1ST;
+            $eventdata['recurrspec']['event_repeat_on_num'] = self::REPEAT_ON_1ST;
         }
         if (empty($eventdata['recurrspec']['event_repeat_on_day']) || $eventdata['recurrspec']['event_repeat_on_day'] < 1) {
-            $eventdata['recurrspec']['event_repeat_on_day'] = REPEAT_ON_SUN;
+            $eventdata['recurrspec']['event_repeat_on_day'] = self::REPEAT_ON_SUN;
         }
 
         // endType
@@ -582,7 +582,7 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
         $event['endDate'] = ($event['endtype'] == self::ENDTYPE_ON) ? $event['endDate'] : null;
 
         if (!isset($event['alldayevent'])) {
-            $event['alldayevent'] = 0;
+            $event['alldayevent'] = false;
         }
 
         if (empty($event['hometext'])) {
@@ -687,14 +687,19 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
         $y = $args['y']; // year
         $f = $args['f']; // freq
         $t = $args['t']; // type
-        if ($t == REPEAT_EVERY_DAY) {
-            return date('Y-m-d', mktime(0, 0, 0, $m, ($d + $f), $y));
-        } elseif ($t == REPEAT_EVERY_WEEK) {
-            return date('Y-m-d', mktime(0, 0, 0, $m, ($d + (7 * $f)), $y));
-        } elseif ($t == REPEAT_EVERY_MONTH) {
-            return date('Y-m-d', mktime(0, 0, 0, ($m + $f), $d, $y));
-        } elseif ($t == REPEAT_EVERY_YEAR) {
-            return date('Y-m-d', mktime(0, 0, 0, $m, $d, ($y + $f)));
+        switch ($t) {
+            case self::REPEAT_EVERY_DAY:
+                return date('Y-m-d', mktime(0, 0, 0, $m, ($d + $f), $y));
+                break;
+            case self::REPEAT_EVERY_WEEK:
+                return date('Y-m-d', mktime(0, 0, 0, $m, ($d + (7 * $f)), $y));
+                break;
+            case self::REPEAT_EVERY_MONTH:
+                return date('Y-m-d', mktime(0, 0, 0, ($m + $f), $d, $y));
+                break;
+            case self::REPEAT_EVERY_YEAR:
+                return date('Y-m-d', mktime(0, 0, 0, $m, $d, ($y + $f)));
+                break;
         }
     }
 
