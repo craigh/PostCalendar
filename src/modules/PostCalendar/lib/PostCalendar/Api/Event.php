@@ -54,10 +54,7 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
         $s_keywords  = $args['s_keywords'];
         $filtercats  = $args['filtercats'];
         $pc_username = $args['pc_username'];
-        $eventstatus = isset($args['eventstatus']) ? $args['eventstatus'] : CalendarEvent::APPROVED;
-        if (!isset($eventstatus) || ((int) $eventstatus < -1 || (int) $eventstatus > 1)) {
-            $eventstatus = CalendarEvent::APPROVED;
-        }
+        $eventstatus = (isset($args['eventstatus']) && (in_array($args['eventstatus'], array(CalendarEvent::APPROVED, CalendarEvent::QUEUED, CalendarEvent::HIDDEN)))) ? $args['eventstatus'] : CalendarEvent::APPROVED;
         
         if (empty($pc_username)) {
             $pc_username = (_SETTING_ALLOW_USER_CAL) ? EventRepo::FILTER_ALL : EventRepo::FILTER_GLOBAL;
@@ -75,11 +72,9 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
             $ruserid = UserUtil::getVar('uid'); // use current user's ID
         }
 
-        $catsarray = self::formatCategoryFilter($filtercats);
-        
         $events = $this->entityManager->getRepository('PostCalendar_Entity_CalendarEvent')
-                ->getEventCollection($eventstatus, $start, $end, $pc_username, $ruserid, $catsarray, $s_keywords);
-        
+                ->getEventCollection($eventstatus, $start, $end, $pc_username, $ruserid, self::formatCategoryFilter($filtercats), $s_keywords);
+
         return $events;
     }
 
