@@ -48,8 +48,7 @@ class PostCalendar_Block_Featuredevent extends Zikula_Controller_AbstractBlock
             return false;
         }
         $vars['showcountdown'] = empty($vars['showcountdown']) ? false : true;
-        $vars['hideonexpire']  = empty($vars['hideonexpire'])  ? false : true;
-        $event['showhiddenwarning'] = false; // default to false
+        $vars['hideonexpire']  = empty($vars['hideonexpire']) ? false : true;
     
         // get the event from the DB
         ModUtil::dbInfoLoad('PostCalendar');
@@ -57,7 +56,9 @@ class PostCalendar_Block_Featuredevent extends Zikula_Controller_AbstractBlock
         $event = ModUtil::apiFunc('PostCalendar', 'event', 'formateventarrayfordisplay', $event);
     
         // is event allowed for this user?
-        if ($event['sharing'] == PostCalendar_Entity_CalendarEvent::SHARING_PRIVATE && $event['aid'] != UserUtil::getVar('uid') && !SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
+        if ($event['sharing'] == PostCalendar_Entity_CalendarEvent::SHARING_PRIVATE 
+                && $event['aid'] != UserUtil::getVar('uid') 
+                && !SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
             // if event is PRIVATE and user is not assigned event ID (aid) and user is not Admin event should not be seen
             return false;
         }
@@ -66,11 +67,13 @@ class PostCalendar_Block_Featuredevent extends Zikula_Controller_AbstractBlock
         // assign next occurance to eventDate
         $event['eventDate'] = array_shift($alleventdates);
     
+        $event['showcountdown'] = false; // default to false
         if ($vars['showcountdown']) {
             $datedifference = DateUtil::getDatetimeDiff_AsField(DateUtil::getDatetime(null, '%F'), $event['eventDate'], 3);
             $event['datedifference'] = round($datedifference);
             $event['showcountdown'] = true;
         }
+        $event['showhiddenwarning'] = false; // default to false
         if ($vars['hideonexpire'] && $event['datedifference'] < 0) {
             //return false;
             $event['showhiddenwarning'] = true;
