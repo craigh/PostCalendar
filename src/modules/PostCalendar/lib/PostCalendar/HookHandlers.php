@@ -311,10 +311,10 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
 
         $classname = $moduleName . '_Version';
         $moduleVersionObj = new $classname;
-        $tbl = Doctrine_Core::getTable('Zikula_Doctrine_Model_HookArea');
+        $_em = ServiceUtil::getService('doctrine.entitymanager');
         $bindingsBetweenOwners = HookUtil::getBindingsBetweenOwners($moduleName, 'PostCalendar');
         foreach ($bindingsBetweenOwners as $k => $binding) {
-            $areaname = $tbl->find($binding['sareaid'])->get('areaname');
+            $areaname = $_em->getRepository('Zikula_Doctrine2_Entity_HookArea')->find($binding['sareaid'])->getAreaName();
             $bindingsBetweenOwners[$k]['areaname'] = $areaname;
             $bindingsBetweenOwners[$k]['areatitle'] = $view->__($moduleVersionObj->getHookSubscriberBundle($areaname)->getTitle());
             $postcalendarhookconfig[$binding['sareaid']]['admincatselected'] = isset($postcalendarhookconfig[$binding['sareaid']]['admincatselected']) ? $postcalendarhookconfig[$binding['sareaid']]['admincatselected'] : 0;
