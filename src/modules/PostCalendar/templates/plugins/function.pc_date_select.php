@@ -5,13 +5,14 @@
  * @copyright   Copyright (c) 2009-2012, Craig Heydenburg, Sound Web Development
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
  */
-function smarty_function_pc_date_select($args, &$smarty)
+function smarty_function_pc_date_select($args, Zikula_View $view)
 {
     $dom       = ZLanguage::getModuleDomain('PostCalendar');
-    $jumpday   = FormUtil::getPassedValue('jumpDay');
-    $jumpmonth = FormUtil::getPassedValue('jumpMonth');
-    $jumpyear  = FormUtil::getPassedValue('jumpYear');
-    $Date      = FormUtil::getPassedValue('Date');
+    $request   = $view->getRequest();
+    $jumpday   = $request->getPost()->get('jumpDay');
+    $jumpmonth = $request->getPost()->get('jumpMonth');
+    $jumpyear  = $request->getPost()->get('jumpYear');
+    $Date      = $request->getPost()->get('Date');
     $jumpargs  = array(
         'Date' => $Date,
         'jumpday' => $jumpday,
@@ -30,9 +31,9 @@ function smarty_function_pc_date_select($args, &$smarty)
         'year'  => __('Year', $dom),
         'list'  => __('List View', $dom));
 
-    $smarty->assign('dateorderinfo', ModUtil::getVar('PostCalendar', 'pcNavDateOrder'));
-    $smarty->assign('currentjumpdate', $y . '-' . $m . '-' . $d);
-    $smarty->assign('viewtypeselector', $sel_data);
+    $view->assign('dateorderinfo', ModUtil::getVar('PostCalendar', 'pcNavDateOrder'));
+    $view->assign('currentjumpdate', $y . '-' . $m . '-' . $d);
+    $view->assign('viewtypeselector', $sel_data);
 
     return;
 }

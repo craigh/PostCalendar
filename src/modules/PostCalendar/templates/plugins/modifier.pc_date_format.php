@@ -13,8 +13,8 @@ function smarty_modifier_pc_date_format($string, $format = null, $default_date =
 
     $ret_val = "";
 
-    $smarty = Zikula_View::getInstance();
-    require_once $smarty->_get_plugin_filepath('shared', 'make_timestamp');
+    $view = Zikula_View::getInstance();
+    require_once $view->_get_plugin_filepath('shared', 'make_timestamp');
 
     if ($string != '') {
         $ret_val = DateUtil::strftime($format, smarty_make_timestamp($string));

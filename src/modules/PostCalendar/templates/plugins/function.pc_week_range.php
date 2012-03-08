@@ -18,15 +18,16 @@
  * @param Smarty $smarty the Smarty instance
  * @return unknown
  */
-function smarty_function_pc_week_range($args, &$smarty)
+function smarty_function_pc_week_range($args, Zikula_View $view)
 {
     //setlocale(LC_TIME, ZLanguage::getLocale()); //setlocale(LC_TIME, _PC_LOCALE);
     if (!isset($args['date'])) {
         //not sure these three lines are needed with call to getDate here
-        $jumpday   = FormUtil::getPassedValue('jumpday');
-        $jumpmonth = FormUtil::getPassedValue('jumpmonth');
-        $jumpyear  = FormUtil::getPassedValue('jumpyear');
-        $Date      = FormUtil::getPassedValue('Date');
+        $request = $view->getRequest();
+        $jumpday = $request->getPost()->get('jumpDay', $request->getGet()->get('jumpDay', null));
+        $jumpmonth = $request->getPost()->get('jumpMonth', $request->getGet()->get('jumpMonth', null));
+        $jumpyear = $request->getPost()->get('jumpYear', $request->getGet()->get('jumpYear', null));
+        $Date = $request->getPost()->get('Date', $request->getGet()->get('Date', null));
         $jumpargs  = array(
             'Date' => $Date,
             'jumpday' => $jumpday,
@@ -73,7 +74,7 @@ function smarty_function_pc_week_range($args, &$smarty)
     $ret_val = $firstDay . $args['sep'] . $lastDay;
 
     if (isset($args['assign'])) {
-        $smarty->assign($args['assign'], $ret_val);
+        $view->assign($args['assign'], $ret_val);
         return;
     } else {
         return $ret_val;

@@ -6,8 +6,10 @@
  * @copyright   Copyright (c) 2009-2012, Craig Heydenburg, Sound Web Development
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
  */
-function smarty_function_pc_url($args, &$smarty)
+function smarty_function_pc_url($args, Zikula_View $view)
 {
+    $request = $view->getRequest();
+    
     $action = array_key_exists('action', $args) && isset($args['action']) ? $args['action'] : _SETTING_DEFAULT_VIEW;
     $print = array_key_exists('print', $args) && !empty($args['print']) ? true : false;
     $date = array_key_exists('date', $args) && !empty($args['date']) ? $args['date'] : null;
@@ -19,7 +21,8 @@ function smarty_function_pc_url($args, &$smarty)
     $assign = array_key_exists('assign', $args) && !empty($args['assign']) ? $args['assign'] : null;
     $navlink = array_key_exists('navlink', $args) && !empty($args['navlink']) ? true : false;
     $func = array_key_exists('func', $args) && !empty($args['func']) ? $args['func'] : 'create';
-    $viewtype = array_key_exists('viewtype', $args) && !empty($args['viewtype']) ? $args['viewtype'] : strtolower(FormUtil::getPassedValue('viewtype', _SETTING_DEFAULT_VIEW));
+    $viewtype = $request->getPost()->get('viewtype', $request->getGet()->get('viewtype', _SETTING_DEFAULT_VIEW));
+    $viewtype = array_key_exists('viewtype', $args) && !empty($args['viewtype']) ? $args['viewtype'] : strtolower($viewtype);
     unset($args['action']);
     unset($args['print']);
     unset($args['date']);
@@ -35,17 +38,17 @@ function smarty_function_pc_url($args, &$smarty)
 
     $dom = ZLanguage::getModuleDomain('PostCalendar');
 
-    if (FormUtil::getPassedValue('func') == 'create') {
+    if ($request->getPost()->get('func', $request->getGet()->get('func', null)) == 'create') {
         $viewtype = 'create';
     }
-    $pc_username = FormUtil::getPassedValue('pc_username');
+    $pc_username = $request->getPost()->get('pc_username', $request->getGet()->get('pc_username', null));
 
     if (is_null($date)) {
         //not sure these three lines are needed with call to getDate here
-        $jumpday = FormUtil::getPassedValue('jumpDay');
-        $jumpmonth = FormUtil::getPassedValue('jumpMonth');
-        $jumpyear = FormUtil::getPassedValue('jumpYear');
-        $Date = FormUtil::getPassedValue('Date');
+        $jumpday = $request->getPost()->get('jumpDay', $request->getGet()->get('jumpDay', null));
+        $jumpmonth = $request->getPost()->get('jumpMonth', $request->getGet()->get('jumpMonth', null));
+        $jumpyear = $request->getPost()->get('jumpYear', $request->getGet()->get('jumpYear', null));
+        $Date = $request->getPost()->get('Date', $request->getGet()->get('Date', null));
         $jumpargs = array(
             'Date' => $Date,
             'jumpday' => $jumpday,
@@ -124,7 +127,7 @@ function smarty_function_pc_url($args, &$smarty)
             if (_SETTING_USENAVIMAGES) {
                 $image_text = $labeltexts[$action];
                 $image_src = ($viewtype == $action) ? $action . '_on.gif' : $action . '.gif';
-                include_once $smarty->_get_plugin_filepath('function', 'img');
+                include_once $view->_get_plugin_filepath('function', 'img');
                 $img_params = array(
                     'modname' => 'PostCalendar',
                     'src' => $image_src,
@@ -139,7 +142,7 @@ function smarty_function_pc_url($args, &$smarty)
                     $img_params['modname'] = 'PostCalendar';
                     $img_params['src'] = 'feed.gif';
                 }
-                $display = smarty_function_img($img_params, $smarty);
+                $display = smarty_function_img($img_params, $view);
                 $class = 'postcalendar_nav_img';
                 $title = $image_text;
             } else {
@@ -187,7 +190,7 @@ function smarty_function_pc_url($args, &$smarty)
     }
 
     if (isset($assign)) {
-        $smarty->assign($assign, $ret_val);
+        $view->assign($assign, $ret_val);
     } else {
         return $ret_val;
     }

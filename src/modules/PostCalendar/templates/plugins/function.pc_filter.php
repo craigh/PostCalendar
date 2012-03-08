@@ -17,11 +17,11 @@
  *                       'order' comma separated list of arguments to sort on (optional)
  * @param Smarty $smarty
  */
-function smarty_function_pc_filter($args, &$smarty)
+function smarty_function_pc_filter($args, Zikula_View $view)
 {
     $dom = ZLanguage::getModuleDomain('PostCalendar');
     if (empty($args['type'])) {
-        $smarty->trigger_error(__f('%1$s: missing or empty \'%2$s\' parameter', array(
+        $view->trigger_error(__f('%1$s: missing or empty \'%2$s\' parameter', array(
             'Plugin:pc_filter',
             'type'), $dom));
         return;
@@ -30,10 +30,11 @@ function smarty_function_pc_filter($args, &$smarty)
     $label = isset($args['label'])  ? $args['label']                    : __('change', $dom);
     $order = isset($args['order'])  ? $args['order']                    : null;
 
-    $jumpday   = FormUtil::getPassedValue('jumpDay');
-    $jumpmonth = FormUtil::getPassedValue('jumpMonth');
-    $jumpyear  = FormUtil::getPassedValue('jumpYear');
-    $Date      = FormUtil::getPassedValue('Date');
+    $request = $view->getRequest();
+    $jumpday   = $request->getPost()->get('jumpDay');
+    $jumpmonth = $request->getPost()->get('jumpMonth');
+    $jumpyear  = $request->getPost()->get('jumpYear');
+    $Date      = $request->getPost()->get('Date');
     $jumpargs  = array(
         'Date' => $Date,
         'jumpday' => $jumpday,
@@ -41,13 +42,13 @@ function smarty_function_pc_filter($args, &$smarty)
         'jumpyear' => $jumpyear);
     $Date      = PostCalendar_Util::getDate($jumpargs);
 
-    $viewtype = FormUtil::getPassedValue('viewtype', _SETTING_DEFAULT_VIEW);
+    $viewtype = $request->getPost()->get('viewtype', _SETTING_DEFAULT_VIEW);
     if (ModUtil::getVar('PostCalendar', 'pcAllowUserCalendar')) {
         $filterdefault = PostCalendar_Entity_Repository_CalendarEventRepository::FILTER_ALL;
     } else {
         $filterdefault = PostCalendar_Entity_Repository_CalendarEventRepository::FILTER_GLOBAL;
     }
-    $pc_username = FormUtil::getPassedValue('pc_username', $filterdefault);
+    $pc_username = $request->getPost()->get('pc_username', $filterdefault);
     if (!UserUtil::isLoggedIn()) {
         $pc_username = PostCalendar_Entity_Repository_CalendarEventRepository::FILTER_GLOBAL;
     }
@@ -101,9 +102,9 @@ function smarty_function_pc_filter($args, &$smarty)
     if (in_array('category', $types) && _SETTING_ALLOW_CAT_FILTER && _SETTING_ENABLECATS) {
         $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'CalendarEvent');
 
-        $smarty->assign('enablecategorization', ModUtil::getVar('PostCalendar', 'enablecategorization'));
-        $smarty->assign('catregistry', $catregistry);
-        $catoptions = $smarty->fetch('event/filtercats.tpl', 1); // force one cachefile
+        $view->assign('enablecategorization', ModUtil::getVar('PostCalendar', 'enablecategorization'));
+        $view->assign('catregistry', $catregistry);
+        $catoptions = $view->fetch('event/filtercats.tpl', 1); // force one cachefile
     } else {
         $catoptions = '';
         $key = array_search('category', $types);
@@ -148,7 +149,7 @@ function smarty_function_pc_filter($args, &$smarty)
     }
 
     if (isset($args['assign'])) {
-        $smarty->assign($args['assign'], $ret_val);
+        $view->assign($args['assign'], $ret_val);
     } else {
         return $ret_val;
     }

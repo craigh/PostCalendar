@@ -5,25 +5,25 @@
  * @copyright   Copyright (c) 2009-2012, Craig Heydenburg, Sound Web Development
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
  */
-function smarty_function_pc_sort_events($params, &$smarty)
+function smarty_function_pc_sort_events($params, Zikula_View $view)
 {
     $dom = ZLanguage::getModuleDomain('PostCalendar');
     if (!array_key_exists('var', $params) || empty($params['var'])) {
-        $smarty->trigger_error(__f('%1$s: missing or empty \'%2$s\' parameter', array(
+        $view->trigger_error(__f('%1$s: missing or empty \'%2$s\' parameter', array(
             'Plugin:pc_sort_events',
             'var'), $dom));
         return;
     }
 
     if (!array_key_exists('value', $params) || !is_array($params['value'])) {
-        $smarty->trigger_error(__f('%1$s: missing or empty \'%2$s\' parameter', array(
+        $view->trigger_error(__f('%1$s: missing or empty \'%2$s\' parameter', array(
             'Plugin:pc_sort_events',
             'value'), $dom));
         return;
     }
 
     if (!array_key_exists('sort', $params)) {
-        $smarty->trigger_error(__f('%1$s: missing or empty \'%2$s\' parameter', array(
+        $view->trigger_error(__f('%1$s: missing or empty \'%2$s\' parameter', array(
             'Plugin:pc_sort_events',
             'sort'), $dom));
         return;
@@ -66,7 +66,7 @@ function smarty_function_pc_sort_events($params, &$smarty)
         $newArray[$date] = $events;
     }
 
-    $smarty->assign_by_ref($params['var'], $newArray);
+    $view->assign_by_ref($params['var'], $newArray);
 }
 /**
  * Sorting Functions

@@ -16,29 +16,30 @@ class PostCalendar_Form_Handler_EditHandler extends Zikula_Form_AbstractHandler
 {
     var $eid;
 
-    function initialize($view)
+    function initialize(Zikula_Form_View $view)
     {
         if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADD)) {
             throw new Zikula_Exception_Forbidden(LogUtil::getErrorMsgPermission());
         }
 
-        $this->eid = FormUtil::getPassedValue('eid');
+        $this->eid = $this->request->getGet()->get('eid');
 
         return true;
     }
 
-    function handleCommand($view, &$args)
+    function handleCommand(Zikula_Form_View $view, &$args)
     {
         $url = null;
 
         // Fetch event data from DB to confirm event exists
-        $event = $this->entityManager->getRepository('PostCalendar_Entity_CalendarEvent')->find($this->eid)->getOldArray();
+        $event = $this->entityManager->getRepository('PostCalendar_Entity_CalendarEvent')->find($this->eid);
+        $eventArray = $event->getOldArray();
         if (count($event) == 0) {
             return LogUtil::registerError($this->__f('Error! There are no events with ID %s.', $this->eid));
         }
 
         if ($args['commandName'] == 'delete') {
-            if ((UserUtil::getVar('uid') != $event['informant']) and (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN))) {
+            if ((UserUtil::getVar('uid') != $eventArray['informant']) and (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN))) {
                 return LogUtil::registerError($this->__('Sorry! You do not have authorization to delete this event.'));
             }
             try {
@@ -58,7 +59,7 @@ class PostCalendar_Form_Handler_EditHandler extends Zikula_Form_AbstractHandler
             $url = ModUtil::url('PostCalendar', 'user', 'display', array(
                 'eid' => $this->eid,
                 'viewtype' => 'details',
-                'Date' => $event['Date']));
+                'Date' => $eventArray['eventDate']));
         }
 
         if ($url != null) {

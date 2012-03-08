@@ -6,7 +6,7 @@
  * @copyright   Copyright (c) 2009-2012, Craig Heydenburg, Sound Web Development
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
  */
-function smarty_function_pc_init_rss_feed($args, &$smarty)
+function smarty_function_pc_init_rss_feed($args, Zikula_View $view)
 {
     if (!ModUtil::getVar('pnRender', 'expose_template')) {
         $rsslink = ModUtil::url('PostCalendar', 'user', 'display', array(
@@ -26,7 +26,7 @@ function smarty_function_pc_init_rss_feed($args, &$smarty)
     }
 
     if (isset($args['assign'])) {
-        $smarty->assign($args['assign'], $ret_val);
+        $view->assign($args['assign'], $ret_val);
     } else {
         return $ret_val;
     }

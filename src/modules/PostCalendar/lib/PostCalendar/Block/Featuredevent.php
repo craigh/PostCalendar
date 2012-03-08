@@ -112,9 +112,9 @@ class PostCalendar_Block_Featuredevent extends Zikula_Controller_AbstractBlock
         $vars = BlockUtil::varsFromContent($blockinfo['content']);
     
         // alter the corresponding variable
-        $vars['eid']           = FormUtil::getPassedValue('eid', '', 'POST');
-        $vars['showcountdown'] = FormUtil::getPassedValue('showcountdown', '', 'POST');
-        $vars['hideonexpire']  = FormUtil::getPassedValue('hideonexpire', '', 'POST');
+        $vars['eid'] = $this->request->getPost()->get('eid', '');
+        $vars['showcountdown'] = $this->request->getPost()->get('showcountdown', '');
+        $vars['hideonexpire'] = $this->request->getPost()->get('hideonexpire', '');
     
         // write back the new contents
         $blockinfo['content'] = BlockUtil::varsToContent($vars);

@@ -117,8 +117,8 @@ class PostCalendar_Block_Pastevents extends Zikula_Controller_AbstractBlock
         $vars = BlockUtil::varsFromContent($blockinfo['content']);
     
         // overwrite with new values
-        $vars['pcbeventsrange'] = FormUtil::getPassedValue('pcbeventsrange', 6);
-        $vars['pcbfiltercats']  = FormUtil::getPassedValue('pcbfiltercats'); //array
+        $vars['pcbeventsrange'] = $this->request->getPost()->get('pcbeventsrange', 6);
+        $vars['pcbfiltercats'] = $this->request->getPost()->get('pcbfiltercats'); //array
     
         $this->view->clear_cache('blocks/pastevents.tpl');
         $blockinfo['content'] = BlockUtil::varsToContent($vars);

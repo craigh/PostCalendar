@@ -6,7 +6,7 @@
  * @copyright   Copyright (c) 2009-2012, Craig Heydenburg, Sound Web Development
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
  */
-function smarty_function_pc_queued_events_notify($args, &$smarty)
+function smarty_function_pc_queued_events_notify($args, Zikula_View $view)
 {
     if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_DELETE)) {
         return;
@@ -34,7 +34,7 @@ function smarty_function_pc_queued_events_notify($args, &$smarty)
     $alert = "<div class='z-informationmsg'>$text [<a href='$url'>$linktext</a>]</div>";
 
     if (isset($assign)) {
-        $smarty->assign($assign, $count);
+        $view->assign($assign, $count);
     } else {
         return $alert;
     }

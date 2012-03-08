@@ -49,7 +49,7 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
     {
         $this->throwForbiddenUnless(SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_DELETE), LogUtil::getErrorMsgPermission());
     
-        $listtype = isset($args['listtype']) ? $args['listtype'] : FormUtil::getPassedValue('listtype', CalendarEvent::APPROVED);
+        $listtype = isset($args['listtype']) ? $args['listtype'] : $this->request->getGet()->get('listtype', $this->request->getPost()->get('listtype', CalendarEvent::APPROVED));
 
         switch ($listtype) {
             case CalendarEvent::ALLSTATUS:
@@ -64,16 +64,16 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
             case CalendarEvent::APPROVED:
             default:
                 $functionname = "approved";
-            }
+        }
     
         $sortcolclasses = array(
             'title' => 'z-order-unsorted',
             'time'  => 'z-order-unsorted',
             'eventDate' => 'z-order-unsorted');
     
-        $offset = FormUtil::getPassedValue('offset', 0);
-        $sort = FormUtil::getPassedValue('sort', 'time');
-        $original_sdir = FormUtil::getPassedValue('sdir', 1);
+        $offset = $this->request->getGet()->get('offset', $this->request->getPost()->get('offset', 0));
+        $sort = $this->request->getGet()->get('sort', $this->request->getPost()->get('sort', 'time'));
+        $original_sdir = $this->request->getGet()->get('sdir', $this->request->getPost()->get('sdir', 1));
         $this->view->assign('offset', $offset);
         $this->view->assign('sort', $sort);
         $this->view->assign('sdir', $original_sdir);
@@ -90,8 +90,8 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
         }
         $this->view->assign('sortcolclasses', $sortcolclasses);
 
-        $filtercats = FormUtil::getPassedValue('postcalendar_events', null, 'GETPOST');
-        $filtercats_serialized = FormUtil::getPassedValue('filtercats_serialized', false, 'GET');
+        $filtercats = $this->request->getGet()->get('postcalendar_events', $this->request->getPost()->get('postcalendar_events', null));
+        $filtercats_serialized = $this->request->getGet()->get('filtercats_serialized', false);
         $filtercats = $filtercats_serialized ? unserialize($filtercats_serialized) : $filtercats;
         $catsarray = PostCalendar_Api_Event::formatCategoryFilter($filtercats);
 
@@ -153,13 +153,13 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
     {
         $this->throwForbiddenUnless(SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_DELETE), LogUtil::getErrorMsgPermission());
     
-        $action = FormUtil::getPassedValue('action');
-        $events = FormUtil::getPassedValue('events'); // could be an array or single val
+        $action = $this->request->getPost()->get('action', $this->request->getGet()->get('action', self::ACTION_VIEW));
+        $events = $this->request->getPost()->get('events', $this->request->getGet()->get('events', null)); // could be an array or single val
     
         if (!isset($events)) {
             LogUtil::registerError($this->__('Please select an event.'));
             // return to where we came from
-            $listtype = FormUtil::getPassedValue('listtype', CalendarEvent::APPROVED);
+            $listtype = $this->request->getPost()->get('listtype', $this->request->getGet()->get('listtype', CalendarEvent::APPROVED));
             return $this->listevents(array('listtype' => $listtype));
         }
     
@@ -235,27 +235,27 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
         }
     
         $settings = array(
-            'pcTime24Hours'           => FormUtil::getPassedValue('pcTime24Hours',               0),
-            'pcEventsOpenInNewWindow' => FormUtil::getPassedValue('pcEventsOpenInNewWindow',     0),
-            'pcFirstDayOfWeek'        => FormUtil::getPassedValue('pcFirstDayOfWeek',            $defaults['pcFirstDayOfWeek']),
-            'pcUsePopups'             => FormUtil::getPassedValue('pcUsePopups',                 0),
-            'pcAllowDirectSubmit'     => FormUtil::getPassedValue('pcAllowDirectSubmit',         0),
-            'pcListHowManyEvents'     => FormUtil::getPassedValue('pcListHowManyEvents',         $defaults['pcListHowManyEvents']),
-            'pcEventDateFormat'       => FormUtil::getPassedValue('pcEventDateFormat',           $defaults['pcEventDateFormat']),
-            'pcAllowUserCalendar'     => FormUtil::getPassedValue('pcAllowUserCalendar',         0),
-            'pcTimeIncrement'         => FormUtil::getPassedValue('pcTimeIncrement',             $defaults['pcTimeIncrement']),
-            'pcDefaultView'           => FormUtil::getPassedValue('pcDefaultView',               $defaults['pcDefaultView']),
-            'pcNotifyAdmin'           => FormUtil::getPassedValue('pcNotifyAdmin',               0),
-            'pcNotifyEmail'           => FormUtil::getPassedValue('pcNotifyEmail',               $defaults['pcNotifyEmail']),
-            'pcListMonths'            => abs((int) FormUtil::getPassedValue('pcListMonths',      $defaults['pcListMonths'])),
-            'pcNotifyAdmin2Admin'     => FormUtil::getPassedValue('pcNotifyAdmin2Admin',         0),
-            'pcAllowCatFilter'        => FormUtil::getPassedValue('pcAllowCatFilter',            0),
-            'enablecategorization'    => FormUtil::getPassedValue('enablecategorization',        0),
-            'enablenavimages'         => FormUtil::getPassedValue('enablenavimages',             0),
-            'enablelocations'         => FormUtil::getPassedValue('enablelocations',             0),
-            'pcFilterYearStart'       => abs((int) FormUtil::getPassedValue('pcFilterYearStart', $defaults['pcFilterYearStart'])), // ensures positive value
-            'pcFilterYearEnd'         => abs((int) FormUtil::getPassedValue('pcFilterYearEnd',   $defaults['pcFilterYearEnd'])), // ensures positive value
-            'pcNotifyPending'         => FormUtil::getPassedValue('pcNotifyPending',             0),
+            'pcTime24Hours' => $this->request->getPost()->get('pcTime24Hours', 0),
+            'pcEventsOpenInNewWindow' => $this->request->getPost()->get('pcEventsOpenInNewWindow', 0),
+            'pcFirstDayOfWeek' => $this->request->getPost()->get('pcFirstDayOfWeek', $defaults['pcFirstDayOfWeek']),
+            'pcUsePopups' => $this->request->getPost()->get('pcUsePopups', 0),
+            'pcAllowDirectSubmit' => $this->request->getPost()->get('pcAllowDirectSubmit', 0),
+            'pcListHowManyEvents' => $this->request->getPost()->get('pcListHowManyEvents', $defaults['pcListHowManyEvents']),
+            'pcEventDateFormat' => $this->request->getPost()->get('pcEventDateFormat', $defaults['pcEventDateFormat']),
+            'pcAllowUserCalendar' => $this->request->getPost()->get('pcAllowUserCalendar', 0),
+            'pcTimeIncrement' => $this->request->getPost()->get('pcTimeIncrement', $defaults['pcTimeIncrement']),
+            'pcDefaultView' => $this->request->getPost()->get('pcDefaultView', $defaults['pcDefaultView']),
+            'pcNotifyAdmin' => $this->request->getPost()->get('pcNotifyAdmin', 0),
+            'pcNotifyEmail' => $this->request->getPost()->get('pcNotifyEmail', $defaults['pcNotifyEmail']),
+            'pcListMonths' => abs((int)$this->request->getPost()->get('pcListMonths', $defaults['pcListMonths'])),
+            'pcNotifyAdmin2Admin' => $this->request->getPost()->get('pcNotifyAdmin2Admin', 0),
+            'pcAllowCatFilter' => $this->request->getPost()->get('pcAllowCatFilter', 0),
+            'enablecategorization' => $this->request->getPost()->get('enablecategorization', 0),
+            'enablenavimages' => $this->request->getPost()->get('enablenavimages', 0),
+            'enablelocations' => $this->request->getPost()->get('enablelocations', 0),
+            'pcFilterYearStart' => abs((int)$this->request->getPost()->get('pcFilterYearStart', $defaults['pcFilterYearStart'])), // ensures positive value
+            'pcFilterYearEnd' => abs((int)$this->request->getPost()->get('pcFilterYearEnd', $defaults['pcFilterYearEnd'])), // ensures positive value
+            'pcNotifyPending' => $this->request->getPost()->get('pcNotifyPending', 0),
         );
         $settings['pcNavDateOrder'] = ModUtil::apiFunc('PostCalendar', 'admin', 'getdateorder', $settings['pcEventDateFormat']);
         // save out event default settings so they are not cleared
@@ -284,8 +284,8 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
 
         $this->throwForbiddenUnless(SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADD), LogUtil::getErrorMsgPermission());
 
-        $pc_eid = FormUtil::getPassedValue('pc_eid');
-        $action = FormUtil::getPassedValue('action');
+        $pc_eid = $this->request->getPost()->get('pc_eid', $this->request->getGet()->get('pc_eid', null));
+        $action = $this->request->getPost()->get('action', $this->request->getGet()->get('action', self::ACTION_APPROVE));
         if (!is_array($pc_eid)) {
             return $this->__("Error! An the eid must be passed as an array.");
         }
@@ -349,7 +349,7 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
         $this->checkCsrfToken();
         $this->throwForbiddenUnless(SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN), LogUtil::getErrorMsgPermission());
     
-        $eventDefaults = FormUtil::getPassedValue('postcalendar_eventdefaults'); //array
+        $eventDefaults = $this->request->getPost()->get('postcalendar_eventdefaults'); //array
 
         // filter through locations translator
         $eventDefaults = ModUtil::apiFunc('PostCalendar', 'event', 'correctlocationdata', $eventDefaults);

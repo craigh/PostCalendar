@@ -5,7 +5,7 @@
  * @copyright   Copyright (c) 2009-2012, Craig Heydenburg, Sound Web Development
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
  */
-function smarty_function_pc_implode($args, &$smarty)
+function smarty_function_pc_implode($args, Zikula_View $view)
 {
     $sep   = (!isset($args['seperator']) || empty($args['seperator'])) ? "," : $args['seperator'];
     $value = $args['value'];
@@ -16,7 +16,7 @@ function smarty_function_pc_implode($args, &$smarty)
     $valueList = implode($sep, $value);
 
     if (isset($args['assign'])) {
-        $smarty->assign($args['assign'], $valueList);
+        $view->assign($args['assign'], $valueList);
     } else {
         return $valueList;
     }

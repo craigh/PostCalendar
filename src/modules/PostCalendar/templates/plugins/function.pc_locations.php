@@ -4,7 +4,7 @@
  * @copyright   Copyright (c) 2010-2012, Craig Heydenburg, Sound Web Development
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
  */
-function smarty_function_pc_locations($args, &$smarty)
+function smarty_function_pc_locations($args, Zikula_View $view)
 {
     if (!ModUtil::available('Locations') || !ModUtil::getVar('PostCalendar', 'enablelocations')) {
         return "<input type='hidden' name='postcalendar_events[location][locations_id]' id='postcalendar_events_location_locations_id' value='-1'>";
@@ -21,7 +21,7 @@ function smarty_function_pc_locations($args, &$smarty)
         $locations[$loc['value']] = $loc['text'];
     }
 
-    include_once $smarty->_get_plugin_filepath('function', 'html_options');
+    include_once $view->_get_plugin_filepath('function', 'html_options');
     $options_array = array(
         'name'     => $fieldname . "[location][locations_id]",
         'id'       => $fieldname . "_location_locations_id",
@@ -31,7 +31,7 @@ function smarty_function_pc_locations($args, &$smarty)
         'selected' => '-1');
 
     $display .= $admin ? "<label for='postcalendar_eventdefaults_location_locations_id'>" . __('Location', $dom) . "</label>" : "";
-    $display .= smarty_function_html_options($options_array, $smarty);
+    $display .= smarty_function_html_options($options_array, $view);
     $display .= $admin ? "" : "<br />";
 
     $pc_loc_javascript = "

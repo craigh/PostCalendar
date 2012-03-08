@@ -9,7 +9,7 @@
  *
  * @param  none
  */
-function smarty_function_pc_pagejs_init($params, &$smarty)
+function smarty_function_pc_pagejs_init($params, Zikula_View $view)
 {
     unset($params);
     $dom = ZLanguage::getModuleDomain('PostCalendar');

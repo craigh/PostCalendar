@@ -22,7 +22,7 @@ class PostCalendar_Controller_Event extends Zikula_AbstractController
     {
         $this->throwForbiddenUnless(SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADD), LogUtil::getErrorMsgPermission());
 
-        $eid    = FormUtil::getPassedValue('eid'); //  seems like this should be handled by the eventHandler
+        $eid    = $this->request->getGet()->get('eid'); //  seems like this should be handled by the eventHandler
         $render = FormUtil::newForm('PostCalendar', $this);
 
         // get the event from the DB
@@ -38,7 +38,7 @@ class PostCalendar_Controller_Event extends Zikula_AbstractController
      */
     public function edit($args)
     {
-        $args['eid'] = FormUtil::getPassedValue('eid');
+        $args['eid'] = $this->request->getGet()->get('eid');
         return $this->create($args);
     }
     /**
@@ -46,7 +46,7 @@ class PostCalendar_Controller_Event extends Zikula_AbstractController
      */
     public function copy($args)
     {
-        $args['eid'] = FormUtil::getPassedValue('eid');
+        $args['eid'] = $this->request->getGet()->get('eid');
         return $this->create($args);
     }
     /**
@@ -77,16 +77,16 @@ class PostCalendar_Controller_Event extends Zikula_AbstractController
         $this->throwForbiddenUnless(SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADD), LogUtil::getErrorMsgPermission());
 
         // these items come on brand new view of this function
-        $func = FormUtil::getPassedValue('func', 'create');
-        $Date = FormUtil::getPassedValue('Date'); //typically formatted YYYYMMDD or YYYYMMDD000000
+        $func = $this->request->getGet()->get('func', 'create');
+        $Date = $this->request->getGet()->get('Date'); //typically formatted YYYYMMDD or YYYYMMDD000000
         // format to '%Y%m%d%H%M%S'
         $Date = PostCalendar_Util::getDate(array(
             'Date' => $Date));
 
         // these items come on submission of form
-        $submitted_event = FormUtil::getPassedValue('postcalendar_events', NULL);
-        $is_update       = FormUtil::getPassedValue('is_update', false);
-        $form_action     = FormUtil::getPassedValue('form_action', NULL);
+        $submitted_event = $this->request->getPost()->get('postcalendar_events', NULL);
+        $is_update       = $this->request->getPost()->get('is_update', false);
+        $form_action     = $this->request->getPost()->get('form_action', NULL);
 
         // compensate for translation of input values
         if (isset($form_action)) {
