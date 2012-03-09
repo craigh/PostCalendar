@@ -36,47 +36,6 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
     const REPEAT_ON_THU = 4;
     const REPEAT_ON_FRI = 5;
     const REPEAT_ON_SAT = 6;
-    /**
-     * Returns an array containing the event's information
-     * @param array $args arguments. Expected keys:
-     *              eventstatus: -1 == hidden ; 0 == queued ; 1 == approved (default)
-     *              start: Events start date (default today)
-     *              end: Events end_date (default null)
-     *              s_keywords: search info
-     *              filtercats: categories to query events from
-     *              pc_username: event type or user id
-     * @return array The events
-     */
-    public function queryEvents($args)
-    {
-        $start       = isset($args['start']) ? $args['start'] : date('Y-m-d');
-        $end         = $args['end'] ? $args['end'] : null;
-        $s_keywords  = $args['s_keywords'];
-        $filtercats  = $args['filtercats'];
-        $pc_username = $args['pc_username'];
-        $eventstatus = (isset($args['eventstatus']) && (in_array($args['eventstatus'], array(CalendarEvent::APPROVED, CalendarEvent::QUEUED, CalendarEvent::HIDDEN)))) ? $args['eventstatus'] : CalendarEvent::APPROVED;
-        
-        if (empty($pc_username)) {
-            $pc_username = (_SETTING_ALLOW_USER_CAL) ? EventRepo::FILTER_ALL : EventRepo::FILTER_GLOBAL;
-        }
-        if (!UserUtil::isLoggedIn()) {
-            $pc_username = EventRepo::FILTER_GLOBAL;
-        }
-
-        // convert $pc_username to useable information
-        if ($pc_username > 0) {
-            // possible values: a user id - only an admin can use this
-            $ruserid = $pc_username; // keep the id
-            $pc_username = EventRepo::FILTER_PRIVATE;
-        } else {
-            $ruserid = UserUtil::getVar('uid'); // use current user's ID
-        }
-
-        $events = $this->entityManager->getRepository('PostCalendar_Entity_CalendarEvent')
-                ->getEventCollection($eventstatus, $start, $end, $pc_username, $ruserid, self::formatCategoryFilter($filtercats), $s_keywords);
-
-        return $events;
-    }
 
     /**
      * This function returns an array of events sorted by date
@@ -95,6 +54,7 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
         $searchend   = isset($args['searchend'])   ? $args['searchend']   : '';
         $Date        = isset($args['Date'])        ? $args['Date']        : '';
         $sort        = ((isset($args['sort'])) && ($args['sort'] == 'DESC')) ? 'DESC' : 'ASC';
+        $eventstatus = (isset($args['eventstatus']) && (in_array($args['eventstatus'], array(CalendarEvent::APPROVED, CalendarEvent::QUEUED, CalendarEvent::HIDDEN)))) ? $args['eventstatus'] : CalendarEvent::APPROVED;
 
         $date = PostCalendar_Util::getDate(array(
             'Date' => $Date)); //formats date
@@ -115,6 +75,8 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
         $currentyear  = substr($date, 0, 4);
         $currentmonth = substr($date, 4, 2);
         $currentday   = substr($date, 6, 2);
+        $start_date = date('Y-m-d');
+        $end_date = null;
 
         if (isset($start) && isset($end)) {
             list ($startmonth, $startday, $startyear) = explode('/', $start);
@@ -137,13 +99,26 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
             $end_date = $endyear . '-' . $endmonth . '-' . $endday;
         }
 
-        $events = $this->queryEvents(array(
-            'start'       => $start_date,
-            'end'         => $end_date,
-            's_keywords'  => $s_keywords,
-            'filtercats'  => $filtercats,
-            'pc_username' => $pc_username));
+        if (empty($pc_username)) {
+            $pc_username = (_SETTING_ALLOW_USER_CAL) ? EventRepo::FILTER_ALL : EventRepo::FILTER_GLOBAL;
+        }
+        if (!UserUtil::isLoggedIn()) {
+            $pc_username = EventRepo::FILTER_GLOBAL;
+        }
 
+        // convert $pc_username to useable information
+        if ($pc_username > 0) {
+            // possible values: a user id - only an admin can use this
+            $ruserid = $pc_username; // keep the id
+            $pc_username = EventRepo::FILTER_PRIVATE;
+        } else {
+            $ruserid = UserUtil::getVar('uid'); // use current user's ID
+        }
+
+        // get event collection
+        $events = $this->entityManager->getRepository('PostCalendar_Entity_CalendarEvent')
+                ->getEventCollection($eventstatus, $start_date, $end_date, $pc_username, $ruserid, self::formatCategoryFilter($filtercats), $s_keywords);
+        
         //==============================================================
         // Here an array is built consisting of the date ranges
         // specific to the current view.  This array is then
