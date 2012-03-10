@@ -85,7 +85,8 @@ class PostCalendar_Util
      */
     public static function getDate($args)
     {
-        $format = (!empty($args['format'])) ? $args['format'] : '%Y%m%d%H%M%S';
+//        $format = (!empty($args['format'])) ? $args['format'] : '%Y%m%d%H%M%S';
+        $format = (!empty($args['format'])) ? $args['format'] : '%Y%m%d';
     
         $time      = time();
         $jumpday   = isset($args['jumpday']) ? $args['jumpday'] : strftime('%d', $time);
