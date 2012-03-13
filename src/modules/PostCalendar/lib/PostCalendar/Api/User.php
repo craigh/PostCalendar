@@ -51,6 +51,17 @@ class PostCalendar_Api_User extends Zikula_AbstractApi
         // set up some information for later variable creation.
         // This helps establish the correct date ranges for each view.
         // There may be a better way to handle all this.
+        /*
+         * first_day is the zero-based array position for the first actual day of the month
+         * week_day is the zero-based array position for the selected day
+         *     this is often equal to first_day because using the forward and back navigation results in 
+         *     selecting the first day of the month `01` for the selected date
+         * end_dow is the zero-based array position for the last calendar day of the month
+         * last_day is the number of days in the month
+         * the_last_day is the last day of the calendar graph display counting from the
+         *     first day of the actual month
+         * 
+         */
         switch (_SETTING_FIRST_DAY_WEEK) {
             case self::MONDAY_IS_FIRST:
                 $pc_array_pos = 1;
@@ -59,7 +70,7 @@ class PostCalendar_Api_User extends Zikula_AbstractApi
                 $end_dow = date('w', mktime(0, 0, 0, $the_month, $last_day, $the_year));
                 if ($end_dow != 0) {
                     $the_last_day = $last_day + (7 - $end_dow);
-                } else {
+                } else { // ==0
                     $the_last_day = $last_day;
                 }
                 $pc_colclasses[5] = "pcWeekend";
@@ -74,7 +85,7 @@ class PostCalendar_Api_User extends Zikula_AbstractApi
                     $the_last_day = $last_day + 6;
                 } elseif ($end_dow != 5) {
                     $the_last_day = $last_day + (5 - $end_dow);
-                } else {
+                } else { // ==5
                     $the_last_day = $last_day;
                 }
                 $pc_colclasses[0] = "pcWeekend";
@@ -88,13 +99,18 @@ class PostCalendar_Api_User extends Zikula_AbstractApi
                 $end_dow = date('w', mktime(0, 0, 0, $the_month, $last_day, $the_year));
                 if ($end_dow != 6) {
                     $the_last_day = $last_day + (6 - $end_dow);
-                } else {
+                } else { // ==6
                     $the_last_day = $last_day;
                 }
                 $pc_colclasses[0] = "pcWeekend";
                 $pc_colclasses[6] = "pcWeekend";
                 break;
         }
+//        echo -6%7 ."<br />";
+        $tempArray = array(0 => 6, 1 => 7, 6 => 5);
+//        $lastDateDisplayed = $last_day + abs(((_SETTING_FIRST_DAY_WEEK + 6) % 7) - $end_dow);
+        $lastDateDisplayed = $last_day + ($tempArray[_SETTING_FIRST_DAY_WEEK] - $end_dow) % 7;
+        echo "first: $first_day; week: $week_day; end: $end_dow; last: $last_day; theLast: $the_last_day; newTheLast: $lastDateDisplayed;<br />";
         // prepare Month Names, Long Day Names and Short Day Names
         $pc_short_day_names = explode(" ", $this->__(/*!First Letter of each Day of week*/'S M T W T F S'));
         $pc_long_day_names  = explode(" ", $this->__('Sunday Monday Tuesday Wednesday Thursday Friday Saturday'));
@@ -111,8 +127,10 @@ class PostCalendar_Api_User extends Zikula_AbstractApi
         }
     
         $function_out = array();
+        echo "BEGIN_WEEKDAY " . DATE_CALC_BEGIN_WEEKDAY . "<br />";
+        echo "SETTING_FIRST_DAY " . _SETTING_FIRST_DAY_WEEK . "<br />";
         $Date_Calc = new Date_Calc();
-    
+        
         // Setup the starting and ending date ranges for pcGetEvents()
         switch ($viewtype) {
             case 'day':
@@ -164,6 +182,7 @@ class PostCalendar_Api_User extends Zikula_AbstractApi
                 $starting_date = date('m/d/Y', mktime(0, 0, 0, $the_month, 1 - $first_day, $the_year));
                 $ending_date = date('m/d/Y', mktime(0, 0, 0, $the_month, $the_last_day, $the_year));
                 $calendarView = $Date_Calc->getCalendarMonth($the_month, $the_year, '%Y-%m-%d');
+                echo "<pre>$the_month::$the_year<br />"; var_dump($calendarView); echo "</pre>";
     
                 $prev_month = DateUtil::getDatetime_NextMonth(-1, '%Y%m%d', $the_year, $the_month, 1);
                 $next_month = DateUtil::getDatetime_NextMonth(1, '%Y%m%d', $the_year, $the_month, 1);
