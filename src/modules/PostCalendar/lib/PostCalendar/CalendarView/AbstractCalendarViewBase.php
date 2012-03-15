@@ -20,7 +20,7 @@ abstract class PostCalendar_CalendarView_AbstractCalendarViewBase extends Zikula
      * Zikula_View instance
      * @var object 
      */
-    private $view;
+    protected $view;
     protected $template;
     protected $cacheTag;
     protected $cacheId;
@@ -35,6 +35,8 @@ abstract class PostCalendar_CalendarView_AbstractCalendarViewBase extends Zikula
     protected $userFilter;
     protected $categoryFilter;
     protected $currentUser;
+    
+    protected $selectedCategories = array();
 
     /**
      * Date_Calc instance
@@ -49,15 +51,6 @@ abstract class PostCalendar_CalendarView_AbstractCalendarViewBase extends Zikula
     protected $navigation = array(
         'previous' => '',
         'next' => '');
-
-    /**
-     * Array of Information to build Calendar Graph
-     * @var array 
-     */
-    protected $calendarGraph = array(
-        'first' => null,
-        'last' => null,
-        'graph' => null);
 
     /**
      * collection of calendar events
@@ -78,16 +71,15 @@ abstract class PostCalendar_CalendarView_AbstractCalendarViewBase extends Zikula
 
         $this->userFilter = $userFilter;
         $this->categoryFilter = $categoryFilter;
+        $this->reArrayCategories($categoryFilter);
 
         $this->setCacheTag();
         $this->cacheId = $this->cacheTag . '|' . $this->currentUser;
         $this->view->setCacheId($this->cacheId);
-
-        $this->setup();
         
         $this->setTemplate();
 
-        return $this;
+        $this->setup();
     }
 
     abstract protected function setup();
@@ -98,9 +90,22 @@ abstract class PostCalendar_CalendarView_AbstractCalendarViewBase extends Zikula
 
     abstract public function render();
 
+    abstract function newGraph();
+
     protected function isCached()
     {
         return (isset($this->template) && $this->view->is_cached($this->template));
     }
 
+    private function reArrayCategories($filtercats)
+    {
+        if (!empty($filtercats)) {
+            $catsarray = $filtercats['__CATEGORIES__'];
+            foreach ($catsarray as $propname => $propid) {
+                if ($propid > 0) {
+                    $this->selectedCategories[$propname] = $propid; // removes categories set to 'all'
+                }
+            }
+        }
+    }
 }

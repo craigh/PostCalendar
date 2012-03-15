@@ -107,6 +107,10 @@ class PostCalendar_Controller_User extends Zikula_AbstractController
                 }
                 break;
     
+            case 'month':
+                $calendar = new PostCalendar_CalendarView_Month($this->view, $Date, $pc_username, $filtercats);
+                return $calendar->render();
+                break;
             default:
                 $this->throwForbiddenUnless(SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_OVERVIEW), LogUtil::getErrorMsgPermission());
                 $cacheTagDate = $this->computeCacheTagDate($Date, $viewtype);

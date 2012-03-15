@@ -26,17 +26,28 @@ abstract class PostCalendar_CalendarView_AbstractDays extends PostCalendar_Calen
      * @var integer
      */
     protected $firstDayOfWeek;
+    
+    protected $startDate;
+    protected $endDate;
+    protected $graph;
 
     /**
+     * An array of information needed to create the display of the calendar graph
+     * 
      * long and short are arrays of weekdays in desired order
-     * firstDayOfMonth is the array position of first day [0-6]
-     * lastDayOfMonth is the array position of last day [0-6]
+     * firstDayOfMonth is the array position of first day of the month [0-6]
+     * lastDayOfMonth is the array position of last day of the month [0-6]
+     * lastDateDisplayed is the last day of the calendar graph display counting from
+     *     the first day of the actual month [28+]
+     * dayOfWeek is the array position of user selected day of the month [0-6]
+     * 
      * @var array 
      */
     protected $dayDisplay = array('long' => array(),
         'short' => array(),
         'firstDayOfMonth' => null,
         'lastDayOfMonth' => null,
+        'lastDateDisplayed' => null,
         'dayOfWeek' => null,
         'colclass' => array(0 => "pcWeekday",
             1 => "pcWeekday",
@@ -51,7 +62,7 @@ abstract class PostCalendar_CalendarView_AbstractDays extends PostCalendar_Calen
         parent::__construct($view, $requestedDate, $userFilter, $categoryFilter);
         $this->firstDayOfWeek = ModUtil::getVar('PostCalendar', 'pcFirstDayOfWeek');
         $this->setUpDayDisplay();
-        $this->setUpCalendarGraph();
+        $this->setDates();
     }
 
     /**
@@ -98,9 +109,7 @@ abstract class PostCalendar_CalendarView_AbstractDays extends PostCalendar_Calen
                 break;
         }
     }
+    
+    abstract protected function setDates();
 
-    protected function setUpCalendarGraph()
-    {
-        
-    }
 }

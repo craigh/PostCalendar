@@ -69,7 +69,7 @@ function smarty_function_pc_url($args, Zikula_View $view)
         case 'today':
             $link = ModUtil::url('PostCalendar', 'user', 'display', array(
                         'viewtype' => $viewtype,
-                        'Date' => date('Ymd') . '000000',
+                        'Date' => date('Ymd'), // . '000000',
                         'pc_username' => $pc_username));
             break;
         case 'day':
