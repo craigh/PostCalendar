@@ -24,15 +24,40 @@ class PostCalendar_CalendarView_Month extends PostCalendar_CalendarView_Abstract
     
     protected function setDates()
     {
-        $this->startDate = DateTime::createFromFormat('Ymd', $this->requestedDate->format('Ym') . "1")
+        $this->startDate = clone $this->requestedDate;
+        $this->startDate
+             ->modify("first day of this month")
              ->modify("-" . $this->dayDisplay['firstDayOfMonth'] . " days");
-        $this->endDate = DateTime::createFromFormat('Ymd', $this->requestedDate->format('Ym') . $this->dayDisplay['lastDateDisplayed']);
+        $this->endDate = clone $this->requestedDate;
+        $this->endDate
+             ->modify("last day of this month")
+             ->modify("+" . ((6 + $this->firstDayOfWeek - (int)$this->dayDisplay['lastDayOfMonth']) % 7) . " days")
+             ->modify("+1 day");  
+
+        $interval = new DateInterval("P1D");
+        $datePeriod = new DatePeriod($this->startDate, $interval, $this->endDate);
+        $i = 0;
+        $week = 0;
+        foreach ($datePeriod as $date) {
+            $this->dateGraph[$week][$i] = $date->format('Y-m-d');
+            $i++;
+            if ($i > 6) {
+                $i = 0;
+                $week++;
+            }
+        }
+//            var_dump($month);
+//            $result = array();
+//            foreach ($month as $k => $week) {
+//                $result[$k] = array_diff_assoc($week, $this->graph[$k]);
+//            }
+//            var_dump($result);
+//            echo "</pre>";
     }
 
     protected function setup()
     {
         $this->viewtype = 'month';
-        $this->newGraph();
 
         // this calculation only works for Monday and Sunday start days
         $this->dayDisplay['lastDateDisplayed'] = $this->requestedDate->format('t') + (6 + $this->firstDayOfWeek - $this->dayDisplay['lastDayOfMonth']) % 7;
@@ -69,7 +94,7 @@ class PostCalendar_CalendarView_Month extends PostCalendar_CalendarView_Abstract
             $this->view
                     ->assign('navigation', $this->navigation)
                     ->assign('dayDisplay', $this->dayDisplay)
-                    ->assign('graph', $this->graph)
+                    ->assign('graph', $this->dateGraph)
                     ->assign('eventsByDate', $eventsByDate)
                     ->assign('selectedcategories', $this->selectedCategories)
                     ->assign('func', $this->view->getRequest()->getGet()->get('func', $this->view->getRequest()->getPost()->get('func', 'display')))
@@ -84,8 +109,4 @@ class PostCalendar_CalendarView_Month extends PostCalendar_CalendarView_Abstract
         return $this->view->fetch($this->template);
     }
 
-    public function newGraph()
-    {
-        $this->graph = $this->calc->getCalendarMonth($this->requestedDate->format('m'), $this->requestedDate->format('Y'), '%Y-%m-%d');
-    }
 }

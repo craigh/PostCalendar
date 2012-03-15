@@ -90,8 +90,6 @@ abstract class PostCalendar_CalendarView_AbstractCalendarViewBase extends Zikula
 
     abstract public function render();
 
-    abstract function newGraph();
-
     protected function isCached()
     {
         return (isset($this->template) && $this->view->is_cached($this->template));

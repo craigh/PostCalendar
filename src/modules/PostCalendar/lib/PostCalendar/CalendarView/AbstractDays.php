@@ -29,7 +29,7 @@ abstract class PostCalendar_CalendarView_AbstractDays extends PostCalendar_Calen
     
     protected $startDate;
     protected $endDate;
-    protected $graph;
+    protected $dateGraph = array();
 
     /**
      * An array of information needed to create the display of the calendar graph
@@ -88,14 +88,14 @@ abstract class PostCalendar_CalendarView_AbstractDays extends PostCalendar_Calen
             case self::MONDAY_IS_FIRST:
                 $this->dayDisplay['firstDayOfMonth'] = date('w', mktime(0, 0, 0, $this->requestedDate->format('m'), 0, $this->requestedDate->format('Y')));
                 $this->dayDisplay['dayOfWeek'] = date('w', mktime(0, 0, 0, $this->requestedDate->format('m'), $this->requestedDate->format('d') - 1, $this->requestedDate->format('Y')));
-                $this->dayDisplay['lastDayOfMonth'] = date('w', mktime(0, 0, 0, $this->requestedDate->format('m'), $this->requestedDate->format('t') - 1, $this->requestedDate->format('Y')));
+                $this->dayDisplay['lastDayOfMonth'] = date('w', mktime(0, 0, 0, $this->requestedDate->format('m'), $this->requestedDate->format('t'), $this->requestedDate->format('Y')));
                 $this->dayDisplay['colclass'][5] = "pcWeekend";
                 $this->dayDisplay['colclass'][6] = "pcWeekend";
                 break;
             case self::SATURDAY_IS_FIRST:
                 $this->dayDisplay['firstDayOfMonth'] = date('w', mktime(0, 0, 0, $this->requestedDate->format('m'), 2, $this->requestedDate->format('Y')));
                 $this->dayDisplay['dayOfWeek'] = date('w', mktime(0, 0, 0, $this->requestedDate->format('m'), $this->requestedDate->format('d') + 1, $this->requestedDate->format('Y')));
-                $this->dayDisplay['lastDayOfMonth'] = date('w', mktime(0, 0, 0, $this->requestedDate->format('m'), $this->requestedDate->format('t') + 1, $this->requestedDate->format('Y')));
+                $this->dayDisplay['lastDayOfMonth'] = date('w', mktime(0, 0, 0, $this->requestedDate->format('m'), $this->requestedDate->format('t'), $this->requestedDate->format('Y')));
                 $this->dayDisplay['colclass'][0] = "pcWeekend";
                 $this->dayDisplay['colclass'][1] = "pcWeekend";
                 break;
@@ -110,6 +110,9 @@ abstract class PostCalendar_CalendarView_AbstractDays extends PostCalendar_Calen
         }
     }
     
+    /**
+     * Set startDate, endDate and dateGraph 
+     */
     abstract protected function setDates();
 
 }
