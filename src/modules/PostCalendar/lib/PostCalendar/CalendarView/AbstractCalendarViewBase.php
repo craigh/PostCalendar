@@ -31,7 +31,7 @@ abstract class PostCalendar_CalendarView_AbstractCalendarViewBase extends Zikula
      * @var DateTime object 
      */
     protected $requestedDate;
-    protected $daysInMonth;
+
     protected $userFilter;
     protected $categoryFilter;
     protected $currentUser;
@@ -66,8 +66,6 @@ abstract class PostCalendar_CalendarView_AbstractCalendarViewBase extends Zikula
         $this->currentUser = UserUtil::getVar('uid');
 
         $this->requestedDate = DateTime::createFromFormat('Ymd', $requestedDate);
-        // daysInMonth probably not needed to keep as it is easly calculated
-        $this->daysInMonth = $this->requestedDate->format('t');
 
         $this->userFilter = $userFilter;
         $this->categoryFilter = $categoryFilter;
