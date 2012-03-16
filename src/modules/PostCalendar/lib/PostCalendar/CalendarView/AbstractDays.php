@@ -36,18 +36,14 @@ abstract class PostCalendar_CalendarView_AbstractDays extends PostCalendar_Calen
      * 
      * long and short are arrays of weekdays in desired order
      * firstDayOfMonth is the array position of first day of the month [0-6]
-     * lastDayOfMonth is the array position of last day of the month [0-6]
-     * lastDateDisplayed is the last day of the calendar graph display counting from
-     *     the first day of the actual month [28+]
      * dayOfWeek is the array position of user selected day of the month [0-6]
+     * colclass is used to style the day columns in the template
      * 
      * @var array 
      */
     protected $dayDisplay = array('long' => array(),
         'short' => array(),
         'firstDayOfMonth' => null,
-        'lastDayOfMonth' => null,
-        'lastDateDisplayed' => null,
         'dayOfWeek' => null,
         'colclass' => array(0 => "pcWeekday",
             1 => "pcWeekday",
@@ -84,26 +80,27 @@ abstract class PostCalendar_CalendarView_AbstractDays extends PostCalendar_Calen
             $this->dayDisplay['short'][$i] = $shortNames[$arrayPointer];
             $arrayPointer++;
         }
+        // clone DateTime objects for later modification
+        $firstClone = clone $this->requestedDate;
+        $firstClone->modify("first day of this month");
+        $dayClone = clone $this->requestedDate;
         switch ($this->firstDayOfWeek) {
             case self::MONDAY_IS_FIRST:
-                $this->dayDisplay['firstDayOfMonth'] = date('w', mktime(0, 0, 0, $this->requestedDate->format('m'), 0, $this->requestedDate->format('Y')));
-                $this->dayDisplay['dayOfWeek'] = date('w', mktime(0, 0, 0, $this->requestedDate->format('m'), $this->requestedDate->format('d') - 1, $this->requestedDate->format('Y')));
-                $this->dayDisplay['lastDayOfMonth'] = date('w', mktime(0, 0, 0, $this->requestedDate->format('m'), $this->requestedDate->format('t'), $this->requestedDate->format('Y')));
+                $this->dayDisplay['firstDayOfMonth'] = $firstClone->modify("-1 day")->format("w");
+                $this->dayDisplay['dayOfWeek'] = $dayClone->modify("-1 day")->format("w");
                 $this->dayDisplay['colclass'][5] = "pcWeekend";
                 $this->dayDisplay['colclass'][6] = "pcWeekend";
                 break;
             case self::SATURDAY_IS_FIRST:
-                $this->dayDisplay['firstDayOfMonth'] = date('w', mktime(0, 0, 0, $this->requestedDate->format('m'), 2, $this->requestedDate->format('Y')));
-                $this->dayDisplay['dayOfWeek'] = date('w', mktime(0, 0, 0, $this->requestedDate->format('m'), $this->requestedDate->format('d') + 1, $this->requestedDate->format('Y')));
-                $this->dayDisplay['lastDayOfMonth'] = date('w', mktime(0, 0, 0, $this->requestedDate->format('m'), $this->requestedDate->format('t'), $this->requestedDate->format('Y')));
+                $this->dayDisplay['firstDayOfMonth'] = $firstClone->modify("+1 day")->format("w");
+                $this->dayDisplay['dayOfWeek'] = $dayClone->modify("+1 day")->format("w");
                 $this->dayDisplay['colclass'][0] = "pcWeekend";
                 $this->dayDisplay['colclass'][1] = "pcWeekend";
                 break;
             case self::SUNDAY_IS_FIRST:
             default:
-                $this->dayDisplay['firstDayOfMonth'] = date('w', mktime(0, 0, 0, $this->requestedDate->format('m'), 1, $this->requestedDate->format('Y')));
-                $this->dayDisplay['dayOfWeek'] = date('w', mktime(0, 0, 0, $this->requestedDate->format('m'), $this->requestedDate->format('d'), $this->requestedDate->format('Y')));
-                $this->dayDisplay['lastDayOfMonth'] = date('w', mktime(0, 0, 0, $this->requestedDate->format('m'), $this->requestedDate->format('t'), $this->requestedDate->format('Y')));
+                $this->dayDisplay['firstDayOfMonth'] = $firstClone->format("w");
+                $this->dayDisplay['dayOfWeek'] = $this->requestedDate->format('w');
                 $this->dayDisplay['colclass'][0] = "pcWeekend";
                 $this->dayDisplay['colclass'][6] = "pcWeekend";
                 break;

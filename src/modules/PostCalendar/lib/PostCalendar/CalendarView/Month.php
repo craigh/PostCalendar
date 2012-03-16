@@ -28,10 +28,12 @@ class PostCalendar_CalendarView_Month extends PostCalendar_CalendarView_Abstract
         $this->startDate
              ->modify("first day of this month")
              ->modify("-" . $this->dayDisplay['firstDayOfMonth'] . " days");
+        $lastClone = clone $this->requestedDate;
+        $lastDayOfMonth = (int)$lastClone->modify("last day of this month")->format("w");
         $this->endDate = clone $this->requestedDate;
         $this->endDate
              ->modify("last day of this month")
-             ->modify("+" . ((6 + $this->firstDayOfWeek - (int)$this->dayDisplay['lastDayOfMonth']) % 7) . " days")
+             ->modify("+" . ((6 + $this->firstDayOfWeek - $lastDayOfMonth) % 7) . " days")
              ->modify("+1 day");  
 
         $interval = new DateInterval("P1D");
@@ -46,21 +48,11 @@ class PostCalendar_CalendarView_Month extends PostCalendar_CalendarView_Abstract
                 $week++;
             }
         }
-//            var_dump($month);
-//            $result = array();
-//            foreach ($month as $k => $week) {
-//                $result[$k] = array_diff_assoc($week, $this->graph[$k]);
-//            }
-//            var_dump($result);
-//            echo "</pre>";
     }
 
     protected function setup()
     {
         $this->viewtype = 'month';
-
-        // this calculation only works for Monday and Sunday start days
-        $this->dayDisplay['lastDateDisplayed'] = $this->requestedDate->format('t') + (6 + $this->firstDayOfWeek - $this->dayDisplay['lastDayOfMonth']) % 7;
 
         $prevClone = clone $this->requestedDate;
         $prevClone->modify("first day of previous month");
@@ -88,9 +80,9 @@ class PostCalendar_CalendarView_Month extends PostCalendar_CalendarView_Abstract
                 'filtercats'  => $this->categoryFilter,
                 'Date'        => $this->requestedDate->format('Ymd'),
                 'pc_username' => $this->userFilter));
+            // create and return template
             $firstClone = $this->requestedDate;
             $lastClone = $this->requestedDate;
-            // create and return template
             $this->view
                     ->assign('navigation', $this->navigation)
                     ->assign('dayDisplay', $this->dayDisplay)
@@ -104,7 +96,6 @@ class PostCalendar_CalendarView_Month extends PostCalendar_CalendarView_Abstract
                     ->assign('firstDayOfMonth', $firstClone->modify("first day of this month")->format('Y-m-d'))
                     ->assign('lastDayOfMonth', $lastClone->modify("last day of this month")->format('Y-m-d'));
             // be sure to DataUtil::formatForDisplay in the template - navigation and others?
-            
         }
         return $this->view->fetch($this->template);
     }
