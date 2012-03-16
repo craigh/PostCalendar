@@ -10,9 +10,9 @@
 {include file="user/navigationOOP.tpl"}
 {/if}
 <h2 class="postcalendar_header">
-    {if $PRINT_VIEW eq false}<a href="{$navigation.previous}">&lt;&lt;</a>{/if}
+    {if $PRINT_VIEW eq false}<a href="{$navigation.previous|safehtml}">&lt;&lt;</a>{/if}
     {$requestedDate|pc_date_format:'%B %Y'}
-    {if $PRINT_VIEW eq false}<a href="{$navigation.next}">&gt;&gt;</a>{/if}
+    {if $PRINT_VIEW eq false}<a href="{$navigation.next|safehtml}">&gt;&gt;</a>{/if}
 </h2>
 
 <div class="calcontainer">
