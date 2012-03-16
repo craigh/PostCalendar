@@ -26,9 +26,20 @@ abstract class PostCalendar_CalendarView_AbstractDays extends PostCalendar_Calen
      * @var integer
      */
     protected $firstDayOfWeek;
-    
+    /**
+     * Start Date of range for Calendar View
+     * @var DateTime object
+     */
     protected $startDate;
+    /**
+     * End Date of range for Calendar View
+     * @var Date Time
+     */
     protected $endDate;
+    /**
+     * Array of dates to create the Calendar View
+     * @var array
+     */
     protected $dateGraph = array();
 
     /**
@@ -55,8 +66,8 @@ abstract class PostCalendar_CalendarView_AbstractDays extends PostCalendar_Calen
 
     function __construct(Zikula_View $view, $requestedDate, $userFilter, $categoryFilter)
     {
-        parent::__construct($view, $requestedDate, $userFilter, $categoryFilter);
         $this->firstDayOfWeek = ModUtil::getVar('PostCalendar', 'pcFirstDayOfWeek');
+        parent::__construct($view, $requestedDate, $userFilter, $categoryFilter);
         $this->setUpDayDisplay();
         $this->setDates();
     }
