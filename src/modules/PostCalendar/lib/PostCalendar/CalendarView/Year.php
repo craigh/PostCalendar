@@ -26,21 +26,46 @@ class PostCalendar_CalendarView_Year extends PostCalendar_CalendarView_AbstractD
     {
         $this->startDate = clone $this->requestedDate;
         $this->startDate
-             ->modify("first day of this year");
-        $this->endDate = clone $this->requestedDate;
+             ->modify("first day of January");
+        $this->endDate = clone $this->startDate;
         $this->endDate
-             ->modify("first day of next year");  
+             ->modify("+1 year");  
 
+        $dayAdjustmentMap = array(self::SUNDAY_IS_FIRST => null,
+            self::MONDAY_IS_FIRST => '-1',
+            self::SATURDAY_IS_FIRST => '+1');
         $interval = new DateInterval("P1D");
         $datePeriod = new DatePeriod($this->startDate, $interval, $this->endDate);
-        $i = 0;
+        $dayOfWeekTracker = 0;
         $week = 0;
+        $month = 0;
         foreach ($datePeriod as $date) {
-            $this->dateGraph[$week][$i] = $date->format('Y-m-d');
-            $i++;
-            if ($i > 6) {
-                $i = 0;
+            $dayOfWeek = clone $date;
+            if (isset($dayAdjustmentMap[$this->firstDayOfWeek])) {
+                $dayOfWeek->modify($dayAdjustmentMap[$this->firstDayOfWeek] . " days");
+            }
+            // add blank days to beginning of display
+            while ($dayOfWeekTracker < $dayOfWeek->format('w')) {
+                $this->dateGraph[$month][$week][$dayOfWeekTracker] = null;
+                $dayOfWeekTracker++;
+            }
+            $this->dateGraph[$month][$week][$dayOfWeek->format('w')] = $date->format('Y-m-d');
+            $dayOfWeekTracker++;
+            if ($dayOfWeek->format('w') == 6) {
+                // new week
+                $dayOfWeekTracker = 0;
                 $week++;
+            }
+            if ($date->format('d') == $date->format('t')) {
+                // add blank days to end of display
+                while (($dayOfWeekTracker > 0) && ($dayOfWeekTracker <= 6)) {
+                    $this->dateGraph[$month][$week][$dayOfWeekTracker] = null;
+                    $dayOfWeekTracker++;
+                }
+                // new month
+                $month++;
+                $week = 0;
+                $dayOfWeekTracker = 0;
             }
         }
     }
@@ -50,14 +75,14 @@ class PostCalendar_CalendarView_Year extends PostCalendar_CalendarView_AbstractD
         $this->viewtype = 'year';
 
         $prevClone = clone $this->requestedDate;
-        $prevClone->modify("first day of previous month");
+        $prevClone->modify("first day of January")->modify("-1 year");
         $this->navigation['previous'] = ModUtil::url('PostCalendar', 'user', 'display', array(
                     'viewtype' => $this->viewtype,
                     'Date' => $prevClone->format('Ymd'),
                     'pc_username' => $this->userFilter,
                     'filtercats' => $this->categoryFilter));
-        $nextClone = clone $this->requestedDate;
-        $nextClone->modify("first day of next month");
+        $nextClone = clone $prevClone;
+        $nextClone->modify("+2 years");
         $this->navigation['next'] = ModUtil::url('PostCalendar', 'user', 'display', array(
                     'viewtype' => $this->viewtype,
                     'Date' => $nextClone->format('Ymd'),
@@ -76,20 +101,17 @@ class PostCalendar_CalendarView_Year extends PostCalendar_CalendarView_AbstractD
                 'Date'        => $this->requestedDate->format('Ymd'),
                 'pc_username' => $this->userFilter));
             // create and return template
-            $firstClone = $this->requestedDate;
-            $lastClone = $this->requestedDate;
             $this->view
                     ->assign('navigation', $this->navigation)
                     ->assign('dayDisplay', $this->dayDisplay)
+                    ->assign('monthNames', explode(" ", $this->__('January February March April May June July August September October November December')))
                     ->assign('graph', $this->dateGraph)
                     ->assign('eventsByDate', $eventsByDate)
                     ->assign('selectedcategories', $this->selectedCategories)
                     ->assign('func', $this->view->getRequest()->getGet()->get('func', $this->view->getRequest()->getPost()->get('func', 'display')))
                     ->assign('viewtypeselected', $this->viewtype)
                     ->assign('todayDate', date('Y-m-d'))
-                    ->assign('requestedDate', $this->requestedDate->format('Y-m-d'))
-                    ->assign('firstDayOfMonth', $firstClone->modify("first day of this month")->format('Y-m-d'))
-                    ->assign('lastDayOfMonth', $lastClone->modify("last day of this month")->format('Y-m-d'));
+                    ->assign('requestedDate', $this->requestedDate->format('Y-m-d'));
             // be sure to DataUtil::formatForDisplay in the template - navigation and others?
         }
         return $this->view->fetch($this->template);

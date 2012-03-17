@@ -21,6 +21,7 @@ function smarty_function_pc_url($args, Zikula_View $view)
     $assign = array_key_exists('assign', $args) && !empty($args['assign']) ? $args['assign'] : null;
     $navlink = array_key_exists('navlink', $args) && !empty($args['navlink']) ? true : false;
     $func = array_key_exists('func', $args) && !empty($args['func']) ? $args['func'] : 'create';
+    $title = array_key_exists('title', $args) && !empty($args['title']) ? $args['title'] : '';
     $viewtype = $request->getPost()->get('viewtype', $request->getGet()->get('viewtype', _SETTING_DEFAULT_VIEW));
     $viewtype = array_key_exists('viewtype', $args) && !empty($args['viewtype']) ? $args['viewtype'] : strtolower($viewtype);
     unset($args['action']);
@@ -34,6 +35,7 @@ function smarty_function_pc_url($args, Zikula_View $view)
     unset($args['assign']);
     unset($args['navlink']);
     unset($args['func']);
+    unset($args['title']);
     unset($args['viewtype']);
 
     $dom = ZLanguage::getModuleDomain('PostCalendar');
@@ -110,7 +112,6 @@ function smarty_function_pc_url($args, Zikula_View $view)
     }
 
     $link = DataUtil::formatForDisplay($link);
-    $title = "";
     $labeltexts = array(
         'today' => __('Jump to Today', $dom),
         'day' => __('Day View', $dom),

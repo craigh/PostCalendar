@@ -106,7 +106,8 @@ class PostCalendar_Controller_User extends Zikula_AbstractController
                     return $this->view->fetch('user/view_event_details.tpl');
                 }
                 break;
-    
+
+            case 'year':
             case 'month':
             case 'week':
                 $class = 'PostCalendar_CalendarView_' . ucfirst($viewtype);
