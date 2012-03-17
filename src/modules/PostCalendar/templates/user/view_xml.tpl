@@ -1,6 +1,6 @@
-{pc_sort_events var="S_EVENTS" sort="time" order="asc" value=$A_EVENTS}
+{pc_sort_events var="S_EVENTS" sort="time" order="asc" value=$eventsByDate}
 {foreach name='dates' item='events' key='date' from=$S_EVENTS}
-  {pc_sort_events var="S_EVENTS" sort="time" order="asc" value=$A_EVENTS}
+  {*pc_sort_events var="S_EVENTS" sort="time" order="asc" value=$eventsByDate*}
   {if ((isset($S_EVENTS.$date)) && (count($S_EVENTS.$date) gt 0))}
   {foreach name='events' item='event' from=$S_EVENTS.$date}
 <item>
