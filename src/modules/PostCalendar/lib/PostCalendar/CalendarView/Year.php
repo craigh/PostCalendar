@@ -9,32 +9,27 @@
  * Please see the NOTICE file distributed with this source code for further
  * information regarding copyright and licensing.
  */
-class PostCalendar_CalendarView_Month extends PostCalendar_CalendarView_AbstractDays
+class PostCalendar_CalendarView_Year extends PostCalendar_CalendarView_AbstractDays
 {
 
     protected function setCacheTag()
     {
-        $this->cacheTag = $this->requestedDate->format('Ym');
+        $this->cacheTag = $this->requestedDate->format('Y');
     }
 
     protected function setTemplate()
     {
-        $this->template = 'user/view_monthOOP.tpl';
+        $this->template = 'user/view_year.tpl';
     }
     
     protected function setDates()
     {
         $this->startDate = clone $this->requestedDate;
         $this->startDate
-             ->modify("first day of this month")
-             ->modify("-" . $this->dayDisplay['firstDayOfMonth'] . " days");
-        $lastClone = clone $this->requestedDate;
-        $lastDayOfMonth = (int)$lastClone->modify("last day of this month")->format("w");
+             ->modify("first day of this year");
         $this->endDate = clone $this->requestedDate;
         $this->endDate
-             ->modify("last day of this month")
-             ->modify("+" . ((6 + $this->firstDayOfWeek - $lastDayOfMonth) % 7) . " days")
-             ->modify("+1 day");  
+             ->modify("first day of next year");  
 
         $interval = new DateInterval("P1D");
         $datePeriod = new DatePeriod($this->startDate, $interval, $this->endDate);
@@ -52,7 +47,7 @@ class PostCalendar_CalendarView_Month extends PostCalendar_CalendarView_Abstract
 
     protected function setup()
     {
-        $this->viewtype = 'month';
+        $this->viewtype = 'year';
 
         $prevClone = clone $this->requestedDate;
         $prevClone->modify("first day of previous month");
