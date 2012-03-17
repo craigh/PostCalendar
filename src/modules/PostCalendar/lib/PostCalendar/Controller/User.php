@@ -107,30 +107,10 @@ class PostCalendar_Controller_User extends Zikula_AbstractController
                 }
                 break;
 
-            case 'day':
-            case 'year':
-            case 'month':
-            case 'week':
+            default:
                 $class = 'PostCalendar_CalendarView_' . ucfirst($viewtype);
                 $calendar = new $class($this->view, $Date, $pc_username, $filtercats);
                 return $calendar->render();
-                break;
-            default:
-                $this->throwForbiddenUnless(SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_OVERVIEW), LogUtil::getErrorMsgPermission());
-                $cacheTagDate = $this->computeCacheTagDate($Date, $viewtype);
-                $this->view->setCacheId($cacheTagDate . '|' . UserUtil::getVar('uid'));
-                if (!$this->view->is_cached('user/view_' . $viewtype . '.tpl')) {
-                    $out = ModUtil::apiFunc('PostCalendar', 'user', 'buildView', array(
-                        'Date'        => $Date,
-                        'viewtype'    => $viewtype,
-                        'pc_username' => $pc_username,
-                        'filtercats'  => $filtercats,
-                        'func'        => $func));
-                    foreach ($out as $var => $val) {
-                        $this->view->assign($var, $val);
-                    }
-                }
-                return $this->view->fetch('user/view_' . $viewtype . '.tpl');
                 break;
         } // end switch
     }

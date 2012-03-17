@@ -8,16 +8,19 @@
 {if $PRINT_VIEW eq false}
 {include file="user/navigation.tpl"}
 {/if}
-<h2>{gt text='List view'}</h2>
+<h2 class="postcalendar_header">
+    {if $PRINT_VIEW eq false}<a href="{$navigation.previous|safehtml}">&lt;&lt;</a>{/if}
+    {gt text='Event list from'} <strong>{$startDate|pc_date_format}</strong> {gt text='to'} <strong>{$endDate|pc_date_format}</strong>
+    {if $PRINT_VIEW eq false}<a href="{$navigation.next|safehtml}">&gt;&gt;</a>{/if}
+</h2>
 
 <div class="calcontainer">
 
-    {pc_sort_events var="S_EVENTS" sort="time" order="asc" value=$A_EVENTS}
+    {pc_sort_events var="S_EVENTS" sort="time" order="asc" value=$eventsByDate}
     {foreach name='dates' item='events' key='date' from=$S_EVENTS}
 
     {* CREATE THE LIST *}
     {*sort the events by category so we can make it pretty*}
-    {pc_sort_events var="S_EVENTS" sort="time" order="asc" value=$A_EVENTS}
     {if ((isset($S_EVENTS.$date)) && (count($S_EVENTS.$date) gt 0))}
     <ul class="eventslist" 
     {if $modvars.PostCalendar.pcEventsOpenInNewWindow eq false}onclick="window.location.href='{pc_url action=day date=$date}';"{/if}>
@@ -40,9 +43,9 @@
     {/foreach}
 
     <div style='padding: .5em'>
-        <a href="{$PREV_LIST_URL}">{img src='previous.png' modname='core' set='icons/extrasmall' __title="previous list" __alt="previous list"}&nbsp;{gt text='previous list'}</a>
+        <a href="{$navigation.previous|safehtml}">{img src='previous.png' modname='core' set='icons/extrasmall' __title="previous list" __alt="previous list"}&nbsp;{gt text='previous list'}</a>
         &nbsp;::&nbsp;
-        <a href="{$NEXT_LIST_URL}">{gt text='next list'}&nbsp;{img src='forward.png' modname='core' set='icons/extrasmall' __title="next list" __alt="next list"}</a>
+        <a href="{$navigation.next|safehtml}">{gt text='next list'}&nbsp;{img src='forward.png' modname='core' set='icons/extrasmall' __title="next list" __alt="next list"}</a>
     </div>
 </div><!-- end calcontainer -->
 <div style='text-align:right;'>
