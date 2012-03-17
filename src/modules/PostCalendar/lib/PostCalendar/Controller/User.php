@@ -115,33 +115,4 @@ class PostCalendar_Controller_User extends Zikula_AbstractController
         } // end switch
     }
 
-    /**
-     * compute the minimal information needed for a cacheid based on viewtype and date
-     * @param string $Date
-     * @param string $viewtype
-     * @return string
-     */
-    private function computeCacheTagDate($Date, $viewtype)
-    {
-        switch ($viewtype) {
-            case 'year':
-                $tag = substr($Date, 0, 4); // year only YYYY
-                break;
-            case 'month':
-                $tag = substr($Date, 0, 6); // year and month YYYYMM
-                break;
-            case 'week':
-                // first day of week
-                $Date_Calc = new Date_Calc();
-                $tag = $Date_Calc->beginOfWeek(substr($Date, 6, 2), substr($Date, 4, 2), substr($Date, 0, 4), '%Y%m%d');
-                break;
-            case 'day':
-            case 'list':
-            case 'xml':
-            default:
-                $tag = substr($Date, 0, 8); // full date YYYYMMDD
-                break;
-        }
-        return $tag;
-    }
 } // end class def
