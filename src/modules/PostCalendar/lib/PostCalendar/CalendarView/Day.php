@@ -19,7 +19,7 @@ class PostCalendar_CalendarView_Day extends PostCalendar_CalendarView_AbstractCa
 
     protected function setTemplate()
     {
-        $this->template = 'user/view_day.tpl';
+        $this->template = 'user/day.tpl';
     }
     
     protected function setup()

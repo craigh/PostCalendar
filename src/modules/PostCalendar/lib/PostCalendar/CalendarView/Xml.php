@@ -13,7 +13,7 @@ class PostCalendar_CalendarView_Xml extends PostCalendar_CalendarView_List
 {
     protected function setTemplate()
     {
-        $this->template = 'user/view_xml.tpl';
+        $this->template = 'user/xml.tpl';
     }
     
     protected function setup()

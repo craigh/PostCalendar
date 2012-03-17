@@ -19,7 +19,7 @@ class PostCalendar_CalendarView_Year extends PostCalendar_CalendarView_AbstractD
 
     protected function setTemplate()
     {
-        $this->template = 'user/view_year.tpl';
+        $this->template = 'user/year.tpl';
     }
     
     protected function setDates()

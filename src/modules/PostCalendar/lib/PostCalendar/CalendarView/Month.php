@@ -19,7 +19,7 @@ class PostCalendar_CalendarView_Month extends PostCalendar_CalendarView_Abstract
 
     protected function setTemplate()
     {
-        $this->template = 'user/view_month.tpl';
+        $this->template = 'user/month.tpl';
     }
     
     protected function setDates()

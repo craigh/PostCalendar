@@ -20,7 +20,7 @@ class PostCalendar_CalendarView_List extends PostCalendar_CalendarView_AbstractD
 
     protected function setTemplate()
     {
-        $this->template = 'user/view_list.tpl';
+        $this->template = 'user/list.tpl';
     }
     
     protected function setDates()

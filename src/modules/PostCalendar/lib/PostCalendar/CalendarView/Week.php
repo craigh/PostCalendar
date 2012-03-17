@@ -24,7 +24,7 @@ class PostCalendar_CalendarView_Week extends PostCalendar_CalendarView_AbstractD
 
     protected function setTemplate()
     {
-        $this->template = 'user/view_week.tpl';
+        $this->template = 'user/week.tpl';
     }
     
     protected function setDates()
