@@ -107,6 +107,7 @@ class PostCalendar_Controller_User extends Zikula_AbstractController
                 }
                 break;
 
+            case 'day':
             case 'year':
             case 'month':
             case 'week':

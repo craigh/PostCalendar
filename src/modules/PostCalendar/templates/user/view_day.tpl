@@ -9,16 +9,15 @@
 {include file="user/navigation.tpl"}
 {/if}
 <h2 class="postcalendar_header">
-    {if $PRINT_VIEW eq false}<a href="{$PREV_DAY_URL}">&lt;&lt;</a>{/if}
-    {$DATE|pc_date_format}
-    {if $PRINT_VIEW eq false}<a href="{$NEXT_DAY_URL}">&gt;&gt;</a>{/if}
+    {if $PRINT_VIEW eq false}<a href="{$navigation.previous|safehtml}">&lt;&lt;</a>{/if}
+    {$requestedDate|pc_date_format}
+    {if $PRINT_VIEW eq false}<a href="{$navigation.next|safehtml}">&gt;&gt;</a>{/if}
 </h2>
 
 <div class="calcontainer">
     <ul class="eventslist">
-        {pc_sort_events var="S_EVENTS" sort="time" order="asc" value=$A_EVENTS}
+        {pc_sort_events var="S_EVENTS" sort="time" order="asc" value=$eventsByDate}
         {foreach name='dates' item='events' key='date' from=$S_EVENTS}
-            {pc_sort_events var="S_EVENTS" sort="time" order="asc" value=$A_EVENTS}
             {if isset($events)}
                 {foreach name='events' item='event' from=$S_EVENTS.$date}
                     <li class="eventslistitems">
