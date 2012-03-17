@@ -10,28 +10,28 @@
 {include file="user/navigation.tpl"}
 {/if}
 <h2 class="postcalendar_header">
-    {if $PRINT_VIEW eq false}<a href="{$PREV_MONTH_URL}">&lt;&lt;</a>{/if}
-    {$DATE|pc_date_format:'%B %Y'}
-    {if $PRINT_VIEW eq false}<a href="{$NEXT_MONTH_URL}">&gt;&gt;</a>{/if}
+    {if $PRINT_VIEW eq false}<a href="{$navigation.previous|safehtml}">&lt;&lt;</a>{/if}
+    {$requestedDate|pc_date_format:'%B %Y'}
+    {if $PRINT_VIEW eq false}<a href="{$navigation.next|safehtml}">&gt;&gt;</a>{/if}
 </h2>
 
 <div class="calcontainer">
 <table class="postcalendar_month">
-    {foreach from=$pc_colclasses item='colclassname'}
+    {foreach from=$dayDisplay.colclass item='colclassname'}
     <col class='{$colclassname}' />
     {/foreach}
     <tr class="daynames">
-        {foreach from=$S_LONG_DAY_NAMES item='day'}
+        {foreach from=$dayDisplay.long item='day'}
         <td>{$day}</td>
         {/foreach}
     </tr>
     {* CREATE THE CALENDAR *}
-    {foreach name='weeks' item='days' from=$CAL_FORMAT}
+    {foreach name='weeks' item='days' from=$graph}
     <tr>
         {foreach name='days' item='date' from=$days}
-        {if $date == $TODAY_DATE}
+        {if $date == $todayDate}
             {assign var="stylesheet" value="monthtoday"}
-        {elseif ($date < $MONTH_START_DATE || $date > $MONTH_END_DATE)}
+        {elseif ($date < $firstDayOfMonth || $date > $lastDayOfMonth)}
             {assign var="stylesheet" value="monthoff"}
         {else}
             {assign var="stylesheet" value="monthon"}
@@ -49,7 +49,7 @@
             </div>
             <div class="monthview_events">
                 {*sort the events by category so we can make it pretty*}
-                {pc_sort_events var="S_EVENTS" sort="time" order="asc" value=$A_EVENTS}
+                {pc_sort_events var="S_EVENTS" sort="time" order="asc" value=$eventsByDate}
                 {assign var="oldCat" value=""}
                 {assign var="javascript" value=""}
                 {if isset($S_EVENTS)}

@@ -9,14 +9,14 @@
 {include file="user/navigation.tpl"}
 {/if}
 <h2 class="postcalendar_header">
-    {if $PRINT_VIEW eq false}<a href="{$PREV_WEEK_URL}">&lt;&lt;</a>{/if}
-    {pc_week_range date=$DATE}
-    {if $PRINT_VIEW eq false}<a href="{$NEXT_WEEK_URL}">&gt;&gt;</a>{/if}
+    {if $PRINT_VIEW eq false}<a href="{$navigation.previous|safehtml}">&lt;&lt;</a>{/if}
+    {pc_week_range date=$requestedDate}
+    {if $PRINT_VIEW eq false}<a href="{$navigation.next|safehtml}">&gt;&gt;</a>{/if}
 </h2>
 
 <div class="calcontainer">
     {* Loop through the EventsByDate array : This array contains data for each day in the view. *}
-    {pc_sort_events var="S_EVENTS" sort="time" order="asc" value=$A_EVENTS}
+    {pc_sort_events var="S_EVENTS" sort="time" order="asc" value=$eventsByDate}
     {assign var="javascript" value=""}
     {foreach name='dates' item='events' key='cdate' from=$S_EVENTS}
         <h3 class="dayheader">

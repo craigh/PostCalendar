@@ -8,7 +8,7 @@
             {checkpermissionblock component='PostCalendar::' instance="::" level=ACCESS_ADMIN}
             <li><a href='{modurl modname='PostCalendar' type='admin' func='listevents'}'>{img src='configure.png' modname='core' set='icons/small' __alt="Admin" __title="Admin"}</a></li>
             {/checkpermissionblock}
-            {if $DATE|truncate:8:"" ne $TODAY_DATE|replace:'-':''}
+            {if $requestedDate|truncate:8:"" ne $todayDate|replace:'-':''}
                 <li>{pc_url action='today' full=true navlink=true viewtype=$viewtypeselected}</li>
             {/if}
             <li>{pc_url action='day' full=true navlink=true viewtype=$viewtypeselected}</li>

@@ -24,7 +24,7 @@ class PostCalendar_CalendarView_Week extends PostCalendar_CalendarView_AbstractD
 
     protected function setTemplate()
     {
-        $this->template = 'user/view_weekOOP.tpl';
+        $this->template = 'user/view_week.tpl';
     }
     
     protected function setDates()
@@ -80,6 +80,7 @@ class PostCalendar_CalendarView_Week extends PostCalendar_CalendarView_AbstractD
                     ->assign('selectedcategories', $this->selectedCategories)
                     ->assign('func', $this->view->getRequest()->getGet()->get('func', $this->view->getRequest()->getPost()->get('func', 'display')))
                     ->assign('viewtypeselected', $this->viewtype)
+                    ->assign('todayDate', date('Y-m-d'))
                     ->assign('requestedDate', $this->requestedDate->format('Ymd'));
             // be sure to DataUtil::formatForDisplay in the template - navigation and others?
         }
