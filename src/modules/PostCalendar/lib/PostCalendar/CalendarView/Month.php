@@ -81,8 +81,8 @@ class PostCalendar_CalendarView_Month extends PostCalendar_CalendarView_Abstract
                 'Date'        => $this->requestedDate->format('Ymd'),
                 'pc_username' => $this->userFilter));
             // create and return template
-            $firstClone = $this->requestedDate;
-            $lastClone = $this->requestedDate;
+            $firstClone = clone $this->requestedDate;
+            $lastClone = clone $this->requestedDate;
             $this->view
                     ->assign('navigation', $this->navigation)
                     ->assign('dayDisplay', $this->dayDisplay)
