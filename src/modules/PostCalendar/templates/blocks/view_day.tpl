@@ -2,18 +2,18 @@
 {ajaxheader module="PostCalendar" ui=true}
 {pc_pagejs_init}
 <div class="postcalendar_block_view_day">
-{if $SHOW_TITLE eq 1}
+{if $blockVars.pcbshowcalendar eq 1}
     <h2 class='postcalendar_block_innertitle'>{gt text="Today's events"}</h2>
 {/if}
 {assign var="eventtotal" value=0}
 {assign var="eventcount" value=0}
     <ul class="pc_blocklist">
         <li class="pc_blockdate">
-            {$TODAY_DATE|pc_date_format}
+            {$todayDate|pc_date_format}
         </li>
         {foreach name='eventloop' key='id' item='event' from=$todaysEvents}
             {assign var="eventtotal" value=$eventtotal+1}
-            {if $eventcount < $DISPLAY_LIMIT}
+            {if $eventcount < $blockVars.pcbeventslimit}
                 {assign var="eventcount" value=$eventcount+1}
                 {if $event.alldayevent != true}
                     {assign var="timestamp" value=$event.startTime}
@@ -34,12 +34,12 @@
                 </li>
             {/if}
         {foreachelse}
-                {assign var="eventtotal" value="0"}
-                    <li class="pc_blockevent">{gt text='No events scheduled.'}</li>
+            {assign var="eventtotal" value="0"}
+            <li class="pc_blockevent">{gt text='No events scheduled.'}</li>
         {/foreach}
     </ul>
-{if ($eventtotal > $DISPLAY_LIMIT)}
-  <a href="{pc_url action='day' eid=$event.eid date=$TODAY_DATE}">{$eventtotal}&nbsp{$EVENTS_TOTAL_LINK}</a>
+{if ($eventtotal > $blockVars.pcbeventslimit)}
+  <a href="{pc_url action='day' eid=$event.eid date=$todayDate}">{$eventtotal}&nbsp{gt text="total events to view"}</a>
 {/if}
 </div>
 {/if}

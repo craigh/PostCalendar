@@ -3,38 +3,38 @@
 <div class="postcalendar_block_view_month">
 <table class="smallmonthtable">
     <col class='weeklink' />
-    {foreach from=$pc_colclasses item=colclassname}
+    {foreach from=$dayDisplay.colclass item=colclassname}
     <col class='{$colclassname}' />
     {/foreach}
     <tr>
         <td class="monthheader" colspan="8">
-            <a href="{$PREV_MONTH_URL|safetext}">&lt;&lt;&nbsp;</a>
-            <a href="{pc_url action="month" date=$DATE}">{$DATE|pc_date_format:'%B %Y'}</a>
-            <a href="{$NEXT_MONTH_URL|safetext}">&nbsp;&gt;&gt;</a>
+            <a href="{$navigation.previous|safetext}">&lt;&lt;&nbsp;</a>
+            <a href="{pc_url action="month" date=$requestedDate}">{$requestedDate|pc_date_format:'%B %Y'}</a>
+            <a href="{$navigation.next|safetext}">&nbsp;&gt;&gt;</a>
         </td>
     </tr>
     <tr class="daynames">
         <td>&nbsp;</td>
-        {foreach name='daynames' item='day' from=$S_SHORT_DAY_NAMES}
+        {foreach name='daynames' item='day' from=$dayDisplay.short}
         <td>{$day}</td>
         {/foreach}
     </tr>
-    {foreach name='weeks' item='days' from=$CAL_FORMAT}
+    {foreach name='weeks' item='days' from=$graph}
     <tr>
         <td><a href="{pc_url action='week' date=$days[0]}">&gt;</a></td>
         {foreach name='day' item='date' from=$days}
-        {if $date == $TODAY_DATE}
+        {if $date == $todayDate}
             {assign var="stylesheet" value="monthtoday"}
-        {elseif ($date < $MONTH_START_DATE || $date > $MONTH_END_DATE)}
+        {elseif ($date < $firstDayOfMonth || $date > $lastDayOfMonth)}
             {assign var="stylesheet" value="monthoff"}
         {else}
             {assign var="stylesheet" value="monthon"}
         {/if}
         <td class="{$stylesheet}">
             {assign var="titles" value=""}
-            {assign var="numberofevents" value=$A_EVENTS.$date|@count}
+            {assign var="numberofevents" value=$eventsByDate.$date|@count}
             {if $modvars.PostCalendar.pcUsePopups}
-                {foreach name='events' item='event' from=$A_EVENTS.$date}
+                {foreach name='events' item='event' from=$eventsByDate.$date}
                     {if $event.alldayevent != true}
                         {assign var="titles" value="$titles<b>`$event.startTime`-`$event.endTime`</b> `$event.title`<br /><br />"}
                     {else}

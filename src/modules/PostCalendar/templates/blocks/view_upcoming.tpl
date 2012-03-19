@@ -2,16 +2,16 @@
 {ajaxheader module="PostCalendar" ui=true}
 {pc_pagejs_init}
 <div class="postcalendar_block_view_upcoming">
-{if $SHOW_TITLE eq 1}
+{if (($blockVars.pcbshowcalendar eq 1) OR ($blockVars.pcbeventoverview eq 1)) }
 <h2 class='postcalendar_block_innertitle'>{gt text='Upcoming events'}</h2>
 {/if}
 
 {counter start=0 assign='eventcount'}
-{pc_sort_events var="S_EVENTS" sort="time" order="asc" value=$A_EVENTS}
+{pc_sort_events var="S_EVENTS" sort="time" order="asc" value=$eventsByDate}
 {foreach name='dates' item='events' key='date' from=$S_EVENTS}
-    {if $date > $TODAY_DATE}
+    {if $date > $todayDate}
         {foreach name='eventloop' key='id' item='event' from=$events}
-            {if $eventcount < $DISPLAY_LIMIT}
+            {if $eventcount < $blockVars.pcbeventslimit}
                 {if $event.alldayevent != true}
                     {assign var="timestamp" value=$event.startTime}
                 {else}
