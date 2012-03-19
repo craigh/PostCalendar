@@ -88,9 +88,13 @@ abstract class PostCalendar_CalendarView_AbstractCalendarViewBase extends Zikula
 
     abstract public function render();
 
-    protected function isCached()
+    protected function isCached($template = null)
     {
-        return (isset($this->template) && $this->view->is_cached($this->template));
+        if (isset($template)) {
+            return $this->view->is_cached($this->template);
+        } else {
+            return (isset($this->template) && $this->view->is_cached($this->template));
+        }
     }
 
     private function reArrayCategories($filtercats)
