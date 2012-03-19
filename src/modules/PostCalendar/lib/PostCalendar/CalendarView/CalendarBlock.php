@@ -35,9 +35,9 @@ class PostCalendar_CalendarView_CalendarBlock extends PostCalendar_CalendarView_
 
     protected function setTemplate()
     {
-        $this->template = 'blocks/view_month.tpl';
-        $this->todayTemplate = 'blocks/view_day.tpl';
-        $this->upcomingTemplate = 'blocks/view_upcoming.tpl';
+        $this->template = 'blocks/month.tpl';
+        $this->todayTemplate = 'blocks/day.tpl';
+        $this->upcomingTemplate = 'blocks/upcoming.tpl';
         $this->linksTemplate = 'blocks/calendarlinks.tpl';
     }
 
