@@ -43,7 +43,7 @@ class PostCalendar_ContentType_PostCalEvent extends Content_AbstractContentType
             return false;
         }
     
-        $alleventdates = ModUtil::apiFunc('PostCalendar', 'event', 'geteventdates', $event); // gets all FUTURE occurances
+        $alleventdates = ModUtil::apiFunc('PostCalendar', 'event', 'getEventOccurances', $event); // gets all FUTURE occurances
         // assign next occurance to eventDate
         $event['eventDate'] = array_shift($alleventdates);
     

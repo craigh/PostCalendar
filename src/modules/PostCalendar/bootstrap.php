@@ -24,9 +24,4 @@ if (ModUtil::available('PostCalendar')) {
     define('_SETTING_ENABLECATS',       $settings['enablecategorization']);
     define('_SETTING_USENAVIMAGES',     $settings['enablenavimages']);
     unset($settings);
-
-    // Setup utility classes and functions
-    define('DATE_CALC_BEGIN_WEEKDAY', _SETTING_FIRST_DAY_WEEK);
-
-    ZLoader::addAutoloader('Date', 'modules/PostCalendar/lib/vendor');
 }

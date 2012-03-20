@@ -22,12 +22,23 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
     const REPEAT_EVERY_WEEK = 1;
     const REPEAT_EVERY_MONTH = 2;
     const REPEAT_EVERY_YEAR = 3;
-
+    public $rTypes = array(self::REPEAT_EVERY_DAY => "day",
+        self::REPEAT_EVERY_WEEK => "week",
+        self::REPEAT_EVERY_MONTH => "month",
+        self::REPEAT_EVERY_YEAR => "year",
+    );
+    
     const REPEAT_ON_1ST = 1;
     const REPEAT_ON_2ND = 2;
     const REPEAT_ON_3RD = 3;
     const REPEAT_ON_4TH = 4;
     const REPEAT_ON_LAST = 5;
+    public $rWeeks = array(self::REPEAT_ON_1ST => "first",
+        self::REPEAT_ON_2ND => "second",
+        self::REPEAT_ON_3RD => "third",
+        self::REPEAT_ON_4TH => "fourth",
+        self::REPEAT_ON_LAST => "last",
+    );
 
     const REPEAT_ON_SUN = 0;
     const REPEAT_ON_MON = 1;
@@ -36,7 +47,15 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
     const REPEAT_ON_THU = 4;
     const REPEAT_ON_FRI = 5;
     const REPEAT_ON_SAT = 6;
-
+    public $rDays = array(self::REPEAT_ON_SUN => "Sunday",
+        self::REPEAT_ON_MON => "Monday",
+        self::REPEAT_ON_TUE => "Tuesday",
+        self::REPEAT_ON_WED => "Wednesday",
+        self::REPEAT_ON_THU => "Thursday",
+        self::REPEAT_ON_FRI => "Friday",
+        self::REPEAT_ON_SAT => "Saturday",
+    );
+    
     /**
      * This function returns an array of events sorted by date
      *    if either is present, both must be present. else uses today's/jumped date.
@@ -57,9 +76,7 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
 
         $date = PostCalendar_Util::getDate(array(
             'Date' => $Date)); //formats date
-        $Date_Calc = new Date_Calc();
-
-
+        
         if (!empty($s_keywords)) {
             unset($start);
             unset($end);
@@ -71,33 +88,23 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
             PostCalendar_PostCalendarEvent_News::scheduler();
         }
 
-        $currentyear  = substr($date, 0, 4);
-        $currentmonth = substr($date, 4, 2);
-        $currentday   = substr($date, 6, 2);
-        $start_date = date('Y-m-d');
-        $end_date = null;
-
+        $requestedDate = DateTime::createFromFormat('Ymd', $date); // was 'current...'
+        $startDate = new DateTime();
+        $endDate = null;
+        
         if (isset($start) && isset($end)) {
-            list ($startmonth, $startday, $startyear) = explode('/', $start);
-            list ($endmonth, $endday, $endyear) = explode('/', $end);
-
-            $s = (int) "$startyear$startmonth$startday";
-            if ($s > $date) {
-                $currentyear = $startyear;
-                $currentmonth = $startmonth;
-                $currentday = $startday;
+            $startDate = DateTime::createFromFormat('m/d/Y', $start);
+            $endDate = DateTime::createFromFormat('m/d/Y', $end);
+            if ($startDate > $requestedDate) {
+                $requestedDate = clone $startDate;
             }
-            $start_date = $Date_Calc->dateFormat($startday, $startmonth, $startyear, '%Y-%m-%d');
-            $end_date = $Date_Calc->dateFormat($endday, $endmonth, $endyear, '%Y-%m-%d');
         } else {
-            $startmonth = $endmonth = $currentmonth;
-            $startday = $endday = $currentday;
-            $startyear = $currentyear + $searchstart;
-            $endyear = $currentyear + $searchend;
-            $start_date = $startyear . '-' . $startmonth . '-' . $startday;
-            $end_date = $endyear . '-' . $endmonth . '-' . $endday;
+            $startDate = clone $requestedDate;
+            $endDate = clone $requestedDate;
+            $startDate->modify("+$searchstart years");
+            $endDate->modify("+$searchend years");
         }
-
+            
         if (empty($pc_username)) {
             $pc_username = (_SETTING_ALLOW_USER_CAL) ? EventRepo::FILTER_ALL : EventRepo::FILTER_GLOBAL;
         }
@@ -116,33 +123,21 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
 
         // get event collection
         $events = $this->entityManager->getRepository('PostCalendar_Entity_CalendarEvent')
-                ->getEventCollection($eventstatus, $start_date, $end_date, $pc_username, $ruserid, self::formatCategoryFilter($filtercats), $s_keywords);
+                ->getEventCollection($eventstatus, $startDate, $endDate, $pc_username, $ruserid, self::formatCategoryFilter($filtercats), $s_keywords);
         
         //==============================================================
         // Here an array is built consisting of the date ranges
         // specific to the current view.  This array is then
         // used to build the calendar display.
         //==============================================================
+        $interval = new DateInterval("P1D");
+        $period = new DatePeriod($startDate, $interval, $endDate->modify("+1 day"));
         $days = array();
-        $sday = $Date_Calc->dateToDays($startday, $startmonth, $startyear);
-        $eday = $Date_Calc->dateToDays($endday, $endmonth, $endyear);
-        if ($sort == 'DESC') { // format days array in date-descending order
-            for ($cday = $eday; $cday >= $sday; $cday--) {
-                $d = $Date_Calc->daysToDate($cday, '%d');
-                $m = $Date_Calc->daysToDate($cday, '%m');
-                $y = $Date_Calc->daysToDate($cday, '%Y');
-                $store_date = $Date_Calc->dateFormat($d, $m, $y, '%Y-%m-%d');
-                $days[$store_date] = array();
-            }
-        } else { // format days array in date-ascending order
-            for ($cday = $sday; $cday <= $eday; $cday++) {
-                $d = $Date_Calc->daysToDate($cday, '%d');
-                $m = $Date_Calc->daysToDate($cday, '%m');
-                $y = $Date_Calc->daysToDate($cday, '%Y');
-                $store_date = $Date_Calc->dateFormat($d, $m, $y, '%Y-%m-%d');
-                $days[$store_date] = array();
-            }
+        foreach ($period as $date) {
+            $days[$date->format('Y-m-d')] = array();
         }
+        // maybe should have done $interval->invert = 1; instead?
+        $days = ($sort == 'DESC') ? array_reverse($days) : $days;
 
         foreach ($events as $event) {
             $event = $event->getoldArray(); // convert from Doctrine Entity
@@ -151,79 +146,14 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
                     || (!CategoryUtil::hasCategoryAccess($event['__CATEGORIES__'], 'PostCalendar'))) {
                 continue;
             }
-            
             $event = $this->formateventarrayfordisplay($event);
-
-            list ($eventstartyear, $eventstartmonth, $eventstartday) = explode('-', $event['eventDate']);
-
-            // determine the stop date for this event
-            $stop = (!isset($event['endDate'])) ? $end_date : $event['endDate'];
-
-            // this switch block fills the $days array with events. It computes recurring events and adds the recurrances to the $days array also
-            switch ($event['recurrtype']) {
-                // Events that do not repeat only have a startday (eventDate)
-                case CalendarEvent::RECURRTYPE_NONE:
-                    if (isset($days[$event['eventDate']])) {
-                        $days[$event['eventDate']][] = $event;
-                    }
-                    break;
-                case CalendarEvent::RECURRTYPE_REPEAT:
-                    $rfreq = $event['recurrspec']['event_repeat_freq']; // could be any int
-                    $rtype = $event['recurrspec']['event_repeat_freq_type']; // REPEAT_EVERY_DAY (0), REPEAT_EVERY_WEEK (1), REPEAT_EVERY_MONTH (2), REPEAT_EVERY_YEAR (3)
-                    // we should bring the event up to date to make this a tad bit faster
-                    // any ideas on how to do that, exactly??? dateToDays probably. (RNG <5.0)
-                    $newyear = $eventstartyear;
-                    $newmonth = $eventstartmonth;
-                    $newday = $eventstartday;
-                    $occurance = $Date_Calc->dateFormat($newday, $newmonth, $newyear, '%Y-%m-%d');
-                    while ($occurance < $start_date) {
-                        $occurance = $this->dateIncrement(array(
-                            'd' => $newday,
-                            'm' => $newmonth,
-                            'y' => $newyear,
-                            'f' => $rfreq,
-                            't' => $rtype));
-                        list ($newyear, $newmonth, $newday) = explode('-', $occurance);
-                    }
-                    while ($occurance <= $stop) {
-                        if (isset($days[$occurance])) {
-                            $days[$occurance][] = $event;
-                        }
-                        $occurance = $this->dateIncrement(array(
-                            'd' => $newday,
-                            'm' => $newmonth,
-                            'y' => $newyear,
-                            'f' => $rfreq,
-                            't' => $rtype));
-                        list ($newyear, $newmonth, $newday) = explode('-', $occurance);
-                    }
-                    break;
-                case CalendarEvent::RECURRTYPE_REPEAT_ON:
-                    $rfreq = $event['recurrspec']['event_repeat_on_freq']; // could be any int
-                    $rnum = $event['recurrspec']['event_repeat_on_num']; // REPEAT_ON_1ST (1), REPEAT_ON_2ND (2), REPEAT_ON_3RD (3), REPEAT_ON_4TH (4), REPEAT_ON_LAST(5)
-                    $rday = $event['recurrspec']['event_repeat_on_day']; // REPEAT_ON_SUN (0), REPEAT_ON_MON (1), REPEAT_ON_TUE (2), REPEAT_ON_WED (3), REPEAT_ON_THU(4), REPEAT_ON_FRI (5), REPEAT_ON_SAT (6)
-                    $newmonth = $eventstartmonth;
-                    $newyear = $eventstartyear;
-                    $newday = $eventstartday;
-                    // make us current
-                    while ($newyear < $currentyear) {
-                        $occurance = date('Y-m-d', mktime(0, 0, 0, $newmonth + $rfreq, $newday, $newyear));
-                        list ($newyear, $newmonth, $newday) = explode('-', $occurance);
-                    }
-                    // populate the event array
-                    while ($newyear <= $endyear) { // was $currentyear
-                        $dnum = $rnum; // get day event repeats on
-                        do {
-                            $occurance = $Date_Calc->NWeekdayOfMonth($dnum--, $rday, $newmonth, $newyear, "%Y-%m-%d");
-                        } while ($occurance === -1);
-                        if (isset($days[$occurance]) && $occurance <= $stop) {
-                            $days[$occurance][] = $event;
-                        }
-                        $occurance = date('Y-m-d', mktime(0, 0, 0, $newmonth + $rfreq, $newday, $newyear));
-                        list ($newyear, $newmonth, $newday) = explode('-', $occurance);
-                    }
-                    break;
-            } // <- end of switch($event['recurrtype'])
+            $occurances = $this->getEventOccurances($event, true);
+            foreach ($occurances as $date) {
+                if (isset($days[$date])) {
+                    $days[$date][] = $event;
+                }
+            }
+            
         } // <- end of foreach($events as $event)
         return $days;
     }
@@ -725,91 +655,47 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
 
     /**
      * find all occurances of an event between start and stop dates of event
+     * by default, do not include occurances before today.
+     * 
      * @param array $event
+     * @param mixed $start
+     * @param mixed $end
+     * @param boolean $includePast
      * @return array dates
      */
-    public function geteventdates($event)
+    public function getEventOccurances($event, $includePast = false)
     {
-        list ($eventstartyear, $eventstartmonth, $eventstartday) = explode('-', $event['eventDate']);
-        // determine the stop date for this event
-        $default_end_date = date("Y-m-d", strtotime("+2 years")); // default to only get first two years of recurrance
-        $stop = (!isset($event['endDate'])) ? $default_end_date : $event['endDate'];
-
-        $start_date = $event['eventDate']; // maybe try today instead?
-
-        $eventdates = array(); // placeholder array for all event dates
-
-        $Date_Calc = new Date_Calc();
-
+        $eventStart = DateTime::createFromFormat('Y-m-d', $event['eventDate']);
+        $defaultEnd = clone $eventStart;
+        $eventEnd = isset($event['endDate']) ? DateTime::createFromFormat('Y-m-d', $event['endDate']) : $defaultEnd->modify("+2 years");
+        $occurances = array();
         switch ($event['recurrtype']) {
-            // Events that do not repeat only have a startday (eventDate)
             case CalendarEvent::RECURRTYPE_NONE:
-                return array($event['eventDate']); // there is only one date - return it
+                return array($event['eventDate']);
                 break;
             case CalendarEvent::RECURRTYPE_REPEAT:
-                $rfreq = $event['recurrspec']['event_repeat_freq']; // could be any int
-                $rtype = $event['recurrspec']['event_repeat_freq_type']; // REPEAT_EVERY_DAY (0), REPEAT_EVERY_WEEK (1), REPEAT_EVERY_MONTH (2), REPEAT_EVERY_YEAR (3)
-                // we should bring the event up to date to make this a tad bit faster
-                // any ideas on how to do that, exactly??? dateToDays probably. (RNG <5.0)
-                $newyear   = $eventstartyear;
-                $newmonth  = $eventstartmonth;
-                $newday    = $eventstartday;
-                $occurance = $Date_Calc->dateFormat($newday, $newmonth, $newyear, '%Y-%m-%d');
-                while ($occurance < $start_date) {
-                    $occurance = $this->dateIncrement(array(
-                        'd' => $newday,
-                        'm' => $newmonth,
-                        'y' => $newyear,
-                        'f' => $rfreq,
-                        't' => $rtype));
-                    list ($newyear, $newmonth, $newday) = explode('-', $occurance);
-                }
-                while ($occurance <= $stop) {
-                    $eventdates[] = $occurance;
-                    $occurance = $this->dateIncrement(array(
-                        'd' => $newday,
-                        'm' => $newmonth,
-                        'y' => $newyear,
-                        'f' => $rfreq,
-                        't' => $rtype));
-                    list ($newyear, $newmonth, $newday) = explode('-', $occurance);
-                }
+                $rfreq = $event['recurrspec']['event_repeat_freq'];
+                $rtype = $event['recurrspec']['event_repeat_freq_type'];
+                $interval = DateInterval::createFromDateString("+$rfreq " . $this->rTypes[$rtype]);
+                $period = new DatePeriod($eventStart, $interval, $eventEnd->modify("+1 day"));
                 break;
             case CalendarEvent::RECURRTYPE_REPEAT_ON:
                 $rfreq = $event['recurrspec']['event_repeat_on_freq'];
                 $rnum = $event['recurrspec']['event_repeat_on_num'];
                 $rday = $event['recurrspec']['event_repeat_on_day'];
-                $newmonth = $eventstartmonth;
-                $newyear = $eventstartyear;
-                $newday = $eventstartday;
-                // make us current
-                $currentyear = date('Y');
-                while ($newyear < $currentyear) {
-                    $occurance = date('Y-m-d', mktime(0, 0, 0, $newmonth + $rfreq, $newday, $newyear));
-                    list ($newyear, $newmonth, $newday) = explode('-', $occurance);
-                }
-                // populate the event array
-                while ($newyear <= $currentyear) {
-                    $dnum = $rnum; // get day event repeats on
-                    do {
-                        $occurance = $Date_Calc->NWeekdayOfMonth($dnum--, $rday, $newmonth, $newyear, "%Y-%m-%d");
-                    } while ($occurance === -1);
-                    if ($occurance <= $stop) {
-                        $eventdates[] = $occurance;
-                    }
-                    $occurance = date('Y-m-d', mktime(0, 0, 0, $newmonth + $rfreq, $newday, $newyear));
-                    list ($newyear, $newmonth, $newday) = explode('-', $occurance);
-                }
+                $eventStart->modify("last day of previous month");
+                $interval = DateInterval::createFromDateString("{$this->rWeeks[$rnum]} {$this->rDays[$rday]} of next month");
+                // not dealing with $rfreq!
+                $period = new DatePeriod($eventStart, $interval, $eventEnd, DatePeriod::EXCLUDE_START_DATE);
                 break;
         }
-        $today = date('Y-m-d');
-        foreach ($eventdates as $key => $date) {
-            if ($date < $today) {
-                unset ($eventdates[$key]);
+        $today = new DateTime();
+        foreach ($period as $date) {
+            if (($includePast && ($date < $today)) || ($date >= $today)) {
+                $occurances[] = $date->format('Y-m-d');
             }
         }
-
-        return $eventdates;
+        return $occurances;
     }
 
     /**

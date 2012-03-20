@@ -39,12 +39,6 @@ abstract class PostCalendar_CalendarView_AbstractCalendarViewBase extends Zikula
     protected $selectedCategories = array();
 
     /**
-     * Date_Calc instance
-     * @var object 
-     */
-    protected $calc;
-
-    /**
      * Array of navigation links
      * @var array 
      */
@@ -62,7 +56,6 @@ abstract class PostCalendar_CalendarView_AbstractCalendarViewBase extends Zikula
     {
         $this->domain = ZLanguage::getModuleDomain('PostCalendar');
         $this->view = $view;
-        $this->calc = new Date_Calc();
         $this->currentUser = UserUtil::getVar('uid');
 
         $this->requestedDate = DateTime::createFromFormat('Ymd', $requestedDate);
