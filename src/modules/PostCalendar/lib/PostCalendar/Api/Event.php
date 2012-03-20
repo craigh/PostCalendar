@@ -65,9 +65,9 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
     {
         $start       = isset($args['start'])       ? $args['start']       : '';
         $end         = isset($args['end'])         ? $args['end']         : '';
-        $s_keywords  = isset($args['s_keywords'])  ? $args['s_keywords']  : ''; // search WHERE string
+        $searchString = isset($args['s_keywords'])  ? $args['s_keywords']  : ''; // search WHERE string
         $filtercats  = isset($args['filtercats'])  ? $args['filtercats']  : '';
-        $pc_username = isset($args['pc_username']) ? $args['pc_username'] : '';
+        $userFilter  = isset($args['pc_username']) ? $args['pc_username'] : '';
         $searchstart = isset($args['searchstart']) ? $args['searchstart'] : '';
         $searchend   = isset($args['searchend'])   ? $args['searchend']   : '';
         $Date        = isset($args['Date'])        ? $args['Date']        : '';
@@ -77,7 +77,7 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
         $date = PostCalendar_Util::getDate(array(
             'Date' => $Date)); //formats date
         
-        if (!empty($s_keywords)) {
+        if (!empty($searchString)) {
             unset($start);
             unset($end);
         } // clear start and end dates for search
@@ -88,7 +88,7 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
             PostCalendar_PostCalendarEvent_News::scheduler();
         }
 
-        $requestedDate = DateTime::createFromFormat('Ymd', $date); // was 'current...'
+        $requestedDate = DateTime::createFromFormat('Ymd', $date);
         $startDate = new DateTime();
         $endDate = null;
         
@@ -105,25 +105,25 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
             $endDate->modify("+$searchend years");
         }
             
-        if (empty($pc_username)) {
-            $pc_username = (_SETTING_ALLOW_USER_CAL) ? EventRepo::FILTER_ALL : EventRepo::FILTER_GLOBAL;
+        if (empty($userFilter)) {
+            $userFilter = (_SETTING_ALLOW_USER_CAL) ? EventRepo::FILTER_ALL : EventRepo::FILTER_GLOBAL;
         }
         if (!UserUtil::isLoggedIn()) {
-            $pc_username = EventRepo::FILTER_GLOBAL;
+            $userFilter = EventRepo::FILTER_GLOBAL;
         }
 
-        // convert $pc_username to useable information
-        if ($pc_username > 0) {
+        // convert $userFilter to useable information
+        if ($userFilter > 0) {
             // possible values: a user id - only an admin can use this
-            $ruserid = $pc_username; // keep the id
-            $pc_username = EventRepo::FILTER_PRIVATE;
+            $ruserid = $userFilter; // keep the id
+            $userFilter = EventRepo::FILTER_PRIVATE;
         } else {
             $ruserid = UserUtil::getVar('uid'); // use current user's ID
         }
 
         // get event collection
         $events = $this->entityManager->getRepository('PostCalendar_Entity_CalendarEvent')
-                ->getEventCollection($eventstatus, $startDate, $endDate, $pc_username, $ruserid, self::formatCategoryFilter($filtercats), $s_keywords);
+                ->getEventCollection($eventstatus, $startDate, $endDate, $userFilter, $ruserid, self::formatCategoryFilter($filtercats), $searchString);
         
         //==============================================================
         // Here an array is built consisting of the date ranges
@@ -568,35 +568,6 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
             $s = 'http://' . $s;
         }
         return $s;
-    }
-
-    /**
-     * returns the next valid date for an event based on the
-     * current day,month,year,freq and type
-     * @param array args
-     * @return string YYYY-MM-DD
-     */
-    public function dateIncrement($args)
-    {
-        $d = $args['d']; // day
-        $m = $args['m']; // month
-        $y = $args['y']; // year
-        $f = $args['f']; // freq
-        $t = $args['t']; // type
-        switch ($t) {
-            case self::REPEAT_EVERY_DAY:
-                return date('Y-m-d', mktime(0, 0, 0, $m, ($d + $f), $y));
-                break;
-            case self::REPEAT_EVERY_WEEK:
-                return date('Y-m-d', mktime(0, 0, 0, $m, ($d + (7 * $f)), $y));
-                break;
-            case self::REPEAT_EVERY_MONTH:
-                return date('Y-m-d', mktime(0, 0, 0, ($m + $f), $d, $y));
-                break;
-            case self::REPEAT_EVERY_YEAR:
-                return date('Y-m-d', mktime(0, 0, 0, $m, $d, ($y + $f)));
-                break;
-        }
     }
 
     /**
