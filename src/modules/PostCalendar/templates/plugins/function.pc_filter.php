@@ -31,18 +31,6 @@ function smarty_function_pc_filter($args, Zikula_View $view)
     $order = isset($args['order'])  ? $args['order']                    : null;
 
     $request = $view->getRequest();
-    $jumpday   = $request->getPost()->get('jumpDay');
-    $jumpmonth = $request->getPost()->get('jumpMonth');
-    $jumpyear  = $request->getPost()->get('jumpYear');
-    $Date      = $request->getPost()->get('Date');
-    $jumpargs  = array(
-        'Date' => $Date,
-        'jumpday' => $jumpday,
-        'jumpmonth' => $jumpmonth,
-        'jumpyear' => $jumpyear);
-    $Date      = PostCalendar_Util::getDate($jumpargs);
-
-    $viewtype = $request->getPost()->get('viewtype', _SETTING_DEFAULT_VIEW);
     if (ModUtil::getVar('PostCalendar', 'pcAllowUserCalendar')) {
         $filterdefault = PostCalendar_Entity_Repository_CalendarEventRepository::FILTER_ALL;
     } else {

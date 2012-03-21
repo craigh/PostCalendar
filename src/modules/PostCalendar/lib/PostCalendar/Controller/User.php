@@ -32,17 +32,14 @@ class PostCalendar_Controller_User extends Zikula_AbstractController
         $popup = $this->request->getGet()->get('popup', $this->request->getPost()->get('popup', false));
         $pc_username = $this->request->getGet()->get('pc_username', $this->request->getPost()->get('pc_username', ''));
         $eid = $this->request->getGet()->get('eid', $this->request->getPost()->get('eid', 0));
-        $jumpday = $this->request->getGet()->get('jumpDay', $this->request->getPost()->get('jumpDay', null));
-        $jumpmonth = $this->request->getGet()->get('jumpMonth', $this->request->getPost()->get('jumpMonth', null));
-        $jumpyear = $this->request->getGet()->get('jumpYear', $this->request->getPost()->get('jumpYear', null));
         $filtercats = $this->request->getGet()->get('postcalendar_events', $this->request->getPost()->get('postcalendar_events', null));
         $func = $this->request->getGet()->get('func', $this->request->getPost()->get('func'));
         $jumpargs    = array(
-            'jumpday' => $jumpday,
-            'jumpmonth' => $jumpmonth,
-            'jumpyear' => $jumpyear);
+            'jumpday' => $this->request->getGet()->get('jumpDay', $this->request->getPost()->get('jumpDay', null)),
+            'jumpmonth' => $this->request->getGet()->get('jumpMonth', $this->request->getPost()->get('jumpMonth', null)),
+            'jumpyear' => $this->request->getGet()->get('jumpYear', $this->request->getPost()->get('jumpYear', null)));
         $viewtype = isset($args['viewtype']) ? strtolower($args['viewtype']) : strtolower($this->request->getGet()->get('viewtype', $this->request->getPost()->get('viewtype', _SETTING_DEFAULT_VIEW)));
-        $Date = isset($args['Date']) ? strtolower($args['Date']) : $this->request->getGet()->get('Date', $this->request->getPost()->get('$viewtype', PostCalendar_Util::getDate($jumpargs)));
+        $date = isset($args['date']) ? strtolower($args['date']) : $this->request->getGet()->get('date', $this->request->getPost()->get('date', PostCalendar_Util::getDate($jumpargs)));
         $prop = isset($args['prop']) ? $args['prop'] : (string)$this->request->getGet()->get('prop', null);
         $cat = isset($args['cat']) ? $args['cat'] : (string)$this->request->getGet()->get('cat', null);
         
@@ -50,8 +47,11 @@ class PostCalendar_Controller_User extends Zikula_AbstractController
             $filtercats['__CATEGORIES__'][$prop] = $cat;
         }
     
-        if (empty($Date) && empty($viewtype)) {
+        if (empty($date) && empty($viewtype)) {
             return LogUtil::registerArgsError();
+        }
+        if (!is_object($date)) {
+            $date = DateTime::createFromFormat('Ymd', $date);
         }
 
         $this->view->assign('viewtypeselected', $viewtype);
@@ -84,10 +84,7 @@ class PostCalendar_Controller_User extends Zikula_AbstractController
                 // to ensure that the correct/current date is being displayed (rather than the
                 // date on which the recurring booking was executed).
                 if ($event['recurrtype']) {
-                    $y = substr($Date, 0, 4);
-                    $m = substr($Date, 4, 2);
-                    $d = substr($Date, 6, 2);
-                    $event['eventDate'] = "$y-$m-$d";
+                    $event['eventDate'] = $date->format('Ymd');
                 }
                 $this->view->assign('loaded_event', $event);
 
@@ -102,14 +99,14 @@ class PostCalendar_Controller_User extends Zikula_AbstractController
                         $this->view->assign('EVENT_CAN_EDIT', false);
                     }
                     $this->view->assign('TODAY_DATE', date('Y-m-d'));
-                    $this->view->assign('DATE', $Date);
+                    $this->view->assign('DATE', $date);
                     return $this->view->fetch('user/view_event_details.tpl');
                 }
                 break;
 
             default:
                 $class = 'PostCalendar_CalendarView_' . ucfirst($viewtype);
-                $calendar = new $class($this->view, $Date, $pc_username, $filtercats);
+                $calendar = new $class($this->view, $date, $pc_username, $filtercats);
                 return $calendar->render();
                 break;
         } // end switch

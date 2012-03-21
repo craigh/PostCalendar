@@ -66,8 +66,10 @@ class PostCalendar_Entity_Repository_CalendarEventRepository extends EntityRepos
      * 
      * @return Object Collection 
      */
-    public function getEventCollection($eventStatus, $startDate, $endDate, $username, $ruserid, array $filterCategories, $search)
+    public function getEventCollection($eventStatus, $startDate, $endDate, $username, $ruserid, array $filterCategories, $searchDql)
     {
+        $startDate->setTime(0, 0);
+        $endDate->setTime(23, 59);
         $dql = "SELECT a FROM PostCalendar_Entity_CalendarEvent a JOIN a.categories c " .
                "WHERE (a.endDate >= ?2 " .
                "OR (a.endDate = ?3 AND a.recurrtype <> ?4) " .
@@ -91,8 +93,8 @@ class PostCalendar_Entity_Repository_CalendarEventRepository extends EntityRepos
                 $dql .= "AND a.sharing = ?7 ";
         }
 
-        if (!empty($search)) {
-            $dql .= "AND $search";
+        if (!empty($searchDql)) {
+            $dql .= "AND $searchDql";
         }
         
         if (isset($filterCategories) && !empty($filterCategories)) {

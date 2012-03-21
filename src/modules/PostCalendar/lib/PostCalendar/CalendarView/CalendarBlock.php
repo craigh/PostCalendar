@@ -85,10 +85,10 @@ class PostCalendar_CalendarView_CalendarBlock extends PostCalendar_CalendarView_
 
         // Load the events
         $eventsByDate = ModUtil::apiFunc('PostCalendar', 'event', 'getEvents', array(
-                    'start' => $this->startDate->format('m/d/Y'), // refactor to use full dateTime instance
-                    'end' => $this->endDate->format('m/d/Y'), // refactor to use full dateTime instance
+                    'start' => $this->startDate,
+                    'end' => $this->endDate,
                     'filtercats' => $this->categoryFilter,
-                    'Date' => $this->requestedDate->format('Ymd'),
+                    'date' => $this->requestedDate,
                     'pc_username' => $this->userFilter));
         // create and return template
         $today = new DateTime();

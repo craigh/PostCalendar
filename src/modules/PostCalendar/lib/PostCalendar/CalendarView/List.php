@@ -53,7 +53,7 @@ class PostCalendar_CalendarView_List extends PostCalendar_CalendarView_AbstractD
         $prevClone->modify("-" . $this->listMonths . " months");
         $this->navigation['previous'] = ModUtil::url('PostCalendar', 'user', 'display', array(
                     'viewtype' => $this->viewtype,
-                    'Date' => $prevClone->format('Ymd'),
+                    'date' => $prevClone->format('Ymd'),
                     'pc_username' => $this->userFilter,
                     'filtercats' => $this->categoryFilter));
         $nextClone = clone $this->requestedDate;
@@ -61,7 +61,7 @@ class PostCalendar_CalendarView_List extends PostCalendar_CalendarView_AbstractD
                   ->modify("+1 day");
         $this->navigation['next'] = ModUtil::url('PostCalendar', 'user', 'display', array(
                     'viewtype' => $this->viewtype,
-                    'Date' => $nextClone->format('Ymd'),
+                    'date' => $nextClone->format('Ymd'),
                     'pc_username' => $this->userFilter,
                     'filtercats' => $this->categoryFilter));
     }
@@ -71,10 +71,10 @@ class PostCalendar_CalendarView_List extends PostCalendar_CalendarView_AbstractD
         if (!$this->isCached()) {
             // Load the events
             $eventsByDate = ModUtil::apiFunc('PostCalendar', 'event', 'getEvents', array(
-                'start'       => $this->startDate->format('m/d/Y'), // refactor to use full dateTime instance
-                'end'         => $this->endDate->format('m/d/Y'), // refactor to use full dateTime instance
+                'start'       => $this->startDate,
+                'end'         => $this->endDate,
                 'filtercats'  => $this->categoryFilter,
-                'Date'        => $this->requestedDate->format('Ymd'),
+                'date'        => $this->requestedDate,
                 'pc_username' => $this->userFilter));
             // create and return template
             $this->view

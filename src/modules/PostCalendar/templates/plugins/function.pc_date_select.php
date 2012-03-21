@@ -9,20 +9,12 @@ function smarty_function_pc_date_select($args, Zikula_View $view)
 {
     $dom       = ZLanguage::getModuleDomain('PostCalendar');
     $request   = $view->getRequest();
-    $jumpday   = $request->getPost()->get('jumpDay');
-    $jumpmonth = $request->getPost()->get('jumpMonth');
-    $jumpyear  = $request->getPost()->get('jumpYear');
-    $Date      = $request->getPost()->get('Date');
     $jumpargs  = array(
-        'Date' => $Date,
-        'jumpday' => $jumpday,
-        'jumpmonth' => $jumpmonth,
-        'jumpyear' => $jumpyear);
-    $Date      = PostCalendar_Util::getDate($jumpargs);
-
-    $y = substr($Date, 0, 4);
-    $m = substr($Date, 4, 2);
-    $d = substr($Date, 6, 2);
+        'date' => $request->getPost()->get('date'),
+        'jumpday' => $request->getPost()->get('jumpDay'),
+        'jumpmonth' => $request->getPost()->get('jumpMonth'),
+        'jumpyear' => $request->getPost()->get('jumpYear'));
+    $date = PostCalendar_Util::getDate($jumpargs);
 
     $sel_data = array(
         'day'   => __('Day', $dom),
@@ -32,7 +24,7 @@ function smarty_function_pc_date_select($args, Zikula_View $view)
         'list'  => __('List View', $dom));
 
     $view->assign('dateorderinfo', ModUtil::getVar('PostCalendar', 'pcNavDateOrder'));
-    $view->assign('currentjumpdate', $y . '-' . $m . '-' . $d);
+    $view->assign('currentjumpdate', $date->format('Y-m-d'));
     $view->assign('viewtypeselector', $sel_data);
 
     return;

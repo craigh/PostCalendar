@@ -30,14 +30,14 @@ class PostCalendar_CalendarView_Day extends PostCalendar_CalendarView_AbstractCa
         $prevClone->modify("-1 day");
         $this->navigation['previous'] = ModUtil::url('PostCalendar', 'user', 'display', array(
                     'viewtype' => $this->viewtype,
-                    'Date' => $prevClone->format('Ymd'),
+                    'date' => $prevClone->format('Ymd'),
                     'pc_username' => $this->userFilter,
                     'filtercats' => $this->categoryFilter));
         $nextClone = clone $this->requestedDate;
         $nextClone->modify("+1 day");
         $this->navigation['next'] = ModUtil::url('PostCalendar', 'user', 'display', array(
                     'viewtype' => $this->viewtype,
-                    'Date' => $nextClone->format('Ymd'),
+                    'date' => $nextClone->format('Ymd'),
                     'pc_username' => $this->userFilter,
                     'filtercats' => $this->categoryFilter));
     }
@@ -46,20 +46,23 @@ class PostCalendar_CalendarView_Day extends PostCalendar_CalendarView_AbstractCa
     {
         if (!$this->isCached()) {
             // Load the events
+            $start = clone $this->requestedDate;
+            $end = clone $this->requestedDate;
             $eventsByDate = ModUtil::apiFunc('PostCalendar', 'event', 'getEvents', array(
-                'start'       => $this->requestedDate->format('m/d/Y'), // refactor to use full dateTime instance
-                'end'         => $this->requestedDate->format('m/d/Y'), // refactor to use full dateTime instance
+                'start'       => $start,
+                'end'         => $end,
                 'filtercats'  => $this->categoryFilter,
-                'Date'        => $this->requestedDate->format('Ymd'),
+                'date'        => $this->requestedDate,
                 'pc_username' => $this->userFilter));
             // create and return template
+            $today = new DateTime();
             $this->view
                     ->assign('navigation', $this->navigation)
                     ->assign('eventsByDate', $eventsByDate)
                     ->assign('selectedcategories', $this->selectedCategories)
                     ->assign('func', $this->view->getRequest()->getGet()->get('func', $this->view->getRequest()->getPost()->get('func', 'display')))
                     ->assign('viewtypeselected', $this->viewtype)
-                    ->assign('todayDate', date('Y-m-d'))
+                    ->assign('todayDate', $today->format('Y-m-d'))
                     ->assign('requestedDate', $this->requestedDate->format('Y-m-d'));
             // be sure to DataUtil::formatForDisplay in the template - navigation and others?
         }

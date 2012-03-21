@@ -35,22 +35,19 @@ class PostCalendar_ContentType_PostCalEvents extends Content_AbstractContentType
     }
 
     public function display() {
-        $Date       = date('YmdHis');
-        $the_year   = substr($Date, 0, 4);
-        $the_month  = substr($Date, 4, 2);
-        $the_day    = substr($Date, 6, 2);
-
-        $starting_date = "$the_month/$the_day/$the_year";
-        $ending_date   = date('m/t/Y', mktime(0, 0, 0, $the_month + $this->pcbeventsrange, 1, $the_year));
+        $date = new DateTime();
+        $start = new DateTime();
+        $end = new DateTime();
+        $end->modify("last day of this month")->modify("+$this->pcbeventsrange months");
 
         $filtercats['__CATEGORIES__'] = $this->categories; //reformat array
         $eventsByDate = ModUtil::apiFunc('PostCalendar', 'event', 'getEvents', array(
-            'start'      => $starting_date,
-            'end'        => $ending_date,
+            'start'      => $start,
+            'end'        => $end,
             'filtercats' => $filtercats));
 
         $this->view->assign('A_EVENTS',      $eventsByDate);
-        $this->view->assign('DATE',          $Date);
+        $this->view->assign('DATE',          $date->format('Y-m-d'));
         $this->view->assign('DISPLAY_LIMIT', $this->pcbeventslimit);
 
         return $this->view->fetch($this->getTemplate());

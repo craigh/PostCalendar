@@ -11,7 +11,7 @@
 {/if}
 <h2 class="postcalendar_header">
     {if $PRINT_VIEW eq false}<a href="{$navigation.previous|safehtml}">&lt;&lt;</a>{/if}
-    {$requestedDate|pc_date_format:'%B %Y'}
+    {$requestedDate|pc_date_format:'F Y'}
     {if $PRINT_VIEW eq false}<a href="{$navigation.next|safehtml}">&gt;&gt;</a>{/if}
 </h2>
 
@@ -99,8 +99,8 @@
         {if ((empty($smarty.get.viewtype)) or (!isset($smarty.get.viewtype)))}
             {assign var="viewtype" value=$modvars.PostCalendar.pcDefaultView}
         {/if}
-        {formutil_getpassedvalue name="Date" source="get" assign="Date" default=''}
-        <a href="{modurl modname="PostCalendar" type='user' func='display' viewtype=$viewtype Date=$Date}">{gt text='Return'}</a>
+        {formutil_getpassedvalue name="date" source="get" assign="date" default=''}
+        <a href="{modurl modname="PostCalendar" type='user' func='display' viewtype=$viewtype Date=$date}">{gt text='Return'}</a>
     {/if}
 </div>
 {include file="user/footer.tpl"}

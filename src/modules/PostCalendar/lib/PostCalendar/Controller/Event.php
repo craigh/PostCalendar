@@ -78,10 +78,10 @@ class PostCalendar_Controller_Event extends Zikula_AbstractController
 
         // these items come on brand new view of this function
         $func = $this->request->getGet()->get('func', 'create');
-        $Date = $this->request->getGet()->get('Date'); //typically formatted YYYYMMDD or YYYYMMDD000000
-        // format to '%Y%m%d%H%M%S'
-        $Date = PostCalendar_Util::getDate(array(
-            'Date' => $Date));
+        $date = $this->request->getGet()->get('date');
+        
+        $date = PostCalendar_Util::getDate(array(
+            'date' => $date));
 
         // these items come on submission of form
         $submitted_event = $this->request->getPost()->get('postcalendar_events', NULL);
@@ -140,7 +140,7 @@ class PostCalendar_Controller_Event extends Zikula_AbstractController
                 $eventdata = ModUtil::apiFunc('PostCalendar', 'event', 'formateventarrayfordisplay', $eventdata);
             }
             // need to check each of these below to see if truly needed CAH 11/14/09
-            $eventdata['Date'] = $Date;
+            $eventdata['date'] = $date->format('Y-m-d');
             $eventdata['is_update'] = true;
             $eventdata['data_loaded'] = true;
         }
@@ -179,7 +179,7 @@ class PostCalendar_Controller_Event extends Zikula_AbstractController
 
         // Enter the event into the DB
         if ($form_action == 'save') {
-            $sdate = strtotime($submitted_event['eventDate']);
+            $sdate = DateTime::createFromFormat('Y-m-d', $submitted_event['eventDate']);
             $this->checkCsrfToken();
 
             $eventdata = ModUtil::apiFunc('PostCalendar', 'event', 'formateventarrayforDB', $eventdata);
@@ -191,11 +191,10 @@ class PostCalendar_Controller_Event extends Zikula_AbstractController
                 $url = new Zikula_ModUrl('PostCalendar', 'user', 'display', ZLanguage::getLanguageCode(), array('viewtype' => 'details', 'eid' => $eid));
                 $this->notifyHooks(new Zikula_ProcessHook('postcalendar.ui_hooks.events.process_edit', $eid, $url));
                 $this->view->clear_cache();
-                $presentation_date = DateUtil::strftime(_SETTING_DATE_FORMAT, $sdate);
                 if ($is_update) {
-                    LogUtil::registerStatus($this->__f('Done! Updated the event. (event date: %s)', $presentation_date));
+                    LogUtil::registerStatus($this->__f('Done! Updated the event. (event date: %s)', $sdate->format(_SETTING_DATE_FORMAT)));
                 } else {
-                    LogUtil::registerStatus($this->__f('Done! Submitted the event. (event date: %s)', $presentation_date));
+                    LogUtil::registerStatus($this->__f('Done! Submitted the event. (event date: %s)', $sdate->format(_SETTING_DATE_FORMAT)));
                 }
                 if ((int)$eventdata['eventstatus'] === (int)CalendarEvent::QUEUED) {
                     LogUtil::registerStatus($this->__('The event has been queued for administrator approval.'));
@@ -203,22 +202,20 @@ class PostCalendar_Controller_Event extends Zikula_AbstractController
                         'eid' => $eid,
                         'is_update' => $is_update)); //notify admin
                 }
-                // format startdate for redirect on success
-                $url_date = strftime('%Y%m%d', $sdate);
             }
             if ($addtrigger) {
                 System::redirect(ModUtil::url('PostCalendar', 'event', 'create'));
             } else {
                 System::redirect(ModUtil::url('PostCalendar', 'user', 'display', array(
                     'viewtype' => _SETTING_DEFAULT_VIEW,
-                    'Date' => $url_date)));
+                    'date' => $sdate->format('Ymd'))));
             }
             return true;
         }
 
         $submitformelements = ModUtil::apiFunc('PostCalendar', 'event', 'buildSubmitForm', array(
             'eventdata' => $eventdata,
-            'Date' => $Date)); //sets defaults or builds selected values
+            'date' => $date)); //sets defaults or builds selected values
         foreach ($submitformelements as $var => $val) {
             $this->view->assign($var, $val);
         }

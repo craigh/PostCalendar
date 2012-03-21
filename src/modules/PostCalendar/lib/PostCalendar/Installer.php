@@ -94,6 +94,7 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
                 // change hooked_area column to integer
                 // change hooked_area values from areaname to area id
                 // update modvars where name=postcalendarhookconfig change key from areaname to iadeaid
+                // change default date setting to date() format instead of strftime format
             case '7.1.0':
                 //future development
         }

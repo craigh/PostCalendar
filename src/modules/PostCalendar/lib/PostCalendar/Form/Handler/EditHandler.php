@@ -59,7 +59,7 @@ class PostCalendar_Form_Handler_EditHandler extends Zikula_Form_AbstractHandler
             $url = ModUtil::url('PostCalendar', 'user', 'display', array(
                 'eid' => $this->eid,
                 'viewtype' => 'details',
-                'Date' => $eventArray['eventDate']));
+                'date' => $eventArray['eventDate']));
         }
 
         if ($url != null) {

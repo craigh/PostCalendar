@@ -42,20 +42,11 @@ class PostCalendar_Block_Pastevents extends Zikula_Controller_AbstractBlock
         if (!ModUtil::available('PostCalendar')) {
             return;
         }
-    
-        // today's date
-        $Date = date('YmdHis');
-    
         // Get variables from content block
         $vars = BlockUtil::varsFromContent($blockinfo['content']);
     
-        $pcbeventsrange = (int) $vars['pcbeventsrange'];
+        $pcbeventsrange = (int)$vars['pcbeventsrange'];
         $pcbfiltercats  = $vars['pcbfiltercats'];
-    
-        // setup the info to build this
-        $the_year  = (int) substr($Date, 0, 4);
-        $the_month = (int) substr($Date, 4, 2);
-        $the_day   = (int) substr($Date, 6, 2);
     
         // If block is cached, return cached version
         $this->view->setCacheId($blockinfo['bid'] . ':' . UserUtil::getVar('uid'));
@@ -63,23 +54,26 @@ class PostCalendar_Block_Pastevents extends Zikula_Controller_AbstractBlock
             $blockinfo['content'] = $this->view->fetch('blocks/pastevents.tpl');
             return BlockUtil::themeBlock($blockinfo);
         }
-    
+
+        $date = new DateTime();
+        $start = new DateTime();
+        $end = new DateTime();
         if ($pcbeventsrange == 0) {
-            $starting_date = '1/1/1970';
+            $start->modify("January 1, 1970");
         } else {
-            $starting_date = date('m/d/Y', mktime(0, 0, 0, $the_month - $pcbeventsrange, $the_day, $the_year));
+            $start->modify("-$pcbeventsrange months");
         }
-        $ending_date   = date('m/d/Y', mktime(0, 0, 0, $the_month, $the_day - 1, $the_year)); // yesterday
+        $end->modify("-1 day"); // yesterday
     
         $filtercats['__CATEGORIES__'] = $pcbfiltercats; //reformat array
         $eventsByDate = ModUtil::apiFunc('PostCalendar', 'event', 'getEvents', array(
-            'start'      => $starting_date,
-            'end'        => $ending_date,
+            'start'      => $start,
+            'end'        => $end,
             'filtercats' => $filtercats,
             'sort'       => 'DESC'));
     
-        $this->view->assign('A_EVENTS',   $eventsByDate);
-        $this->view->assign('DATE',       $Date);
+        $this->view->assign('A_EVENTS', $eventsByDate);
+        $this->view->assign('DATE', $date->format("Y-m-d"));
     
         $blockinfo['content'] = $this->view->fetch('blocks/pastevents.tpl');
     

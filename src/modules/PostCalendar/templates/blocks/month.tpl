@@ -9,7 +9,7 @@
     <tr>
         <td class="monthheader" colspan="8">
             <a href="{$navigation.previous|safetext}">&lt;&lt;&nbsp;</a>
-            <a href="{pc_url action="month" date=$requestedDate}">{$requestedDate|pc_date_format:'%B %Y'}</a>
+            <a href="{pc_url action="month" date=$requestedDate}">{$requestedDate|pc_date_format:'F Y'}</a>
             <a href="{$navigation.next|safetext}">&nbsp;&gt;&gt;</a>
         </td>
     </tr>

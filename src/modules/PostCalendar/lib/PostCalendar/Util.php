@@ -32,7 +32,7 @@ class PostCalendar_Util
             'pcUsePopups'             => '0',
             'pcAllowDirectSubmit'     => '0',
             'pcListHowManyEvents'     => '15',
-            'pcEventDateFormat'       => '%B %e, %Y', // American: e.g. July 4, 2010
+            'pcEventDateFormat'       => 'F j, Y', // American: e.g. July 4, 2010
             'pcAllowUserCalendar'     => '0', // no group
             'pcTimeIncrement'         => '15',
             'pcDefaultView'           => 'month',
@@ -76,37 +76,25 @@ class PostCalendar_Util
     }
     /**
      * get the correct day, format it and return
-     * @param string format
      * @param string Date
      * @param string jumpday
      * @param string jumpmonth
      * @param string jumpyear
-     * @return string formatted date string
+     * @return DateTime instance
      */
     public static function getDate($args)
     {
-//        $format = (!empty($args['format'])) ? $args['format'] : '%Y%m%d%H%M%S';
-        $format = (!empty($args['format'])) ? $args['format'] : '%Y%m%d';
-    
-        $time      = time();
-        $jumpday   = isset($args['jumpday']) ? $args['jumpday'] : strftime('%d', $time);
-        $jumpmonth = isset($args['jumpmonth']) ? $args['jumpmonth'] : strftime('%m', $time);
-        $jumpyear  = isset($args['jumpyear']) ? $args['jumpyear'] : strftime('%Y', $time);
-    
-        if (UserUtil::isLoggedIn()) {
-            $time += (UserUtil::getVar('timezone_offset') - System::getVar('timezone_offset')) * 3600;
+        if (isset($args['date'])) {
+            if (is_object($args['date'])) {
+                return $args['date'];
+            }
+            $args['date'] = str_replace('-', '', $args['date']);
+            return DateTime::createFromFormat('Ymd', $args['date']);
+        } elseif (isset($args['jumpday'], $args['jumpmonth'], $args['jumpyear'])) {
+            return DateTime::createFromFormat('Ymd', $args['jumpyear'] . $args['jumpmonth'] . $args['jumpyear']);            
+        } else {
+            return new DateTime();
         }
-    
-        $Date = isset($args['Date']) ? $args['Date'] : '';
-        if (empty($Date)) {
-            // if we still don't have a date then calculate it
-            $Date = (int) "$jumpyear$jumpmonth$jumpday";
-        }
-    
-        $y = (int)substr($Date, 0, 4);
-        $m = (int)substr($Date, 4, 2);
-        $d = (int)substr($Date, 6, 2);
-        return DateUtil::strftime($format, mktime(0, 0, 0, $m, $d, $y));
     }
 
 } // end class def

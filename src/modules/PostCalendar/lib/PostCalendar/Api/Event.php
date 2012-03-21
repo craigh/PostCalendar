@@ -63,45 +63,31 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
      **/
     public function getEvents($args)
     {
-        $start       = isset($args['start'])       ? $args['start']       : '';
-        $end         = isset($args['end'])         ? $args['end']         : '';
-        $searchString = isset($args['s_keywords'])  ? $args['s_keywords']  : ''; // search WHERE string
+        $startDate   = isset($args['start'])       ? $args['start']       : new DateTime();
+        $endDate     = isset($args['end'])         ? $args['end']         : null;
         $filtercats  = isset($args['filtercats'])  ? $args['filtercats']  : '';
         $userFilter  = isset($args['pc_username']) ? $args['pc_username'] : '';
+        $searchDql   = isset($args['s_keywords'])  ? $args['s_keywords']  : ''; // search WHERE dql
         $searchstart = isset($args['searchstart']) ? $args['searchstart'] : '';
         $searchend   = isset($args['searchend'])   ? $args['searchend']   : '';
-        $Date        = isset($args['Date'])        ? $args['Date']        : '';
+        $requestedDate = isset($args['date'])      ? $args['date']        : new DateTime();
         $sort        = ((isset($args['sort'])) && ($args['sort'] == 'DESC')) ? 'DESC' : 'ASC';
         $eventstatus = (isset($args['eventstatus']) && (in_array($args['eventstatus'], array(CalendarEvent::APPROVED, CalendarEvent::QUEUED, CalendarEvent::HIDDEN)))) ? $args['eventstatus'] : CalendarEvent::APPROVED;
-
-        $date = PostCalendar_Util::getDate(array(
-            'Date' => $Date)); //formats date
-        
-        if (!empty($searchString)) {
-            unset($start);
-            unset($end);
-        } // clear start and end dates for search
 
         // update news-hooked stories that have been published since last pageload
         $bindings = HookUtil::getBindingsBetweenOwners('News', 'PostCalendar');
         if (!empty($bindings)) {
             PostCalendar_PostCalendarEvent_News::scheduler();
         }
-
-        $requestedDate = DateTime::createFromFormat('Ymd', $date);
-        $startDate = new DateTime();
-        $endDate = null;
         
-        if (isset($start) && isset($end)) {
-            $startDate = DateTime::createFromFormat('m/d/Y', $start);
-            $endDate = DateTime::createFromFormat('m/d/Y', $end);
-            if ($startDate > $requestedDate) {
-                $requestedDate = clone $startDate;
-            }
-        } else {
+        if ($startDate > $requestedDate) {
+            $requestedDate = clone $startDate;
+        }
+        
+        if (!empty($searchDql)) {
             $startDate = clone $requestedDate;
             $endDate = clone $requestedDate;
-            $startDate->modify("+$searchstart years");
+            $startDate->modify("-$searchstart years");
             $endDate->modify("+$searchend years");
         }
             
@@ -115,15 +101,15 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
         // convert $userFilter to useable information
         if ($userFilter > 0) {
             // possible values: a user id - only an admin can use this
-            $ruserid = $userFilter; // keep the id
+            $userid = $userFilter; // keep the id
             $userFilter = EventRepo::FILTER_PRIVATE;
         } else {
-            $ruserid = UserUtil::getVar('uid'); // use current user's ID
+            $userid = UserUtil::getVar('uid'); // use current user's ID
         }
-
+        
         // get event collection
         $events = $this->entityManager->getRepository('PostCalendar_Entity_CalendarEvent')
-                ->getEventCollection($eventstatus, $startDate, $endDate, $userFilter, $ruserid, self::formatCategoryFilter($filtercats), $searchString);
+                ->getEventCollection($eventstatus, $startDate, $endDate, $userFilter, $userid, self::formatCategoryFilter($filtercats), $searchDql);
         
         //==============================================================
         // Here an array is built consisting of the date ranges
@@ -131,14 +117,13 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
         // used to build the calendar display.
         //==============================================================
         $interval = new DateInterval("P1D");
-        $period = new DatePeriod($startDate, $interval, $endDate->modify("+1 day"));
+        $period = new DatePeriod($startDate, $interval, $endDate); // endDate has already been extended +1 days
         $days = array();
         foreach ($period as $date) {
             $days[$date->format('Y-m-d')] = array();
         }
-        // maybe should have done $interval->invert = 1; instead?
         $days = ($sort == 'DESC') ? array_reverse($days) : $days;
-
+        
         foreach ($events as $event) {
             $event = $event->getoldArray(); // convert from Doctrine Entity
             // check access for event
@@ -152,9 +137,8 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
                 if (isset($days[$date])) {
                     $days[$date][] = $event;
                 }
-            }
-            
-        } // <- end of foreach($events as $event)
+            }   
+        }
         return $days;
     }
 
@@ -200,8 +184,8 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
     /**
      * generate information to help build the submit form
      * this is also used on a preview of event function, so $eventdata is passed from that if 'loaded'
-     * @param eventdata
-     * @param Date
+     * @param array eventdata
+     * @param DateTime instance date
      * @return array form_data : key, val pairs to be assigned to the template, including default event data
      */
     public function buildSubmitForm($args)
@@ -211,37 +195,25 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
 
         // get event default values
         $eventDefaults = $this->getVar('pcEventDefaults');
-
+        
         // format date information
         if ((!isset($eventdata['endDate'])) || empty($eventdata['endDate'])) {
-            $eventdata['endvalue'] = PostCalendar_Util::getDate(array(
-                'Date' => $args['Date'],
-                'format' => _SETTING_DATE_FORMAT));
-            $eventdata['endDate'] = PostCalendar_Util::getDate(array(
-                'Date' => $args['Date'],
-                'format' => '%Y-%m-%d'));
+            $eventdata['endvalue'] = $args['date']->format(_SETTING_DATE_FORMAT);
+            $eventdata['endDate'] = $args['date']->format('Y-m-d');
         } else {
             $eventdata['endvalue'] = PostCalendar_Util::getDate(array(
-                'Date' => str_replace('-', '', $eventdata['endDate']),
-                'format' => _SETTING_DATE_FORMAT));
+                'date' => $eventdata['endDate']))->format(_SETTING_DATE_FORMAT);
             $eventdata['endDate'] = PostCalendar_Util::getDate(array(
-                'Date' => str_replace('-', '', $eventdata['endDate']),
-                'format' => '%Y-%m-%d'));
+                'date' => $eventdata['endDate']))->format('Y-m-d');
         }
         if ((!isset($eventdata['eventDate'])) || empty($eventdata['eventDate'])) {
-            $eventdata['eventDatevalue'] = PostCalendar_Util::getDate(array(
-                'Date' => $args['Date'],
-                'format' => _SETTING_DATE_FORMAT));
-            $eventdata['eventDate'] = PostCalendar_Util::getDate(array(
-                'Date' => $args['Date'],
-                'format' => '%Y-%m-%d'));
+            $eventdata['eventDatevalue'] = $args['date']->format(_SETTING_DATE_FORMAT);
+            $eventdata['eventDate'] = $args['date']->format('Y-m-d');
         } else {
             $eventdata['eventDatevalue'] = PostCalendar_Util::getDate(array(
-                'Date' => str_replace('-', '', $eventdata['eventDate']),
-                'format' => _SETTING_DATE_FORMAT));
+                'date' => $eventdata['eventDate']))->format(_SETTING_DATE_FORMAT);
             $eventdata['eventDate'] = PostCalendar_Util::getDate(array(
-                'Date' => str_replace('-', '', $eventdata['eventDate']),
-                'format' => '%Y-%m-%d'));
+                'date' => $eventdata['eventDate']))->format('Y-m-d');
         }
 
         if ((SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) && (_SETTING_ALLOW_USER_CAL)) {
@@ -406,10 +378,9 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
         $event['duration'] = gmdate("G:i", $event['duration']); // stored in DB as seconds
 
         // prepare starttime for display HH:MM or HH:MM AP
-        // for this to work, need to convert time to timestamp and then change all the templates.
         $event['sortTime']  = $event['startTime']; // save for sorting later
-        list ($h, $m, $s)   = explode(':', $event['startTime']);
-        $event['startTime'] = _SETTING_TIME_24HOUR ? gmdate('G:i', gmmktime($h, $m, $s, 0, 0, 0)) : gmdate('g:i a', gmmktime($h, $m, $s, 0, 0, 0));
+        $stime = DateTime::createFromFormat('G:i:s', $event['startTime']);
+        $event['startTime'] = _SETTING_TIME_24HOUR ? $stime->format('G:i') : $stime->format('g:i a');
 
         // format endtype for edit form
         $event['endtype'] = (!isset($event['endDate'])) ? (string)self::ENDTYPE_NONE : (string)self::ENDTYPE_ON;
@@ -768,10 +739,9 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
      **/
     public function computeendtime($event)
     {
-        list ($h, $m, $s)   = explode(':', $event['startTime']); // HH:MM:SS
-        $startTime = $this->converttimetoseconds(array('Hour' => $h, 'Minute' => $m));
-        $endTime   = $startTime + $event['duration']; // duation already in seconds
-        return _SETTING_TIME_24HOUR ? gmdate('G:i', $endTime) : gmdate('g:i a', $endTime);
+        $stime = DateTime::createFromFormat('G:i:s', $event['startTime']);
+        $stime->modify("+" . $event['duration'] . " seconds");
+        return _SETTING_TIME_24HOUR ? $stime->format('G:i') : $stime->format('g:i a');
     }
     /**
      * @desc compute duration from startTime and endTime

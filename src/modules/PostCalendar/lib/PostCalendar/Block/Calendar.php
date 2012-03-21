@@ -43,7 +43,7 @@ class PostCalendar_Block_Calendar extends Zikula_Controller_AbstractBlock
             return;
         }
         $date = new DateTime();
-        $calendarView = new PostCalendar_CalendarView_CalendarBlock($this->view, $date->format('Ymd'), '', null, $blockinfo);
+        $calendarView = new PostCalendar_CalendarView_CalendarBlock($this->view, $date, '', null, $blockinfo);
         $blockinfo['content'] = $calendarView->render();
 
         return BlockUtil::themeBlock($blockinfo);

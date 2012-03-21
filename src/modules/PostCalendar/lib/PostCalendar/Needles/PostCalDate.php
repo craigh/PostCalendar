@@ -53,7 +53,7 @@ class PostCalendar_Needles_PostCalDate extends Zikula_AbstractHelper
             if (strpos($displaytype, 'D') !== false) {
                 $link = ModUtil::url('PostCalendar', 'user', 'display', array(
                     'viewtype' => 'day',
-                    'Date'     => $date));
+                    'date'     => $date));
                 $linktext = DateUtil::strftime(ModUtil::getVar('PostCalendar', 'pcEventDateFormat'), strtotime($date));
             }
 

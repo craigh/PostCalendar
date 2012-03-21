@@ -57,8 +57,8 @@ abstract class PostCalendar_CalendarView_AbstractCalendarViewBase extends Zikula
         $this->domain = ZLanguage::getModuleDomain('PostCalendar');
         $this->view = $view;
         $this->currentUser = UserUtil::getVar('uid');
-
-        $this->requestedDate = DateTime::createFromFormat('Ymd', $requestedDate);
+        
+        $this->requestedDate = $requestedDate;
 
         $this->userFilter = $userFilter;
         $this->categoryFilter = $categoryFilter;

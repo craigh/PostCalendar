@@ -78,14 +78,14 @@ class PostCalendar_CalendarView_Year extends PostCalendar_CalendarView_AbstractD
         $prevClone->modify("first day of January")->modify("-1 year");
         $this->navigation['previous'] = ModUtil::url('PostCalendar', 'user', 'display', array(
                     'viewtype' => $this->viewtype,
-                    'Date' => $prevClone->format('Ymd'),
+                    'date' => $prevClone->format('Ymd'),
                     'pc_username' => $this->userFilter,
                     'filtercats' => $this->categoryFilter));
         $nextClone = clone $prevClone;
         $nextClone->modify("+2 years");
         $this->navigation['next'] = ModUtil::url('PostCalendar', 'user', 'display', array(
                     'viewtype' => $this->viewtype,
-                    'Date' => $nextClone->format('Ymd'),
+                    'date' => $nextClone->format('Ymd'),
                     'pc_username' => $this->userFilter,
                     'filtercats' => $this->categoryFilter));
     }
@@ -95,10 +95,10 @@ class PostCalendar_CalendarView_Year extends PostCalendar_CalendarView_AbstractD
         if (!$this->isCached()) {
             // Load the events
             $eventsByDate = ModUtil::apiFunc('PostCalendar', 'event', 'getEvents', array(
-                'start'       => $this->startDate->format('m/d/Y'), // refactor to use full dateTime instance
-                'end'         => $this->endDate->format('m/d/Y'), // refactor to use full dateTime instance
+                'start'       => $this->startDate,
+                'end'         => $this->endDate,
                 'filtercats'  => $this->categoryFilter,
-                'Date'        => $this->requestedDate->format('Ymd'),
+                'date'        => $this->requestedDate,
                 'pc_username' => $this->userFilter));
             // create and return template
             $this->view

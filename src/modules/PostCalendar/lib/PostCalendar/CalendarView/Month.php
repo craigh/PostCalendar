@@ -58,14 +58,14 @@ class PostCalendar_CalendarView_Month extends PostCalendar_CalendarView_Abstract
         $prevClone->modify("first day of previous month");
         $this->navigation['previous'] = ModUtil::url('PostCalendar', 'user', 'display', array(
                     'viewtype' => $this->viewtype,
-                    'Date' => $prevClone->format('Ymd'),
+                    'date' => $prevClone->format('Ymd'),
                     'pc_username' => $this->userFilter,
                     'filtercats' => $this->categoryFilter));
         $nextClone = clone $this->requestedDate;
         $nextClone->modify("first day of next month");
         $this->navigation['next'] = ModUtil::url('PostCalendar', 'user', 'display', array(
                     'viewtype' => $this->viewtype,
-                    'Date' => $nextClone->format('Ymd'),
+                    'date' => $nextClone->format('Ymd'),
                     'pc_username' => $this->userFilter,
                     'filtercats' => $this->categoryFilter));
     }
@@ -75,14 +75,15 @@ class PostCalendar_CalendarView_Month extends PostCalendar_CalendarView_Abstract
         if (!$this->isCached()) {
             // Load the events
             $eventsByDate = ModUtil::apiFunc('PostCalendar', 'event', 'getEvents', array(
-                'start'       => $this->startDate->format('m/d/Y'), // refactor to use full dateTime instance
-                'end'         => $this->endDate->format('m/d/Y'), // refactor to use full dateTime instance
+                'start'       => clone $this->startDate,
+                'end'         => clone $this->endDate,
                 'filtercats'  => $this->categoryFilter,
-                'Date'        => $this->requestedDate->format('Ymd'),
+                'date'        => $this->requestedDate,
                 'pc_username' => $this->userFilter));
             // create and return template
             $firstClone = clone $this->requestedDate;
             $lastClone = clone $this->requestedDate;
+            $today = new DateTime();
             $this->view
                     ->assign('navigation', $this->navigation)
                     ->assign('dayDisplay', $this->dayDisplay)
@@ -91,7 +92,7 @@ class PostCalendar_CalendarView_Month extends PostCalendar_CalendarView_Abstract
                     ->assign('selectedcategories', $this->selectedCategories)
                     ->assign('func', $this->view->getRequest()->getGet()->get('func', $this->view->getRequest()->getPost()->get('func', 'display')))
                     ->assign('viewtypeselected', $this->viewtype)
-                    ->assign('todayDate', date('Y-m-d'))
+                    ->assign('todayDate', $today->format('Y-m-d'))
                     ->assign('requestedDate', $this->requestedDate->format('Y-m-d'))
                     ->assign('firstDayOfMonth', $firstClone->modify("first day of this month")->format('Y-m-d'))
                     ->assign('lastDayOfMonth', $lastClone->modify("last day of this month")->format('Y-m-d'));

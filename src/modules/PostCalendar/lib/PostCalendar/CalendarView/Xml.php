@@ -25,7 +25,7 @@ class PostCalendar_CalendarView_Xml extends PostCalendar_CalendarView_List
         $prevClone->modify("-" . $this->listMonths . " months");
         $this->navigation['previous'] = ModUtil::url('PostCalendar', 'user', 'display', array(
                     'viewtype' => $this->viewtype,
-                    'Date' => $prevClone->format('Ymd'),
+                    'date' => $prevClone->format('Ymd'),
                     'pc_username' => $this->userFilter,
                     'filtercats' => $this->categoryFilter));
         $nextClone = clone $this->requestedDate;
@@ -33,7 +33,7 @@ class PostCalendar_CalendarView_Xml extends PostCalendar_CalendarView_List
                   ->modify("+1 day");
         $this->navigation['next'] = ModUtil::url('PostCalendar', 'user', 'display', array(
                     'viewtype' => $this->viewtype,
-                    'Date' => $nextClone->format('Ymd'),
+                    'date' => $nextClone->format('Ymd'),
                     'pc_username' => $this->userFilter,
                     'filtercats' => $this->categoryFilter));
     }

@@ -46,32 +46,28 @@ function smarty_function_pc_url($args, Zikula_View $view)
     $pc_username = $request->getPost()->get('pc_username', $request->getGet()->get('pc_username', null));
 
     if (is_null($date)) {
-        //not sure these three lines are needed with call to getDate here
-        $jumpday = $request->getPost()->get('jumpDay', $request->getGet()->get('jumpDay', null));
-        $jumpmonth = $request->getPost()->get('jumpMonth', $request->getGet()->get('jumpMonth', null));
-        $jumpyear = $request->getPost()->get('jumpYear', $request->getGet()->get('jumpYear', null));
-        $Date = $request->getPost()->get('Date', $request->getGet()->get('Date', null));
         $jumpargs = array(
-            'Date' => $Date,
-            'jumpday' => $jumpday,
-            'jumpmonth' => $jumpmonth,
-            'jumpyear' => $jumpyear);
+            'date' => $request->getPost()->get('date', $request->getGet()->get('date', null)),
+            'jumpday' => $request->getPost()->get('jumpDay', $request->getGet()->get('jumpDay', null)),
+            'jumpmonth' => $request->getPost()->get('jumpMonth', $request->getGet()->get('jumpMonth', null)),
+            'jumpyear' => $request->getPost()->get('jumpYear', $request->getGet()->get('jumpYear', null)));
         $date = PostCalendar_Util::getDate($jumpargs);
+    } elseif (!is_object($date)) {
+        $date = DateTime::createFromFormat('Y-m-d', $date);
     }
-    // some extra cleanup if necessary
-    $date = str_replace('-', '', $date);
 
     switch ($action) {
         case 'add':
         case 'submit':
         case 'submit-admin':
             $link = ModUtil::url('PostCalendar', 'event', $func, array(
-                        'Date' => $date));
+                        'date' => $date->format('Ymd')));
             break;
         case 'today':
+            $today = new DateTime();
             $link = ModUtil::url('PostCalendar', 'user', 'display', array(
                         'viewtype' => $viewtype,
-                        'Date' => date('Ymd'), // . '000000',
+                        'date' => $today->format('Ymd'),
                         'pc_username' => $pc_username));
             break;
         case 'day':
@@ -81,7 +77,7 @@ function smarty_function_pc_url($args, Zikula_View $view)
         case 'list':
             $link = ModUtil::url('PostCalendar', 'user', 'display', array(
                         'viewtype' => $action,
-                        'Date' => $date,
+                        'date' => $date->format('Ymd'),
                         'pc_username' => $pc_username));
             break;
         case 'search':
@@ -98,7 +94,7 @@ function smarty_function_pc_url($args, Zikula_View $view)
         case 'detail':
             if (isset($eid)) {
                 $linkparams = array(
-                    'Date' => $date,
+                    'date' => $date->format('Ymd'),
                     'viewtype' => 'details',
                     'eid' => $eid);
                 if (_SETTING_OPEN_NEW_WINDOW) {
