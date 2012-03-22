@@ -105,6 +105,7 @@ class PostCalendar_Controller_User extends Zikula_AbstractController
                 break;
 
             default:
+                $this->throwForbiddenUnless(SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_OVERVIEW), LogUtil::getErrorMsgPermission());
                 $class = 'PostCalendar_CalendarView_' . ucfirst($viewtype);
                 $calendar = new $class($this->view, $date, $pc_username, $filtercats);
                 return $calendar->render();
