@@ -34,7 +34,7 @@ class PostCalendar_Controller_User extends Zikula_AbstractController
         $eid = $this->request->query->get('eid', $this->request->request->get('eid', 0));
         $filtercats = $this->request->query->get('postcalendar_events', $this->request->request->get('postcalendar_events', null));
         $func = $this->request->query->get('func', $this->request->request->get('func'));
-        $jumpargs    = array(
+        $jumpargs = array(
             'jumpday' => $this->request->query->get('jumpDay', $this->request->request->get('jumpDay', null)),
             'jumpmonth' => $this->request->query->get('jumpMonth', $this->request->request->get('jumpMonth', null)),
             'jumpyear' => $this->request->query->get('jumpYear', $this->request->request->get('jumpYear', null)));
@@ -105,7 +105,6 @@ class PostCalendar_Controller_User extends Zikula_AbstractController
                 break;
 
             default:
-                $this->throwForbiddenUnless(SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_OVERVIEW), LogUtil::getErrorMsgPermission());
                 $class = 'PostCalendar_CalendarView_' . ucfirst($viewtype);
                 $calendar = new $class($this->view, $date, $pc_username, $filtercats);
                 return $calendar->render();
