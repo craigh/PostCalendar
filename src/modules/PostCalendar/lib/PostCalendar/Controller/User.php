@@ -106,8 +106,8 @@ class PostCalendar_Controller_User extends Zikula_AbstractController
 
             default:
                 $class = 'PostCalendar_CalendarView_' . ucfirst($viewtype);
-                $calendar = new $class($this->view, $date, $pc_username, $filtercats);
-                return $calendar->render();
+                $calendarView = new $class($this->view, $date, $pc_username, $filtercats);
+                return $calendarView->render();
                 break;
         } // end switch
     }
