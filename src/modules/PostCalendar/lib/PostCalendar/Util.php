@@ -91,7 +91,7 @@ class PostCalendar_Util
             $args['date'] = str_replace('-', '', $args['date']);
             return DateTime::createFromFormat('Ymd', $args['date']);
         } elseif (isset($args['jumpday'], $args['jumpmonth'], $args['jumpyear'])) {
-            return DateTime::createFromFormat('Ymd', $args['jumpyear'] . $args['jumpmonth'] . $args['jumpyear']);            
+            return DateTime::createFromFormat('Ymd', $args['jumpyear'] . $args['jumpmonth'] . $args['jumpday']);            
         } else {
             return new DateTime();
         }
