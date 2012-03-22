@@ -39,7 +39,7 @@ class PostCalendar_Controller_User extends Zikula_AbstractController
             'jumpmonth' => $this->request->getGet()->get('jumpMonth', $this->request->getPost()->get('jumpMonth', null)),
             'jumpyear' => $this->request->getGet()->get('jumpYear', $this->request->getPost()->get('jumpYear', null)));
         $viewtype = isset($args['viewtype']) ? strtolower($args['viewtype']) : strtolower($this->request->getGet()->get('viewtype', $this->request->getPost()->get('viewtype', _SETTING_DEFAULT_VIEW)));
-        $date = isset($args['date']) ? strtolower($args['date']) : $this->request->getGet()->get('date', $this->request->getPost()->get('date', PostCalendar_Util::getDate($jumpargs)));
+        $date = isset($args['date']) ? $args['date'] : $this->request->getGet()->get('date', $this->request->getPost()->get('date', PostCalendar_Util::getDate($jumpargs)));
         $prop = isset($args['prop']) ? $args['prop'] : (string)$this->request->getGet()->get('prop', null);
         $cat = isset($args['cat']) ? $args['cat'] : (string)$this->request->getGet()->get('cat', null);
         
