@@ -118,7 +118,7 @@ abstract class PostCalendar_PostCalendarEvent_AbstractBase {
      * Event categories
      * @var array
      */
-    protected $__CATEGORIES__;
+    protected $categories;
 
     /**
      * Constructor
@@ -191,10 +191,10 @@ abstract class PostCalendar_PostCalendarEvent_AbstractBase {
 
     /**
      *
-     * @param array $__CATEGORIES__
+     * @param array $categories
      */
-    public function set__CATEGORIES__($__CATEGORIES__) {
-        $this->__CATEGORIES__ = $__CATEGORIES__;
+    public function setcategories($categories) {
+        $this->categories = $categories;
     }
 
     /**
@@ -218,7 +218,7 @@ abstract class PostCalendar_PostCalendarEvent_AbstractBase {
         $meta['alldatevent'] = $this->alldayevent;
         $meta['eventstatus'] = $this->eventstatus;
         $meta['sharing'] = $this->sharing;
-        $meta['__CATEGORIES__'] = $this->__CATEGORIES__;
+        $meta['categories'] = $this->categories;
         if (!empty($this->eid)) {
             $meta['eid'] = $this->eid;
         }

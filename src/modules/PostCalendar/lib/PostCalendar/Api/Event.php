@@ -128,7 +128,7 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
             $event = $event->getoldArray(); // convert from Doctrine Entity
             // check access for event
             if ((!SecurityUtil::checkPermission('PostCalendar::Event', "$event[title]::$event[eid]", ACCESS_OVERVIEW))
-                    || (!CategoryUtil::hasCategoryAccess($event['__CATEGORIES__'], 'PostCalendar'))) {
+                    || (!CategoryUtil::hasCategoryAccess($event['categories'], 'PostCalendar'))) {
                 continue;
             }
             $event = $this->formateventarrayfordisplay($event);
@@ -226,7 +226,7 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
         $form_data['catregistry'] = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'CalendarEvent');
         $form_data['cat_count'] = count($form_data['catregistry']);
         // configure default categories
-        $eventdata['__CATEGORIES__'] = isset($eventdata['__CATEGORIES__']) ? $eventdata['__CATEGORIES__'] : $eventDefaults['categories'];
+        $eventdata['categories'] = isset($eventdata['categories']) ? $eventdata['categories'] : $eventDefaults['categories'];
 
         // All-day event values for radio buttons
         $eventdata['alldayevent'] = isset($eventdata['alldayevent']) ? $eventdata['alldayevent'] : $eventDefaults['alldayevent'];
@@ -387,9 +387,9 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
 
         // compensate for changeover to new categories system
         $lang = ZLanguage::getLanguageCode();
-        $event['catname']      = isset($event['__CATEGORIES__']['Main']['display_name'][$lang]) ? $event['__CATEGORIES__']['Main']['display_name'][$lang] : $event['__CATEGORIES__']['Main']['name'];
-        $event['catcolor']     = isset($event['__CATEGORIES__']['Main']['__ATTRIBUTES__']['color'])     ? $event['__CATEGORIES__']['Main']['__ATTRIBUTES__']['color']     : '#eeeeee';
-        $event['cattextcolor'] = isset($event['__CATEGORIES__']['Main']['__ATTRIBUTES__']['textcolor']) ? $event['__CATEGORIES__']['Main']['__ATTRIBUTES__']['textcolor'] : $this->color_inverse($event['catcolor']);
+        $event['catname']      = isset($event['categories']['Main']['display_name'][$lang]) ? $event['categories']['Main']['display_name'][$lang] : $event['categories']['Main']['name'];
+        $event['catcolor']     = isset($event['categories']['Main']['attributes']['color'])     ? $event['categories']['Main']['attributes']['color']     : '#eeeeee';
+        $event['cattextcolor'] = isset($event['categories']['Main']['attributes']['textcolor']) ? $event['categories']['Main']['attributes']['textcolor'] : $this->color_inverse($event['catcolor']);
 
         // temporarily remove hometext from array
         $hometext = $event['hometext'];
@@ -764,7 +764,7 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
     public static function formatCategoryFilter($filtercats)
     {
         if (is_array($filtercats)) {
-            $catsarray = is_array($filtercats['__CATEGORIES__']) ? $filtercats['__CATEGORIES__'] : array('Main' => 0);
+            $catsarray = is_array($filtercats['categories']) ? $filtercats['categories'] : array('Main' => 0);
             foreach ($catsarray as $propname => $propid) {
                 if (is_array($propid)) { // select multiple used
                     foreach ($propid as $int_key => $int_id) {

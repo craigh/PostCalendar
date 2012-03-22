@@ -133,7 +133,7 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
         // convert categories array to proper filter info
         $selectedcategories = array();
         if (is_array($filtercats)) {
-            $catsarray = $filtercats['__CATEGORIES__'];
+            $catsarray = $filtercats['categories'];
             foreach ($catsarray as $propname => $propid) {
                 if ($propid > 0) {
                     $selectedcategories[$propname] = $propid; // removes categories set to 'all'

@@ -38,18 +38,18 @@
             {/if}
             {if $loaded_event.fee}{gt text='Fee'}: {$loaded_event.fee}{/if}
         </div>
-        {if count($loaded_event.__CATEGORIES__) gt 0}
+        {if count($loaded_event.categories) gt 0}
         <div class="postcalendar_event_categoryinfo">
             {lang assign="lang"}
             <h3>{gt text='Categorized in'}:</h3>
             <ul>
-                {foreach from=$loaded_event.__CATEGORIES__ key="property" item="attribute"}
-                    {if isset($attribute.__ATTRIBUTES__.textcolor) && isset($attribute.__ATTRIBUTES__.color)}
-                        {assign var='textcolor' value=$attribute.__ATTRIBUTES__.textcolor}
-                        {assign var='bgcolor' value=$attribute.__ATTRIBUTES__.color}
-                    {elseif !isset($attribute.__ATTRIBUTES__.textcolor) && isset($attribute.__ATTRIBUTES__.color)}
-                        {assign var='textcolor' value=$attribute.__ATTRIBUTES__.color|pc_inversecolor}
-                        {assign var='bgcolor' value=$attribute.__ATTRIBUTES__.color}
+                {foreach from=$loaded_event.categories key="property" item="attribute"}
+                    {if isset($attribute.attributes.textcolor) && isset($attribute.attributes.color)}
+                        {assign var='textcolor' value=$attribute.attributes.textcolor}
+                        {assign var='bgcolor' value=$attribute.attributes.color}
+                    {elseif !isset($attribute.attributes.textcolor) && isset($attribute.attributes.color)}
+                        {assign var='textcolor' value=$attribute.attributes.color|pc_inversecolor}
+                        {assign var='bgcolor' value=$attribute.attributes.color}
                     {else}
                         {assign var='textcolor' value='#000000'}
                         {assign var='bgcolor' value='#ffffff'}

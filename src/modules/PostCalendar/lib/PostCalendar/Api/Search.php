@@ -51,7 +51,7 @@ class PostCalendar_Api_Search extends Zikula_AbstractApi
      *     $args[numlimit] (result limit)
      *     $args[page]
      *     $args[startnum]
-     *     $args[__CATEGORIES__] (postcalendar specific)
+     *     $args[categories] (postcalendar specific)
      *     $args[searchstart] (postcalendar specific)
      *     $args[searchend] (postcalendar specific)
      **/
@@ -62,8 +62,8 @@ class PostCalendar_Api_Search extends Zikula_AbstractApi
         }
     
         $searchargs = array();
-        if (!empty($args['__CATEGORIES__'])) {
-            $searchargs['filtercats']['__CATEGORIES__'] = $args['__CATEGORIES__'];
+        if (!empty($args['categories'])) {
+            $searchargs['filtercats']['categories'] = $args['categories'];
         }
         $searchargs['searchstart'] = isset($args['searchstart']) ? $args['searchstart'] : 0;
         $args['searchend'] = isset($args['searchend']) ? $args['searchend'] : 2;

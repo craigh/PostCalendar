@@ -166,11 +166,11 @@ class PostCalendar_Controller_Event extends Zikula_AbstractController
             // format the data for editing
             $eventdata = ModUtil::apiFunc('PostCalendar', 'event', 'formateventarrayforDB', $eventdata);
             // reformat the category information
-            foreach ($eventdata['__CATEGORIES__'] as $name => $id) {
+            foreach ($eventdata['categories'] as $name => $id) {
                 $categories[$name] = CategoryUtil::getCategoryByID($id);
             }
-            unset($eventdata['__CATEGORIES__']);
-            $eventdata['__CATEGORIES__'] = $categories;
+            unset($eventdata['categories']);
+            $eventdata['categories'] = $categories;
             // format the data for preview
             $eventdata = ModUtil::apiFunc('PostCalendar', 'event', 'formateventarrayfordisplay', $eventdata);
         } else {

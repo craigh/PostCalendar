@@ -93,7 +93,7 @@ abstract class PostCalendar_CalendarView_AbstractCalendarViewBase extends Zikula
     private function reArrayCategories($filtercats)
     {
         if (!empty($filtercats)) {
-            $catsarray = $filtercats['__CATEGORIES__'];
+            $catsarray = $filtercats['categories'];
             foreach ($catsarray as $propname => $propid) {
                 if ($propid > 0) {
                     $this->selectedCategories[$propname] = $propid; // removes categories set to 'all'

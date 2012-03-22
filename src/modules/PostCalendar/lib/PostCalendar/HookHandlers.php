@@ -104,7 +104,7 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
                 if ($pc_event) {
                     $pc_event = $pc_event->getOldArray();
                     $selectedcategories = array();
-                    foreach ($pc_event['__CATEGORIES__'] as $prop => $cats) {
+                    foreach ($pc_event['categories'] as $prop => $cats) {
                         $selectedcategories[$prop] = $cats['id'];
                     }
                     $pceventid = $pc_event['eid'];
@@ -243,7 +243,7 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
         $postCalendarEventInstance->setHooked_objectid($hook->getId());
         $postCalendarEventInstance->setHooked_objecturl($objUrl);
         $postCalendarEventInstance->setHooked_area($hook->getAreaId());
-        $postCalendarEventInstance->set__CATEGORIES__($hookdata['cats']);
+        $postCalendarEventInstance->setcategories($hookdata['cats']);
         if (!$postCalendarEventInstance->makeEvent()) {
             return false;
         }

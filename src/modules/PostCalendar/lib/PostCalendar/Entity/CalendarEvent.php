@@ -529,10 +529,10 @@ class PostCalendar_Entity_CalendarEvent extends Zikula_EntityAccess
         if (isset($array['website'])) {
             $this->setWebsite($array['website']);
         }
-        if (isset($array['__CATEGORIES__'])) {
+        if (isset($array['categories'])) {
             $em = ServiceUtil::getService('doctrine.entitymanager');
             $regIds = CategoryRegistryUtil::getRegisteredModuleCategoriesIds('PostCalendar', 'CalendarEvent');
-            foreach ($array['__CATEGORIES__'] as $propName => $catId) {
+            foreach ($array['categories'] as $propName => $catId) {
                 $category = $em->find('Zikula_Doctrine2_Entity_Category', $catId);
                 if ($this->getCategories()->get($regIds[$propName])) {
                     $this->getCategories()->get($regIds[$propName])->setCategory($category);
@@ -576,14 +576,14 @@ class PostCalendar_Entity_CalendarEvent extends Zikula_EntityAccess
             $categoryRegistration = $this->getCategories()->get($regId);
             if (is_object($categoryRegistration)) {
                 $category = $categoryRegistration->getCategory();
-                $array['__CATEGORIES__'][$propName] = array('name' => $category->getName(),
+                $array['categories'][$propName] = array('name' => $category->getName(),
                     'id' => (string)$category->getId(),
                     'path' => $category->getPath(),
                     'ipath' => $category->getIPath(),
                     'display_name' => $category->getDisplayName());
                 $categoryAttributes = $category->getAttributes();
                 foreach($categoryAttributes as $attr) {
-                    $array['__CATEGORIES__'][$propName]['__ATTRIBUTES__'][$attr->getName()] = $attr->getValue();
+                    $array['categories'][$propName]['attributes'][$attr->getName()] = $attr->getValue();
                 }
             }
         }

@@ -65,7 +65,7 @@ class PostCalendar_Block_Pastevents extends Zikula_Controller_AbstractBlock
         }
         $end->modify("-1 day"); // yesterday
     
-        $filtercats['__CATEGORIES__'] = $pcbfiltercats; //reformat array
+        $filtercats['categories'] = $pcbfiltercats; //reformat array
         $eventsByDate = ModUtil::apiFunc('PostCalendar', 'event', 'getEvents', array(
             'start'      => $start,
             'end'        => $end,

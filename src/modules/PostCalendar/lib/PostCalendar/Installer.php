@@ -166,7 +166,7 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
             'eventstatus' => PostCalendar_Entity_CalendarEvent::APPROVED,
             'sharing' => PostCalendar_Entity_CalendarEvent::SHARING_GLOBAL,
             'website' => 'https://github.com/craigh/PostCalendar/wiki',
-            '__CATEGORIES__' => array(
+            'categories' => array(
                 'Main' => $cat['id']));
 
         try {

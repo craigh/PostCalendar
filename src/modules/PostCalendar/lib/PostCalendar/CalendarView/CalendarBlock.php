@@ -23,7 +23,7 @@ class PostCalendar_CalendarView_CalendarBlock extends PostCalendar_CalendarView_
         $this->bid = $blockinfo['bid'];
         $this->blockVars = BlockUtil::varsFromContent($blockinfo['content']);
         if (!isset($categoryFilter)) {
-            $categoryFilter['__CATEGORIES__'] = $this->blockVars['pcbfiltercats'];
+            $categoryFilter['categories'] = $this->blockVars['pcbfiltercats'];
         } 
         parent::__construct($view, $requestedDate, $userFilter, $categoryFilter);
     }
