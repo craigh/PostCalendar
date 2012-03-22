@@ -10,7 +10,7 @@ function smarty_function_pc_date_select($args, Zikula_View $view)
     $dom       = ZLanguage::getModuleDomain('PostCalendar');
     $request   = $view->getRequest();
     $jumpargs  = array(
-        'date' => $request->request->get('date'),
+        'date' => $request->request->get('date', $request->query->get('date')),
         'jumpday' => $request->request->get('jumpDay'),
         'jumpmonth' => $request->request->get('jumpMonth'),
         'jumpyear' => $request->request->get('jumpYear'));
