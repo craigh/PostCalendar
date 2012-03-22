@@ -22,7 +22,7 @@ function smarty_function_pc_url($args, Zikula_View $view)
     $navlink = array_key_exists('navlink', $args) && !empty($args['navlink']) ? true : false;
     $func = array_key_exists('func', $args) && !empty($args['func']) ? $args['func'] : 'create';
     $title = array_key_exists('title', $args) && !empty($args['title']) ? $args['title'] : '';
-    $viewtype = $request->getPost()->get('viewtype', $request->getGet()->get('viewtype', _SETTING_DEFAULT_VIEW));
+    $viewtype = $request->request->get('viewtype', $request->query->get('viewtype', _SETTING_DEFAULT_VIEW));
     $viewtype = array_key_exists('viewtype', $args) && !empty($args['viewtype']) ? $args['viewtype'] : strtolower($viewtype);
     unset($args['action']);
     unset($args['print']);
@@ -40,17 +40,17 @@ function smarty_function_pc_url($args, Zikula_View $view)
 
     $dom = ZLanguage::getModuleDomain('PostCalendar');
 
-    if ($request->getPost()->get('func', $request->getGet()->get('func', null)) == 'create') {
+    if ($request->request->get('func', $request->query->get('func', null)) == 'create') {
         $viewtype = 'create';
     }
-    $pc_username = $request->getPost()->get('pc_username', $request->getGet()->get('pc_username', null));
+    $pc_username = $request->request->get('pc_username', $request->query->get('pc_username', null));
 
     if (is_null($date)) {
         $jumpargs = array(
-            'date' => $request->getPost()->get('date', $request->getGet()->get('date', null)),
-            'jumpday' => $request->getPost()->get('jumpDay', $request->getGet()->get('jumpDay', null)),
-            'jumpmonth' => $request->getPost()->get('jumpMonth', $request->getGet()->get('jumpMonth', null)),
-            'jumpyear' => $request->getPost()->get('jumpYear', $request->getGet()->get('jumpYear', null)));
+            'date' => $request->request->get('date', $request->query->get('date', null)),
+            'jumpday' => $request->request->get('jumpDay', $request->query->get('jumpDay', null)),
+            'jumpmonth' => $request->request->get('jumpMonth', $request->query->get('jumpMonth', null)),
+            'jumpyear' => $request->request->get('jumpYear', $request->query->get('jumpYear', null)));
         $date = PostCalendar_Util::getDate($jumpargs);
     } elseif (!is_object($date)) {
         $date = DateTime::createFromFormat('Y-m-d', $date);

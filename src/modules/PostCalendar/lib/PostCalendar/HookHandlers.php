@@ -180,7 +180,7 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
     public function validateEdit(Zikula_ValidationHook $hook)
     {
         // get data from post
-        $data = $this->view->getRequest->getPost()->get('postcalendar', null);
+        $data = $this->view->getRequest->request->get('postcalendar', null);
 
         // create a new hook validation object and assign it to $this->validation
         $this->validation = new Zikula_Hook_ValidationResponse('data', $data);
@@ -342,7 +342,7 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
         $dom = ZLanguage::getModuleDomain('PostCalendar');
 
         $request = ServiceUtil::getService('request');
-        $hookdata = $request->getPost()->get('postcalendar', array());
+        $hookdata = $request->request->get('postcalendar', array());
         $token = isset($hookdata['postcalendar_csrftoken']) ? $hookdata['postcalendar_csrftoken'] : null;
         if (!SecurityUtil::validateCsrfToken($token)) {
             throw new Zikula_Exception_Forbidden(__('Security token validation failed', $dom));

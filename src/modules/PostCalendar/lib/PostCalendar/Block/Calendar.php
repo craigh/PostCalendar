@@ -86,14 +86,14 @@ class PostCalendar_Block_Calendar extends Zikula_Controller_AbstractBlock
         $vars = BlockUtil::varsFromContent($blockinfo['content']);
     
         // overwrite with new values
-        $vars['pcbshowcalendar'] = $this->request->getPost()->get('pcbshowcalendar', 0);
-        $vars['pcbeventslimit'] = $this->request->getPost()->get('pcbeventslimit', 5);
-        $vars['pcbeventoverview'] = $this->request->getPost()->get('pcbeventoverview', 0);
-        $vars['pcbhideeventoverview'] = $this->request->getPost()->get('pcbhideeventoverview', 0);
-        $vars['pcbnextevents'] = $this->request->getPost()->get('pcbnextevents', 0);
-        $vars['pcbeventsrange'] = $this->request->getPost()->get('pcbeventsrange', 6);
-        $vars['pcbshowsslinks'] = $this->request->getPost()->get('pcbshowsslinks', 0);
-        $vars['pcbfiltercats'] = $this->request->getPost()->get('pcbfiltercats'); //array
+        $vars['pcbshowcalendar'] = $this->request->request->get('pcbshowcalendar', 0);
+        $vars['pcbeventslimit'] = $this->request->request->get('pcbeventslimit', 5);
+        $vars['pcbeventoverview'] = $this->request->request->get('pcbeventoverview', 0);
+        $vars['pcbhideeventoverview'] = $this->request->request->get('pcbhideeventoverview', 0);
+        $vars['pcbnextevents'] = $this->request->request->get('pcbnextevents', 0);
+        $vars['pcbeventsrange'] = $this->request->request->get('pcbeventsrange', 6);
+        $vars['pcbshowsslinks'] = $this->request->request->get('pcbshowsslinks', 0);
+        $vars['pcbfiltercats'] = $this->request->request->get('pcbfiltercats'); //array
     
         $this->view->clear_cache('blocks/view_day.tpl');
         $this->view->clear_cache('blocks/view_month.tpl');

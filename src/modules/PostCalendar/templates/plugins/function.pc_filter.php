@@ -36,7 +36,7 @@ function smarty_function_pc_filter($args, Zikula_View $view)
     } else {
         $filterdefault = PostCalendar_Entity_Repository_CalendarEventRepository::FILTER_GLOBAL;
     }
-    $pc_username = $request->getPost()->get('pc_username', $filterdefault);
+    $pc_username = $request->request->get('pc_username', $filterdefault);
     if (!UserUtil::isLoggedIn()) {
         $pc_username = PostCalendar_Entity_Repository_CalendarEventRepository::FILTER_GLOBAL;
     }

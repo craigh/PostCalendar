@@ -22,7 +22,7 @@ class PostCalendar_Form_Handler_EditHandler extends Zikula_Form_AbstractHandler
             throw new Zikula_Exception_Forbidden(LogUtil::getErrorMsgPermission());
         }
 
-        $this->eid = $this->request->getGet()->get('eid');
+        $this->eid = $this->request->query->get('eid');
 
         return true;
     }

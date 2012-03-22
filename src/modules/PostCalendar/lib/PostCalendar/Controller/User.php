@@ -29,19 +29,19 @@ class PostCalendar_Controller_User extends Zikula_AbstractController
         $this->throwForbiddenUnless(SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_OVERVIEW), LogUtil::getErrorMsgPermission());
 
         // get the vars that were passed in
-        $popup = $this->request->getGet()->get('popup', $this->request->getPost()->get('popup', false));
-        $pc_username = $this->request->getGet()->get('pc_username', $this->request->getPost()->get('pc_username', ''));
-        $eid = $this->request->getGet()->get('eid', $this->request->getPost()->get('eid', 0));
-        $filtercats = $this->request->getGet()->get('postcalendar_events', $this->request->getPost()->get('postcalendar_events', null));
-        $func = $this->request->getGet()->get('func', $this->request->getPost()->get('func'));
+        $popup = $this->request->query->get('popup', $this->request->request->get('popup', false));
+        $pc_username = $this->request->query->get('pc_username', $this->request->request->get('pc_username', ''));
+        $eid = $this->request->query->get('eid', $this->request->request->get('eid', 0));
+        $filtercats = $this->request->query->get('postcalendar_events', $this->request->request->get('postcalendar_events', null));
+        $func = $this->request->query->get('func', $this->request->request->get('func'));
         $jumpargs    = array(
-            'jumpday' => $this->request->getGet()->get('jumpDay', $this->request->getPost()->get('jumpDay', null)),
-            'jumpmonth' => $this->request->getGet()->get('jumpMonth', $this->request->getPost()->get('jumpMonth', null)),
-            'jumpyear' => $this->request->getGet()->get('jumpYear', $this->request->getPost()->get('jumpYear', null)));
-        $viewtype = isset($args['viewtype']) ? strtolower($args['viewtype']) : strtolower($this->request->getGet()->get('viewtype', $this->request->getPost()->get('viewtype', _SETTING_DEFAULT_VIEW)));
-        $date = isset($args['date']) ? $args['date'] : $this->request->getGet()->get('date', $this->request->getPost()->get('date', PostCalendar_Util::getDate($jumpargs)));
-        $prop = isset($args['prop']) ? $args['prop'] : (string)$this->request->getGet()->get('prop', null);
-        $cat = isset($args['cat']) ? $args['cat'] : (string)$this->request->getGet()->get('cat', null);
+            'jumpday' => $this->request->query->get('jumpDay', $this->request->request->get('jumpDay', null)),
+            'jumpmonth' => $this->request->query->get('jumpMonth', $this->request->request->get('jumpMonth', null)),
+            'jumpyear' => $this->request->query->get('jumpYear', $this->request->request->get('jumpYear', null)));
+        $viewtype = isset($args['viewtype']) ? strtolower($args['viewtype']) : strtolower($this->request->query->get('viewtype', $this->request->request->get('viewtype', _SETTING_DEFAULT_VIEW)));
+        $date = isset($args['date']) ? $args['date'] : $this->request->query->get('date', $this->request->request->get('date', PostCalendar_Util::getDate($jumpargs)));
+        $prop = isset($args['prop']) ? $args['prop'] : (string)$this->request->query->get('prop', null);
+        $cat = isset($args['cat']) ? $args['cat'] : (string)$this->request->query->get('cat', null);
         
         if (empty($filtercats) && !empty($prop) && !empty($cat)) {
             $filtercats['__CATEGORIES__'][$prop] = $cat;

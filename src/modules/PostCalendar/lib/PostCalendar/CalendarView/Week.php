@@ -79,7 +79,7 @@ class PostCalendar_CalendarView_Week extends PostCalendar_CalendarView_AbstractD
                     ->assign('navigation', $this->navigation)
                     ->assign('eventsByDate', $eventsByDate)
                     ->assign('selectedcategories', $this->selectedCategories)
-                    ->assign('func', $this->view->getRequest()->getGet()->get('func', $this->view->getRequest()->getPost()->get('func', 'display')))
+                    ->assign('func', $this->view->getRequest()->query->get('func', $this->view->getRequest()->request->get('func', 'display')))
                     ->assign('viewtypeselected', $this->viewtype)
                     ->assign('todayDate', $today->format('Y-m-d'))
                     ->assign('startDate', $this->startDate->format('Ymd'))

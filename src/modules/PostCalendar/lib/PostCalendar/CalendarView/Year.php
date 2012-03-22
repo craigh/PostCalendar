@@ -108,7 +108,7 @@ class PostCalendar_CalendarView_Year extends PostCalendar_CalendarView_AbstractD
                     ->assign('graph', $this->dateGraph)
                     ->assign('eventsByDate', $eventsByDate)
                     ->assign('selectedcategories', $this->selectedCategories)
-                    ->assign('func', $this->view->getRequest()->getGet()->get('func', $this->view->getRequest()->getPost()->get('func', 'display')))
+                    ->assign('func', $this->view->getRequest()->query->get('func', $this->view->getRequest()->request->get('func', 'display')))
                     ->assign('viewtypeselected', $this->viewtype)
                     ->assign('todayDate', date('Y-m-d'))
                     ->assign('requestedDate', $this->requestedDate->format('Y-m-d'));
