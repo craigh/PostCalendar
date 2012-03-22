@@ -385,6 +385,8 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
         $eventArray = array();
         foreach($events as $key => $event) {
             $eventArray[$key] = $event->getOldArray();
+            // temp workaround for assignedcategorieslist plugin
+            $eventArray[$key]['Categories'] = $eventArray[$key]['categories'];
             $options = array();
             $truncated_title = StringUtil::getTruncatedString($event['title'], 25);
             $options[] = array('url' => ModUtil::url('PostCalendar', 'user', 'display', array('viewtype' => 'details', 'eid' => $event['eid'])),
