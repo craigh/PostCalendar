@@ -15,9 +15,6 @@ use PostCalendar_Entity_CalendarEvent as CalendarEvent;
 
 class PostCalendar_Api_Event extends Zikula_AbstractApi
 {
-    const ENDTYPE_ON = 1;
-    const ENDTYPE_NONE = 0;
-
     const REPEAT_EVERY_DAY = 0;
     const REPEAT_EVERY_WEEK = 1;
     const REPEAT_EVERY_MONTH = 2;
@@ -302,8 +299,8 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
         }
 
         // endType
-        $form_data['SelectedEndOn'] = ((isset($eventdata['endtype']))  && ((int)$eventdata['endtype'] == self::ENDTYPE_ON)) ? " checked='checked'" : '';
-        $form_data['SelectedNoEnd'] = ((!isset($eventdata['endtype'])) || ((int)$eventdata['endtype'] == self::ENDTYPE_NONE)) ? " checked='checked'" : ''; //default
+        $form_data['SelectedEndOn'] = ((isset($eventdata['endtype']))  && ((int)$eventdata['endtype'] == CalendarEvent::ENDTYPE_ON)) ? " checked='checked'" : '';
+        $form_data['SelectedNoEnd'] = ((!isset($eventdata['endtype'])) || ((int)$eventdata['endtype'] == CalendarEvent::ENDTYPE_NONE)) ? " checked='checked'" : ''; //default
 
         // Assign the content format (determines if scribite is in use)
         $form_data['formattedcontent'] = $this->isformatted(array(
@@ -345,14 +342,6 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
             return LogUtil::registerArgsError();
         }
 
-        $event['privateicon'] = ($event['sharing'] == CalendarEvent::SHARING_PRIVATE) ? true : false;
-
-        $event['HTMLorTextVal'] = substr($event['hometext'], 1, 4); // HTMLorTextVal needed in edit form
-        $event['hometext'] = substr($event['hometext'], 6);
-        if ($event['HTMLorTextVal'] == "text") {
-            $event['hometext'] = nl2br(strip_tags($event['hometext']));
-        }
-
         // build recurrance sentence for display
         $repeat_freq_type = explode("/", $this->__('Day(s)/Week(s)/Month(s)/Year(s)'));
         $repeat_on_num = explode("/", $this->__('err/First/Second/Third/Fourth/Last'));
@@ -381,9 +370,6 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
         $event['sortTime']  = $event['startTime']; // save for sorting later
         $stime = DateTime::createFromFormat('G:i:s', $event['startTime']);
         $event['startTime'] = _SETTING_TIME_24HOUR ? $stime->format('G:i') : $stime->format('g:i a');
-
-        // format endtype for edit form
-        $event['endtype'] = (!isset($event['endDate'])) ? (string)self::ENDTYPE_NONE : (string)self::ENDTYPE_ON;
 
         // compensate for changeover to new categories system
         $lang = ZLanguage::getLanguageCode();
@@ -446,7 +432,7 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
             $event['eventstatus'] = CalendarEvent::QUEUED;
         }
 
-        $event['endDate'] = ($event['endtype'] == self::ENDTYPE_ON) ? $event['endDate'] : null;
+        $event['endDate'] = ($event['endtype'] == CalendarEvent::ENDTYPE_ON) ? $event['endDate'] : null;
 
         if (!isset($event['alldayevent'])) {
             $event['alldayevent'] = false;
@@ -505,7 +491,7 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
         $sdate = strtotime($submitted_event['eventDate']);
         $edate = strtotime($submitted_event['endDate']);
 
-        if (($submitted_event['endtype'] == self::ENDTYPE_ON) && ($edate < $sdate)) {
+        if (($submitted_event['endtype'] == CalendarEvent::ENDTYPE_ON) && ($edate < $sdate)) {
             LogUtil::registerError($this->__('Error! The selected start date falls after the selected end date.'));
             return true;
         }

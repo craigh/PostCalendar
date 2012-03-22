@@ -17,6 +17,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * Annotations define the entity mappings to database.
  *
  * @ORM\Entity(repositoryClass="PostCalendar_Entity_Repository_CalendarEventRepository")
+ * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="postcalendar_events",indexes={@ORM\index(name="basic_event", columns={"aid", "eventDate", "endDate", "eventstatus", "sharing"})})
  */
 class PostCalendar_Entity_CalendarEvent extends Zikula_EntityAccess
@@ -33,7 +34,9 @@ class PostCalendar_Entity_CalendarEvent extends Zikula_EntityAccess
     const RECURRTYPE_NONE = 0;
     const RECURRTYPE_REPEAT = 1;
     const RECURRTYPE_REPEAT_ON = 2;
-    
+
+    const ENDTYPE_ON = 1;
+    const ENDTYPE_NONE = 0;
     /**
      * event id field (record id)
      *
@@ -206,6 +209,12 @@ class PostCalendar_Entity_CalendarEvent extends Zikula_EntityAccess
      *                orphanRemoval=true, indexBy="categoryRegistryId")
      */
     private $categories;
+    /**
+     * non-persisted properties
+     */
+    private $privateicon = false;
+    private $HTMLorTextVal = 'html';
+    private $endtype = self::ENDTYPE_NONE;
     
     /**
      * Constructor 
@@ -461,6 +470,7 @@ class PostCalendar_Entity_CalendarEvent extends Zikula_EntityAccess
     {
         $this->hooked_area = $hooked_area;
     }
+    
     public function getCategories()
     {
         return $this->categories;
@@ -469,6 +479,37 @@ class PostCalendar_Entity_CalendarEvent extends Zikula_EntityAccess
     public function setCategories(ArrayCollection $categories)
     {
         $this->categories = $categories;
+    }
+    
+    /**
+     * Getters and Setters for non-persisted properties
+     */
+    public function getPrivateicon()
+    {
+        return $this->privateicon;
+    }
+    public function getHTMLorTextVal()
+    {
+        return $this->HTMLorTextVal;
+    }
+    public function getEndtype()
+    {
+        return $this->endtype;
+    }
+
+    /**
+     * Configure non-persisted properties for object display
+     * @ORM\PostLoad
+     */
+    public function postLoad()
+    {
+        $this->privateicon = ($this->sharing == self::SHARING_PRIVATE) ? true : false;
+        $this->HTMLorTextVal = substr($this->hometext, 1, 4);
+        $this->hometext = substr($this->hometext, 6);
+        if ($this->HTMLorTextVal == "text") {
+            $this->hometext = nl2br(strip_tags($this->hometext));
+        }
+        $this->endtype = (!isset($this->endDate)) ? (string)self::ENDTYPE_NONE : (string)self::ENDTYPE_ON;
     }
 
     /**
@@ -568,9 +609,7 @@ class PostCalendar_Entity_CalendarEvent extends Zikula_EntityAccess
     public function getOldArray()
     {
         $array = parent::toArray();
-        unset($array['reflection']);
         unset($array['categories']);
-        
         $regIds = CategoryRegistryUtil::getRegisteredModuleCategoriesIds('PostCalendar', 'CalendarEvent');
         foreach ($regIds as $propName => $regId) {
             $categoryRegistration = $this->getCategories()->get($regId);

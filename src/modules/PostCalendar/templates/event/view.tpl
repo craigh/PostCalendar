@@ -70,7 +70,7 @@
         </div>
         <div class="postcalendar_event_sharinginfo">
             <h3>{gt text='Event sharing information'}:</h3>
-            <p>{$loaded_event.sharing_sentence}</p>
+            <p>{$loaded_event.sharingSentence}</p>
         </div>
     </div>
 </div>
