@@ -62,6 +62,9 @@ class PostCalendar_Controller_User extends Zikula_AbstractController
         if (!in_array($viewtype, $this->allowedViewtypes)) {
             return LogUtil::registerError($this->__('Unsupported Viewtype.'));
         }
+        if ($viewtype == 'event') {
+            $this->throwForbiddenUnless(SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_READ), LogUtil::getErrorMsgPermission());
+        }
         
         if (!is_object($date)) {
             $date = DateTime::createFromFormat('Ymd', $date);
