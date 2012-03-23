@@ -32,14 +32,14 @@ class PostCalendar_CalendarView_Day extends PostCalendar_CalendarView_AbstractCa
                     'viewtype' => $this->viewtype,
                     'date' => $prevClone->format('Ymd'),
                     'pc_username' => $this->userFilter,
-                    'filtercats' => $this->categoryFilter));
+                    'filtercats' => $this->selectedCategories));
         $nextClone = clone $this->requestedDate;
         $nextClone->modify("+1 day");
         $this->navigation['next'] = ModUtil::url('PostCalendar', 'user', 'display', array(
                     'viewtype' => $this->viewtype,
                     'date' => $nextClone->format('Ymd'),
                     'pc_username' => $this->userFilter,
-                    'filtercats' => $this->categoryFilter));
+                    'filtercats' => $this->selectedCategories));
     }
 
     public function render()
@@ -51,7 +51,7 @@ class PostCalendar_CalendarView_Day extends PostCalendar_CalendarView_AbstractCa
             $eventsByDate = ModUtil::apiFunc('PostCalendar', 'event', 'getEvents', array(
                 'start'       => $start,
                 'end'         => $end,
-                'filtercats'  => $this->categoryFilter,
+                'filtercats'  => $this->selectedCategories,
                 'date'        => $this->requestedDate,
                 'pc_username' => $this->userFilter));
             // create and return template

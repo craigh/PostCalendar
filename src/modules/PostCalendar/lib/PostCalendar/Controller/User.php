@@ -32,7 +32,7 @@ class PostCalendar_Controller_User extends Zikula_AbstractController
         $popup = $this->request->query->get('popup', $this->request->request->get('popup', false));
         $pc_username = $this->request->query->get('pc_username', $this->request->request->get('pc_username', ''));
         $eid = $this->request->query->get('eid', $this->request->request->get('eid', 0));
-        $filtercats = $this->request->query->get('postcalendar_events', $this->request->request->get('postcalendar_events', null));
+        $filtercats = $this->request->query->get('pc_categories', $this->request->request->get('pc_categories', null));
         $func = $this->request->query->get('func', $this->request->request->get('func'));
         $jumpargs = array(
             'jumpday' => $this->request->query->get('jumpDay', $this->request->request->get('jumpDay', null)),
@@ -44,7 +44,7 @@ class PostCalendar_Controller_User extends Zikula_AbstractController
         $cat = isset($args['cat']) ? $args['cat'] : (string)$this->request->query->get('cat', null);
         
         if (empty($filtercats) && !empty($prop) && !empty($cat)) {
-            $filtercats['categories'][$prop] = $cat;
+            $filtercats[$prop] = $cat;
         }
     
         if (empty($date) && empty($viewtype)) {
@@ -99,7 +99,7 @@ class PostCalendar_Controller_User extends Zikula_AbstractController
                         $this->view->assign('EVENT_CAN_EDIT', false);
                     }
                     $this->view->assign('TODAY_DATE', date('Y-m-d'));
-                    $this->view->assign('DATE', $date);
+                    $this->view->assign('DATE', $date->format('Ymd'));
                     return $this->view->fetch('user/view_event_details.tpl');
                 }
                 break;

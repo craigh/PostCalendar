@@ -80,14 +80,14 @@ class PostCalendar_CalendarView_Year extends PostCalendar_CalendarView_AbstractD
                     'viewtype' => $this->viewtype,
                     'date' => $prevClone->format('Ymd'),
                     'pc_username' => $this->userFilter,
-                    'filtercats' => $this->categoryFilter));
+                    'filtercats' => $this->selectedCategories));
         $nextClone = clone $prevClone;
         $nextClone->modify("+2 years");
         $this->navigation['next'] = ModUtil::url('PostCalendar', 'user', 'display', array(
                     'viewtype' => $this->viewtype,
                     'date' => $nextClone->format('Ymd'),
                     'pc_username' => $this->userFilter,
-                    'filtercats' => $this->categoryFilter));
+                    'filtercats' => $this->selectedCategories));
     }
 
     public function render()
@@ -97,7 +97,7 @@ class PostCalendar_CalendarView_Year extends PostCalendar_CalendarView_AbstractD
             $eventsByDate = ModUtil::apiFunc('PostCalendar', 'event', 'getEvents', array(
                 'start'       => $this->startDate,
                 'end'         => $this->endDate,
-                'filtercats'  => $this->categoryFilter,
+                'filtercats'  => $this->selectedCategories,
                 'date'        => $this->requestedDate,
                 'pc_username' => $this->userFilter));
             // create and return template

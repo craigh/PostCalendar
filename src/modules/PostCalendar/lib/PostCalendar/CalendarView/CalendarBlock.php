@@ -23,14 +23,14 @@ class PostCalendar_CalendarView_CalendarBlock extends PostCalendar_CalendarView_
         $this->bid = $blockinfo['bid'];
         $this->blockVars = BlockUtil::varsFromContent($blockinfo['content']);
         if (!isset($categoryFilter)) {
-            $categoryFilter['categories'] = $this->blockVars['pcbfiltercats'];
+            $categoryFilter = $this->blockVars['pcbfiltercats'];
         } 
         parent::__construct($view, $requestedDate, $userFilter, $categoryFilter);
     }
 
     protected function setCacheTag()
     {
-        $this->cacheTag = $this->bid . ':' . UserUtil::getVar('uid');
+        $this->cacheTag = $this->bid;
     }
 
     protected function setTemplate()
@@ -87,7 +87,7 @@ class PostCalendar_CalendarView_CalendarBlock extends PostCalendar_CalendarView_
         $eventsByDate = ModUtil::apiFunc('PostCalendar', 'event', 'getEvents', array(
                     'start' => $this->startDate,
                     'end' => $this->endDate,
-                    'filtercats' => $this->categoryFilter,
+                    'filtercats' => $this->selectedCategories,
                     'date' => $this->requestedDate,
                     'pc_username' => $this->userFilter));
         // create and return template

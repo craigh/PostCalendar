@@ -106,7 +106,7 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
         
         // get event collection
         $events = $this->entityManager->getRepository('PostCalendar_Entity_CalendarEvent')
-                ->getEventCollection($eventstatus, $startDate, $endDate, $userFilter, $userid, self::formatCategoryFilter($filtercats), $searchDql);
+                ->getEventCollection($eventstatus, $startDate, $endDate, $userFilter, $userid, $filtercats, $searchDql);
         
         //==============================================================
         // Here an array is built consisting of the date ranges
@@ -360,7 +360,7 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
         }
 
         // build sharing sentence for display
-        $event['sharing_sentence'] = ($event['sharing'] == CalendarEvent::SHARING_PRIVATE) ? $this->__('This is a private event.') : $this->__('This is a public event. ');
+        $event['sharing_sentence'] = ($event['sharing'] == CalendarEvent::SHARING_PRIVATE) ? $this->__('This is a private event.') : $this->__('This is a public event.');
 
         $event['endTime'] = $this->computeendtime($event);
         // converts seconds to HH:MM for display  - keep just in case duration is wanted
@@ -749,30 +749,28 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
      */
     public static function formatCategoryFilter($filtercats)
     {
-        if (is_array($filtercats)) {
-            $catsarray = is_array($filtercats['categories']) ? $filtercats['categories'] : array('Main' => 0);
-            foreach ($catsarray as $propname => $propid) {
+        $selectedCategories = array();
+        if (isset($filtercats) && is_array($filtercats)) {
+            foreach ($filtercats as $propid) {
                 if (is_array($propid)) { // select multiple used
-                    foreach ($propid as $int_key => $int_id) {
-                        if ($int_id <= 0) {
-                            unset($catsarray[$propname][$int_key]); // removes categories set to 'all' (0)
-                        }
-                        if (empty($catsarray[$propname])) {
-                            unset($catsarray[$propname]);
+                    foreach ($propid as $id) {
+                        if ($id > 0) {
+                            $selectedCategories[] = $id;
                         }
                     }
                 } elseif (strstr($propid, ',')) { // category Zikula.UI.SelectMultiple used
-                    $catsarray[$propname] = explode(',', $propid);
+                    $ids = explode(',', $propid);
                     // no propid should be '0' in this case
+                    foreach ($ids as $id) {
+                        $selectedCategories[] = $id;
+                    }
                 } else { // single selectbox used
-                    if ($propid <= 0) {
-                        unset($catsarray[$propname]); // removes categories set to 'all' (0)
+                    if ($propid > 0) {
+                        $selectedCategories[] = $propid;
                     }
                 }
             }
-        } else {
-            $catsarray = array();
         }
-        return $catsarray;
+        return $selectedCategories;
     }
 } // end class def

@@ -55,7 +55,7 @@ class PostCalendar_CalendarView_List extends PostCalendar_CalendarView_AbstractD
                     'viewtype' => $this->viewtype,
                     'date' => $prevClone->format('Ymd'),
                     'pc_username' => $this->userFilter,
-                    'filtercats' => $this->categoryFilter));
+                    'filtercats' => $this->selectedCategories));
         $nextClone = clone $this->requestedDate;
         $nextClone->modify("+" . $this->listMonths . " months")
                   ->modify("+1 day");
@@ -63,7 +63,7 @@ class PostCalendar_CalendarView_List extends PostCalendar_CalendarView_AbstractD
                     'viewtype' => $this->viewtype,
                     'date' => $nextClone->format('Ymd'),
                     'pc_username' => $this->userFilter,
-                    'filtercats' => $this->categoryFilter));
+                    'filtercats' => $this->selectedCategories));
     }
 
     public function render()
@@ -73,7 +73,7 @@ class PostCalendar_CalendarView_List extends PostCalendar_CalendarView_AbstractD
             $eventsByDate = ModUtil::apiFunc('PostCalendar', 'event', 'getEvents', array(
                 'start'       => $this->startDate,
                 'end'         => $this->endDate,
-                'filtercats'  => $this->categoryFilter,
+                'filtercats'  => $this->selectedCategories,
                 'date'        => $this->requestedDate,
                 'pc_username' => $this->userFilter));
             // create and return template

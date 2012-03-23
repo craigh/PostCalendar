@@ -27,7 +27,7 @@ class PostCalendar_CalendarView_Xml extends PostCalendar_CalendarView_List
                     'viewtype' => $this->viewtype,
                     'date' => $prevClone->format('Ymd'),
                     'pc_username' => $this->userFilter,
-                    'filtercats' => $this->categoryFilter));
+                    'filtercats' => $this->selectedCategories));
         $nextClone = clone $this->requestedDate;
         $nextClone->modify("+" . $this->listMonths . " months")
                   ->modify("+1 day");
@@ -35,6 +35,6 @@ class PostCalendar_CalendarView_Xml extends PostCalendar_CalendarView_List
                     'viewtype' => $this->viewtype,
                     'date' => $nextClone->format('Ymd'),
                     'pc_username' => $this->userFilter,
-                    'filtercats' => $this->categoryFilter));
+                    'filtercats' => $this->selectedCategories));
     }
 }

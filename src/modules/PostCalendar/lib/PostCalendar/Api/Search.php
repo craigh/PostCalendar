@@ -63,7 +63,7 @@ class PostCalendar_Api_Search extends Zikula_AbstractApi
     
         $searchargs = array();
         if (!empty($args['categories'])) {
-            $searchargs['filtercats']['categories'] = $args['categories'];
+            $searchargs['filtercats'] = PostCalendar_Api_Event::formatCategoryFilter($args['categories']);
         }
         $searchargs['searchstart'] = isset($args['searchstart']) ? $args['searchstart'] : 0;
         $args['searchend'] = isset($args['searchend']) ? $args['searchend'] : 2;
@@ -90,13 +90,15 @@ class PostCalendar_Api_Search extends Zikula_AbstractApi
         foreach ($eventsByDate as $date) {
             if (count($date) > 0) {
                 foreach ($date as $event) {
-                    $title = $event['title'] . " (" . DateUtil::strftime($this->getVar('pcEventDateFormat'), strtotime($event['eventDate'])) . ")";
-                    $start = $event['alldayevent'] ? "12:00:00" : $event['startTime'];
-                    $created = $event['eventDate'] . " " . $start;
+                    $eventDate = DateTime::createFromFormat('Y-m-d', $event['eventDate']);
+                    $title = $event['title'] . " (" . $eventDate->format($this->getVar('pcEventDateFormat')) . ")";
+                    $start = $event['alldayevent'] ? "12:00:00" : $event['sortTime'];
+                    list($h, $m, $s) = explode(':', $start);
+                    $created = $eventDate->setTime($h, $m);
                     $items = array('title' => $title,
                                    'text'  => $event['hometext'],
                                    'extra' => $event['eid'],
-                                   'created' => $created,
+                                   'created' => $created->format('Y-m-d G:i:s'),
                                    'module'  => 'PostCalendar',
                                    'session' => $sessionId);
                 }

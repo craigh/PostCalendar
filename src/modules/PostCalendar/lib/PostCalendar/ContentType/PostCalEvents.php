@@ -40,7 +40,7 @@ class PostCalendar_ContentType_PostCalEvents extends Content_AbstractContentType
         $end = new DateTime();
         $end->modify("last day of this month")->modify("+$this->pcbeventsrange months");
 
-        $filtercats['categories'] = $this->categories; //reformat array
+        $filtercats = PostCalendar_Api_Event::formatCategoryFilter($this->categories); //reformat array
         $eventsByDate = ModUtil::apiFunc('PostCalendar', 'event', 'getEvents', array(
             'start'      => $start,
             'end'        => $end,

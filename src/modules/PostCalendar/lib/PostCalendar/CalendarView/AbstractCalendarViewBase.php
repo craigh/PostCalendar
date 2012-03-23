@@ -33,9 +33,7 @@ abstract class PostCalendar_CalendarView_AbstractCalendarViewBase extends Zikula
     protected $requestedDate;
 
     protected $userFilter;
-    protected $categoryFilter;
     protected $currentUser;
-    
     protected $selectedCategories = array();
 
     /**
@@ -61,8 +59,7 @@ abstract class PostCalendar_CalendarView_AbstractCalendarViewBase extends Zikula
         $this->requestedDate = $requestedDate;
 
         $this->userFilter = $userFilter;
-        $this->categoryFilter = $categoryFilter;
-        $this->reArrayCategories($categoryFilter);
+        $this->setSelectedCategories($categoryFilter);
 
         $this->setCacheTag();
         $this->cacheId = $this->cacheTag . '|' . $this->currentUser;
@@ -90,13 +87,26 @@ abstract class PostCalendar_CalendarView_AbstractCalendarViewBase extends Zikula
         }
     }
 
-    private function reArrayCategories($filtercats)
+    private function setSelectedCategories($filtercats)
     {
-        if (!empty($filtercats)) {
-            $catsarray = $filtercats['categories'];
-            foreach ($catsarray as $propname => $propid) {
-                if ($propid > 0) {
-                    $this->selectedCategories[$propname] = $propid; // removes categories set to 'all'
+        if (is_array($filtercats)) {
+            foreach ($filtercats as $propid) {
+                if (is_array($propid)) { // select multiple used
+                    foreach ($propid as $id) {
+                        if ($id > 0) {
+                            $this->selectedCategories[] = $id;
+                        }
+                    }
+                } elseif (strstr($propid, ',')) { // category Zikula.UI.SelectMultiple used
+                    $ids = explode(',', $propid);
+                    // no propid should be '0' in this case
+                    foreach ($ids as $id) {
+                        $this->selectedCategories[] = $id;
+                    }
+                } else { // single selectbox used
+                    if ($propid > 0) {
+                        $this->selectedCategories[] = $propid;
+                    }
                 }
             }
         }
