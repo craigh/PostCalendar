@@ -41,49 +41,10 @@ class PostCalendar_Block_Featuredevent extends Zikula_Controller_AbstractBlock
         if (!ModUtil::available('PostCalendar')) {
             return;
         }
-        $vars = BlockUtil::varsFromContent($blockinfo['content']);
-    
-        // Defaults
-        if (empty($vars['eid'])) {
-            return false;
-        }
-        $vars['showcountdown'] = empty($vars['showcountdown']) ? false : true;
-        $vars['hideonexpire']  = empty($vars['hideonexpire']) ? false : true;
-    
-        // get the event from the DB
-        ModUtil::dbInfoLoad('PostCalendar');
-        $event = $this->entityManager->getRepository('PostCalendar_Entity_CalendarEvent')->find((int)$vars['eid'])->getOldArray();
-        $event = ModUtil::apiFunc('PostCalendar', 'event', 'formateventarrayfordisplay', $event);
-    
-        // is event allowed for this user?
-        if ($event['sharing'] == PostCalendar_Entity_CalendarEvent::SHARING_PRIVATE 
-                && $event['aid'] != UserUtil::getVar('uid') 
-                && !SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
-            // if event is PRIVATE and user is not assigned event ID (aid) and user is not Admin event should not be seen
-            return false;
-        }
-    
-        $alleventdates = ModUtil::apiFunc('PostCalendar', 'event', 'getEventOccurances', $event); // gets all FUTURE occurances
-        // assign next occurance to eventDate
-        $event['eventDate'] = array_shift($alleventdates);
-    
-        $event['showcountdown'] = false; // default to false
-        if ($vars['showcountdown']) {
-            $datedifference = DateUtil::getDatetimeDiff_AsField(DateUtil::getDatetime(null, '%F'), $event['eventDate'], 3);
-            $event['datedifference'] = round($datedifference);
-            $event['showcountdown'] = true;
-        }
-        $event['showhiddenwarning'] = false; // default to false
-        if ($vars['hideonexpire'] && $event['datedifference'] < 0) {
-            //return false;
-            $event['showhiddenwarning'] = true;
-            $blockinfo['title'] = NULL;
-        }
-    
-        $this->view->assign('loaded_event', $event);
-        $this->view->assign('thisblockid', $blockinfo['bid']);
-    
-        $blockinfo['content'] = $this->view->fetch('blocks/featuredevent.tpl');
+
+        $date = new DateTime();
+        $calendarView = new PostCalendar_CalendarView_FeaturedEventBlock($this->view, $date, '', null, $blockinfo);
+        $blockinfo = $calendarView->render();
     
         return BlockUtil::themeBlock($blockinfo);
     }

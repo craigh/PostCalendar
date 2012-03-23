@@ -11,7 +11,7 @@
  */
 class PostCalendar_CalendarView_Event extends PostCalendar_CalendarView_AbstractCalendarViewBase
 {
-    private $event = array();
+    protected $event = array();
 
     private $popup = false;
 
