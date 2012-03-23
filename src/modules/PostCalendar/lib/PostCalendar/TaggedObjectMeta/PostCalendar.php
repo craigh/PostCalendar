@@ -28,7 +28,7 @@ class PostCalendar_TaggedObjectMeta_PostCalendar extends Tag_AbstractTaggedObjec
             $this->setObjectDate("$date $time");
             $this->setObjectTitle($pc_event['title']);
             // do not use default objectURL to compensate for shortUrl handling
-            $this->setObjectUrl(ModUtil::url('PostCalendar', 'user', 'display', array('viewtype' => 'details', 'eid' => $this->getObjectId())));
+            $this->setObjectUrl(ModUtil::url('PostCalendar', 'user', 'display', array('viewtype' => 'event', 'eid' => $this->getObjectId())));
         }
     }
 

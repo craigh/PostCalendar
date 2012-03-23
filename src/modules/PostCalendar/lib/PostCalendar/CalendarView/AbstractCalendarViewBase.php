@@ -35,6 +35,7 @@ abstract class PostCalendar_CalendarView_AbstractCalendarViewBase extends Zikula
     protected $userFilter;
     protected $currentUser;
     protected $selectedCategories = array();
+    protected $eid;
 
     /**
      * Array of navigation links
@@ -50,7 +51,7 @@ abstract class PostCalendar_CalendarView_AbstractCalendarViewBase extends Zikula
      */
     protected $events;
 
-    public function __construct(Zikula_View $view, $requestedDate, $userFilter, $categoryFilter)
+    public function __construct(Zikula_View $view, $requestedDate, $userFilter, $categoryFilter, $eid = null)
     {
         $this->domain = ZLanguage::getModuleDomain('PostCalendar');
         $this->view = $view;
@@ -60,6 +61,8 @@ abstract class PostCalendar_CalendarView_AbstractCalendarViewBase extends Zikula
 
         $this->userFilter = $userFilter;
         $this->setSelectedCategories($categoryFilter);
+        
+        $this->eid = $eid;
 
         $this->setCacheTag();
         $this->cacheId = $this->cacheTag . '|' . $this->currentUser;

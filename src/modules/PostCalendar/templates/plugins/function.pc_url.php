@@ -95,7 +95,7 @@ function smarty_function_pc_url($args, Zikula_View $view)
             if (isset($eid)) {
                 $linkparams = array(
                     'date' => $date->format('Ymd'),
-                    'viewtype' => 'details',
+                    'viewtype' => 'event',
                     'eid' => $eid);
                 if (_SETTING_OPEN_NEW_WINDOW) {
                     $linkparams['popup'] = true;

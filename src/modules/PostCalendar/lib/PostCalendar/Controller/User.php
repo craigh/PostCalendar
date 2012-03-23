@@ -8,6 +8,16 @@
 
 class PostCalendar_Controller_User extends Zikula_AbstractController
 {
+    private $allowedViewtypes = array(
+        'event',
+        'day',
+        'week',
+        'month',
+        'year',
+        'list',
+        'xml',
+    );
+    
     /**
      * main view functions for end user
      */
@@ -29,11 +39,9 @@ class PostCalendar_Controller_User extends Zikula_AbstractController
         $this->throwForbiddenUnless(SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_OVERVIEW), LogUtil::getErrorMsgPermission());
 
         // get the vars that were passed in
-        $popup = $this->request->query->get('popup', $this->request->request->get('popup', false));
         $pc_username = $this->request->query->get('pc_username', $this->request->request->get('pc_username', ''));
         $eid = $this->request->query->get('eid', $this->request->request->get('eid', 0));
         $filtercats = $this->request->query->get('pc_categories', $this->request->request->get('pc_categories', null));
-        $func = $this->request->query->get('func', $this->request->request->get('func'));
         $jumpargs = array(
             'jumpday' => $this->request->query->get('jumpDay', $this->request->request->get('jumpDay', null)),
             'jumpmonth' => $this->request->query->get('jumpMonth', $this->request->request->get('jumpMonth', null)),
@@ -50,66 +58,21 @@ class PostCalendar_Controller_User extends Zikula_AbstractController
         if (empty($date) && empty($viewtype)) {
             return LogUtil::registerArgsError();
         }
+        
+        if (!in_array($viewtype, $this->allowedViewtypes)) {
+            return LogUtil::registerError($this->__('Unsupported Viewtype.'));
+        }
+        
         if (!is_object($date)) {
             $date = DateTime::createFromFormat('Ymd', $date);
         }
 
+        // this is for the navigation
         $this->view->assign('viewtypeselected', $viewtype);
     
-        switch ($viewtype) {
-            case 'details':
-                $this->throwForbiddenUnless(SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_READ), LogUtil::getErrorMsgPermission());
-
-                // get the event from the DB
-                $event = $this->entityManager->getRepository('PostCalendar_Entity_CalendarEvent')->find($eid)->getOldArray();
-                $event = ModUtil::apiFunc('PostCalendar', 'event', 'formateventarrayfordisplay', $event);
-
-                // is event allowed for this user?
-                if (($event['sharing'] == PostCalendar_Entity_CalendarEvent::SHARING_PRIVATE 
-                        && $event['aid'] != UserUtil::getVar('uid') 
-                        && !SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN))
-                        || ((!SecurityUtil::checkPermission('PostCalendar::Event', "$event[title]::$event[eid]", ACCESS_OVERVIEW))
-                        || (!CategoryUtil::hasCategoryAccess($event['categories'], 'PostCalendar')))) {
-                    // if event is PRIVATE and user is not assigned event ID (aid) and user is not Admin event should not be seen
-                    // or if specific event is permission controlled or if Category is denied
-                    return LogUtil::registerError($this->__('You do not have permission to view this event.'));
-                }
-
-                $this->view->setCacheId($eid);
-                // caching won't help much in this case because security check comes 
-                // after fetch from db, so don't use is_cached, just fetch after
-                // normal routine.
-
-                // since recurrevents are dynamically calculcated, we need to change the date
-                // to ensure that the correct/current date is being displayed (rather than the
-                // date on which the recurring booking was executed).
-                if ($event['recurrtype']) {
-                    $event['eventDate'] = $date->format('Ymd');
-                }
-                $this->view->assign('loaded_event', $event);
-
-                if ($popup == true) {
-                    $this->view->assign('popup', $popup);
-                    $this->view->display('event/view.tpl');
-                    return true; // displays template without theme wrap
-                } else {
-                    if ((SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADD) && (UserUtil::getVar('uid') == $event['aid'])) || SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
-                        $this->view->assign('EVENT_CAN_EDIT', true);
-                    } else {
-                        $this->view->assign('EVENT_CAN_EDIT', false);
-                    }
-                    $this->view->assign('TODAY_DATE', date('Y-m-d'));
-                    $this->view->assign('DATE', $date->format('Ymd'));
-                    return $this->view->fetch('user/view_event_details.tpl');
-                }
-                break;
-
-            default:
-                $class = 'PostCalendar_CalendarView_' . ucfirst($viewtype);
-                $calendarView = new $class($this->view, $date, $pc_username, $filtercats);
-                return $calendarView->render();
-                break;
-        } // end switch
+        $class = 'PostCalendar_CalendarView_' . ucfirst($viewtype);
+        $calendarView = new $class($this->view, $date, $pc_username, $filtercats, $eid);
+        return $calendarView->render();
     }
 
 } // end class def

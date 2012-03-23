@@ -35,7 +35,7 @@ class PostCalendar_Needles_PostCalEvent extends Zikula_AbstractHelper
             }
             list ($dispose, $eid, $displaytype) = explode('-', $args['nid']);
             $link = ModUtil::url('PostCalendar', 'user', 'display', array(
-                'viewtype' => 'details',
+                'viewtype' => 'event',
                 'eid' => $eid));
             $displaytype = $displaytype ? strtoupper($displaytype) : 'NLI'; // in any order: N (name) D (date) T (time) I (icon) L (uselink) - default: NL
             $e_array = array('eid' => $eid);
