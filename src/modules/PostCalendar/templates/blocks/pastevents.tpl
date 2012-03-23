@@ -3,7 +3,7 @@
 {pc_pagejs_init}
 <div class="postcalendar_block_pastevents">
 {counter start=0 assign=eventcount}
-{pc_sort_events var="S_EVENTS" sort="time" order="desc" value=$A_EVENTS}
+{pc_sort_events var="S_EVENTS" sort="time" order="desc" value=$eventsByDate}
 {foreach name='dates' item='events' key='date' from=$S_EVENTS}
     {foreach name='eventloop' key='id' item='event' from=$events}
         {if $event.alldayevent != true}
@@ -35,6 +35,6 @@
 {/foreach}
 
 {if $eventcount == 0}
-    {gt text='No upcoming events.'}
+    {gt text='No past events.'}
 {/if}
 </div>

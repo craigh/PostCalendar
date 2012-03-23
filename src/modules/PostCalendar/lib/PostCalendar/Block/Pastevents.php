@@ -42,40 +42,9 @@ class PostCalendar_Block_Pastevents extends Zikula_Controller_AbstractBlock
         if (!ModUtil::available('PostCalendar')) {
             return;
         }
-        // Get variables from content block
-        $vars = BlockUtil::varsFromContent($blockinfo['content']);
-    
-        $pcbeventsrange = (int)$vars['pcbeventsrange'];
-        $pcbfiltercats  = $vars['pcbfiltercats'];
-    
-        // If block is cached, return cached version
-        $this->view->setCacheId($blockinfo['bid'] . ':' . UserUtil::getVar('uid'));
-        if ($this->view->is_cached('blocks/pastevents.tpl')) {
-            $blockinfo['content'] = $this->view->fetch('blocks/pastevents.tpl');
-            return BlockUtil::themeBlock($blockinfo);
-        }
-
         $date = new DateTime();
-        $start = new DateTime();
-        $end = new DateTime();
-        if ($pcbeventsrange == 0) {
-            $start->modify("January 1, 1970");
-        } else {
-            $start->modify("-$pcbeventsrange months");
-        }
-        $end->modify("-1 day"); // yesterday
-    
-        $filtercats['categories'] = $pcbfiltercats; //reformat array
-        $eventsByDate = ModUtil::apiFunc('PostCalendar', 'event', 'getEvents', array(
-            'start'      => $start,
-            'end'        => $end,
-            'filtercats' => $filtercats,
-            'sort'       => 'DESC'));
-    
-        $this->view->assign('A_EVENTS', $eventsByDate);
-        $this->view->assign('DATE', $date->format("Y-m-d"));
-    
-        $blockinfo['content'] = $this->view->fetch('blocks/pastevents.tpl');
+        $calendarView = new PostCalendar_CalendarView_PastEventsBlock($this->view, $date, '', null, $blockinfo);
+        $blockinfo['content'] = $calendarView->render();
     
         return BlockUtil::themeBlock($blockinfo);
     }
