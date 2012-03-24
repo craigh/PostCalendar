@@ -34,21 +34,9 @@ class PostCalendar_CalendarView_FeaturedEventBlock extends PostCalendar_Calendar
         $this->template = 'blocks/featuredevent.tpl';
     }
 
-    public function render()
+    public function setup()
     {
-        // caching won't help much in this case because security check comes after
-        // fetch from db, so don't use isCached, just fetch after normal routine.
-        // is event allowed for this user?
-        if (($this->event['sharing'] == PostCalendar_Entity_CalendarEvent::SHARING_PRIVATE
-                && $this->event['aid'] != $this->currentUser
-                && !SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN))
-                || ((!SecurityUtil::checkPermission('PostCalendar::Event', "{$this->event['title']}::{$this->event['eid']}", ACCESS_OVERVIEW))
-                || (!CategoryUtil::hasCategoryAccess($this->event['categories'], 'PostCalendar')))) {
-            // if event is PRIVATE and user is not assigned event ID (aid) and user is not Admin event should not be seen
-            // or if specific event is permission controlled or if Category is denied
-            return false;
-        }
-
+        parent::setup();
         $alleventdates = ModUtil::apiFunc('PostCalendar', 'event', 'getEventOccurances', $this->event); // gets all FUTURE occurances
         // assign next occurance to eventDate
         $this->event['eventDate'] = array_shift($alleventdates);
@@ -64,6 +52,22 @@ class PostCalendar_CalendarView_FeaturedEventBlock extends PostCalendar_Calendar
             //return false;
             $this->event['showhiddenwarning'] = true;
             $this->blockInfo['title'] = NULL;
+        }
+    }
+
+    public function render()
+    {
+        // caching won't help much in this case because security check comes after
+        // fetch from db, so don't use isCached, just fetch after normal routine.
+        // is event allowed for this user?
+        if (($this->event['sharing'] == PostCalendar_Entity_CalendarEvent::SHARING_PRIVATE
+                && $this->event['aid'] != $this->currentUser
+                && !SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN))
+                || ((!SecurityUtil::checkPermission('PostCalendar::Event', "{$this->event['title']}::{$this->event['eid']}", ACCESS_OVERVIEW))
+                || (!CategoryUtil::hasCategoryAccess($this->event['categories'], 'PostCalendar')))) {
+            // if event is PRIVATE and user is not assigned event ID (aid) and user is not Admin event should not be seen
+            // or if specific event is permission controlled or if Category is denied
+            return false;
         }
 
         $this->view->assign('loaded_event', $this->event);

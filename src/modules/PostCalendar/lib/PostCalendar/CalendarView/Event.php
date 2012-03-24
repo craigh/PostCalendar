@@ -73,4 +73,9 @@ class PostCalendar_CalendarView_Event extends PostCalendar_CalendarView_Abstract
         }
     }
 
+    public function getEvent()
+    {
+        return $this->event;
+    }
+
 }
