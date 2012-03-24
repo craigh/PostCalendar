@@ -8,7 +8,7 @@
  */
 function smarty_function_pc_init_rss_feed($args, Zikula_View $view)
 {
-    if (!ModUtil::getVar('pnRender', 'expose_template')) {
+    if (!ModUtil::getVar('Theme', 'render_expose_template')) {
         $rsslink = ModUtil::url('PostCalendar', 'user', 'display', array(
             'viewtype' => 'xml',
             'theme'    => 'rss'));
