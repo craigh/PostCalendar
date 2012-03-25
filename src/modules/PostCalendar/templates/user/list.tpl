@@ -1,4 +1,3 @@
-{checkpermission component="PostCalendar::" instance="::" level="ACCESS_ADD" assign="ACCESS_ADD"}
 {formutil_getpassedvalue name="theme" source="get" assign="theme" default=false}
 {assign var="PRINT_VIEW" value=0}
 {if $theme eq "Printer"}
