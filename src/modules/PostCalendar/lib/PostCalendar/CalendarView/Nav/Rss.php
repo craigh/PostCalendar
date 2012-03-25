@@ -14,24 +14,40 @@ class PostCalendar_CalendarView_Nav_Rss extends PostCalendar_CalendarView_Nav_Ab
 
     public function setup()
     {
-        $this->viewtype = 'rss';
+        $this->viewtype = 'xml';
         $this->imageTitleText = $this->view->__('RSS Feed');
         $this->displayText = $this->view->__('RSS');
-        $this->displayImageOn = 'rss_on.gif';
-        $this->displayImageOff = 'rss.gif';
     }
-    
+
     protected function getImageParams()
     {
         return array(
             'modname' => 'PostCalendar',
             'src' => 'feed.gif');
     }
-    
+
     protected function setUrl()
     {
         $this->url = ModUtil::url('PostCalendar', 'user', 'display', array(
                     'viewtype' => $this->viewtype,
                     'theme' => 'rss'));
     }
+
+    protected function setAnchorTag()
+    {
+        if (!ModUtil::getVar('Theme', 'render_expose_template')) {
+            $rsslink = $this->getUrl();
+            $rsslink = DataUtil::formatForDisplay($rsslink);
+            $sitename = System::getVar('sitename');
+            $modinfo = ModUtil::getInfo(ModUtil::getIdFromName('PostCalendar'));
+            $modname = $modinfo['displayname'];
+            $title = DataUtil::formatForDisplay($sitename . " " . $modname);
+            $pagevarvalue = "<link rel='alternate' href='$rsslink' type='application/rss+xml' title='$title' />";
+            PageUtil::addVar("header", $pagevarvalue);
+            parent::setAnchorTag();
+        } else {
+            $this->anchorTag = null;
+        }
+    }
+
 }

@@ -18,6 +18,7 @@ abstract class PostCalendar_CalendarView_Nav_AbstractItemBase
      */
     protected $view;
     protected $viewtype;
+    protected $defaultViewtype;
 
     /**
      * DateTime object
@@ -78,6 +79,7 @@ abstract class PostCalendar_CalendarView_Nav_AbstractItemBase
         $this->useDisplayImage = (boolean)ModUtil::getVar('PostCalendar', 'enablenavimages');
         $this->usePopups = (boolean)ModUtil::getVar('PostCalendar', 'pcUsePopups');
         $this->openInNewWindow = (boolean)ModUtil::getVar('PostCalendar', 'pcEventsOpenInNewWindow');
+        $this->defaultViewtype = ModUtil::getVar('PostCalendar', 'pcDefaultView');
         $this->setup();
         $this->postSetup();
         $this->setUrl();
