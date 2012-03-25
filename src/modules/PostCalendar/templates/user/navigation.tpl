@@ -1,29 +1,12 @@
 {nocache}{ajaxheader module="PostCalendar" ui=true}{pc_pagejs_init}{/nocache}
 {pc_queued_events_notify}
-{pc_form_nav_open}
-{pc_init_rss_feed assign="rss"}
+<form action="{modurl modname='PostCalendar' type='user' func='display'}" method="post" enctype="application/x-www-form-urlencoded">
 <div class="z-clearfix">
     <div id="postcalendar_nav_right">
         <ul>
-            {checkpermissionblock component='PostCalendar::' instance="::" level=ACCESS_ADMIN}
-            <li><a href='{modurl modname='PostCalendar' type='admin' func='listevents'}'>{img src='configure.png' modname='core' set='icons/small' __alt="Admin" __title="Admin"}</a></li>
-            {/checkpermissionblock}
-            {if $requestedDate|truncate:8:"" ne $todayDate|replace:'-':''}
-                <li>{pc_url action='today' full=true navlink=true viewtype=$viewtypeselected}</li>
-            {/if}
-            <li>{pc_url action='day' full=true navlink=true viewtype=$viewtypeselected}</li>
-            <li>{pc_url action='week' full=true navlink=true viewtype=$viewtypeselected}</li>
-            <li>{pc_url action='month' full=true navlink=true viewtype=$viewtypeselected}</li>
-            <li>{pc_url action='year' full=true navlink=true viewtype=$viewtypeselected}</li>
-            <li>{pc_url action='list' full=true navlink=true viewtype=$viewtypeselected}</li>
-            {if $ACCESS_ADD eq true}
-                <li>{pc_url action='add' full=true navlink=true viewtype=$viewtypeselected}</li>
-            {/if}
-            <li>{pc_url action='search' full=true navlink=true viewtype=$viewtypeselected}</li>
-            <li>{pc_url action='print' full=true navlink=true viewtype=$viewtypeselected}</li>
-            {if $rss}
-                <li>{pc_url action='rss' full=true navlink=true viewtype=$viewtypeselected}</li>
-            {/if}
+            {foreach from=$navItems item='navItem'}
+            <li>{$navItem|safehtml}</li>
+            {/foreach}    
         </ul>
     </div>
     <div id="postcalendar_nav_left">

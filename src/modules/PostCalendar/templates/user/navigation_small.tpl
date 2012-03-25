@@ -1,18 +1,11 @@
 {pc_queued_events_notify}
-{pc_form_nav_open}
+<form action="{modurl modname='PostCalendar' type='user' func='display'}" method="post" enctype="application/x-www-form-urlencoded">
 <div class="z-clearfix">
     <div id="postcalendar_nav_right">
         <ul>
-            {checkpermissionblock component='PostCalendar::' instance="::" level=ACCESS_ADMIN}
-            <li><a href='{modurl modname='PostCalendar' type='admin' func='listevents'}'>{img src='configure.png' modname='core' set='icons/small' __alt="Admin" __title="Admin"}</a></li>
-            {/checkpermissionblock}
-            <li>{pc_url action='day' full=true navlink=true viewtype=$viewtypeselected}</li>
-            <li>{pc_url action='week' full=true navlink=true viewtype=$viewtypeselected}</li>
-            <li>{pc_url action='month' full=true navlink=true viewtype=$viewtypeselected}</li>
-            <li>{pc_url action='year' full=true navlink=true viewtype=$viewtypeselected}</li>
-            <li>{pc_url action='list' full=true navlink=true viewtype=$viewtypeselected}</li>
-            <li>{pc_url action='search' full=true navlink=true viewtype=$viewtypeselected}</li>
-            <li>{pc_url action='print' full=true navlink=true viewtype=$viewtypeselected}</li>
+            {foreach from=$navItems item='navItem'}
+            <li>{$navItem|safehtml}</li>
+            {/foreach}  
         </ul>
     </div>
     <div id="postcalendar_nav_left">
