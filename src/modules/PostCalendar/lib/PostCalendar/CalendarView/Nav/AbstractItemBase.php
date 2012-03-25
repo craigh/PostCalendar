@@ -83,14 +83,10 @@ abstract class PostCalendar_CalendarView_Nav_AbstractItemBase
         $this->setUrl();
         $this->setAnchorTag();
     }
-    
+
     private function postSetup()
     {
-        $params = array(
-            'modname' => 'PostCalendar',
-            'src' => $this->selected ? $this->displayImageOn : $this->displayImageOff,
-            'alt' => $this->imageTitleText,
-            'title' => $this->imageTitleText);
+        $params = $this->getImageParams();
         $this->imageHtml = smarty_function_img($params, $this->view);
         if ($this->useDisplayImage) {
             $this->cssClasses[] = 'postcalendar_nav_img';
@@ -106,13 +102,23 @@ abstract class PostCalendar_CalendarView_Nav_AbstractItemBase
         }
     }
 
+    protected function getImageParams()
+    {
+        return array(
+            'modname' => 'PostCalendar',
+            'src' => $this->selected ? $this->displayImageOn : $this->displayImageOff,
+            'alt' => $this->imageTitleText,
+            'title' => $this->imageTitleText);
+    }
+
     protected function setUrl()
     {
         $this->url = ModUtil::url('PostCalendar', 'user', 'display', array(
-                        'viewtype' => $this->viewtype,
-                        'date' => $this->date->format('Ymd'),
-                        'pc_username' => $this->userFilter));
+                    'viewtype' => $this->viewtype,
+                    'date' => $this->date->format('Ymd'),
+                    'pc_username' => $this->userFilter));
     }
+
     protected function setAnchorTag()
     {
         $class = implode(' ', $this->cssClasses);
