@@ -79,13 +79,46 @@ abstract class PostCalendar_CalendarView_Nav_AbstractItemBase
         $this->usePopups = (boolean)ModUtil::getVar('PostCalendar', 'pcUsePopups');
         $this->openInNewWindow = (boolean)ModUtil::getVar('PostCalendar', 'pcEventsOpenInNewWindow');
         $this->setup();
+        $this->postSetup();
         $this->setUrl();
         $this->setAnchorTag();
     }
+    
+    private function postSetup()
+    {
+        $params = array(
+            'modname' => 'PostCalendar',
+            'src' => $this->selected ? $this->displayImageOn : $this->displayImageOff,
+            'alt' => $this->imageTitleText,
+            'title' => $this->imageTitleText);
+        $this->imageHtml = smarty_function_img($params, $this->view);
+        if ($this->useDisplayImage) {
+            $this->cssClasses[] = 'postcalendar_nav_img';
+        } else {
+            if ($this->selected) {
+                $this->cssClasses[] = 'postcalendar_nav_text_selected';
+            } else {
+                $this->cssClasses[] = 'postcalendar_nav_text';
+            }
+        }
+        if ($this->usePopups) {
+            $this->cssClasses[] = 'tooltips';
+        }
+    }
 
-    abstract protected function setUrl();
-
-    abstract protected function setAnchorTag();
+    protected function setUrl()
+    {
+        $this->url = ModUtil::url('PostCalendar', 'user', 'display', array(
+                        'viewtype' => $this->viewtype,
+                        'date' => $this->date->format('Ymd'),
+                        'pc_username' => $this->userFilter));
+    }
+    protected function setAnchorTag()
+    {
+        $class = implode(' ', $this->cssClasses);
+        $display = $this->useDisplayImage ? $this->imageHtml : $this->displayText;
+        $this->anchorTag = "<a href='" . $this->getUrl() . "' class='$class' title='$this->imageTitleText'>$display</a>";
+    }
 
     abstract public function setup();
 }
