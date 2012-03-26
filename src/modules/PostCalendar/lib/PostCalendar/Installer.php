@@ -38,7 +38,7 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
 
         // PostCalendar Default Settings
         $defaultsettings = PostCalendar_Util::getdefaults();
-        $result = ModUtil::setVars('PostCalendar', $defaultsettings);
+        $result = $this->setVars($defaultsettings);
         if (!$result) {
             return LogUtil::registerError($this->__('Error! Could not set the default settings for PostCalendar.'));
         }
@@ -95,6 +95,8 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
                 // change hooked_area values from areaname to area id
                 // update modvars where name=postcalendarhookconfig change key from areaname to iadeaid
                 // change default date setting to date() format instead of strftime format
+                $defaultsettings = PostCalendar_Util::getdefaults();
+                $this->setVar('pcAllowedViews', $defaultsettings['pcAllowedViews']);
             case '7.1.0':
                 //future development
         }
@@ -116,7 +118,7 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
         //drop the tables
         DoctrineHelper::dropSchema($this->entityManager, array('PostCalendar_Entity_CalendarEvent', 
                                                                'PostCalendar_Entity_EventCategory'));
-        ModUtil::delVar('PostCalendar');
+        $this->delVars();
         
         // Delete entries from category registry
         CategoryRegistryUtil::deleteEntry('PostCalendar');

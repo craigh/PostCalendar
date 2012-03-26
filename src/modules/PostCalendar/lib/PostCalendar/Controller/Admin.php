@@ -256,6 +256,7 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
             'pcFilterYearStart' => abs((int)$this->request->request->get('pcFilterYearStart', $defaults['pcFilterYearStart'])), // ensures positive value
             'pcFilterYearEnd' => abs((int)$this->request->request->get('pcFilterYearEnd', $defaults['pcFilterYearEnd'])), // ensures positive value
             'pcNotifyPending' => $this->request->request->get('pcNotifyPending', 0),
+            'pcAllowedViews' => $this->request->request->get('pcAllowedViews', $defaults['pcAllowedViews']),
         );
         $settings['pcNavDateOrder'] = ModUtil::apiFunc('PostCalendar', 'admin', 'getdateorder', $settings['pcEventDateFormat']);
         // save out event default settings so they are not cleared

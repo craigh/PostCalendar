@@ -77,6 +77,22 @@
 				</select></span>
 		</div>
 		<div class="z-formrow">
+			<label for="pcAllowedViews">{gt text='Views/links available to user'}</label>
+			<span><select multiple="multiple" size="5" id="pcAllowedViews" name="pcAllowedViews[]">
+				<option value="today"{if in_array('today', $modvars.PostCalendar.pcAllowedViews)} selected="selected"{/if}>{gt text='Today link'}</option>
+				<option value="day"{if in_array('day', $modvars.PostCalendar.pcAllowedViews)} selected="selected"{/if}>{gt text='Day'}</option>
+				<option value="week"{if in_array('week', $modvars.PostCalendar.pcAllowedViews)} selected="selected"{/if}>{gt text='Week'}</option>
+				<option value="month"{if in_array('month', $modvars.PostCalendar.pcAllowedViews)} selected="selected"{/if}>{gt text='Month'}</option>
+				<option value="year"{if in_array('year', $modvars.PostCalendar.pcAllowedViews)} selected="selected"{/if}>{gt text='Year'}</option>
+				<option value="list"{if in_array('list', $modvars.PostCalendar.pcAllowedViews)} selected="selected"{/if}>{gt text='List'}</option>
+				<option value="create"{if in_array('create', $modvars.PostCalendar.pcAllowedViews)} selected="selected"{/if}>{gt text='Create link'}</option>
+				<option value="search"{if in_array('search', $modvars.PostCalendar.pcAllowedViews)} selected="selected"{/if}>{gt text='Search link'}</option>
+				<option value="print"{if in_array('print', $modvars.PostCalendar.pcAllowedViews)} selected="selected"{/if}>{gt text='Print'}</option>
+				<option value="rss"{if in_array('rss', $modvars.PostCalendar.pcAllowedViews)} selected="selected"{/if}>{gt text='RSS'}</option>
+				</select></span>
+                <em class="z-formnote z-sub">{gt text="The create item is also controlled by permissions settings."}</em>
+		</div>
+		<div class="z-formrow">
 			<label for="pcListMonths">{gt text='Number of months to display in list/rss view'}</label>
 			<span><input type="text" size="3" maxlength="3" value="{$modvars.PostCalendar.pcListMonths}" id="pcListMonths" name="pcListMonths" /></span>
 		</div>

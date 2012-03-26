@@ -72,7 +72,9 @@ class PostCalendar_Controller_User extends Zikula_AbstractController
 
         // create navigation items
         $navItems = array();
-        foreach (array('admin', 'today', 'day', 'week', 'month', 'year', 'list', 'create', 'search', 'print', 'rss') as $navType) {
+        $allowedViews = $this->getVar('pcAllowedViews');
+        array_unshift($allowedViews, 'admin');
+        foreach ($allowedViews as $navType) {
             $class = 'PostCalendar_CalendarView_Nav_' . ucfirst($navType);
             $navItem = new $class($this->view, ($navType == $viewtype));
             $item = $navItem->renderAnchorTag();
@@ -81,8 +83,11 @@ class PostCalendar_Controller_User extends Zikula_AbstractController
             }
         }
         $this->view->assign('navItems', $navItems);
-        
-        $class = 'PostCalendar_CalendarView_' . ucfirst($viewtype);
+        if (in_array($viewtype, $allowedViews)) {
+            $class = 'PostCalendar_CalendarView_' . ucfirst($viewtype);
+        } else {
+            $class = 'PostCalendar_CalendarView_' . ucfirst(_SETTING_DEFAULT_VIEW);
+        }
         $calendarView = new $class($this->view, $date, $pc_username, $filtercats, $eid);
         return $calendarView->render();
     }

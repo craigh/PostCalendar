@@ -22,10 +22,17 @@ function smarty_function_pc_date_select($args, Zikula_View $view)
         'month' => __('Month', $dom),
         'year'  => __('Year', $dom),
         'list'  => __('List View', $dom));
+    $allowedViews = ModUtil::getVar('PostCalendar', 'pcAllowedViews');
+    $viewtypeselector = array();
+    foreach ($sel_data as $key => $text) {
+        if (in_array($key, $allowedViews)) {
+            $viewtypeselector[$key] = $text;
+        }
+    }
 
     $view->assign('dateorderinfo', ModUtil::getVar('PostCalendar', 'pcNavDateOrder'));
     $view->assign('currentjumpdate', $date->format('Y-m-d'));
-    $view->assign('viewtypeselector', $sel_data);
+    $view->assign('viewtypeselector', $viewtypeselector);
 
     return;
 }

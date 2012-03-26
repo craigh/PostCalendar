@@ -70,7 +70,19 @@ class PostCalendar_Util
                     'event_city'              => '',
                     'event_state'             => '',
                     'event_postal'            => '')),
-            'pcTimeItMigrateComplete' => false);
+            'pcTimeItMigrateComplete' => false,
+            'pcAllowedViews'          => array(
+                'today',
+                'day',
+                'week',
+                'month',
+                'year',
+                'list',
+                'create',
+                'search',
+                'print',
+                'rss'),
+        );
     
         return $defaults;
     }
