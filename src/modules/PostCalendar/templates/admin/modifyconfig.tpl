@@ -110,6 +110,14 @@
 			<span><input type="text" size="3" value="{$modvars.PostCalendar.pcFilterYearEnd}" id="pcFilterYearEnd" name="pcFilterYearEnd" />
                  &nbsp;{gt text='year(s) after current year.'}</span>
 		</div>
+		<div class="z-formrow">
+			<label for="pcNavDateOrder">{gt text='Jump Date selector order'}</label>
+			<span><select size="1" id="pcNavDateOrder" name="pcNavDateOrder">
+				<option value="DMY"{if $modvars.PostCalendar.pcNavDateOrder eq "DMY"} selected="selected"{/if}>{gt text='Day Month Year'}</option>
+				<option value="MDY"{if $modvars.PostCalendar.pcNavDateOrder eq "MDY"} selected="selected"{/if}>{gt text='Month Day Year'}</option>
+				<option value="YMD"{if $modvars.PostCalendar.pcNavDateOrder eq "YMD"} selected="selected"{/if}>{gt text='Year Month Day'}</option>
+				</select></span>
+		</div>
         <div class="z-formrow">
 			<label for="enablenavimages">{gt text='Enable images in navigation header'}</label>
 			<input type="checkbox" value="1" id="enablenavimages" name="enablenavimages"{if $modvars.PostCalendar.enablenavimages eq true} checked="checked"{/if}/>

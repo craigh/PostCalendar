@@ -15,8 +15,7 @@
             <li>{pc_filter label=$lbltxt class="" type="user,category" order="user,category,jump"}</li>
             <li>
                 {pc_date_select}
-                {*pc_html_select_date time=$currentjumpdate prefix="jump" start_year="-"|cat:$modvars.PostCalendar.pcFilterYearStart end_year="+"|cat:$modvars.PostCalendar.pcFilterYearEnd day_format="%d" day_value_format="%02d" month_format=$dateorderinfo.M field_order=$dateorderinfo.format*}
-                {pc_html_select_date time=$currentjumpdate prefix="jump" start_year="-"|cat:$modvars.PostCalendar.pcFilterYearStart end_year="+"|cat:$modvars.PostCalendar.pcFilterYearEnd day_format="%d" day_value_format="%02d" month_format='%B' field_order='MDY'}
+                {pc_html_select_date time=$currentjumpdate prefix="jump" start_year="-"|cat:$modvars.PostCalendar.pcFilterYearStart end_year="+"|cat:$modvars.PostCalendar.pcFilterYearEnd day_format="%d" day_value_format="%02d" month_format='%B' field_order=$modvars.PostCalendar.pcNavDateOrder}
                 {if !empty($viewtypeselector)}
                     {html_options name='viewtype' options=$viewtypeselector selected=$viewtypeselected}
                 {/if}

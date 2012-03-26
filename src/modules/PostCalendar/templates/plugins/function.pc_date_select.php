@@ -30,7 +30,6 @@ function smarty_function_pc_date_select($args, Zikula_View $view)
         }
     }
 
-    $view->assign('dateorderinfo', ModUtil::getVar('PostCalendar', 'pcNavDateOrder'));
     $view->assign('currentjumpdate', $date->format('Y-m-d'));
     $view->assign('viewtypeselector', $viewtypeselector);
 

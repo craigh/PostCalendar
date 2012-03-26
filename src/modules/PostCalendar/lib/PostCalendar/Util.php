@@ -47,11 +47,7 @@ class PostCalendar_Util
             'pcFilterYearStart'       => 1,
             'pcFilterYearEnd'         => 2,
             'pcListMonths'            => 12,
-            'pcNavDateOrder'          => array(
-                'format'                  => 'MDY',
-                'D'                       => '%e',
-                'M'                       => '%B',
-                'Y'                       => '%Y'),
+            'pcNavDateOrder'          => 'DMY',
             'pcEventDefaults'         => array(
                 'sharing'                 => PostCalendar_Entity_CalendarEvent::SHARING_GLOBAL,
                 'categories'              => $defaultcats,
