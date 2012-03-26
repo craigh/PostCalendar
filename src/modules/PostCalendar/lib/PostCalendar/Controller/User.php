@@ -50,7 +50,8 @@ class PostCalendar_Controller_User extends Zikula_AbstractController
         $date = isset($args['date']) ? $args['date'] : $this->request->query->get('date', $this->request->request->get('date', PostCalendar_Util::getDate($jumpargs)));
         $prop = isset($args['prop']) ? $args['prop'] : (string)$this->request->query->get('prop', null);
         $cat = isset($args['cat']) ? $args['cat'] : (string)$this->request->query->get('cat', null);
-        
+        $popup = $this->view->getRequest()->query->get('popup', $this->view->getRequest()->request->get('popup', false));
+
         if (empty($filtercats) && !empty($prop) && !empty($cat)) {
             $filtercats[$prop] = $cat;
         }
@@ -83,7 +84,7 @@ class PostCalendar_Controller_User extends Zikula_AbstractController
             }
         }
         $this->view->assign('navItems', $navItems);
-        if (in_array($viewtype, $allowedViews)) {
+        if ((in_array($viewtype, $allowedViews)) || ($viewtype == 'event' && $popup)) {
             $class = 'PostCalendar_CalendarView_' . ucfirst($viewtype);
         } else {
             $class = 'PostCalendar_CalendarView_' . ucfirst(_SETTING_DEFAULT_VIEW);
