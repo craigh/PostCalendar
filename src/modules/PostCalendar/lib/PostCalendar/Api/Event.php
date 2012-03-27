@@ -608,19 +608,24 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
                 $period = new DatePeriod($eventStart, $interval, $eventEnd->modify("+1 day"));
                 break;
             case CalendarEvent::RECURRTYPE_REPEAT_ON:
-                $rfreq = $event['recurrspec']['event_repeat_on_freq'];
                 $rnum = $event['recurrspec']['event_repeat_on_num'];
                 $rday = $event['recurrspec']['event_repeat_on_day'];
                 $eventStart->modify("last day of previous month");
                 $interval = DateInterval::createFromDateString("{$this->rWeeks[$rnum]} {$this->rDays[$rday]} of next month");
-                // not dealing with $rfreq!
-                $period = new DatePeriod($eventStart, $interval, $eventEnd, DatePeriod::EXCLUDE_START_DATE);
+                $period = new DatePeriod($eventStart, $interval, $eventEnd->modify("+1 day"), DatePeriod::EXCLUDE_START_DATE);
                 break;
         }
+        $rfreq = $event['recurrspec']['event_repeat_on_freq'];
         $today = new DateTime();
+        $count = 0;
         foreach ($period as $date) {
             if (($includePast && ($date < $today)) || ($date >= $today)) {
-                $occurances[] = $date->format('Y-m-d');
+                if (($event['recurrtype'] <> CalendarEvent::RECURRTYPE_REPEAT_ON) 
+                        || (($event['recurrtype'] == CalendarEvent::RECURRTYPE_REPEAT_ON) && (($count == 0) || ($rfreq == $count)))) {
+                    $occurances[] = $date->format('Y-m-d');
+                    $count = 0;
+                }
+                $count++;
             }
         }
         return $occurances;
