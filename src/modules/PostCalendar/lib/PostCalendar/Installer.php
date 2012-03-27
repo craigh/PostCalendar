@@ -97,6 +97,7 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
                 // change default date setting to date() format instead of strftime format
                 $defaultsettings = PostCalendar_Util::getdefaults();
                 $this->setVar('pcAllowedViews', $defaultsettings['pcAllowedViews']);
+                $this->setVar('pcEventStrftimeFormat', $defaultsettings['pcEventStrftimeFormat']);
                 $old_pcNavDateOrder = $this->getVar('pcNavDateOrder');
                 $this->setVar('pcNavDateOrder', $old_pcNavDateOrder['format']);
             case '7.1.0':

@@ -32,7 +32,8 @@ class PostCalendar_Util
             'pcUsePopups'             => '0',
             'pcAllowDirectSubmit'     => '0',
             'pcListHowManyEvents'     => '15',
-            'pcEventDateFormat'       => 'F j, Y', // American: e.g. July 4, 2010
+            'pcEventDateFormat'       => 'j F Y', // European: e.g. 4 July 2010
+            'pcEventStrftimeFormat'   => '%e %B %Y',
             'pcAllowUserCalendar'     => '0', // no group
             'pcTimeIncrement'         => '15',
             'pcDefaultView'           => 'month',

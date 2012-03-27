@@ -50,12 +50,20 @@
 			<input type="checkbox" value="1" id="pcUsePopups" name="pcUsePopups"{if $modvars.PostCalendar.pcUsePopups eq true} checked="checked"{/if}/>
 		</div>
 		<div class="z-formrow">
-			<label for="pcEventDateFormat">{gt text='Date Display Format'}<br />(<i>{gt text='uses %s format' tag1='<a href="http://php.net/strftime" target="_blank">php strftime</a>'}</i>)</label>
+			<label for="pcEventDateFormat">{gt text='Date Display Format (date() version)'}<br />(<i>{gt text='uses %s format' tag1='<a href="http://php.net/date" target="_blank">php date</a>'}</i>)</label>
                 <span><input type="text" size="15" value="{$modvars.PostCalendar.pcEventDateFormat}" id="pcEventDateFormat" name="pcEventDateFormat" />
                 &nbsp;{gt text="Or choose a preset:"}&nbsp;
                 <input type="button" name="format_usa" value="{gt text='Month Day, Year'}" onclick="this.form.pcEventDateFormat.value='F j, Y'" />
                 <input type="button" name="format_eu" value="{gt text='Day Month Year'}" onclick="this.form.pcEventDateFormat.value='j F Y'" />
                 <input type="button" name="format_iso8601" value="{gt text='YYYY-MM-DD'}" onclick="this.form.pcEventDateFormat.value='Y-m-d'" /></span>
+		</div>
+		<div class="z-formrow">
+			<label for="pcEventStrftimeFormat">{gt text='Date Display Format (strftime() version)'}<br />(<i>{gt text='uses %s format' tag1='<a href="http://php.net/strftime" target="_blank">php strftime</a>'}</i>)</label>
+                <span><input type="text" size="15" value="{$modvars.PostCalendar.pcEventStrftimeFormat}" id="pcEventStrftimeFormat" name="pcEventStrftimeFormat" />
+                &nbsp;{gt text="Or choose a preset:"}&nbsp;
+                <input type="button" name="format_usa" value="{gt text='Month Day, Year'}" onclick="this.form.pcEventStrftimeFormat.value='%B %e, %Y'" />
+                <input type="button" name="format_eu" value="{gt text='Day Month Year'}" onclick="this.form.pcEventStrftimeFormat.value='%e %B %Y'" />
+                <input type="button" name="format_iso8601" value="{gt text='YYYY-MM-DD'}" onclick="this.form.pcEventStrftimeFormat.value='%Y-%m-%d'" /></span>
 		</div>
 		<div class="z-formrow">
 			<label for="pcFirstDayOfWeek">{gt text='First day of the week'}</label>

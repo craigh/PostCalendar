@@ -47,7 +47,7 @@
             <br />
 
             <span style='padding-right:2em;'><label for="display_eventDate"><b>{gt text='Start date'}</b></label></span>
-            {calendarinput display=true hidden=true objectname="postcalendar_events" htmlname="eventDate" ifformat="%Y-%m-%d" dateformat=$modvars.PostCalendar.pcEventDateFormat defaultstring=$loaded_event.eventDatevalue defaultdate=$loaded_event.eventDate}
+            {calendarinput display=true hidden=true objectname="postcalendar_events" htmlname="eventDate" ifformat="%Y-%m-%d" dateformat=$modvars.PostCalendar.pcEventStrftimeFormat defaultstring=$loaded_event.eventDatevalue defaultdate=$loaded_event.eventDate}
             <br /><br />
             <b>{gt text='Time'}</b><br />
             <input type="radio" name="postcalendar_events[alldayevent]" id="postcalendar_events_alldayevent1" value="1"{$Selected.allday} /><label for="postcalendar_events_alldayevent1" style='padding-left:1em;'>{gt text='All-day event'}</label>
@@ -118,9 +118,9 @@
             <input type="radio" name="postcalendar_events[endtype]" id="postcalendar_events_endtype1" value="1" {$SelectedEndOn} />
             <span style='padding-left:1em;'>
             {if ((isset($postcalendar_events)) AND ($postcalendar_events.eventDate > $postcalendar_events.endDate))}
-                {calendarinput display=true hidden=true objectname="postcalendar_events" htmlname="endDate" ifformat="%Y-%m-%d" dateformat=$modvars.PostCalendar.pcEventDateFormat defaultstring=$loaded_event.eventDatevalue defaultdate=$loaded_event.eventDate}<br />
+                {calendarinput display=true hidden=true objectname="postcalendar_events" htmlname="endDate" ifformat="%Y-%m-%d" dateformat=$modvars.PostCalendar.pcEventStrftimeFormat defaultstring=$loaded_event.eventDatevalue defaultdate=$loaded_event.eventDate}<br />
             {else}
-                {calendarinput display=true hidden=true objectname="postcalendar_events" htmlname="endDate" ifformat="%Y-%m-%d" dateformat=$modvars.PostCalendar.pcEventDateFormat defaultstring=$loaded_event.endvalue defaultdate=$loaded_event.endDate}<br />
+                {calendarinput display=true hidden=true objectname="postcalendar_events" htmlname="endDate" ifformat="%Y-%m-%d" dateformat=$modvars.PostCalendar.pcEventStrftimeFormat defaultstring=$loaded_event.endvalue defaultdate=$loaded_event.endDate}<br />
             {/if}
             </span>
             <input type="radio" name="postcalendar_events[endtype]" id="postcalendar_events_endtype0" value="0" {$SelectedNoEnd} />

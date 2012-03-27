@@ -258,6 +258,7 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
             'pcNotifyPending' => $this->request->request->get('pcNotifyPending', 0),
             'pcAllowedViews' => $this->request->request->get('pcAllowedViews', $defaults['pcAllowedViews']),
             'pcNavDateOrder' => $this->request->request->get('pcNavDateOrder', $defaults['pcNavDateOrder']),
+            'pcEventStrftimeFormat' => $this->request->request->get('pcEventStrftimeFormat', $defaults['pcEventStrftimeFormat']),
         );
         // save out event default settings so they are not cleared
         $settings['pcEventDefaults'] = $this->getVar('pcEventDefaults');
