@@ -78,14 +78,11 @@ class PostCalendar_CalendarView_List extends PostCalendar_CalendarView_AbstractD
                 'pc_username' => $this->userFilter));
             // create and return template
             $this->view
+                    ->assign('navBar', $this->navBar)
                     ->assign('navigation', $this->navigation)
                     ->assign('dayDisplay', $this->dayDisplay)
                     ->assign('graph', $this->dateGraph)
                     ->assign('eventsByDate', $eventsByDate)
-                    ->assign('selectedcategories', $this->selectedCategories)
-                    ->assign('func', $this->view->getRequest()->query->get('func', $this->view->getRequest()->request->get('func', 'display')))
-                    ->assign('viewtypeselected', $this->viewtype)
-                    ->assign('todayDate', date('Y-m-d'))
                     ->assign('requestedDate', $this->requestedDate->format('Y-m-d'))
                     ->assign('startDate', $this->startDate->format('Y-m-d'))
                     ->assign('endDate', $this->endDate->format('Y-m-d'));

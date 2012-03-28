@@ -36,6 +36,8 @@ abstract class PostCalendar_CalendarView_AbstractCalendarViewBase extends Zikula
     protected $currentUser;
     protected $selectedCategories = array();
     protected $eid;
+    
+    protected $navBar;
 
     /**
      * Array of navigation links
@@ -71,6 +73,9 @@ abstract class PostCalendar_CalendarView_AbstractCalendarViewBase extends Zikula
         $this->setTemplate();
 
         $this->setup();
+        
+        $navBar = new PostCalendar_CalendarView_Navigation($this->view, $this->requestedDate, $this->userFilter, $this->selectedCategories, $this->viewtype, $this->getNavBarConfig());
+        $this->navBar = $navBar->render();
     }
 
     abstract protected function setup();
@@ -80,6 +85,16 @@ abstract class PostCalendar_CalendarView_AbstractCalendarViewBase extends Zikula
     abstract protected function setCacheTag();
 
     abstract public function render();
+    
+    /** 
+     * optionally provide config date to the navBar
+     * override in child class to modify
+     * @return array
+     */
+    protected function getNavBarConfig()
+    {
+        return array();
+    }
 
     protected function isCached($template = null)
     {

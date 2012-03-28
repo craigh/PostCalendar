@@ -74,14 +74,10 @@ class PostCalendar_CalendarView_Week extends PostCalendar_CalendarView_AbstractD
                 'date'        => $this->requestedDate,
                 'pc_username' => $this->userFilter));
             // create and return template
-            $today = new DateTime();
             $this->view
+                    ->assign('navBar', $this->navBar)
                     ->assign('navigation', $this->navigation)
                     ->assign('eventsByDate', $eventsByDate)
-                    ->assign('selectedcategories', $this->selectedCategories)
-                    ->assign('func', $this->view->getRequest()->query->get('func', $this->view->getRequest()->request->get('func', 'display')))
-                    ->assign('viewtypeselected', $this->viewtype)
-                    ->assign('todayDate', $today->format('Y-m-d'))
                     ->assign('startDate', $this->startDate->format('Ymd'))
                     ->assign('endDate', $this->endDate->format('Ymd'))
                     ->assign('requestedDate', $this->requestedDate->format('Ymd'));

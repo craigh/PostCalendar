@@ -1,36 +1,27 @@
 <?php
+
 /**
  * @package     PostCalendar
  * @copyright   Copyright (c) 2002, The PostCalendar Team
  * @copyright   Copyright (c) 2009-2012, Craig Heydenburg, Sound Web Development
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
  */
-
 class PostCalendar_Controller_User extends Zikula_AbstractController
 {
-    private $allowedViewtypes = array(
-        'event',
-        'day',
-        'week',
-        'month',
-        'year',
-        'list',
-        'xml',
-    );
-    
+
     /**
      * main view functions for end user
      */
     public function main($args)
     {
-		$this->redirect(ModUtil::url('PostCalendar', 'user', 'display', $args));
+        $this->redirect(ModUtil::url('PostCalendar', 'user', 'display', $args));
     }
 
     public function view($args)
     {
-		$this->redirect(ModUtil::url('PostCalendar', 'user', 'display', $args));
+        $this->redirect(ModUtil::url('PostCalendar', 'user', 'display', $args));
     }
-    
+
     /**
      * display calendar events in requested viewtype
      */
@@ -55,42 +46,28 @@ class PostCalendar_Controller_User extends Zikula_AbstractController
         if (empty($filtercats) && !empty($prop) && !empty($cat)) {
             $filtercats[$prop] = $cat;
         }
-    
+
         if (empty($date) && empty($viewtype)) {
             return LogUtil::registerArgsError();
         }
-        
-        if (!in_array($viewtype, $this->allowedViewtypes)) {
-            return LogUtil::registerError($this->__('Unsupported Viewtype.'));
-        }
+
         if ($viewtype == 'event') {
             $this->throwForbiddenUnless(SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_READ), LogUtil::getErrorMsgPermission());
         }
-        
+
         if (!is_object($date)) {
             $date = DateTime::createFromFormat('Ymd', $date);
         }
 
-        // create navigation items
-        $navItems = array();
         $allowedViews = $this->getVar('pcAllowedViews');
-        array_unshift($allowedViews, 'admin');
-        foreach ($allowedViews as $navType) {
-            $class = 'PostCalendar_CalendarView_Nav_' . ucfirst($navType);
-            $navItem = new $class($this->view, ($navType == $viewtype));
-            $item = $navItem->renderAnchorTag();
-            if (isset($item)) {
-                $navItems[] = $item;
-            }
-        }
-        $this->view->assign('navItems', $navItems);
         if ((in_array($viewtype, $allowedViews)) || ($viewtype == 'event' && $popup)) {
             $class = 'PostCalendar_CalendarView_' . ucfirst($viewtype);
         } else {
+            LogUtil::registerError($this->__('Attempting to view unauthorized viewtype.'));
             $class = 'PostCalendar_CalendarView_' . ucfirst(_SETTING_DEFAULT_VIEW);
         }
         $calendarView = new $class($this->view, $date, $pc_username, $filtercats, $eid);
         return $calendarView->render();
     }
 
-} // end class def
+}

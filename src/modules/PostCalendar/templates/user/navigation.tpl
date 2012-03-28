@@ -5,7 +5,7 @@
     <div id="postcalendar_nav_right">
         <ul>
             {foreach from=$navItems item='navItem'}
-            <li>{$navItem|safehtml}</li>
+            <li>{$navItem->renderAnchorTag()|safehtml}</li>
             {/foreach}    
         </ul>
     </div>

@@ -5,7 +5,7 @@
     {assign var="PRINT_VIEW" value=1}
 {/if}
 {if $PRINT_VIEW eq false}
-    {include file="user/navigation_small.tpl"}
+{$navBar}
 {/if}
 
 {include file="event/view.tpl"}

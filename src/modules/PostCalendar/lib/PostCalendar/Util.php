@@ -78,7 +78,8 @@ class PostCalendar_Util
                 'create',
                 'search',
                 'print',
-                'rss'),
+                'rss',
+                'event'),
         );
     
         return $defaults;

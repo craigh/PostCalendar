@@ -5,7 +5,7 @@
 	{assign var="PRINT_VIEW" value=1}
 {/if}
 {if $PRINT_VIEW != 1}
-{include file="user/navigation.tpl"}
+{$navBar}
 {/if}
 <h2 class="postcalendar_header">
     {if $PRINT_VIEW eq false}<a href="{$navigation.previous|safehtml}">&lt;&lt;</a>{/if}

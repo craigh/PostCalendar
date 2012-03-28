@@ -55,14 +55,10 @@ class PostCalendar_CalendarView_Day extends PostCalendar_CalendarView_AbstractCa
                 'date'        => $this->requestedDate,
                 'pc_username' => $this->userFilter));
             // create and return template
-            $today = new DateTime();
             $this->view
+                    ->assign('navBar', $this->navBar)
                     ->assign('navigation', $this->navigation)
                     ->assign('eventsByDate', $eventsByDate)
-                    ->assign('selectedcategories', $this->selectedCategories)
-                    ->assign('func', $this->view->getRequest()->query->get('func', $this->view->getRequest()->request->get('func', 'display')))
-                    ->assign('viewtypeselected', $this->viewtype)
-                    ->assign('todayDate', $today->format('Y-m-d'))
                     ->assign('requestedDate', $this->requestedDate->format('Y-m-d'));
             // be sure to DataUtil::formatForDisplay in the template - navigation and others?
         }
