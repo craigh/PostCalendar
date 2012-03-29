@@ -60,7 +60,6 @@ class PostCalendar_CalendarView_Day extends PostCalendar_CalendarView_AbstractCa
                     ->assign('navigation', $this->navigation)
                     ->assign('eventsByDate', $eventsByDate)
                     ->assign('requestedDate', $this->requestedDate->format('Y-m-d'));
-            // be sure to DataUtil::formatForDisplay in the template - navigation and others?
         }
         return $this->view->fetch($this->template);
     }

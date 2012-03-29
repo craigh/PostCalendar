@@ -86,7 +86,6 @@ class PostCalendar_CalendarView_List extends PostCalendar_CalendarView_AbstractD
                     ->assign('requestedDate', $this->requestedDate->format('Y-m-d'))
                     ->assign('startDate', $this->startDate->format('Y-m-d'))
                     ->assign('endDate', $this->endDate->format('Y-m-d'));
-            // be sure to DataUtil::formatForDisplay in the template - navigation and others?
         }
         return $this->view->fetch($this->template);
     }

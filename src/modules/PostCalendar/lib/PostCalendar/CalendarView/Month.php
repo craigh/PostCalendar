@@ -94,7 +94,6 @@ class PostCalendar_CalendarView_Month extends PostCalendar_CalendarView_Abstract
                     ->assign('requestedDate', $this->requestedDate->format('Y-m-d'))
                     ->assign('firstDayOfMonth', $firstClone->modify("first day of this month")->format('Y-m-d'))
                     ->assign('lastDayOfMonth', $lastClone->modify("last day of this month")->format('Y-m-d'));
-            // be sure to DataUtil::formatForDisplay in the template - navigation and others?
         }
         return $this->view->fetch($this->template);
     }

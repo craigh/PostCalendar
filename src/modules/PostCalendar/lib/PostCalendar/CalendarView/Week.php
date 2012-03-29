@@ -81,7 +81,6 @@ class PostCalendar_CalendarView_Week extends PostCalendar_CalendarView_AbstractD
                     ->assign('startDate', $this->startDate->format('Ymd'))
                     ->assign('endDate', $this->endDate->format('Ymd'))
                     ->assign('requestedDate', $this->requestedDate->format('Ymd'));
-            // be sure to DataUtil::formatForDisplay in the template - navigation and others?
         }
         return $this->view->fetch($this->template);
     }

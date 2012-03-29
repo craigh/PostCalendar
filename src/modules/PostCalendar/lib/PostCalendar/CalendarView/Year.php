@@ -109,7 +109,6 @@ class PostCalendar_CalendarView_Year extends PostCalendar_CalendarView_AbstractD
                     ->assign('graph', $this->dateGraph)
                     ->assign('eventsByDate', $eventsByDate)
                     ->assign('requestedDate', $this->requestedDate->format('Y-m-d'));
-            // be sure to DataUtil::formatForDisplay in the template - navigation and others?
         }
         return $this->view->fetch($this->template);
     }

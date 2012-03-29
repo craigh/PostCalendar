@@ -62,10 +62,8 @@ class PostCalendar_CalendarView_PastEventsBlock extends PostCalendar_CalendarVie
                         'filtercats' => $this->selectedCategories,
                         'sort' => 'DESC'));
             // create and return template
-            $today = new DateTime();
             $this->view
-                    ->assign('eventsByDate', $eventsByDate)
-                    ->assign('todayDate', $today->format('Y-m-d'));
+                    ->assign('eventsByDate', $eventsByDate);
         }
 
         return $this->view->fetch($this->template);
