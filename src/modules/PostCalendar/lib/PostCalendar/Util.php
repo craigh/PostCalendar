@@ -78,7 +78,7 @@ class PostCalendar_Util
                 'create',
                 'search',
                 'print',
-                'rss',
+                'xml',
                 'event'),
         );
     

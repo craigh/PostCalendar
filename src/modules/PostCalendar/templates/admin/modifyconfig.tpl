@@ -96,7 +96,7 @@
 				<option value="create"{if in_array('create', $modvars.PostCalendar.pcAllowedViews)} selected="selected"{/if}>{gt text='Create link'}</option>
 				<option value="search"{if in_array('search', $modvars.PostCalendar.pcAllowedViews)} selected="selected"{/if}>{gt text='Search link'}</option>
 				<option value="print"{if in_array('print', $modvars.PostCalendar.pcAllowedViews)} selected="selected"{/if}>{gt text='Print'}</option>
-				<option value="rss"{if in_array('rss', $modvars.PostCalendar.pcAllowedViews)} selected="selected"{/if}>{gt text='RSS'}</option>
+				<option value="xml"{if in_array('xml', $modvars.PostCalendar.pcAllowedViews)} selected="selected"{/if}>{gt text='Xml/RSS'}</option>
 				<option value="event"{if in_array('event', $modvars.PostCalendar.pcAllowedViews)} selected="selected"{/if}>{gt text='Event'}</option>
 				</select></span>
                 <em class="z-formnote z-sub">{gt text="The create item is also controlled by %s permissions settings." tag1='ACCESS_ADD'}</em>
