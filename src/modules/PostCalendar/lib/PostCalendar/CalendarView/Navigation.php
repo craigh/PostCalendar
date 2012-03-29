@@ -17,7 +17,6 @@ class PostCalendar_CalendarView_Navigation
      * @var mixed PostCalendar_CalendarView_Nav_AbstractItem or null 
      */
     private $navItems = array();
-    private $cacheTag = 'nav';
     private $template = 'user/navigation.tpl';
     protected $view;
     protected $requestedDate;
@@ -57,13 +56,13 @@ class PostCalendar_CalendarView_Navigation
 
     public function render()
     {
+        // caching shouldn't be used because the date and other filter settings may change
         $today = new DateTime();
         $this->view->assign('navItems', $this->navItems)
                 ->assign('todayDate', $today->format('Ymd'))
                 ->assign('currentjumpdate', $this->requestedDate->format('Y-m-d'))
                 ->assign('selectedcategories', $this->selectedCategories)
                 ->assign('viewtypeselector', $this->viewtypeselector)
-                ->assign('func', $this->view->getRequest()->query->get('func', $this->view->getRequest()->request->get('func', 'display')))
                 ->assign('viewtypeselected', $this->viewtype);
         return $this->view->fetch($this->template);
     }
