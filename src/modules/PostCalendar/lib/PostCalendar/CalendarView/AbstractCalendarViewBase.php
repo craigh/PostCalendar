@@ -99,7 +99,7 @@ abstract class PostCalendar_CalendarView_AbstractCalendarViewBase extends Zikula
     protected function isCached($template = null)
     {
         if (isset($template)) {
-            return $this->view->is_cached($this->template);
+            return $this->view->is_cached($template);
         } else {
             return (isset($this->template) && $this->view->is_cached($this->template));
         }
