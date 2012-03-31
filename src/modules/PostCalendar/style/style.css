@@ -74,7 +74,7 @@ table#postcalendar_yearview td.postcalendar_yearview_panel {
 #postcalendar_footer {
     text-align: left;
     font-size: 8px;
-    padding: 2px;
+    padding: 4px 2px;
 }
 /********** DAY ***************/
 h3.dayheader,
