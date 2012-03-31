@@ -12,9 +12,9 @@
 class PostCalendar_TaggedObjectMeta_PostCalendar extends Tag_AbstractTaggedObjectMeta
 {
 
-    function __construct($objectId, $areaId, $module, $objectUrl)
+    function __construct($objectId, $areaId, $module, $urlString = null, Zikula_ModUrl $urlObject = null)
     {
-        parent::__construct($objectId, $areaId, $module, $objectUrl);
+        parent::__construct($objectId, $areaId, $module, $urlString, $urlObject);
 
         $entityManager = ServiceUtil::getService('doctrine.entitymanager');
         $pc_event = $entityManager->getRepository('PostCalendar_Entity_CalendarEvent')->find($this->getObjectId())->getOldArray();
@@ -28,8 +28,6 @@ class PostCalendar_TaggedObjectMeta_PostCalendar extends Tag_AbstractTaggedObjec
             $this->setObjectDate("$date $time");
             $this->setObjectTitle($pc_event['title']);
             // do not use default objectURL to compensate for shortUrl handling
-            $modUrl = new Zikula_ModUrl('PostCalendar', 'user', 'display', System::getVar('language_i18n'), array('viewtype' => 'event', 'eid' => $this->getObjectId()));
-            $this->setUrlObject($modUrl);
         }
     }
 
@@ -58,7 +56,8 @@ class PostCalendar_TaggedObjectMeta_PostCalendar extends Tag_AbstractTaggedObjec
             $on = __('on', $dom);
             $calEvent = __('Event', $dom);
             $modinfo = ModUtil::getInfoFromName('PostCalendar');
-            $link = "$modinfo[displayname] $calEvent: <a href='{$this->getObjectUrl()}'>$title</a>";
+            $urlObj = $this->getUrlObject();
+            $link = "$modinfo[displayname] $calEvent: <a href='{$urlObj->getUrl()}'>$title</a>";
             $sub = '';
             if (!empty($date)) {
                 $sub .= " $on $date";
