@@ -11,40 +11,35 @@
  *
  * @param array  $args   array with arguments. Used values:
  *                       'type'  comma separated list of filter types;
- *                               can be one or both of 'user' or 'category' (required)
+ *                               can be one or both of 'user' or 'category' (optional, default 'user,category')
  *                       'class' the classname(s) (optional, default no class)
  *                       'label' the label on the submit button (optional, default _PC_TPL_VIEW_SUBMIT)
- *                       'order' comma separated list of arguments to sort on (optional)
+ *                       'order' comma separated list of arguments to sort on (optional, default user,category,jump)
+ *                       'userfilter' userid to filter resultset. default configured in plugin
+ *                       'selectedCategories' the categories that were slected to filter by
  * @param Smarty $smarty
  */
 function smarty_function_pc_filter($args, Zikula_View $view)
 {
     $dom = ZLanguage::getModuleDomain('PostCalendar');
-    if (empty($args['type'])) {
-        $view->trigger_error(__f('%1$s: missing or empty \'%2$s\' parameter', array(
-            'Plugin:pc_filter',
-            'type'), $dom));
-        return;
-    }
-    $class = !empty($args['class']) ? ' class="' . $args['class'] . '"' : '';
-    $label = isset($args['label'])  ? $args['label']                    : __('change', $dom);
-    $order = isset($args['order'])  ? $args['order']                    : null;
+    $type = isset($args['type']) ? $args['type'] : "user,category";
+    $types = explode(',', $type);
+    $class = (isset($args['class']) && !empty($args['class'])) ? ' class="' . $args['class'] . '"' : '';
+    $label = isset($args['label']) ? $args['label'] : __('change', $dom);
+    $order = isset($args['order']) ? $args['order'] : "user,category,jump";
 
-    $request = $view->getRequest();
+    //================================================================
+    // build the username filter pulldown
+    //================================================================
     if (ModUtil::getVar('PostCalendar', 'pcAllowUserCalendar')) {
         $filterdefault = PostCalendar_Entity_Repository_CalendarEventRepository::FILTER_ALL;
     } else {
         $filterdefault = PostCalendar_Entity_Repository_CalendarEventRepository::FILTER_GLOBAL;
     }
-    $pc_username = $request->request->get('pc_username', $filterdefault);
+    $userFilter = isset($args['userfilter']) ? $args['userfilter'] : $filterdefault;
     if (!UserUtil::isLoggedIn()) {
-        $pc_username = PostCalendar_Entity_Repository_CalendarEventRepository::FILTER_GLOBAL;
+        $userFilter = PostCalendar_Entity_Repository_CalendarEventRepository::FILTER_GLOBAL;
     }
-    $types = explode(',', $args['type']);
-
-    //================================================================
-    // build the username filter pulldown
-    //================================================================
     define('IS_ADMIN', SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN));
     $allowedgroup = ModUtil::getVar('PostCalendar', 'pcAllowUserCalendar');
     $uid = UserUtil::getVar('uid');
@@ -74,7 +69,7 @@ function smarty_function_pc_filter($args, Zikula_View $view)
             // generate html for selectbox - should move this to the template...
             $useroptions = "<select name='pc_username' $class>";
             foreach ($filteroptions as $k => $v) {
-                $sel = ($pc_username == $k ? ' selected="selected"' : '');
+                $sel = ($userFilter == $k ? ' selected="selected"' : '');
                 $useroptions .= "<option value='$k'$sel$class>$v</option>";
            }
             $useroptions .= '</select>';
@@ -91,6 +86,7 @@ function smarty_function_pc_filter($args, Zikula_View $view)
         $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'CalendarEvent');
 
         $view->assign('enablecategorization', ModUtil::getVar('PostCalendar', 'enablecategorization'));
+        $view->assign('selectedcategories', $args['selectedCategories']);
         $view->assign('catregistry', $catregistry);
         $catoptions = $view->fetch('event/filtercats.tpl', 1); // force one cachefile
     } else {
@@ -133,7 +129,7 @@ function smarty_function_pc_filter($args, Zikula_View $view)
     }
 
     if (!in_array('user', $types)) {
-        $ret_val .= "<input type='hidden' name='pc_username' value='$pc_username' />";
+        $ret_val .= "<input type='hidden' name='pc_username' value='$userFilter' />";
     }
 
     if (isset($args['assign'])) {

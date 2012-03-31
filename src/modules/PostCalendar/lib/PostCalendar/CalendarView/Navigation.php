@@ -18,22 +18,33 @@ class PostCalendar_CalendarView_Navigation
      */
     private $navItems = array();
     private $template = 'user/navigation.tpl';
-    protected $view;
-    protected $requestedDate;
-    protected $userFilter;
-    protected $selectedCategories;
-    protected $viewtype;
-    protected $config;
-    protected $viewtypeselector = array();
-    
-    public function __construct(Zikula_View $view, $requestedDate, $userFilter, $selectedCategories, $viewtype, $config)
+    private $view;
+    public $today;
+    public $requestedDate;
+    private $userFilter;
+    private $selectedCategories;
+    private $viewtype;
+
+    /**
+     * config options for Navigation display
+     * @var boolean 
+     */
+    public $useFilter = true;
+    public $useJumpDate = true;
+    public $useNavBar = true;
+    public $viewtypeselector = array();
+
+    public function __construct(Zikula_View $view, $requestedDate, $userFilter, $selectedCategories, $viewtype, $config = null)
     {
         $this->view = $view;
         $this->requestedDate = $requestedDate;
         $this->userFilter = $userFilter;
         $this->selectedCategories = $selectedCategories;
         $this->viewtype = $viewtype;
-        $this->config = $config;
+        if (isset($config) && !empty($config)) {
+            $this->configure($config);
+        }
+        $this->today = new DateTime();
 
         $allowedViews = ModUtil::getVar('PostCalendar', 'pcAllowedViews');
         array_unshift($allowedViews, 'admin'); // add 'admin' view for nav purposes (always available to Admin)
@@ -57,14 +68,41 @@ class PostCalendar_CalendarView_Navigation
     public function render()
     {
         // caching shouldn't be used because the date and other filter settings may change
-        $today = new DateTime();
-        $this->view->assign('navItems', $this->navItems)
-                ->assign('todayDate', $today->format('Ymd'))
-                ->assign('currentjumpdate', $this->requestedDate->format('Y-m-d'))
-                ->assign('selectedcategories', $this->selectedCategories)
-                ->assign('viewtypeselector', $this->viewtypeselector)
-                ->assign('viewtypeselected', $this->viewtype);
+        $this->view->assign('navigationObj', $this);
         return $this->view->fetch($this->template);
+    }
+
+    private function configure($args)
+    {
+        if (isset($args['filter'])) {
+            $this->useFilter = $args['filter'];
+        }
+        if (isset($args['jumpdate'])) {
+            $this->useJumpDate = $args['jumpdate'];
+        }
+        if (isset($args['navbar'])) {
+            $this->useNavBar = $args['navbar'];
+        }
+    }
+
+    public function getNavItems()
+    {
+        return $this->navItems;
+    }
+
+    public function getSelectedCategories()
+    {
+        return $this->selectedCategories;
+    }
+
+    public function getViewtype()
+    {
+        return $this->viewtype;
+    }
+
+    public function getUserFilter()
+    {
+        return $this->userFilter;
     }
 
 }

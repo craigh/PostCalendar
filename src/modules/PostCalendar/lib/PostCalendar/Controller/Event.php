@@ -222,18 +222,9 @@ class PostCalendar_Controller_Event extends Zikula_AbstractController
 
         // assign function in case we were editing
         $this->view->assign('func', $func);
-        $this->view->assign('viewtypeselected', _SETTING_DEFAULT_VIEW);
-        // create navigation items
-        $navItems = array();
-        foreach (array('admin', 'day', 'week', 'month', 'year', 'list') as $navType) {
-            $class = 'PostCalendar_CalendarView_Nav_' . ucfirst($navType);
-            $navItem = new $class($this->view, false);
-            $item = $navItem->renderAnchorTag();
-            if (isset($item)) {
-                $navItems[] = $item;
-            }
-        }
-        $this->view->assign('navItems', $navItems);
+
+        $navBar = new PostCalendar_CalendarView_Navigation($this->view, $date, null, null, null, array('filter' => false, 'jumpdate' => true, 'navbar' => true));
+        $this->view->assign('navBar', $navBar->render());
         
         return $this->view->fetch("event/submit.tpl");
     }

@@ -10,7 +10,7 @@
     {gt text='Submit event' assign="submittext"}
 {/if}
 
-{include file="user/navigation_small.tpl"}
+{$navBar}
 
 {if ($loaded_event.preview ne "")}
     <div id="postcalendar_addevent_previewevent">
