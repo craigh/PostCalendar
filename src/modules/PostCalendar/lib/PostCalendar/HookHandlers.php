@@ -402,8 +402,6 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
             }
         }
         
-        $affected = $delete->rowCount();
-
         if ($affected > 0) {
             LogUtil::registerStatus(__f('ALL associated PostCalendar events also deleted. (%s)', $affected, $dom));
         }
