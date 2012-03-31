@@ -35,7 +35,6 @@ class PostCalendar_ContentType_PostCalEvents extends Content_AbstractContentType
     }
 
     public function display() {
-        $date = new DateTime();
         $start = new DateTime();
         $end = new DateTime();
         $end->modify("last day of this month")->modify("+$this->pcbeventsrange months");
@@ -46,9 +45,8 @@ class PostCalendar_ContentType_PostCalEvents extends Content_AbstractContentType
             'end'        => $end,
             'filtercats' => $filtercats));
 
-        $this->view->assign('A_EVENTS',      $eventsByDate);
-        $this->view->assign('DATE',          $date->format('Y-m-d'));
-        $this->view->assign('DISPLAY_LIMIT', $this->pcbeventslimit);
+        $this->view->assign('eventsByDate',      $eventsByDate);
+        $this->view->assign('displayLimit', $this->pcbeventslimit);
 
         return $this->view->fetch($this->getTemplate());
     }
@@ -87,7 +85,7 @@ class PostCalendar_ContentType_PostCalEvents extends Content_AbstractContentType
             'pcbeventsrange' => 6,
             'pcbeventslimit' => 5,
             'categories'     => null);
-        // Get the registered categories for the News module
+        // Get the registered categories for the module
         $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'CalendarEvent');
         $properties = array_keys($catregistry);
 

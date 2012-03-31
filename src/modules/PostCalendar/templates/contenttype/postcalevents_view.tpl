@@ -3,10 +3,10 @@
 {pc_pagejs_init}
 <div class="postcalendar_block_view_upcoming">
 {counter start=0 assign=eventcount}
-{pc_sort_events var="S_EVENTS" sort="time" order="asc" value=$A_EVENTS}
-{foreach name='dates' item='events' key='date' from=$S_EVENTS}
+{pc_sort_events var="sortedEvents" sort="time" order="asc" value=$eventsByDate}
+{foreach name='dates' item='events' key='date' from=$sortedEvents}
     {foreach name='eventloop' key='id' item='event' from=$events}
-        {if $eventcount < $DISPLAY_LIMIT}
+        {if $eventcount < $displayLimit}
             {if $event.alldayevent != true}
                 {assign var="timestamp" value=$event.startTime}
             {else}
