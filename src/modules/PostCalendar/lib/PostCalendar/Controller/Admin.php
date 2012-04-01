@@ -96,7 +96,7 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
         $catsarray = PostCalendar_Api_Event::formatCategoryFilter($filtercats);
 
         $events = $this->entityManager->getRepository('PostCalendar_Entity_CalendarEvent')
-                       ->getEventlist($listtype, $sort, $offset-1, _SETTING_HOW_MANY_EVENTS, $catsarray);
+                       ->getEventlist($listtype, $sort, $offset-1, $this->getVar('pcListHowManyEvents'), $catsarray);
         $events = $this->_appendObjectActions($events, $listtype);
 
         $total_events = $this->entityManager->getRepository('PostCalendar_Entity_CalendarEvent')
@@ -207,10 +207,10 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
         }
     
         // delete all the old vars
-        ModUtil::delVar('PostCalendar');
+        $this->delVars();
     
         // set the new variables
-        ModUtil::setVars('PostCalendar', $defaults);
+        $this->setVars($defaults);
     
         // clear the cache
         $this->view->clear_cache();

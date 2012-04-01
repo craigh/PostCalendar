@@ -9,8 +9,9 @@
 function smarty_function_pc_url($args, Zikula_View $view)
 {
     $request = $view->getRequest();
+    $modVars = $view->get_template_vars('modvars');
     
-    $action = array_key_exists('action', $args) && isset($args['action']) ? $args['action'] : _SETTING_DEFAULT_VIEW;
+    $action = array_key_exists('action', $args) && isset($args['action']) ? $args['action'] : $modVars['PostCalendar']['pcDefaultView'];
     $date = array_key_exists('date', $args) && !empty($args['date']) ? $args['date'] : null;
     $full = array_key_exists('full', $args) && !empty($args['full']) ? true : false;
     $class = array_key_exists('class', $args) && !empty($args['class']) ? $args['class'] : null;
@@ -19,7 +20,7 @@ function smarty_function_pc_url($args, Zikula_View $view)
     $javascript = array_key_exists('javascript', $args) && !empty($args['javascript']) ? $args['javascript'] : null;
     $assign = array_key_exists('assign', $args) && !empty($args['assign']) ? $args['assign'] : null;
     $title = array_key_exists('title', $args) && !empty($args['title']) ? $args['title'] : '';
-    $viewtype = $request->request->get('viewtype', $request->query->get('viewtype', _SETTING_DEFAULT_VIEW));
+    $viewtype = $request->request->get('viewtype', $request->query->get('viewtype', $modVars['PostCalendar']['pcDefaultView']));
     $viewtype = array_key_exists('viewtype', $args) && !empty($args['viewtype']) ? $args['viewtype'] : strtolower($viewtype);
     unset($args['action']);
     unset($args['date']);
@@ -31,7 +32,7 @@ function smarty_function_pc_url($args, Zikula_View $view)
     unset($args['assign']);
     unset($args['title']);
     unset($args['viewtype']);
-
+    
     $pc_username = $request->request->get('pc_username', $request->query->get('pc_username', null));
 
     if (is_null($date)) {
@@ -64,7 +65,7 @@ function smarty_function_pc_url($args, Zikula_View $view)
                     'date' => $date->format('Ymd'),
                     'viewtype' => 'event',
                     'eid' => $eid);
-                if (_SETTING_OPEN_NEW_WINDOW) {
+                if ($modVars['PostCalendar']['pcEventsOpenInNewWindow']) {
                     $linkparams['popup'] = true;
                 }
                 $link = ModUtil::url('PostCalendar', 'user', 'display', $linkparams);
@@ -78,10 +79,10 @@ function smarty_function_pc_url($args, Zikula_View $view)
 
     if ($full) {
         $classes = array($class);
-        if (_SETTING_USE_POPUPS) {
+        if ($modVars['PostCalendar']['pcUsePopups']) {
             $classes[] = 'tooltips';
         }
-        if ((_SETTING_OPEN_NEW_WINDOW) && ($action == "event")) {
+        if (($modVars['PostCalendar']['pcEventsOpenInNewWindow']) && ($action == "event")) {
             $classes[] = 'event_details';
         }
         $class = implode(' ', $classes);

@@ -29,7 +29,7 @@ class PostCalendar_Util
             'pcTime24Hours'           => $i18n->locale->getTimeformat() == 24 ? '1' : '0',
             'pcEventsOpenInNewWindow' => '0',
             'pcFirstDayOfWeek'        => '0', // Sunday
-            'pcUsePopups'             => '0',
+            'pcUsePopups'             => '1',
             'pcAllowDirectSubmit'     => '0',
             'pcListHowManyEvents'     => '15',
             'pcEventDateFormat'       => 'j F Y', // European: e.g. 4 July 2010

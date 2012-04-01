@@ -22,6 +22,8 @@
 function smarty_function_pc_filter($args, Zikula_View $view)
 {
     $dom = ZLanguage::getModuleDomain('PostCalendar');
+    $modVars = $view->get_template_vars('modvars');
+
     $type = isset($args['type']) ? $args['type'] : "user,category";
     $types = explode(',', $type);
     $class = (isset($args['class']) && !empty($args['class'])) ? ' class="' . $args['class'] . '"' : '';
@@ -31,7 +33,7 @@ function smarty_function_pc_filter($args, Zikula_View $view)
     //================================================================
     // build the username filter pulldown
     //================================================================
-    if (ModUtil::getVar('PostCalendar', 'pcAllowUserCalendar')) {
+    if ($modVars['PostCalendar']['pcAllowUserCalendar']) {
         $filterdefault = PostCalendar_Entity_Repository_CalendarEventRepository::FILTER_ALL;
     } else {
         $filterdefault = PostCalendar_Entity_Repository_CalendarEventRepository::FILTER_GLOBAL;
@@ -41,7 +43,7 @@ function smarty_function_pc_filter($args, Zikula_View $view)
         $userFilter = PostCalendar_Entity_Repository_CalendarEventRepository::FILTER_GLOBAL;
     }
     define('IS_ADMIN', SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN));
-    $allowedgroup = ModUtil::getVar('PostCalendar', 'pcAllowUserCalendar');
+    $allowedgroup = $modVars['PostCalendar']['pcAllowUserCalendar'];
     $uid = UserUtil::getVar('uid');
     $uid = empty($uid) ? 1 : $uid;
     $ingroup = $allowedgroup > 0 ? ModUtil::apiFunc('Groups', 'user', 'isgroupmember', array(
@@ -82,10 +84,10 @@ function smarty_function_pc_filter($args, Zikula_View $view)
     //================================================================
     // build the category filter pulldown
     //================================================================
-    if (in_array('category', $types) && _SETTING_ALLOW_CAT_FILTER && _SETTING_ENABLECATS) {
+    if (in_array('category', $types) && $modVars['PostCalendar']['pcAllowCatFilter'] && $modVars['PostCalendar']['enablecategorization']) {
         $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'CalendarEvent');
 
-        $view->assign('enablecategorization', ModUtil::getVar('PostCalendar', 'enablecategorization'));
+        $view->assign('enablecategorization', $modVars['PostCalendar']['enablecategorization']);
         $view->assign('selectedcategories', $args['selectedCategories']);
         $view->assign('catregistry', $catregistry);
         $catoptions = $view->fetch('event/filtercats.tpl', 1); // force one cachefile

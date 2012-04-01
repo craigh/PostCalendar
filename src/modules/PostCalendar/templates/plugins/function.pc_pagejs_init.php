@@ -12,15 +12,16 @@
 function smarty_function_pc_pagejs_init($params, Zikula_View $view)
 {
     unset($params);
+    $modVars = $view->get_template_vars('modvars');
     $dom = ZLanguage::getModuleDomain('PostCalendar');
-    if (_SETTING_OPEN_NEW_WINDOW) {
+    if ($modVars['PostCalendar']['pcEventsOpenInNewWindow']) {
         $javascript = "
             $$('.event_details').each(function(link){
                 new Zikula.UI.Window(link, {title:'" . __('PostCalendar Event', $dom) ."'});
             });";
         PageUtil::addVar("footer", "<script type='text/javascript'>$javascript</script>");
     }
-    if (_SETTING_USE_POPUPS) {
+    if ($modVars['PostCalendar']['pcUsePopups']) {
         $javascript = "
             Zikula.UI.Tooltips($$('.tooltips'));
             ";
