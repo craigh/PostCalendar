@@ -109,7 +109,6 @@ class PostCalendar_CalendarView_CalendarBlock extends PostCalendar_CalendarView_
                 ->assign('todaysEvents', $eventsByDate[$today->format('Y-m-d')])
                 ->assign('hideTodaysEvents', $hideTodaysEvents)
                 ->assign('blockVars', $this->blockVars);
-        // be sure to DataUtil::formatForDisplay in the template - navigation and others?
 
         if ($this->blockVars['pcbshowcalendar']) {
             $output .= $this->view->fetch($this->template);
