@@ -110,7 +110,7 @@ abstract class PostCalendar_CalendarView_Nav_AbstractItemBase
             'modname' => 'PostCalendar',
             'src' => $this->selected ? $this->displayImageOn : $this->displayImageOff,
             'alt' => $this->imageTitleText,
-            'title' => $this->imageTitleText);
+            'title' => $this->usePopups ? '' : $this->imageTitleText);
     }
 
     protected function setUrl()
