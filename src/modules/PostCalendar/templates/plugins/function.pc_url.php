@@ -58,7 +58,7 @@ function smarty_function_pc_url($args, Zikula_View $view)
                         'date' => $date->format('Ymd'),
                         'pc_username' => $pc_username));
             break;
-        case 'detail':
+        case 'event':
             if (isset($eid)) {
                 $linkparams = array(
                     'date' => $date->format('Ymd'),
@@ -81,7 +81,7 @@ function smarty_function_pc_url($args, Zikula_View $view)
         if (_SETTING_USE_POPUPS) {
             $classes[] = 'tooltips';
         }
-        if ((_SETTING_OPEN_NEW_WINDOW) && ($action == "detail")) {
+        if ((_SETTING_OPEN_NEW_WINDOW) && ($action == "event")) {
             $classes[] = 'event_details';
         }
         $class = implode(' ', $classes);
