@@ -362,7 +362,7 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
     
         $startTime = $eventDefaults['startTime'];
         unset($eventDefaults['startTime']); // clears the whole array
-        $eventDefaults['startTime'] = ModUtil::apiFunc('PostCalendar', 'event', 'convertstarttime', $startTime);
+        $eventDefaults['startTime'] = ModUtil::apiFunc('PostCalendar', 'event', 'convertTimeArray', $startTime);
 
         // save the new values
         $this->setVar('pcEventDefaults', $eventDefaults);

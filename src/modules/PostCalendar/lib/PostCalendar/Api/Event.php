@@ -345,7 +345,7 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
         // build recurrance sentence for display
         $repeat_freq_type = explode("/", $this->__('Day(s)/Week(s)/Month(s)/Year(s)'));
         $repeat_on_num = explode("/", $this->__('err/First/Second/Third/Fourth/Last'));
-        $repeat_on_day = explode(" ", $this->__('Sun Mon Tue Wed Thu Fri Sat'));
+        $repeat_on_day = explode("/", $this->__('Sunday/Monday/Tueday/Wednesday/Thursday/Friday/Saturday'));
         if ($event['recurrtype'] == CalendarEvent::RECURRTYPE_REPEAT) {
             $event['recurr_sentence'] = $this->__f("Event recurs every %s", $event['recurrspec']['event_repeat_freq']);
             $event['recurr_sentence'] .= " " . $repeat_freq_type[$event['recurrspec']['event_repeat_freq_type']];
@@ -404,24 +404,16 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
      */
     public function formateventarrayforDB($event)
     {
-        if ((substr($event['endDate'], 0, 4) == '0000') || (substr($event['endDate'], 0, 5) == '-0001')) {
-            $event['endDate'] = $event['eventDate'];
-        }
-
         // reformat endTime to duration in seconds
         $event['duration'] = $this->computeduration($event);
 
         // reformat times from form to 'real' 24-hour format
         $startTime = $event['startTime'];
         unset($event['startTime']); // clears the whole array
-        $event['startTime'] = $this->convertstarttime($startTime);
+        $event['startTime'] = $this->convertTimeArray($startTime);
 
-        // if event ADD perms are given to anonymous users...
-        if (UserUtil::isLoggedIn()) {
-            $event['informant'] = UserUtil::getVar('uid');
-        } else {
-            $event['informant'] = 1; // 'guest'
-        }
+        // if event ADD perms are given to anonymous users, register informant as uid = 1 (guest)
+        $event['informant'] = (UserUtil::isLoggedIn()) ? UserUtil::getVar('uid') : 1;
 
         define('PC_ACCESS_ADMIN', SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_DELETE));
 
@@ -434,9 +426,7 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
 
         $event['endDate'] = ($event['endtype'] == CalendarEvent::ENDTYPE_ON) ? $event['endDate'] : null;
 
-        if (!isset($event['alldayevent'])) {
-            $event['alldayevent'] = false;
-        }
+        $event['alldayevent'] = (isset($event['alldayevent'])) ? $event['alldayevent'] : false;
 
         if (empty($event['hometext'])) {
             $event['hometext'] = ':text:' . $this->__(/*!(abbr) not applicable or not available*/'n/a'); // default description
@@ -444,11 +434,9 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
             $event['hometext'] = ':' . $event['html_or_text'] . ':' . $event['hometext']; // inserts :text:/:html: before actual content
         }
 
-        if (!isset($event['recurrtype'])) {
-            $event['recurrtype'] = CalendarEvent::RECURRTYPE_NONE;
-        }
+        $event['recurrtype'] = (isset($event['recurrtype'])) ? $event['recurrtype'] : CalendarEvent::RECURRTYPE_NONE;
 
-        $event['url'] = isset($event['url']) ? $this->_makeValidURL($event['url']) : '';
+        $event['url'] = (isset($event['url'])) ? $this->_makeValidURL($event['url']) : '';
 
         return $event;
     }
@@ -498,8 +486,8 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
 
         // check time validity
         if ($submitted_event['alldayevent'] == 0) {
-            $stime = $this->converttimetoseconds($submitted_event['startTime']);
-            $etime = $this->converttimetoseconds($submitted_event['endTime']);
+            $stime = $this->convertTimeArray($submitted_event['startTime'], 'U');
+            $etime = $this->convertTimeArray($submitted_event['endTime'], 'U');
             if ($etime <= $stime) {
                 LogUtil::registerError($this->__('Error! The end time must be after the start time.'));
                 return true;
@@ -657,39 +645,24 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
         }
         return $event;
     }
+
     /**
-     * @desc convert time like 3:00 to seconds
-     * @since     06/29/2010
-     * @params      array $time array(Hour, Minute, Meridian (opt))
-     * @return      int seconds
-     **/
-    public function converttimetoseconds($time)
+     * @desc convert time array to desired format
+     *      WARNING: uses current date for calculations be careful with comparisons
+     * @param   array $time array(Hour, Minute, Meridian)
+     * @param   string $format desired output format
+     * @return  string
+     **/    
+    public function convertTimeArray($time, $format = 'G:i:s')
     {
+        $timeString = "{$time['Hour']}:{$time['Minute']}";
+        $stringFormat = 'G:i';
         if (isset($time['Meridian']) && !empty($time['Meridian'])) {
-            if ($time['Meridian'] == "am") {
-                $time['Hour'] = $time['Hour'] == 12 ? '00' : $time['Hour'];
-            } else {
-                $time['Hour'] = $time['Hour'] != 12 ? $time['Hour'] += 12 : $time['Hour'];
-            }
+            $stringFormat = 'g:i a';
+            $timeString .= " {$time['Meridian']}";
         }
-        return (60 * 60 * $time['Hour']) + (60 * $time['Minute']);
-    }
-    /**
-     * @desc convert time array to HH:MM:SS
-     * @since     06/29/2010
-     * @params      array $time array(Hour, Minute, Meridian)
-     * @return      string 'HH:MM:SS'
-     **/
-    public function convertstarttime($time)
-    {
-        if ((bool) !_SETTING_TIME_24HOUR) {
-            if ($time['Meridian'] == "am") {
-                $time['Hour'] = $time['Hour'] == 12 ? '00' : $time['Hour'];
-            } else {
-                $time['Hour'] = $time['Hour'] != 12 ? $time['Hour'] += 12 : $time['Hour'];
-            }
-        }
-        return sprintf('%02d', $time['Hour']) . ':' . sprintf('%02d', $time['Minute']) . ':00';
+        $newTime = DateTime::createFromFormat($stringFormat, $timeString);
+        return $newTime->format($format);
     }
     /**
      * @desc create event sharing select box
@@ -742,8 +715,8 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
      **/
     public function computeduration($event)
     {
-        $stime = $this->converttimetoseconds($event['startTime']);
-        $etime = $this->converttimetoseconds($event['endTime']);
+        $stime = $this->convertTimeArray($event['startTime'], 'U');
+        $etime = $this->convertTimeArray($event['endTime'], 'U');
         return $etime - $stime;
     }
 
