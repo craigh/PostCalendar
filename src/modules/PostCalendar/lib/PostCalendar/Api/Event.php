@@ -89,7 +89,7 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
         }
             
         if (empty($userFilter)) {
-            $userFilter = (_SETTING_ALLOW_USER_CAL) ? EventRepo::FILTER_ALL : EventRepo::FILTER_GLOBAL;
+            $userFilter = ($this->getVar('pcAllowUserCalendar')) ? EventRepo::FILTER_ALL : EventRepo::FILTER_GLOBAL;
         }
         if (!UserUtil::isLoggedIn()) {
             $userFilter = EventRepo::FILTER_GLOBAL;
@@ -192,28 +192,29 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
 
         // get event default values
         $eventDefaults = $this->getVar('pcEventDefaults');
+        $dateFormat = $this->getVar('pcEventDateFormat');
         
         // format date information
         if ((!isset($eventdata['endDate'])) || empty($eventdata['endDate'])) {
-            $eventdata['endvalue'] = $args['date']->format(_SETTING_DATE_FORMAT);
+            $eventdata['endvalue'] = $args['date']->format($dateFormat);
             $eventdata['endDate'] = $args['date']->format('Y-m-d');
         } else {
             $eventdata['endvalue'] = PostCalendar_Util::getDate(array(
-                'date' => $eventdata['endDate']))->format(_SETTING_DATE_FORMAT);
+                'date' => $eventdata['endDate']))->format($dateFormat);
             $eventdata['endDate'] = PostCalendar_Util::getDate(array(
                 'date' => $eventdata['endDate']))->format('Y-m-d');
         }
         if ((!isset($eventdata['eventDate'])) || empty($eventdata['eventDate'])) {
-            $eventdata['eventDatevalue'] = $args['date']->format(_SETTING_DATE_FORMAT);
+            $eventdata['eventDatevalue'] = $args['date']->format($dateFormat);
             $eventdata['eventDate'] = $args['date']->format('Y-m-d');
         } else {
             $eventdata['eventDatevalue'] = PostCalendar_Util::getDate(array(
-                'date' => $eventdata['eventDate']))->format(_SETTING_DATE_FORMAT);
+                'date' => $eventdata['eventDate']))->format($dateFormat);
             $eventdata['eventDate'] = PostCalendar_Util::getDate(array(
                 'date' => $eventdata['eventDate']))->format('Y-m-d');
         }
 
-        if ((SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) && (_SETTING_ALLOW_USER_CAL)) {
+        if ((SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) && ($this->getVar('pcAllowUserCalendar'))) {
             $users = DBUtil::selectFieldArray('users', 'uname', null, null, null, 'uid');
             $form_data['users'] = $users;
         }
@@ -275,7 +276,7 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
         $selectarray = array_combine($keys, $in);
         $form_data['repeat_on_num'] = $selectarray;
 
-        $in = explode(" ", $this->__('Sun Mon Tue Wed Thu Fri Sat'));
+        $in = explode("/", $this->__('Sunday/Monday/Tuesday/Wednesday/Thursday/Friday/Saturday'));
         $keys = array(
             self::REPEAT_ON_SUN,
             self::REPEAT_ON_MON,
@@ -345,7 +346,7 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
         // build recurrance sentence for display
         $repeat_freq_type = explode("/", $this->__('Day(s)/Week(s)/Month(s)/Year(s)'));
         $repeat_on_num = explode("/", $this->__('err/First/Second/Third/Fourth/Last'));
-        $repeat_on_day = explode("/", $this->__('Sunday/Monday/Tueday/Wednesday/Thursday/Friday/Saturday'));
+        $repeat_on_day = explode("/", $this->__('Sunday/Monday/Tuesday/Wednesday/Thursday/Friday/Saturday'));
         if ($event['recurrtype'] == CalendarEvent::RECURRTYPE_REPEAT) {
             $event['recurr_sentence'] = $this->__f("Event recurs every %s", $event['recurrspec']['event_repeat_freq']);
             $event['recurr_sentence'] .= " " . $repeat_freq_type[$event['recurrspec']['event_repeat_freq_type']];
@@ -369,7 +370,7 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
         // prepare starttime for display HH:MM or HH:MM AP
         $event['sortTime']  = $event['startTime']; // save for sorting later
         $stime = DateTime::createFromFormat('G:i:s', $event['startTime']);
-        $event['startTime'] = _SETTING_TIME_24HOUR ? $stime->format('G:i') : $stime->format('g:i a');
+        $event['startTime'] = $this->getVar('pcTime24Hours') ? $stime->format('G:i') : $stime->format('g:i a');
 
         // compensate for changeover to new categories system
         $lang = ZLanguage::getLanguageCode();
@@ -415,10 +416,10 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
         // if event ADD perms are given to anonymous users, register informant as uid = 1 (guest)
         $event['informant'] = (UserUtil::isLoggedIn()) ? UserUtil::getVar('uid') : 1;
 
-        define('PC_ACCESS_ADMIN', SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_DELETE));
+        define('PC_ACCESS_DELETE', SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_DELETE));
 
         // determine if the event is to be published immediately or not
-        if ((bool) $this->getVar('pcAllowDirectSubmit') || (bool) PC_ACCESS_ADMIN || ($event['sharing'] != CalendarEvent::SHARING_GLOBAL)) {
+        if ((bool) $this->getVar('pcAllowDirectSubmit') || (bool) PC_ACCESS_DELETE || ($event['sharing'] != CalendarEvent::SHARING_GLOBAL)) {
             $event['eventstatus'] = CalendarEvent::APPROVED;
         } else {
             $event['eventstatus'] = CalendarEvent::QUEUED;
@@ -426,15 +427,11 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
 
         $event['endDate'] = ($event['endtype'] == CalendarEvent::ENDTYPE_ON) ? $event['endDate'] : null;
 
-        $event['alldayevent'] = (isset($event['alldayevent'])) ? $event['alldayevent'] : false;
-
         if (empty($event['hometext'])) {
             $event['hometext'] = ':text:' . $this->__(/*!(abbr) not applicable or not available*/'n/a'); // default description
         } else {
             $event['hometext'] = ':' . $event['html_or_text'] . ':' . $event['hometext']; // inserts :text:/:html: before actual content
         }
-
-        $event['recurrtype'] = (isset($event['recurrtype'])) ? $event['recurrtype'] : CalendarEvent::RECURRTYPE_NONE;
 
         $event['url'] = (isset($event['url'])) ? $this->_makeValidURL($event['url']) : '';
 
@@ -672,10 +669,11 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
     public function sharingselect()
     {
         $data = array();
-        if (_SETTING_ALLOW_USER_CAL) {
+        $allowUserCal = $this->getVar('pcAllowUserCalendar');
+        if ($allowUserCal) {
             $data[CalendarEvent::SHARING_PRIVATE] = $this->__('Private');
         }
-        if (SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN) || !_SETTING_ALLOW_USER_CAL) {
+        if (SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN) || !$allowUserCal) {
             $data[CalendarEvent::SHARING_GLOBAL] = $this->__('Global');
         }
         return $data;
@@ -705,7 +703,7 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
     {
         $stime = DateTime::createFromFormat('G:i:s', $event['startTime']);
         $stime->modify("+" . $event['duration'] . " seconds");
-        return _SETTING_TIME_24HOUR ? $stime->format('G:i') : $stime->format('g:i a');
+        return $this->getVar('pcTime24Hours') ? $stime->format('G:i') : $stime->format('g:i a');
     }
     /**
      * @desc compute duration from startTime and endTime

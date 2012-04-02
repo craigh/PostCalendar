@@ -191,10 +191,11 @@ class PostCalendar_Controller_Event extends Zikula_AbstractController
                 $url = new Zikula_ModUrl('PostCalendar', 'user', 'display', ZLanguage::getLanguageCode(), array('viewtype' => 'event', 'eid' => $eid));
                 $this->notifyHooks(new Zikula_ProcessHook('postcalendar.ui_hooks.events.process_edit', $eid, $url));
                 $this->view->clear_cache();
+                $dateFormat = $this->getVar('pcEventDateFormat');
                 if ($is_update) {
-                    LogUtil::registerStatus($this->__f('Done! Updated the event. (event date: %s)', $sdate->format(_SETTING_DATE_FORMAT)));
+                    LogUtil::registerStatus($this->__f('Done! Updated the event. (event date: %s)', $sdate->format($dateFormat)));
                 } else {
-                    LogUtil::registerStatus($this->__f('Done! Submitted the event. (event date: %s)', $sdate->format(_SETTING_DATE_FORMAT)));
+                    LogUtil::registerStatus($this->__f('Done! Submitted the event. (event date: %s)', $sdate->format($dateFormat)));
                 }
                 if ((int)$eventdata['eventstatus'] === (int)CalendarEvent::QUEUED) {
                     LogUtil::registerStatus($this->__('The event has been queued for administrator approval.'));
@@ -207,7 +208,7 @@ class PostCalendar_Controller_Event extends Zikula_AbstractController
                 System::redirect(ModUtil::url('PostCalendar', 'event', 'create'));
             } else {
                 System::redirect(ModUtil::url('PostCalendar', 'user', 'display', array(
-                    'viewtype' => _SETTING_DEFAULT_VIEW,
+                    'viewtype' => $this->getVar('pcDefaultView'),
                     'date' => $sdate->format('Ymd'))));
             }
             return true;

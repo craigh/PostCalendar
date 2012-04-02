@@ -28,7 +28,7 @@ class PostCalendar_Controller_User extends Zikula_AbstractController
     public function display($args)
     {
         $this->throwForbiddenUnless(SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_OVERVIEW), LogUtil::getErrorMsgPermission());
-
+        $defaultView = $this->getVar('pcDefaultView');
         // get the vars that were passed in
         $pc_username = $this->request->query->get('pc_username', $this->request->request->get('pc_username', ''));
         $eid = $this->request->query->get('eid', $this->request->request->get('eid', 0));
@@ -37,7 +37,7 @@ class PostCalendar_Controller_User extends Zikula_AbstractController
             'jumpday' => $this->request->query->get('jumpDay', $this->request->request->get('jumpDay', null)),
             'jumpmonth' => $this->request->query->get('jumpMonth', $this->request->request->get('jumpMonth', null)),
             'jumpyear' => $this->request->query->get('jumpYear', $this->request->request->get('jumpYear', null)));
-        $viewtype = isset($args['viewtype']) ? strtolower($args['viewtype']) : strtolower($this->request->query->get('viewtype', $this->request->request->get('viewtype', _SETTING_DEFAULT_VIEW)));
+        $viewtype = isset($args['viewtype']) ? strtolower($args['viewtype']) : strtolower($this->request->query->get('viewtype', $this->request->request->get('viewtype', $defaultView)));
         $date = isset($args['date']) ? $args['date'] : $this->request->query->get('date', $this->request->request->get('date', PostCalendar_Util::getDate($jumpargs)));
         $prop = isset($args['prop']) ? $args['prop'] : (string)$this->request->query->get('prop', null);
         $cat = isset($args['cat']) ? $args['cat'] : (string)$this->request->query->get('cat', null);
@@ -64,7 +64,7 @@ class PostCalendar_Controller_User extends Zikula_AbstractController
             $class = 'PostCalendar_CalendarView_' . ucfirst($viewtype);
         } else {
             LogUtil::registerError($this->__('Attempting to view unauthorized viewtype.'));
-            $class = 'PostCalendar_CalendarView_' . ucfirst(_SETTING_DEFAULT_VIEW);
+            $class = 'PostCalendar_CalendarView_' . ucfirst($defaultView);
         }
         $calendarView = new $class($this->view, $date, $pc_username, $filtercats, $eid);
         return $calendarView->render();
