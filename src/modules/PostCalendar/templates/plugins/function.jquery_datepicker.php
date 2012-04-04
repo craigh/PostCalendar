@@ -5,19 +5,36 @@ function smarty_function_jquery_datepicker($params, Zikula_View $view)
     $defaultDate = (isset($params['defaultdate'])) ? $params['defaultdate'] : new DateTime();
     $displayElement = (isset($params['displayelement'])) ? $params['displayelement'] : '';
     $valueStorageElement = (isset($params['valuestorageelement'])) ? $params['valuestorageelement'] : '';
-    $class = (isset($params['class'])) ? $params['class'] : 'postcalendar_datepicker';
     $readOnly = (isset($params['readonly'])) ? $params['readonly'] : true;
-
+    $object = (isset($params['object'])) ? $params['object'] : true;
+    $minDate = (isset($params['mindate'])) ? $params['mindate'] : null;
+    $maxDate = (isset($params['maxdate'])) ? $params['maxdate'] : null;
+    $dateDisplayFormat = 'd MM yy';
+    
     $modVars = $view->get_template_vars('modvars');
+    $userFormat = $modVars['PostCalendar']['pcEventDateFormat'];
 
     PageUtil::addVar("javascript", "jquery");
     PageUtil::addVar("javascript", "modules/PostCalendar/javascript/jquery-ui-1.8.18.custom.min.js");
     PageUtil::addVar("stylesheet", "modules/PostCalendar/style/ui-lightness/jquery-ui-1.8.18.custom.css");
+    
     $javascript = "
         jQuery(document).ready(function() {
             jQuery('#$displayElement').datepicker({
-                dateFormat: 'MM d, yy',
-                defaultDate: '$defaultDate',
+                onSelect: function(dateText, inst) {
+                        updateFields(this, dateText);
+                    },
+                dateFormat: '$dateDisplayFormat',
+                defaultDate: '{$defaultDate->format($userFormat)}',";
+    if (isset($minDate)) {
+        $javascript .= "
+                minDate: '{$minDate->format($userFormat)}',";
+    }
+    if (isset($maxDate)) {
+        $javascript .= "
+                maxDate: '{$maxDate->format($userFormat)}',";
+    }
+    $javascript .= "
                 altField: '#$valueStorageElement',
                 altFormat: 'yy-mm-dd',
                 autoSize: true
@@ -27,8 +44,8 @@ function smarty_function_jquery_datepicker($params, Zikula_View $view)
 
     $readOnlyHtml = ($readOnly) ? " readonly='readonly'" : "";
     
-    $html = "<input type='text'{$readOnlyHtml} class='$class' id='$displayElement' name='$displayElement' value='{$defaultDate->format($modVars['PostCalendar']['pcEventDateFormat'])}' />\n
-        <input type='hidden' id='$valueStorageElement' name='$valueStorageElement' value='{$defaultDate->format('Y-m-d')}' />";
+    $html = "<input type='text'{$readOnlyHtml} id='$displayElement' name='$displayElement' value='{$defaultDate->format($userFormat)}' />\n
+        <input type='hidden' id='$valueStorageElement' name='{$object}[{$valueStorageElement}]' value='{$defaultDate->format('Y-m-d')}' />";
 
     return $html;
 }
