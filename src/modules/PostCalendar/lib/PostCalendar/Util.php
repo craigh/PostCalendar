@@ -53,7 +53,7 @@ class PostCalendar_Util
                 'sharing'                 => PostCalendar_Entity_CalendarEvent::SHARING_GLOBAL,
                 'categories'              => $defaultcats,
                 'alldayevent'             => 0,
-                'startTime'               => '01:00:00',
+                'startTime'               => '01:00',
                 'duration'                => '3600',
                 'fee'                     => '',
                 'contname'                => '',
