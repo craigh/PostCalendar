@@ -359,6 +359,7 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
         //convert times to storable values
         $eventDefaults['duration'] = ModUtil::apiFunc('PostCalendar', 'event', 'computeduration', $eventDefaults);
         $eventDefaults['duration'] = ($eventDefaults['duration'] > 0) ? $eventDefaults['duration'] : 3600; //disallow duration < 0
+        unset($eventDefaults['endTime']); // do not store selected endTime
     
         $startTime = $eventDefaults['startTime'];
         unset($eventDefaults['startTime']); // clears the whole array
