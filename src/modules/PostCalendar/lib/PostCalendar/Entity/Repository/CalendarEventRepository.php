@@ -84,10 +84,10 @@ class PostCalendar_Entity_Repository_CalendarEventRepository extends EntityRepos
         $startDate->setTime(0, 0);
         $endDate->setTime(23, 59);
         $dql = "SELECT a FROM PostCalendar_Entity_CalendarEvent a JOIN a.categories c " .
-                "WHERE (a.endDate >= ?2 " .
+                "WHERE (a.eventEnd >= ?2 " .
                 "OR (a.endDate = ?3 AND a.recurrtype <> ?4) " .
-                "OR a.eventDate >= ?5) " .
-                "AND a.eventDate <= ?6 ";
+                "OR a.eventStart >= ?5) " .
+                "AND a.eventStart <= ?6 ";
 
         if ($eventStatus <> CalendarEvent::ALLSTATUS) {
             $dql .= "AND a.eventstatus = ?1 ";
