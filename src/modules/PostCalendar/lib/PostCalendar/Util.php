@@ -54,7 +54,7 @@ class PostCalendar_Util
                 'categories'              => $defaultcats,
                 'alldayevent'             => 0,
                 'startTime'               => '01:00',
-                'duration'                => '3600',
+                'duration'                => null,
                 'fee'                     => '',
                 'contname'                => '',
                 'conttel'                 => '',
