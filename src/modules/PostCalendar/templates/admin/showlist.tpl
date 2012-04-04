@@ -44,7 +44,7 @@
                 <tr class="{cycle values="z-odd,z-even"}">
                     <td class='z-w5'><input type="checkbox" value="{$events[event].eid}" id="events_{$events[event].eid}" name="events[]" /></td>
                     <td class='z-w30'>{$events[event].title|safetext}</td>
-                    <td class='z-w15'>{$events[event].eventDate|pc_date_format}</td>
+                    <td class='z-w15'>{$events[event].eventStart->format($modvars.PostCalendar.pcEventDateFormat)}</td>
                     <td class='z-w20'>{assignedcategorieslist item=$events[event]}</td>
                     <td class='z-w20'>{$events[event].time}</td>
                     <td class='z-w10'>
