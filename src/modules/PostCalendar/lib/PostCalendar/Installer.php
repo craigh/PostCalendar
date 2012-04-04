@@ -24,17 +24,17 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
             DoctrineHelper::createSchema($this->entityManager, array('PostCalendar_Entity_CalendarEvent', 
                                                                      'PostCalendar_Entity_EventCategory'));
         } catch (Exception $e) {
-            echo "<pre>";
-            var_dump($e->getMessage());
-            die;
+            LogUtil::registerError($this->__f('Error! Could not create tables (%s).', $e->getMessage()));
             return false;
         }
         
         // insert default category
-        if (!$this->createdefaultcategory()) {
-            return LogUtil::registerError($this->__('Error! Could not create default category.'));
+        try {
+            $this->createCategoryTree();
+        } catch (Exception $e) {
+            LogUtil::registerError($this->__f('Did not create default categories (%s).', $e->getMessage()));
         }
-        $this->createdefaultsubcategory();
+        
 
         // PostCalendar Default Settings
         $defaultsettings = PostCalendar_Util::getdefaults();
@@ -77,7 +77,7 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
         if (version_compare($oldversion, '7', '<')) {
             // Inform user about error, and how he can upgrade to $modversion
             $upgradeToVersion = $this->version->getVersion();
-            return LogUtil::registerError($this->__f('Notice: This version does not support upgrades from PostCalendar 7.x and earlier. Please see detailed upgrade instructions at <a href="https://github.com/craigh/PostCalendar/wiki/Installation-and-Upgrade">the GitHub site</a>). After upgrading, you can install PostCalendar %s and perform this upgrade.', $upgradeToVersion));
+            return LogUtil::registerError($this->__f('Notice: This version does not support upgrades from PostCalendar 6.x and earlier. Please see detailed upgrade instructions at <a href="https://github.com/craigh/PostCalendar/wiki/Installation-and-Upgrade">the GitHub site</a>). After upgrading, you can install PostCalendar %s and perform this upgrade.', $upgradeToVersion));
         }
 
         switch ($oldversion) {
@@ -91,16 +91,18 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
                 // change sharing values - 2's become 0's and  and 4's become 0's
                 // update hometext values change n/a to :text:n/a
                 // change endDate = '0000-00-00' to null
-                // change hooked_area column to integer
                 // change hooked_area values from areaname to area id
-                // update modvars where name=postcalendarhookconfig change key from areaname to iadeaid
+                // change hooked_area column to integer
+                // update modvars where name=postcalendarhookconfig change key from areaname to areaid
                 // change default date setting to date() format instead of strftime format
+                // convert eventDate + startTime -> (DateTime) eventStart
+                // convert eventStart + duration -> (DateTime) eventEnd
                 $defaultsettings = PostCalendar_Util::getdefaults();
                 $this->setVar('pcAllowedViews', $defaultsettings['pcAllowedViews']);
                 $this->setVar('pcEventStrftimeFormat', $defaultsettings['pcEventStrftimeFormat']);
                 $old_pcNavDateOrder = $this->getVar('pcNavDateOrder');
                 $this->setVar('pcNavDateOrder', $old_pcNavDateOrder['format']);
-            case '7.1.0':
+            case '8.0.0':
                 //future development
         }
 
@@ -136,28 +138,6 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
     }
 
     /**
-     * create the default category tree
-     * copied and adapted from News module
-     * @return boolean
-     */
-    private function createdefaultcategory()
-    {
-        if (!$cat = CategoryUtil::createCategory('/__SYSTEM__/Modules', 'PostCalendar', null, $this->__('PostCalendar'), $this->__('Calendar for Zikula'))) {
-            return false;
-        }
-        // get the category path to insert upgraded PostCalendar categories
-        $rootcat = CategoryUtil::getCategoryByPath('/__SYSTEM__/Modules/PostCalendar');
-        if ($rootcat) {
-            // create an entry in the categories registry to the Main property
-            CategoryRegistryUtil::insertEntry ('PostCalendar', 'CalendarEvent', 'Main', $rootcat['id']);
-        } else {
-            return false;
-        }
-        LogUtil::registerStatus($this->__("PostCalendar: 'Main' category created."));
-        return true;
-    }
-
-    /**
      * create initial calendar event
      */
     private function createinstallevent()
@@ -185,20 +165,23 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
 
         return true;
     }
-
+    
     /**
-     * create initial category on first install
-     * @return boolean
+     * create the category tree
+     * @return void
      */
-    private function createdefaultsubcategory()
+    private function createCategoryTree()
     {
-        if (!$cat = CategoryUtil::createCategory('/__SYSTEM__/Modules/PostCalendar', 'Events', null, $this->__('Events'), $this->__('Initial sub-category created on install'), array('color' => '#99ccff'))) {
-            LogUtil::registerError($this->__('Error! Could not create an initial sub-category.'));
-            return false;
+        // create category
+        CategoryUtil::createCategory('/__SYSTEM__/Modules', 'PostCalendar', null, $this->__('PostCalendar'), $this->__('Calendar for Zikula'));
+        // create subcategory
+        CategoryUtil::createCategory('/__SYSTEM__/Modules/PostCalendar', 'Events', null, $this->__('Events'), $this->__('Initial sub-category created on install'), array('color' => '#99ccff'));
+        // get the category path to insert PostCalendar categories
+        $rootcat = CategoryUtil::getCategoryByPath('/__SYSTEM__/Modules/PostCalendar');
+        if ($rootcat) {
+            // create an entry in the categories registry to the Main property
+            CategoryRegistryUtil::insertEntry('PostCalendar', 'CalendarEvent', 'Main', $rootcat['id']);
         }
-
-        LogUtil::registerStatus($this->__("PostCalendar: Initial sub-category created (Events)."));
-        return true;
     }
 
     public static function LegacyContentTypeMap()
