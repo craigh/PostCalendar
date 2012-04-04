@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PostCalendar
  * 
@@ -8,7 +9,6 @@
  * Please see the NOTICE file distributed with this source code for further
  * information regarding copyright and licensing.
  */
-
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -18,13 +18,14 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class PostCalendar_Entity_EventCategory extends Zikula_Doctrine2_Entity_EntityCategory
 {
+
     /**
      * @ORM\ManyToOne(targetEntity="PostCalendar_Entity_CalendarEvent", inversedBy="categories")
      * @ORM\JoinColumn(name="entityId", referencedColumnName="eid")
      * @var PostCalendar_Entity_CalendarEvent
      */
     private $entity;
-    
+
     public function getEntity()
     {
         return $this->entity;
@@ -34,4 +35,5 @@ class PostCalendar_Entity_EventCategory extends Zikula_Doctrine2_Entity_EntityCa
     {
         $this->entity = $entity;
     }
+
 }
