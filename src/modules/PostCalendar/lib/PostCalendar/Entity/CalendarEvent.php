@@ -34,8 +34,6 @@ class PostCalendar_Entity_CalendarEvent extends Zikula_EntityAccess
     const RECURRTYPE_NONE = 0;
     const RECURRTYPE_REPEAT = 1;
     const RECURRTYPE_REPEAT_ON = 2;
-    const ENDTYPE_ON = 1;
-    const ENDTYPE_NONE = 0;
 
     /**
      * event id field (record id)
@@ -117,7 +115,7 @@ class PostCalendar_Entity_CalendarEvent extends Zikula_EntityAccess
      * 
      * @ORM\Column(type="bigint", nullable=true)
      */
-    private $duration = 0;
+    private $duration = null;
 
     /**
      * Event recurrance end date
@@ -258,7 +256,6 @@ class PostCalendar_Entity_CalendarEvent extends Zikula_EntityAccess
      */
     private $privateicon = false;
     private $HTMLorTextVal = 'html';
-    private $endtype = self::ENDTYPE_NONE;
 
     /**
      * Constructor 
@@ -389,11 +386,8 @@ class PostCalendar_Entity_CalendarEvent extends Zikula_EntityAccess
         $this->duration = $duration;
     }
 
-    public function getEndDate($format = 'Y-m-d')
+    public function getEndDate()
     {
-//        if (isset($this->endDate)) {
-//            return $this->endDate->format($format);
-//        }
         return $this->endDate;
     }
 
@@ -575,24 +569,18 @@ class PostCalendar_Entity_CalendarEvent extends Zikula_EntityAccess
         return $this->HTMLorTextVal;
     }
 
-    public function getEndtype()
-    {
-        return $this->endtype;
-    }
-
     /**
      * Configure non-persisted properties for object display
      * @ORM\PostLoad
      */
     public function postLoad()
     {
-        $this->privateicon = ($this->sharing == self::SHARING_PRIVATE) ? true : false;
+        $this->privateicon = ($this->sharing == self::SHARING_PRIVATE);
         $this->HTMLorTextVal = substr($this->hometext, 1, 4);
         $this->hometext = substr($this->hometext, 6);
         if ($this->HTMLorTextVal == "text") {
             $this->hometext = nl2br(strip_tags($this->hometext));
         }
-        $this->endtype = (!isset($this->endDate)) ? (string)self::ENDTYPE_NONE : (string)self::ENDTYPE_ON;
     }
 
     /**
@@ -618,25 +606,20 @@ class PostCalendar_Entity_CalendarEvent extends Zikula_EntityAccess
         if (isset($array['informant'])) {
             $this->setInformant($array['informant']);
         }
-        if (isset($array['eventDate'])) {
-            $eventDate = DateTime::createFromFormat('Y-m-d', $array['eventDate']);
-            $this->setEventDate($eventDate);
+        if (isset($array['eventStart'])) {
+            $this->setEventStart($array['eventStart']);
         }
-        if (isset($array['duration'])) {
-            $this->setDuration($array['duration']);
+        if (isset($array['eventEnd'])) {
+            $this->setEventEnd($array['eventEnd']);
         }
         if (isset($array['endDate'])) {
-            $endDate = DateTime::createFromFormat('Y-m-d', $array['endDate']);
-            $this->setEndDate($endDate);
+            $this->setEndDate($array['endDate']);
         }
         if (isset($array['recurrtype'])) {
             $this->setRecurrtype($array['recurrtype']);
         }
         if (isset($array['recurrspec'])) {
             $this->setRecurrspec($array['recurrspec']);
-        }
-        if (isset($array['startTime'])) {
-            $this->setStartTime($array['startTime']);
         }
         if (isset($array['alldayevent'])) {
             $allday = $array['alldayevent'] ? true : false;
