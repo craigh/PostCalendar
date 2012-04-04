@@ -30,9 +30,10 @@ function smarty_function_pc_locations($args, Zikula_View $view)
         'options'  => $locations,
         'selected' => '-1');
 
+    $display .= "<div class='z-formrow'>";
     $display .= $admin ? "<label for='postcalendar_eventdefaults_location_locations_id'>" . __('Location', $dom) . "</label>" : "";
     $display .= smarty_function_html_options($options_array, $view);
-    $display .= $admin ? "" : "<br />";
+    $display .= "</div>";
 
     $pc_loc_javascript = "
         <!--//
