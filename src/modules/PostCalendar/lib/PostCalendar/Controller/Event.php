@@ -85,6 +85,10 @@ class PostCalendar_Controller_Event extends Zikula_AbstractController
 
         // these items come on submission of form
         $submitted_event = $this->request->request->get('postcalendar_events', NULL);
+        // process checkboxes
+        $submitted_event['alldayevent'] = (isset($submitted_event['alldayevent'])) ? $submitted_event['alldayevent'] : 0;
+        $submitted_event['recurrtype'] = (isset($submitted_event['recurrtype'])) ? $submitted_event['recurrtype'] : CalendarEvent::RECURRTYPE_NONE;
+
         $is_update       = $this->request->request->get('is_update', false);
         $form_action     = $this->request->request->get('form_action', NULL);
 
@@ -106,6 +110,13 @@ class PostCalendar_Controller_Event extends Zikula_AbstractController
         // VALIDATE form data if form action is preview or save
         $abort = false;
         if (($form_action == 'preview') || ($form_action == 'save')) {
+            // make DateTime objects from form data
+            $timeFormat = $this->getVar('pcTime24Hours') ? 'G:i' : 'g:i a';
+            $submitted_event['eventStart'] = DateTime::createFromFormat("Y-m-d $timeFormat", $submitted_event['eventstart_date'] . " " . $submitted_event['eventstart_time']);
+            $submitted_event['eventEnd'] = DateTime::createFromFormat("Y-m-d $timeFormat", $submitted_event['eventend_date'] . " " . $submitted_event['eventend_time']);
+            $submitted_event['endDate'] = DateTime::createFromFormat('Y-m-d', $submitted_event['enddate']);
+            unset($submitted_event['eventstart_date'], $submitted_event['eventstart_time'], $submitted_event['eventend_date'], $submitted_event['eventend_time'], $submitted_event['enddate']);
+            
             $abort = ModUtil::apiFunc('PostCalendar', 'event', 'validateformdata', $submitted_event);
             // check hooked modules for validation
             $hook = new Zikula_ValidationHook('postcalendar.ui_hooks.events.validate_edit', new Zikula_Hook_ValidationProviders());
@@ -121,7 +132,7 @@ class PostCalendar_Controller_Event extends Zikula_AbstractController
         if ($func == 'create') { // triggered on form_action=preview && on brand new load
             $eventdata = array();
             // wrap all the data into array for passing to save and preview functions
-            if ($submitted_event['data_loaded']) {
+            if ((isset($submitted_event['data_loaded'])) && (!empty($submitted_event['data_loaded']))) {
                 $eventdata = $submitted_event; // data loaded on preview and processing of new event, but not on initial pageload
             }
             $eventdata['is_update'] = $is_update;
@@ -179,7 +190,6 @@ class PostCalendar_Controller_Event extends Zikula_AbstractController
 
         // Enter the event into the DB
         if ($form_action == 'save') {
-            $sdate = DateTime::createFromFormat('Y-m-d', $submitted_event['eventDate']);
             $this->checkCsrfToken();
 
             $eventdata = ModUtil::apiFunc('PostCalendar', 'event', 'formateventarrayforDB', $eventdata);
@@ -193,9 +203,9 @@ class PostCalendar_Controller_Event extends Zikula_AbstractController
                 $this->view->clear_cache();
                 $dateFormat = $this->getVar('pcEventDateFormat');
                 if ($is_update) {
-                    LogUtil::registerStatus($this->__f('Done! Updated the event. (event date: %s)', $sdate->format($dateFormat)));
+                    LogUtil::registerStatus($this->__f('Done! Updated the event. (event date: %s)', $submitted_event['eventStart']->format($dateFormat)));
                 } else {
-                    LogUtil::registerStatus($this->__f('Done! Submitted the event. (event date: %s)', $sdate->format($dateFormat)));
+                    LogUtil::registerStatus($this->__f('Done! Submitted the event. (event date: %s)', $submitted_event['eventStart']->format($dateFormat)));
                 }
                 if ((int)$eventdata['eventstatus'] === (int)CalendarEvent::QUEUED) {
                     LogUtil::registerStatus($this->__('The event has been queued for administrator approval.'));
@@ -209,7 +219,7 @@ class PostCalendar_Controller_Event extends Zikula_AbstractController
             } else {
                 System::redirect(ModUtil::url('PostCalendar', 'user', 'display', array(
                     'viewtype' => $this->getVar('pcDefaultView'),
-                    'date' => $sdate->format('Ymd'))));
+                    'date' => $submitted_event['eventStart']->format('Ymd'))));
             }
             return true;
         }

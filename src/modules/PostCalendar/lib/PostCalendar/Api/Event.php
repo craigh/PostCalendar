@@ -128,11 +128,10 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
                     || (!CategoryUtil::hasCategoryAccess($event['categories'], 'PostCalendar'))) {
                 continue;
             }
-            $event = $this->formateventarrayfordisplay($event);
             $occurances = $this->getEventOccurances($event, true);
             foreach ($occurances as $date) {
                 if (isset($days[$date])) {
-                    $days[$date][] = $event;
+                    $days[$date][] = $this->formateventarrayfordisplay($event);
                 }
             }   
         }
@@ -157,7 +156,6 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
         } else { //new event
             unset($eventdata['eid']); //be sure that eid is not set on insert op to autoincrement value
             unset($eventdata['is_update']);
-            $eventdata['time'] = date("Y-m-d H:i:s"); //current date for timestamp on event
             $event = new PostCalendar_Entity_CalendarEvent();
         }
         try {
@@ -192,26 +190,26 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
 
         // get event default values
         $eventDefaults = $this->getVar('pcEventDefaults');
-        $dateFormat = $this->getVar('pcEventDateFormat');
         
         // format date information
         if ((!isset($eventdata['endDate'])) || empty($eventdata['endDate'])) {
-            $eventdata['endvalue'] = $args['date']->format($dateFormat);
-            $eventdata['endDate'] = $args['date']->format('Y-m-d');
+            $eventdata['endDate'] = clone $args['date'];
+            $eventdata['endDate']->modify("+1 day");
         } else {
-            $eventdata['endvalue'] = PostCalendar_Util::getDate(array(
-                'date' => $eventdata['endDate']))->format($dateFormat);
-            $eventdata['endDate'] = PostCalendar_Util::getDate(array(
-                'date' => $eventdata['endDate']))->format('Y-m-d');
+            $eventdata['endDate'] = PostCalendar_Util::getDate(array('date' => $eventdata['endDate']));
         }
-        if ((!isset($eventdata['eventDate'])) || empty($eventdata['eventDate'])) {
-            $eventdata['eventDatevalue'] = $args['date']->format($dateFormat);
-            $eventdata['eventDate'] = $args['date']->format('Y-m-d');
+        if ((!isset($eventdata['eventStart'])) || empty($eventdata['eventStart'])) {
+            $eventdata['eventStart'] = clone $args['date'];
+            $startTimeParts = explode(":", $eventDefaults['startTime']);
+            $eventdata['eventStart']->setTime($startTimeParts[0], $startTimeParts[1]);
         } else {
-            $eventdata['eventDatevalue'] = PostCalendar_Util::getDate(array(
-                'date' => $eventdata['eventDate']))->format($dateFormat);
-            $eventdata['eventDate'] = PostCalendar_Util::getDate(array(
-                'date' => $eventdata['eventDate']))->format('Y-m-d');
+            $eventdata['eventStart'] = PostCalendar_Util::getDate(array('date' => $eventdata['eventDate']));
+        }
+        if ((!isset($eventdata['eventEnd'])) || empty($eventdata['eventEnd'])) {
+            $eventdata['eventEnd'] = clone $eventdata['eventStart'];
+            $eventdata['eventEnd']->modify("+" . $eventDefaults['duration'] . " seconds");
+        } else {
+            $eventdata['eventEnd'] = PostCalendar_Util::getDate(array('date' => $eventdata['eventEnd']));
         }
 
         if ((SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) && ($this->getVar('pcAllowUserCalendar'))) {
@@ -228,33 +226,19 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
 
         // All-day event values for radio buttons
         $eventdata['alldayevent'] = isset($eventdata['alldayevent']) ? $eventdata['alldayevent'] : $eventDefaults['alldayevent'];
-        $form_data['Selected'] = $this->alldayselect($eventdata['alldayevent']);
-
-        $eventdata['endTime'] = (empty($eventdata['endTime'])) ? $this->computeendtime($eventDefaults) : $eventdata['endTime'];
-
-        $eventdata['startTime'] = (empty($eventdata['startTime'])) ? $eventDefaults['startTime'] : $eventdata['startTime'];
 
         // hometext
-        if (empty($eventdata['HTMLorTextVal'])) {
-            $eventdata['HTMLorTextVal'] = 'text'; // default to text
-        }
-
-        // create html/text selectbox
-        $form_data['EventHTMLorText'] = array(
-            'text' => $this->__('Plain text'),
-            'html' => $this->__('HTML-formatted'));
+        $eventdata['HTMLorTextVal'] = (!empty($eventdata['HTMLorTextVal'])) ? $eventdata['HTMLorTextVal'] : 'text'; // default to text
 
         // sharing selectbox
         $form_data['sharingselect'] = $this->sharingselect();
 
-        if (!isset($eventdata['sharing'])) {
-            $eventdata['sharing'] = $eventDefaults['sharing'];
-        }
+        $eventdata['sharing'] = (isset($eventdata['sharing'])) ? $eventdata['sharing'] : $eventDefaults['sharing'];
 
         // recur type radio selects
-        $form_data['SelectedNoRepeat'] = ((!isset($eventdata['recurrtype'])) || ((int) $eventdata['recurrtype'] == 0)) ? " checked='checked'" : ''; //default
-        $form_data['SelectedRepeat']   = ((isset($eventdata['recurrtype']))  && ((int) $eventdata['recurrtype'] == 1)) ? " checked='checked'" : '';
-        $form_data['SelectedRepeatOn'] = ((isset($eventdata['recurrtype']))  && ((int) $eventdata['recurrtype'] == 2)) ? " checked='checked'" : '';
+        $eventdata['repeats'] = !((!isset($eventdata['recurrtype'])) || ((int)$eventdata['recurrtype'] == CalendarEvent::RECURRTYPE_NONE)); //default
+        $form_data['SelectedRepeat']   = ((isset($eventdata['recurrtype']))  && ((int)$eventdata['recurrtype'] == CalendarEvent::RECURRTYPE_REPEAT)) ? " checked='checked'" : '';
+        $form_data['SelectedRepeatOn'] = ((isset($eventdata['recurrtype']))  && ((int)$eventdata['recurrtype'] == CalendarEvent::RECURRTYPE_REPEAT_ON)) ? " checked='checked'" : '';
 
         // recur select box arrays
         $in = explode("/", $this->__('Day(s)/Week(s)/Month(s)/Year(s)'));
@@ -299,10 +283,6 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
             $eventdata['recurrspec']['event_repeat_on_day'] = self::REPEAT_ON_SUN;
         }
 
-        // endType
-        $form_data['SelectedEndOn'] = ((isset($eventdata['endtype']))  && ((int)$eventdata['endtype'] == CalendarEvent::ENDTYPE_ON)) ? " checked='checked'" : '';
-        $form_data['SelectedNoEnd'] = ((!isset($eventdata['endtype'])) || ((int)$eventdata['endtype'] == CalendarEvent::ENDTYPE_NONE)) ? " checked='checked'" : ''; //default
-
         // Assign the content format (determines if scribite is in use)
         $form_data['formattedcontent'] = $this->isformatted(array(
             'func' => 'create'));
@@ -326,6 +306,9 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
         $eventdata['location']['event_state']    = isset($eventdata['location']['event_state'])    ? $eventdata['location']['event_state']    : $eventDefaults['location']['event_state'];
         $eventdata['location']['event_postal']   = isset($eventdata['location']['event_postal'])   ? $eventdata['location']['event_postal']   : $eventDefaults['location']['event_postal'];
 
+        $eventdata['haslocation'] = !empty($eventdata['location']['event_location']) || !empty($eventdata['location']['event_street1']) || !empty($eventdata['location']['event_street2']) || !empty($eventdata['location']['event_city']) || !empty($eventdata['location']['event_state']) || !empty($eventdata['location']['event_postal']);
+        $eventdata['hascontact'] = !empty($eventdata['contname']) || !empty($eventdata['conttel']) || !empty($eventdata['contemail']) || !empty($eventdata['website']);
+        
         // assign loaded data or default values
         $form_data['loaded_event'] = $eventdata;
 
@@ -350,12 +333,12 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
         if ($event['recurrtype'] == CalendarEvent::RECURRTYPE_REPEAT) {
             $event['recurr_sentence'] = $this->__f("Event recurs every %s", $event['recurrspec']['event_repeat_freq']);
             $event['recurr_sentence'] .= " " . $repeat_freq_type[$event['recurrspec']['event_repeat_freq_type']];
-            $event['recurr_sentence'] .= " " . $this->__("until") . " " . $event['endDate'];
+            $event['recurr_sentence'] .= " " . $this->__("until") . " " . $event['endDate']->format($this->getVar('pcEventDateFormat'));
         } elseif ($event['recurrtype'] == CalendarEvent::RECURRTYPE_REPEAT_ON) {
             $event['recurr_sentence'] = $this->__("Event recurs on") . " " . $repeat_on_num[$event['recurrspec']['event_repeat_on_num']];
             $event['recurr_sentence'] .= " " . $repeat_on_day[$event['recurrspec']['event_repeat_on_day']];
             $event['recurr_sentence'] .= " " . $this->__f("of the month, every %s months", $event['recurrspec']['event_repeat_on_freq']);
-            $event['recurr_sentence'] .= " " . $this->__("until") . " " . $event['endDate'];
+            $event['recurr_sentence'] .= " " . $this->__("until") . " " . $event['endDate']->format($this->getVar('pcEventDateFormat'));
         } else {
             $event['recurr_sentence'] = $this->__("This event does not recur.");
         }
@@ -363,14 +346,15 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
         // build sharing sentence for display
         $event['sharing_sentence'] = ($event['sharing'] == CalendarEvent::SHARING_PRIVATE) ? $this->__('This is a private event.') : $this->__('This is a public event.');
 
-        $event['endTime'] = $this->computeendtime($event);
-        // converts seconds to HH:MM for display  - keep just in case duration is wanted
-        $event['duration'] = gmdate("G:i", $event['duration']); // stored in DB as seconds
+        $timeFormat = $this->getVar('pcTime24Hours') ? 'G:i' : 'g:i a';
+        $eventStart = clone $event['eventStart'];
+        $eventEnd = clone $event['eventEnd'];
+        $event['endTime'] = $eventEnd->format($timeFormat);
+        $event['duration'] = $eventEnd->diff($eventStart)->format('%a days %h:%I hours'); // no translation?
 
         // prepare starttime for display HH:MM or HH:MM AP
-        $event['sortTime']  = $event['startTime']; // save for sorting later
-        $stime = DateTime::createFromFormat('G:i:s', $event['startTime']);
-        $event['startTime'] = $this->getVar('pcTime24Hours') ? $stime->format('G:i') : $stime->format('g:i a');
+        $event['sortTime']  = $eventStart->format('G:i'); // save for sorting later
+        $event['startTime'] = $eventStart->format($timeFormat);
 
         // compensate for changeover to new categories system
         $lang = ZLanguage::getLanguageCode();
@@ -405,14 +389,6 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
      */
     public function formateventarrayforDB($event)
     {
-        // reformat endTime to duration in seconds
-        $event['duration'] = $this->computeduration($event);
-
-        // reformat times from form to 'real' 24-hour format
-        $startTime = $event['startTime'];
-        unset($event['startTime']); // clears the whole array
-        $event['startTime'] = $this->convertTimeArray($startTime);
-
         // if event ADD perms are given to anonymous users, register informant as uid = 1 (guest)
         $event['informant'] = (UserUtil::isLoggedIn()) ? UserUtil::getVar('uid') : 1;
 
@@ -425,7 +401,7 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
             $event['eventstatus'] = CalendarEvent::QUEUED;
         }
 
-        $event['endDate'] = ($event['endtype'] == CalendarEvent::ENDTYPE_ON) ? $event['endDate'] : null;
+        $event['endDate'] = ($event['recurrtype'] <> CalendarEvent::RECURRTYPE_NONE) ? $event['endDate'] : null;
 
         if (empty($event['hometext'])) {
             $event['hometext'] = ':text:' . $this->__(/*!(abbr) not applicable or not available*/'n/a'); // default description
@@ -472,23 +448,16 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
             }
         }
 
-        // check date validity
-        $sdate = strtotime($submitted_event['eventDate']);
-        $edate = strtotime($submitted_event['endDate']);
-
-        if (($submitted_event['endtype'] == CalendarEvent::ENDTYPE_ON) && ($edate < $sdate)) {
-            LogUtil::registerError($this->__('Error! The selected start date falls after the selected end date.'));
+        // for recurring events, make sure the end of recurrance is after the eventStart
+        if (($submitted_event['recurrtype'] <> CalendarEvent::RECURRTYPE_NONE) && ($submitted_event['endDate'] < $submitted_event['eventStart'])) {
+            LogUtil::registerError($this->__('Error! The repeat end date must be after the event start date.'));
             return true;
         }
 
-        // check time validity
-        if ($submitted_event['alldayevent'] == 0) {
-            $stime = $this->convertTimeArray($submitted_event['startTime'], 'U');
-            $etime = $this->convertTimeArray($submitted_event['endTime'], 'U');
-            if ($etime <= $stime) {
-                LogUtil::registerError($this->__('Error! The end time must be after the start time.'));
-                return true;
-            }
+        // check time validity if not allday event
+        if ($submitted_event['eventEnd'] <= $submitted_event['eventStart']) {
+            LogUtil::registerError($this->__('Error! The event cannot end before it begins.'));
+            return true;
         }
 
         return false;
@@ -578,13 +547,15 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
      */
     public function getEventOccurances($event, $includePast = false)
     {
-        $eventStart = DateTime::createFromFormat('Y-m-d', $event['eventDate']);
-        $defaultEnd = clone $eventStart;
-        $eventEnd = isset($event['endDate']) ? DateTime::createFromFormat('Y-m-d', $event['endDate']) : $defaultEnd->modify("+2 years");
+//        $eventStart = DateTime::createFromFormat('Y-m-d', $event['eventDate']);
+        $eventStart = clone $event['eventStart'];
+        $defaultEnd = clone $event['eventStart'];
+//        $eventEnd = isset($event['endDate']) ? DateTime::createFromFormat('Y-m-d', $event['endDate']) : $defaultEnd->modify("+2 years");
+        $eventEnd = isset($event['endDate']) ? $event['endDate'] : $defaultEnd->modify("+2 years");
         $occurances = array();
         switch ($event['recurrtype']) {
             case CalendarEvent::RECURRTYPE_NONE:
-                return array($event['eventDate']);
+                return array($eventStart->format('Y-m-d'));
                 break;
             case CalendarEvent::RECURRTYPE_REPEAT:
                 $rfreq = $event['recurrspec']['event_repeat_freq'];
@@ -650,7 +621,7 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
      * @param   string $format desired output format
      * @return  string
      **/    
-    public function convertTimeArray($time, $format = 'G:i:s')
+    public function convertTimeArray($time, $format = 'G:i')
     {
         $timeString = "{$time['Hour']}:{$time['Minute']}";
         $stringFormat = 'G:i';
@@ -701,7 +672,7 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
      **/
     public function computeendtime($event)
     {
-        $stime = DateTime::createFromFormat('G:i:s', $event['startTime']);
+        $stime = DateTime::createFromFormat('G:i', $event['startTime']);
         $stime->modify("+" . $event['duration'] . " seconds");
         return $this->getVar('pcTime24Hours') ? $stime->format('G:i') : $stime->format('g:i a');
     }

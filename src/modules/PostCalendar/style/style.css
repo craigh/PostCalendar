@@ -35,34 +35,6 @@ h2.postcalendar_header a {
 	padding-left: 10px;
 	padding-right: 10px;
 }
-#postcalendar_addevent_leftcol {
-    width: 49%;
-    float: left;
-}
-#postcalendar_addevent_rightcol {
-    margin-left: 50%;
-}
-#postcalendar_addevent_rightcol fieldset {
-    margin-bottom: 1em;
-    padding: 4px 0 1em 1em;
-    background-color: #eeeeee;
-}
-#postcalendar_addevent_rightcol fieldset legend,
-#postcalendar_addevent_leftcol fieldset legend {
-    background-color: #ffffff;
-    padding: 0 3px;
-}
-#postcalendar_addevent_previewevent {
-    background-color: #eeeeee;
-    border: 2px solid #cccccc;
-    margin: 2em;
-    padding: 1em;
-}
-#postcalendar_addevent_previewevent #previewtitle {
-    border-bottom: 1px solid #999999;
-    color: navy;
-    font-style: italic;
-}
 table#postcalendar_yearview {
     width: 100%;
 }
@@ -345,11 +317,33 @@ div.postcalendar_featuredevent div.eventdetails span.location{
     margin-left: 2em;
 }
 
-/** date and time pickers **/
-.postcalendar_timepicker {
-    width: 8em;
+/** submit form **/
+#postcalendar_repetitionsettings {
+    background-color: #ffffff;
+    border: 1px solid #cccccc;
+    padding: 1em;
+    width: 65.8%;
 }
 
-.postcalendar_datepicker {
-    width: 12em;
+#postcalendar_repetitionsettings div {
+    margin: .5em 0 0 1em;
+}
+
+#postcalendar_addevent_previewevent {
+    background-color: #eeeeee;
+    border: 2px solid #cccccc;
+    margin: 2em;
+    padding: 1em;
+}
+
+#postcalendar_addevent_previewevent #previewtitle {
+    border-bottom: 1px solid #999999;
+    color: navy;
+    font-style: italic;
+}
+
+/** date and time pickers **/
+#eventstart_time,
+#eventend_time {
+    width: 8em;
 }
