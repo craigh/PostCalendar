@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PostCalendar
  * 
@@ -22,21 +23,20 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class PostCalendar_Entity_CalendarEvent extends Zikula_EntityAccess
 {
+
     const SHARING_PRIVATE = 0;
     const SHARING_PUBLIC = 1;
     const SHARING_GLOBAL = 3;
-    
     const APPROVED = 1;
     const QUEUED = 0;
     const HIDDEN = -1;
     const ALLSTATUS = 100;
-    
     const RECURRTYPE_NONE = 0;
     const RECURRTYPE_REPEAT = 1;
     const RECURRTYPE_REPEAT_ON = 2;
-
     const ENDTYPE_ON = 1;
     const ENDTYPE_NONE = 0;
+
     /**
      * event id field (record id)
      *
@@ -45,6 +45,7 @@ class PostCalendar_Entity_CalendarEvent extends Zikula_EntityAccess
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $eid;
+
     /**
      * Participant's UID
      * duplicate of informant UID
@@ -52,12 +53,14 @@ class PostCalendar_Entity_CalendarEvent extends Zikula_EntityAccess
      * @ORM\Column(length=30)
      */
     private $aid = 2;
+
     /**
      * Event Title
      * 
      * @ORM\Column(length=150, nullable=true)
      */
     private $title = '';
+
     /**
      * timestamp for event creation
      * NOT a typo - 'time' is a reserved SQL word
@@ -66,12 +69,14 @@ class PostCalendar_Entity_CalendarEvent extends Zikula_EntityAccess
      * @ORM\Column(type="datetime", name="ttime")
      */
     private $time;
+
     /**
      * Event description
      * 
      * @ORM\Column(type="text", nullable=true)
      */
     private $hometext = '';
+
     /**
      * UID of event submittor
      * default 2 = admin
@@ -79,26 +84,48 @@ class PostCalendar_Entity_CalendarEvent extends Zikula_EntityAccess
      * @ORM\Column(length=20)
      */
     private $informant = 2;
+
     /**
      * Event start date
      * set to current DateTime object in constructor
+     * @deprecated since v8.0.0
      * 
-     * @ORM\Column(type="date")
+     * @ORM\Column(type="date", nullable=true)
      */
     private $eventDate;
+
+    /**
+     * Event start date and time
+     * set to current DateTime object in constructor
+     * 
+     * @ORM\Column(type="datetime")
+     */
+    private $eventStart;
+
+    /**
+     * Event end date and time
+     * set to current DateTime object in constructor
+     * 
+     * @ORM\Column(type="datetime")
+     */
+    private $eventEnd;
+
     /**
      * event duration
      * length of event in seconds
+     * @deprecated since v8.0.0
      * 
-     * @ORM\Column(type="bigint")
+     * @ORM\Column(type="bigint", nullable=true)
      */
     private $duration = 0;
+
     /**
-     * Event end date
+     * Event recurrance end date
      * 
      * @ORM\Column(type="date", nullable=true)
      */
     private $endDate = null;
+
     /**
      * Type of recurrance (0, 1, 2)
      * see const defs in this class
@@ -106,6 +133,7 @@ class PostCalendar_Entity_CalendarEvent extends Zikula_EntityAccess
      * @ORM\Column(type="integer", length=1)
      */
     private $recurrtype = self::RECURRTYPE_NONE;
+
     /**
      * Serialized recurrance spec
      * 
@@ -116,19 +144,23 @@ class PostCalendar_Entity_CalendarEvent extends Zikula_EntityAccess
         "event_repeat_on_num" => "1",
         "event_repeat_on_day" => "0",
         "event_repeat_on_freq" => ""
-        );
+    );
+
     /**
      * Event Start time
+     * @deprecated since v8.0.0
      * 
-     * @ORM\Column(length=8)
+     * @ORM\Column(length=8, nullable=true)
      */
-    private $startTime = '00:00:00';
+    private $startTime = null;
+
     /**
      * Event All Day or not
      * 
      * @ORM\Column(type="boolean") 
      */
     private $alldayevent = false;
+
     /**
      * Location of the event
      * 
@@ -137,40 +169,46 @@ class PostCalendar_Entity_CalendarEvent extends Zikula_EntityAccess
     private $location = array("event_location" => "",
         "event_street1" => "",
         "event_street2" => "",
-        "event_city"=> "",
+        "event_city" => "",
         "event_state" => "",
         "event_postal" => ""
-        );
+    );
+
     /**
      * Telephone of Event Contact
      * 
      * @ORM\Column(length=50, nullable=true)
      */
     private $conttel = '';
+
     /**
      * Event Contact Name
      * 
      * @ORM\Column(length=50, nullable=true)
      */
     private $contname = '';
+
     /**
      * Event Contact email
      * 
      * @ORM\Column(nullable=true)
      */
     private $contemail = '';
+
     /**
      * Event Contact website
      * 
      * @ORM\Column(nullable=true)
      */
     private $website = '';
+
     /**
      * Event Fee
      * 
      * @ORM\Column(length=50, nullable=true) 
      */
     private $fee = '';
+
     /**
      * Event status (approved, pending)
      * see const defs in this class
@@ -178,6 +216,7 @@ class PostCalendar_Entity_CalendarEvent extends Zikula_EntityAccess
      * @ORM\Column(type="integer", nullable=true)
      */
     private $eventstatus = self::QUEUED;
+
     /**
      * Event sharing (private, global)
      * see const defs in this class
@@ -185,51 +224,58 @@ class PostCalendar_Entity_CalendarEvent extends Zikula_EntityAccess
      * @ORM\Column(type="integer")
      */
     private $sharing = self::SHARING_PRIVATE;
+
     /**
      * Module name of Hook Target
      * 
      * @ORM\Column(length=50, nullable=true) 
      */
     private $hooked_modulename = '';
+
     /**
      * Object ID of Hook Target
      * 
      * @ORM\Column(type="integer", nullable=true) 
      */
     private $hooked_objectid = 0;
+
     /**
      * Area ID of Hook Target
      * 
      * @ORM\Column(type="integer", nullable=true)
      */
     private $hooked_area = 0;
+
     /**
      * @ORM\OneToMany(targetEntity="PostCalendar_Entity_EventCategory", 
      *                mappedBy="entity", cascade={"all"}, 
      *                orphanRemoval=true, indexBy="categoryRegistryId")
      */
     private $categories;
+
     /**
      * non-persisted properties
      */
     private $privateicon = false;
     private $HTMLorTextVal = 'html';
     private $endtype = self::ENDTYPE_NONE;
-    
+
     /**
      * Constructor 
      */
     public function __construct()
     {
         $this->categories = new ArrayCollection();
-        $this->setEventDate(new DateTime());
-        $this->setTime(new DateTime());
+        $currentDateTime = new DateTime();
+        $this->setEventStart(clone $currentDateTime);
+        $this->setEventEnd(clone $currentDateTime);
+        $this->setTime(clone $currentDateTime);
 
         $uid = UserUtil::getVar('uid');
         $this->setAid($uid);
         $this->setInformant($uid);
     }
-    
+
     /**
      * GETTERS AND SETTERS
      */
@@ -288,14 +334,49 @@ class PostCalendar_Entity_CalendarEvent extends Zikula_EntityAccess
         $this->informant = $informant;
     }
 
-    public function getEventDate($format='Y-m-d')
+    /**
+     * get Event date
+     * @deprecated since v8.0.0
+     * @param string $format
+     * @return mixed string/null 
+     */
+    public function getEventDate($format = 'Y-m-d')
     {
-        return $this->eventDate->format($format);
+        if ($this->eventDate instanceof DateTime) {
+            return $this->eventDate->format($format);
+        } else {
+            return null;
+        }
     }
 
+    /**
+     * set Event date
+     * @deprecated since v8.0.0
+     * @param DateTime $eventDate 
+     */
     public function setEventDate(DateTime $eventDate)
     {
         $this->eventDate = $eventDate;
+    }
+
+    public function getEventStart()
+    {
+        return $this->eventStart;
+    }
+
+    public function setEventStart($eventStart)
+    {
+        $this->eventStart = $eventStart;
+    }
+
+    public function getEventEnd()
+    {
+        return $this->eventEnd;
+    }
+
+    public function setEventEnd($eventEnd)
+    {
+        $this->eventEnd = $eventEnd;
     }
 
     public function getDuration()
@@ -308,11 +389,11 @@ class PostCalendar_Entity_CalendarEvent extends Zikula_EntityAccess
         $this->duration = $duration;
     }
 
-    public function getEndDate($format='Y-m-d')
+    public function getEndDate($format = 'Y-m-d')
     {
-        if (isset($this->endDate)) {
-            return $this->endDate->format($format);
-        }
+//        if (isset($this->endDate)) {
+//            return $this->endDate->format($format);
+//        }
         return $this->endDate;
     }
 
@@ -470,7 +551,7 @@ class PostCalendar_Entity_CalendarEvent extends Zikula_EntityAccess
     {
         $this->hooked_area = $hooked_area;
     }
-    
+
     public function getCategories()
     {
         return $this->categories;
@@ -480,7 +561,7 @@ class PostCalendar_Entity_CalendarEvent extends Zikula_EntityAccess
     {
         $this->categories = $categories;
     }
-    
+
     /**
      * Getters and Setters for non-persisted properties
      */
@@ -488,10 +569,12 @@ class PostCalendar_Entity_CalendarEvent extends Zikula_EntityAccess
     {
         return $this->privateicon;
     }
+
     public function getHTMLorTextVal()
     {
         return $this->HTMLorTextVal;
     }
+
     public function getEndtype()
     {
         return $this->endtype;
@@ -517,7 +600,8 @@ class PostCalendar_Entity_CalendarEvent extends Zikula_EntityAccess
      * 
      * @param type $array 
      */
-    public function setFromArray($array) {
+    public function setFromArray($array)
+    {
         if (isset($array['title'])) {
             $this->setTitle($array['title']);
         }
@@ -581,7 +665,6 @@ class PostCalendar_Entity_CalendarEvent extends Zikula_EntityAccess
                     $this->getCategories()->set($regIds[$propName], new PostCalendar_Entity_EventCategory($regIds[$propName], $category, $this));
                 }
             }
-
         }
         if (isset($array['contname'])) {
             $this->setContname($array['contname']);
@@ -605,7 +688,7 @@ class PostCalendar_Entity_CalendarEvent extends Zikula_EntityAccess
             $this->setHooked_objectid($array['hooked_objectid']);
         }
     }
-    
+
     public function getOldArray()
     {
         $array = parent::toArray();
@@ -621,13 +704,13 @@ class PostCalendar_Entity_CalendarEvent extends Zikula_EntityAccess
                     'ipath' => $category->getIPath(),
                     'display_name' => $category->getDisplayName());
                 $categoryAttributes = $category->getAttributes();
-                foreach($categoryAttributes as $attr) {
+                foreach ($categoryAttributes as $attr) {
                     $array['categories'][$propName]['attributes'][$attr->getName()] = $attr->getValue();
                 }
             }
         }
         $array['time'] = $this->getTime()->format('Y-m-d H:i:s');
-        
+
         return $array;
     }
 
