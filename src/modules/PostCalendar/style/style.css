@@ -344,3 +344,12 @@ div.postcalendar_featuredevent div.eventdetails span.location{
 #pc_bulkaction_control select {
     margin-left: 2em;
 }
+
+/** date and time pickers **/
+.postcalendar_timepicker {
+    width: 8em;
+}
+
+.postcalendar_datepicker {
+    width: 12em;
+}
