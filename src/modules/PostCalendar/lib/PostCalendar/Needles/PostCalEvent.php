@@ -89,9 +89,7 @@ class PostCalendar_Needles_PostCalEvent extends Zikula_AbstractHelper
             return false;
         }
 
-        if (!$event = ModUtil::apiFunc('PostCalendar', 'event', 'formateventarrayfordisplay', $event)) {
-            return false;
-        }
+        $event = ModUtil::apiFunc('PostCalendar', 'event', 'formateventarrayfordisplay', array('event' => $event));
 
         // is event allowed for this user?
         if ($event['sharing'] == PostCalendar_Entity_CalendarEvent::SHARING_PRIVATE && $event['aid'] != UserUtil::getVar('uid') && !SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {

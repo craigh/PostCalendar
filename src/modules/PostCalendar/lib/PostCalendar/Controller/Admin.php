@@ -173,7 +173,7 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
         foreach ($events as $event) {
             // get event info
             $eventitems = $event->getOldArray();
-            $eventitems = ModUtil::apiFunc('PostCalendar', 'event', 'formateventarrayfordisplay', $eventitems);
+            $eventitems = ModUtil::apiFunc('PostCalendar', 'event', 'formateventarrayfordisplay', array('event' => $eventitems));
             $alleventinfo[$event->getEid()] = $eventitems;
         }
     

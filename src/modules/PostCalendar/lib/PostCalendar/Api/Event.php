@@ -131,7 +131,7 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
             $occurances = $this->getEventOccurances($event, true);
             foreach ($occurances as $date) {
                 if (isset($days[$date])) {
-                    $days[$date][] = $this->formateventarrayfordisplay($event);
+                    $days[$date][] = $this->formateventarrayfordisplay(array('event' => $event));
                 }
             }   
         }
@@ -320,10 +320,12 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
      * @param array $event event array as pulled from the DB
      * @return array $event modified array for display
      */
-    public function formateventarrayfordisplay($event)
+    public function formateventarrayfordisplay($params)
     {
-        if ((empty($event)) or (!is_array($event))) {
+        if ((empty($params['event'])) or (!is_array($params['event']))) {
             return LogUtil::registerArgsError();
+        } else {
+            $event = $params['event'];
         }
 
         // build recurrance sentence for display

@@ -27,7 +27,7 @@ class PostCalendar_Controller_Event extends Zikula_AbstractController
 
         // get the event from the DB
         $event = $this->entityManager->getRepository('PostCalendar_Entity_CalendarEvent')->find($eid)->getOldArray();
-        $event = ModUtil::apiFunc('PostCalendar', 'event', 'formateventarrayfordisplay', $event);
+        $event = ModUtil::apiFunc('PostCalendar', 'event', 'formateventarrayfordisplay', array('event' => $event));
 
         $render->assign('loaded_event', $event);
         return $render->execute('event/deleteeventconfirm.tpl', new PostCalendar_Form_Handler_EditHandler());
@@ -148,7 +148,7 @@ class PostCalendar_Controller_Event extends Zikula_AbstractController
                         ->getRepository('PostCalendar_Entity_CalendarEvent')
                         ->findOneBy(array('eid' => $eid))
                         ->getOldArray();
-                $eventdata = ModUtil::apiFunc('PostCalendar', 'event', 'formateventarrayfordisplay', $eventdata);
+                $eventdata = ModUtil::apiFunc('PostCalendar', 'event', 'formateventarrayfordisplay', array('event' => $eventdata));
             }
             // need to check each of these below to see if truly needed CAH 11/14/09
             $eventdata['date'] = $date->format('Y-m-d');
@@ -183,7 +183,7 @@ class PostCalendar_Controller_Event extends Zikula_AbstractController
             unset($eventdata['categories']);
             $eventdata['categories'] = $categories;
             // format the data for preview
-            $eventdata = ModUtil::apiFunc('PostCalendar', 'event', 'formateventarrayfordisplay', $eventdata);
+            $eventdata = ModUtil::apiFunc('PostCalendar', 'event', 'formateventarrayfordisplay', array('event' => $eventdata));
         } else {
             $eventdata['preview'] = "";
         }
