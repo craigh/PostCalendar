@@ -28,6 +28,9 @@ function smarty_function_jquery_timepicker($params, Zikula_View $view)
     $javascript = "
         jQuery(document).ready(function() {
             jQuery('#$displayElement').timepicker({
+                onClose: function(dateText, inst) {
+                        updateFields(this, dateText);
+                    },
                 timeFormat: '$jqueryTimeFormat',
                 ampm: $ap,
                 stepMinute: {$modVars['PostCalendar']['pcTimeIncrement']}

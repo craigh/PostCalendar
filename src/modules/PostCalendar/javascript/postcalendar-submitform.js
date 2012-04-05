@@ -43,6 +43,8 @@ function updateFields(inputElementObj, dateText)
     var date = new Date(dateText);
     var datePlusOne = new Date(dateText);
     datePlusOne.setDate(datePlusOne.getDate()+1);
+    var eventStartTime = jQuery("#eventstart_time").datepicker("getDate");
+    var eventEndTime = jQuery("#eventend_time").datepicker("getDate");
     
     switch(fieldName)
     {
@@ -55,6 +57,22 @@ function updateFields(inputElementObj, dateText)
             break;
         case 'repeat_enddate_display':
             // do nothing
+            break;
+        case 'eventstart_time':
+            // apparently cannot use straight == comparison of Date objects...
+            if (jQuery.datepicker.formatDate('yymmdd', jQuery("#eventstart_display").datepicker("getDate")) == jQuery.datepicker.formatDate('yymmdd', jQuery("#eventend_display").datepicker("getDate"))) {
+                if (eventStartTime > eventEndTime) {
+                    jQuery("#eventend_time").datepicker("setDate", jQuery("#eventstart_time").datepicker("getDate"));
+                }
+            }
+            break;
+        case 'eventend_time':
+            // apparently cannot use straight == comparison of Date objects...
+            if (jQuery.datepicker.formatDate('yymmdd', jQuery("#eventstart_display").datepicker("getDate")) == jQuery.datepicker.formatDate('yymmdd', jQuery("#eventend_display").datepicker("getDate"))) {
+                if (eventStartTime > eventEndTime) {
+                    jQuery("#eventstart_time").datepicker("setDate", jQuery("#eventend_time").datepicker("getDate"));
+                }
+            }
             break;
     }
 }
