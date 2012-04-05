@@ -54,11 +54,12 @@
         <div class="z-formrow">
             <label>{gt text='Starts and Ends'}</label>
             <span>
+                {if ($loaded_event.alldayevent)}{assign var='inlinestyle' value='display: none;'}{else}{assign var='inlinestyle' value=null}{/if}
                 {jquery_datepicker defaultdate=$loaded_event.eventStart displayelement='eventstart_display' object='postcalendar_events' valuestorageelement='eventstart_date' maxdate=$loaded_event.eventStart}
-                {jquery_timepicker defaultdate=$loaded_event.eventStart displayelement='eventstart_time' object='postcalendar_events'}
+                {jquery_timepicker defaultdate=$loaded_event.eventStart displayelement='eventstart_time' object='postcalendar_events' inlinestyle=$inlinestyle}
                 <span style='padding:0 1em;'>{gt text='to'}</span>
                 {jquery_datepicker defaultdate=$loaded_event.eventEnd displayelement='eventend_display' object='postcalendar_events'  valuestorageelement='eventend_date' mindate=$loaded_event.eventEnd}
-                {jquery_timepicker defaultdate=$loaded_event.eventEnd displayelement='eventend_time' object='postcalendar_events'}
+                {jquery_timepicker defaultdate=$loaded_event.eventEnd displayelement='eventend_time' object='postcalendar_events' inlinestyle=$inlinestyle}
             </span>
         </div>
             

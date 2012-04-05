@@ -6,6 +6,7 @@ function smarty_function_jquery_timepicker($params, Zikula_View $view)
     $displayElement = (isset($params['displayelement'])) ? $params['displayelement'] : '';
     $readOnly = (isset($params['readonly'])) ? $params['readonly'] : true;
     $object = (isset($params['object'])) ? $params['object'] : true;
+    $inlineStyle = (isset($params['inlinestyle'])) ? $params['inlinestyle'] : null;
 
     $modVars = $view->get_template_vars('modvars');
     if ($modVars['PostCalendar']['pcTime24Hours']) {
@@ -35,8 +36,9 @@ function smarty_function_jquery_timepicker($params, Zikula_View $view)
     PageUtil::addVar("footer", "<script type='text/javascript'>$javascript</script>");
     
     $readOnlyHtml = ($readOnly) ? " readonly='readonly'" : "";
+    $inlineStyle = (isset($inlineStyle)) ? " style='$inlineStyle'" : '';
     
-    $html = "<input type='text'{$readOnlyHtml} id='$displayElement' name='{$object}[{$displayElement}]' value='{$defaultDate->format($dateTimeFormat)}' />";
+    $html = "<input type='text'{$readOnlyHtml}{$inlineStyle} id='$displayElement' name='{$object}[{$displayElement}]' value='{$defaultDate->format($dateTimeFormat)}' />";
 
     return $html;
 }
