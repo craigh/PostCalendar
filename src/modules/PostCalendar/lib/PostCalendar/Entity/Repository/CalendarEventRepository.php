@@ -84,13 +84,13 @@ class PostCalendar_Entity_Repository_CalendarEventRepository extends EntityRepos
         $startDate->setTime(0, 0);
         $endDate->setTime(23, 59);
         $dql = "SELECT a FROM PostCalendar_Entity_CalendarEvent a JOIN a.categories c " .
-                "WHERE (a.eventEnd >= ?2 " .
-                "OR (a.endDate = ?3 AND a.recurrtype <> ?4) " .
-                "OR a.eventStart >= ?5) " .
-                "AND a.eventStart <= ?6 ";
-
+                "WHERE (a.endDate >= :startDate1 " .
+                "OR a.eventEnd >= :startDate3 " .
+                "OR a.eventStart >= :startDate2) " .
+                "AND a.eventStart <= :endDate ";
+        
         if ($eventStatus <> CalendarEvent::ALLSTATUS) {
-            $dql .= "AND a.eventstatus = ?1 ";
+            $dql .= "AND a.eventstatus = :status ";
         }
         switch ($userFilter) {
             case self::FILTER_PRIVATE: // show just private events
@@ -122,13 +122,12 @@ class PostCalendar_Entity_Repository_CalendarEventRepository extends EntityRepos
 
         // Add query parameters
         $query->setParameters(array(
-            2 => $startDate,
-            3 => null,
-            4 => CalendarEvent::RECURRTYPE_NONE,
-            5 => $startDate,
-            6 => $endDate));
+            'startDate1' => $startDate,
+            'startDate2' => $startDate,
+            'startDate3' => $startDate,
+            'endDate' => $endDate));
         if ($eventStatus <> CalendarEvent::ALLSTATUS) {
-            $query->setParameter(1, $eventStatus);
+            $query->setParameter('status', $eventStatus);
         }
         switch ($userFilter) {
             case self::FILTER_PRIVATE:
