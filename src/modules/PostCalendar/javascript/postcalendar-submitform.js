@@ -41,6 +41,9 @@ function updateFields(inputElementObj, dateText)
 {
     var fieldName = jQuery(inputElementObj).attr('id');
     var date = new Date(dateText);
+    var datePlusOne = new Date(dateText);
+    datePlusOne.setDate(datePlusOne.getDate()+1);
+    
     switch(fieldName)
     {
         case 'eventstart_display':
@@ -48,8 +51,7 @@ function updateFields(inputElementObj, dateText)
             break;
         case 'eventend_display':
             jQuery("#eventstart_display").datepicker('option', 'maxDate', date);
-            date.setDate(date.getDate()+1);
-            jQuery("#repeat_enddate_display").datepicker('option', 'minDate', date);
+            jQuery("#repeat_enddate_display").datepicker('option', 'minDate', datePlusOne);
             break;
         case 'repeat_enddate_display':
             // do nothing
