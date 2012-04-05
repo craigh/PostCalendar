@@ -139,7 +139,7 @@ class PostCalendar_Controller_Event extends Zikula_AbstractController
             $eventdata['data_loaded'] = true;
 
         } else { // func=edit or func=copy (we are editing an existing event or copying an existing event)
-            if ($submitted_event['data_loaded']) {
+            if ((isset($submitted_event['data_loaded'])) && ($submitted_event['data_loaded'])) {
                 $eventdata = $submitted_event; // reloaded event when editing
             } else {
                 // here were need to format the DB data to be able to load it into the form

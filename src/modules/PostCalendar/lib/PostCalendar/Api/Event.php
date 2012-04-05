@@ -345,7 +345,9 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
                 $event['recurr_sentence'] .= " " . $repeat_freq_type[$event['recurrspec']['event_repeat_freq_type']];
                 $event['recurr_sentence'] .= " " . $this->__("until") . " " . $event['endDate']->format($formats['date']);
                 // modify start date to current date for display
-                $event['eventStart']->setDate($currentDate->format('Y'), $currentDate->format('m'), $currentDate->format('d'));
+                if (isset($currentDate)) {
+                    $event['eventStart']->setDate($currentDate->format('Y'), $currentDate->format('m'), $currentDate->format('d'));
+                }
                 break;
             case CalendarEvent::RECURRTYPE_REPEAT_ON:
                 $event['recurr_sentence'] = $this->__("Event recurs on") . " " . $repeat_on_num[$event['recurrspec']['event_repeat_on_num']];
@@ -353,7 +355,9 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
                 $event['recurr_sentence'] .= " " . $this->__f("of the month, every %s months", $event['recurrspec']['event_repeat_on_freq']);
                 $event['recurr_sentence'] .= " " . $this->__("until") . " " . $event['endDate']->format($formats['date']);
                 // modify start date to current date for display
-                $event['eventStart']->setDate($currentDate->format('Y'), $currentDate->format('m'), $currentDate->format('d'));
+                if (isset($currentDate)) {
+                    $event['eventStart']->setDate($currentDate->format('Y'), $currentDate->format('m'), $currentDate->format('d'));
+                }
                 break;
             case CalendarEvent::RECURRTYPE_CONTINUOUS:
                 $event['recurr_sentence'] = $this->__("Continuous, multi-day event, beginning") . " " . $event['eventStart']->format($formats['date'] . " @ " . $timeFormat);
