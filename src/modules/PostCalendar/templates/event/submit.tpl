@@ -91,7 +91,7 @@
             </div>
             <div>
                 <label>{gt text='until'}...</label>
-                {jquery_datepicker defaultdate=$loaded_event.endDate displayelement='repeat_enddate_display' object='postcalendar_events' valuestorageelement='enddate' mindate=$loaded_event.endDate}
+                {jquery_datepicker defaultdate=$loaded_event.endDate displayelement='repeat_enddate_display' object='postcalendar_events' valuestorageelement='enddate' mindate=$loaded_event.eventEnd}
             </div>
         </div>
 
