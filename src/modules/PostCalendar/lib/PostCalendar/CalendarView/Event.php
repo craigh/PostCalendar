@@ -53,12 +53,6 @@ class PostCalendar_CalendarView_Event extends PostCalendar_CalendarView_Abstract
             return LogUtil::registerError($this->view->__('You do not have permission to view this event.'));
         }
 
-        // since recurrevents are dynamically calculated, we need to change the date
-        // to ensure that the correct/current date is being displayed (rather than the
-        // date on which the recurring booking was executed).
-        if ($this->event['recurrtype']) {
-            $this->event['eventStart'] = clone $this->requestedDate;
-        }
         // create and return template
         $this->view->assign('loaded_event', $this->event);
         if ($this->popup) {
