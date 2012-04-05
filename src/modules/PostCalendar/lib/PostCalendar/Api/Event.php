@@ -131,7 +131,9 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
             $occurances = $this->getEventOccurances($event, true);
             foreach ($occurances as $date) {
                 if (isset($days[$date])) {
-                    $days[$date][] = $this->formateventarrayfordisplay(array('event' => $event));
+                    $days[$date][] = $this->formateventarrayfordisplay(array(
+                        'event' => $event,
+                        'currentDate' => $date));
                 }
             }   
         }
@@ -236,7 +238,7 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
         $eventdata['sharing'] = (isset($eventdata['sharing'])) ? $eventdata['sharing'] : $eventDefaults['sharing'];
 
         // recur type radio selects
-        $eventdata['repeats'] = !((!isset($eventdata['recurrtype'])) || ((int)$eventdata['recurrtype'] == CalendarEvent::RECURRTYPE_NONE)); //default
+        $eventdata['repeats'] = !((!isset($eventdata['recurrtype'])) || ((int)$eventdata['recurrtype'] == CalendarEvent::RECURRTYPE_NONE) || ((int)$eventdata['recurrtype'] == CalendarEvent::RECURRTYPE_CONTINUOUS)); //default
         $form_data['SelectedRepeat']   = ((isset($eventdata['recurrtype']))  && ((int)$eventdata['recurrtype'] == CalendarEvent::RECURRTYPE_REPEAT)) ? " checked='checked'" : '';
         $form_data['SelectedRepeatOn'] = ((isset($eventdata['recurrtype']))  && ((int)$eventdata['recurrtype'] == CalendarEvent::RECURRTYPE_REPEAT_ON)) ? " checked='checked'" : '';
 
@@ -318,6 +320,7 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
     /**
      * @desc This function reformats the information in an event array for proper display in detail
      * @param array $event event array as pulled from the DB
+     * @param string $currentDate the date the event is being displayed upon (optional, default NULL)
      * @return array $event modified array for display
      */
     public function formateventarrayfordisplay($params)
@@ -327,6 +330,7 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
         } else {
             $event = $params['event'];
         }
+        $currentDate = isset($params['currentDate']) ? DateTime::createFromFormat('Y-m-d', $params['currentDate']) : null;
 
         // build recurrance sentence for display
         $repeat_freq_type = explode("/", $this->__('Day(s)/Week(s)/Month(s)/Year(s)'));
@@ -348,9 +352,20 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
                 $event['recurr_sentence'] .= " " . $this->__("until") . " " . $event['endDate']->format($formats['date']);
                 break;
             case CalendarEvent::RECURRTYPE_CONTINUOUS:
-                echo "<pre>"; var_dump($event); die;
                 $event['recurr_sentence'] = $this->__("Continuous, multi-day event, beginning") . " " . $event['eventStart']->format($formats['date'] . " @ " . $timeFormat);
                 $event['recurr_sentence'] .= " " . $this->__("and ending") . " " . $event['eventEnd']->format($formats['date'] . " @ " . $timeFormat);
+                // modify event start and end dates if event is continuous 
+                if (isset($currentDate)) {
+                    if ((int)$event['eventStart']->format('Ymd') == (int)$currentDate->format('Ymd')) {
+                        $end = clone $event['eventEnd'];
+                        $event['eventEnd'] = $end->setTime(23, 59); // last minute of the day
+                    } else if ((int)$event['eventEnd']->format('Ymd') == (int)$currentDate->format('Ymd')) {
+                        $start = clone $event['eventStart'];
+                        $event['eventStart'] = $start->setTime(0, 0); // first minute of the day
+                    } else {
+                        $event['alldayevent'] = true;
+                    }
+                }
                 break;
             default:
                 $event['recurr_sentence'] = $this->__("This event does not recur.");

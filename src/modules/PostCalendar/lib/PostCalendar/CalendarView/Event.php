@@ -33,7 +33,9 @@ class PostCalendar_CalendarView_Event extends PostCalendar_CalendarView_Abstract
 
         $em = ServiceUtil::getService('doctrine.entitymanager');
         $event = $em->getRepository('PostCalendar_Entity_CalendarEvent')->find($this->eid)->getOldArray();
-        $this->event = ModUtil::apiFunc('PostCalendar', 'event', 'formateventarrayfordisplay', array('event' => $event));
+        $this->event = ModUtil::apiFunc('PostCalendar', 'event', 'formateventarrayfordisplay', array(
+            'event' => $event,
+            'currentDate' => $this->requestedDate->format('Y-m-d')));
     }
 
     public function render()
