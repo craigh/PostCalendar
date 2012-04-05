@@ -179,10 +179,10 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
     
         $count = count($events);
         $texts = array(
-            self::ACTION_VIEW => "view",
-            self::ACTION_APPROVE => "approve",
-            self::ACTION_HIDE => "hide",
-            self::ACTION_DELETE => "delete");
+            self::ACTION_VIEW => $this->__("view"),
+            self::ACTION_APPROVE => $this->__("approve"),
+            self::ACTION_HIDE => $this->__("hide"),
+            self::ACTION_DELETE => $this->__("delete"));
 
         $this->view->assign('actiontext', $texts[$action]);
         $this->view->assign('action', $action);
