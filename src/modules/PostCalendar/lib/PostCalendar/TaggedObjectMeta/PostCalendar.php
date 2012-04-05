@@ -21,11 +21,11 @@ class PostCalendar_TaggedObjectMeta_PostCalendar extends Tag_AbstractTaggedObjec
         // check for permission and status
         $permission = SecurityUtil::checkPermission('PostCalendar::Event', "$pc_event[title]::$pc_event[eid]", ACCESS_OVERVIEW);
         $private = ($pc_event['sharing'] == 0 && $pc_event['aid'] != UserUtil::getVar('uid') && !SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN));
+        $formats = ModUtil::getVar('PostCalendar', 'pcDateFormats');
+        $timeFormat = ModUtil::getVar('PostCalendar', 'pcTime24Hours') ? "G:i" : "g:i a";
         if ($pc_event && $permission && !$private) {
             $this->setObjectAuthor("");
-            $date = DateUtil::formatDatetime($pc_event['eventDate'], 'datebrief', false);
-            $time = DateUtil::formatDatetime($pc_event['startTime'], 'timebrief', false);
-            $this->setObjectDate("$date $time");
+            $this->setObjectDate($pc_event['eventStart']->format($formats['date'] . " " . $timeFormat));
             $this->setObjectTitle($pc_event['title']);
             // do not use default objectURL to compensate for shortUrl handling
         }

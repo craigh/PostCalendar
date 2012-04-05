@@ -38,12 +38,12 @@ class PostCalendar_CalendarView_FeaturedEventBlock extends PostCalendar_Calendar
     {
         parent::setup();
         $alleventdates = ModUtil::apiFunc('PostCalendar', 'event', 'getEventOccurances', $this->event); // gets all FUTURE occurances
-        // assign next occurance to eventDate
-        $this->event['eventDate'] = array_shift($alleventdates);
+        // assign next occurance to eventStart
+        $this->event['eventStart'] = DateTime::createFromFormat('Y-m-d', array_shift($alleventdates));
 
         $this->event['showcountdown'] = false; // default to false
         if ($this->blockVars['showcountdown']) {
-            $datedifference = DateUtil::getDatetimeDiff_AsField(DateUtil::getDatetime(null, '%F'), $this->event['eventDate'], 3);
+            $datedifference = DateUtil::getDatetimeDiff_AsField(DateUtil::getDatetime(null, '%F'), $this->event['eventStart']->format('Y-m-d'), 3);
             $this->event['datedifference'] = round($datedifference);
             $this->event['showcountdown'] = true;
         }

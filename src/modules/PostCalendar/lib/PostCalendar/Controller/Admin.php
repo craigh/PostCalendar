@@ -69,7 +69,7 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
         $sortcolclasses = array(
             'title' => 'z-order-unsorted',
             'time'  => 'z-order-unsorted',
-            'eventDate' => 'z-order-unsorted');
+            'eventStart' => 'z-order-unsorted');
     
         $offset = $this->request->query->get('offset', $this->request->request->get('offset', 0));
         $sort = $this->request->query->get('sort', $this->request->request->get('sort', 'time'));
@@ -107,7 +107,7 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
 
         $this->view->assign('functionname', $functionname);
         $this->view->assign('events', $events);
-        $sorturls = array('title', 'time', 'eventDate');
+        $sorturls = array('title', 'time', 'eventStart');
         foreach ($sorturls as $sorturl) {
             $this->view->assign($sorturl . '_sort_url', ModUtil::url('PostCalendar', 'admin', 'listevents', array(
                 'listtype' => $listtype,
@@ -242,6 +242,7 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
             'pcAllowDirectSubmit' => $this->request->request->get('pcAllowDirectSubmit', 0),
             'pcListHowManyEvents' => $this->request->request->get('pcListHowManyEvents', $defaults['pcListHowManyEvents']),
             'pcEventDateFormat' => $this->request->request->get('pcEventDateFormat', $defaults['pcEventDateFormat']),
+            'pcDateFormats' => $this->request->request->get('pcDateFormats', $defaults['pcDateFormats']),
             'pcAllowUserCalendar' => $this->request->request->get('pcAllowUserCalendar', 0),
             'pcTimeIncrement' => $this->request->request->get('pcTimeIncrement', $defaults['pcTimeIncrement']),
             'pcDefaultView' => $this->request->request->get('pcDefaultView', $defaults['pcDefaultView']),
@@ -257,9 +258,11 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
             'pcFilterYearEnd' => abs((int)$this->request->request->get('pcFilterYearEnd', $defaults['pcFilterYearEnd'])), // ensures positive value
             'pcNotifyPending' => $this->request->request->get('pcNotifyPending', 0),
             'pcAllowedViews' => $this->request->request->get('pcAllowedViews', $defaults['pcAllowedViews']),
-            'pcNavDateOrder' => $this->request->request->get('pcNavDateOrder', $defaults['pcNavDateOrder']),
-            'pcEventStrftimeFormat' => $this->request->request->get('pcEventStrftimeFormat', $defaults['pcEventStrftimeFormat']),
         );
+        // set pcDafeFormats
+        if ($settings['pcEventDateFormat'] <> "-1") {
+            $settings['pcDateFormats'] = PostCalendar_Util::getDateFormats($settings['pcEventDateFormat']);
+        }
         // save out event default settings so they are not cleared
         $settings['pcEventDefaults'] = $this->getVar('pcEventDefaults');
     

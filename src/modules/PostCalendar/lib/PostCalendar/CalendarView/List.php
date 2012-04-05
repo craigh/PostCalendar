@@ -83,9 +83,8 @@ class PostCalendar_CalendarView_List extends PostCalendar_CalendarView_AbstractD
                     ->assign('dayDisplay', $this->dayDisplay)
                     ->assign('graph', $this->dateGraph)
                     ->assign('eventsByDate', $eventsByDate)
-                    ->assign('requestedDate', $this->requestedDate->format('Y-m-d'))
-                    ->assign('startDate', $this->startDate->format('Y-m-d'))
-                    ->assign('endDate', $this->endDate->format('Y-m-d'));
+                    ->assign('startDate', $this->startDate)
+                    ->assign('endDate', $this->endDate);
         }
         return $this->view->fetch($this->template);
     }

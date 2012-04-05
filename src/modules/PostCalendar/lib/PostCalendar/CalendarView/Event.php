@@ -55,7 +55,7 @@ class PostCalendar_CalendarView_Event extends PostCalendar_CalendarView_Abstract
         // to ensure that the correct/current date is being displayed (rather than the
         // date on which the recurring booking was executed).
         if ($this->event['recurrtype']) {
-            $this->event['eventDate'] = $this->requestedDate->format('Ymd');
+            $this->event['eventStart'] = clone $this->requestedDate;
         }
         // create and return template
         $this->view->assign('loaded_event', $this->event);

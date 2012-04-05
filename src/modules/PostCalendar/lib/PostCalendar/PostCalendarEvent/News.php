@@ -41,8 +41,8 @@ class PostCalendar_PostCalendarEvent_News extends PostCalendar_PostCalendarEvent
         $this->aid = $article['cr_uid']; // userid of creator
         $this->time = $article['cr_date']; // mysql timestamp YYYY-MM-DD HH:MM:SS
         $this->informant = $article['cr_uid']; // userid of creator
-        $this->eventDate = substr($article['from'], 0, 10); // date of event: YYYY-MM-DD
-        $this->startTime = substr($article['from'], -8); // time of event: HH:MM:SS
+        $this->eventStart = DateTime::createFromFormat('Y-m-d G:i:s');
+        $this->eventEnd = clone $this->eventStart;
         $this->eventstatus = $eventstatus;
 
         return true;
@@ -58,15 +58,12 @@ class PostCalendar_PostCalendarEvent_News extends PostCalendar_PostCalendarEvent
                "SET a.eventstatus = :newstatus " .
                "WHERE a.hooked_modulename = :modname " .
                "AND a.eventstatus = :oldstatus " .
-               "AND a.eventDate <= :today " .
-               "AND a.startTime <= :time";
+               "AND a.eventStart <= now()";
         $query = $_em->createQuery($dql);
         $query->setParameters(array(
             'newstatus' => PostCalendar_Entity_CalendarEvent::APPROVED,
             'modname' => 'news',
             'oldstatus' => PostCalendar_Entity_CalendarEvent::HIDDEN,
-            'today' => date('Y-m-d'), // ?does this need to be a dateTime object?
-            'time' => date('H:i:s'), // this too?
         ));
         try {
             $query->getResult();

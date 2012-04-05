@@ -203,7 +203,7 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
             $startTimeParts = explode(":", $eventDefaults['startTime']);
             $eventdata['eventStart']->setTime($startTimeParts[0], $startTimeParts[1]);
         } else {
-            $eventdata['eventStart'] = PostCalendar_Util::getDate(array('date' => $eventdata['eventDate']));
+            $eventdata['eventStart'] = PostCalendar_Util::getDate(array('date' => $eventdata['eventStart']));
         }
         if ((!isset($eventdata['eventEnd'])) || empty($eventdata['eventEnd'])) {
             $eventdata['eventEnd'] = clone $eventdata['eventStart'];
@@ -330,15 +330,16 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
         $repeat_freq_type = explode("/", $this->__('Day(s)/Week(s)/Month(s)/Year(s)'));
         $repeat_on_num = explode("/", $this->__('err/First/Second/Third/Fourth/Last'));
         $repeat_on_day = explode("/", $this->__('Sunday/Monday/Tuesday/Wednesday/Thursday/Friday/Saturday'));
+        $formats = $this->getVar('pcDateFormats');
         if ($event['recurrtype'] == CalendarEvent::RECURRTYPE_REPEAT) {
             $event['recurr_sentence'] = $this->__f("Event recurs every %s", $event['recurrspec']['event_repeat_freq']);
             $event['recurr_sentence'] .= " " . $repeat_freq_type[$event['recurrspec']['event_repeat_freq_type']];
-            $event['recurr_sentence'] .= " " . $this->__("until") . " " . $event['endDate']->format($this->getVar('pcEventDateFormat'));
+            $event['recurr_sentence'] .= " " . $this->__("until") . " " . $event['endDate']->format($formats['date']);
         } elseif ($event['recurrtype'] == CalendarEvent::RECURRTYPE_REPEAT_ON) {
             $event['recurr_sentence'] = $this->__("Event recurs on") . " " . $repeat_on_num[$event['recurrspec']['event_repeat_on_num']];
             $event['recurr_sentence'] .= " " . $repeat_on_day[$event['recurrspec']['event_repeat_on_day']];
             $event['recurr_sentence'] .= " " . $this->__f("of the month, every %s months", $event['recurrspec']['event_repeat_on_freq']);
-            $event['recurr_sentence'] .= " " . $this->__("until") . " " . $event['endDate']->format($this->getVar('pcEventDateFormat'));
+            $event['recurr_sentence'] .= " " . $this->__("until") . " " . $event['endDate']->format($formats['date']);
         } else {
             $event['recurr_sentence'] = $this->__("This event does not recur.");
         }
@@ -362,13 +363,15 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
         $event['catcolor']     = isset($event['categories']['Main']['attributes']['color'])     ? $event['categories']['Main']['attributes']['color']     : '#eeeeee';
         $event['cattextcolor'] = isset($event['categories']['Main']['attributes']['textcolor']) ? $event['categories']['Main']['attributes']['textcolor'] : $this->color_inverse($event['catcolor']);
 
-        // temporarily remove hometext from array
-        $hometext = $event['hometext'];
-        unset($event['hometext']);
-        // format all the values for display
-        $event = DataUtil::formatForDisplay($event);
-        $event['hometext'] = DataUtil::formatForDisplayHTML($hometext); //add hometext back into array with HTML formatting
-
+        // format some strings for display
+        $event['hometext'] = DataUtil::formatForDisplayHTML($event['hometext']);
+        $event['title'] = DataUtil::formatForDisplay($event['title']);
+        $event['location'] = DataUtil::formatForDisplay($event['location']);
+        $event['conttel'] = DataUtil::formatForDisplay($event['conttel']);
+        $event['contname'] = DataUtil::formatForDisplay($event['contname']);
+        $event['contemail'] = DataUtil::formatForDisplay($event['contemail']);
+        $event['website'] = DataUtil::formatForDisplay($event['website']);
+        
         // Check for comments
         if (ModUtil::available('EZComments')) {
             $event['commentcount'] = ModUtil::apiFunc('EZComments', 'user', 'countitems', array(
@@ -547,10 +550,8 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
      */
     public function getEventOccurances($event, $includePast = false)
     {
-//        $eventStart = DateTime::createFromFormat('Y-m-d', $event['eventDate']);
         $eventStart = clone $event['eventStart'];
         $defaultEnd = clone $event['eventStart'];
-//        $eventEnd = isset($event['endDate']) ? DateTime::createFromFormat('Y-m-d', $event['endDate']) : $defaultEnd->modify("+2 years");
         $eventEnd = isset($event['endDate']) ? $event['endDate'] : $defaultEnd->modify("+2 years");
         $occurances = array();
         switch ($event['recurrtype']) {

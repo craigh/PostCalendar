@@ -19,7 +19,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  *
  * @ORM\Entity(repositoryClass="PostCalendar_Entity_Repository_CalendarEventRepository")
  * @ORM\HasLifecycleCallbacks
- * @ORM\Table(name="postcalendar_events",indexes={@ORM\index(name="basic_event", columns={"aid", "eventDate", "endDate", "eventstatus", "sharing"})})
+ * @ORM\Table(name="postcalendar_events",indexes={@ORM\index(name="basic_event", columns={"aid", "eventStart", "eventEnd", "eventstatus", "sharing"})})
  */
 class PostCalendar_Entity_CalendarEvent extends Zikula_EntityAccess
 {

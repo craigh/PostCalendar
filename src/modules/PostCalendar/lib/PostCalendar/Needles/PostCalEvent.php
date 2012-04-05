@@ -57,7 +57,7 @@ class PostCalendar_Needles_PostCalEvent extends Zikula_AbstractHelper
                 $linkarray['name'] = $event['title'];
             }
             if (strpos($displaytype, 'D') !== false) {
-                $linkarray['date'] = $event['eventDate'];
+                $linkarray['date'] = $event['eventStart']->format('Y-m-d');
             }
             if (strpos($displaytype, 'T') !== false) {
                 $linkarray['time'] = '@' . $event['startTime'];
@@ -92,7 +92,6 @@ class PostCalendar_Needles_PostCalEvent extends Zikula_AbstractHelper
         if (!$event = ModUtil::apiFunc('PostCalendar', 'event', 'formateventarrayfordisplay', $event)) {
             return false;
         }
-        $event['eventDate'] = DateUtil::strftime(ModUtil::getVar('PostCalendar', 'pcEventDateFormat'), strtotime($event['eventDate']));
 
         // is event allowed for this user?
         if ($event['sharing'] == PostCalendar_Entity_CalendarEvent::SHARING_PRIVATE && $event['aid'] != UserUtil::getVar('uid') && !SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
@@ -101,10 +100,10 @@ class PostCalendar_Needles_PostCalEvent extends Zikula_AbstractHelper
         }
 
         // compensate for recurring events
-        if ($event['recurrtype']) {
-            $dom = ZLanguage::getModuleDomain('PostCalendar');
-            $event['eventDate'] = __("recurring event beginning %s", $event['eventDate'], $dom);
-        }
+//        if ($event['recurrtype']) {
+//            $dom = ZLanguage::getModuleDomain('PostCalendar');
+//            $event['eventDate'] = __("recurring event beginning %s", $event['eventDate'], $dom);
+//        }
         return $event;
     }
 }

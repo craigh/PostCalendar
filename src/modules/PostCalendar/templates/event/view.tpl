@@ -5,7 +5,7 @@
 </h2>
 <div class="calcontainer">
     <div class="eventtime">
-        {$loaded_event.eventDate|pc_date_format}<br />
+        {$loaded_event.eventStart->format($modvars.PostCalendar.pcDateFormats.date)}<br />
         {if $loaded_event.alldayevent != true}
             {$loaded_event.startTime} - {$loaded_event.endTime}<br />
         {else}

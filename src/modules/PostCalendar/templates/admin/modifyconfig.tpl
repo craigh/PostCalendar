@@ -1,3 +1,5 @@
+{pageaddvar name="javascript" value="jquery"}
+{pageaddvar name='javascript' value='modules/PostCalendar/javascript/postcalendar-admin-modifyconfig.js'}
 {adminheader}
 <div class="z-admin-content-pagetitle">
     {icon type="config" size="small"}
@@ -50,21 +52,28 @@
 			<input type="checkbox" value="1" id="pcUsePopups" name="pcUsePopups"{if $modvars.PostCalendar.pcUsePopups eq true} checked="checked"{/if}/>
 		</div>
 		<div class="z-formrow">
-			<label for="pcEventDateFormat">{gt text='Date Display Format (%s version)' tag1='date()'}<br />(<i>{gt text='uses %s format' tag1='<a href="http://php.net/date" target="_blank">php date</a>'}</i>)</label>
-                <span><input type="text" size="15" value="{$modvars.PostCalendar.pcEventDateFormat}" id="pcEventDateFormat" name="pcEventDateFormat" />
-                &nbsp;{gt text="Or choose a preset:"}&nbsp;
-                <input type="button" name="format_usa" value="{gt text='Month Day, Year'}" onclick="this.form.pcEventDateFormat.value='F j, Y'" />
-                <input type="button" name="format_eu" value="{gt text='Day Month Year'}" onclick="this.form.pcEventDateFormat.value='j F Y'" />
-                <input type="button" name="format_iso8601" value="{gt text='YYYY-MM-DD'}" onclick="this.form.pcEventDateFormat.value='Y-m-d'" /></span>
+			<label for="pcEventDateFormat">{gt text='Date Display Format'}</label>
+			<span><select size="1" id="pcEventDateFormat" name="pcEventDateFormat">
+				<option value="DMY"{if $modvars.PostCalendar.pcEventDateFormat eq "DMY"} selected="selected"{/if}>{gt text='Day Month Year (EUR)'}</option>
+				<option value="MDY"{if $modvars.PostCalendar.pcEventDateFormat eq "MDY"} selected="selected"{/if}>{gt text='Month Day, Year (US)'}</option>
+				<option value="YMD"{if $modvars.PostCalendar.pcEventDateFormat eq "YMD"} selected="selected"{/if}>{gt text='Year-Month-Day'}</option>
+				<option value="-1"{if $modvars.PostCalendar.pcEventDateFormat eq "-1"} selected="selected"{/if}>{gt text='Custom'}</option>
+            </select></span>
 		</div>
-		<div class="z-formrow">
-			<label for="pcEventStrftimeFormat">{gt text='Date Display Format (%s version)' tag1='strftime()'}<br />(<i>{gt text='uses %s format' tag1='<a href="http://php.net/strftime" target="_blank">php strftime</a>'}</i>)</label>
-                <span><input type="text" size="15" value="{$modvars.PostCalendar.pcEventStrftimeFormat}" id="pcEventStrftimeFormat" name="pcEventStrftimeFormat" />
-                &nbsp;{gt text="Or choose a preset:"}&nbsp;
-                <input type="button" name="format_usa" value="{gt text='Month Day, Year'}" onclick="this.form.pcEventStrftimeFormat.value='%B %e, %Y'" />
-                <input type="button" name="format_eu" value="{gt text='Day Month Year'}" onclick="this.form.pcEventStrftimeFormat.value='%e %B %Y'" />
-                <input type="button" name="format_iso8601" value="{gt text='YYYY-MM-DD'}" onclick="this.form.pcEventStrftimeFormat.value='%Y-%m-%d'" /></span>
-		</div>
+        <div id='manuallySetDateFormats'{if $modvars.PostCalendar.pcEventDateFormat ne "-1"}style="display: none"{/if}>
+            <div class="z-formrow">
+                <label for="dateformat_date">{gt text='php %s format' tag1='<a href="http://php.net/date" target="_blank">date()</a>'}</label>
+                <span><input type="text" value="{$modvars.PostCalendar.pcDateFormats.date}" id="dateformat_date" name="pcDateFormats[date]" /></span>
+            </div>
+            <div class="z-formrow">
+                <label for="dateformat_strftime">{gt text='php %s format' tag1='<a href="http://php.net/strftime" target="_blank">php strftime()</a>'}</label>
+                <span><input type="text" value="{$modvars.PostCalendar.pcDateFormats.strftime}" id="dateformat_strftime" name="pcDateFormats[strftime]" /></span>
+            </div>
+            <div class="z-formrow">
+                <label for="dateformat_javascript">{gt text='jquery %s format' tag1='<a href="http://docs.jquery.com/UI/Datepicker/parseDate" taget="_blank">datepicker</a>'}</label>
+                <span><input type="text" value="{$modvars.PostCalendar.pcDateFormats.javascript}" id="dateformat_javascript" name="pcDateFormats[javascript]" /></span>
+            </div>            
+        </div>
 		<div class="z-formrow">
 			<label for="pcFirstDayOfWeek">{gt text='First day of the week'}</label>
 			<span><select size="1" id="pcFirstDayOfWeek" name="pcFirstDayOfWeek">
@@ -119,14 +128,6 @@
 			<label for="pcFilterYearEnd">{gt text='In jump date selector, display'}</label>
 			<span><input type="text" size="3" value="{$modvars.PostCalendar.pcFilterYearEnd}" id="pcFilterYearEnd" name="pcFilterYearEnd" />
                  &nbsp;{gt text='year(s) after current year.'}</span>
-		</div>
-		<div class="z-formrow">
-			<label for="pcNavDateOrder">{gt text='Jump Date selector order'}</label>
-			<span><select size="1" id="pcNavDateOrder" name="pcNavDateOrder">
-				<option value="DMY"{if $modvars.PostCalendar.pcNavDateOrder eq "DMY"} selected="selected"{/if}>{gt text='Day Month Year'}</option>
-				<option value="MDY"{if $modvars.PostCalendar.pcNavDateOrder eq "MDY"} selected="selected"{/if}>{gt text='Month Day Year'}</option>
-				<option value="YMD"{if $modvars.PostCalendar.pcNavDateOrder eq "YMD"} selected="selected"{/if}>{gt text='Year Month Day'}</option>
-				</select></span>
 		</div>
         <div class="z-formrow">
 			<label for="enablenavimages">{gt text='Enable images in navigation header'}</label>

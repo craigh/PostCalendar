@@ -8,11 +8,15 @@
 
 function smarty_modifier_pc_date_format($string, $format = null, $default_date = null)
 {
-    $defaultFormat = ModUtil::getVar('PostCalendar', 'pcEventDateFormat');
-    $format = (isset($format) && !empty($format)) ? $format : $defaultFormat;
+    $defaultFormat = ModUtil::getVar('PostCalendar', 'pcDateFormats');
+    $format = (isset($format) && !empty($format)) ? $format : $defaultFormat['date'];
         
     if ($string != '') {
-        $date = DateTime::createFromFormat('Ymd', str_replace('-', '', $string));
+        if ($string instanceof DateTime) {
+            $date = $string;
+        } else {
+            $date = DateTime::createFromFormat('Ymd', str_replace('-', '', $string));
+        }
     } elseif (isset($default_date) && $default_date != '') {
         $date = DateTime::createFromFormat('Ymd', str_replace('-', '', $default_date));
     } else {

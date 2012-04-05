@@ -58,8 +58,7 @@ class PostCalendar_Form_Handler_EditHandler extends Zikula_Form_AbstractHandler
         } else if ($args['commandName'] == 'cancel') {
             $url = ModUtil::url('PostCalendar', 'user', 'display', array(
                 'eid' => $this->eid,
-                'viewtype' => 'event',
-                'date' => $eventArray['eventDate']));
+                'viewtype' => 'event'));
         }
 
         if ($url != null) {

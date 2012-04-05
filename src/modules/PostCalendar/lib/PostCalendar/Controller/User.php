@@ -58,7 +58,7 @@ class PostCalendar_Controller_User extends Zikula_AbstractController
         if (!is_object($date)) {
             $date = DateTime::createFromFormat('Ymd', $date);
         }
-
+        
         $allowedViews = $this->getVar('pcAllowedViews');
         if ((in_array($viewtype, $allowedViews)) || ($viewtype == 'event' && $popup)) {
             $class = 'PostCalendar_CalendarView_' . ucfirst($viewtype);

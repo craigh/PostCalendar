@@ -22,6 +22,7 @@ class PostCalendar_PostCalendarEvent_Generic extends PostCalendar_PostCalendarEv
         $dom = ZLanguage::getModuleDomain('PostCalendar');
 
         $date = date('Y-m-d H:i:s');
+        $date = new DateTime();
 
         $this->title = __f('New %1$s item (#%2$s)', array($this->getHooked_modulename(), $this->getHooked_objectid()), $dom);
 //        $this->hometext = ":text:" .  __f('New %1$s item (#%2$s)', array($this->getHooked_modulename(), $this->getHooked_objectid()), $dom);
@@ -31,8 +32,8 @@ class PostCalendar_PostCalendarEvent_Generic extends PostCalendar_PostCalendarEv
         $this->aid = $this->getHooked_objectid();
         $this->time = $date; // mysql timestamp YYYY-MM-DD HH:MM:SS
         $this->informant = $this->getHooked_objectid();
-        $this->eventDate = substr($date, 0, 10); // date of event: YYYY-MM-DD
-        $this->startTime = substr($date, -8); // time of event: HH:MM:SS
+        $this->eventStart = $date;
+        $this->eventEnd = $date;
 
         return true;
     }

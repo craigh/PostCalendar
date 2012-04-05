@@ -20,7 +20,7 @@
             {/if}
             {if $navigationObj->useJumpDate}
             <li>
-                {pc_html_select_date time=$navigationObj->requestedDate->format('Y-m-d') prefix="jump" start_year="-"|cat:$modvars.PostCalendar.pcFilterYearStart end_year="+"|cat:$modvars.PostCalendar.pcFilterYearEnd day_format="%d" day_value_format="%02d" month_format='%B' field_order=$modvars.PostCalendar.pcNavDateOrder}
+                {pc_html_select_date time=$navigationObj->requestedDate->format('Y-m-d') prefix="jump" start_year="-"|cat:$modvars.PostCalendar.pcFilterYearStart end_year="+"|cat:$modvars.PostCalendar.pcFilterYearEnd day_format="%d" day_value_format="%02d" month_format='%B' field_order=$modvars.PostCalendar.pcEventDateFormat}
                 {if !empty($navigationObj->viewtypeselector)}
                     {html_options name='viewtype' options=$navigationObj->viewtypeselector selected=$navigationObj->getViewtype()}
                 {/if}
