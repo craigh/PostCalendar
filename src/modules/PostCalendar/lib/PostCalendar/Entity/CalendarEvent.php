@@ -34,6 +34,7 @@ class PostCalendar_Entity_CalendarEvent extends Zikula_EntityAccess
     const RECURRTYPE_NONE = 0;
     const RECURRTYPE_REPEAT = 1;
     const RECURRTYPE_REPEAT_ON = 2;
+    const RECURRTYPE_CONTINUOUS = 3;
 
     /**
      * event id field (record id)

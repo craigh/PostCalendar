@@ -331,27 +331,36 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
         $repeat_on_num = explode("/", $this->__('err/First/Second/Third/Fourth/Last'));
         $repeat_on_day = explode("/", $this->__('Sunday/Monday/Tuesday/Wednesday/Thursday/Friday/Saturday'));
         $formats = $this->getVar('pcDateFormats');
-        if ($event['recurrtype'] == CalendarEvent::RECURRTYPE_REPEAT) {
-            $event['recurr_sentence'] = $this->__f("Event recurs every %s", $event['recurrspec']['event_repeat_freq']);
-            $event['recurr_sentence'] .= " " . $repeat_freq_type[$event['recurrspec']['event_repeat_freq_type']];
-            $event['recurr_sentence'] .= " " . $this->__("until") . " " . $event['endDate']->format($formats['date']);
-        } elseif ($event['recurrtype'] == CalendarEvent::RECURRTYPE_REPEAT_ON) {
-            $event['recurr_sentence'] = $this->__("Event recurs on") . " " . $repeat_on_num[$event['recurrspec']['event_repeat_on_num']];
-            $event['recurr_sentence'] .= " " . $repeat_on_day[$event['recurrspec']['event_repeat_on_day']];
-            $event['recurr_sentence'] .= " " . $this->__f("of the month, every %s months", $event['recurrspec']['event_repeat_on_freq']);
-            $event['recurr_sentence'] .= " " . $this->__("until") . " " . $event['endDate']->format($formats['date']);
-        } else {
-            $event['recurr_sentence'] = $this->__("This event does not recur.");
+        $timeFormat = $this->getVar('pcTime24Hours') ? 'G:i' : 'g:i a';
+
+        switch ($event['recurrtype']) {
+            case CalendarEvent::RECURRTYPE_REPEAT:
+                $event['recurr_sentence'] = $this->__f("Event recurs every %s", $event['recurrspec']['event_repeat_freq']);
+                $event['recurr_sentence'] .= " " . $repeat_freq_type[$event['recurrspec']['event_repeat_freq_type']];
+                $event['recurr_sentence'] .= " " . $this->__("until") . " " . $event['endDate']->format($formats['date']);
+                break;
+            case CalendarEvent::RECURRTYPE_REPEAT_ON:
+                $event['recurr_sentence'] = $this->__("Event recurs on") . " " . $repeat_on_num[$event['recurrspec']['event_repeat_on_num']];
+                $event['recurr_sentence'] .= " " . $repeat_on_day[$event['recurrspec']['event_repeat_on_day']];
+                $event['recurr_sentence'] .= " " . $this->__f("of the month, every %s months", $event['recurrspec']['event_repeat_on_freq']);
+                $event['recurr_sentence'] .= " " . $this->__("until") . " " . $event['endDate']->format($formats['date']);
+                break;
+            case CalendarEvent::RECURRTYPE_CONTINUOUS:
+                echo "<pre>"; var_dump($event); die;
+                $event['recurr_sentence'] = $this->__("Continuous, multi-day event, beginning") . " " . $event['eventStart']->format($formats['date'] . " @ " . $timeFormat);
+                $event['recurr_sentence'] .= " " . $this->__("and ending") . " " . $event['eventEnd']->format($formats['date'] . " @ " . $timeFormat);
+                break;
+            default:
+                $event['recurr_sentence'] = $this->__("This event does not recur.");
         }
 
         // build sharing sentence for display
         $event['sharing_sentence'] = ($event['sharing'] == CalendarEvent::SHARING_PRIVATE) ? $this->__('This is a private event.') : $this->__('This is a public event.');
 
-        $timeFormat = $this->getVar('pcTime24Hours') ? 'G:i' : 'g:i a';
         $eventStart = clone $event['eventStart'];
         $eventEnd = clone $event['eventEnd'];
         $event['endTime'] = $eventEnd->format($timeFormat);
-        $event['duration'] = $eventEnd->diff($eventStart)->format('%a days %h:%I hours'); // no translation?
+        $event['duration'] = $eventEnd->diff($eventStart)->format('%d days %h:%I hours'); // no translation?
 
         // prepare starttime for display HH:MM or HH:MM AP
         $event['sortTime']  = $eventStart->format('G:i'); // save for sorting later
@@ -405,7 +414,11 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
         }
 
         $event['endDate'] = ($event['recurrtype'] <> CalendarEvent::RECURRTYPE_NONE) ? $event['endDate'] : null;
-
+        // if event is continuous and more than one day:
+        if ((int)$event['eventEnd']->diff($event['eventStart'])->format('%d') > 0) {
+            $event['recurrtype'] = CalendarEvent::RECURRTYPE_CONTINUOUS;
+        }
+        
         if (empty($event['hometext'])) {
             $event['hometext'] = ':text:' . $this->__(/*!(abbr) not applicable or not available*/'n/a'); // default description
         } else {
@@ -570,6 +583,11 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
                 $eventStart->modify("last day of previous month");
                 $interval = DateInterval::createFromDateString("{$this->rWeeks[$rnum]} {$this->rDays[$rday]} of next month");
                 $period = new DatePeriod($eventStart, $interval, $eventEnd->modify("+1 day"), DatePeriod::EXCLUDE_START_DATE);
+                break;
+            case CalendarEvent::RECURRTYPE_CONTINUOUS:
+                $interval = DateInterval::createFromDateString("+1 day");
+                $eventEnd = clone $event['eventEnd'];
+                $period = new DatePeriod($eventStart, $interval, $eventEnd);
                 break;
         }
         $rfreq = $event['recurrspec']['event_repeat_on_freq'];
