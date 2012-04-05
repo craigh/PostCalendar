@@ -360,8 +360,9 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
                 }
                 break;
             case CalendarEvent::RECURRTYPE_CONTINUOUS:
-                $event['recurr_sentence'] = $this->__("Continuous, multi-day event, beginning") . " " . $event['eventStart']->format($formats['date'] . " @ " . $timeFormat);
-                $event['recurr_sentence'] .= " " . $this->__("and ending") . " " . $event['eventEnd']->format($formats['date'] . " @ " . $timeFormat);
+                $dateTimeFormat = $event['alldayevent'] ? $formats['date'] : $formats['date'] . " @ " . $timeFormat;
+                $event['recurr_sentence'] = $this->__("Continuous, multi-day event, beginning") . " " . $event['eventStart']->format($dateTimeFormat);
+                $event['recurr_sentence'] .= " " . $this->__("and ending") . " " . $event['eventEnd']->format($dateTimeFormat);
                 // modify event start and end dates if event is continuous 
                 if (isset($currentDate)) {
                     if ((int)$event['eventStart']->format('Ymd') == (int)$currentDate->format('Ymd')) {
