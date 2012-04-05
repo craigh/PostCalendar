@@ -1,2 +1,12 @@
+TODO LIST
+
+- deal with extended events (non-recurring)
 - review hook provider abstract class and so on
 - upgrade routine
+- need to make the time picker obey the rules too like the date picker
+- events not sorting by time in display
+- Needles are still a guess
+- check ContentTypes over
+- jquery date/time plugins need regionalization
+- jquery date plugin needs first day of week correction
+- check out editing events (some errors - and check data avail in datepicker)
