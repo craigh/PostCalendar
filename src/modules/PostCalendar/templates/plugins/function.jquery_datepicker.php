@@ -10,15 +10,19 @@ function smarty_function_jquery_datepicker($params, Zikula_View $view)
     $minDate = (isset($params['mindate'])) ? $params['mindate'] : null;
     $maxDate = (isset($params['maxdate'])) ? $params['maxdate'] : null;
     $jQueryTheme = (isset($params['theme'])) ? $params['theme'] : 'ui-lightness';
+    $lang = (isset($params['lang'])) ? $params['lang'] : ZLanguage::getLanguageCode();
     $dateDisplayFormat = 'd MM yy';
-    
+
     $modVars = $view->get_template_vars('modvars');
     $userFormat = $modVars['PostCalendar']['pcDateFormats']['date'];
 
     PageUtil::addVar("javascript", "jquery");
     PageUtil::addVar("javascript", "modules/PostCalendar/javascript/jquery-ui/jquery-ui-1.8.18.custom.min.js");
+    if (empty($lang) || ($lang <> 'en')) {
+        PageUtil::addVar("javascript", "modules/PostCalendar/javascript/jquery-ui/i18n/jquery.ui.datepicker-$lang.js");
+    }
     PageUtil::addVar("stylesheet", "modules/PostCalendar/style/$jQueryTheme/jquery-ui-1.8.18.custom.css");
-    
+
     $javascript = "
         jQuery(document).ready(function() {
             jQuery('#$displayElement').datepicker({
@@ -44,7 +48,7 @@ function smarty_function_jquery_datepicker($params, Zikula_View $view)
     PageUtil::addVar("footer", "<script type='text/javascript'>$javascript</script>");
 
     $readOnlyHtml = ($readOnly) ? " readonly='readonly'" : "";
-    
+
     $html = "<input type='text'{$readOnlyHtml} id='$displayElement' name='$displayElement' value='{$defaultDate->format($userFormat)}' />\n
         <input type='hidden' id='$valueStorageElement' name='{$object}[{$valueStorageElement}]' value='{$defaultDate->format('Y-m-d')}' />";
 

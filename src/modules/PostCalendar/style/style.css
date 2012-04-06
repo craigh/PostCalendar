@@ -349,7 +349,7 @@ div.postcalendar_featuredevent div.eventdetails span.location{
 }
 
 /** date and time pickers **/
-#eventstart_time,
-#eventend_time {
+#eventstart_time_display,
+#eventend_time_display {
     width: 8em;
 }

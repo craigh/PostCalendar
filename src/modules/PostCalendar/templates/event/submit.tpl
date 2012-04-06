@@ -56,10 +56,10 @@
             <span>
                 {if ($loaded_event.alldayevent)}{assign var='inlinestyle' value='display: none;'}{else}{assign var='inlinestyle' value=null}{/if}
                 {jquery_datepicker defaultdate=$loaded_event.eventStart displayelement='eventstart_display' object='postcalendar_events' valuestorageelement='eventstart_date' maxdate=$loaded_event.eventStart theme='cupertino'}
-                {jquery_timepicker defaultdate=$loaded_event.eventStart displayelement='eventstart_time' object='postcalendar_events' inlinestyle=$inlinestyle theme='cupertino'}
+                {jquery_timepicker defaultdate=$loaded_event.eventStart displayelement='eventstart_time_display' object='postcalendar_events' valuestorageelement='eventstart_time' inlinestyle=$inlinestyle theme='cupertino'}
                 <span style='padding:0 1em;'>{gt text='to'}</span>
                 {jquery_datepicker defaultdate=$loaded_event.eventEnd displayelement='eventend_display' object='postcalendar_events'  valuestorageelement='eventend_date' mindate=$loaded_event.eventEnd theme='cupertino'}
-                {jquery_timepicker defaultdate=$loaded_event.eventEnd displayelement='eventend_time' object='postcalendar_events' inlinestyle=$inlinestyle theme='cupertino'}
+                {jquery_timepicker defaultdate=$loaded_event.eventEnd displayelement='eventend_time_display' object='postcalendar_events' valuestorageelement='eventend_time' inlinestyle=$inlinestyle theme='cupertino'}
             </span>
         </div>
             

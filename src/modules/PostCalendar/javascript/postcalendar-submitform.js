@@ -1,11 +1,11 @@
 jQuery(document).ready(function(){
     jQuery('#postcalendar_events_alldayevent').click(function(){
         if (jQuery('#postcalendar_events_alldayevent').is(':checked')) {
-            jQuery('#eventstart_time').hide("slow");
-            jQuery('#eventend_time').hide("slow");
+            jQuery('#eventstart_time_display').hide("slow");
+            jQuery('#eventend_time_display').hide("slow");
         } else {
-            jQuery('#eventstart_time').show("slow");
-            jQuery('#eventend_time').show("slow");
+            jQuery('#eventstart_time_display').show("slow");
+            jQuery('#eventend_time_display').show("slow");
         }
     });
     jQuery('#postcalendar_events_repeats').click(function(){
@@ -43,8 +43,8 @@ function updateFields(inputElementObj, dateText)
     var date = new Date(dateText);
     var datePlusOne = new Date(dateText);
     datePlusOne.setDate(datePlusOne.getDate()+1);
-    var eventStartTime = jQuery("#eventstart_time").datepicker("getDate");
-    var eventEndTime = jQuery("#eventend_time").datepicker("getDate");
+    var eventStartTime = jQuery("#eventstart_time_display").datepicker("getDate");
+    var eventEndTime = jQuery("#eventend_time_display").datepicker("getDate");
     
     switch(fieldName)
     {
@@ -58,19 +58,33 @@ function updateFields(inputElementObj, dateText)
         case 'repeat_enddate_display':
             // do nothing
             break;
-        case 'eventstart_time':
+        case 'eventstart_time_display':
+            jQuery("#eventstart_time").attr("value", pcFormatTime(eventStartTime));
             if (jQuery("#eventstart_display").datepicker("getDate").getTime() == jQuery("#eventend_display").datepicker("getDate").getTime()) {
                 if (eventStartTime > eventEndTime) {
-                    jQuery("#eventend_time").datepicker("setDate", eventStartTime);
+                    jQuery("#eventend_time_display").datepicker("setDate", eventStartTime);
+                    jQuery("#eventend_time").attr("value", pcFormatTime(eventStartTime));
                 }
             }
             break;
-        case 'eventend_time':
+        case 'eventend_time_display':
+            jQuery("#eventend_time").attr("value", pcFormatTime(eventEndTime));
             if (jQuery("#eventstart_display").datepicker("getDate").getTime() == jQuery("#eventend_display").datepicker("getDate").getTime()) {
                 if (eventStartTime > eventEndTime) {
-                    jQuery("#eventstart_time").datepicker("setDate", eventEndTime);
+                    jQuery("#eventstart_time_display").datepicker("setDate", eventEndTime);
+                    jQuery("#eventstart_time").attr("value", pcFormatTime(eventEndTime));
                 }
             }
             break;
     }
+}
+function pcFormatTime(date)
+{
+    var m = date.getMinutes();
+    var h = date.getHours();
+    m = m + ''; // convert to string
+    h = h + ''; // convert to string
+    m = m.length == 1 ? "0" + m : m;
+    h = h.length == 1 ? "0" + h : h;
+    return h + ":" + m;
 }

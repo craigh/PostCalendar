@@ -111,9 +111,8 @@ class PostCalendar_Controller_Event extends Zikula_AbstractController
         $abort = false;
         if (($form_action == 'preview') || ($form_action == 'save')) {
             // make DateTime objects from form data
-            $timeFormat = $this->getVar('pcTime24Hours') ? 'G:i' : 'g:i a';
-            $submitted_event['eventStart'] = DateTime::createFromFormat("Y-m-d $timeFormat", $submitted_event['eventstart_date'] . " " . $submitted_event['eventstart_time']);
-            $submitted_event['eventEnd'] = DateTime::createFromFormat("Y-m-d $timeFormat", $submitted_event['eventend_date'] . " " . $submitted_event['eventend_time']);
+            $submitted_event['eventStart'] = DateTime::createFromFormat("Y-m-d G:i", $submitted_event['eventstart_date'] . " " . $submitted_event['eventstart_time']);
+            $submitted_event['eventEnd'] = DateTime::createFromFormat("Y-m-d G:i", $submitted_event['eventend_date'] . " " . $submitted_event['eventend_time']);
             $submitted_event['endDate'] = DateTime::createFromFormat('Y-m-d', $submitted_event['enddate']);
             unset($submitted_event['eventstart_date'], $submitted_event['eventstart_time'], $submitted_event['eventend_date'], $submitted_event['eventend_time'], $submitted_event['enddate']);
             
