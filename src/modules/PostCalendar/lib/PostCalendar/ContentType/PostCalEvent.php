@@ -29,14 +29,14 @@ class PostCalendar_ContentType_PostCalEvent extends Content_AbstractContentType
             return LogUtil::RegisterError ($this->__('PostCalendar: No event ID set.'));
         }
 
-        $vars = array('content' => array(
+        $vars = array('bid' => $this->contentId,
+            'content' => serialize(array(
             'showcountdown' => $this->showcountdown,
             'hideonexpire' => $this->hideonexpire,
             'eid' => $this->eid,
-        ));
-    
+        )));
         $date = new DateTime();
-        $calendarView = new PostCalendar_CalendarView_FeaturedEventBlock($this->view, $date, '', null, serialize($vars));
+        $calendarView = new PostCalendar_CalendarView_FeaturedEventBlock($this->view, $date, '', null, $vars);
     
         $this->view->assign('loaded_event', $calendarView->getEvent());
     

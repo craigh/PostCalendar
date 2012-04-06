@@ -1,3 +1,4 @@
+{pageaddvar name='stylesheet' value='modules/PostCalendar/style/style.css'}
 <div class='postcalendar_featuredevent'>
 {if $loaded_event.showcountdown}
 <div class='eventcountdown'>

@@ -1,3 +1,4 @@
+{pageaddvar name='stylesheet' value='modules/PostCalendar/style/style.css'}
 {pc_queued_events_notify}
 {ajaxheader module="PostCalendar" ui=true}
 {pc_pagejs_init}
