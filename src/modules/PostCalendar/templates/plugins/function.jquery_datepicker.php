@@ -9,6 +9,7 @@ function smarty_function_jquery_datepicker($params, Zikula_View $view)
     $object = (isset($params['object'])) ? $params['object'] : true;
     $minDate = (isset($params['mindate'])) ? $params['mindate'] : null;
     $maxDate = (isset($params['maxdate'])) ? $params['maxdate'] : null;
+    $jQueryTheme = (isset($params['theme'])) ? $params['theme'] : 'ui-lightness';
     $dateDisplayFormat = 'd MM yy';
     
     $modVars = $view->get_template_vars('modvars');
@@ -16,7 +17,7 @@ function smarty_function_jquery_datepicker($params, Zikula_View $view)
 
     PageUtil::addVar("javascript", "jquery");
     PageUtil::addVar("javascript", "modules/PostCalendar/javascript/jquery-ui-1.8.18.custom.min.js");
-    PageUtil::addVar("stylesheet", "modules/PostCalendar/style/ui-lightness/jquery-ui-1.8.18.custom.css");
+    PageUtil::addVar("stylesheet", "modules/PostCalendar/style/$jQueryTheme/jquery-ui-1.8.18.custom.css");
     
     $javascript = "
         jQuery(document).ready(function() {

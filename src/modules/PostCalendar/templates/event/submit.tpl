@@ -55,11 +55,11 @@
             <label>{gt text='Starts and Ends'}</label>
             <span>
                 {if ($loaded_event.alldayevent)}{assign var='inlinestyle' value='display: none;'}{else}{assign var='inlinestyle' value=null}{/if}
-                {jquery_datepicker defaultdate=$loaded_event.eventStart displayelement='eventstart_display' object='postcalendar_events' valuestorageelement='eventstart_date' maxdate=$loaded_event.eventStart}
-                {jquery_timepicker defaultdate=$loaded_event.eventStart displayelement='eventstart_time' object='postcalendar_events' inlinestyle=$inlinestyle}
+                {jquery_datepicker defaultdate=$loaded_event.eventStart displayelement='eventstart_display' object='postcalendar_events' valuestorageelement='eventstart_date' maxdate=$loaded_event.eventStart theme='cupertino'}
+                {jquery_timepicker defaultdate=$loaded_event.eventStart displayelement='eventstart_time' object='postcalendar_events' inlinestyle=$inlinestyle theme='cupertino'}
                 <span style='padding:0 1em;'>{gt text='to'}</span>
-                {jquery_datepicker defaultdate=$loaded_event.eventEnd displayelement='eventend_display' object='postcalendar_events'  valuestorageelement='eventend_date' mindate=$loaded_event.eventEnd}
-                {jquery_timepicker defaultdate=$loaded_event.eventEnd displayelement='eventend_time' object='postcalendar_events' inlinestyle=$inlinestyle}
+                {jquery_datepicker defaultdate=$loaded_event.eventEnd displayelement='eventend_display' object='postcalendar_events'  valuestorageelement='eventend_date' mindate=$loaded_event.eventEnd theme='cupertino'}
+                {jquery_timepicker defaultdate=$loaded_event.eventEnd displayelement='eventend_time' object='postcalendar_events' inlinestyle=$inlinestyle theme='cupertino'}
             </span>
         </div>
             
@@ -92,7 +92,7 @@
             </div>
             <div>
                 <label>{gt text='until'}...</label>
-                {jquery_datepicker defaultdate=$loaded_event.endDate displayelement='repeat_enddate_display' object='postcalendar_events' valuestorageelement='enddate' mindate=$loaded_event.eventEnd}
+                {jquery_datepicker defaultdate=$loaded_event.endDate displayelement='repeat_enddate_display' object='postcalendar_events' valuestorageelement='enddate' mindate=$loaded_event.eventEnd theme='cupertino'}
             </div>
         </div>
 
