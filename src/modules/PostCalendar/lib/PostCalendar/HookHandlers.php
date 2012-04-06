@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2010-2012 PostCalendar Team.
  *
@@ -7,10 +8,11 @@
  * Please see the NOTICE file distributed with this source code for further
  * information regarding copyright and licensing.
  */
-
 class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
 {
+
     const PROVIDER_AREANAME = 'provider.postcalendar.ui_hooks.event';
+
     /**
      * Zikula_View instance
      * @var object
@@ -65,7 +67,7 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
         $hook->setResponse(new Zikula_Response_DisplayHook(self::PROVIDER_AREANAME, $this->view, 'hooks/view.tpl'));
     }
 
-     /**
+    /**
      * Display hook for edit views.
      *
      * @param Zikula_DisplayHook $hook
@@ -300,10 +302,10 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
         // check if this is for this handler
         $subject = $z_event->getSubject();
         if (!($z_event['method'] == 'postcalendarhookconfig' && strrpos(get_class($subject), '_Controller_Admin'))) {
-           return;
+            return;
         }
         $moduleName = $subject->getName();
-        if (!SecurityUtil::checkPermission($moduleName.'::', '::', ACCESS_ADMIN)) {
+        if (!SecurityUtil::checkPermission($moduleName . '::', '::', ACCESS_ADMIN)) {
             throw new Zikula_Exception_Forbidden(LogUtil::getErrorMsgPermission());
         }
         $view = Zikula_View::getInstance('PostCalendar', false);
@@ -352,13 +354,13 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
         // check if this is for this handler
         $subject = $z_event->getSubject();
         if (!($z_event['method'] == 'postcalendarhookconfigprocess' && strrpos(get_class($subject), '_Controller_Admin'))) {
-           return;
+            return;
         }
         $moduleName = $subject->getName();
-        if (!SecurityUtil::checkPermission($moduleName.'::', '::', ACCESS_ADMIN)) {
+        if (!SecurityUtil::checkPermission($moduleName . '::', '::', ACCESS_ADMIN)) {
             throw new Zikula_Exception_Forbidden(LogUtil::getErrorMsgPermission());
         }
-        
+
         foreach ($hookdata as $area => $data) {
             if ((!isset($data['optoverride'])) || (empty($data['optoverride']))) {
                 $hookdata[$area]['optoverride'] = "0";
@@ -387,21 +389,21 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
     {
         $module = $z_event['name'];
         $dom = ZLanguage::getModuleDomain('PostCalendar');
-        $em = ServiceUtil::getService('doctrine.entitymanager');
+        $_em = ServiceUtil::getService('doctrine.entitymanager');
 
         $events = $em->getRepository('PostCalendar_Entity_CalendarEvent')->findBy(array('hooked_modulename' => DataUtil::formatForStore($module)));
         $i = 0;
         $affected = 0;
         foreach ($events as $event) {
-            $this->_em->remove($event);
+            $_em->remove($event);
             $i++;
             $affected++;
             if ($i == 15) {
-                $this->_em->flush();
+                $_em->flush();
                 $i = 0;
             }
         }
-        
+
         if ($affected > 0) {
             LogUtil::registerStatus(__f('ALL associated PostCalendar events also deleted. (%s)', $affected, $dom));
         }
@@ -413,7 +415,8 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
      * @param string $module Module name
      * @return instantiated object of found class
      */
-    private function getClassInstance($module) {
+    private function getClassInstance($module)
+    {
         if (empty($module)) {
             return false;
         }
@@ -438,11 +441,13 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
      */
     public static function servicelinks(Zikula_Event $event)
     {
+        $dom = ZLanguage::getModuleDomain('PostCalendar');
         $module = ModUtil::getName();
         $bindingCount = count(HookUtil::getBindingsBetweenOwners($module, 'PostCalendar'));
         if (($bindingCount > 0) && ($module <> 'PostCalendar') && (empty($event->data) || (is_array($event->data)
-                && !in_array(array('url' => ModUtil::url($module, 'admin', 'postcalendarhookconfig'), 'text' => __('PostCalendar Hook Options')), $event->data)))) {
-            $event->data[] = array('url' => ModUtil::url($module, 'admin', 'postcalendarhookconfig'), 'text' => __('PostCalendar Hook Options'));
+                && !in_array(array('url' => ModUtil::url($module, 'admin', 'postcalendarhookconfig'), 'text' => __('PostCalendar Hook Options', $dom)), $event->data)))) {
+            $event->data[] = array('url' => ModUtil::url($module, 'admin', 'postcalendarhookconfig'), 'text' => __('PostCalendar Hook Options', $dom));
         }
     }
+
 }
