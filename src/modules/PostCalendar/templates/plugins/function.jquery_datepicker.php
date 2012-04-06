@@ -16,7 +16,7 @@ function smarty_function_jquery_datepicker($params, Zikula_View $view)
     $userFormat = $modVars['PostCalendar']['pcDateFormats']['date'];
 
     PageUtil::addVar("javascript", "jquery");
-    PageUtil::addVar("javascript", "modules/PostCalendar/javascript/jquery-ui-1.8.18.custom.min.js");
+    PageUtil::addVar("javascript", "modules/PostCalendar/javascript/jquery-ui/jquery-ui-1.8.18.custom.min.js");
     PageUtil::addVar("stylesheet", "modules/PostCalendar/style/$jQueryTheme/jquery-ui-1.8.18.custom.css");
     
     $javascript = "
