@@ -1,11 +1,11 @@
 jQuery(document).ready(function(){
     jQuery('#postcalendar_events_alldayevent').click(function(){
         if (jQuery('#postcalendar_events_alldayevent').is(':checked')) {
-            jQuery('#eventstart_time').hide();
-            jQuery('#eventend_time').hide();
+            jQuery('#eventstart_time').hide("slow");
+            jQuery('#eventend_time').hide("slow");
         } else {
-            jQuery('#eventstart_time').show();
-            jQuery('#eventend_time').show();
+            jQuery('#eventstart_time').show("slow");
+            jQuery('#eventend_time').show("slow");
         }
     });
     jQuery('#postcalendar_events_repeats').click(function(){
