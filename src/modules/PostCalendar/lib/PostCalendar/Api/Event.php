@@ -298,8 +298,8 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
         $eventdata['website']   = isset($eventdata['website'])   ? $eventdata['website']   : $eventDefaults['website'];
         $eventdata['fee']       = isset($eventdata['fee'])       ? $eventdata['fee']       : $eventDefaults['fee'];
 
-        $eventdata['recurrspec']['event_repeat_freq']    = isset($eventdata['recurrspec']['event_repeat_freq'])    ? $eventdata['recurrspec']['event_repeat_freq']    : "";
-        $eventdata['recurrspec']['event_repeat_on_freq'] = isset($eventdata['recurrspec']['event_repeat_on_freq']) ? $eventdata['recurrspec']['event_repeat_on_freq'] : "";
+        $eventdata['recurrspec']['event_repeat_freq']    = isset($eventdata['recurrspec']['event_repeat_freq'])    ? $eventdata['recurrspec']['event_repeat_freq']    : "1";
+        $eventdata['recurrspec']['event_repeat_on_freq'] = isset($eventdata['recurrspec']['event_repeat_on_freq']) ? $eventdata['recurrspec']['event_repeat_on_freq'] : "1";
 
         $eventdata['location']['event_location'] = isset($eventdata['location']['event_location']) ? $eventdata['location']['event_location'] : $eventDefaults['location']['event_location'];
         $eventdata['location']['event_street1']  = isset($eventdata['location']['event_street1'])  ? $eventdata['location']['event_street1']  : $eventDefaults['location']['event_street1'];

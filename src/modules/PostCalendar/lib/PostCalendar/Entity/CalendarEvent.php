@@ -138,11 +138,11 @@ class PostCalendar_Entity_CalendarEvent extends Zikula_EntityAccess
      * 
      * @ORM\Column(type="array")
      */
-    private $recurrspec = array("event_repeat_freq" => "",
+    private $recurrspec = array("event_repeat_freq" => "1",
         "event_repeat_freq_type" => "0",
         "event_repeat_on_num" => "1",
         "event_repeat_on_day" => "0",
-        "event_repeat_on_freq" => ""
+        "event_repeat_on_freq" => "1"
     );
 
     /**
