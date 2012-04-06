@@ -2,7 +2,4 @@ TODO LIST
 
 - review hook provider abstract class and so on
 - upgrade routine
-- events not sorting by time in display
 - Needles are still a guess
-- jquery date/time plugins need regionalization
-- jquery date plugin needs first day of week correction

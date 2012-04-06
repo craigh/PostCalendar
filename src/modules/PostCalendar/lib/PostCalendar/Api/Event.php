@@ -389,7 +389,6 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
         $event['duration'] = $eventEnd->diff($eventStart)->format('%d days %h:%I hours'); // no translation?
 
         // prepare starttime for display HH:MM or HH:MM AP
-        $event['sortTime']  = $eventStart->format('G:i'); // save for sorting later
         $event['startTime'] = $eventStart->format($timeFormat);
 
         // compensate for changeover to new categories system
@@ -444,6 +443,9 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
         if ((int)$event['eventEnd']->diff($event['eventStart'])->format('%d') > 0) {
             $event['recurrtype'] = CalendarEvent::RECURRTYPE_CONTINUOUS;
         }
+        
+        // for all-day events, the startTime should be set to 00:00 so it sorts properly
+        $event['eventStart'] = $event['alldayevent'] ? $event['eventStart']->setTime(0,0,0) : $event['eventStart'];
         
         if (empty($event['hometext'])) {
             $event['hometext'] = ':text:' . $this->__(/*!(abbr) not applicable or not available*/'n/a'); // default description
