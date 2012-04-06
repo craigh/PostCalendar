@@ -4,6 +4,5 @@ TODO LIST
 - upgrade routine
 - events not sorting by time in display
 - Needles are still a guess
-- check ContentTypes over
 - jquery date/time plugins need regionalization
 - jquery date plugin needs first day of week correction
