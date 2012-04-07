@@ -17,25 +17,21 @@ class PostCalendar_PostCalendarEvent_Generic extends PostCalendar_PostCalendarEv
 {
 
     /**
-     * get generic info for Postcalendar event creation
+     * Set generic info for Postcalendar event creation
      *
-     * @return  array() event info or false if no desire to publish event
+     * @return  boolean success/failure
      */
     public function makeEvent()
     {
         $dom = ZLanguage::getModuleDomain('PostCalendar');
-
+        $this->setTitle(__f('New %1$s item (#%2$s)', array($this->getEvent()->getHooked_modulename(), $this->getEvent()->getHooked_objectid()), $dom));
+        $text = ":html:" . __f('New %1$s item (#%2$s)', array($this->getEvent()->getHooked_modulename(), $this->getEvent()->getHooked_objectid()), $dom);
+        $url = DataUtil::formatForDisplayHTML($this->getHook()->getUrl()->getUrl());
+        $text .= isset($url) ? "(<a href='$url'>" . __("Item link", $dom) . "</a>)" : "(" . __("URL not provided", $dom) . ")";
+        $this->setHometext($text);
         $date = new DateTime();
-
-        $this->title = __f('New %1$s item (#%2$s)', array($this->getHooked_modulename(), $this->getHooked_objectid()), $dom);
-        $this->hometext = ":html:" . __f('New %1$s item (#%2$s)', array($this->getHooked_modulename(), $this->getHooked_objectid()), $dom);
-        $url = DataUtil::formatForDisplayHTML($this->getHooked_objecturl());
-        $this->hometext .= isset($url) ? "(<a href='$url'>" . __("Item link", $dom) . "</a>)" : "(" . __("URL not provided", $dom) . ")";
-        $this->aid = $this->getHooked_objectid();
-        $this->time = $date; // mysql timestamp YYYY-MM-DD HH:MM:SS
-        $this->informant = $this->getHooked_objectid();
-        $this->eventStart = $date;
-        $this->eventEnd = $date;
+        $this->setEventStart($date); // technically unneccessary but left for demonstration purposes
+        $this->setEventEnd($date); // technically unneccessary but left for demonstration purposes
 
         return true;
     }

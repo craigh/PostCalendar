@@ -2,16 +2,16 @@
 
 ### Hooks
 
-**Please note: this information applies to PostCalendar v7.0.0+ only.**
+**Please note: this information applies to PostCalendar v8.0.0+ only.**
 
 PostCalendar provides create, update and delete hooks that can be utilized and
 customized by any modules that wishes to create a calendar event along with
 their own item creation. PostCalendar ships with an example of this
-technology: _News_. You can find these examples as follows:
+technology: _News_ (and _Generic_). You can find these examples as follows:
 
     modules/PostCalendar/lib/PostCalendar/PostCalendarEvent/News.php
 
-each of these functions _could_ be located in their respective module's own
+each of these functions _could_  (and should) be located in their respective module's own
 directory if the developer so chooses. Any additional functions that are
 created by subsequent devs should be placed within their own module. Create
 the following directory structure with your module:
@@ -24,18 +24,16 @@ within this file, create a class which extends the base class like so:
 
 within that class, you must create at least the following _required_ method:
 
-    public function makeEvent($args)
+    public function makeEvent()
 
 Again, look in the PostCalendar module for examples.
 
 Your makeEvent method must set the following properties that will form the event:
 
-        $this->title
-        $this->hometext
-        $this->aid
-        $this->time
-        $this->informant
-        $this->eventDate
+        title
+        hometext
+        eventStart
+        eventEnd
 
 There are additional class properties that can be set if you wish. Please see
 the Base class for additional information.

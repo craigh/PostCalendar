@@ -33,6 +33,7 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
     {
         $this->view = Zikula_View::getInstance("PostCalendar");
         $this->_em = ServiceUtil::getService('doctrine.entitymanager');
+        $this->domain = ZLanguage::getModuleDomain('PostCalendar');
     }
 
     /**
@@ -182,7 +183,7 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
     public function validateEdit(Zikula_ValidationHook $hook)
     {
         // get data from post
-        $data = $this->view->getRequest->request->get('postcalendar', null);
+        $data = $this->view->getRequest()->request->get('postcalendar', null);
 
         // create a new hook validation object and assign it to $this->validation
         $this->validation = new Zikula_Hook_ValidationResponse('data', $data);
@@ -220,10 +221,6 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
             return;
         }
 
-        $dom = ZLanguage::getModuleDomain('PostCalendar');
-        $objUrl = $hook->getUrl()->getUrl(null, null, false, false); // objecturl provided by subscriber
-        // the fourth arg is forceLang and if left to default (true) then the url is malformed - core bug as of 1.3.0
-
         $hookdata = $this->validation->getObject();
         $hookdata = DataUtil::cleanVar($hookdata);
         if (DataUtil::is_serialized($hookdata['cats'], false)) {
@@ -234,38 +231,34 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
             // check to see if event currently exists - delete if so
             if (!empty($hookdata['eid'])) {
                 $this->_em->getRepository('PostCalendar_Entity_CalendarEvent')->deleteEvents(array($hookdata['eid']));
-                LogUtil::registerStatus(__("PostCalendar: Existing event deleted (opt out).", $dom));
+                LogUtil::registerStatus($this->__("PostCalendar: Existing event deleted (opt out)."));
             } else {
-                LogUtil::registerStatus(__("PostCalendar: News event not created (opt out).", $dom));
+                LogUtil::registerStatus($this->__("PostCalendar: News event not created (opt out)."));
             }
             return;
-        }
-
-        $postCalendarEventInstance = $this->getClassInstance($hook->getCaller());
-        $postCalendarEventInstance->setHooked_objectid($hook->getId());
-        $postCalendarEventInstance->setHooked_objecturl($objUrl);
-        $postCalendarEventInstance->setHooked_area($hook->getAreaId());
-        $postCalendarEventInstance->setcategories($hookdata['cats']);
-        if (!$postCalendarEventInstance->makeEvent()) {
-            return false;
         }
 
         if (!empty($hookdata['eid'])) {
             // event already exists - just update
             $event = $this->_em->getRepository('PostCalendar_Entity_CalendarEvent')->find($hookdata['eid']);
-            $word = __("update", $dom);
+            $word = $this->__("update");
         } else {
             // create a new event
             $event = new PostCalendar_Entity_CalendarEvent();
-            $word = __("create", $dom);
+            $word = $this->__("create");
+        }
+        $postCalendarEventInstance = $this->getClassInstance($hook);
+        $postCalendarEventInstance->setEvent($event);
+        $postCalendarEventInstance->setCategories($hookdata['cats']);
+        if (!$postCalendarEventInstance->makeEvent()) {
+            return false;
         }
         try {
-            $event->setFromArray($postCalendarEventInstance->toArray());
-            $this->_em->persist($event);
+            $this->_em->persist($postCalendarEventInstance->getEvent());
             $this->_em->flush();
-            LogUtil::registerStatus(__f("PostCalendar: Associated Calendar event %sd.", $word, $dom));
+            LogUtil::registerStatus($this->__f("PostCalendar: Associated Calendar event %sd.", $word));
         } catch (Exception $e) {
-            LogUtil::registerError(__f('Error! Could not %s the associated Calendar event.', $word, $dom));
+            LogUtil::registerError($this->__f('Error! Could not %s the associated Calendar event.', $word));
             return false;
         }
         return true;
@@ -280,16 +273,14 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
      */
     public function processDelete(Zikula_ProcessHook $hook)
     {
-        $dom = ZLanguage::getModuleDomain('PostCalendar');
-
         $pc_event = $this->_em->getRepository('PostCalendar_Entity_CalendarEvent')->getHookedEvent($hook);
         $result = $this->_em->getRepository('PostCalendar_Entity_CalendarEvent')->deleteEvents(array($pc_event->getEid()));
 
         if (!$result) {
-            return LogUtil::registerError(__('Error! Could not delete associated PostCalendar event.', $dom));
+            return LogUtil::registerError($this->__('Error! Could not delete associated PostCalendar event.'));
         }
 
-        LogUtil::registerStatus(__('Associated PostCalendar event also deleted.', $dom));
+        LogUtil::registerStatus($this->__('Associated PostCalendar event also deleted.'));
     }
 
     /**
@@ -412,26 +403,27 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
     /**
      * Find Class and instantiate
      *
-     * @param string $module Module name
+     * @param Zikula_ProcessHook $hook
      * @return instantiated object of found class
      */
-    private function getClassInstance($module)
+    private function getClassInstance(Zikula_ProcessHook $hook)
     {
-        if (empty($module)) {
+        if (empty($hook)) {
             return false;
         }
+        $module = $hook->getCaller();
 
         $locations = array($module, 'PostCalendar'); // locations to search for the class
         foreach ($locations as $location) {
             $classname = $location . '_PostCalendarEvent_' . $module;
             if (class_exists($classname)) {
-                $instance = new $classname($module);
+                $instance = new $classname($hook);
                 if ($instance instanceof PostCalendar_PostCalendarEvent_AbstractBase) {
                     return $instance;
                 }
             }
         }
-        return new PostCalendar_PostCalendarEvent_Generic($module);
+        return new PostCalendar_PostCalendarEvent_Generic($hook);
     }
 
     /**
