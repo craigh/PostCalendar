@@ -88,7 +88,8 @@ abstract class PostCalendar_PostCalendarEvent_AbstractBase
      *     'title'        event title
      *     'hometext'     an event description
      *     'eventStart'   php DateTime
-     *     'eventEnd'   php DateTime
+     *     'eventEnd'     php DateTime
+     *     'sharing'      likely you should set to PostCalendar_Entity_CalendarEvent::SHARING_GLOBAL (defaults to PRIVATE)
      * The other properties of the event are optional and have default values
      * @see PostCalendar_Entity_CalendarEvent (use setters)
      * @see PostCalendar_PostCalendarEvent_Generic (example)

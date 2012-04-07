@@ -46,6 +46,7 @@ class PostCalendar_PostCalendarEvent_News extends PostCalendar_PostCalendarEvent
         $this->setEventStart($articleDate);
         $this->setEventEnd($articleDate);
         $this->setEventstatus($eventstatus);
+        $this->setSharing(PostCalendar_Entity_CalendarEvent::SHARING_GLOBAL);
 
         return true;
     }
