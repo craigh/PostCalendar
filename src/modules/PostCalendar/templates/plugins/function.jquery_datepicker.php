@@ -11,10 +11,10 @@ function smarty_function_jquery_datepicker($params, Zikula_View $view)
     $maxDate = (isset($params['maxdate'])) ? $params['maxdate'] : null;
     $jQueryTheme = (isset($params['theme'])) ? $params['theme'] : 'ui-lightness';
     $lang = (isset($params['lang'])) ? $params['lang'] : ZLanguage::getLanguageCode();
-    $dateDisplayFormat = 'd MM yy';
 
     $modVars = $view->get_template_vars('modvars');
     $userFormat = $modVars['PostCalendar']['pcDateFormats']['date'];
+    $dateDisplayFormat = $modVars['PostCalendar']['pcDateFormats']['javascript'];
 
     PageUtil::addVar("javascript", "jquery");
     PageUtil::addVar("javascript", "modules/PostCalendar/javascript/jquery-ui/jquery-ui-1.8.18.custom.min.js");
