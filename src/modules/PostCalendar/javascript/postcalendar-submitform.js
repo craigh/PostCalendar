@@ -50,10 +50,12 @@ function updateFields(inputElementObj, dateText)
     {
         case 'eventstart_display':
             jQuery("#eventend_display").datepicker('option', 'minDate', date);
+            updateFields(jQuery("#eventend_time_display"), dateText);
             break;
         case 'eventend_display':
             jQuery("#eventstart_display").datepicker('option', 'maxDate', date);
             jQuery("#repeat_enddate_display").datepicker('option', 'minDate', datePlusOne);
+            updateFields(jQuery("#eventstart_time_display"), dateText);
             break;
         case 'repeat_enddate_display':
             // do nothing
