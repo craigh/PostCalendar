@@ -1,4 +1,8 @@
 TODO LIST
 
+- new popup jquey nav with buttons
+- update docs
+- make submit form an object
 - upgrade routine
 - Needles are still a guess
+- move jquery plugins to core
