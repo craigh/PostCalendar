@@ -1,4 +1,4 @@
-{pageaddvar name='javascript' value='modules/PostCalendar/javascript/postcalendar-submitform.js'}
+{pageaddvar name='javascript' value='modules/PostCalendar/javascript/postcalendar-event-submit.js'}
 {if $modvars.PostCalendar.pcAllowUserCalendar}
     {usergetvar name="uid" assign="uid"}
     {modapifunc modname='Groups' type='user' func='isgroupmember' uid=$uid gid=$modvars.PostCalendar.pcAllowUserCalendar assign="ingroup"}
