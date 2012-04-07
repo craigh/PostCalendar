@@ -1,4 +1,5 @@
 {pageaddvar name='javascript' value='modules/PostCalendar/javascript/postcalendar-event-submit.js'}
+{assign value='overcast' var='jquerytheme'}
 {if $modvars.PostCalendar.pcAllowUserCalendar}
     {usergetvar name="uid" assign="uid"}
     {modapifunc modname='Groups' type='user' func='isgroupmember' uid=$uid gid=$modvars.PostCalendar.pcAllowUserCalendar assign="ingroup"}
@@ -55,11 +56,11 @@
             <label>{gt text='Starts and Ends'}</label>
             <span>
                 {if ($loaded_event.alldayevent)}{assign var='inlinestyle' value='display: none;'}{else}{assign var='inlinestyle' value=null}{/if}
-                {jquery_datepicker defaultdate=$loaded_event.eventStart displayelement='eventstart_display' object='postcalendar_events' valuestorageelement='eventstart_date' maxdate=$loaded_event.eventStart theme='cupertino'}
-                {jquery_timepicker defaultdate=$loaded_event.eventStart displayelement='eventstart_time_display' object='postcalendar_events' valuestorageelement='eventstart_time' inlinestyle=$inlinestyle theme='cupertino'}
+                {jquery_datepicker defaultdate=$loaded_event.eventStart displayelement='eventstart_display' object='postcalendar_events' valuestorageelement='eventstart_date' maxdate=$loaded_event.eventStart theme=$jquerytheme}
+                {jquery_timepicker defaultdate=$loaded_event.eventStart displayelement='eventstart_time_display' object='postcalendar_events' valuestorageelement='eventstart_time' inlinestyle=$inlinestyle theme=$jquerytheme}
                 <span style='padding:0 1em;'>{gt text='to'}</span>
-                {jquery_datepicker defaultdate=$loaded_event.eventEnd displayelement='eventend_display' object='postcalendar_events'  valuestorageelement='eventend_date' mindate=$loaded_event.eventEnd theme='cupertino'}
-                {jquery_timepicker defaultdate=$loaded_event.eventEnd displayelement='eventend_time_display' object='postcalendar_events' valuestorageelement='eventend_time' inlinestyle=$inlinestyle theme='cupertino'}
+                {jquery_datepicker defaultdate=$loaded_event.eventEnd displayelement='eventend_display' object='postcalendar_events'  valuestorageelement='eventend_date' mindate=$loaded_event.eventEnd theme=$jquerytheme}
+                {jquery_timepicker defaultdate=$loaded_event.eventEnd displayelement='eventend_time_display' object='postcalendar_events' valuestorageelement='eventend_time' inlinestyle=$inlinestyle theme=$jquerytheme}
             </span>
         </div>
             
@@ -92,7 +93,7 @@
             </div>
             <div>
                 <label>{gt text='until'}...</label>
-                {jquery_datepicker defaultdate=$loaded_event.endDate displayelement='repeat_enddate_display' object='postcalendar_events' valuestorageelement='enddate' mindate=$loaded_event.eventEnd theme='cupertino'}
+                {jquery_datepicker defaultdate=$loaded_event.endDate displayelement='repeat_enddate_display' object='postcalendar_events' valuestorageelement='enddate' mindate=$loaded_event.eventEnd theme=$jquerytheme}
             </div>
         </div>
 
