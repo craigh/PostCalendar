@@ -72,7 +72,7 @@ class PostCalendar_CalendarView_Navigation
             PageUtil::addVar("javascript", "modules/PostCalendar/javascript/jquery-ui/jquery-ui-1.8.18.custom.min.js");
             PageUtil::addVar("javascript", "modules/PostCalendar/javascript/postcalendar-user-navigation.js");
             $jQueryTheme = 'overcast';
-            PageUtil::addVar("stylesheet", "modules/PostCalendar/style/$jQueryTheme/jquery-ui-1.8.18.custom.css");
+            PageUtil::addVar("stylesheet", "modules/PostCalendar/style/$jQueryTheme/jquery-ui.css");
             PageUtil::addVar("stylesheet", "modules/PostCalendar/style/jquery-overrides.css");
         }
         $this->view->assign('navigationObj', $this);
