@@ -20,16 +20,26 @@ class PostCalendar_CalendarView_Nav_Today extends PostCalendar_CalendarView_Nav_
         $this->displayImageOn = 'today.gif';
         $this->displayImageOff = 'today.gif';
     }
-    
+
     protected function setAnchorTag()
     {
-        $today = new DateTime();
-        if ($this->date <> $today) {
-            $this->date = $today;
+        if ($this->date <> $this->today) {
+            $this->date = clone $this->today;
             parent::setUrl(); // reset with new date
             parent::setAnchorTag();
         } else {
             $this->anchorTag = null;
+        }
+    }
+
+    protected function setRadio()
+    {
+        if ($this->date <> $this->today) {
+            $this->date = clone $this->today;
+            parent::setUrl(); // reset with new date
+            parent::setRadio();
+        } else {
+            $this->radio = null;
         }
     }
 

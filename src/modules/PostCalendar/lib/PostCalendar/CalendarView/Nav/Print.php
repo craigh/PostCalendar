@@ -29,7 +29,7 @@ class PostCalendar_CalendarView_Nav_Print extends PostCalendar_CalendarView_Nav_
 
     protected function setUrl()
     {
-        $this->url = ModUtil::url('PostCalendar', 'user', 'display', array(
+        $this->url = new Zikula_ModUrl('PostCalendar', 'user', 'display', ZLanguage::getLanguageCode(), array(
                     'viewtype' => $this->viewtype,
                     'date' => $this->date->format('Ymd'),
                     'pc_username' => $this->userFilter,

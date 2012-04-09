@@ -29,7 +29,7 @@ class PostCalendar_CalendarView_Nav_Admin extends PostCalendar_CalendarView_Nav_
 
     protected function setUrl()
     {
-        $this->url = ModUtil::url('PostCalendar', 'admin', 'listevents');
+        $this->url = new Zikula_ModUrl('PostCalendar', 'admin', 'listevents', ZLanguage::getLanguageCode());
     }
 
     protected function setAnchorTag()
@@ -38,6 +38,15 @@ class PostCalendar_CalendarView_Nav_Admin extends PostCalendar_CalendarView_Nav_
             parent::setAnchorTag();
         } else {
             $this->anchorTag = null;
+        }
+    }
+
+    protected function setRadio()
+    {
+        if (SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
+            parent::setRadio();
+        } else {
+            $this->radio = null;
         }
     }
 

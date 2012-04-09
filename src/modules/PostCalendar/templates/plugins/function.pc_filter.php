@@ -102,7 +102,7 @@ function smarty_function_pc_filter($args, Zikula_View $view)
         //================================================================
         // build it in the correct order
         //================================================================
-        $submit = "<input type='submit' name='submit' value='$label' $class />";
+        $submit = "<input type='submit' name='pc_submit' value='$label' $class />";
         $orderArray = array(
             'user' => $useroptions,
             'category' => $catoptions,

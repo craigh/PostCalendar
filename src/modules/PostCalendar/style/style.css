@@ -118,7 +118,7 @@ table.postcalendar_month col.pcWeekend {
 	border: none;
 	margin: 0;
 	padding: 0;
-    width: 50%;
+/*    width: 50%;*/
     vertical-align: top;
 }
 #postcalendar_nav_right {
@@ -160,6 +160,34 @@ a.postcalendar_nav_text_selected {
 a.postcalendar_nav_text_selected:hover {
     background-color: #ffffff;
 	text-decoration: none;
+}
+#pcnav_datepicker {
+    background: url("images/ui-bg_glass_60_eeeeee_1x400.png") repeat-x scroll 50% 50% #EEEEEE;
+    border: 1px solid #CCCCCC;
+    border-right: 0;
+    color: #3383BB;
+    width: 8em;
+    height: 16px;
+    vertical-align: top;
+    padding: 4px 4px 4px 8px;
+    border-bottom-left-radius: 6px;
+    border-top-left-radius: 6px;
+}
+#pcnav_datepicker_button {
+    background-image: -moz-linear-gradient(center top , #FAFAFA 0%, #E5E5E5 100%);
+    border: 1px solid #CCCCCC;
+    padding: 5px;
+    width: 14px;
+    height: 14px;
+    background-color: #EEEEEE;
+    text-indent: -99999px; 
+    border-bottom-right-radius: 6px;
+    border-top-right-radius: 6px;
+    margin-right: .8em;
+}
+#pcnav_datepicker_button:hover {
+    background-color: #FFFFFF;
+    background-image: -moz-linear-gradient(center top , #E5E5E5 0%, #FAFAFA 100%);
 }
 
 /********** details **************/

@@ -18,6 +18,7 @@ abstract class PostCalendar_CalendarView_Nav_AbstractItemBase
      */
     protected $view;
     protected $viewtype;
+    protected $navbarType;
     protected $defaultViewtype;
 
     /**
@@ -25,6 +26,7 @@ abstract class PostCalendar_CalendarView_Nav_AbstractItemBase
      * @var object
      */
     protected $date;
+    protected $today;
     protected $userFilter;
     protected $displayText;
     protected $displayImageOff;
@@ -43,8 +45,8 @@ abstract class PostCalendar_CalendarView_Nav_AbstractItemBase
     protected $selected = false;
 
     /**
-     * The proper link e.g. value of href
-     * @var string 
+     * Url object
+     * @var Zikula_ModUrl 
      */
     protected $url;
 
@@ -53,21 +55,39 @@ abstract class PostCalendar_CalendarView_Nav_AbstractItemBase
      * @var string
      */
     protected $anchorTag;
+    
+    /**
+     * Fully formed radio button html e.g. <input type="radio"...
+     * @var type 
+     */
+    protected $radio;
 
-    public function getUrl()
+    /**
+     * get a url string
+     * @see Zikula_ModUrl
+     * @param boolean? $ssl
+     * @param boolean? $fqurl
+     * @param boolean $forcelongurl
+     * @param boolean $forcelang
+     * @return string 
+     */
+    public function getUrl($ssl = null, $fqurl = null, $forcelongurl = false, $forcelang=false)
     {
-        return $this->url;
+        return $this->url->getUrl($ssl, $fqurl, $forcelongurl, $forcelang);
     }
 
     public function renderAnchorTag()
     {
-        return $this->anchorTag;
+        if (isset($this->anchorTag)) {
+            return $this->anchorTag;
+        }
     }
 
-    public function __construct(Zikula_View $view, $selected)
+    public function __construct(Zikula_View $view, $selected, $navBarType)
     {
         $this->view = $view;
         $this->selected = $selected;
+        $this->navBarType = $navBarType;
         include_once $this->view->_get_plugin_filepath('function', 'img');
         $jumpargs = array(
             'date' => $this->view->getRequest()->request->get('date', $this->view->getRequest()->query->get('date', null)),
@@ -75,15 +95,21 @@ abstract class PostCalendar_CalendarView_Nav_AbstractItemBase
             'jumpmonth' => $this->view->getRequest()->request->get('jumpMonth', $this->view->getRequest()->query->get('jumpMonth', null)),
             'jumpyear' => $this->view->getRequest()->request->get('jumpYear', $this->view->getRequest()->query->get('jumpYear', null)));
         $this->date = PostCalendar_Util::getDate($jumpargs);
+        $this->today = new DateTime();
         $this->userFilter = $this->view->getRequest()->request->get('pc_username', $this->view->getRequest()->query->get('pc_username', null));
         $this->useDisplayImage = (boolean)ModUtil::getVar('PostCalendar', 'enablenavimages');
         $this->usePopups = (boolean)ModUtil::getVar('PostCalendar', 'pcUsePopups');
         $this->openInNewWindow = (boolean)ModUtil::getVar('PostCalendar', 'pcEventsOpenInNewWindow');
         $this->defaultViewtype = ModUtil::getVar('PostCalendar', 'pcDefaultView');
         $this->setup();
-        $this->postSetup();
-        $this->setUrl();
-        $this->setAnchorTag();
+        if ($this->navBarType == 'buttonbar') {
+            $this->setUrl();
+            $this->setRadio();        
+        } else {
+            $this->postSetup();
+            $this->setUrl();
+            $this->setAnchorTag();
+        }
     }
 
     private function postSetup()
@@ -115,7 +141,7 @@ abstract class PostCalendar_CalendarView_Nav_AbstractItemBase
 
     protected function setUrl()
     {
-        $this->url = ModUtil::url('PostCalendar', 'user', 'display', array(
+        $this->url = new Zikula_ModUrl('PostCalendar', 'user', 'display', ZLanguage::getLanguageCode(), array(
                     'viewtype' => $this->viewtype,
                     'date' => $this->date->format('Ymd'),
                     'pc_username' => $this->userFilter));
@@ -126,6 +152,22 @@ abstract class PostCalendar_CalendarView_Nav_AbstractItemBase
         $class = implode(' ', $this->cssClasses);
         $display = $this->useDisplayImage ? $this->imageHtml : $this->displayText;
         $this->anchorTag = "<a href='" . $this->getUrl() . "' class='$class' title='$this->imageTitleText'>$display</a>";
+    }
+    
+    protected function setRadio()
+    {
+        $id = strtolower($this->displayText);
+        $checked = $this->selected ? " checked='checked'" : "";
+        $this->radio = "<input type='radio'{$checked} id='pcnav_{$id}' class='pcnav-button' name='viewtype' value='{$id}' />
+            <label for='pcnav_{$id}'>{$this->displayText}</label>
+            <input type='hidden' id='pcnav_url_{$id}' value='{$this->getUrl(null, true)}' />";
+    }
+    
+    public function renderRadio()
+    {
+        if (isset($this->radio)) {
+            return $this->radio;
+        }
     }
 
     abstract public function setup();

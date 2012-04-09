@@ -28,7 +28,7 @@ class PostCalendar_CalendarView_Nav_Xml extends PostCalendar_CalendarView_Nav_Ab
 
     protected function setUrl()
     {
-        $this->url = ModUtil::url('PostCalendar', 'user', 'display', array(
+        $this->url = new Zikula_ModUrl('PostCalendar', 'user', 'display', ZLanguage::getLanguageCode(), array(
                     'viewtype' => $this->viewtype,
                     'theme' => 'rss'));
     }
@@ -36,18 +36,33 @@ class PostCalendar_CalendarView_Nav_Xml extends PostCalendar_CalendarView_Nav_Ab
     protected function setAnchorTag()
     {
         if (!ModUtil::getVar('Theme', 'render_expose_template')) {
-            $rsslink = $this->getUrl();
-            $rsslink = DataUtil::formatForDisplay($rsslink);
-            $sitename = System::getVar('sitename');
-            $modinfo = ModUtil::getInfo(ModUtil::getIdFromName('PostCalendar'));
-            $modname = $modinfo['displayname'];
-            $title = DataUtil::formatForDisplay($sitename . " " . $modname);
-            $pagevarvalue = "<link rel='alternate' href='$rsslink' type='application/rss+xml' title='$title' />";
-            PageUtil::addVar("header", $pagevarvalue);
+            $this->prepRss();
             parent::setAnchorTag();
         } else {
             $this->anchorTag = null;
         }
+    }
+
+    protected function setRadio()
+    {
+        if (!ModUtil::getVar('Theme', 'render_expose_template')) {
+            $this->prepRss();
+            parent::setRadio();
+        } else {
+            $this->radio = null;
+        }
+    }
+
+    private function prepRss()
+    {
+        $rsslink = $this->getUrl();
+        $rsslink = DataUtil::formatForDisplay($rsslink);
+        $sitename = System::getVar('sitename');
+        $modinfo = ModUtil::getInfo(ModUtil::getIdFromName('PostCalendar'));
+        $modname = $modinfo['displayname'];
+        $title = DataUtil::formatForDisplay($sitename . " " . $modname);
+        $pagevarvalue = "<link rel='alternate' href='$rsslink' type='application/rss+xml' title='$title' />";
+        PageUtil::addVar("header", $pagevarvalue);
     }
 
 }

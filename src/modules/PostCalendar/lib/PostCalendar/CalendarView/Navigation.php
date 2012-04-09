@@ -19,7 +19,6 @@ class PostCalendar_CalendarView_Navigation
     private $navItems = array();
     private $template = 'user/navigation.tpl';
     private $view;
-    public $today;
     public $requestedDate;
     private $userFilter;
     private $selectedCategories;
@@ -32,6 +31,7 @@ class PostCalendar_CalendarView_Navigation
     public $useFilter = true;
     public $useJumpDate = true;
     public $useNavBar = true;
+    public $navBarType = 'plain';
     public $viewtypeselector = array();
 
     public function __construct(Zikula_View $view, $requestedDate, $userFilter, $selectedCategories, $viewtype, $config = null)
@@ -44,14 +44,13 @@ class PostCalendar_CalendarView_Navigation
         if (isset($config) && !empty($config)) {
             $this->configure($config);
         }
-        $this->today = new DateTime();
 
         $allowedViews = ModUtil::getVar('PostCalendar', 'pcAllowedViews');
         array_unshift($allowedViews, 'admin'); // add 'admin' view for nav purposes (always available to Admin)
         unset($allowedViews[array_search('event', $allowedViews)]); // remove 'event' view for nav purposes
         foreach ($allowedViews as $navType) {
             $class = 'PostCalendar_CalendarView_Nav_' . ucfirst($navType);
-            $this->navItems[] = new $class($this->view, ($navType == $viewtype));
+            $this->navItems[] = new $class($this->view, ($navType == $viewtype), $this->navBarType);
         }
         $viewtypeSelectorData = array('day' => $this->view->__('Day'),
             'week' => $this->view->__('Week'),
@@ -68,6 +67,14 @@ class PostCalendar_CalendarView_Navigation
     public function render()
     {
         // caching shouldn't be used because the date and other filter settings may change
+        if ($this->navBarType == 'buttonbar') {
+            PageUtil::addVar("javascript", "jquery");
+            PageUtil::addVar("javascript", "modules/PostCalendar/javascript/jquery-ui/jquery-ui-1.8.18.custom.min.js");
+            PageUtil::addVar("javascript", "modules/PostCalendar/javascript/postcalendar-user-navigation.js");
+            $jQueryTheme = 'overcast';
+            PageUtil::addVar("stylesheet", "modules/PostCalendar/style/$jQueryTheme/jquery-ui-1.8.18.custom.css");
+            PageUtil::addVar("stylesheet", "modules/PostCalendar/style/jquery-overrides.css");
+        }
         $this->view->assign('navigationObj', $this);
         return $this->view->fetch($this->template);
     }
@@ -82,6 +89,9 @@ class PostCalendar_CalendarView_Navigation
         }
         if (isset($args['navbar'])) {
             $this->useNavBar = $args['navbar'];
+        }
+        if (isset($args['navbartype'])) {
+            $this->navBarType = $args['navbartype'];
         }
     }
 

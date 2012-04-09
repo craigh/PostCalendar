@@ -23,7 +23,7 @@ class PostCalendar_CalendarView_Nav_Create extends PostCalendar_CalendarView_Nav
 
     protected function setUrl()
     {
-        $this->url = ModUtil::url('PostCalendar', 'event', 'create', array(
+        $this->url = new Zikula_ModUrl('PostCalendar', 'event', 'create', ZLanguage::getLanguageCode(), array(
                     'date' => $this->date->format('Ymd')));
     }
     
@@ -33,6 +33,15 @@ class PostCalendar_CalendarView_Nav_Create extends PostCalendar_CalendarView_Nav
             parent::setAnchorTag();
         } else {
             $this->anchorTag = null;
+        }
+    }
+
+    protected function setRadio()
+    {
+        if (SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADD)) {
+            parent::setRadio();
+        } else {
+            $this->radio = null;
         }
     }
 

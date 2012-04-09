@@ -23,7 +23,7 @@ class PostCalendar_CalendarView_Nav_Search extends PostCalendar_CalendarView_Nav
 
     protected function setUrl()
     {
-        $this->url = ModUtil::url('Search', 'user', 'main');
+        $this->url = new Zikula_ModUrl('Search', 'user', 'main', ZLanguage::getLanguageCode());
     }
 
 }

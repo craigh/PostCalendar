@@ -1,0 +1,8 @@
+.ui-button-text-only .ui-button-text {
+    font-size: 80%;
+}
+.ui-state-default, 
+.ui-widget-content .ui-state-default, 
+.ui-widget-header .ui-state-default {
+    font-weight: normal;
+}
