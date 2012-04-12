@@ -6,6 +6,8 @@
     <div id="postcalendar_nav_right">
         {if $navigationObj->navBarType == 'buttonbar'}
         <div id="pcnav-buttonbar">
+            <input type='text' readonly="readonly" id='pcnav_categoryfilter' name='pcnav_categoryfilter' value='item1' />
+            <input id="pcnav_categoryfilter_button" type="image" alt="filter" title='filter categories' src='images/icons/extrasmall/filter.png' />
             {assign value='overcast' var='jquerytheme'}
             {jquery_datepicker defaultdate=$navigationObj->requestedDate displayelement='pcnav_datepicker' valuestorageelement='date' valuestorageformat='Ymd' theme=$jquerytheme submitonselect=true}
             <input id="pcnav_datepicker_button" type="image" alt="jump" title='jump to date' src='modules/PostCalendar/images/icon-calendar.jpg' />
@@ -43,4 +45,15 @@
     {/if}
 </div>
 </form>
+{$pcCategoryStylesheet}
 <div>{insert name="getstatusmsg"}</div>
+<div id='pccategorypicker' title='{gt text='Filter view'}'>
+    <h5>{gt text='Categories'}</h5>
+    <ul>
+    {foreach from=$pcCategories key='regname' item='categories'}
+        {foreach from=$categories item='category'}
+        <li class='pccategories_{$category.id} pccategories_selector' id='pccat_{$category.id}'>{$category.display_name.en}</li>
+        {/foreach}
+    {/foreach}
+    </ul>
+</div>

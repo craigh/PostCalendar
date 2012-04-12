@@ -19,10 +19,9 @@
         {foreach name='dates' item='events' key='date' from=$S_EVENTS}
             {if isset($events)}
                 {foreach name='events' item='event' from=$S_EVENTS.$date}
-                    <li class="eventslistitems">
-                        <span style="padding: 1px 4px; color: {$event.cattextcolor}; background: {$event.catcolor};">{$event.catname}</span>
+                    <li class="eventslistitems pccategories_{$event.catid}">
                         {if $event.alldayevent != true}{$event.startTime} - {$event.endTime}{else}{gt text='All-day event'}{/if}&nbsp;
-                        {if $event.privateicon}{img src='locked.png' modname='core' set='icons/extrasmall' __title="private event" __alt="private event"}{/if}
+                        {if $event.privateicon}{img src='lock.gif' modname='PostCalendar' __title="private event" __alt="private event"}{/if}
                         {pc_url full=true action='event' eid=$event.eid date=$date style="text-decoration: none;" display=$event.title|strip_tags}
                         {if $event.commentcount gt 0}
                             {gt text='%s comment left' plural='%s comments left.' count=$event.commentcount tag1=$event.commentcount domain="module_postcalendar" assign="title"}

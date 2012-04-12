@@ -7,3 +7,4 @@ TODO LIST
 - Needles are still a guess
 - move jquery plugins to core
 - comment and docblock code better
+- remove 'enable categorization' checks and require

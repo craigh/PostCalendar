@@ -48,42 +48,25 @@
                 {/if}
             </div>
             <div class="monthview_events">
-                {*sort the events by category so we can make it pretty*}
                 {pc_sort_events var="S_EVENTS" sort="time" order="asc" value=$eventsByDate}
-                {assign var="oldCat" value=""}
-                {assign var="javascript" value=""}
                 {if isset($S_EVENTS)}
                 {foreach name='events' item='event' from=$S_EVENTS.$date}
-                    {assign var="cCat" value=$event.catname}
-                    {if $oldCat != $cCat}
-                        {if $smarty.foreach.events.first != true}
-                            </div>
-                        {/if}
-                        <div style="padding: 1px; color: {$event.cattextcolor}; background-color: {$event.catcolor};">
-                            {$event.catname}
-                        </div>
-                        <div style="padding: 2px; border:solid 1px {$event.catcolor};">
-                    {/if}
+                    <div class='pccategories_{$event.catid}'>
                     {assign var="title" value=$event.title|strip_tags}
                     {if $event.alldayevent != true}
                         {assign var="timestamp" value=$event.startTime}
                     {else}
                         {assign var="timestamp" value=""}
                     {/if}
-
                     {assign var="desc" value=$event.hometext|notifyfilters:'postcalendar.hook.eventsfilter.ui.filter'|safehtml|truncate:255:"..."}
-                    {if $event.privateicon}{img src='locked.png' modname='core' set='icons/extrasmall' __title="private event" __alt="private event"}{/if}
+                    {if $event.privateicon}{img src='lock.gif' modname='PostCalendar' __title="private event" __alt="private event"}{/if}
                     {pc_url full=true action='event' eid=$event.eid date=$date style="font-size: 7pt; text-decoration: none;" title=$event.hometext|notifyfilters:'postcalendar.hook.eventsfilter.ui.filter'|safehtml display="$timestamp $title"|safehtml}
                     {if $event.commentcount gt 0}
                         {gt text='%s comment left' plural='%s comments left.' count=$event.commentcount tag1=$event.commentcount domain="module_postcalendar" assign="title"}
                         <a href="{modurl modname='PostCalendar' type='user' func='display' viewtype='event' eid=$event.eid}#comments" title='{$title}'>
                         {img modname='core' src='comment.png' set='icons/extrasmall' __alt="Comment" title=$title}</a>
                     {/if}
-                    <br />
-                    {assign var="oldCat" value=$event.catname}
-                    {if $smarty.foreach.events.last}
-                        </div>
-                    {/if}
+                    </div>
                 {/foreach}
                 {/if}
             </div>

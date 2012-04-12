@@ -393,6 +393,7 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
 
         // compensate for changeover to new categories system
         $lang = ZLanguage::getLanguageCode();
+        $event['catid']        = $event['categories']['Main']['id'];
         $event['catname']      = isset($event['categories']['Main']['display_name'][$lang]) ? $event['categories']['Main']['display_name'][$lang] : $event['categories']['Main']['name'];
         $event['catcolor']     = isset($event['categories']['Main']['attributes']['color'])     ? $event['categories']['Main']['attributes']['color']     : '#eeeeee';
         $event['cattextcolor'] = isset($event['categories']['Main']['attributes']['textcolor']) ? $event['categories']['Main']['attributes']['textcolor'] : $this->color_inverse($event['catcolor']);
