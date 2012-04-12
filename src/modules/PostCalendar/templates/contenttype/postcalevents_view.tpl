@@ -21,7 +21,7 @@
                 {/if}
                 <li class="pc_blockevent">
                     {gt text='private event' assign='p_txt' domain='module_postcalendar'}
-                    {if $event.privateicon}{img src='locked.png' modname='core' set='icons/extrasmall' title=$p_txt alt=$p_txt}{/if}
+                    {if $event.privateicon}{img src='lock.gif' modname='PostCalendar' title=$p_txt alt=$p_txt}{/if}
                     {pc_url full=true class="eventlink" action="event" eid=$event.eid date=$date title=$event.hometext|notifyfilters:'postcalendar.hook.eventsfilter.ui.filter'|safehtml display="$timestamp `$event.title`"|strip_tags}
                     {if $event.alldayevent != true}&nbsp;({gt text='until' domain="module_postcalendar"} {$event.endTime}){/if}
                     {if $event.commentcount gt 0}

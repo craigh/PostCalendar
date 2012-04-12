@@ -13,7 +13,7 @@
 {/if}
 <h2 class="eventheader">
     {gt text='private event' assign='p_txt' domain='module_postcalendar'}
-    {if $loaded_event.privateicon}{img src='locked.png' modname='core' set='icons/extrasmall' title=$p_txt alt=$p_txt}{/if}
+    {if $loaded_event.privateicon}{img src='lock.gif' modname='PostCalendar' title=$p_txt alt=$p_txt}{/if}
     {$loaded_event.title|safehtml}
     <a href="{modurl modname='PostCalendar' type='user' func='display' viewtype='event' eid=$loaded_event.eid}" title='{gt text='Full event information' domain="module_postcalendar"}'>
     {gt text='Full event information' assign='title' domain='module_postcalendar'}{gt text='Info' assign='alt' domain='module_postcalendar'}
