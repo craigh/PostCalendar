@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package     PostCalendar
  * @copyright   Copyright (c) 2002, The PostCalendar Team
@@ -47,35 +48,35 @@ function smarty_function_pc_filter($args, Zikula_View $view)
     $uid = UserUtil::getVar('uid');
     $uid = empty($uid) ? 1 : $uid;
     $ingroup = $allowedgroup > 0 ? ModUtil::apiFunc('Groups', 'user', 'isgroupmember', array(
-        'uid' => $uid,
-        'gid' => $allowedgroup)) : false;
+                'uid' => $uid,
+                'gid' => $allowedgroup)) : false;
     $useroptions = "";
 
     if ($ingroup || ($allowedgroup && IS_ADMIN)) {
         if (in_array('user', $types)) {
             //define array of filter options
             $filteroptions = array(
-                PostCalendar_Entity_Repository_CalendarEventRepository::FILTER_GLOBAL  => __('Global Events', $dom) . " " . __('Only', $dom),
+                PostCalendar_Entity_Repository_CalendarEventRepository::FILTER_GLOBAL => __('Global Events', $dom) . " " . __('Only', $dom),
                 PostCalendar_Entity_Repository_CalendarEventRepository::FILTER_PRIVATE => __('My Events', $dom) . " " . __('Only', $dom),
-                PostCalendar_Entity_Repository_CalendarEventRepository::FILTER_ALL     => __('Global Events', $dom) . " + " . __('My Events', $dom));
+                PostCalendar_Entity_Repository_CalendarEventRepository::FILTER_ALL => __('Global Events', $dom) . " + " . __('My Events', $dom));
             // if user is admin, add list of users in allowed group
             if (IS_ADMIN) {
                 $group = ModUtil::apiFunc('Groups', 'user', 'get', array(
-                    'gid' => $allowedgroup));
+                            'gid' => $allowedgroup));
                 $users = array();
                 foreach ($group['members'] as $uid => $uarray) {
                     $users[$uid] = UserUtil::getVar('uname', $uid);
-               }
+                }
                 $filteroptions = $filteroptions + $users;
-           }
+            }
             // generate html for selectbox - should move this to the template...
             $useroptions = "<select name='pc_username' $class>";
             foreach ($filteroptions as $k => $v) {
                 $sel = ($userFilter == $k ? ' selected="selected"' : '');
                 $useroptions .= "<option value='$k'$sel$class>$v</option>";
-           }
+            }
             $useroptions .= '</select>';
-       }
+        }
     } else {
         // remove user from types array to force hidden input display below
         $key = array_search('user', $types);
@@ -128,7 +129,7 @@ function smarty_function_pc_filter($args, Zikula_View $view)
             foreach ($orderArray as $key => $old_order) {
                 if (!in_array($old_order, $newOrder)) {
                     array_push($newOrder, $orderArray[$key]);
-               }
+                }
             }
 
             $order = $newOrder;
