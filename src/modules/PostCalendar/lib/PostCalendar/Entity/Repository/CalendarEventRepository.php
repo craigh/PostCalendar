@@ -98,8 +98,8 @@ class PostCalendar_Entity_Repository_CalendarEventRepository extends EntityRepos
                         "AND a.sharing = ?8 ";
                 break;
             case self::FILTER_ALL: // show all public/global AND private events
-                $dql .= "AND (a.aid = ?7 " .
-                        "AND (a.sharing IN (?8, ?9))) ";
+                $dql .= "AND ((a.aid = ?7 AND a.sharing = ?8)" .
+                        "OR a.sharing = ?9) ";
                 break;
             case self::FILTER_GLOBAL: // show all public/global events
             default:
