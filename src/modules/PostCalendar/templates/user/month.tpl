@@ -51,7 +51,7 @@
                 {pc_sort_events var="S_EVENTS" sort="time" order="asc" value=$eventsByDate}
                 {if isset($S_EVENTS)}
                 {foreach name='events' item='event' from=$S_EVENTS.$date}
-                    <div class='pccategories_{$event.catid}'>
+                    <div class='pccategories_{$event.catid}{if $event.privateicon} pcviz_private{else} pcviz_global{/if}'>
                     {assign var="title" value=$event.title|strip_tags}
                     {if $event.alldayevent != true}
                         {assign var="timestamp" value=$event.startTime}

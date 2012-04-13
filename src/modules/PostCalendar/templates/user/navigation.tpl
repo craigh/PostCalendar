@@ -56,4 +56,11 @@
         {/foreach}
     {/foreach}
     </ul>
+    {checkgroup gid=$modvars.PostCalendar.pcAllowUserCalendar}
+    <h5>{gt text='Visibility'}</h5>
+    <ul>
+        <li class='pcvisibility_selector' id='pcviz_private'>{gt text='Private events'}</li>
+        <li class='pcvisibility_selector' id='pcviz_global'>{gt text='Global events'}</li>
+    </ul>
+    {/checkgroup}
 </div>

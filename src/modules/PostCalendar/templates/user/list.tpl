@@ -25,7 +25,7 @@
     {if $modvars.PostCalendar.pcEventsOpenInNewWindow eq false}onclick="window.location.href='{pc_url action=day date=$date}';"{/if}>
     {foreach name='events' item='event' from=$S_EVENTS.$date}
         {if $smarty.foreach.events.first eq true}<li class="dayheader" style='margin-top: .5em;'>{$date|pc_date_format}</li>{/if}
-        <li class="eventslistitems pccategories_{$event.catid}">
+        <li class="eventslistitems pccategories_{$event.catid}{if $event.privateicon} pcviz_private{else} pcviz_global{/if}">
             {if $event.alldayevent != true}{$event.startTime} - {$event.endTime}{else}{gt text='All-day event'}{/if}&nbsp;
             {if $event.privateicon}{img src='lock.gif' modname='PostCalendar' __title="private event" __alt="private event"}{/if}
             {pc_url full=true action='event' eid=$event.eid date=$date style="text-decoration: none;" display=$event.title|strip_tags}

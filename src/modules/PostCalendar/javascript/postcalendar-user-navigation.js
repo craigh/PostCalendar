@@ -46,4 +46,14 @@ jQuery(document).ready(function() {
     }, function() {
         jQuery(this).fadeTo(0, 1);
     });
+    jQuery('.pcvisibility_selector').click(function() {
+        var vizid = jQuery(this).attr('id');
+        jQuery('.'+vizid).toggle();
+        jQuery(this).show();
+    });
+    jQuery('.pcvisibility_selector').toggle(function() {
+        jQuery(this).fadeTo(0, 0.3);
+    }, function() {
+        jQuery(this).fadeTo(0, 1);
+    });
 });

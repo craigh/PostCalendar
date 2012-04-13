@@ -10,3 +10,4 @@ TODO LIST
 - remove 'enable categorization' checks and require
 - rename pc_username to userFilter
 - replace prototype/livepipe use with jquery (tooltips, popup, category multiselect?)
+- make a navigation sideblock
