@@ -8,3 +8,5 @@ TODO LIST
 - move jquery plugins to core
 - comment and docblock code better
 - remove 'enable categorization' checks and require
+- rename pc_username to userFilter
+- replace prototype/livepipe use with jquery (tooltips, popup, category multiselect?)
