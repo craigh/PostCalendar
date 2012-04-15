@@ -21,15 +21,15 @@ class PostCalendar_CalendarView_Year extends PostCalendar_CalendarView_AbstractD
     {
         $this->template = 'user/year.tpl';
     }
-    
+
     protected function setDates()
     {
         $this->startDate = clone $this->requestedDate;
         $this->startDate
-             ->modify("first day of January");
+                ->modify("first day of January");
         $this->endDate = clone $this->startDate;
         $this->endDate
-             ->modify("+1 year");  
+                ->modify("+1 year");
 
         $dayAdjustmentMap = array(self::SUNDAY_IS_FIRST => null,
             self::MONDAY_IS_FIRST => '-1',
@@ -90,16 +90,34 @@ class PostCalendar_CalendarView_Year extends PostCalendar_CalendarView_AbstractD
                     'filtercats' => $this->selectedCategories));
     }
 
+    protected function getNavBarConfig()
+    {
+        $parentSettings = parent::getNavBarConfig();
+        $newArray = array();
+        if (isset($parentSettings['navbartype'])) {
+            $newArray['navbartype'] = $parentSettings['navbartype'];
+        }
+        if (isset($parentSettings['jumpdate'])) {
+            $newArray['jumpdate'] = $parentSettings['jumpdate'];
+        }
+        if (isset($parentSettings['navbar'])) {
+            $newArray['navbar'] = $parentSettings['navbar'];
+        }
+        // hide filter in year view
+        $newArray['filter'] = false;
+        return $newArray;
+    }
+
     public function render()
     {
         if (!$this->isCached()) {
             // Load the events
             $eventsByDate = ModUtil::apiFunc('PostCalendar', 'event', 'getEvents', array(
-                'start'       => $this->startDate,
-                'end'         => $this->endDate,
-                'filtercats'  => $this->selectedCategories,
-                'date'        => $this->requestedDate,
-                'pc_username' => $this->userFilter));
+                        'start' => $this->startDate,
+                        'end' => $this->endDate,
+                        'filtercats' => $this->selectedCategories,
+                        'date' => $this->requestedDate,
+                        'pc_username' => $this->userFilter));
             // create and return template
             $this->view
                     ->assign('navBar', $this->navBar)
