@@ -39,7 +39,7 @@ function smarty_function_pc_filter($args, Zikula_View $view)
     } else {
         $filterdefault = PostCalendar_Entity_Repository_CalendarEventRepository::FILTER_GLOBAL;
     }
-    $userFilter = isset($args['userfilter']) ? $args['userfilter'] : $filterdefault;
+    $userFilter = isset($args['userfilter']) && !empty($args['userFilter']) ? $args['userfilter'] : $filterdefault;
     if (!UserUtil::isLoggedIn()) {
         $userFilter = PostCalendar_Entity_Repository_CalendarEventRepository::FILTER_GLOBAL;
     }
@@ -72,7 +72,7 @@ function smarty_function_pc_filter($args, Zikula_View $view)
             // generate html for selectbox - should move this to the template...
             $useroptions = "<select name='pc_username' $class>";
             foreach ($filteroptions as $k => $v) {
-                $sel = ($userFilter == $k ? ' selected="selected"' : '');
+                $sel = ($userFilter == $k) ? ' selected="selected"' : '';
                 $useroptions .= "<option value='$k'$sel$class>$v</option>";
             }
             $useroptions .= '</select>';
