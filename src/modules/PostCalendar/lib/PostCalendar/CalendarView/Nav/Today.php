@@ -23,7 +23,7 @@ class PostCalendar_CalendarView_Nav_Today extends PostCalendar_CalendarView_Nav_
 
     protected function setAnchorTag()
     {
-        if ($this->date <> $this->today) {
+        if (($this->date <> $this->today) && ($this->viewtype <> 'event')) {
             $this->date = clone $this->today;
             parent::setUrl(); // reset with new date
             parent::setAnchorTag();
@@ -34,7 +34,7 @@ class PostCalendar_CalendarView_Nav_Today extends PostCalendar_CalendarView_Nav_
 
     protected function setRadio()
     {
-        if ($this->date <> $this->today) {
+        if (($this->date <> $this->today) && ($this->viewtype <> 'event')) {
             $this->date = clone $this->today;
             parent::setUrl(); // reset with new date
             parent::setRadio();
