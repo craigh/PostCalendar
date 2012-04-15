@@ -15,11 +15,13 @@ function smarty_function_jquery_datepicker($params, Zikula_View $view)
     $lang = (isset($params['lang'])) ? $params['lang'] : ZLanguage::getLanguageCode();
     $submitOnSelect = (isset($params['submitonselect']) && ($params['submitonselect'])) ? 'true' : 'false';
     
-
     $modVars = $view->get_template_vars('modvars');
     $userFormat = $modVars['PostCalendar']['pcDateFormats']['date'];
     $dateDisplayFormat = $modVars['PostCalendar']['pcDateFormats']['javascript'];
 
+    $minDateValue = ($minDate instanceof DateTime) ? $minDate->format($userFormat) : $minDate;
+    $maxDateValue = ($maxDate instanceof DateTime) ? $maxDate->format($userFormat) : $maxDate;
+        
     PageUtil::addVar("javascript", "jquery");
     PageUtil::addVar("javascript", "modules/PostCalendar/javascript/jquery-ui/jquery-ui-1.8.18.custom.min.js");
     PageUtil::addVar("javascript", "modules/PostCalendar/javascript/postcalendar-function-updatefields.js");
@@ -38,11 +40,11 @@ function smarty_function_jquery_datepicker($params, Zikula_View $view)
                 defaultDate: '{$defaultDate->format($userFormat)}',";
     if (isset($minDate)) {
         $javascript .= "
-                minDate: '{$minDate->format($userFormat)}',";
+                minDate: '$minDateValue',";
     }
     if (isset($maxDate)) {
         $javascript .= "
-                maxDate: '{$maxDate->format($userFormat)}',";
+                maxDate: '$maxDateValue',";
     }
     $javascript .= "
                 altField: '#$valueStorageElement',
