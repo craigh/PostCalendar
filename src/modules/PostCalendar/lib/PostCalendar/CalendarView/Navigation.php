@@ -74,6 +74,19 @@ class PostCalendar_CalendarView_Navigation
             $jQueryTheme = 'overcast';
             PageUtil::addVar("stylesheet", "modules/PostCalendar/style/$jQueryTheme/jquery-ui.css");
             PageUtil::addVar("stylesheet", "modules/PostCalendar/style/jquery-overrides.css");
+            $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'CalendarEvent');
+            $categories = array();
+            // generate css classnames for each category
+            $stylesheet = "<style type='text/css'>\n";
+            foreach ($catregistry as $regname => $catid) {
+                $categories[$regname] = CategoryUtil::getSubCategories($catid);
+                foreach ($categories[$regname] as $category) {
+                    $stylesheet .= ".pccategories_{$category['id']},.pccategories_selector_{$category['id']}{background-color: {$category['__ATTRIBUTES__']['color']};}\n";
+                }
+            }
+            $stylesheet .= "</style>\n";
+            PageUtil::addVar('header', $stylesheet);
+            $this->view->assign('pcCategories', $categories);
         }
         $this->view->assign('navigationObj', $this);
         return $this->view->fetch($this->template);

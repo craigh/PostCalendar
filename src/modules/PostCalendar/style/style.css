@@ -113,6 +113,9 @@ table.postcalendar_month col.pcWeekend {
 }
 
 /*********** NAV **************/
+#pcnav_buttonbar {
+    text-align: right;
+}
 #postcalendar_nav_right,
 #postcalendar_nav_left {
 	border: none;

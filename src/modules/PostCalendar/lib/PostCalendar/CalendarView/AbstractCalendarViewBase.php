@@ -94,8 +94,7 @@ abstract class PostCalendar_CalendarView_AbstractCalendarViewBase extends Zikula
     protected function getNavBarConfig()
     {
         return array(
-            'navbartype' => 'buttonbar',
-            'jumpdate' => false);
+            'navbartype' => 'buttonbar');
     }
 
     protected function isCached($template = null)

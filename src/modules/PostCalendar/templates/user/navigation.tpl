@@ -2,26 +2,31 @@
 {pc_queued_events_notify}
 <form action="{modurl modname='PostCalendar' type='user' func='display'}" id='pcnav-form' method="post" enctype="application/x-www-form-urlencoded">
 <div class="z-clearfix">
+    {if $navigationObj->navBarType == 'buttonbar'}
+    <div id="pcnav_buttonbar">
+        {if $navigationObj->useFilter}
+        <input type='text' readonly="readonly" id='pcnav_filterpicker' name='pcnav_filterpicker' value='{gt text='inactive'}' />
+        <input id="pcnav_filterpicker_button" type="image" alt="filter" title='filter categories' src='images/icons/extrasmall/filter.png' />
+        {/if}
+        {if $navigationObj->useJumpDate}
+        {assign value='overcast' var='jquerytheme'}
+        {jquery_datepicker defaultdate=$navigationObj->requestedDate displayelement='pcnav_datepicker' valuestorageelement='date' valuestorageformat='Ymd' theme=$jquerytheme submitonselect=true}
+        <input id="pcnav_datepicker_button" type="image" alt="jump" title='jump to date' src='modules/PostCalendar/images/icon-calendar.jpg' />
+        {/if}
+        {if $navigationObj->useNavBar}
+        {foreach from=$navigationObj->getNavItems() item='navItem'}
+            {$navItem->renderRadio()}
+        {/foreach}
+        {/if}
+    </div>
+    {else}{*else if $navigationObj->navBarType != 'buttonbar'*}
     {if $navigationObj->useNavBar}
     <div id="postcalendar_nav_right">
-        {if $navigationObj->navBarType == 'buttonbar'}
-        <div id="pcnav_buttonbar">
-            <input type='text' readonly="readonly" id='pcnav_filterpicker' name='pcnav_filterpicker' value='{gt text='inactive'}' />
-            <input id="pcnav_filterpicker_button" type="image" alt="filter" title='filter categories' src='images/icons/extrasmall/filter.png' />
-            {assign value='overcast' var='jquerytheme'}
-            {jquery_datepicker defaultdate=$navigationObj->requestedDate displayelement='pcnav_datepicker' valuestorageelement='date' valuestorageformat='Ymd' theme=$jquerytheme submitonselect=true}
-            <input id="pcnav_datepicker_button" type="image" alt="jump" title='jump to date' src='modules/PostCalendar/images/icon-calendar.jpg' />
-            {foreach from=$navigationObj->getNavItems() item='navItem'}
-                {$navItem->renderRadio()}
-            {/foreach}
-        </div>
-        {else}
         <ul>
             {foreach from=$navigationObj->getNavItems() item='navItem'}
             <li>{$navItem->renderAnchorTag()|safehtml}</li>
             {/foreach}    
         </ul>
-        {/if}
     </div>
     {/if}
     {if $navigationObj->useFilter || $navigationObj->useJumpDate}
@@ -43,10 +48,11 @@
         </ul>
     </div>
     {/if}
+    {/if}{*end if $navigationObj->navBarType == 'buttonbar'*}
 </div>
 </form>
-{$pcCategoryStylesheet}
 <div>{insert name="getstatusmsg"}</div>
+<!-- This is a pop up dialog box -->
 <div id='pcnav_filterpicker_dialog' title='{gt text='Filter view'}'>
     <h5>{gt text='Categories'}</h5>
     <ul>
@@ -64,3 +70,4 @@
     </ul>
     {/checkgroup}
 </div>
+<!-- end dialog -->

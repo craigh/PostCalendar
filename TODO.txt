@@ -1,5 +1,6 @@
 TODO LIST
 
+- 'today' button shouldn't be available in event view
 - new popup jquey nav with buttons
 - update docs
 - make submit form an object

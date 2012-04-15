@@ -87,18 +87,6 @@ function smarty_function_pc_filter($args, Zikula_View $view)
     //================================================================
     if (in_array('category', $types) && $modVars['PostCalendar']['pcAllowCatFilter'] && $modVars['PostCalendar']['enablecategorization']) {
         $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'CalendarEvent');
-        $categories = array();
-        // generate css classnames for each category
-        $stylesheet = "<style type='text/css'>\n";
-        foreach ($catregistry as $regname => $catid) {
-            $categories[$regname] = CategoryUtil::getSubCategories($catid);
-            foreach ($categories[$regname] as $category) {
-                $stylesheet .= ".pccategories_{$category['id']},.pccategories_selector_{$category['id']}{background-color: {$category['__ATTRIBUTES__']['color']};}\n";
-            }
-        }
-        $stylesheet .= "</style>\n";
-        $view->assign('pcCategories', $categories);
-        $view->assign('pcCategoryStylesheet', $stylesheet);
         $view->assign('enablecategorization', $modVars['PostCalendar']['enablecategorization']);
         $view->assign('selectedcategories', $args['selectedCategories']);
         $view->assign('catregistry', $catregistry);
