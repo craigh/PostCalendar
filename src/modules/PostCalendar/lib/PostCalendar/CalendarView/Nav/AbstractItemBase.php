@@ -96,7 +96,7 @@ abstract class PostCalendar_CalendarView_Nav_AbstractItemBase
             'jumpyear' => $this->view->getRequest()->request->get('jumpYear', $this->view->getRequest()->query->get('jumpYear', null)));
         $this->date = PostCalendar_Util::getDate($jumpargs);
         $this->today = new DateTime();
-        $this->userFilter = $this->view->getRequest()->request->get('pc_username', $this->view->getRequest()->query->get('pc_username', null));
+        $this->userFilter = $this->view->getRequest()->request->get('userfilter', $this->view->getRequest()->query->get('userfilter', null));
         $this->useDisplayImage = (boolean)ModUtil::getVar('PostCalendar', 'enablenavimages');
         $this->usePopups = (boolean)ModUtil::getVar('PostCalendar', 'pcUsePopups');
         $this->openInNewWindow = (boolean)ModUtil::getVar('PostCalendar', 'pcEventsOpenInNewWindow');
@@ -144,7 +144,7 @@ abstract class PostCalendar_CalendarView_Nav_AbstractItemBase
         $this->url = new Zikula_ModUrl('PostCalendar', 'user', 'display', ZLanguage::getLanguageCode(), array(
                     'viewtype' => $this->viewtype,
                     'date' => $this->date->format('Ymd'),
-                    'pc_username' => $this->userFilter));
+                    'userfilter' => $this->userFilter));
     }
 
     protected function setAnchorTag()

@@ -89,7 +89,7 @@ class PostCalendar_CalendarView_CalendarBlock extends PostCalendar_CalendarView_
                     'end' => $this->endDate,
                     'filtercats' => $this->selectedCategories,
                     'date' => $this->requestedDate,
-                    'pc_username' => $this->userFilter));
+                    'userfilter' => $this->userFilter));
         // create and return template
         $today = new DateTime();
         $countTodaysEvents = count($eventsByDate[$today->format('Y-m-d')]);

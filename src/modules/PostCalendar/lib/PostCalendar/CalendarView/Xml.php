@@ -26,7 +26,7 @@ class PostCalendar_CalendarView_Xml extends PostCalendar_CalendarView_List
         $this->navigation['previous'] = ModUtil::url('PostCalendar', 'user', 'display', array(
                     'viewtype' => $this->viewtype,
                     'date' => $prevClone->format('Ymd'),
-                    'pc_username' => $this->userFilter,
+                    'userfilter' => $this->userFilter,
                     'filtercats' => $this->selectedCategories));
         $nextClone = clone $this->requestedDate;
         $nextClone->modify("+" . $this->listMonths . " months")
@@ -34,7 +34,7 @@ class PostCalendar_CalendarView_Xml extends PostCalendar_CalendarView_List
         $this->navigation['next'] = ModUtil::url('PostCalendar', 'user', 'display', array(
                     'viewtype' => $this->viewtype,
                     'date' => $nextClone->format('Ymd'),
-                    'pc_username' => $this->userFilter,
+                    'userfilter' => $this->userFilter,
                     'filtercats' => $this->selectedCategories));
     }
 }

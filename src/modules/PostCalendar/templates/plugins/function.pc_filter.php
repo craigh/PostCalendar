@@ -70,7 +70,7 @@ function smarty_function_pc_filter($args, Zikula_View $view)
                 $filteroptions = $filteroptions + $users;
             }
             // generate html for selectbox - should move this to the template...
-            $useroptions = "<select name='pc_username' $class>";
+            $useroptions = "<select name='userfilter' $class>";
             foreach ($filteroptions as $k => $v) {
                 $sel = ($userFilter == $k) ? ' selected="selected"' : '';
                 $useroptions .= "<option value='$k'$sel$class>$v</option>";
@@ -131,7 +131,7 @@ function smarty_function_pc_filter($args, Zikula_View $view)
     }
 
     if (!in_array('user', $types)) {
-        $ret_val .= "<input type='hidden' name='pc_username' value='$userFilter' />";
+        $ret_val .= "<input type='hidden' name='userfilter' value='$userFilter' />";
     }
 
     if (isset($args['assign'])) {

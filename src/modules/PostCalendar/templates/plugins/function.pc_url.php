@@ -33,7 +33,7 @@ function smarty_function_pc_url($args, Zikula_View $view)
     unset($args['title']);
     unset($args['viewtype']);
     
-    $pc_username = $request->request->get('pc_username', $request->query->get('pc_username', null));
+    $userFilter = $request->request->get('userfilter', $request->query->get('userfilter', null));
 
     if (is_null($date)) {
         $jumpargs = array(
@@ -57,7 +57,7 @@ function smarty_function_pc_url($args, Zikula_View $view)
             $link = ModUtil::url('PostCalendar', 'user', 'display', array(
                         'viewtype' => $action,
                         'date' => $date->format('Ymd'),
-                        'pc_username' => $pc_username));
+                        'userfilter' => $userFilter));
             break;
         case 'event':
             if (isset($eid)) {

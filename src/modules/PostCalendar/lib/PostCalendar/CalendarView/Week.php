@@ -52,14 +52,14 @@ class PostCalendar_CalendarView_Week extends PostCalendar_CalendarView_AbstractD
         $this->navigation['previous'] = ModUtil::url('PostCalendar', 'user', 'display', array(
                     'viewtype' => $this->viewtype,
                     'date' => $prevClone->format('Ymd'),
-                    'pc_username' => $this->userFilter,
+                    'userfilter' => $this->userFilter,
                     'filtercats' => $this->selectedCategories));
         $nextClone = clone $this->requestedDate;
         $nextClone->modify("next " . $this->dayMap[$this->firstDayOfWeek]);
         $this->navigation['next'] = ModUtil::url('PostCalendar', 'user', 'display', array(
                     'viewtype' => $this->viewtype,
                     'date' => $nextClone->format('Ymd'),
-                    'pc_username' => $this->userFilter,
+                    'userfilter' => $this->userFilter,
                     'filtercats' => $this->selectedCategories));
     }
 
@@ -72,7 +72,7 @@ class PostCalendar_CalendarView_Week extends PostCalendar_CalendarView_AbstractD
                 'end'         => clone $this->endDate,
                 'filtercats'  => $this->selectedCategories,
                 'date'        => $this->requestedDate,
-                'pc_username' => $this->userFilter));
+                'userfilter' => $this->userFilter));
             // create and return template
             $this->view
                     ->assign('navBar', $this->navBar)

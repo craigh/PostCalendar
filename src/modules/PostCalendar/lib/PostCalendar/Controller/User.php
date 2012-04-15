@@ -30,7 +30,7 @@ class PostCalendar_Controller_User extends Zikula_AbstractController
         $this->throwForbiddenUnless(SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_OVERVIEW), LogUtil::getErrorMsgPermission());
         $defaultView = $this->getVar('pcDefaultView');
         // get the vars that were passed in
-        $pc_username = $this->request->query->get('pc_username', $this->request->request->get('pc_username', ''));
+        $userFilter = $this->request->query->get('userfilter', $this->request->request->get('userfilter', ''));
         $eid = $this->request->query->get('eid', $this->request->request->get('eid', 0));
         $filtercats = $this->request->query->get('pc_categories', $this->request->request->get('pc_categories', null));
         $jumpargs = array(
@@ -66,7 +66,7 @@ class PostCalendar_Controller_User extends Zikula_AbstractController
             LogUtil::registerError($this->__('Attempting to view unauthorized viewtype.'));
             $class = 'PostCalendar_CalendarView_' . ucfirst($defaultView);
         }
-        $calendarView = new $class($this->view, $date, $pc_username, $filtercats, $eid);
+        $calendarView = new $class($this->view, $date, $userFilter, $filtercats, $eid);
         return $calendarView->render();
     }
 

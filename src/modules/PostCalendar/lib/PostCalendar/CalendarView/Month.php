@@ -59,14 +59,14 @@ class PostCalendar_CalendarView_Month extends PostCalendar_CalendarView_Abstract
         $this->navigation['previous'] = ModUtil::url('PostCalendar', 'user', 'display', array(
                     'viewtype' => $this->viewtype,
                     'date' => $prevClone->format('Ymd'),
-                    'pc_username' => $this->userFilter,
+                    'userfilter' => $this->userFilter,
                     'filtercats' => $this->selectedCategories));
         $nextClone = clone $this->requestedDate;
         $nextClone->modify("first day of next month");
         $this->navigation['next'] = ModUtil::url('PostCalendar', 'user', 'display', array(
                     'viewtype' => $this->viewtype,
                     'date' => $nextClone->format('Ymd'),
-                    'pc_username' => $this->userFilter,
+                    'userfilter' => $this->userFilter,
                     'filtercats' => $this->selectedCategories));
     }
 
@@ -79,7 +79,7 @@ class PostCalendar_CalendarView_Month extends PostCalendar_CalendarView_Abstract
                 'end'         => clone $this->endDate,
                 'filtercats'  => $this->selectedCategories,
                 'date'        => $this->requestedDate,
-                'pc_username' => $this->userFilter));
+                'userfilter' => $this->userFilter));
             // create and return template
             $firstClone = clone $this->requestedDate;
             $lastClone = clone $this->requestedDate;
