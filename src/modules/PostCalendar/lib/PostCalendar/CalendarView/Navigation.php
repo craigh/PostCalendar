@@ -67,6 +67,17 @@ class PostCalendar_CalendarView_Navigation
     public function render()
     {
         // caching shouldn't be used because the date and other filter settings may change
+        $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'CalendarEvent');
+        $categories = array();
+        // generate css classnames for each category
+        $stylesheet = "<style type='text/css'>\n";
+        foreach ($catregistry as $regname => $catid) {
+            $categories[$regname] = CategoryUtil::getSubCategories($catid);
+            foreach ($categories[$regname] as $category) {
+                $stylesheet .= ".pccategories_{$category['id']},.pccategories_selector_{$category['id']}{background-color: {$category['__ATTRIBUTES__']['color']};}\n";
+            }
+        }
+        $stylesheet .= "</style>\n";
         if ($this->navBarType == 'buttonbar') {
             PageUtil::addVar("javascript", "jquery");
             PageUtil::addVar("javascript", "modules/PostCalendar/javascript/jquery-ui/jquery-ui-1.8.18.custom.min.js");
@@ -74,20 +85,9 @@ class PostCalendar_CalendarView_Navigation
             $jQueryTheme = 'overcast';
             PageUtil::addVar("stylesheet", "modules/PostCalendar/style/$jQueryTheme/jquery-ui.css");
             PageUtil::addVar("stylesheet", "modules/PostCalendar/style/jquery-overrides.css");
-            $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'CalendarEvent');
-            $categories = array();
-            // generate css classnames for each category
-            $stylesheet = "<style type='text/css'>\n";
-            foreach ($catregistry as $regname => $catid) {
-                $categories[$regname] = CategoryUtil::getSubCategories($catid);
-                foreach ($categories[$regname] as $category) {
-                    $stylesheet .= ".pccategories_{$category['id']},.pccategories_selector_{$category['id']}{background-color: {$category['__ATTRIBUTES__']['color']};}\n";
-                }
-            }
-            $stylesheet .= "</style>\n";
-            PageUtil::addVar('header', $stylesheet);
             $this->view->assign('pcCategories', $categories);
         }
+        PageUtil::addVar('header', $stylesheet);
         $this->view->assign('navigationObj', $this);
         return $this->view->fetch($this->template);
     }
