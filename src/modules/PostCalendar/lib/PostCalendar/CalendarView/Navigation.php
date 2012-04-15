@@ -74,7 +74,10 @@ class PostCalendar_CalendarView_Navigation
         foreach ($catregistry as $regname => $catid) {
             $categories[$regname] = CategoryUtil::getSubCategories($catid);
             foreach ($categories[$regname] as $category) {
-                $stylesheet .= ".pccategories_{$category['id']},.pccategories_selector_{$category['id']}{background-color: {$category['__ATTRIBUTES__']['color']};}\n";
+                if (isset($category['__ATTRIBUTES__']['color'])) {
+                    $stylesheet .= ".pccategories_{$category['id']},\n.pccategories_selector_{$category['id']} {\n";
+                    $stylesheet .= "    background-color: {$category['__ATTRIBUTES__']['color']};\n}\n";
+                }
             }
         }
         $stylesheet .= "</style>\n";

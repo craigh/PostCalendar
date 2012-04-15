@@ -6,7 +6,6 @@ Item                       |Description
 ---------------------------|-----------
 Reset All...               |This resets all admin-definable options to the default settings
 ...Activated without review|Do not queue up event for admin approval
-Enable categorization...   |Allows categorization of events utilizing the Zikula Categories module
 ...Personal Calendars...   |Personal Calendars allow users to create events that only they can see. Choose a Zikula Group allowed to do so (or no group)
 
 #### Display Settings

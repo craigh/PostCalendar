@@ -45,7 +45,6 @@ class PostCalendar_Util
             'pcNotifyPending' => '1',
             'pcNavBarType' => 'buttonbar',
             'pcAllowCatFilter' => '1',
-            'enablecategorization' => '1',
             'enablenavimages' => '1',
             'enablelocations' => '0',
             'pcFilterYearStart' => 1,

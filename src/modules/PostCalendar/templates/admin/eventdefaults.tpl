@@ -40,8 +40,6 @@
             <label for="postcalendar_eventdefaults_fee">{gt text='Fee'}</label>
             <input style='margin-left: 1em;' type="text" name="postcalendar_eventdefaults[fee]" id="postcalendar_eventdefaults_fee" value="{$modvars.PostCalendar.pcEventDefaults.fee}" />
         </div>
-
-        {if $modvars.PostCalendar.enablecategorization}
 		<div class="z-formrow">
 			<label for="postcalendar_eventdefaults_categories">{gt text='Default categories'}</label>
                {gt text="No Default Category" assign="allText"}
@@ -61,7 +59,6 @@
                {/foreach}</span>
                {/nocache}
         </div>
-        {/if}
     </fieldset>
 
     <fieldset>

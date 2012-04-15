@@ -251,7 +251,6 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
             'pcListMonths' => abs((int)$this->request->request->get('pcListMonths', $defaults['pcListMonths'])),
             'pcNotifyAdmin2Admin' => $this->request->request->get('pcNotifyAdmin2Admin', 0),
             'pcAllowCatFilter' => $this->request->request->get('pcAllowCatFilter', 0),
-            'enablecategorization' => $this->request->request->get('enablecategorization', 0),
             'enablenavimages' => $this->request->request->get('enablenavimages', 0),
             'enablelocations' => $this->request->request->get('enablelocations', 0),
             'pcFilterYearStart' => abs((int)$this->request->request->get('pcFilterYearStart', $defaults['pcFilterYearStart'])), // ensures positive value

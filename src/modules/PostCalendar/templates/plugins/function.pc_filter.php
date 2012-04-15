@@ -85,9 +85,8 @@ function smarty_function_pc_filter($args, Zikula_View $view)
     //================================================================
     // build the category filter pulldown
     //================================================================
-    if (in_array('category', $types) && $modVars['PostCalendar']['pcAllowCatFilter'] && $modVars['PostCalendar']['enablecategorization']) {
+    if (in_array('category', $types) && $modVars['PostCalendar']['pcAllowCatFilter']) {
         $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'CalendarEvent');
-        $view->assign('enablecategorization', $modVars['PostCalendar']['enablecategorization']);
         $view->assign('selectedcategories', $args['selectedCategories']);
         $view->assign('catregistry', $catregistry);
         $catoptions = $view->fetch('event/filtercats.tpl', 1); // force one cachefile

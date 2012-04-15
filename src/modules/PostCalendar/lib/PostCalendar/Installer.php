@@ -102,6 +102,7 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
                 // remove pcNavDateOrder
                 // add pcDateFormats
                 // add pcNavBarType
+                // remove enablecategorization
             case '8.0.0':
                 //future development
         }

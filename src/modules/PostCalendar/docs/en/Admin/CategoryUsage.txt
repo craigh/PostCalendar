@@ -1,4 +1,8 @@
-## PostCalendar v7.0.0 Category Usage
+## PostCalendar v8.0.0 Category Usage
+
+### Categorization now required
+
+As of v8.0.0, PostCalendar now requires the use of categorization. All checks for 'enablecategorization' have been removed and it is assumed they are in use.
 
 ### Utilizing Categories in a New Installation of PostCalendar
 
@@ -10,7 +14,7 @@ If you wish to add more subcategories, you can do so easily using the Categories
 
 One may also create a new category and link it to PostCalendar. This will allow you to categorize PostCalendar events in multiple areas. Simply create a new Category, then using the categories registry, select the following values
 
-`PostCalendar | postcalendar_events | <choose a name> | <your new category name>`
+`PostCalendar | CalendarEvent | <choose a name> | <your new category name>`
 
 Be sure to create appropriate subcategories. PostCalendar will not associate colors with secondary (non 'Main') subcategories, so there is no need to create color attributes.
 
@@ -18,9 +22,7 @@ To remove a parent category from PostCalendar, simply delete the associated entr
 
 ### Using Colors in Categories
 
-One can assign colors for any category utilized in PostCalendar. This color is used to provide a visual cue to the user. Do so by creating a <span class="underline">color</span> attribute and give it a [hexadecimal value][link1] (including the hash symbol) e.g. '#cccccc'. If you do not assign a color to a category a default color of '#eeeeee' will be used.
-
-In addition, you can also assign a <span class="underline">textcolor</span> attribute for the category. Textcolors are optional. This color is used only for the text display of the category *name*. Do so by creating a <span class="underline">textcolor</span> attribute and give it a hexadecimal value (including the hash symbol) e.g. '#111111'. If you do not assign a textcolor to a category, a default value computed as the hexadecimal inverse will be used.
+One can assign colors for any category utilized in PostCalendar. This color is used to provide a visual cue to the user. Do so by creating a _color_ attribute and give it a [hexadecimal value][link1] (including the hash symbol) e.g. '#cccccc'. If you do not assign a color to a category a default color of '#eeeeee' will be used.
 
 *Note that the attribute names **must** be in English (as above).*
 
@@ -28,7 +30,7 @@ In addition, you can also assign a <span class="underline">textcolor</span> attr
 
 If you want to use the same categories in PostCalendar that you are using in other modules (the Global categories or another), you are free to do so. Create a new category registry entry with the following settings:
 
-`PostCalendar | postcalendar_events | Main | __SYSTEM__/Modules/Global`
+`PostCalendar | CalendarEvent | Main | __SYSTEM__/Modules/Global`
 
 *note: these settings assign the 'Main' property name to the global categories. If you do this, delete the old PostCalendar 'Main' reference or convert it to a secondary category.*
 Be sure to remember to add a 'color' attribute to each of the global categories to take advantage of that feature in PostCalendar.

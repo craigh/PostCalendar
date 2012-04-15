@@ -52,21 +52,17 @@ class PostCalendar_ContentType_PostCalEvents extends Content_AbstractContentType
     }
 
     public function startEditing() {
-        $enablecategorization = ModUtil::getVar('PostCalendar', 'enablecategorization');
-        if ($enablecategorization) {
-            $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'CalendarEvent');
-            $this->view->assign('catregistry', $catregistry);
-        }
+        $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'CalendarEvent');
+        $this->view->assign('catregistry', $catregistry);
 
         return;
     }
 
     public function displayEditing() {
-        $enablecategorization = ModUtil::getVar('PostCalendar', 'enablecategorization');
         $cats = array();
         $output = '';
         $lang = ZLanguage::getLanguageCode();
-        if ($enablecategorization && $this->categories) {
+        if ($this->categories) {
             foreach ($this->categories['Main'] as $id) {
                 $thiscat = CategoryUtil::getCategoryByID($id);
                 $cats[]  = isset($thiscat['display_name'][$lang]) ? $thiscat['display_name'][$lang] : $thiscat['name'];

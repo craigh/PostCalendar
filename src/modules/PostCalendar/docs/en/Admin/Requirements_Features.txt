@@ -4,7 +4,7 @@ PostCalendar is a standard calendar module for Zikula with multiple views, priva
 
 #### Software Requirements
 
-*   Zikula >= 1.3
+*   Zikula >= 1.3.3
 *   php 5.3+
 
 #### Features

@@ -19,10 +19,6 @@
 			<input type="checkbox" value="1" id="pcAllowDirectSubmit" name="pcAllowDirectSubmit"{if $modvars.PostCalendar.pcAllowDirectSubmit eq true} checked="checked"{/if}/>
         </div>
 		<div class="z-formrow">
-			<label for="enablecategorization">{gt text='Enable categorization of events'}</label>
-			<input type="checkbox" value="1" id="enablecategorization" name="enablecategorization"{if $modvars.PostCalendar.enablecategorization eq true} checked="checked"{/if}/>
-		</div>
-		<div class="z-formrow">
 			<label for="pcAllowUserCalendar">{gt text='Group allowed to publish personal calendars'}</label>
             {gt text="No group" assign="nogroup"}
 			<span>{selector_group selectedValue=$modvars.PostCalendar.pcAllowUserCalendar defaultValue=0 allValue=0 allText=$nogroup name="pcAllowUserCalendar" id="pcAllowUserCalendar"}

@@ -97,7 +97,6 @@
             </div>
         </div>
 
-        {if $modvars.PostCalendar.enablecategorization}
         <div class="z-formrow">
             <label for='postcalendar_events_categories_selector'>{gt text='Category' plural="Categories" count=$cat_count}</label>
             {nocache}
@@ -117,7 +116,6 @@
             </span>
             {/nocache}
         </div>
-        {/if}
 
         <div class="z-formrow">
             <label for="description">{gt text='Description'}</label>
