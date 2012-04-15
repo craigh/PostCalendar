@@ -162,7 +162,7 @@ a.postcalendar_nav_text_selected:hover {
 	text-decoration: none;
 }
 #pcnav_datepicker,
-#pcnav_categoryfilter {
+#pcnav_filterpicker {
     background: url("images/ui-bg_glass_60_eeeeee_1x400.png") repeat-x scroll 50% 50% #EEEEEE;
     border: 1px solid #CCCCCC;
     border-right: 0;
@@ -174,8 +174,11 @@ a.postcalendar_nav_text_selected:hover {
     border-bottom-left-radius: 6px;
     border-top-left-radius: 6px;
 }
+#pcnav_filterpicker {
+    width: 5em;
+}
 #pcnav_datepicker_button,
-#pcnav_categoryfilter_button {
+#pcnav_filterpicker_button {
     background-image: -moz-linear-gradient(center top , #FAFAFA 0%, #E5E5E5 100%);
     border: 1px solid #CCCCCC;
     padding: 5px;
@@ -188,11 +191,11 @@ a.postcalendar_nav_text_selected:hover {
     margin-right: .8em;
 }
 #pcnav_datepicker_button:hover,
-#pcnav_categoryfilter_button:hover {
+#pcnav_filterpicker_button:hover {
     background-color: #FFFFFF;
     background-image: -moz-linear-gradient(center top , #E5E5E5 0%, #FAFAFA 100%);
 }
-#pccategorypicker {
+#pcnav_filterpicker_dialog {
     text-align: left;
     cursor:pointer;
 }

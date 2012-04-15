@@ -93,7 +93,7 @@ function smarty_function_pc_filter($args, Zikula_View $view)
         foreach ($catregistry as $regname => $catid) {
             $categories[$regname] = CategoryUtil::getSubCategories($catid);
             foreach ($categories[$regname] as $category) {
-                $stylesheet .= ".pccategories_{$category['id']}{background-color: {$category['__ATTRIBUTES__']['color']};}\n";
+                $stylesheet .= ".pccategories_{$category['id']},.pccategories_selector_{$category['id']}{background-color: {$category['__ATTRIBUTES__']['color']};}\n";
             }
         }
         $stylesheet .= "</style>\n";
