@@ -94,7 +94,7 @@ abstract class PostCalendar_CalendarView_AbstractCalendarViewBase extends Zikula
     protected function getNavBarConfig()
     {
         return array(
-            'navbartype' => 'buttonbar');
+            'navbartype' => ModUtil::getVar('PostCalendar', 'pcNavBarType'));
     }
 
     protected function isCached($template = null)

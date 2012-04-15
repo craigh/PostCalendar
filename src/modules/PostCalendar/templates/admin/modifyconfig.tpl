@@ -27,6 +27,7 @@
             {gt text="No group" assign="nogroup"}
 			<span>{selector_group selectedValue=$modvars.PostCalendar.pcAllowUserCalendar defaultValue=0 allValue=0 allText=$nogroup name="pcAllowUserCalendar" id="pcAllowUserCalendar"}
                 &nbsp;&nbsp;<a href="{modurl modname="Groups" type="admin" func="view"}">{img src='xedit.png' modname='core' set='icons/extrasmall' __title="Edit groups" __alt="Edit groups"}</a></span>
+                <em class="z-formnote z-sub">{gt text="Adds selector to filter in navigation bar."}</em>
 		</div>
     </fieldset>
 	<fieldset>
@@ -115,6 +116,23 @@
 			<label for="pcListMonths">{gt text='Number of months to display in list/rss view'}</label>
 			<span><input type="text" size="3" maxlength="3" value="{$modvars.PostCalendar.pcListMonths}" id="pcListMonths" name="pcListMonths" /></span>
 		</div>
+        {modavailable modname="Locations" assign="locationsAvailable"}
+        {if $locationsAvailable}
+        <div class="z-formrow">
+			<label for="enablelocations">{gt text='Enable Locations for PostCalendar'}</label>
+			<input type="checkbox" value="1" id="enablelocations" name="enablelocations"{if $modvars.PostCalendar.enablelocations eq true} checked="checked"{/if}/>
+		</div>
+        {/if}
+    </fieldset>
+	<fieldset>
+        <legend>{gt text='Navigation display settings'}</legend>
+		<div class="z-formrow">
+			<label for="pcNavBarType">{gt text='Navigation bar type'}</label>
+			<span><select size="1" id="pcNavBarType" name="pcNavBarType">
+				<option value="buttonbar"{if $modvars.PostCalendar.pcNavBarType eq 'buttonbar'} selected="selected"{/if}>{gt text='jQuery Button Bar'}</option>
+				<option value="plain"{if $modvars.PostCalendar.pcNavBarType eq 'plain'} selected="selected"{/if}>{gt text='Plain text or images'}</option>
+				</select></span>
+		</div>
 		<div class="z-formrow">
 			<label for="pcAllowCatFilter">{gt text='Allow users to filter event display by category'}</label>
 			<input type="checkbox" value="1" id="pcAllowCatFilter" name="pcAllowCatFilter"{if $modvars.PostCalendar.pcAllowCatFilter eq true} checked="checked"{/if}/>
@@ -133,13 +151,6 @@
 			<label for="enablenavimages">{gt text='Enable images in navigation header'}</label>
 			<input type="checkbox" value="1" id="enablenavimages" name="enablenavimages"{if $modvars.PostCalendar.enablenavimages eq true} checked="checked"{/if}/>
 		</div>
-        {modavailable modname="Locations" assign="locationsAvailable"}
-        {if $locationsAvailable}
-        <div class="z-formrow">
-			<label for="enablelocations">{gt text='Enable Locations for PostCalendar'}</label>
-			<input type="checkbox" value="1" id="enablelocations" name="enablelocations"{if $modvars.PostCalendar.enablelocations eq true} checked="checked"{/if}/>
-		</div>
-        {/if}
     </fieldset>
 	<fieldset>
         <legend>{gt text='Notification settings'}</legend>

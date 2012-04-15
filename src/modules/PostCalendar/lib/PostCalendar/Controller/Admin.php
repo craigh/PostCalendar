@@ -258,8 +258,9 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
             'pcFilterYearEnd' => abs((int)$this->request->request->get('pcFilterYearEnd', $defaults['pcFilterYearEnd'])), // ensures positive value
             'pcNotifyPending' => $this->request->request->get('pcNotifyPending', 0),
             'pcAllowedViews' => $this->request->request->get('pcAllowedViews', $defaults['pcAllowedViews']),
+            'pcNavBarType' => $this->request->request->get('pcNavBarType', $defaults['pcNavBarType']),
         );
-        // set pcDafeFormats
+        // set pcDateFormats
         if ($settings['pcEventDateFormat'] <> "-1") {
             $settings['pcDateFormats'] = PostCalendar_Util::getDateFormats($settings['pcEventDateFormat']);
         }

@@ -98,9 +98,10 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
                 // convert eventDate + startTime -> (DateTime) eventStart
                 // convert eventStart + duration -> (DateTime) eventEnd
                 $defaultsettings = PostCalendar_Util::getdefaults();
-                // convert old pcEventDateFormat to new setting/default
+                // convert old pcEventDateFormat to new setting/default (still needed? @see pcDateFormats)
                 // remove pcNavDateOrder
                 // add pcDateFormats
+                // add pcNavBarType
             case '8.0.0':
                 //future development
         }
