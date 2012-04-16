@@ -14,10 +14,11 @@ function smarty_function_pc_pagejs_init($params, Zikula_View $view)
     unset($params);
     $modVars = $view->get_template_vars('modvars');
     $dom = ZLanguage::getModuleDomain('PostCalendar');
+    $title = __('PostCalendar Event', $dom);
     if ($modVars['PostCalendar']['pcEventsOpenInNewWindow']) {
         $javascript = "
             $$('.event_details').each(function(link){
-                new Zikula.UI.Window(link, {title:'" . __('PostCalendar Event', $dom) ."'});
+                new Zikula.UI.Window(link, {title:'$title'});
             });";
         PageUtil::addVar("footer", "<script type='text/javascript'>$javascript</script>");
     }
