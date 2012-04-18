@@ -116,6 +116,9 @@ table.postcalendar_month col.pcWeekend {
 #pcnav_buttonbar {
     text-align: right;
 }
+.pcnav_button+label {
+    vertical-align: top;
+}
 #postcalendar_nav_right,
 #postcalendar_nav_left {
 	border: none;

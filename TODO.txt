@@ -8,3 +8,4 @@ TODO LIST
 - comment and docblock code better
 - replace prototype/livepipe use with jquery (tooltips, popup, category multiselect?)
 - make a navigation sideblock
+- add open graph stuff?

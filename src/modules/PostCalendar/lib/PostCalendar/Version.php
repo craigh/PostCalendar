@@ -24,7 +24,7 @@ class PostCalendar_Version extends Zikula_AbstractVersion
         $meta['securityschema'] = array(
             'PostCalendar::Event' => 'Event Title::Event ID',
             'PostCalendar::' => '::');
-        $meta['core_min'] = '1.3.2'; // requires minimum 1.3.2 or later
+        $meta['core_min'] = '1.3.3'; // requires minimum 1.3.3 or later
         // will require 1.3.3 for hookarea doctrine entity usage
         $meta['core_max'] = '1.3.99'; // doesn't work with 1.4.0 (yet)
 
