@@ -55,12 +55,44 @@
         <div class="z-formrow">
             <label>{gt text='Starts and Ends'}</label>
             <span>
+                {pageaddvar name='javascript' value='modules/PostCalendar/javascript/postcalendar-function-updatefields.js'}
                 {if ($loaded_event.alldayevent)}{assign var='inlinestyle' value='display: none;'}{else}{assign var='inlinestyle' value=null}{/if}
-                {jquery_datepicker defaultdate=$loaded_event.eventStart displayelement='eventstart_display' object='postcalendar_events' valuestorageelement='eventstart_date' maxdate=$loaded_event.eventStart theme=$jquerytheme}
-                {jquery_timepicker defaultdate=$loaded_event.eventStart displayelement='eventstart_time_display' object='postcalendar_events' valuestorageelement='eventstart_time' inlinestyle=$inlinestyle theme=$jquerytheme}
+                {jquery_datepicker 
+                    defaultdate=$loaded_event.eventStart 
+                    displayelement='eventstart_display' 
+                    object='postcalendar_events' 
+                    valuestorageelement='eventstart_date' 
+                    maxdate=$loaded_event.eventStart 
+                    theme=$jquerytheme 
+                    displayformat_datetime=$modvars.PostCalendar.pcDateFormats.date 
+                    displayformat_javascript=$modvars.PostCalendar.pcDateFormats.javascript}
+                {jquery_timepicker 
+                    defaultdate=$loaded_event.eventStart 
+                    displayelement='eventstart_time_display' 
+                    object='postcalendar_events' 
+                    valuestorageelement='eventstart_time' 
+                    inlinestyle=$inlinestyle theme=$jquerytheme 
+                    use24hour=$modvars.PostCalendar.pcTime24Hours 
+                    stepminute=$modvars.PostCalendar.pcTimeIncrement}
                 <span style='padding:0 1em;'>{gt text='to'}</span>
-                {jquery_datepicker defaultdate=$loaded_event.eventEnd displayelement='eventend_display' object='postcalendar_events'  valuestorageelement='eventend_date' mindate=$loaded_event.eventEnd theme=$jquerytheme}
-                {jquery_timepicker defaultdate=$loaded_event.eventEnd displayelement='eventend_time_display' object='postcalendar_events' valuestorageelement='eventend_time' inlinestyle=$inlinestyle theme=$jquerytheme}
+                {jquery_datepicker 
+                    defaultdate=$loaded_event.eventEnd 
+                    displayelement='eventend_display' 
+                    object='postcalendar_events'  
+                    valuestorageelement='eventend_date' 
+                    mindate=$loaded_event.eventEnd 
+                    theme=$jquerytheme 
+                    displayformat_datetime=$modvars.PostCalendar.pcDateFormats.date 
+                    displayformat_javascript=$modvars.PostCalendar.pcDateFormats.javascript}
+                {jquery_timepicker 
+                    defaultdate=$loaded_event.eventEnd 
+                    displayelement='eventend_time_display' 
+                    object='postcalendar_events' 
+                    valuestorageelement='eventend_time' 
+                    inlinestyle=$inlinestyle 
+                    theme=$jquerytheme 
+                    use24hour=$modvars.PostCalendar.pcTime24Hours 
+                    stepminute=$modvars.PostCalendar.pcTimeIncrement}
             </span>
         </div>
             

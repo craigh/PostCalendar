@@ -8,11 +8,12 @@ function smarty_function_jquery_timepicker($params, Zikula_View $view)
     $readOnly = (isset($params['readonly'])) ? $params['readonly'] : true;
     $object = (isset($params['object'])) ? $params['object'] : true;
     $inlineStyle = (isset($params['inlinestyle'])) ? $params['inlinestyle'] : null;
-    $jQueryTheme = (isset($params['theme'])) ? $params['theme'] : 'ui-lightness';
+    $jQueryTheme = (isset($params['theme'])) ? $params['theme'] : 'base';
     $lang = (isset($params['lang'])) ? $params['lang'] : ZLanguage::getLanguageCode();
-
-    $modVars = $view->get_template_vars('modvars');
-    if ($modVars['PostCalendar']['pcTime24Hours']) {
+    $use24hour = (isset($params['use24hour'])) ? $params['use24hour'] : false;
+    $stepMinute = (isset($params['stepminute'])) ? $params['stepminute'] : 1;
+    
+    if ($use24hour) {
         $ap = 'false';
         $jqueryTimeFormat = 'h:mm';
         $dateTimeFormat = 'G:i';
@@ -22,14 +23,14 @@ function smarty_function_jquery_timepicker($params, Zikula_View $view)
         $dateTimeFormat = 'g:i a';
     }
 
-    PageUtil::addVar("javascript", "jquery");
-    PageUtil::addVar("javascript", "modules/PostCalendar/javascript/jquery-ui/jquery-ui-1.8.18.custom.min.js");
-    PageUtil::addVar("javascript", "modules/PostCalendar/javascript/jquery-ui/jquery-ui-timepicker-addon.js");
-    if (empty($lang) || ($lang <> 'en')) {
-        PageUtil::addVar("javascript", "modules/PostCalendar/javascript/jquery-ui/i18n/jquery-ui-timepicker-$lang.js");
+    PageUtil::addVar("javascript", "jquery-ui");
+    PageUtil::addVar("javascript", "javascript/jQuery-Timepicker-Addon/jquery-ui-timepicker-addon.js");
+    if (!empty($lang) && ($lang <> 'en')) {
+        PageUtil::addVar("javascript", "javascript/jQuery-Timepicker-Addon/localization/jquery-ui-timepicker-$lang.js");
     }
-    PageUtil::addVar("stylesheet", "modules/PostCalendar/style/$jQueryTheme/jquery-ui-1.8.18.custom.css");
-    PageUtil::addVar("stylesheet", "modules/PostCalendar/style/timepicker.css");
+    JQueryUtil::loadTheme($jQueryTheme);
+
+    PageUtil::addVar("stylesheet", "javascript/jQuery-Timepicker-Addon/jquery-ui-timepicker-addon.css");
 
     $javascript = "
         jQuery(document).ready(function() {
@@ -39,7 +40,7 @@ function smarty_function_jquery_timepicker($params, Zikula_View $view)
                     },
                 timeFormat: '$jqueryTimeFormat',
                 ampm: $ap,
-                stepMinute: {$modVars['PostCalendar']['pcTimeIncrement']}
+                stepMinute: $stepMinute
             });
         });";
     PageUtil::addVar("footer", "<script type='text/javascript'>$javascript</script>");

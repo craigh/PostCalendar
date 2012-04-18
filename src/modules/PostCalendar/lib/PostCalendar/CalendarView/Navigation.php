@@ -83,11 +83,11 @@ class PostCalendar_CalendarView_Navigation
         $stylesheet .= "</style>\n";
         if ($this->navBarType == 'buttonbar') {
             PageUtil::addVar("javascript", "jquery");
-            PageUtil::addVar("javascript", "modules/PostCalendar/javascript/jquery-ui/jquery-ui-1.8.18.custom.min.js");
+            PageUtil::addVar("javascript", "jquery-ui");
             PageUtil::addVar("javascript", "modules/PostCalendar/javascript/postcalendar-user-navigation.js");
             PageUtil::addVar("jsgettext", "module_postcalendar_js:PostCalendar");
             $jQueryTheme = 'overcast';
-            PageUtil::addVar("stylesheet", "modules/PostCalendar/style/$jQueryTheme/jquery-ui.css");
+            JQueryUtil::loadTheme($jQueryTheme);
             PageUtil::addVar("stylesheet", "modules/PostCalendar/style/jquery-overrides.css");
             $this->view->assign('pcCategories', $categories);
         }
