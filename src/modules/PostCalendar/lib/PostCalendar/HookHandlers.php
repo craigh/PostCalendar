@@ -382,7 +382,7 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
         $dom = ZLanguage::getModuleDomain('PostCalendar');
         $_em = ServiceUtil::getService('doctrine.entitymanager');
 
-        $events = $em->getRepository('PostCalendar_Entity_CalendarEvent')->findBy(array('hooked_modulename' => DataUtil::formatForStore($module)));
+        $events = $_em->getRepository('PostCalendar_Entity_CalendarEvent')->findBy(array('hooked_modulename' => DataUtil::formatForStore($module)));
         $i = 0;
         $affected = 0;
         foreach ($events as $event) {
