@@ -5,7 +5,8 @@ function smarty_function_jquery_datepicker($params, Zikula_View $view)
     $defaultDate = (isset($params['defaultdate'])) ? $params['defaultdate'] : new DateTime();
     $displayElement = (isset($params['displayelement'])) ? $params['displayelement'] : '';
     $valueStorageElement = (isset($params['valuestorageelement'])) ? $params['valuestorageelement'] : '';
-    $valueStorageFormat_javascript = (isset($params['valuestorageformat'])) ? $params['valuestorageformat'] : 'yy-mm-dd';
+    $valueStorageFormat_dateTime = (isset($params['valuestorageformat'])) ? $params['valuestorageformat'] : 'Y-m-d';
+    $valueStorageFormat_javascript = (isset($params['valuestorageformat_javascript'])) ? $params['valuestorageformat_javascript'] : str_replace(array('Y', 'm', 'd'), array('yy', 'mm', 'dd'), $valueStorageFormat_dateTime);
     $displayFormat_dateTime = (isset($params['displayformat_datetime'])) ? $params['displayformat_datetime'] : 'j F Y';
     $displayFormat_javascript = (isset($params['displayformat_javascript'])) ? $params['displayformat_javascript'] : 'd MM yy';
     $readOnly = (isset($params['readonly'])) ? $params['readonly'] : true;
@@ -54,7 +55,7 @@ function smarty_function_jquery_datepicker($params, Zikula_View $view)
     $name = isset($object) ? "{$object}[{$valueStorageElement}]" : $valueStorageElement;
 
     $html = "<input type='text'{$readOnlyHtml} id='$displayElement' name='$displayElement' value='{$defaultDate->format($displayFormat_dateTime)}' />\n
-        <input type='hidden' id='$valueStorageElement' name='{$name}' value='{$defaultDate->format($valueStorageFormat)}' />";
+        <input type='hidden' id='$valueStorageElement' name='{$name}' value='{$defaultDate->format($valueStorageFormat_dateTime)}' />";
 
     return $html;
 }
