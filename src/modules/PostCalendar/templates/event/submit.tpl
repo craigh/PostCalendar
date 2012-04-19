@@ -65,7 +65,8 @@
                     maxdate=$loaded_event.eventStart 
                     theme=$jquerytheme 
                     displayformat_datetime=$modvars.PostCalendar.pcDateFormats.date 
-                    displayformat_javascript=$modvars.PostCalendar.pcDateFormats.javascript}
+                    displayformat_javascript=$modvars.PostCalendar.pcDateFormats.javascript
+                    onselectcallback='updateFields(this,dateText);'}
                 {jquery_timepicker 
                     defaultdate=$loaded_event.eventStart 
                     displayelement='eventstart_time_display' 
@@ -73,7 +74,8 @@
                     valuestorageelement='eventstart_time' 
                     inlinestyle=$inlinestyle theme=$jquerytheme 
                     use24hour=$modvars.PostCalendar.pcTime24Hours 
-                    stepminute=$modvars.PostCalendar.pcTimeIncrement}
+                    stepminute=$modvars.PostCalendar.pcTimeIncrement
+                    onclosecallback='updateFields(this,dateText);'}
                 <span style='padding:0 1em;'>{gt text='to'}</span>
                 {jquery_datepicker 
                     defaultdate=$loaded_event.eventEnd 
@@ -83,7 +85,8 @@
                     mindate=$loaded_event.eventEnd 
                     theme=$jquerytheme 
                     displayformat_datetime=$modvars.PostCalendar.pcDateFormats.date 
-                    displayformat_javascript=$modvars.PostCalendar.pcDateFormats.javascript}
+                    displayformat_javascript=$modvars.PostCalendar.pcDateFormats.javascript
+                    onselectcallback='updateFields(this,dateText);'}
                 {jquery_timepicker 
                     defaultdate=$loaded_event.eventEnd 
                     displayelement='eventend_time_display' 
@@ -92,7 +95,8 @@
                     inlinestyle=$inlinestyle 
                     theme=$jquerytheme 
                     use24hour=$modvars.PostCalendar.pcTime24Hours 
-                    stepminute=$modvars.PostCalendar.pcTimeIncrement}
+                    stepminute=$modvars.PostCalendar.pcTimeIncrement
+                    onclosecallback='updateFields(this,dateText);'}
             </span>
         </div>
             
@@ -125,7 +129,16 @@
             </div>
             <div>
                 <label>{gt text='until'}...</label>
-                {jquery_datepicker defaultdate=$loaded_event.endDate displayelement='repeat_enddate_display' object='postcalendar_events' valuestorageelement='enddate' mindate=$loaded_event.eventEnd theme=$jquerytheme}
+                {jquery_datepicker 
+                    defaultdate=$loaded_event.endDate 
+                    displayelement='repeat_enddate_display' 
+                    object='postcalendar_events' 
+                    valuestorageelement='enddate' 
+                    mindate=$loaded_event.eventEnd 
+                    theme=$jquerytheme
+                    displayformat_datetime=$modvars.PostCalendar.pcDateFormats.date 
+                    displayformat_javascript=$modvars.PostCalendar.pcDateFormats.javascript
+                    onselectcallback='updateFields(this,dateText);'}
             </div>
         </div>
 

@@ -10,7 +10,16 @@
         {/if}
         {if $navigationObj->useJumpDate}
         {assign value='overcast' var='jquerytheme'}
-        {jquery_datepicker defaultdate=$navigationObj->requestedDate displayelement='pcnav_datepicker' valuestorageelement='date' valuestorageformat='Ymd' theme=$jquerytheme submitonselect=true mindate="-"|cat:$modvars.PostCalendar.pcFilterYearStart|cat:"Y" maxdate="+"|cat:$modvars.PostCalendar.pcFilterYearEnd|cat:"Y"}
+        {jquery_datepicker 
+            defaultdate=$navigationObj->requestedDate 
+            displayelement='pcnav_datepicker' 
+            valuestorageelement='date' 
+            valuestorageformat='Ymd' 
+            theme=$jquerytheme 
+            submitonselect=true 
+            mindate="-"|cat:$modvars.PostCalendar.pcFilterYearStart|cat:"Y" 
+            maxdate="+"|cat:$modvars.PostCalendar.pcFilterYearEnd|cat:"Y"
+            onselectcallback='jQuery(this).closest("form").submit();'}
         <input id="pcnav_datepicker_button" type="image" alt="jump" title='jump to date' src='modules/PostCalendar/images/icon-calendar.jpg' />
         {/if}
         {if $navigationObj->useNavBar}

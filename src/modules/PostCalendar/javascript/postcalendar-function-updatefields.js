@@ -1,4 +1,4 @@
-function updateFields(inputElementObj, dateText, submitOnSelect)
+function updateFields(inputElementObj, dateText)
 {
     var fieldName = jQuery(inputElementObj).attr('id');
     var date = new Date(dateText);
@@ -39,9 +39,6 @@ function updateFields(inputElementObj, dateText, submitOnSelect)
                 }
             }
             break;
-    }
-    if (submitOnSelect) {
-        jQuery(inputElementObj).closest("form").submit();
     }
 }
 function pcFormatTime(date)

@@ -8,6 +8,7 @@ function smarty_function_jquery_timepicker($params, Zikula_View $view)
     $readOnly = (isset($params['readonly'])) ? $params['readonly'] : true;
     $object = (isset($params['object'])) ? $params['object'] : true;
     $inlineStyle = (isset($params['inlinestyle'])) ? $params['inlinestyle'] : null;
+    $onCloseCallback = (isset($params['onclosecallback'])) ? $params['onclosecallback'] : null;
     $jQueryTheme = (isset($params['theme'])) ? $params['theme'] : 'base';
     $lang = (isset($params['lang'])) ? $params['lang'] : ZLanguage::getLanguageCode();
     $use24hour = (isset($params['use24hour'])) ? $params['use24hour'] : false;
@@ -22,7 +23,7 @@ function smarty_function_jquery_timepicker($params, Zikula_View $view)
         $jqueryTimeFormat = 'h:mm tt';
         $dateTimeFormat = 'g:i a';
     }
-
+    
     PageUtil::addVar("javascript", "jquery-ui");
     PageUtil::addVar("javascript", "javascript/jQuery-Timepicker-Addon/jquery-ui-timepicker-addon.js");
     if (!empty($lang) && ($lang <> 'en')) {
@@ -35,11 +36,13 @@ function smarty_function_jquery_timepicker($params, Zikula_View $view)
     $javascript = "
         jQuery(document).ready(function() {
             jQuery('#$displayElement').timepicker({
-                onClose: function(dateText, inst) {
-                        updateFields(this, dateText);
-                    },
                 timeFormat: '$jqueryTimeFormat',
-                ampm: $ap,
+                ampm: $ap,";
+    if (isset($onCloseCallback)) {
+        $javascript .= "
+                    onClose: function(dateText, inst) {" . $onCloseCallback . "},";
+    }
+    $javascript .= "
                 stepMinute: $stepMinute
             });
         });";

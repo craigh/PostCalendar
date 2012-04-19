@@ -9,13 +9,13 @@ function smarty_function_jquery_datepicker($params, Zikula_View $view)
     $valueStorageFormat_javascript = (isset($params['valuestorageformat_javascript'])) ? $params['valuestorageformat_javascript'] : str_replace(array('Y', 'm', 'd'), array('yy', 'mm', 'dd'), $valueStorageFormat_dateTime);
     $displayFormat_dateTime = (isset($params['displayformat_datetime'])) ? $params['displayformat_datetime'] : 'j F Y';
     $displayFormat_javascript = (isset($params['displayformat_javascript'])) ? $params['displayformat_javascript'] : 'd MM yy';
+    $onSelectCallback = (isset($params['onselectcallback'])) ? $params['onselectcallback'] : null;
     $readOnly = (isset($params['readonly'])) ? $params['readonly'] : true;
     $object = (isset($params['object'])) ? $params['object'] : null;
     $minDate = (isset($params['mindate'])) ? $params['mindate'] : null;
     $maxDate = (isset($params['maxdate'])) ? $params['maxdate'] : null;
     $jQueryTheme = (isset($params['theme'])) ? $params['theme'] : 'base';
     $lang = (isset($params['lang'])) ? $params['lang'] : ZLanguage::getLanguageCode();
-    $submitOnSelect = (isset($params['submitonselect']) && ($params['submitonselect'])) ? 'true' : 'false';
     
     $minDateValue = ($minDate instanceof DateTime) ? $minDate->format($displayFormat_dateTime) : $minDate;
     $maxDateValue = ($maxDate instanceof DateTime) ? $maxDate->format($displayFormat_dateTime) : $maxDate;
@@ -25,13 +25,12 @@ function smarty_function_jquery_datepicker($params, Zikula_View $view)
         PageUtil::addVar("javascript", "javascript/jquery-ui/i18n/jquery.ui.datepicker-$lang.js");
     }
     JQueryUtil::loadTheme($jQueryTheme);
-
+    
     $javascript = "
         jQuery(document).ready(function() {
             jQuery('#$displayElement').datepicker({
-                onSelect: function(dateText, inst) {
-                        updateFields(this, dateText, $submitOnSelect);
-                    },
+                altField: '#$valueStorageElement',
+                altFormat: '$valueStorageFormat_javascript',
                 dateFormat: '$displayFormat_javascript',
                 defaultDate: '{$defaultDate->format($displayFormat_dateTime)}',";
     if (isset($minDate)) {
@@ -42,9 +41,12 @@ function smarty_function_jquery_datepicker($params, Zikula_View $view)
         $javascript .= "
                 maxDate: '$maxDateValue',";
     }
+    if (isset($onSelectCallback)) {
+        $javascript .= "
+                onSelect: function(dateText, inst) {" . $onSelectCallback . "},";
+    }
+
     $javascript .= "
-                altField: '#$valueStorageElement',
-                altFormat: '$valueStorageFormat_javascript',
                 autoSize: true
             });
         });";
