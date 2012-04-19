@@ -7,6 +7,25 @@
         {if $navigationObj->useFilter}
         <input type='text' readonly="readonly" id='pcnav_filterpicker' name='pcnav_filterpicker' value='{gt text='inactive'}' />
         <input id="pcnav_filterpicker_button" type="image" alt="filter" title='filter categories' src='images/icons/extrasmall/filter.png' />
+        <!-- This is a pop up dialog box -->
+        <div id='pcnav_filterpicker_dialog' title='{gt text='Filter view'}'>
+            <h5>{gt text='Categories'}</h5>
+            <ul>
+            {foreach from=$pcCategories key='regname' item='categories'}
+                {foreach from=$categories item='category'}
+                <li class='pccategories_selector_{$category.id} pccategories_selector' id='pccat_{$category.id}'>{$category.display_name.en}</li>
+                {/foreach}
+            {/foreach}
+            </ul>
+            {checkgroup gid=$modvars.PostCalendar.pcAllowUserCalendar}
+            <h5>{gt text='Visibility'}</h5>
+            <ul>
+                <li class='pcvisibility_selector' id='pcviz_private'>{gt text='Private events'}</li>
+                <li class='pcvisibility_selector' id='pcviz_global'>{gt text='Global events'}</li>
+            </ul>
+            {/checkgroup}
+        </div>
+        <!-- end dialog -->
         {/if}
         {if $navigationObj->useJumpDate}
         {assign value='overcast' var='jquerytheme'}
@@ -28,25 +47,6 @@
         {/foreach}
         {/if}
     </div>
-    <!-- This is a pop up dialog box -->
-    <div id='pcnav_filterpicker_dialog' title='{gt text='Filter view'}'>
-        <h5>{gt text='Categories'}</h5>
-        <ul>
-        {foreach from=$pcCategories key='regname' item='categories'}
-            {foreach from=$categories item='category'}
-            <li class='pccategories_selector_{$category.id} pccategories_selector' id='pccat_{$category.id}'>{$category.display_name.en}</li>
-            {/foreach}
-        {/foreach}
-        </ul>
-        {checkgroup gid=$modvars.PostCalendar.pcAllowUserCalendar}
-        <h5>{gt text='Visibility'}</h5>
-        <ul>
-            <li class='pcvisibility_selector' id='pcviz_private'>{gt text='Private events'}</li>
-            <li class='pcvisibility_selector' id='pcviz_global'>{gt text='Global events'}</li>
-        </ul>
-        {/checkgroup}
-    </div>
-    <!-- end dialog -->
     {else}{*else if $navigationObj->navBarType != 'buttonbar'*}
     {if $navigationObj->useNavBar}
     <div id="postcalendar_nav_right">

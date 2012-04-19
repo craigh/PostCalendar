@@ -1,5 +1,6 @@
 TODO LIST
 
+- first four characters of event description are disappearing...
 - update docs
 - make submit form an object
 - upgrade routine

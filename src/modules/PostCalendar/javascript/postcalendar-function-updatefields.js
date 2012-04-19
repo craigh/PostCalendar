@@ -22,32 +22,20 @@ function updateFields(inputElementObj, dateText)
             // do nothing
             break;
         case 'eventstart_time_display':
-            jQuery("#eventstart_time").attr("value", pcFormatTime(eventStartTime));
             if (jQuery("#eventstart_display").datepicker("getDate").getTime() == jQuery("#eventend_display").datepicker("getDate").getTime()) {
                 if (eventStartTime > eventEndTime) {
                     jQuery("#eventend_time_display").datepicker("setDate", eventStartTime);
-                    jQuery("#eventend_time").attr("value", pcFormatTime(eventStartTime));
+                    jQuery("#eventend_time").attr("value", timepickerFormatTime(eventStartTime));
                 }
             }
             break;
         case 'eventend_time_display':
-            jQuery("#eventend_time").attr("value", pcFormatTime(eventEndTime));
             if (jQuery("#eventstart_display").datepicker("getDate").getTime() == jQuery("#eventend_display").datepicker("getDate").getTime()) {
                 if (eventStartTime > eventEndTime) {
                     jQuery("#eventstart_time_display").datepicker("setDate", eventEndTime);
-                    jQuery("#eventstart_time").attr("value", pcFormatTime(eventEndTime));
+                    jQuery("#eventstart_time").attr("value", timepickerFormatTime(eventEndTime));
                 }
             }
             break;
     }
-}
-function pcFormatTime(date)
-{
-    var m = date.getMinutes();
-    var h = date.getHours();
-    m = m + ''; // convert to string
-    h = h + ''; // convert to string
-    m = m.length == 1 ? "0" + m : m;
-    h = h.length == 1 ? "0" + h : h;
-    return h + ":" + m;
 }

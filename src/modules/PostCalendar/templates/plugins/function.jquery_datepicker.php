@@ -14,6 +14,7 @@ function smarty_function_jquery_datepicker($params, Zikula_View $view)
     $object = (isset($params['object'])) ? $params['object'] : null;
     $minDate = (isset($params['mindate'])) ? $params['mindate'] : null;
     $maxDate = (isset($params['maxdate'])) ? $params['maxdate'] : null;
+    $autoSize = (isset($params['autosize'])) ? $params['autosize'] : 'true';
     $jQueryTheme = (isset($params['theme'])) ? $params['theme'] : 'base';
     $lang = (isset($params['lang'])) ? $params['lang'] : ZLanguage::getLanguageCode();
     
@@ -45,9 +46,8 @@ function smarty_function_jquery_datepicker($params, Zikula_View $view)
         $javascript .= "
                 onSelect: function(dateText, inst) {" . $onSelectCallback . "},";
     }
-
     $javascript .= "
-                autoSize: true
+                autoSize: $autoSize
             });
         });";
     PageUtil::addVar("footer", "<script type='text/javascript'>$javascript</script>");
