@@ -35,6 +35,8 @@
             valuestorageelement='date' 
             valuestorageformat='Ymd' 
             theme=$jquerytheme 
+            displayformat_datetime=$modvars.PostCalendar.pcDateFormats.date 
+            displayformat_javascript=$modvars.PostCalendar.pcDateFormats.javascript
             submitonselect=true 
             mindate="-"|cat:$modvars.PostCalendar.pcFilterYearStart|cat:"Y" 
             maxdate="+"|cat:$modvars.PostCalendar.pcFilterYearEnd|cat:"Y"
