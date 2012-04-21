@@ -1,4 +1,4 @@
-## PostCalendar v7.0.0 Administration Options
+## PostCalendar v8.0.0 Administration Options
 
 #### General Settings
 
@@ -17,15 +17,22 @@ Use 24 Hour time format          |Display 13:30 instead of 1:30 PM
 Time Increment...                |Used in dropdown on new event form for possible event lengths and start time
 Popup Window                     |changes functionality to popup a new window with event details instead of linking to full display
 Event details in tooltip...      |Use Javascript to display event description in tooltip on mouseover
-Date Display Format              |Choose format Dates will be displayed as (uses php's [*strftime* format][link1])
+Date Display Format              |Choose format Dates will be displayed
 First Day of Week                |Which Day weeks begin with
 Default Calendar View            |Which calendar view is displayed with no arguments in link to module
+Views/links available...         |Choose which links and views are available to your users (see notes in template)
 ...months ... in list/rss        |how many months into the future (from today) to display in list/rss view
+Enable Locations...              |*(option only displays if Locations module is active)* Enable use of Locations in PostCalendar
+
+#### Navigation display settings
+
+Item                             |Description
+---------------------------------------------
+Navigation Bar type              |v8.0.0 adds the (default) option of using a jQuery-based navbar or use the old style
 Filter Event Display             |Allow users to filter events by category/user (if option available)
 ...jump date... year(s) before...|Number of years to display before current year in jump date selector
 ...jump date... year(s) after... |Number of years to display after current year in jump date selector
 Enable images...                 |Show images in the PostCalendar navigation header (or just show text links)
-Enable Locations...              |*(option only displays if Locations module is active)* Enable use of Locations in PostCalendar
 
 #### Notification Settings
 

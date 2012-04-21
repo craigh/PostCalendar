@@ -1,6 +1,5 @@
 TODO LIST
 
-- update docs
 - make submit form an object
 - upgrade routine
 - Needles are still a guess
@@ -9,3 +8,4 @@ TODO LIST
 - replace prototype/livepipe use with jquery (tooltips, popup, category multiselect?)
 - make a navigation sideblock
 - add open graph stuff?
+- use timepicker in Event defaults?

@@ -1,9 +1,15 @@
-## PostCalendar v7.0.0 Licensing & Usage
+## PostCalendar v8.0.0 Licensing & Usage
 
 #### License
 
-PostCalendar is licensed under the GNU GENERAL PUBLIC LICENSE (Version 2). This means that the code is *Open Source* and you are free to use it at no financial cost as well as free to change it in any way you see fit.
+PostCalendar is licensed under the GNU GENERAL PUBLIC LICENSE (Version 2). This 
+means that the code is *Open Source* and you are free to use it at no financial 
+cost as well as free to change it in any way you see fit.
 
 #### Usage
 
-You are not required, but if you see fit it would be *very kind* of you to donate to the PostCalendar project!
+You are not required, but if you see fit it would be *very kind* of you to donate 
+to the PostCalendar project!
+
+If you are using PostCalendar in a commerical situation, a donation is strongly
+suggested. Please contact craigh@mac.com.

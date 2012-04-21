@@ -2,38 +2,57 @@
 
 ### Categorization now required
 
-As of v8.0.0, PostCalendar now requires the use of categorization. All checks for 'enablecategorization' have been removed and it is assumed they are in use.
+As of v8.0.0, PostCalendar now requires the use of categorization. All checks for 
+'enablecategorization' have been removed and it is assumed they are in use.
 
 ### Utilizing Categories in a New Installation of PostCalendar
 
-On install, PostCalendar will create a main category called 'PostCalendar' and one subcategory called 'Events'. The category will have a property name of 'Main'. The Events subcategory will have an attribute called 'color' and a value of '#99ccff' (light blue).
+On install, PostCalendar will create a main category called 'PostCalendar' and one 
+subcategory called 'Events'. The category will have a property name of 'Main'. The 
+Events subcategory will have an attribute called 'color' and a value of '#99ccff' 
+(light blue).
 
 ### Adding New Categories & Subcategories to PostCalendar
 
-If you wish to add more subcategories, you can do so easily using the Categories module. Be sure to choose 'PostCalendar' as the parent category and add a <span class="underline">color</span> attribute with an appropriate hexadecimal value.
+If you wish to add more subcategories, you can do so easily using the Categories 
+module. Be sure to choose 'PostCalendar' as the parent category and add a color 
+attribute with an appropriate hexadecimal value.
 
-One may also create a new category and link it to PostCalendar. This will allow you to categorize PostCalendar events in multiple areas. Simply create a new Category, then using the categories registry, select the following values
+One may also create a new category and link it to PostCalendar. This will allow 
+you to categorize PostCalendar events in multiple areas. Simply create a new Category, 
+then using the categories registry, select the following values
 
 `PostCalendar | CalendarEvent | <choose a name> | <your new category name>`
 
-Be sure to create appropriate subcategories. PostCalendar will not associate colors with secondary (non 'Main') subcategories, so there is no need to create color attributes.
+Be sure to create appropriate subcategories. PostCalendar will not associate colors 
+with secondary (non 'Main') subcategories, so there is no need to create color attributes.
 
-To remove a parent category from PostCalendar, simply delete the associated entry in the category registry and it will no longer be associated with the module.
+To remove a parent category from PostCalendar, simply delete the associated entry 
+in the category registry and it will no longer be associated with the module.
 
 ### Using Colors in Categories
 
-One can assign colors for any category utilized in PostCalendar. This color is used to provide a visual cue to the user. Do so by creating a _color_ attribute and give it a [hexadecimal value][link1] (including the hash symbol) e.g. '#cccccc'. If you do not assign a color to a category a default color of '#eeeeee' will be used.
+One can assign colors for any category utilized in PostCalendar. This color is used 
+to provide a visual cue to the user. Do so by creating a _color_ attribute and give 
+it a [hexadecimal value][link1] (including the hash symbol) e.g. '#cccccc'. If you 
+do not assign a color to a category a default color of '#eeeeee' will be used.
 
 *Note that the attribute names **must** be in English (as above).*
 
 ### Using Global Categories in PostCalendar
 
-If you want to use the same categories in PostCalendar that you are using in other modules (the Global categories or another), you are free to do so. Create a new category registry entry with the following settings:
+If you want to use the same categories in PostCalendar that you are using in other 
+modules (the Global categories or another), you are free to do so. Create a new 
+category registry entry with the following settings:
 
 `PostCalendar | CalendarEvent | Main | __SYSTEM__/Modules/Global`
 
-*note: these settings assign the 'Main' property name to the global categories. If you do this, delete the old PostCalendar 'Main' reference or convert it to a secondary category.*
-Be sure to remember to add a 'color' attribute to each of the global categories to take advantage of that feature in PostCalendar.
+*note: these settings assign the 'Main' property name to the global categories. 
+If you do this, delete the old PostCalendar 'Main' reference or convert it to a 
+secondary category.*
+
+Be sure to remember to add a 'color' attribute to each of the global categories 
+to take advantage of that feature in PostCalendar.
 
 ### Multi-Category Filter
 
@@ -41,7 +60,8 @@ Multi-Category filtering is possible using the multi-select in the filter.
 
 ### Category Permissions
 
-Category-based permissions became available for the first time in PostCalendar v7.0. Please see `Permissions.txt` of the documentation for more information.
+Category-based permissions became available for the first time in PostCalendar 
+v7.0. Please see `Permissions.txt` of the documentation for more information.
 
 [link1]: <http://en.wikipedia.org/wiki/Web_colors>
     "Wikipedia Web Color Reference"
