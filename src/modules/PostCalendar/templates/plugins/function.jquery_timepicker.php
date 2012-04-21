@@ -23,6 +23,11 @@
  *
  * Available attributes:
  *  - see inline docblocks of each parameter
+ *  - additionally, one can set any parameter available in the timepicker documentation
+ *    however, parameter names and values will not be validated, simply rendered as is.
+ *    case in parameter names must be observed! all jQuery parameter values must be strings.
+ *    see timepicker docs for options
+ *  - regionalization attributes (i18n) are set in most cases automatically
  *
  * Examples:
  *
@@ -43,12 +48,14 @@ function smarty_function_jquery_timepicker($params, Zikula_View $view)
      * The initial datetime selected and displayed (default: now)
      */
     $defaultDate = (isset($params['defaultdate']) && ($params['defaultdate'] instanceof DateTime)) ? $params['defaultdate'] : new DateTime();
+    unset($params['defaultdate']);
     /**
      * displayelement
      * string (do not include the '#' character)
      * (required) The id text of the html element where the timepicker displays the selection 
      */
     $displayElement = (isset($params['displayelement'])) ? $params['displayelement'] : '';
+    unset($params['displayelement']);
     /**
      * valuestorageelement
      * string (do not include the '#' character)
@@ -56,54 +63,56 @@ function smarty_function_jquery_timepicker($params, Zikula_View $view)
      * note: storage format is HH:MM (in 24 hour format)
      */
     $valueStorageElement = (isset($params['valuestorageelement'])) ? $params['valuestorageelement'] : null;
+    unset($params['valuestorageelement']);
     /**
      * readonly
      * boolean
      * (optional) whether the display field is readonly of active (default: (boolean)true - IS readonly) 
      */
     $readOnly = (isset($params['readonly'])) ? $params['readonly'] : true;
+    unset($params['readonly']);
     /**
      * object
      * string
      * (optional) object name for html element names. e.g. name='myObjectName[myVariable]' (default: null) 
      */
     $object = (isset($params['object'])) ? $params['object'] : true;
+    unset($params['object']);
     /**
      * inlinestyle
      * string
      * contents of html style param - useful for setting display:none on load
      */
     $inlineStyle = (isset($params['inlinestyle'])) ? $params['inlinestyle'] : null;
+    unset($params['inlinestyle']);
     /**
      * onclosecallback
      * string
      * (optional) javascript to perform onClose event (default: null) 
      */
     $onCloseCallback = (isset($params['onclosecallback'])) ? $params['onclosecallback'] : null;
+    unset($params['onclosecallback']);
     /**
      * theme
      * string
      * (optional) which jquery theme to use for this plugin. Uses JQueryUtil::loadTheme() (default: 'base')
      */
     $jQueryTheme = (isset($params['theme'])) ? $params['theme'] : 'base';
+    unset($params['theme']);
     /**
      * lang
      * string
      * (optional) language of datepicker (default: current system language)
      */
     $lang = (isset($params['lang'])) ? $params['lang'] : ZLanguage::getLanguageCode();
+    unset($params['lang']);
     /**
      * use24hour
      * boolean
      * (optional) use 24 hour time display or 12 hour am/pm (default: false) 
      */
     $use24hour = (isset($params['use24hour'])) ? $params['use24hour'] : false;
-    /**
-     * stepminute
-     * integer
-     * (optional) snapto minute interval in minute slider selector (default: 1)
-     */
-    $stepMinute = (isset($params['stepminute'])) ? $params['stepminute'] : 1;
+    unset($params['use24hour']);
 
     // compute formats
     if ($use24hour) {
@@ -128,9 +137,13 @@ function smarty_function_jquery_timepicker($params, Zikula_View $view)
     // build the timepicker
     $javascript = "
         jQuery(document).ready(function() {
-            jQuery('#$displayElement').timepicker({
-                timeFormat: '$jqueryTimeFormat',
-                ampm: $ap,";
+            jQuery('#$displayElement').timepicker({";
+    // add additional parameters set in template first
+    foreach ($params as $param => $value) {
+        $javascript .= "
+                $param: $value,";
+    }
+    // add configured/computed paramters from plugin
     if (isset($onCloseCallback)) {
         $javascript .= "
                 onClose: function(dateText, inst) {" . $onCloseCallback . "},";
@@ -143,7 +156,8 @@ function smarty_function_jquery_timepicker($params, Zikula_View $view)
                 },";
     }
     $javascript .= "
-                stepMinute: $stepMinute
+                timeFormat: '$jqueryTimeFormat',
+                ampm: $ap,
             });
         });";
     PageUtil::addVar("footer", "<script type='text/javascript'>$javascript</script>");
