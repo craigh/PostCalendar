@@ -72,7 +72,8 @@
                     displayelement='eventstart_time_display' 
                     object='postcalendar_events' 
                     valuestorageelement='eventstart_time' 
-                    inlinestyle=$inlinestyle theme=$jquerytheme 
+                    inlinestyle=$inlinestyle
+                    theme=$jquerytheme 
                     use24hour=$modvars.PostCalendar.pcTime24Hours 
                     stepminute=$modvars.PostCalendar.pcTimeIncrement
                     onclosecallback='updateFields(this,dateText);'}
