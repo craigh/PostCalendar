@@ -12,29 +12,56 @@
 class PostCalendar_CalendarView_PastEventsBlock extends PostCalendar_CalendarView_AbstractDays
 {
 
+    /**
+     * The block vars
+     * @var array
+     */
     protected $blockVars = array();
+
+    /**
+     * The block id
+     * @var integer 
+     */
     protected $bid;
 
+    /**
+     * Constructor
+     * 
+     * @param Zikula_View $view
+     * @param DateTime $requestedDate
+     * @param integer $userFilter
+     * @param array $categoryFilter
+     * @param array $blockinfo 
+     */
     function __construct(Zikula_View $view, $requestedDate, $userFilter, $categoryFilter, $blockinfo)
     {
         $this->bid = $blockinfo['bid'];
         $this->blockVars = BlockUtil::varsFromContent($blockinfo['content']);
         if (!isset($categoryFilter)) {
             $categoryFilter = $this->blockVars['pcbfiltercats'];
-        } 
+        }
         parent::__construct($view, $requestedDate, $userFilter, $categoryFilter);
     }
 
+    /**
+     * Set the cacheTag 
+     */
     protected function setCacheTag()
     {
         $this->cacheTag = $this->bid;
     }
 
+    /**
+     * Set the template 
+     */
     protected function setTemplate()
     {
         $this->template = 'blocks/pastevents.tpl';
     }
 
+    /**
+     * Set the date range of this view 
+     */
     protected function setDates()
     {
         $this->startDate = new DateTime();
@@ -46,12 +73,19 @@ class PostCalendar_CalendarView_PastEventsBlock extends PostCalendar_CalendarVie
         $this->endDate = new DateTime();
         $this->endDate->modify("-1 day"); // yesterday
     }
-    
+
+    /**
+     * provide required setup 
+     */
     protected function setup()
     {
         
     }
 
+    /**
+     * Render the view
+     * @return string 
+     */
     public function render()
     {
         if (!$this->isCached()) {

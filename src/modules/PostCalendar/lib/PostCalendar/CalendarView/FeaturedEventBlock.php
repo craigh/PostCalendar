@@ -12,9 +12,27 @@
 class PostCalendar_CalendarView_FeaturedEventBlock extends PostCalendar_CalendarView_Event
 {
 
+    /**
+     * The block vars
+     * @var array
+     */
     protected $blockVars = array();
+
+    /**
+     * The block information
+     * @var type 
+     */
     protected $blockInfo;
 
+    /**
+     * Constructor
+     * 
+     * @param Zikula_View $view
+     * @param DateTime $requestedDate
+     * @param integer $userFilter
+     * @param array $categoryFilter
+     * @param array $blockinfo 
+     */
     function __construct(Zikula_View $view, $requestedDate, $userFilter, $categoryFilter, $blockinfo)
     {
         $this->blockInfo = $blockinfo;
@@ -24,16 +42,25 @@ class PostCalendar_CalendarView_FeaturedEventBlock extends PostCalendar_Calendar
         parent::__construct($view, $requestedDate, $userFilter, $categoryFilter, $this->blockVars['eid']);
     }
 
+    /**
+     * Set the cacheTag 
+     */
     protected function setCacheTag()
     {
         $this->cacheTag = $this->blockInfo['bid'];
     }
 
+    /**
+     * Set the template 
+     */
     protected function setTemplate()
     {
         $this->template = 'blocks/featuredevent.tpl';
     }
 
+    /**
+     * Setup the view 
+     */
     public function setup()
     {
         parent::setup();
@@ -55,6 +82,11 @@ class PostCalendar_CalendarView_FeaturedEventBlock extends PostCalendar_Calendar
         }
     }
 
+    /**
+     * Render the view
+     * 
+     * @return mixed boolena/string 
+     */
     public function render()
     {
         // caching won't help much in this case because security check comes after

@@ -16,26 +16,31 @@
  */
 abstract class PostCalendar_CalendarView_AbstractDays extends PostCalendar_CalendarView_AbstractCalendarViewBase
 {
+    /**
+     * @abstract
+     * AbstractDays
+     * 
+     * An abstract class to construct Calendar View objects containing multiple days.
+     */
 
-    const SUNDAY_IS_FIRST = 0;
-    const MONDAY_IS_FIRST = 1;
-    const SATURDAY_IS_FIRST = 6;
-    
     /**
      * Integer representing the admin-selected value for first day of the week [0-6]
      * @var integer
      */
     protected $firstDayOfWeek;
+
     /**
      * Start Date of range for Calendar View
      * @var DateTime object
      */
     protected $startDate;
+
     /**
      * End Date of range for Calendar View
      * @var Date Time
      */
     protected $endDate;
+
     /**
      * Array of dates to create the Calendar View
      * @var array
@@ -64,6 +69,14 @@ abstract class PostCalendar_CalendarView_AbstractDays extends PostCalendar_Calen
             5 => "pcWeekday",
             6 => "pcWeekday"));
 
+    /**
+     * Constructor
+     * 
+     * @param Zikula_View $view
+     * @param DateTime $requestedDate
+     * @param integer $userFilter
+     * @param array $categoryFilter 
+     */
     function __construct(Zikula_View $view, $requestedDate, $userFilter, $categoryFilter)
     {
         $this->firstDayOfWeek = ModUtil::getVar('PostCalendar', 'pcFirstDayOfWeek');
@@ -117,10 +130,9 @@ abstract class PostCalendar_CalendarView_AbstractDays extends PostCalendar_Calen
                 break;
         }
     }
-    
+
     /**
      * Set startDate, endDate and dateGraph 
      */
     abstract protected function setDates();
-
 }

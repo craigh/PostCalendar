@@ -12,6 +12,9 @@
 class PostCalendar_CalendarView_Nav_Today extends PostCalendar_CalendarView_Nav_AbstractItemBase
 {
 
+    /**
+     * Setup the navitem 
+     */
     public function setup()
     {
         $this->viewtype = $this->view->getRequest()->request->get('viewtype', $this->view->getRequest()->query->get('viewtype', $this->defaultViewtype));
@@ -21,6 +24,9 @@ class PostCalendar_CalendarView_Nav_Today extends PostCalendar_CalendarView_Nav_
         $this->displayImageOff = 'today.gif';
     }
 
+    /**
+     * Set the anchortag 
+     */
     protected function setAnchorTag()
     {
         if (($this->date <> $this->today) && ($this->viewtype <> 'event')) {
@@ -32,6 +38,9 @@ class PostCalendar_CalendarView_Nav_Today extends PostCalendar_CalendarView_Nav_
         }
     }
 
+    /**
+     * Set the radio input 
+     */
     protected function setRadio()
     {
         if (($this->date <> $this->today) && ($this->viewtype <> 'event')) {

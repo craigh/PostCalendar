@@ -12,6 +12,9 @@
 class PostCalendar_CalendarView_Nav_Admin extends PostCalendar_CalendarView_Nav_AbstractItemBase
 {
 
+    /**
+     * Setup the navitem 
+     */
     public function setup()
     {
         $this->viewtype = null;
@@ -19,6 +22,10 @@ class PostCalendar_CalendarView_Nav_Admin extends PostCalendar_CalendarView_Nav_
         $this->displayText = $this->view->__('Admin');
     }
 
+    /**
+     * provide the image params
+     * @return array
+     */
     protected function getImageParams()
     {
         return array(
@@ -27,11 +34,17 @@ class PostCalendar_CalendarView_Nav_Admin extends PostCalendar_CalendarView_Nav_
             'src' => 'configure.png');
     }
 
+    /**
+     * Set the Zikula_ModUrl 
+     */
     protected function setUrl()
     {
         $this->url = new Zikula_ModUrl('PostCalendar', 'admin', 'listevents', ZLanguage::getLanguageCode());
     }
 
+    /**
+     * Set the anchortag
+     */
     protected function setAnchorTag()
     {
         if (SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
@@ -41,6 +54,9 @@ class PostCalendar_CalendarView_Nav_Admin extends PostCalendar_CalendarView_Nav_
         }
     }
 
+    /**
+     * Set the radio input 
+     */
     protected function setRadio()
     {
         if (SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {

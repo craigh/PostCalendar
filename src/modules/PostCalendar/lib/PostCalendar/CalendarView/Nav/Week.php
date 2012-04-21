@@ -12,6 +12,9 @@
 class PostCalendar_CalendarView_Nav_Week extends PostCalendar_CalendarView_Nav_AbstractItemBase
 {
 
+    /**
+     * Setup the navitem 
+     */
     public function setup()
     {
         $this->viewtype = 'week';

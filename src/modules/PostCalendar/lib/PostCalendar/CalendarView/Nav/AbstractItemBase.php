@@ -17,25 +17,90 @@ abstract class PostCalendar_CalendarView_Nav_AbstractItemBase
      * @var object
      */
     protected $view;
+
+    /**
+     * The selected PostCalendar viewtype
+     * @var string
+     */
     protected $viewtype;
-    protected $navbarType;
+
+    /**
+     * The selected navBarType
+     * @see PostCalendar_CalendarView_Navigation
+     * @var string 
+     */
+    protected $navBarType;
+
+    /**
+     * The default PostCalendar viewtype
+     * @var string
+     */
     protected $defaultViewtype;
 
     /**
      * DateTime object
-     * @var object
+     * @var DateTime
      */
     protected $date;
+
+    /**
+     * DateTime object for current DateTime
+     * @var DateTime 
+     */
     protected $today;
+
+    /**
+     * Selected userFilter
+     * @var integer
+     */
     protected $userFilter;
+
+    /**
+     * Text to display if images disabled
+     * @var string
+     */
     protected $displayText;
+
+    /**
+     * Location of image for 'inactive' status
+     * @var string
+     */
     protected $displayImageOff;
+
+    /**
+     * Location of image for 'active' status
+     * @var string
+     */
     protected $displayImageOn;
+
+    /**
+     * Display images in navbar?
+     * @var boolean
+     */
     protected $useDisplayImage = true;
+
+    /**
+     * Use 'tooltips' for titles instead of regular html
+     * @var type 
+     */
     protected $usePopups = false;
-    protected $openInNewWindow = false;
+
+    /**
+     * Css classes used in rendering of item 
+     * @var array 
+     */
     protected $cssClasses = array();
+
+    /**
+     * Text to display as image title
+     * @var string
+     */
     protected $imageTitleText;
+
+    /**
+     * The rendered image html
+     * @var string
+     */
     protected $imageHtml;
 
     /**
@@ -55,7 +120,7 @@ abstract class PostCalendar_CalendarView_Nav_AbstractItemBase
      * @var string
      */
     protected $anchorTag;
-    
+
     /**
      * Fully formed radio button html e.g. <input type="radio"...
      * @var type 
@@ -63,26 +128,12 @@ abstract class PostCalendar_CalendarView_Nav_AbstractItemBase
     protected $radio;
 
     /**
-     * get a url string
-     * @see Zikula_ModUrl
-     * @param boolean? $ssl
-     * @param boolean? $fqurl
-     * @param boolean $forcelongurl
-     * @param boolean $forcelang
-     * @return string 
+     * Constructor
+     * 
+     * @param Zikula_View $view
+     * @param boolean $selected
+     * @param string $navBarType 
      */
-    public function getUrl($ssl = null, $fqurl = null, $forcelongurl = false, $forcelang=false)
-    {
-        return $this->url->getUrl($ssl, $fqurl, $forcelongurl, $forcelang);
-    }
-
-    public function renderAnchorTag()
-    {
-        if (isset($this->anchorTag)) {
-            return $this->anchorTag;
-        }
-    }
-
     public function __construct(Zikula_View $view, $selected, $navBarType)
     {
         $this->view = $view;
@@ -99,12 +150,11 @@ abstract class PostCalendar_CalendarView_Nav_AbstractItemBase
         $this->userFilter = $this->view->getRequest()->request->get('userfilter', $this->view->getRequest()->query->get('userfilter', null));
         $this->useDisplayImage = (boolean)ModUtil::getVar('PostCalendar', 'enablenavimages');
         $this->usePopups = (boolean)ModUtil::getVar('PostCalendar', 'pcUsePopups');
-        $this->openInNewWindow = (boolean)ModUtil::getVar('PostCalendar', 'pcEventsOpenInNewWindow');
         $this->defaultViewtype = ModUtil::getVar('PostCalendar', 'pcDefaultView');
         $this->setup();
         if ($this->navBarType == 'buttonbar') {
             $this->setUrl();
-            $this->setRadio();        
+            $this->setRadio();
         } else {
             $this->postSetup();
             $this->setUrl();
@@ -112,6 +162,9 @@ abstract class PostCalendar_CalendarView_Nav_AbstractItemBase
         }
     }
 
+    /**
+     * Perform operations after the setup method is performed 
+     */
     private function postSetup()
     {
         $params = $this->getImageParams();
@@ -130,6 +183,10 @@ abstract class PostCalendar_CalendarView_Nav_AbstractItemBase
         }
     }
 
+    /**
+     * Get the required image parameters
+     * @return array
+     */
     protected function getImageParams()
     {
         return array(
@@ -139,6 +196,9 @@ abstract class PostCalendar_CalendarView_Nav_AbstractItemBase
             'title' => $this->usePopups ? '' : $this->imageTitleText);
     }
 
+    /**
+     * Set the Zikula_ModUrl object for this item 
+     */
     protected function setUrl()
     {
         $this->url = new Zikula_ModUrl('PostCalendar', 'user', 'display', ZLanguage::getLanguageCode(), array(
@@ -147,13 +207,46 @@ abstract class PostCalendar_CalendarView_Nav_AbstractItemBase
                     'userfilter' => $this->userFilter));
     }
 
+    /**
+     * get a url string
+     * 
+     * @see Zikula_ModUrl
+     * @param boolean? $ssl
+     * @param boolean? $fqurl
+     * @param boolean $forcelongurl
+     * @param boolean $forcelang
+     * @return string 
+     */
+    public function getUrl($ssl = null, $fqurl = null, $forcelongurl = false, $forcelang = false)
+    {
+        return $this->url->getUrl($ssl, $fqurl, $forcelongurl, $forcelang);
+    }
+
+    /**
+     * Set the anchor tag 
+     */
     protected function setAnchorTag()
     {
         $class = implode(' ', $this->cssClasses);
         $display = $this->useDisplayImage ? $this->imageHtml : $this->displayText;
         $this->anchorTag = "<a href='" . $this->getUrl() . "' class='$class' title='$this->imageTitleText'>$display</a>";
     }
-    
+
+    /**
+     * Render the anchortag (e.g. '<a href=...></a>')
+     * 
+     * @return string 
+     */
+    public function renderAnchorTag()
+    {
+        if (isset($this->anchorTag)) {
+            return $this->anchorTag;
+        }
+    }
+
+    /**
+     * Set the radio input selector 
+     */
     protected function setRadio()
     {
         $id = strtolower($this->displayText);
@@ -162,7 +255,11 @@ abstract class PostCalendar_CalendarView_Nav_AbstractItemBase
             <label for='pcnav_{$id}'>{$this->displayText}</label>
             <input type='hidden' id='pcnav_url_{$id}' value='{$this->getUrl(null, true)}' />";
     }
-    
+
+    /**
+     * Render the radio input selector (e.g. '<input type='radio'... />')
+     * @return string
+     */
     public function renderRadio()
     {
         if (isset($this->radio)) {
@@ -170,5 +267,8 @@ abstract class PostCalendar_CalendarView_Nav_AbstractItemBase
         }
     }
 
+    /**
+     * Setup the navitem 
+     */
     abstract public function setup();
 }

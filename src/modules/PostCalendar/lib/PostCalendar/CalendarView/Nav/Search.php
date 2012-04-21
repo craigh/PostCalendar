@@ -12,6 +12,9 @@
 class PostCalendar_CalendarView_Nav_Search extends PostCalendar_CalendarView_Nav_AbstractItemBase
 {
 
+    /**
+     * Setup the navitem 
+     */
     public function setup()
     {
         $this->viewtype = $this->view->getRequest()->request->get('viewtype', $this->view->getRequest()->query->get('viewtype', $this->defaultViewtype));
@@ -21,6 +24,9 @@ class PostCalendar_CalendarView_Nav_Search extends PostCalendar_CalendarView_Nav
         $this->displayImageOff = 'search.gif';
     }
 
+    /**
+     * Set the Zikula_ModUrl 
+     */
     protected function setUrl()
     {
         $this->url = new Zikula_ModUrl('Search', 'user', 'main', ZLanguage::getLanguageCode());

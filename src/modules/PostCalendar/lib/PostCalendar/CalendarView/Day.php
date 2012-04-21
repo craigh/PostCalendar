@@ -11,17 +11,29 @@
  */
 class PostCalendar_CalendarView_Day extends PostCalendar_CalendarView_AbstractCalendarViewBase
 {
+    /**
+     * Display a calendar day and all events 
+     */
 
+    /**
+     * Set the cacheTag 
+     */
     protected function setCacheTag()
     {
         $this->cacheTag = $this->requestedDate->format('Ymd');
     }
 
+    /**
+     * Set the template name 
+     */
     protected function setTemplate()
     {
         $this->template = 'user/day.tpl';
     }
     
+    /**
+     * Setup the view 
+     */
     protected function setup()
     {
         $this->viewtype = 'day';
@@ -42,6 +54,11 @@ class PostCalendar_CalendarView_Day extends PostCalendar_CalendarView_AbstractCa
                     'filtercats' => $this->selectedCategories));
     }
 
+    /**
+     * Render the view
+     * 
+     * @return string 
+     */
     public function render()
     {
         if (!$this->isCached()) {

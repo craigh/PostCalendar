@@ -12,29 +12,38 @@
 class PostCalendar_CalendarView_Month extends PostCalendar_CalendarView_AbstractDays
 {
 
+    /**
+     * Set the cacheTag 
+     */
     protected function setCacheTag()
     {
         $this->cacheTag = $this->requestedDate->format('Ym');
     }
 
+    /**
+     * Set the template 
+     */
     protected function setTemplate()
     {
         $this->template = 'user/month.tpl';
     }
-    
+
+    /**
+     * Set the date range of the view 
+     */
     protected function setDates()
     {
         $this->startDate = clone $this->requestedDate;
         $this->startDate
-             ->modify("first day of this month")
-             ->modify("-" . $this->dayDisplay['firstDayOfMonth'] . " days");
+                ->modify("first day of this month")
+                ->modify("-" . $this->dayDisplay['firstDayOfMonth'] . " days");
         $lastClone = clone $this->requestedDate;
         $lastDayOfMonth = (int)$lastClone->modify("last day of this month")->format("w");
         $this->endDate = clone $this->requestedDate;
         $this->endDate
-             ->modify("last day of this month")
-             ->modify("+" . ((6 + $this->firstDayOfWeek - $lastDayOfMonth) % 7) . " days")
-             ->modify("+1 day");  
+                ->modify("last day of this month")
+                ->modify("+" . ((6 + $this->firstDayOfWeek - $lastDayOfMonth) % 7) . " days")
+                ->modify("+1 day");
 
         $interval = new DateInterval("P1D");
         $datePeriod = new DatePeriod($this->startDate, $interval, $this->endDate);
@@ -50,6 +59,9 @@ class PostCalendar_CalendarView_Month extends PostCalendar_CalendarView_Abstract
         }
     }
 
+    /**
+     * Setup the view 
+     */
     protected function setup()
     {
         $this->viewtype = 'month';
@@ -70,16 +82,20 @@ class PostCalendar_CalendarView_Month extends PostCalendar_CalendarView_Abstract
                     'filtercats' => $this->selectedCategories));
     }
 
+    /**
+     * Render the view
+     * @return string
+     */
     public function render()
     {
         if (!$this->isCached()) {
             // Load the events
             $eventsByDate = ModUtil::apiFunc('PostCalendar', 'event', 'getEvents', array(
-                'start'       => clone $this->startDate,
-                'end'         => clone $this->endDate,
-                'filtercats'  => $this->selectedCategories,
-                'date'        => $this->requestedDate,
-                'userfilter' => $this->userFilter));
+                        'start' => clone $this->startDate,
+                        'end' => clone $this->endDate,
+                        'filtercats' => $this->selectedCategories,
+                        'date' => $this->requestedDate,
+                        'userfilter' => $this->userFilter));
             // create and return template
             $firstClone = clone $this->requestedDate;
             $lastClone = clone $this->requestedDate;

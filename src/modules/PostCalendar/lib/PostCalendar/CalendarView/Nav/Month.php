@@ -12,6 +12,9 @@
 class PostCalendar_CalendarView_Nav_Month extends PostCalendar_CalendarView_Nav_AbstractItemBase
 {
 
+    /**
+     * Setup the navitem 
+     */
     public function setup()
     {
         $this->viewtype = 'month';

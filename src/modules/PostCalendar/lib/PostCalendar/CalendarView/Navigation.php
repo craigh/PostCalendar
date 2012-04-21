@@ -11,17 +11,50 @@
  */
 class PostCalendar_CalendarView_Navigation
 {
+    /**
+     * Provide the rendered navigation html for CalendarViews 
+     */
 
     /**
      * Array of objects/null containing nav items
-     * @var mixed PostCalendar_CalendarView_Nav_AbstractItem or null 
+     * @var mixed array of PostCalendar_CalendarView_Nav_AbstractItemBase objects or null 
      */
     private $navItems = array();
+
+    /**
+     * The template name
+     * @var string
+     */
     private $template = 'user/navigation.tpl';
+
+    /**
+     * Zikula_View instance
+     * @var Zikula_View
+     */
     private $view;
+
+    /**
+     * The requested date
+     * @var DateTime
+     */
     public $requestedDate;
+
+    /**
+     * The selected userFilter
+     * @var integer
+     */
     private $userFilter;
+
+    /**
+     * The selected categories
+     * @var array
+     */
     private $selectedCategories;
+
+    /**
+     * The selected PostCalendar viewtype
+     * @var type 
+     */
     private $viewtype;
 
     /**
@@ -29,11 +62,41 @@ class PostCalendar_CalendarView_Navigation
      * @var boolean 
      */
     public $useFilter = true;
+
+    /**
+     * Display the jumpdate selector?
+     * @var boolean 
+     */
     public $useJumpDate = true;
+
+    /**
+     * Display the Navbar links?
+     * @var boolean 
+     */
     public $useNavBar = true;
+
+    /**
+     * Navbar type (currently 'plain' or 'buttonbar')
+     * @var type 
+     */
     public $navBarType = 'plain';
+
+    /**
+     * The array to render as options in the viewtype selector
+     * @var array
+     */
     public $viewtypeselector = array();
 
+    /**
+     * Constructor
+     * 
+     * @param Zikula_View $view
+     * @param DateTime $requestedDate
+     * @param integer $userFilter
+     * @param array $selectedCategories
+     * @param string $viewtype
+     * @param array $config (optional)
+     */
     public function __construct(Zikula_View $view, $requestedDate, $userFilter, $selectedCategories, $viewtype, $config = null)
     {
         $this->view = $view;
@@ -45,6 +108,8 @@ class PostCalendar_CalendarView_Navigation
             $this->configure($config);
         }
 
+        // construct an array of PostCalendar_CalendarView_Nav_AbstractItemBase objects
+        // to render as a navbar
         $allowedViews = ModUtil::getVar('PostCalendar', 'pcAllowedViews');
         array_unshift($allowedViews, 'admin'); // add 'admin' view for nav purposes (always available to Admin)
         unset($allowedViews[array_search('event', $allowedViews)]); // remove 'event' view for nav purposes
@@ -64,6 +129,11 @@ class PostCalendar_CalendarView_Navigation
         }
     }
 
+    /**
+     * Render the navigation view
+     * 
+     * @return string
+     */
     public function render()
     {
         // caching shouldn't be used because the date and other filter settings may change
@@ -96,6 +166,11 @@ class PostCalendar_CalendarView_Navigation
         return $this->view->fetch($this->template);
     }
 
+    /**
+     * Configure the navigation view
+     * 
+     * @param array $args 
+     */
     private function configure($args)
     {
         if (isset($args['filter'])) {
@@ -112,21 +187,41 @@ class PostCalendar_CalendarView_Navigation
         }
     }
 
+    /**
+     * Get the NavItems
+     * 
+     * @return array of PostCalendar_CalendarView_Nav_AbstractItemBase objects
+     */
     public function getNavItems()
     {
         return $this->navItems;
     }
 
+    /**
+     * Get the selected categories
+     * 
+     * @return array 
+     */
     public function getSelectedCategories()
     {
         return $this->selectedCategories;
     }
 
+    /**
+     * Get the selected PostCalendar viewtype
+     * 
+     * @return string 
+     */
     public function getViewtype()
     {
         return $this->viewtype;
     }
 
+    /**
+     * Get the userFilter
+     * 
+     * @return integer 
+     */
     public function getUserFilter()
     {
         return $this->userFilter;

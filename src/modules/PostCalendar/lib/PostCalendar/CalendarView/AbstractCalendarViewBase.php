@@ -11,6 +11,12 @@
  */
 abstract class PostCalendar_CalendarView_AbstractCalendarViewBase extends Zikula_AbstractHelper
 {
+    /**
+     * @abstract
+     * AbstractCalendarViewBase
+     * 
+     * An abstract class to construct Calendar View objects.
+     */
 
     const SUNDAY_IS_FIRST = 0;
     const MONDAY_IS_FIRST = 1;
@@ -21,9 +27,29 @@ abstract class PostCalendar_CalendarView_AbstractCalendarViewBase extends Zikula
      * @var object 
      */
     protected $view;
+
+    /**
+     * the full name (inc directory) of the template to render
+     * @var string 
+     */
     protected $template;
+
+    /**
+     * The template's cacheTag
+     * @var string 
+     */
     protected $cacheTag;
+
+    /**
+     * The template's cacheId (cacheTag|userId)
+     * @var string 
+     */
     protected $cacheId;
+
+    /**
+     * The selected PostCalendar viewtype
+     * @var string 
+     */
     protected $viewtype;
 
     /**
@@ -32,11 +58,34 @@ abstract class PostCalendar_CalendarView_AbstractCalendarViewBase extends Zikula
      */
     protected $requestedDate;
 
+    /**
+     * Filterview by userId or global/private
+     * @var type 
+     */
     protected $userFilter;
+
+    /**
+     * The current user
+     * @var integer 
+     */
     protected $currentUser;
+
+    /**
+     * Selected catgory ids
+     * @var array
+     */
     protected $selectedCategories = array();
+
+    /**
+     * Event Eid
+     * @var integer 
+     */
     protected $eid;
-    
+
+    /**
+     * The rendered navbar
+     * @var string
+     */
     protected $navBar;
 
     /**
@@ -53,41 +102,66 @@ abstract class PostCalendar_CalendarView_AbstractCalendarViewBase extends Zikula
      */
     protected $events;
 
+    /**
+     * Constructor
+     * 
+     * @param Zikula_View $view
+     * @param DateTime $requestedDate
+     * @param integer $userFilter
+     * @param array $categoryFilter
+     * @param integer $eid 
+     */
     public function __construct(Zikula_View $view, $requestedDate, $userFilter, $categoryFilter, $eid = null)
     {
         $this->domain = ZLanguage::getModuleDomain('PostCalendar');
         $this->view = $view;
         $this->currentUser = UserUtil::getVar('uid');
-        
+
         $this->requestedDate = $requestedDate;
 
         $this->userFilter = $userFilter;
         $this->setSelectedCategories($categoryFilter);
-        
+
         $this->eid = $eid;
 
         $this->setCacheTag();
         $this->cacheId = $this->cacheTag . '|' . $this->currentUser;
         $this->view->setCacheId($this->cacheId);
-        
+
         $this->setTemplate();
 
         $this->setup();
-        
+
         $navBar = new PostCalendar_CalendarView_Navigation($this->view, $this->requestedDate, $this->userFilter, $this->selectedCategories, $this->viewtype, $this->getNavBarConfig());
         $this->navBar = $navBar->render();
     }
 
+    /**
+     * @abstract
+     * Setup the calendarView 
+     */
     abstract protected function setup();
 
+    /**
+     * @abstract
+     * Set the template for this calendarView 
+     */
     abstract protected function setTemplate();
 
+    /**
+     * @abstract
+     * Set the cacheTag for this calendarView 
+     */
     abstract protected function setCacheTag();
 
+    /**
+     * @abstract
+     * Render the calendarView 
+     */
     abstract public function render();
-    
-    /** 
-     * optionally provide config date to the navBar
+
+    /**
+     * optionally provide config data to the navBar
      * override in child class to modify
      * @return array
      */
@@ -97,6 +171,11 @@ abstract class PostCalendar_CalendarView_AbstractCalendarViewBase extends Zikula
             'navbartype' => ModUtil::getVar('PostCalendar', 'pcNavBarType'));
     }
 
+    /**
+     * Check if this calendarView is cached
+     * @param string $template
+     * @return boolean 
+     */
     protected function isCached($template = null)
     {
         if (isset($template)) {
@@ -106,6 +185,10 @@ abstract class PostCalendar_CalendarView_AbstractCalendarViewBase extends Zikula
         }
     }
 
+    /**
+     * Set the selectedCategories based on provided user selections via html select
+     * @param array $filtercats 
+     */
     private function setSelectedCategories($filtercats)
     {
         if (is_array($filtercats)) {
@@ -130,4 +213,5 @@ abstract class PostCalendar_CalendarView_AbstractCalendarViewBase extends Zikula
             }
         }
     }
+
 }

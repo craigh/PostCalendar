@@ -12,6 +12,9 @@
 class PostCalendar_CalendarView_Nav_Create extends PostCalendar_CalendarView_Nav_AbstractItemBase
 {
 
+    /**
+     * Setup the navitem 
+     */
     public function setup()
     {
         $this->viewtype = null;
@@ -21,12 +24,18 @@ class PostCalendar_CalendarView_Nav_Create extends PostCalendar_CalendarView_Nav
         $this->displayImageOff = 'add.gif';
     }
 
+    /**
+     * Set the Zikula_ModUrl
+     */
     protected function setUrl()
     {
         $this->url = new Zikula_ModUrl('PostCalendar', 'event', 'create', ZLanguage::getLanguageCode(), array(
                     'date' => $this->date->format('Ymd')));
     }
-    
+
+    /**
+     * Set the anchortag 
+     */
     protected function setAnchorTag()
     {
         if (SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADD)) {
@@ -36,6 +45,9 @@ class PostCalendar_CalendarView_Nav_Create extends PostCalendar_CalendarView_Nav
         }
     }
 
+    /**
+     * Set the radio input 
+     */
     protected function setRadio()
     {
         if (SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADD)) {

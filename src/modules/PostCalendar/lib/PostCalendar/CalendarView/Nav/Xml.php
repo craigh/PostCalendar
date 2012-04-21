@@ -12,6 +12,9 @@
 class PostCalendar_CalendarView_Nav_Xml extends PostCalendar_CalendarView_Nav_AbstractItemBase
 {
 
+    /**
+     * Setup the navitem 
+     */
     public function setup()
     {
         $this->viewtype = 'xml';
@@ -19,6 +22,11 @@ class PostCalendar_CalendarView_Nav_Xml extends PostCalendar_CalendarView_Nav_Ab
         $this->displayText = $this->view->__('RSS');
     }
 
+    /**
+     * provide the image params
+     * 
+     * @return array 
+     */
     protected function getImageParams()
     {
         return array(
@@ -26,6 +34,9 @@ class PostCalendar_CalendarView_Nav_Xml extends PostCalendar_CalendarView_Nav_Ab
             'src' => 'feed.gif');
     }
 
+    /**
+     * Set the Zikula_ModUrl
+     */
     protected function setUrl()
     {
         $this->url = new Zikula_ModUrl('PostCalendar', 'user', 'display', ZLanguage::getLanguageCode(), array(
@@ -33,6 +44,9 @@ class PostCalendar_CalendarView_Nav_Xml extends PostCalendar_CalendarView_Nav_Ab
                     'theme' => 'rss'));
     }
 
+    /**
+     * Set the anchortag 
+     */
     protected function setAnchorTag()
     {
         if (!ModUtil::getVar('Theme', 'render_expose_template')) {
@@ -43,6 +57,9 @@ class PostCalendar_CalendarView_Nav_Xml extends PostCalendar_CalendarView_Nav_Ab
         }
     }
 
+    /**
+     * Set the radio input 
+     */
     protected function setRadio()
     {
         if (!ModUtil::getVar('Theme', 'render_expose_template')) {
@@ -53,6 +70,9 @@ class PostCalendar_CalendarView_Nav_Xml extends PostCalendar_CalendarView_Nav_Ab
         }
     }
 
+    /**
+     * Setup the page properly to provide an RSS feed 
+     */
     private function prepRss()
     {
         $rsslink = $this->getUrl();

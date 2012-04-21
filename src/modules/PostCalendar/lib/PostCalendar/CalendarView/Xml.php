@@ -11,11 +11,18 @@
  */
 class PostCalendar_CalendarView_Xml extends PostCalendar_CalendarView_List
 {
+
+    /**
+     * Set the template 
+     */
     protected function setTemplate()
     {
         $this->template = 'user/xml.tpl';
     }
-    
+
+    /**
+     * Setup the view 
+     */
     protected function setup()
     {
         $this->viewtype = 'xml';
@@ -30,11 +37,12 @@ class PostCalendar_CalendarView_Xml extends PostCalendar_CalendarView_List
                     'filtercats' => $this->selectedCategories));
         $nextClone = clone $this->requestedDate;
         $nextClone->modify("+" . $this->listMonths . " months")
-                  ->modify("+1 day");
+                ->modify("+1 day");
         $this->navigation['next'] = ModUtil::url('PostCalendar', 'user', 'display', array(
                     'viewtype' => $this->viewtype,
                     'date' => $nextClone->format('Ymd'),
                     'userfilter' => $this->userFilter,
                     'filtercats' => $this->selectedCategories));
     }
+
 }

@@ -12,20 +12,40 @@
 class PostCalendar_CalendarView_Event extends PostCalendar_CalendarView_AbstractCalendarViewBase
 {
 
+    /**
+     * The event to view
+     * 
+     * @var array 
+     */
     protected $event = array();
+
+    /**
+     * Is the view of this event in popup mode?
+     * 
+     * @var boolean 
+     */
     private $popup = false;
 
+    /**
+     * Set the cacheTag 
+     */
     protected function setCacheTag()
     {
         // this is unused in this object. It is set to be not null.
         $this->cacheTag = $this->eid;
     }
 
+    /**
+     * Set the template 
+     */
     protected function setTemplate()
     {
         $this->template = 'user/event.tpl';
     }
 
+    /**
+     * Setup the view 
+     */
     protected function setup()
     {
         $this->viewtype = 'event';
@@ -34,10 +54,15 @@ class PostCalendar_CalendarView_Event extends PostCalendar_CalendarView_Abstract
         $em = ServiceUtil::getService('doctrine.entitymanager');
         $event = $em->getRepository('PostCalendar_Entity_CalendarEvent')->find($this->eid)->getOldArray();
         $this->event = ModUtil::apiFunc('PostCalendar', 'event', 'formateventarrayfordisplay', array(
-            'event' => $event,
-            'currentDate' => $this->requestedDate->format('Y-m-d')));
+                    'event' => $event,
+                    'currentDate' => $this->requestedDate->format('Y-m-d')));
     }
 
+    /**
+     * Override the navBarConfig for event view to hide the filter
+     * 
+     * @return array 
+     */
     protected function getNavBarConfig()
     {
         $parentSettings = parent::getNavBarConfig();
@@ -56,6 +81,11 @@ class PostCalendar_CalendarView_Event extends PostCalendar_CalendarView_Abstract
         return $newArray;
     }
 
+    /**
+     * Render the view
+     * 
+     * @return mixed boolean/string 
+     */
     public function render()
     {
         // caching won't help much in this case because security check comes after
@@ -87,6 +117,11 @@ class PostCalendar_CalendarView_Event extends PostCalendar_CalendarView_Abstract
         }
     }
 
+    /**
+     * Get the event
+     * 
+     * @return array 
+     */
     public function getEvent()
     {
         return $this->event;

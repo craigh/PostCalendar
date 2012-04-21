@@ -11,24 +11,39 @@
  */
 class PostCalendar_CalendarView_List extends PostCalendar_CalendarView_AbstractDays
 {
+
+    /**
+     * How many months to view
+     * 
+     * @var integer
+     */
     protected $listMonths = 1;
 
+    /**
+     * Set the cacheTag 
+     */
     protected function setCacheTag()
     {
         $this->cacheTag = $this->requestedDate->format('Ymd');
     }
 
+    /**
+     * Set the template 
+     */
     protected function setTemplate()
     {
         $this->template = 'user/list.tpl';
     }
-    
+
+    /**
+     * Set the date range of the view 
+     */
     protected function setDates()
     {
         $this->startDate = clone $this->requestedDate;
         $this->endDate = clone $this->requestedDate;
         $this->endDate
-             ->modify("+" . $this->listMonths . " months");  
+                ->modify("+" . $this->listMonths . " months");
 
         $interval = new DateInterval("P1D");
         $datePeriod = new DatePeriod($this->startDate, $interval, $this->endDate);
@@ -44,6 +59,9 @@ class PostCalendar_CalendarView_List extends PostCalendar_CalendarView_AbstractD
         }
     }
 
+    /**
+     * Setup the view 
+     */
     protected function setup()
     {
         $this->viewtype = 'list';
@@ -58,7 +76,7 @@ class PostCalendar_CalendarView_List extends PostCalendar_CalendarView_AbstractD
                     'filtercats' => $this->selectedCategories));
         $nextClone = clone $this->requestedDate;
         $nextClone->modify("+" . $this->listMonths . " months")
-                  ->modify("+1 day");
+                ->modify("+1 day");
         $this->navigation['next'] = ModUtil::url('PostCalendar', 'user', 'display', array(
                     'viewtype' => $this->viewtype,
                     'date' => $nextClone->format('Ymd'),
@@ -66,16 +84,20 @@ class PostCalendar_CalendarView_List extends PostCalendar_CalendarView_AbstractD
                     'filtercats' => $this->selectedCategories));
     }
 
+    /**
+     * Render the view
+     * @return string 
+     */
     public function render()
     {
         if (!$this->isCached()) {
             // Load the events
             $eventsByDate = ModUtil::apiFunc('PostCalendar', 'event', 'getEvents', array(
-                'start'       => $this->startDate,
-                'end'         => $this->endDate,
-                'filtercats'  => $this->selectedCategories,
-                'date'        => $this->requestedDate,
-                'userfilter' => $this->userFilter));
+                        'start' => $this->startDate,
+                        'end' => $this->endDate,
+                        'filtercats' => $this->selectedCategories,
+                        'date' => $this->requestedDate,
+                        'userfilter' => $this->userFilter));
             // create and return template
             $this->view
                     ->assign('navBar', $this->navBar)

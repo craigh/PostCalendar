@@ -12,27 +12,66 @@
 class PostCalendar_CalendarView_CalendarBlock extends PostCalendar_CalendarView_Month
 {
 
+    /**
+     * The block vars
+     * @var array 
+     */
     protected $blockVars = array();
+
+    /**
+     * The block id
+     * @var integer
+     */
     protected $bid;
+
+    /**
+     * The location and name of the template for 'today's events'
+     * @var string
+     */
     protected $todayTemplate;
+
+    /**
+     * The location and name of the template for 'upcoming events'
+     * @var string
+     */
     protected $upcomingTemplate;
+
+    /**
+     * The location and name of the tempalte for 'footer links'
+     * @var type 
+     */
     protected $linksTemplate;
 
+    /**
+     * Constructor
+     * 
+     * @param Zikula_View $view
+     * @param DateTime $requestedDate
+     * @param integer $userFilter
+     * @param array $categoryFilter
+     * @param array $blockinfo 
+     */
     function __construct(Zikula_View $view, $requestedDate, $userFilter, $categoryFilter, $blockinfo)
     {
         $this->bid = $blockinfo['bid'];
         $this->blockVars = BlockUtil::varsFromContent($blockinfo['content']);
         if (!isset($categoryFilter)) {
             $categoryFilter = $this->blockVars['pcbfiltercats'];
-        } 
+        }
         parent::__construct($view, $requestedDate, $userFilter, $categoryFilter);
     }
 
+    /**
+     * Set the cacheTag 
+     */
     protected function setCacheTag()
     {
         $this->cacheTag = $this->bid;
     }
 
+    /**
+     * Set the template names 
+     */
     protected function setTemplate()
     {
         $this->template = 'blocks/month.tpl';
@@ -41,6 +80,9 @@ class PostCalendar_CalendarView_CalendarBlock extends PostCalendar_CalendarView_
         $this->linksTemplate = 'blocks/calendarlinks.tpl';
     }
 
+    /**
+     * Set the date range of this view 
+     */
     protected function setDates()
     {
         parent::setDates();
@@ -51,6 +93,10 @@ class PostCalendar_CalendarView_CalendarBlock extends PostCalendar_CalendarView_
                 ->modify("+" . $this->blockVars['pcbeventsrange'] . " months");
     }
 
+    /**
+     * Render the view
+     * @return string 
+     */
     public function render()
     {
         $output = '';

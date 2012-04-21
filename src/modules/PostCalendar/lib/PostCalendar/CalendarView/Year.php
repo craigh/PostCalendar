@@ -12,16 +12,25 @@
 class PostCalendar_CalendarView_Year extends PostCalendar_CalendarView_AbstractDays
 {
 
+    /**
+     * Set the cacheTag 
+     */
     protected function setCacheTag()
     {
         $this->cacheTag = $this->requestedDate->format('Y');
     }
 
+    /**
+     * Set the template 
+     */
     protected function setTemplate()
     {
         $this->template = 'user/year.tpl';
     }
 
+    /**
+     * Set the date range of this view 
+     */
     protected function setDates()
     {
         $this->startDate = clone $this->requestedDate;
@@ -70,6 +79,9 @@ class PostCalendar_CalendarView_Year extends PostCalendar_CalendarView_AbstractD
         }
     }
 
+    /**
+     * Setup the view 
+     */
     protected function setup()
     {
         $this->viewtype = 'year';
@@ -90,6 +102,11 @@ class PostCalendar_CalendarView_Year extends PostCalendar_CalendarView_AbstractD
                     'filtercats' => $this->selectedCategories));
     }
 
+    /**
+     * Override the navBarConfig for event view to hide the filter
+     * 
+     * @return array 
+     */
     protected function getNavBarConfig()
     {
         $parentSettings = parent::getNavBarConfig();
@@ -108,6 +125,10 @@ class PostCalendar_CalendarView_Year extends PostCalendar_CalendarView_AbstractD
         return $newArray;
     }
 
+    /**
+     * Render the view
+     * @return string 
+     */
     public function render()
     {
         if (!$this->isCached()) {

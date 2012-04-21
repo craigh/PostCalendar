@@ -11,35 +11,54 @@
  */
 class PostCalendar_CalendarView_Week extends PostCalendar_CalendarView_AbstractDays
 {
+
+    /**
+     * An array of values to use in the computation of DateTime objects 
+     * Do not translate!
+     * 
+     * @var array 
+     */
     private $dayMap = array(
         self::SUNDAY_IS_FIRST => "Sunday",
         self::MONDAY_IS_FIRST => "Monday",
         self::SATURDAY_IS_FIRST => "Saturday",
     );
 
+    /**
+     * Set the cacheTag 
+     */
     protected function setCacheTag()
     {
         $this->cacheTag = $this->requestedDate->format('Ym');
     }
 
+    /**
+     * Set the template 
+     */
     protected function setTemplate()
     {
         $this->template = 'user/week.tpl';
     }
-    
+
+    /**
+     * Set the date range of the view 
+     */
     protected function setDates()
     {
         $this->startDate = clone $this->requestedDate;
         if ($this->requestedDate->format('w') <> $this->firstDayOfWeek) {
             $this->startDate
-                ->modify("last " . $this->dayMap[$this->firstDayOfWeek]);
+                    ->modify("last " . $this->dayMap[$this->firstDayOfWeek]);
         }
         $this->endDate = clone $this->requestedDate;
         $this->endDate
-             ->modify("next " . $this->dayMap[$this->firstDayOfWeek])
-             ->modify("-1 day");  
+                ->modify("next " . $this->dayMap[$this->firstDayOfWeek])
+                ->modify("-1 day");
     }
 
+    /**
+     * Setup the view 
+     */
     protected function setup()
     {
         $this->viewtype = 'week';
@@ -63,16 +82,20 @@ class PostCalendar_CalendarView_Week extends PostCalendar_CalendarView_AbstractD
                     'filtercats' => $this->selectedCategories));
     }
 
+    /**
+     * Render the view
+     * @return string 
+     */
     public function render()
     {
         if (!$this->isCached()) {
             // Load the events
             $eventsByDate = ModUtil::apiFunc('PostCalendar', 'event', 'getEvents', array(
-                'start'       => clone $this->startDate,
-                'end'         => clone $this->endDate,
-                'filtercats'  => $this->selectedCategories,
-                'date'        => $this->requestedDate,
-                'userfilter' => $this->userFilter));
+                        'start' => clone $this->startDate,
+                        'end' => clone $this->endDate,
+                        'filtercats' => $this->selectedCategories,
+                        'date' => $this->requestedDate,
+                        'userfilter' => $this->userFilter));
             // create and return template
             $this->view
                     ->assign('navBar', $this->navBar)
