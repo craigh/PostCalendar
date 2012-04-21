@@ -38,6 +38,24 @@ class PostCalendar_CalendarView_Event extends PostCalendar_CalendarView_Abstract
             'currentDate' => $this->requestedDate->format('Y-m-d')));
     }
 
+    protected function getNavBarConfig()
+    {
+        $parentSettings = parent::getNavBarConfig();
+        $newArray = array();
+        if (isset($parentSettings['navbartype'])) {
+            $newArray['navbartype'] = $parentSettings['navbartype'];
+        }
+        if (isset($parentSettings['jumpdate'])) {
+            $newArray['jumpdate'] = $parentSettings['jumpdate'];
+        }
+        if (isset($parentSettings['navbar'])) {
+            $newArray['navbar'] = $parentSettings['navbar'];
+        }
+        // hide filter in year view
+        $newArray['filter'] = false;
+        return $newArray;
+    }
+
     public function render()
     {
         // caching won't help much in this case because security check comes after
