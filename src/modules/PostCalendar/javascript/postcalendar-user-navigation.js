@@ -34,6 +34,7 @@ jQuery(document).ready(function() {
     });
     // open the filterpicker dialog on button click
     jQuery('#pcnav_filterpicker_button').click(function() {
+        jQuery('#pcnav_filterpicker_dialog').css('display', 'inherit');
         jQuery('#pcnav_filterpicker_dialog').dialog('open');
         return false;
     });

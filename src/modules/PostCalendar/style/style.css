@@ -202,6 +202,7 @@ a.postcalendar_nav_text_selected:hover {
     background-image: -moz-linear-gradient(center top , #E5E5E5 0%, #FAFAFA 100%);
 }
 #pcnav_filterpicker_dialog {
+    display: none;
     text-align: left;
     cursor:pointer;
 }
