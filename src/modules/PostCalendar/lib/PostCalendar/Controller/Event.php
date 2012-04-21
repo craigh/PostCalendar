@@ -87,6 +87,7 @@ class PostCalendar_Controller_Event extends Zikula_AbstractController
         $submitted_event = $this->request->request->get('postcalendar_events', NULL);
         // process checkboxes
         $submitted_event['alldayevent'] = (isset($submitted_event['alldayevent'])) ? $submitted_event['alldayevent'] : 0;
+        $submitted_event['html_or_text'] = (isset($submitted_event['html_or_text'])) ? $submitted_event['html_or_text'] : 0;
         $submitted_event['recurrtype'] = (isset($submitted_event['recurrtype'])) ? $submitted_event['recurrtype'] : CalendarEvent::RECURRTYPE_NONE;
 
         $is_update       = $this->request->request->get('is_update', false);

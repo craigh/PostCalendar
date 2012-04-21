@@ -451,7 +451,8 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
         if (empty($event['hometext'])) {
             $event['hometext'] = ':text:' . $this->__(/*!(abbr) not applicable or not available*/'n/a'); // default description
         } else {
-            $event['hometext'] = ':' . $event['html_or_text'] . ':' . $event['hometext']; // inserts :text:/:html: before actual content
+            $type = $event['html_or_text'] ? 'html' : 'text';
+            $event['hometext'] = ":$type:" . $event['hometext']; // inserts :text:/:html: before actual content
         }
 
         $event['url'] = (isset($event['url'])) ? $this->_makeValidURL($event['url']) : '';
