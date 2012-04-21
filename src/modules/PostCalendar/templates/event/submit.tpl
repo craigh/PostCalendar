@@ -66,6 +66,7 @@
                     theme=$jquerytheme 
                     displayformat_datetime=$modvars.PostCalendar.pcDateFormats.date 
                     displayformat_javascript=$modvars.PostCalendar.pcDateFormats.javascript
+                    autoSize='true'
                     onselectcallback='updateFields(this,dateText);'}
                 {jquery_timepicker 
                     defaultdate=$loaded_event.eventStart 
@@ -75,7 +76,7 @@
                     inlinestyle=$inlinestyle
                     theme=$jquerytheme 
                     use24hour=$modvars.PostCalendar.pcTime24Hours 
-                    stepminute=$modvars.PostCalendar.pcTimeIncrement
+                    stepMinute=$modvars.PostCalendar.pcTimeIncrement
                     onclosecallback='updateFields(this,dateText);'}
                 <span style='padding:0 1em;'>{gt text='to'}</span>
                 {jquery_datepicker 
@@ -87,6 +88,7 @@
                     theme=$jquerytheme 
                     displayformat_datetime=$modvars.PostCalendar.pcDateFormats.date 
                     displayformat_javascript=$modvars.PostCalendar.pcDateFormats.javascript
+                    autoSize='true' 
                     onselectcallback='updateFields(this,dateText);'}
                 {jquery_timepicker 
                     defaultdate=$loaded_event.eventEnd 
@@ -96,7 +98,7 @@
                     inlinestyle=$inlinestyle 
                     theme=$jquerytheme 
                     use24hour=$modvars.PostCalendar.pcTime24Hours 
-                    stepminute=$modvars.PostCalendar.pcTimeIncrement
+                    stepMinute=$modvars.PostCalendar.pcTimeIncrement
                     onclosecallback='updateFields(this,dateText);'}
             </span>
         </div>
@@ -139,6 +141,7 @@
                     theme=$jquerytheme
                     displayformat_datetime=$modvars.PostCalendar.pcDateFormats.date 
                     displayformat_javascript=$modvars.PostCalendar.pcDateFormats.javascript
+                    autoSize='true' 
                     onselectcallback='updateFields(this,dateText);'}
             </div>
         </div>

@@ -37,7 +37,7 @@
             theme=$jquerytheme 
             displayformat_datetime=$modvars.PostCalendar.pcDateFormats.date 
             displayformat_javascript=$modvars.PostCalendar.pcDateFormats.javascript
-            submitonselect=true 
+            autoSize='true' 
             mindate="-"|cat:$modvars.PostCalendar.pcFilterYearStart|cat:"Y" 
             maxdate="+"|cat:$modvars.PostCalendar.pcFilterYearEnd|cat:"Y"
             onselectcallback='jQuery(this).closest("form").submit();'}
