@@ -2,6 +2,7 @@ TODO LIST
 
 - category filter not working in admin view (works in user view)
 - admin access to other user calendars not avail with jquery button bar
+- pc_locations plugin still uses prototype
 - make submit form an object
 - upgrade routine
 - Needles are still a guess

@@ -15,7 +15,14 @@ function smarty_function_pc_pagejs_init($params, Zikula_View $view)
     $modVars = $view->get_template_vars('modvars');
     $dom = ZLanguage::getModuleDomain('PostCalendar');
     $title = __('PostCalendar Event', $dom);
+    if ($modVars['PostCalendar']['pcEventsOpenInNewWindow'] || $modVars['PostCalendar']['pcUsePopups']) {
+        // ensure jquery and jquery-ui are loaded
+        PageUtil::addVar("javascript", "jquery-ui");
+    }
     if ($modVars['PostCalendar']['pcEventsOpenInNewWindow']) {
+        $jQueryTheme = 'overcast';
+        $jQueryTheme = is_dir("javascript/jquery-ui/themes/$jQueryTheme") ? $jQueryTheme : 'base';
+        PageUtil::addVar("stylesheet", "javascript/jquery-ui/themes/$jQueryTheme/jquery-ui.css");
         // sample code taken from http://blog.nemikor.com/category/jquery-ui/jquery-ui-dialog/
         $javascript = "
         jQuery(document).ready(function() {
