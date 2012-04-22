@@ -127,12 +127,13 @@ function smarty_function_jquery_timepicker($params, Zikula_View $view)
 
     // load required javascripts
     PageUtil::addVar("javascript", "jquery-ui");
-    PageUtil::addVar("javascript", "javascript/jQuery-Timepicker-Addon/jquery-ui-timepicker-addon.js");
+    PageUtil::addVar("javascript", "javascript/jquery-plugins/jQuery-Timepicker-Addon/jquery-ui-timepicker-addon.js");
     if (!empty($lang) && ($lang <> 'en')) {
-        PageUtil::addVar("javascript", "javascript/jQuery-Timepicker-Addon/localization/jquery-ui-timepicker-$lang.js");
+        PageUtil::addVar("javascript", "javascript/jquery-plugins/jQuery-Timepicker-Addon/localization/jquery-ui-timepicker-$lang.js");
     }
-    JQueryUtil::loadTheme($jQueryTheme);
-    PageUtil::addVar("stylesheet", "javascript/jQuery-Timepicker-Addon/jquery-ui-timepicker-addon.css");
+    $jQueryTheme = is_dir("javascript/jquery-ui/themes/$jQueryTheme") ? $jQueryTheme : 'base';
+    PageUtil::addVar("stylesheet", "javascript/jquery-ui/themes/$jQueryTheme/jquery-ui.css");
+    PageUtil::addVar("stylesheet", "javascript/jquery-plugins/jQuery-Timepicker-Addon/jquery-ui-timepicker-addon.css");
 
     // build the timepicker
     $javascript = "

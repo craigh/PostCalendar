@@ -154,7 +154,8 @@ function smarty_function_jquery_datepicker($params, Zikula_View $view)
     if (!empty($lang) && ($lang <> 'en')) {
         PageUtil::addVar("javascript", "javascript/jquery-ui/i18n/jquery.ui.datepicker-$lang.js");
     }
-    JQueryUtil::loadTheme($jQueryTheme);
+    $jQueryTheme = is_dir("javascript/jquery-ui/themes/$jQueryTheme") ? $jQueryTheme : 'base';
+    PageUtil::addVar("stylesheet", "javascript/jquery-ui/themes/$jQueryTheme/jquery-ui.css");
 
     // build the datepicker
     $javascript = "
