@@ -1,4 +1,4 @@
-{nocache}{ajaxheader module="PostCalendar" ui=true}{pc_pagejs_init}{/nocache}
+{nocache}{pc_pagejs_init}{/nocache}
 {pc_queued_events_notify}
 <form action="{modurl modname='PostCalendar' type='user' func='display'}" id='pcnav-form' method="post" enctype="application/x-www-form-urlencoded">
 <div class="z-clearfix">

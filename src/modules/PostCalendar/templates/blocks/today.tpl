@@ -1,5 +1,4 @@
 {if !$hideTodaysEvents}
-{ajaxheader module="PostCalendar" ui=true}
 {pc_pagejs_init}
 <div class="postcalendar_block_view_day">
 {if $blockVars.pcbshowcalendar eq 1}

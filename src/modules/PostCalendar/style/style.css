@@ -219,6 +219,14 @@ a.postcalendar_nav_text_selected:hover {
     padding-left: 2em;
     display: block;
 }
+div.event_details_popup {
+    text-align: left;
+}
+div.event_details_popup img.loading {
+    position: relative;
+    top: 170px;
+    left: 225px;
+}
 /*********** SMALLMONTHTABLE STYLES **************/
 table.smallmonthtable {
     width: 100%;

@@ -1,4 +1,3 @@
-{ajaxheader module="PostCalendar" ui=true}
 {pc_pagejs_init}
 <div class="postcalendar_block_view_month">
 <table class="smallmonthtable">

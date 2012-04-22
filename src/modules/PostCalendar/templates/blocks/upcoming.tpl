@@ -1,5 +1,4 @@
 {pc_queued_events_notify}
-{ajaxheader module="PostCalendar" ui=true}
 {pc_pagejs_init}
 <div class="postcalendar_block_view_upcoming">
 {if (($blockVars.pcbshowcalendar eq 1) OR ($blockVars.pcbeventoverview eq 1)) }
