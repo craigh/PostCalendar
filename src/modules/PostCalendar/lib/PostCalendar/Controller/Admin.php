@@ -90,20 +90,20 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
         }
         $this->view->assign('sortcolclasses', $sortcolclasses);
 
-        $filtercats = $this->request->query->get('postcalendar_events', $this->request->request->get('postcalendar_events', null));
+        $filtercats = $this->request->query->get('pc_categories', $this->request->request->get('pc_categories', null));
         $filtercats_serialized = $this->request->query->get('filtercats_serialized', false);
         $filtercats = $filtercats_serialized ? unserialize($filtercats_serialized) : $filtercats;
-        $catsarray = PostCalendar_Api_Event::formatCategoryFilter($filtercats);
+        $selectedCategories = PostCalendar_Api_Event::formatCategoryFilter($filtercats);
 
         $events = $this->entityManager->getRepository('PostCalendar_Entity_CalendarEvent')
-                       ->getEventlist($listtype, $sort, $offset-1, $this->getVar('pcListHowManyEvents'), $catsarray);
+                       ->getEventlist($listtype, $sort, $offset-1, $this->getVar('pcListHowManyEvents'), $selectedCategories);
         $events = $this->_appendObjectActions($events, $listtype);
 
         $total_events = $this->entityManager->getRepository('PostCalendar_Entity_CalendarEvent')
-                       ->getEventCount($listtype, $catsarray);
+                       ->getEventCount($listtype, $selectedCategories);
         $this->view->assign('total_events', $total_events);
 
-        $this->view->assign('filter_active', (($listtype == CalendarEvent::ALLSTATUS) && empty($catsarray)) ? false : true);
+        $this->view->assign('filter_active', (($listtype == CalendarEvent::ALLSTATUS) && empty($selectedCategories)) ? false : true);
 
         $this->view->assign('functionname', $functionname);
         $this->view->assign('events', $events);
@@ -111,7 +111,7 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
         foreach ($sorturls as $sorturl) {
             $this->view->assign($sorturl . '_sort_url', ModUtil::url('PostCalendar', 'admin', 'listevents', array(
                 'listtype' => $listtype,
-                'filtercats_serialized' => serialize($filtercats),
+                'filtercats_serialized' => serialize($selectedCategories),
                 'sort' => $sorturl,
                 'sdir' => $sdir)));
         }
@@ -130,17 +130,7 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
         $this->view->assign('listtypeselected', $listtype);
 
         $this->view->assign('catregistry', CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'CalendarEvent'));
-        // convert categories array to proper filter info
-        $selectedcategories = array();
-        if (is_array($filtercats)) {
-            $catsarray = $filtercats['categories'];
-            foreach ($catsarray as $propname => $propid) {
-                if ($propid > 0) {
-                    $selectedcategories[$propname] = $propid; // removes categories set to 'all'
-                }
-            }
-        }
-        $this->view->assign('selectedcategories', $selectedcategories);
+        $this->view->assign('selectedcategories', $selectedCategories);
 
         return $this->view->fetch('admin/showlist.tpl');
     }
