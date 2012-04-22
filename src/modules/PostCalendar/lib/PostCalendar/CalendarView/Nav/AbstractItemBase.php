@@ -252,7 +252,7 @@ abstract class PostCalendar_CalendarView_Nav_AbstractItemBase
         $id = strtolower($this->displayText);
         $checked = $this->selected ? " checked='checked'" : "";
         $this->radio = "<input type='radio'{$checked} id='pcnav_{$id}' class='pcnav_button' name='viewtype' value='{$id}' />
-            <label for='pcnav_{$id}'>{$this->displayText}</label>
+            <label class='tooltips' title='$this->imageTitleText' for='pcnav_{$id}'>{$this->displayText}</label>
             <input type='hidden' id='pcnav_url_{$id}' value='{$this->getUrl(null, true)}' />";
     }
 

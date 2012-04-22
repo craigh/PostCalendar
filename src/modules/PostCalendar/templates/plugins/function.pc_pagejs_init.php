@@ -55,7 +55,7 @@ function smarty_function_pc_pagejs_init($params, Zikula_View $view)
         PageUtil::addVar("stylesheet", "modules/PostCalendar/javascript/jquery-plugins/tipTipv13/tipTip.css");
         $javascript = "
         jQuery(document).ready(function() {
-            jQuery('a.tooltips').tipTip({
+            jQuery('.tooltips').tipTip({
                 delay: 50,
                 fadeIn: 50,
                 fadeOut: 50

@@ -6,7 +6,7 @@
     <div id="pcnav_buttonbar">
         {if $navigationObj->useFilter}
         <input type='text' readonly="readonly" id='pcnav_filterpicker' name='pcnav_filterpicker' value='{gt text='inactive'}' />
-        <input id="pcnav_filterpicker_button" type="image" alt="filter" title='filter categories' src='images/icons/extrasmall/filter.png' />
+        <input id="pcnav_filterpicker_button" type="image" alt="filter" class='tooltips' title='{gt text='filter categories'}' src='images/icons/extrasmall/filter.png' />
         <!-- This is a pop up dialog box -->
         <div id='pcnav_filterpicker_dialog' title='{gt text='Filter view'}'>
             <h5>{gt text='Categories'}</h5>
@@ -41,7 +41,7 @@
             mindate="-"|cat:$modvars.PostCalendar.pcFilterYearStart|cat:"Y" 
             maxdate="+"|cat:$modvars.PostCalendar.pcFilterYearEnd|cat:"Y"
             onselectcallback='jQuery(this).closest("form").submit();'}
-        <input id="pcnav_datepicker_button" type="image" alt="jump" title='jump to date' src='modules/PostCalendar/images/icon-calendar.jpg' />
+        <input id="pcnav_datepicker_button" type="image" alt="jump" class='tooltips' title='{gt text='jump to date'}' src='modules/PostCalendar/images/icon-calendar.jpg' />
         {/if}
         {if $navigationObj->useNavBar}
         {foreach from=$navigationObj->getNavItems() item='navItem'}
