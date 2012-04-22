@@ -157,7 +157,8 @@ class PostCalendar_CalendarView_Navigation
             PageUtil::addVar("javascript", "modules/PostCalendar/javascript/postcalendar-user-navigation.js");
             PageUtil::addVar("jsgettext", "module_postcalendar_js:PostCalendar");
             $jQueryTheme = 'overcast';
-            JQueryUtil::loadTheme($jQueryTheme);
+            $jQueryTheme = is_dir("javascript/jquery-ui/themes/$jQueryTheme") ? $jQueryTheme : 'base';
+            PageUtil::addVar("stylesheet", "javascript/jquery-ui/themes/$jQueryTheme/jquery-ui.css");
             PageUtil::addVar("stylesheet", "modules/PostCalendar/style/jquery-overrides.css");
             $this->view->assign('pcCategories', $categories);
         }
