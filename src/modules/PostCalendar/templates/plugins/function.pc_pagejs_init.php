@@ -37,7 +37,8 @@ function smarty_function_pc_pagejs_init($params, Zikula_View $view)
                             title: '$title',
                             width: 500,
                             height: 400,
-                            draggable: false
+                            draggable: false,
+                            resizable: false
                         });
                     link.click(function() {
                         dialog.dialog('open');
