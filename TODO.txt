@@ -1,11 +1,14 @@
 TODO LIST
 
+- category filter not working in admin view (works in user view)
+- admin access to other user calendars not avail with jquery button bar
 - make submit form an object
 - upgrade routine
 - Needles are still a guess
 - move jquery plugins to core
 - comment and docblock code better
-- replace prototype/livepipe use with jquery (tooltips, popup, category multiselect?)
+- replace prototype/livepipe use with jquery (done except category multiselect)
 - make a navigation sideblock
 - add open graph stuff?
 - use timepicker in Event defaults?
+- eliminate YYYY-MM-DD and replace with YYYYMMDD ?
