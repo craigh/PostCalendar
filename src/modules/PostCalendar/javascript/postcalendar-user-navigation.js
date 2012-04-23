@@ -10,9 +10,53 @@ jQuery(document).ready(function() {
             return this.nodeType == 3;
         }).remove();
     });
+    jQuery('#pcnav').contents().filter(function() {
+        // see note above - removing spaces, etc.
+        return this.nodeType == 3;
+    }).remove();
     // redirect on buttonclick
     jQuery('.pcnav_button').click(function() {
         window.location = jQuery('#pcnav_url_' + jQuery(this).attr('value')).attr("value");
+    });
+    // create the user button
+    jQuery('#pcnav_usercalendar_button').button({
+        icons: {
+            secondary: "ui-icon-triangle-1-s"
+        }
+    });
+    // create the filterpicker dialog
+    jQuery('#pcnav_usercalendar_dialog').dialog({
+        autoOpen: false,
+        width: 200,
+        resizable: false,
+        draggable: false,
+        position: {
+            my: 'left top',
+            at: 'left bottom',
+            of: jQuery('#pcnav_usercalendar_button')
+        }
+    });
+    // open the filterpicker dialog on button click
+    jQuery('#pcnav_usercalendar_button').click(function() {
+        jQuery('#pcnav_usercalendar_dialog').css('display', 'inherit');
+        jQuery('#pcnav_usercalendar_dialog').dialog('open');
+        return false;
+    });
+    // close the filterpicker dialog when clicking outside dialog
+    jQuery(document).click(function(e){
+        if (!jQuery(e.target).parents().filter('.ui-dialog').length) {
+            // close the dialog
+            jQuery('#pcnav_usercalendar_dialog').dialog('close');
+        }
+    });
+    jQuery('.pcusercalendar_selector').click(function() {
+        var id = jQuery(this).attr('id').split("_").pop();
+        if (id == 'GLOBAL') {
+            id = '';
+        }
+        jQuery('#userfilter').attr('value', id);
+        // submit the form
+        jQuery('#pcnav-form').submit();
     });
     // open the datepicker on button click
     jQuery('#pcnav_datepicker_button').click(function() {

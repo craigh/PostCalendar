@@ -113,7 +113,7 @@ table.postcalendar_month col.pcWeekend {
 }
 
 /*********** NAV **************/
-#pcnav_buttonbar {
+#pcnav {
     text-align: right;
 }
 .pcnav_button+label {
@@ -179,6 +179,7 @@ a.postcalendar_nav_text_selected:hover {
     padding: 4px 4px 4px 8px;
     border-bottom-left-radius: 6px;
     border-top-left-radius: 6px;
+    cursor: default;
 }
 #pcnav_filterpicker {
     width: 5em;
@@ -201,10 +202,16 @@ a.postcalendar_nav_text_selected:hover {
     background-color: #FFFFFF;
     background-image: -moz-linear-gradient(center top , #E5E5E5 0%, #FAFAFA 100%);
 }
-#pcnav_filterpicker_dialog {
+#pcnav_filterpicker_dialog,
+#pcnav_usercalendar_dialog {
     display: none;
     text-align: left;
-    cursor:pointer;
+    cursor: pointer;
+}
+#pcnav_usercalendar_button {
+    font-size: 90%;
+    vertical-align: top;
+    margin-right: .8em;
 }
 
 /********** details **************/

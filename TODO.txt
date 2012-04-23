@@ -1,6 +1,5 @@
 TODO LIST
 
-- admin access to other user calendars not avail with jquery button bar
 - pc_locations plugin still uses prototype
 - make submit form an object
 - upgrade routine
@@ -11,3 +10,4 @@ TODO LIST
 - add open graph stuff?
 - use timepicker in Event defaults?
 - eliminate YYYY-MM-DD and replace with YYYYMMDD ?
+- Agenda viewtype?

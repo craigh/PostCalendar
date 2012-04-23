@@ -151,6 +151,8 @@ class PostCalendar_CalendarView_Navigation
             }
         }
         $stylesheet .= "</style>\n";
+        PageUtil::addVar('header', $stylesheet);
+
         if ($this->navBarType == 'buttonbar') {
             PageUtil::addVar("javascript", "jquery");
             PageUtil::addVar("javascript", "jquery-ui");
@@ -161,8 +163,17 @@ class PostCalendar_CalendarView_Navigation
             PageUtil::addVar("stylesheet", "javascript/jquery-ui/themes/$jQueryTheme/jquery-ui.css");
             PageUtil::addVar("stylesheet", "modules/PostCalendar/style/jquery-overrides.css");
             $this->view->assign('pcCategories', $categories);
+            if (SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
+                $allowedGroup = ModUtil::getVar('PostCalendar', 'pcAllowUserCalendar');
+                $group = ModUtil::apiFunc('Groups', 'user', 'get', array(
+                            'gid' => $allowedGroup));
+                $users = array();
+                foreach ($group['members'] as $uid => $uarray) {
+                    $users[$uid] = UserUtil::getVar('uname', $uid);
+                }
+                $this->view->assign('privateCalendarUsers', $users);
+            }
         }
-        PageUtil::addVar('header', $stylesheet);
         $this->view->assign('navigationObj', $this);
         return $this->view->fetch($this->template);
     }
