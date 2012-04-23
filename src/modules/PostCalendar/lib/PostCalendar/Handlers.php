@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PostCalendar
  * 
@@ -8,11 +9,17 @@
  * Please see the NOTICE file distributed with this source code for further
  * information regarding copyright and licensing.
  */
+
 /**
  * post pending content to pending_content Event handler
  */
-class PostCalendar_Handlers {
+class PostCalendar_Handlers
+{
 
+    /**
+     * Event handler to provide pending content
+     * @param Zikula_Event $event 
+     */
     public static function pendingContent(Zikula_Event $event)
     {
         $dom = ZLanguage::getModuleDomain('PostCalendar');
@@ -23,9 +30,16 @@ class PostCalendar_Handlers {
             $event->getSubject()->add($collection);
         }
     }
-    public static function getTypes(Zikula_Event $event) {
+
+    /**
+     * Event handler to provide Content module ContentTypes
+     * @param Zikula_Event $event 
+     */
+    public static function getTypes(Zikula_Event $event)
+    {
         $types = $event->getSubject();
         $types->add('PostCalendar_ContentType_PostCalEvent');
         $types->add('PostCalendar_ContentType_PostCalEvents');
     }
+
 }

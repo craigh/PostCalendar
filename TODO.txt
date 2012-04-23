@@ -4,7 +4,6 @@ TODO LIST
 - make submit form an object
 - upgrade routine
 - Needles are still a guess
-- comment and docblock code better
 - replace prototype/livepipe use with jquery (done except category multiselect)
 - make a navigation sideblock
 - add open graph stuff?

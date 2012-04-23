@@ -17,7 +17,16 @@
 abstract class PostCalendar_PostCalendarEvent_AbstractBase
 {
 
+    /**
+     * The Zikula_ProcessHook
+     * @var Zikula_ProcessHook 
+     */
     private $hook;
+    
+    /**
+     * The PostCalendar event
+     * @var object 
+     */
     private $event;
 
     /**
@@ -30,21 +39,37 @@ abstract class PostCalendar_PostCalendarEvent_AbstractBase
         $this->hook = $hook;
     }
 
+    /**
+     * Get the hook
+     * @return Zikula_ProcessHook 
+     */
     public function getHook()
     {
         return $this->hook;
     }
 
-    public function setHook($hook)
+    /**
+     * Set the hook
+     * @param Zikula_ProcessHook $hook 
+     */
+    public function setHook(Zikula_ProcessHook $hook)
     {
         $this->hook = $hook;
     }
 
+    /**
+     * Get the event
+     * @return PostCalendar_Entity_CalendarEvent 
+     */
     public function getEvent()
     {
         return $this->event;
     }
 
+    /**
+     * Set the event
+     * @param PostCalendar_Entity_CalendarEvent $event 
+     */
     public function setEvent(PostCalendar_Entity_CalendarEvent $event)
     {
         $this->event = $event;
@@ -53,6 +78,10 @@ abstract class PostCalendar_PostCalendarEvent_AbstractBase
         $this->event->setHooked_area($this->hook->getAreaId());
     }
 
+    /**
+     * Set the event categories
+     * @param type $categories 
+     */
     public function setCategories($categories)
     {
         $em = ServiceUtil::getService('doctrine.entitymanager');

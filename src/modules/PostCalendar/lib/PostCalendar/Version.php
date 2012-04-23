@@ -35,6 +35,9 @@ class PostCalendar_Version extends Zikula_AbstractVersion
         return $meta;
     }
 
+    /**
+     * Set up hook subscriber and provider bundles 
+     */
     protected function setupHookBundles()
     {
         $bundle = new Zikula_HookManager_ProviderBundle($this->name, 'provider.postcalendar.ui_hooks.event', 'ui_hooks', $this->__('PostCalendar Event Maker'));

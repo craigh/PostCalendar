@@ -1,3 +1,4 @@
+// hide or show custom dateFormat fields 
 jQuery(document).ready(function(){
     jQuery('#pcEventDateFormat').change(function(){
         if (jQuery('#pcEventDateFormat').attr('value') == "-1") {

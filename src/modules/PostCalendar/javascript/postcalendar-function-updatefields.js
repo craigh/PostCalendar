@@ -1,3 +1,4 @@
+// update companion time and date fields to prevent user from selecting invalid dates and times
 function updateFields(inputElementObj, dateText)
 {
     var fieldName = jQuery(inputElementObj).attr('id');

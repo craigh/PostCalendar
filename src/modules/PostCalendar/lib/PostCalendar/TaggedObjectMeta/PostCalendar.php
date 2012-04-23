@@ -12,6 +12,15 @@
 class PostCalendar_TaggedObjectMeta_PostCalendar extends Tag_AbstractTaggedObjectMeta
 {
 
+    /**
+     * Constructor
+     * 
+     * @param integer $objectId
+     * @param integer $areaId
+     * @param string $module
+     * @param type $urlString
+     * @param Zikula_ModUrl $urlObject 
+     */
     function __construct($objectId, $areaId, $module, $urlString = null, Zikula_ModUrl $urlObject = null)
     {
         parent::__construct($objectId, $areaId, $module, $urlString, $urlObject);
@@ -27,25 +36,40 @@ class PostCalendar_TaggedObjectMeta_PostCalendar extends Tag_AbstractTaggedObjec
             $this->setObjectAuthor("");
             $this->setObjectDate($pc_event['eventStart']->format($formats['date'] . " " . $timeFormat));
             $this->setObjectTitle($pc_event['title']);
-            // do not use default objectURL to compensate for shortUrl handling
         }
     }
 
+    /**
+     * Set the object title
+     * @param string $title 
+     */
     public function setObjectTitle($title)
     {
         $this->title = $title;
     }
 
+    /**
+     * Set the object date
+     * @param string $date 
+     */
     public function setObjectDate($date)
     {
         $this->date = $date;
     }
 
+    /**
+     * Set the object author
+     * @param string $author 
+     */
     public function setObjectAuthor($author)
     {
         $this->author = $author;
     }
-    
+
+    /**
+     * Override the method to present specialized link
+     * @return string 
+     */
     public function getPresentationLink()
     {
         $date = $this->getDate();

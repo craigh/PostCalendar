@@ -49,6 +49,7 @@ jQuery(document).ready(function() {
             jQuery('#pcnav_usercalendar_dialog').dialog('close');
         }
     });
+    // submit the form based on usercalendar selection
     jQuery('.pcusercalendar_selector').click(function() {
         var id = jQuery(this).attr('id').split("_").pop();
         if (id == 'GLOBAL') {

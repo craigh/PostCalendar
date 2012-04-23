@@ -127,7 +127,7 @@ class PostCalendar_Util
             'YMD' => array('date' => 'Y-m-d',
                 'strftime' => '%Y-%m-%d',
                 'javascript' => 'yy-mm-dd'),
-            );
+        );
         if (isset($formatsAvailable[$string])) {
             return $formatsAvailable[$string];
         } else {
@@ -136,5 +136,3 @@ class PostCalendar_Util
     }
 
 }
-
-// end class def

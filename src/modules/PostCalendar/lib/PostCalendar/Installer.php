@@ -185,6 +185,10 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
         }
     }
 
+    /**
+     * Provide legacy ContentType map for upgrade process in Content module
+     * @return array 
+     */
     public static function LegacyContentTypeMap()
     {
         $oldToNew = array(

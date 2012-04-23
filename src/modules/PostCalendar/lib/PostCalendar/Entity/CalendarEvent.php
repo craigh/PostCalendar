@@ -673,6 +673,11 @@ class PostCalendar_Entity_CalendarEvent extends Zikula_EntityAccess
         }
     }
 
+    /**
+     * Convert the object to an array that matches the old way
+     * 
+     * @return array 
+     */
     public function getOldArray()
     {
         $array = parent::toArray();

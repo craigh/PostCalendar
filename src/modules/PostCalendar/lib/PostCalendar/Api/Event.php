@@ -55,7 +55,6 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
     
     /**
      * This function returns an array of events sorted by date
-     *    if either is present, both must be present. else uses today's/jumped date.
      * expected args (from search/postcalendar_search_options): s_keywords, filtercats, seachstart, searchend
      **/
     public function getEvents($args)
