@@ -192,7 +192,6 @@
 
         <div id='postcalendar_events_haslocation_display'{if $loaded_event.haslocation eq false} style="display: none;"{/if}>
             <h5 class='z-formnote'>{gt text='Location'}</h5>
-            {pc_locations}
             <div class="z-formrow">
                 <label for="postcalendar_events_location_event_location">{gt text='Name'}</label>
                 <input type="text" name="postcalendar_events[location][event_location]" id="postcalendar_events_location_event_location" value="{$loaded_event.location.event_location}" />

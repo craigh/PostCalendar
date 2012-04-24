@@ -1,10 +1,11 @@
 TODO LIST
 
-- pc_locations plugin still uses prototype
 - make submit form an object
 - upgrade routine
 - Needles are still a guess
+  - should MultiHook support be removed?
 - replace prototype/livepipe use with jquery (done except category multiselect)
+  - just eliminate multicategory selector?
 - make a navigation sideblock
 - add open graph stuff?
 - use timepicker in Event defaults?

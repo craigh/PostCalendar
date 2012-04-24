@@ -636,33 +636,6 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
     }
 
     /**
-     * @desc take id from locations module and inserts data into correct fields in PostCalendar
-     * @since     06/25/2010
-     * @params      array $event event array
-     * @return      array $event event array (modified)
-     * @note        locations ID is discarded and not available to edit later
-     **/
-    public function correctlocationdata($event)
-    {
-        if (isset($event['location']['locations_id']) && ((int) $event['location']['locations_id'] > 0)) {
-            $locargs = array('locationid' => $event['location']['locations_id']);
-            $locObj = ModUtil::apiFunc('Locations','user','getLocationByID',$locargs);
-
-            $event['location']['event_location'] = $locObj['name'];
-            $event['location']['event_street1']  = $locObj['street'];
-            $event['location']['event_street2']  = $locObj[''];
-            $event['location']['event_city']     = $locObj['city'];
-            $event['location']['event_state']    = $locObj['state'];
-            $event['location']['event_postal']   = $locObj['zip'];
-
-            $event['conttel']   = isset($event['conttel'])   ? $event['conttel']   : $locObj['phone'];
-            $event['contemail'] = isset($event['contemail']) ? $event['contemail'] : $locObj['email'];
-            $event['website']   = isset($event['website'])   ? $event['website']   : $locObj['url'];
-        }
-        return $event;
-    }
-
-    /**
      * @desc convert time array to desired format
      *      WARNING: uses current date for calculations be careful with comparisons
      * @param   array $time array(Hour, Minute, Meridian)

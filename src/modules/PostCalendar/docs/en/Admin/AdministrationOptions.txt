@@ -22,7 +22,6 @@ First Day of Week                |Which Day weeks begin with
 Default Calendar View            |Which calendar view is displayed with no arguments in link to module
 Views/links available...         |Choose which links and views are available to your users (see notes in template)
 ...months ... in list/rss        |how many months into the future (from today) to display in list/rss view
-Enable Locations...              |*(option only displays if Locations module is active)* Enable use of Locations in PostCalendar
 
 #### Navigation display settings
 

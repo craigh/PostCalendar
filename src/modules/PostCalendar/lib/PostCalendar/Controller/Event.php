@@ -125,8 +125,6 @@ class PostCalendar_Controller_Event extends Zikula_AbstractController
             if ($hookvalidators->hasErrors()) {
                 LogUtil::registerError($this->__('Error! Hooked content does not validate.'));
             }
-            // also correct locations data if importing from locations module
-            $submitted_event = ModUtil::apiFunc('PostCalendar', 'event', 'correctlocationdata', $submitted_event);
         }
 
         if ($func == 'create') { // triggered on form_action=preview && on brand new load

@@ -112,13 +112,6 @@
 			<label for="pcListMonths">{gt text='Number of months to display in list/rss view'}</label>
 			<span><input type="text" size="3" maxlength="3" value="{$modvars.PostCalendar.pcListMonths}" id="pcListMonths" name="pcListMonths" /></span>
 		</div>
-        {modavailable modname="Locations" assign="locationsAvailable"}
-        {if $locationsAvailable}
-        <div class="z-formrow">
-			<label for="enablelocations">{gt text='Enable Locations for PostCalendar'}</label>
-			<input type="checkbox" value="1" id="enablelocations" name="enablelocations"{if $modvars.PostCalendar.enablelocations eq true} checked="checked"{/if}/>
-		</div>
-        {/if}
     </fieldset>
 	<fieldset>
         <legend>{gt text='Navigation display settings'}</legend>

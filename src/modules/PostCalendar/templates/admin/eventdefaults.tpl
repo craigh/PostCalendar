@@ -63,7 +63,6 @@
 
     <fieldset>
         <legend>{gt text='Location'}</legend>
-        {pc_locations admin=1}
 		<div class="z-formrow">
             <label for="postcalendar_eventdefaults_location_event_location">{gt text='Name'}</label>
             <input type="text" name="postcalendar_eventdefaults[location][event_location]" id="postcalendar_eventdefaults_location_event_location" value="{$modvars.PostCalendar.pcEventDefaults.location.event_location}" />

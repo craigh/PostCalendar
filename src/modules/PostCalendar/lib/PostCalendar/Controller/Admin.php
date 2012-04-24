@@ -242,7 +242,6 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
             'pcNotifyAdmin2Admin' => $this->request->request->get('pcNotifyAdmin2Admin', 0),
             'pcAllowCatFilter' => $this->request->request->get('pcAllowCatFilter', 0),
             'enablenavimages' => $this->request->request->get('enablenavimages', 0),
-            'enablelocations' => $this->request->request->get('enablelocations', 0),
             'pcFilterYearStart' => abs((int)$this->request->request->get('pcFilterYearStart', $defaults['pcFilterYearStart'])), // ensures positive value
             'pcFilterYearEnd' => abs((int)$this->request->request->get('pcFilterYearEnd', $defaults['pcFilterYearEnd'])), // ensures positive value
             'pcNotifyPending' => $this->request->request->get('pcNotifyPending', 0),
@@ -346,9 +345,6 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
     
         $eventDefaults = $this->request->request->get('postcalendar_eventdefaults'); //array
 
-        // filter through locations translator
-        $eventDefaults = ModUtil::apiFunc('PostCalendar', 'event', 'correctlocationdata', $eventDefaults);
-    
         //convert times to storable values
         $eventDefaults['duration'] = ModUtil::apiFunc('PostCalendar', 'event', 'computeduration', $eventDefaults);
         $eventDefaults['duration'] = ($eventDefaults['duration'] > 0) ? $eventDefaults['duration'] : 3600; //disallow duration < 0

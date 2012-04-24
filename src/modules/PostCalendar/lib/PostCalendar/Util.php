@@ -46,7 +46,6 @@ class PostCalendar_Util
             'pcNavBarType' => 'buttonbar',
             'pcAllowCatFilter' => '1',
             'enablenavimages' => '1',
-            'enablelocations' => '0',
             'pcFilterYearStart' => 1,
             'pcFilterYearEnd' => 2,
             'pcListMonths' => 12,

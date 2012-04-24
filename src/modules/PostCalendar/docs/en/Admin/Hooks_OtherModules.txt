@@ -66,13 +66,5 @@ These two block types are identical in function to standard the Zikula blocks do
 above with the exception that the Upcoming block merges today's events with all 
 upcoming events and does not display the navigation calendar.
 
-## Locations Support
-
-PostCalendar proves integration support with the Locations module. Once the Locations 
-module is active and it is enabled in the PostCalendar module config, a drop-down 
-menu will appear in the event create/edit form as well as the event defaults form. 
-*Technical note: the link to the locations data is not maintained, the data is simply 
-copied to the PostCalendar fields.*
-
 [link1]: <https://github.com/craigh/PostCalendar/wiki/Developer-Docs>
    "PostCalendar Developer Documentation"
