@@ -1,13 +1,14 @@
 <?php
+
 /**
  * @package     PostCalendar
  * @copyright   Copyright (c) 2002, The PostCalendar Team
  * @copyright   Copyright (c) 2009-2012, Craig Heydenburg, Sound Web Development
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
  */
-
 class PostCalendar_Installer extends Zikula_AbstractInstaller
 {
+
     /**
      * Initializes a new install of PostCalendar
      *
@@ -21,20 +22,21 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
     {
         // create tables
         try {
-            DoctrineHelper::createSchema($this->entityManager, array('PostCalendar_Entity_CalendarEvent', 
-                                                                     'PostCalendar_Entity_EventCategory'));
+            DoctrineHelper::createSchema($this->entityManager, array('PostCalendar_Entity_CalendarEvent',
+                'PostCalendar_Entity_EventCategory',
+                'PostCalendar_Entity_RecurExceptions'));
         } catch (Exception $e) {
             LogUtil::registerError($this->__f('Error! Could not create tables (%s).', $e->getMessage()));
             return false;
         }
-        
+
         // insert default category
         try {
             $this->createCategoryTree();
         } catch (Exception $e) {
             LogUtil::registerError($this->__f('Did not create default categories (%s).', $e->getMessage()));
         }
-        
+
 
         // PostCalendar Default Settings
         $defaultsettings = PostCalendar_Util::getdefaults();
@@ -82,7 +84,7 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
 
         switch ($oldversion) {
             case '7.0.0':
-                // no changes
+            // no changes
             case '7.0.1':
                 // update category registry data to change tablename to EntityName
                 // add category relation table
@@ -98,14 +100,14 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
                 // convert eventDate + startTime -> (DateTime) eventStart
                 // convert eventStart + duration -> (DateTime) eventEnd
                 $defaultsettings = PostCalendar_Util::getdefaults();
-                // convert old pcEventDateFormat to new setting/default (still needed? @see pcDateFormats)
-                // remove pcNavDateOrder
-                // add pcDateFormats
-                // add pcNavBarType
-                // remove enablecategorization
-                // remove enablelocations
+            // convert old pcEventDateFormat to new setting/default (still needed? @see pcDateFormats)
+            // remove pcNavDateOrder
+            // add pcDateFormats
+            // add pcNavBarType
+            // remove enablecategorization
+            // remove enablelocations
             case '8.0.0':
-                //future development
+            //future development
         }
 
         return true;
@@ -123,13 +125,14 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
     public function uninstall()
     {
         //drop the tables
-        DoctrineHelper::dropSchema($this->entityManager, array('PostCalendar_Entity_CalendarEvent', 
-                                                               'PostCalendar_Entity_EventCategory'));
+        DoctrineHelper::dropSchema($this->entityManager, array('PostCalendar_Entity_CalendarEvent',
+            'PostCalendar_Entity_EventCategory',
+            'PostCalendar_Entity_RecurExceptions'));
         $this->delVars();
-        
+
         // Delete entries from category registry
         CategoryRegistryUtil::deleteEntry('PostCalendar');
-        
+
         // unregister handlers
         EventUtil::unregisterPersistentModuleHandlers('PostCalendar');
 
@@ -167,7 +170,7 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
 
         return true;
     }
-    
+
     /**
      * create the category tree
      * @return void
@@ -199,4 +202,4 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
         return $oldToNew;
     }
 
-} // end class def
+}
