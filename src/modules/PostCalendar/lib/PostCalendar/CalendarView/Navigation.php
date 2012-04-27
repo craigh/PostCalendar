@@ -157,6 +157,7 @@ class PostCalendar_CalendarView_Navigation
             PageUtil::addVar("javascript", "jquery");
             PageUtil::addVar("javascript", "jquery-ui");
             PageUtil::addVar("javascript", "modules/PostCalendar/javascript/postcalendar-user-navigation.js");
+            PageUtil::addVar("javascript", "zikula");
             PageUtil::addVar("jsgettext", "module_postcalendar_js:PostCalendar");
             $jQueryTheme = 'overcast';
             $jQueryTheme = is_dir("javascript/jquery-ui/themes/$jQueryTheme") ? $jQueryTheme : 'base';
