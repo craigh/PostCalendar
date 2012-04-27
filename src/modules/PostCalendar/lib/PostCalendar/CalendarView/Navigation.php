@@ -157,6 +157,7 @@ class PostCalendar_CalendarView_Navigation
             PageUtil::addVar("javascript", "jquery");
             PageUtil::addVar("javascript", "jquery-ui");
             PageUtil::addVar("javascript", "modules/PostCalendar/javascript/postcalendar-user-navigation.js");
+            PageUtil::addVar("javascript", "zikula");
             PageUtil::addVar("jsgettext", "module_postcalendar_js:PostCalendar");
             $jQueryTheme = 'overcast';
             $jQueryTheme = is_dir("javascript/jquery-ui/themes/$jQueryTheme") ? $jQueryTheme : 'base';
@@ -165,13 +166,15 @@ class PostCalendar_CalendarView_Navigation
             $this->view->assign('pcCategories', $categories);
             if (SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
                 $allowedGroup = ModUtil::getVar('PostCalendar', 'pcAllowUserCalendar');
-                $group = ModUtil::apiFunc('Groups', 'user', 'get', array(
-                            'gid' => $allowedGroup));
-                $users = array();
-                foreach ($group['members'] as $uid => $uarray) {
-                    $users[$uid] = UserUtil::getVar('uname', $uid);
+                if ($allowedGroup > 0) {
+                    $group = ModUtil::apiFunc('Groups', 'user', 'get', array(
+                                'gid' => $allowedGroup));
+                    $users = array();
+                    foreach ($group['members'] as $uid => $uarray) {
+                        $users[$uid] = UserUtil::getVar('uname', $uid);
+                    }
+                    $this->view->assign('privateCalendarUsers', $users);
                 }
-                $this->view->assign('privateCalendarUsers', $users);
             }
         }
         $this->view->assign('navigationObj', $this);

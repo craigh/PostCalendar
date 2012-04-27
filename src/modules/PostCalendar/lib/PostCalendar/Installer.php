@@ -185,7 +185,11 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
         $rootcat = CategoryUtil::getCategoryByPath('/__SYSTEM__/Modules/PostCalendar');
         if ($rootcat) {
             // create an entry in the categories registry to the Main property
-            CategoryRegistryUtil::insertEntry('PostCalendar', 'CalendarEvent', 'Main', $rootcat['id']);
+            if (!CategoryRegistryUtil::insertEntry('PostCalendar', 'CalendarEvent', 'Main', $rootcat['id'])) {
+                throw new Zikula_Exception("Cannot insert Category Registry entry.");
+            }
+        } else {
+            $this->throwNotFound("Root category not found.");
         }
     }
 
