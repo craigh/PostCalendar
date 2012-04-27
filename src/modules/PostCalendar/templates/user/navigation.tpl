@@ -13,6 +13,7 @@
         {else}
             {usergetvar uid=$uid name='uname' assign='uname'}
         {/if}
+        {if !empty($modvars.PostCalendar.pcAllowUserCalendar)}
         <button id='pcnav_usercalendar_button'>{$uname}</button>
         <!-- This is a pop up dialog box -->
         <div id='pcnav_usercalendar_dialog' title='{gt text='View private events of'}:'>
@@ -24,6 +25,7 @@
             </ul>
         </div>
         <!-- end dialog -->
+        {/if}
         {/checkpermissionblock}
         <input type='text' readonly="readonly" id='pcnav_filterpicker' name='pcnav_filterpicker' value='{gt text='inactive'}' />
         <input id="pcnav_filterpicker_button" type="image" alt="filter" class='tooltips' title='{gt text='filter categories and private/global'}' src='images/icons/extrasmall/filter.png' />
@@ -37,6 +39,7 @@
                 {/foreach}
             {/foreach}
             </ul>
+            {if !empty($modvars.PostCalendar.pcAllowUserCalendar)}
             {checkgroup gid=$modvars.PostCalendar.pcAllowUserCalendar}
             <h5>{gt text='Visibility'}</h5>
             <ul>
@@ -44,6 +47,7 @@
                 <li class='pcvisibility_selector' id='pcviz_global'>{gt text='Global events'}</li>
             </ul>
             {/checkgroup}
+            {/if}
         </div>
         <!-- end dialog -->
         {/if}

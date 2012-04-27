@@ -165,13 +165,15 @@ class PostCalendar_CalendarView_Navigation
             $this->view->assign('pcCategories', $categories);
             if (SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
                 $allowedGroup = ModUtil::getVar('PostCalendar', 'pcAllowUserCalendar');
-                $group = ModUtil::apiFunc('Groups', 'user', 'get', array(
-                            'gid' => $allowedGroup));
-                $users = array();
-                foreach ($group['members'] as $uid => $uarray) {
-                    $users[$uid] = UserUtil::getVar('uname', $uid);
+                if ($allowedGroup > 0) {
+                    $group = ModUtil::apiFunc('Groups', 'user', 'get', array(
+                                'gid' => $allowedGroup));
+                    $users = array();
+                    foreach ($group['members'] as $uid => $uarray) {
+                        $users[$uid] = UserUtil::getVar('uname', $uid);
+                    }
+                    $this->view->assign('privateCalendarUsers', $users);
                 }
-                $this->view->assign('privateCalendarUsers', $users);
             }
         }
         $this->view->assign('navigationObj', $this);
