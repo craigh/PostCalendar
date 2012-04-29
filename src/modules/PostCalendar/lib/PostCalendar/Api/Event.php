@@ -622,13 +622,16 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
         }
         $rfreq = $event['recurrspec']['event_repeat_on_freq'];
         $today = new DateTime();
+        $today->setTime(12, 00);
         $count = 0;
         foreach ($period as $date) {
+            $date->setTime(12, 00);
             if (($includePast && ($date < $today)) || ($date >= $today)) {
                 if (($event['recurrtype'] <> CalendarEvent::RECURRTYPE_REPEAT_ON) 
                         || (($event['recurrtype'] == CalendarEvent::RECURRTYPE_REPEAT_ON) && (($count == 0) || ($rfreq == $count)))) {
-                    echo "<pre>", var_dump($event['recurrspec']['exceptions']), "</pre>";
-                    $occurances[] = $date->format('Y-m-d');
+                    if (!in_array($date, $event['recurrspec']['exceptions'])) {
+                        $occurances[] = $date->format('Y-m-d');
+                    }
                     $count = 0;
                 }
                 $count++;

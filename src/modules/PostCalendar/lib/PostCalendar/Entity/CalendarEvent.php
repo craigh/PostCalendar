@@ -732,7 +732,7 @@ class PostCalendar_Entity_CalendarEvent extends Zikula_EntityAccess
         $array['recurrspec']['exceptions'] = array();
         $exceptions = $this->getRecurExceptions();
         foreach($exceptions as $exception) {
-            $array['recurrspec']['exceptions'][] = $exception->getException();
+            $array['recurrspec']['exceptions'][] = $exception->getException()->setTime(12, 00);
         }
 
         return $array;
