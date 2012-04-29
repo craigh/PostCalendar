@@ -27,22 +27,6 @@ class PostCalendar_Controller_User extends Zikula_AbstractController
      */
     public function display($args)
     {
-        $myArray = array();
-        $now = new DateTime();
-        $alsoNow = clone $now;
-        $myArray[0] = $now;
-        $myArray[1] = new DateTime();
-        $myArray[1]->modify("+1 day");
-        $myArray[2] = new DateTime();
-        $myArray[2]->modify("+1 week");
-
-        echo "<pre>", var_dump($myArray), "</pre>";
-        if (in_array($alsoNow, $myArray)) {
-            echo "now in array<br/ >";
-        }
-        
-        
-        
         $this->throwForbiddenUnless(SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_OVERVIEW), LogUtil::getErrorMsgPermission());
         $defaultView = $this->getVar('pcDefaultView');
         // get the vars that were passed in
