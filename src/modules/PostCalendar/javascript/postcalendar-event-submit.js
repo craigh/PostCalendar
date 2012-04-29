@@ -41,4 +41,63 @@ jQuery(document).ready(function(){
             jQuery('#postcalendar_events_hascontact_display').hide("slow");
         }
     });
+    // hide or show recur exceptions
+    jQuery('#postcalendar_events_hasexceptions').click(function(){
+        if (jQuery('#postcalendar_events_hasexceptions').is(':checked')) {
+            jQuery('#postcalendar_exceptions').show("slow");
+        } else {
+            jQuery('#postcalendar_exceptions').hide("slow");
+        }
+    });
+    // add new exception form field on click
+    jQuery('.addexception').click(function() {
+        var parent = jQuery(this).parent();
+        // rename the first storage element to hold arrays
+        parent.find('input:hidden').attr('name', 'postcalendar_events[recurexceptionstorage][]');        
+        // compute the id number
+        var exceptionIndex = parent.attr('id').split("-").pop();
+        exceptionIndex++;
+        // clone the parent container and change the ids and names
+        var newChild = parent.clone(true)
+            // find display element and rename
+            .find('input.hasDatepicker')
+            .attr('name', 'postcalendar_events[recurexceptiondisplay_' + exceptionIndex + ']')
+            .attr('id', 'recurexceptiondisplay_' + exceptionIndex)
+            // find storage element rename
+            .end().find('input.hasDatepicker+input')
+            .attr('name', 'postcalendar_events[recurexceptionstorage][]')
+            .attr('id', 'recurexceptionstorage_' + exceptionIndex)
+            .end()
+            // re-id container
+            .attr('id', 'postcalendar_exceptions-' + exceptionIndex);
+        // insert the new container
+        parent.after(newChild);
+        // reinitialize cloned datepicker
+        var oldDateInput = parent.find('input:text');
+        var newDateInput = newChild.find('input:text');
+        newDateInput.siblings('.ui-datepicker-trigger,.ui-datepicker-apply').remove();
+        newDateInput
+            .removeClass('hasDatepicker')
+            .removeData('datepicker')
+            .unbind()
+            .datepicker({
+                // copy old settings to new instance
+                autoSize: oldDateInput.datepicker('option', 'autoSize'),
+                altField: '#recurexceptionstorage_' + exceptionIndex,
+                altFormat: oldDateInput.datepicker('option', 'altFormat'),
+                minDate: oldDateInput.datepicker('option', 'minDate'),
+                dateFormat: oldDateInput.datepicker('option', 'dateFormat'),
+                defaultDate: oldDateInput.datepicker('option', 'defaultDate')
+            });
+        // remove add button
+        jQuery(this).remove();
+        // return false so button doesn't process form
+        return false;
+    });
+    jQuery('.deleteexception').click(function() {
+        // remove the entire container
+        jQuery(this).parent().remove();
+        // return false so button doesn't process form
+        return false;
+    });
 });
