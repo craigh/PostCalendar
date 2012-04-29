@@ -4,8 +4,11 @@ TODO LIST
 - upgrade routine
 - Needles are still a guess
   - should MultiHook support be removed?
+
+IDEAS:
 - make a navigation sideblock
 - add open graph stuff?
 - use timepicker in Event defaults?
 - eliminate YYYY-MM-DD and replace with YYYYMMDD ?
 - Agenda viewtype?
+- add right-click context menu for edit/delete event from multi-day views?
