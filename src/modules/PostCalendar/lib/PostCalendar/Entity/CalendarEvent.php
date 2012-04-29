@@ -728,9 +728,9 @@ class PostCalendar_Entity_CalendarEvent extends Zikula_EntityAccess
         }
         $array['time'] = $this->getTime()->format('Y-m-d H:i:s');
         
-//        unset($array['recurExceptions']);
-//        $array['recurspec']['exceptions'] = array();
-//        $exceptions = $this->getRecurExceptions();
+        unset($array['recurExceptions']);
+        $array['recurspec']['exceptions'] = array();
+        $exceptions = $this->getRecurExceptions();
 //        foreach($exceptions as $exception) {
 //            $array['recurspec']['exceptions'][] = $exception->getException();
 //        }
