@@ -148,7 +148,7 @@ class PostCalendar_Entity_CalendarEvent extends Zikula_EntityAccess
     /**
      * An array of DateTime objects that are disallowed in the recurrance sequence
      * 
-     * @ORM\OneToMany(targetEntity="PostCalendar_Entity_CalendarEvent", cascade={"all"}, 
+     * @ORM\OneToMany(targetEntity="PostCalendar_Entity_RecurException", cascade={"all"}, 
      *                orphanRemoval=true, mappedBy="event")
      */
     private $recurExceptions;
@@ -729,11 +729,11 @@ class PostCalendar_Entity_CalendarEvent extends Zikula_EntityAccess
         $array['time'] = $this->getTime()->format('Y-m-d H:i:s');
         
         unset($array['recurExceptions']);
-        $array['recurspec']['exceptions'] = array();
+        $array['recurrspec']['exceptions'] = array();
         $exceptions = $this->getRecurExceptions();
-//        foreach($exceptions as $exception) {
-//            $array['recurspec']['exceptions'][] = $exception->getException();
-//        }
+        foreach($exceptions as $exception) {
+            $array['recurrspec']['exceptions'][] = $exception->getException();
+        }
 
         return $array;
     }
