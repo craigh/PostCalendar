@@ -13,8 +13,11 @@ jQuery(document).ready(function(){
     jQuery('#postcalendar_events_repeats').click(function(){
         if (jQuery('#postcalendar_events_repeats').is(':checked')) {
             jQuery('#postcalendar_repetitionsettings').show("slow");
+            jQuery('#postcalendar_events_recurrtype1').attr("checked", "checked");
         } else {
             jQuery('#postcalendar_repetitionsettings').hide("slow");
+            jQuery('#postcalendar_events_recurrtype1').removeAttr("checked");
+            jQuery('#postcalendar_events_recurrtype2').removeAttr("checked");
         }
     });
     // hide or show allowed html based on text type
