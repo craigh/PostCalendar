@@ -113,7 +113,7 @@
             <label for="postcalendar_events_repeats">{gt text='Event repeats'}</label>
         </div>
 
-        <div id="postcalendar_repetitionsettings" class='z-formnote'{if $loaded_event.repeats eq false} style="display: none;"{/if} class="z-formrow">
+        <div id="postcalendar_repetitionsettings" class='z-formrow z-formnote'{if $loaded_event.repeats eq false} style="display: none;"{/if}>
             <h5>{gt text='Repetition settings'}</h5>
             <div>
                 <input type="radio" name="postcalendar_events[recurrtype]" id="postcalendar_events_recurrtype1" value="1"{$SelectedRepeat} />
@@ -143,6 +143,27 @@
                     displayformat_javascript=$modvars.PostCalendar.pcDateFormats.javascript
                     autoSize='true' 
                     onselectcallback='updateFields(this,dateText);'}
+            </div>
+            <div>
+                <input type="checkbox" value="1" id="postcalendar_events_hasexceptions" name="postcalendar_events[hasexceptions]"{if $loaded_event.hasexceptions eq true} checked="checked"{/if} />
+                <label for="postcalendar_events_hasexceptions">{gt text='Repeat has exceptions'}</label>
+            </div>
+            <div id='postcalendar_exceptions'{if $loaded_event.hasexceptions eq false} style="display: none;"{/if}>
+                <div id='postcalendar_exceptions-1'>
+                    <label>{gt text='Event does not occur on'}...</label>
+                    {jquery_datepicker 
+                        defaultdate=$loaded_event.endDate 
+                        displayelement='recurexceptiondisplay_1' 
+                        object='postcalendar_events' 
+                        valuestorageelement='recurexceptionstorage' 
+                        mindate=$loaded_event.eventEnd 
+                        theme=$jquerytheme
+                        displayformat_datetime=$modvars.PostCalendar.pcDateFormats.date 
+                        displayformat_javascript=$modvars.PostCalendar.pcDateFormats.javascript
+                        autoSize='true'}
+                    <button class='addexception'>{gt text='add another'}</button>
+                    <button class='deleteexception'>{gt text='delete'}</button>
+                </div>
             </div>
         </div>
 
