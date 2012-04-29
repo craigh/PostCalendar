@@ -149,21 +149,39 @@
                 <label for="postcalendar_events_hasexceptions">{gt text='Repeat has exceptions'}</label>
             </div>
             <div id='postcalendar_exceptions'{if $loaded_event.hasexceptions eq false} style="display: none;"{/if}>
+                {foreach from=$loaded_event.recurrspec.exceptions item='exception' name='exceptionarray'}
+                <div id='postcalendar_exceptions-{$smarty.foreach.exceptionarray.iteration}'>
+                    <label>{gt text='Event does not occur on'}...</label>
+                    {jquery_datepicker 
+                        defaultdate=$exception 
+                        displayelement='recurexceptiondisplay_'|cat:$smarty.foreach.exceptionarray.iteration 
+                        object='postcalendar_events' 
+                        valuestorageelement='recurexceptionstorage_'|cat:$smarty.foreach.exceptionarray.iteration 
+                        mindate=$loaded_event.eventEnd 
+                        theme=$jquerytheme
+                        displayformat_datetime=$modvars.PostCalendar.pcDateFormats.date 
+                        displayformat_javascript=$modvars.PostCalendar.pcDateFormats.javascript
+                        autoSize='true'}
+                    <button class='addexception'{if !($smarty.foreach.exceptionarray.last)} style='display: none;'{/if}>{gt text='add another'}</button>
+                    <button class='deleteexception'{if $smarty.foreach.exceptionarray.last} style='display: none;'{/if}>{gt text='delete'}</button>
+                </div>
+                {foreachelse}
                 <div id='postcalendar_exceptions-1'>
                     <label>{gt text='Event does not occur on'}...</label>
                     {jquery_datepicker 
                         defaultdate=$loaded_event.endDate 
                         displayelement='recurexceptiondisplay_1' 
                         object='postcalendar_events' 
-                        valuestorageelement='recurexceptionstorage' 
+                        valuestorageelement='recurexceptionstorage_1' 
                         mindate=$loaded_event.eventEnd 
                         theme=$jquerytheme
                         displayformat_datetime=$modvars.PostCalendar.pcDateFormats.date 
                         displayformat_javascript=$modvars.PostCalendar.pcDateFormats.javascript
                         autoSize='true'}
                     <button class='addexception'>{gt text='add another'}</button>
-                    <button class='deleteexception'>{gt text='delete'}</button>
+                    <button class='deleteexception' style='display: none;'>{gt text='delete'}</button>
                 </div>
+                {/foreach}
             </div>
         </div>
 

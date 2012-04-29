@@ -283,6 +283,9 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
         if (empty($eventdata['recurrspec']['event_repeat_on_day']) || $eventdata['recurrspec']['event_repeat_on_day'] < 1) {
             $eventdata['recurrspec']['event_repeat_on_day'] = self::REPEAT_ON_SUN;
         }
+        if (!isset($eventdata['recurrspec']['exceptions'])) {
+            $eventdata['recurrspec']['exceptions'] = array();
+        }
 
         // Assign the content format (determines if scribite is in use)
         $form_data['formattedcontent'] = $this->isformatted(array(

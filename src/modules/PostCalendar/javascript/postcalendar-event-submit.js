@@ -55,8 +55,6 @@ jQuery(document).ready(function(){
     // add new exception form field on click
     jQuery('.addexception').click(function() {
         var parent = jQuery(this).parent();
-        // rename the first storage element to hold arrays
-        parent.find('input:hidden').attr('name', 'postcalendar_events[recurexceptionstorage][]');        
         // compute the id number
         var exceptionIndex = parent.attr('id').split("-").pop();
         exceptionIndex++;
@@ -94,6 +92,8 @@ jQuery(document).ready(function(){
             });
         // remove add button
         jQuery(this).remove();
+        // show delete button
+        parent.find('.deleteexception').show();
         // return false so button doesn't process form
         return false;
     });
@@ -103,4 +103,6 @@ jQuery(document).ready(function(){
         // return false so button doesn't process form
         return false;
     });
+    // rename all the storage elements to hold arrays
+    jQuery('#postcalendar_exceptions').find('input:hidden').attr('name', 'postcalendar_events[recurexceptionstorage][]');        
 });
