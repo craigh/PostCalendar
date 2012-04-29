@@ -144,6 +144,13 @@ class PostCalendar_Entity_CalendarEvent extends Zikula_EntityAccess
         "event_repeat_on_day" => "0",
         "event_repeat_on_freq" => "1"
     );
+    
+    /**
+     * An array of DateTime objects that are disallowed in the recurrance sequence
+     * 
+     * @ORM\OneToMany(targetEntity="PostCalendar_Entity_CalendarEvent", mappedBy="event")
+     */
+    private $recurExceptions;
 
     /**
      * Event Start time
@@ -264,6 +271,7 @@ class PostCalendar_Entity_CalendarEvent extends Zikula_EntityAccess
     public function __construct()
     {
         $this->categories = new ArrayCollection();
+        $this->recurExceptions = new ArrayCollection();
         $currentDateTime = new DateTime();
         $this->setEventStart(clone $currentDateTime);
         $this->setEventEnd(clone $currentDateTime);
@@ -415,6 +423,16 @@ class PostCalendar_Entity_CalendarEvent extends Zikula_EntityAccess
     public function setRecurrspec(array $recurrspec)
     {
         $this->recurrspec = $recurrspec;
+    }
+    
+    public function getRecurExceptions()
+    {
+        return $this->recurExceptions;
+    }
+
+    public function setRecurExceptions($recurExceptions)
+    {
+        $this->recurExceptions = $recurExceptions;
     }
 
     public function getStartTime()
