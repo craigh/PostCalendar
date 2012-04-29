@@ -309,7 +309,7 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
 
         $eventdata['haslocation'] = !empty($eventdata['location']['event_location']) || !empty($eventdata['location']['event_street1']) || !empty($eventdata['location']['event_street2']) || !empty($eventdata['location']['event_city']) || !empty($eventdata['location']['event_state']) || !empty($eventdata['location']['event_postal']);
         $eventdata['hascontact'] = !empty($eventdata['contname']) || !empty($eventdata['conttel']) || !empty($eventdata['contemail']) || !empty($eventdata['website']);
-        $eventdata['hasexceptions'] = (count($eventdata['recurrspec']['exceptions']) > 0);
+        $eventdata['hasexceptions'] = ((isset($eventdata['recurrspec']['exceptions'])) && (count($eventdata['recurrspec']['exceptions']) > 0));
 
         // assign loaded data or default values
         $form_data['loaded_event'] = $eventdata;
