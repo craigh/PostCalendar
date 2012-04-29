@@ -13,9 +13,9 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="postcalendar_calendarevent_recurexceptions")
+ * @ORM\Table(name="postcalendar_calendarevent_recurexception")
  */
-class PostCalendar_Entity_RecurExceptions
+class PostCalendar_Entity_RecurException
 {
 
     /**
@@ -38,7 +38,18 @@ class PostCalendar_Entity_RecurExceptions
      * @ORM\Column(type="datetime")
      */
     private $exception;
-    
+
+    /**
+     * Constructor
+     * 
+     * @param integer $event
+     * @param DateTime $exception 
+     */
+    function __construct(DateTime $exception)
+    {
+        $this->exception = $exception;
+    }
+
     /**
      * get the record id
      * @return integer
@@ -55,6 +66,24 @@ class PostCalendar_Entity_RecurExceptions
     public function setId($id)
     {
         $this->id = $id;
+    }
+
+    /**
+     * get the associated event
+     * @return PostCalendar_Entity_CalendarEvent 
+     */
+    public function getEvent()
+    {
+        return $this->event;
+    }
+
+    /**
+     * Set the associated event
+     * @param PostCalendar_Entity_CalendarEvent $event 
+     */
+    public function setEvent(PostCalendar_Entity_CalendarEvent $event)
+    {
+        $this->event = $event;
     }
 
     /**

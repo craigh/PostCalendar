@@ -24,7 +24,7 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
         try {
             DoctrineHelper::createSchema($this->entityManager, array('PostCalendar_Entity_CalendarEvent',
                 'PostCalendar_Entity_EventCategory',
-                'PostCalendar_Entity_RecurExceptions'));
+                'PostCalendar_Entity_RecurException'));
         } catch (Exception $e) {
             LogUtil::registerError($this->__f('Error! Could not create tables (%s).', $e->getMessage()));
             return false;
@@ -89,7 +89,7 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
                 // update category registry data to change tablename to EntityName
                 // add category relation table
                 // move relations from categories_mapobj to postcalendar_calendarevent_category
-                // update the DB tables
+                // update the DB tables (add PostCalendar_Entity_RecurException)
                 // change sharing values - 2's become 0's and  and 4's become 0's
                 // update hometext values change n/a to :text:n/a
                 // change endDate = '0000-00-00' to null
@@ -100,12 +100,12 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
                 // convert eventDate + startTime -> (DateTime) eventStart
                 // convert eventStart + duration -> (DateTime) eventEnd
                 $defaultsettings = PostCalendar_Util::getdefaults();
-            // convert old pcEventDateFormat to new setting/default (still needed? @see pcDateFormats)
-            // remove pcNavDateOrder
-            // add pcDateFormats
-            // add pcNavBarType
-            // remove enablecategorization
-            // remove enablelocations
+                // convert old pcEventDateFormat to new setting/default (still needed? @see pcDateFormats)
+                // remove pcNavDateOrder
+                // add pcDateFormats
+                // add pcNavBarType
+                // remove enablecategorization
+                // remove enablelocations
             case '8.0.0':
             //future development
         }
@@ -127,7 +127,7 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
         //drop the tables
         DoctrineHelper::dropSchema($this->entityManager, array('PostCalendar_Entity_CalendarEvent',
             'PostCalendar_Entity_EventCategory',
-            'PostCalendar_Entity_RecurExceptions'));
+            'PostCalendar_Entity_RecurException'));
         $this->delVars();
 
         // Delete entries from category registry
