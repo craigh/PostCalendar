@@ -148,7 +148,8 @@ class PostCalendar_Entity_CalendarEvent extends Zikula_EntityAccess
     /**
      * An array of DateTime objects that are disallowed in the recurrance sequence
      * 
-     * @ORM\OneToMany(targetEntity="PostCalendar_Entity_CalendarEvent", mappedBy="event")
+     * @ORM\OneToMany(targetEntity="PostCalendar_Entity_CalendarEvent", cascade={"all"}, 
+     *                orphanRemoval=true, mappedBy="event")
      */
     private $recurExceptions;
 
@@ -689,6 +690,15 @@ class PostCalendar_Entity_CalendarEvent extends Zikula_EntityAccess
         if (isset($array['hooked_objectid'])) {
             $this->setHooked_objectid($array['hooked_objectid']);
         }
+        if (($this->recurrtype <> self::RECURRTYPE_NONE) && ($array['hasexceptions']) && (isset($array['recurexceptionstorage']))) {
+            $this->getRecurExceptions()->clear();
+            $exceptions = is_array($array['recurexceptionstorage']) ? $array['recurexceptionstorage'] : array($array['recurexceptionstorage']);
+            foreach ($exceptions as $exception) {
+                $e = new PostCalendar_Entity_RecurException(DateTime::createFromFormat('Y-m-d', $exception));
+                $this->getRecurExceptions()->add($e);
+                $e->setEvent($this);
+            }
+        }
     }
 
     /**
@@ -717,6 +727,13 @@ class PostCalendar_Entity_CalendarEvent extends Zikula_EntityAccess
             }
         }
         $array['time'] = $this->getTime()->format('Y-m-d H:i:s');
+        
+//        unset($array['recurExceptions']);
+//        $array['recurspec']['exceptions'] = array();
+//        $exceptions = $this->getRecurExceptions();
+//        foreach($exceptions as $exception) {
+//            $array['recurspec']['exceptions'][] = $exception->getException();
+//        }
 
         return $array;
     }
