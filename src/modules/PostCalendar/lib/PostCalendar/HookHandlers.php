@@ -359,7 +359,7 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
         }
 
         ModUtil::setVar($moduleName, 'postcalendarhookconfig', $hookdata);
-        // ModVar: postcalendarhookconfig => array('areaname' => array(admincatselected, optoverride))
+        // ModVar: postcalendarhookconfig => array('areaid' => array(admincatselected, optoverride))
 
         LogUtil::registerStatus(__("PostCalendar: Hook option settings updated.", $dom));
 
