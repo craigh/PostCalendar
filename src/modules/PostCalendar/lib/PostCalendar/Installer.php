@@ -86,26 +86,103 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
             case '7.0.0':
             // no changes
             case '7.0.1':
-                // update category registry data to change tablename to EntityName
-                // add category relation table
-                // move relations from categories_mapobj to postcalendar_calendarevent_category
-                // update the DB tables (add PostCalendar_Entity_RecurException)
-                // change sharing values - 2's become 0's and  and 4's become 0's
-                // update hometext values change n/a to :text:n/a
-                // change endDate = '0000-00-00' to null
-                // change hooked_area values from areaname to area id
-                // change hooked_area column to integer
-                // update modvars where name=postcalendarhookconfig change key from areaname to areaid
-                // change default date setting to date() format instead of strftime format
-                // convert eventDate + startTime -> (DateTime) eventStart
-                // convert eventStart + duration -> (DateTime) eventEnd
+                // set up some manager vars
+                $connection = $this->entityManager->getConnection();
                 $defaultsettings = PostCalendar_Util::getdefaults();
-                // convert old pcEventDateFormat to new setting/default (still needed? @see pcDateFormats)
-                // remove pcNavDateOrder
+                $hookManager = $this->serviceManager->getService('zikula.hookmanager');
+
+                // select partial array of all events for later manipulation
+                $sql = "SELECT eid, hooked_area, eventDate, startTime, duration FROM postcalendar_events";
+                $objects = $connection->fetchAll($sql);
+                // index array by eid
+                $sqlEvents = array();
+                foreach ($objects as $object) {
+                    $sqlEvents[$object['eid']] = $object;
+                }
+
+                // add PostCalendar_Entity_RecurException and PostCalendar_Entity_EventCategory tables
+                DoctrineHelper::createSchema($this->entityManager, array('PostCalendar_Entity_EventCategory',
+                    'PostCalendar_Entity_RecurException'));
+                // update the PostCalendar_Entity_CalendarEvent table
+                DoctrineHelper::updateSchema($this->entityManager, array('PostCalendar_Entity_CalendarEvent'));
+
+                // move relations from categories_mapobj to postcalendar_calendarevent_category
+                $sql = "INSERT INTO postcalendar_calendarevent_category (entityId, registryId, categoryId) SELECT o.obj_id, o.reg_id, o.category_id FROM categories_mapobj o WHERE o.modname = 'PostCalendar' AND o.tablename = 'postcalendar_events'";
+                $stmt = $connection->prepare($sql);
+                try {
+                    $stmt->execute();
+                } catch (Exception $e) {
+                    LogUtil::registerError($e->getMessage());
+                }
+
+                // update every event with correct hooked_area and new eventStart and eventEnd values
+                $doctrineEvents = $this->entityManager->getRepository('PostCalendar_Entity_CalendarEvent')->findAll();
+                $counter = 0;
+                foreach ($doctrineEvents as $doctrineEvent) {
+                    $eid = $doctrineEvent->getEid();
+                    // change hooked_area values from areaname to area id
+                    $doctrineEvent->setHooked_area($hookManager->getAreaId($sqlEvents[$eid]['hooked_area']));
+                    // convert eventDate + startTime -> (DateTime) eventStart
+                    $eventStart = DateTime::createFromFormat('Y-m-d G:i:s', $sqlEvents[$eid]['eventDate'] . " " . $sqlEvents[$eid]['startTime']);
+                    $doctrineEvent->setEventStart($eventStart);
+                    // convert eventStart + duration -> (DateTime) eventEnd
+                    $eventEnd = clone $eventStart;
+                    $eventEnd->modify("+" . $sqlEvents[$eid]['duration'] . " seconds");
+                    $doctrineEvent->setEventEnd($eventEnd);
+                    unset($eventEnd, $eventStart);
+                    $counter++;
+                    if ($counter % 20 == 0) {
+                        // drak says no need to persist...
+                        $this->entityManager->flush();
+                    }
+                }
+
+                // update non-postcalendar modvars where name=postcalendarhookconfig change key from areaname to areaid
+                $sql = "SELECT id, value from module_vars WHERE name='postcalendarhookconfig'";
+                $objects = $connection->fetchAll($sql);
+                $sqls = array();
+                foreach ($objects as $object) {
+                    $values = unserialize($object['value']);
+                    $newValues = array();
+                    // update the keys 
+                    foreach ($values as $key => $value) {
+                        $newValues[$hookManager->getAreaId($key)] = $value;
+                    }
+                    $sqls[] = "UPDATE module_vars SET value=" . serialize($newValues) . "WHERE id = " . $object['id'];
+                }
+                // general table updates to correct data
+                // update category registry data to change tablename to EntityName
+                $sqls[] = "UPDATE categories_registry SET tablename = 'CalendarEvent' WHERE tablename = 'postcalendar_events'";
+                // change sharing values - 2's become 0's and  and 4's become 0's
+                $sqls[] = "UPDATE postcalendar_events SET sharing = 0 WHERE sharing IN (2, 4)";
+                // update hometext values change n/a to :text:n/a
+                $sqls[] = "UPDATE postcalendar_events SET hometext = ':text:n/a' WHERE hometext = 'n/a'";
+                // change endDate = '0000-00-00' to null
+                $sqls[] = "UPDATE postcalendar_events SET endDate = null WHERE endDate = '0000-00-00'";
+                foreach ($sqls as $sql) {
+                    $stmt = $connection->prepare($sql);
+                    try {
+                        $stmt->execute();
+                    } catch (Exception $e) {
+                        LogUtil::registerError($e->getMessage());
+                    }
+                }
+
+                // update postcalendar modvars
+                // convert old pcEventDateFormat to new setting/default
+                $this->setVar('pcEventDateFormat', $defaultsettings['pcEventDateFormat']);
+                LogUtil::registerStatus($this->__('NOTICE: The date display format has been reset to "Day Month Year", you must manually change it again if desired.'));
                 // add pcDateFormats
+                $this->setVar('pcDateFormats', $defaultsettings['pcDateFormats']);
                 // add pcNavBarType
+                $this->setVar('pcNavBarType', $defaultsettings['pcNavBarType']);
+                // remove pcNavDateOrder
+                $this->delVar('pcNavDateOrder');
                 // remove enablecategorization
+                $this->delVar('enablecategorization');
                 // remove enablelocations
+                $this->delVar('enablelocations');
+
             case '8.0.0':
             //future development
         }
