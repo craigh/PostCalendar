@@ -1,7 +1,6 @@
 TODO LIST
 
 - make submit form an object
-- upgrade routine
 - Needles are still a guess
   - should MultiHook support be removed?
 
@@ -12,3 +11,4 @@ IDEAS:
 - eliminate YYYY-MM-DD and replace with YYYYMMDD ?
 - Agenda viewtype?
 - add right-click context menu for edit/delete event from multi-day views?
+- draggable behavior for changing event dates?
