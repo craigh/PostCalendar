@@ -56,3 +56,6 @@ Using the standard Zikula Module upgrade method, upgrade your module.
 
 * Select MODULES Administration
 * Click the upgrade link. 
+
+Please note that the use of category colors has changed in PC 8.0.0. You may need 
+to adjust your category and text colors for their new usage.
