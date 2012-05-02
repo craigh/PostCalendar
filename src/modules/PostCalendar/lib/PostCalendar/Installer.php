@@ -94,11 +94,6 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
                 // select partial array of all events for later manipulation
                 $sql = "SELECT eid, hooked_area, eventDate, startTime, duration FROM postcalendar_events";
                 $objects = $connection->fetchAll($sql);
-                // index array by eid
-                $sqlEvents = array();
-                foreach ($objects as $object) {
-                    $sqlEvents[$object['eid']] = $object;
-                }
 
                 // add PostCalendar_Entity_RecurException and PostCalendar_Entity_EventCategory tables
                 DoctrineHelper::createSchema($this->entityManager, array('PostCalendar_Entity_EventCategory',
@@ -106,34 +101,44 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
                 // update the PostCalendar_Entity_CalendarEvent table
                 DoctrineHelper::updateSchema($this->entityManager, array('PostCalendar_Entity_CalendarEvent'));
 
-                // move relations from categories_mapobj to postcalendar_calendarevent_category
-                $sql = "INSERT INTO postcalendar_calendarevent_category (entityId, registryId, categoryId) SELECT o.obj_id, o.reg_id, o.category_id FROM categories_mapobj o WHERE o.modname = 'PostCalendar' AND o.tablename = 'postcalendar_events'";
-                $stmt = $connection->prepare($sql);
-                try {
-                    $stmt->execute();
-                } catch (Exception $e) {
-                    LogUtil::registerError($e->getMessage());
+                // update every event with correct hooked_area and new eventStart and eventEnd values
+                $sqls = array();
+                foreach ($objects as $object) {
+                    $hookedArea = isset($object['hooked_area']) ? $hookManager->getAreaId($object['hooked_area']) : 'null';
+                    $eventStart = DateTime::createFromFormat('Y-m-d H:i:s', $object['eventDate'] . " " . $object['startTime']);
+                    $eventEnd = clone $eventStart;
+                    $eventEnd->modify("+" . $object['duration'] . " seconds");
+                    $eid = $object['eid'];
+                    $sqls[] = "UPDATE `postcalendar_events` 
+                               SET `hooked_area` = $hookedArea, 
+                                   `eventStart` = '{$eventStart->format('Y-m-d H:i:s')}', 
+                                   `eventEnd` = '{$eventEnd->format('Y-m-d H:i:s')}' 
+                               WHERE `postcalendar_events`.`eid`=$eid";
+                    if (count($sqls) > 20) {
+                        // this only runs the sql on the server every 20 events
+                        foreach ($sqls as $sql) {
+                            $stmt = $connection->prepare($sql);
+                            try {
+                                $stmt->execute();
+                            } catch (Exception $e) {
+                                LogUtil::registerError($e->getMessage());
+                            }
+                        }
+                        $sqls = array();
+                    }
                 }
 
-                // update every event with correct hooked_area and new eventStart and eventEnd values
-                $doctrineEvents = $this->entityManager->getRepository('PostCalendar_Entity_CalendarEvent')->findAll();
-                $counter = 0;
-                foreach ($doctrineEvents as $doctrineEvent) {
-                    $eid = $doctrineEvent->getEid();
-                    // change hooked_area values from areaname to area id
-                    $doctrineEvent->setHooked_area($hookManager->getAreaId($sqlEvents[$eid]['hooked_area']));
-                    // convert eventDate + startTime -> (DateTime) eventStart
-                    $eventStart = DateTime::createFromFormat('Y-m-d G:i:s', $sqlEvents[$eid]['eventDate'] . " " . $sqlEvents[$eid]['startTime']);
-                    $doctrineEvent->setEventStart($eventStart);
-                    // convert eventStart + duration -> (DateTime) eventEnd
-                    $eventEnd = clone $eventStart;
-                    $eventEnd->modify("+" . $sqlEvents[$eid]['duration'] . " seconds");
-                    $doctrineEvent->setEventEnd($eventEnd);
-                    unset($eventEnd, $eventStart);
-                    $counter++;
-                    if ($counter % 20 == 0) {
-                        // drak says no need to persist...
-                        $this->entityManager->flush();
+                // move relations from categories_mapobj to postcalendar_calendarevent_category
+                // then delete old data
+                $sqls = array();
+                $sqls[] = "INSERT INTO postcalendar_calendarevent_category (entityId, registryId, categoryId) SELECT obj_id, reg_id, category_id FROM categories_mapobj WHERE modname = 'PostCalendar' AND tablename = 'postcalendar_events'";
+                $sqls[] = "DELETE FROM categories_mapobj WHERE modname = 'PostCalendar' AND tablename = 'postcalendar_events'";
+                foreach ($sqls as $sql) {
+                    $stmt = $connection->prepare($sql);
+                    try {
+                        $stmt->execute();
+                    } catch (Exception $e) {
+                        LogUtil::registerError($e->getMessage());
                     }
                 }
 
@@ -171,7 +176,7 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
                 // update postcalendar modvars
                 // convert old pcEventDateFormat to new setting/default
                 $this->setVar('pcEventDateFormat', $defaultsettings['pcEventDateFormat']);
-                LogUtil::registerStatus($this->__('NOTICE: The date display format has been reset to "Day Month Year", you must manually change it again if desired.'));
+                LogUtil::registerStatus($this->__('NOTICE: The PostCalendar date display format has been reset to "Day Month Year", you must manually change it again if desired.'));
                 // add pcDateFormats
                 $this->setVar('pcDateFormats', $defaultsettings['pcDateFormats']);
                 // add pcNavBarType
