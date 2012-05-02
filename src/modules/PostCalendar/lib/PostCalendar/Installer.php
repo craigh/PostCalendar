@@ -79,7 +79,7 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
         if (version_compare($oldversion, '7', '<')) {
             // Inform user about error, and how he can upgrade to $modversion
             $upgradeToVersion = $this->version->getVersion();
-            return LogUtil::registerError($this->__f('Notice: This version does not support upgrades from PostCalendar 6.x and earlier. Please see detailed upgrade instructions at <a href="https://github.com/craigh/PostCalendar/wiki/Installation-and-Upgrade">the GitHub site</a>). After upgrading, you can install PostCalendar %s and perform this upgrade.', $upgradeToVersion));
+            return LogUtil::registerError($this->__f('Notice: This version does not support upgrades from PostCalendar 6.x and earlier. Please see detailed upgrade instructions at <a href="modules/PostCalendar/docs/en/Admin/InstallationAndUpgrade.txt">the local docs</a>). After upgrading, you can install PostCalendar %s and perform this upgrade.', $upgradeToVersion));
         }
 
         switch ($oldversion) {

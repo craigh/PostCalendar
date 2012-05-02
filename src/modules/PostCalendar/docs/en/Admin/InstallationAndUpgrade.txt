@@ -23,7 +23,9 @@ as early as possible.
 
 PostCalendar 8.0.x supports upgrades from version 7.0.x and newer. If you are using 
 an older version, you must upgrade to version 7.0.1 first before upgrading to 8.0.0.
-You can download earlier versions from the download area.
+You can download earlier versions at
+
+https://github.com/craigh/PostCalendar/downloads
 
 If you are upgrading from PostNuke it may be painful :-) I suggest upgrading Zikula 
 to 1.1.2 via the migration distribution, then upgrading PostCalendar to 5.5.3. 
@@ -56,6 +58,10 @@ Using the standard Zikula Module upgrade method, upgrade your module.
 
 * Select MODULES Administration
 * Click the upgrade link. 
+
+NOTICE: PostCalendar v8.0.0 could take a very long time to upgrade because it
+has to update every event with new information. Please be patient as it completes
+the upgrade process.
 
 Please note that the use of category colors has changed in PC 8.0.0. You may need 
 to adjust your category and text colors for their new usage.
