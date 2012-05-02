@@ -181,6 +181,8 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
                 $this->setVar('pcDateFormats', $defaultsettings['pcDateFormats']);
                 // add pcNavBarType
                 $this->setVar('pcNavBarType', $defaultsettings['pcNavBarType']);
+                // add pcAllowedViews
+                $this->setVar('pcAllowedViews', $defaultsettings['pcAllowedViews']);
                 // remove pcNavDateOrder
                 $this->delVar('pcNavDateOrder');
                 // remove enablecategorization
