@@ -130,7 +130,7 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
 
                 // move relations from categories_mapobj to postcalendar_calendarevent_category
                 // then delete old data
-                $sqls = array();
+                // some remaining sql statements from above may be processed here (less than 20) 
                 $sqls[] = "INSERT INTO postcalendar_calendarevent_category (entityId, registryId, categoryId) SELECT obj_id, reg_id, category_id FROM categories_mapobj WHERE modname = 'PostCalendar' AND tablename = 'postcalendar_events'";
                 $sqls[] = "DELETE FROM categories_mapobj WHERE modname = 'PostCalendar' AND tablename = 'postcalendar_events'";
                 foreach ($sqls as $sql) {
