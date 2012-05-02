@@ -13,7 +13,7 @@ PostCalendar is completely converted to the new Zikula 1.3 model (OOP).
 
 *   Multiple views (Year, Month, Week, Day, List, RSS)
 *   100% W3C-valid XHTML 1.1 templates - fully customizable with optional navigation images
-*   Repeating events (including continuous events)
+*   Repeating events (including continuous events, and repeat-exceptions)
 *   Use of jQuery to make the UI user-friendly
 *   Categorization of events using Zikula category system
     *   Category-based permissions allow group-based or multiple calendars
