@@ -1,5 +1,6 @@
 TODO LIST
-
+- tooltips in listview are broken for the event links.
+- add perm check to all navlinks to avoid spiders?
 - make submit form an object
 - Needles are still a guess
   - should MultiHook support be removed?
