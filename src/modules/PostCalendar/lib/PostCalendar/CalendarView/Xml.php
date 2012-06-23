@@ -27,22 +27,27 @@ class PostCalendar_CalendarView_Xml extends PostCalendar_CalendarView_List
     {
         $this->viewtype = 'xml';
         $this->listMonths = ModUtil::getVar('PostCalendar', 'pcListMonths');
-
-        $prevClone = clone $this->requestedDate;
-        $prevClone->modify("-" . $this->listMonths . " months");
-        $this->navigation['previous'] = ModUtil::url('PostCalendar', 'user', 'display', array(
-                    'viewtype' => $this->viewtype,
-                    'date' => $prevClone->format('Ymd'),
-                    'userfilter' => $this->userFilter,
-                    'filtercats' => $this->selectedCategories));
-        $nextClone = clone $this->requestedDate;
-        $nextClone->modify("+" . $this->listMonths . " months")
-                ->modify("+1 day");
-        $this->navigation['next'] = ModUtil::url('PostCalendar', 'user', 'display', array(
-                    'viewtype' => $this->viewtype,
-                    'date' => $nextClone->format('Ymd'),
-                    'userfilter' => $this->userFilter,
-                    'filtercats' => $this->selectedCategories));
+    }
+    
+    /**
+     * Render the view
+     * @return string 
+     */
+    public function render()
+    {
+        if (!$this->isCached()) {
+            // Load the events
+            $eventsByDate = ModUtil::apiFunc('PostCalendar', 'event', 'getEvents', array(
+                        'start' => $this->startDate,
+                        'end' => $this->endDate,
+                        'filtercats' => $this->selectedCategories,
+                        'date' => $this->requestedDate,
+                        'userfilter' => $this->userFilter));
+            // create and return template
+            $this->view
+                    ->assign('eventsByDate', $eventsByDate);
+        }
+        return $this->view->fetch($this->template);
     }
 
 }

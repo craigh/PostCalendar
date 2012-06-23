@@ -41,6 +41,7 @@ class PostCalendar_CalendarView_Nav_Xml extends PostCalendar_CalendarView_Nav_Ab
     {
         $this->url = new Zikula_ModUrl('PostCalendar', 'user', 'display', ZLanguage::getLanguageCode(), array(
                     'viewtype' => $this->viewtype,
+                    'date' => $this->date->format('Ymd'),
                     'theme' => 'rss'));
     }
 
