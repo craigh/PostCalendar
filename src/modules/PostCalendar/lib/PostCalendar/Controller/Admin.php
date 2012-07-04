@@ -418,25 +418,29 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
     public function migrateTimeIt()
     {
         $this->throwForbiddenUnless(SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN), LogUtil::getErrorMsgPermission());
-//        if ($this->getVar('pcTimeItMigrateComplete')) {
-//            LogUtil::registerError($this->__('TimeIt events have already been migrated. You can only run the migration once.'));
-//            $this->redirect(ModUtil::url('PostCalendar', 'admin', 'main'));
-//        }
+        if ($this->getVar('pcTimeItMigrateComplete')) {
+            LogUtil::registerError($this->__('TimeIt events have already been migrated. You can only run the migration once.'));
+            $this->redirect(ModUtil::url('PostCalendar', 'admin', 'main'));
+        }
 
         // get all available TimeIt events with direct SQL
         $prefix = System::getVar('prefix');
         if (!empty($prefix)) {
             $prefix = $prefix . '_';
         }
+        $connection = $this->entityManager->getConnection();
         $sql = "SELECT * FROM {$prefix}timeit_events";
-        $res = DBUtil::executeSql($sql);
-        $events = DBUtil::marshallObjects($res);
+        $events = $connection->fetchAll($sql);
+        if (empty($events)) {
+            LogUtil::registerError($this->__f('No TimeIt events found in the database. The TimeIt table should be called %s in the database. Mind the table prefix', $prefix.'timeit_events'));
+            $this->redirect(ModUtil::url('PostCalendar', 'admin', 'main'));
+        }
 
- 		// -------------
+         // -------------
         // create subcategory for imported events
-		if (!CategoryUtil::getCategoryByPath('/__SYSTEM__/Modules/PostCalendar/Imported')) {
-			CategoryUtil::createCategory('/__SYSTEM__/Modules/PostCalendar', 'Imported', null, $this->__('Imported'), $this->__('TimeIt imported'));
-		}
+        if (!CategoryUtil::getCategoryByPath('/__SYSTEM__/Modules/PostCalendar/Imported')) {
+            CategoryUtil::createCategory('/__SYSTEM__/Modules/PostCalendar', 'Imported', null, $this->__('Imported'), $this->__('TimeIt imported'));
+        }
         // get the category path to insert PostCalendar categories
         $rootcat = CategoryUtil::getCategoryByPath('/__SYSTEM__/Modules/TimeIt');
         if ($rootcat) {
@@ -447,18 +451,19 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
         } else {
             $this->throwNotFound("Root category not found.");
         }
-		
-		// obtain some category ids
-		$catRegId = CategoryRegistryUtil::getRegisteredModuleCategory('PostCalendar', 'CalendarEvent', 'TimeItImport');
-		$catMain = CategoryUtil::getCategoryByPath('/__SYSTEM__/Modules/PostCalendar/Imported');
-		
-		// -------------
+        
+        // obtain some category ids
+        $catRegId = CategoryRegistryUtil::getRegisteredModuleCategory('PostCalendar', 'CalendarEvent', 'TimeItImport');
+        $catMain = CategoryUtil::getCategoryByPath('/__SYSTEM__/Modules/PostCalendar/Imported');
+        
+        // -------------
         $eventCount = 0;
+        $flushCount = 0; // flush to Doctrine every 25 events
 
         // $events is an PHP array with the whole database table for TimeIt_events
         // loop through all events and create postcalendar events with doctrine methods
         foreach ($events as $k => $event) {
-            // determine recurrence type
+            // determine recurrence type in TimeIt
             $reptype = '';
             switch ($event['pn_repeatSpec']) {
                 case 'day':
@@ -475,7 +480,7 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
                     break;
             }
             
-			// determine duration and construct start and end datetime objects
+            // determine duration in TimeIt and construct start and end datetime objects for PC
             $durtmp = explode(',', $event['pn_allDayDur']);
             switch (count($durtmp)) {
                 case 1:
@@ -488,38 +493,48 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
                     $duration = $durtmp[0] * 3600 + $durtmp[2] * 60; // time specified with hours and minutes
                     break;
             }
-			$start = DateTime::createFromFormat('Y-m-d H:i', $event['pn_startDate'] . " " . $event['pn_allDayStart']);
-			if ($event['pn_allDay']) {
-				// duration is zero, so use startdate time
-				$end = DateTime::createFromFormat('Y-m-d H:i', $event['pn_endDate'] . " " . $event['pn_allDayStart']);
-			} else {
-				// timed event, in this case enddate = startdate afais + duration
-				$end = DateTime::createFromFormat('Y-m-d H:i', $event['pn_startDate'] . " " . $event['pn_allDayStart']);
-				$end->add(new DateInterval('PT'.$duration.'S'));
-			}
-			
+            $start = DateTime::createFromFormat('Y-m-d H:i', $event['pn_startDate'] . " " . $event['pn_allDayStart']);
+            if ($event['pn_allDay']) {
+                // duration is zero, so use startdate time
+                $end = DateTime::createFromFormat('Y-m-d H:i', $event['pn_endDate'] . " " . $event['pn_allDayStart']);
+            } else {
+                // timed event, in this case enddate = startdate afais + duration
+                $end = DateTime::createFromFormat('Y-m-d H:i', $event['pn_startDate'] . " " . $event['pn_allDayStart']);
+                $end->add(new DateInterval('PT'.$duration.'S'));
+            }
+            
             // extract location and contact data
             $data = unserialize($event['pn_data']);
 
-			// extract the hometext and distinguish between plain and html
-			$hometext = '';
-			if (!empty($event['pn_text'])) {
-				if (strpos($event['pn_text'], '#plaintext#') !== false) {
-					$hometext = str_replace('#plaintext#', ':text:', $event['pn_text']);
-				} else {
-					$hometext = ':html:'.$event['pn_text'];
-				}
-			}
-
-// 		$sqls[] = "INSERT INTO postcalendar_calendarevent_category (entityId, registryId, categoryId) SELECT obj_id, reg_id, category_id FROM categories_mapobj WHERE modname = 'TimeIt' AND tablename = 'TimeIt_events'";
-//		$sqls[] = "DELETE FROM categories_mapobj WHERE modname = 'TimeIt' AND tablename = 'TimeIt_events'";
-			
-			// obtain relevant category 
-			$catRegTimeIt = CategoryRegistryUtil::getRegisteredModuleCategory('TimeIt', 'TimeIt_events', 'Main');
-			$where = 'obj_id = ' . $event['pn_id'] . ' AND reg_id = ' . $catRegTimeIt['id'];
-			$oldCat = DBUtil::selectObject('categories_mapobj', $where);
-			
-			// construct the postcalendar array
+            // extract the hometext and distinguish between plain and html
+            $hometext = '';
+            if (!empty($event['pn_text'])) {
+                if (strpos($event['pn_text'], '#plaintext#') !== false) {
+                    $hometext = str_replace('#plaintext#', ':text:', $event['pn_text']);
+                } else {
+                    $hometext = ':html:'.$event['pn_text'];
+                }
+            }
+            
+            // obtain relevant categories
+            $catRegIds = CategoryRegistryUtil::getRegisteredModuleCategoriesIds('TimeIt', 'TimeIt_events');
+            $sql = "SELECT category_id FROM `categories_mapobj` WHERE obj_id=".$event['pn_id']." AND reg_id=".$catRegIds['Main'];
+            $cats = $connection->fetchAll($sql);
+            
+            // obtain current sharing in TimeIt
+            switch ($event['pn_sharing']) {
+                case 1:
+                    $sharing = CalendarEvent::SHARING_PRIVATE;
+                    break;
+                case 2:
+                    $sharing = CalendarEvent::SHARING_PUBLIC;
+                    break;
+                case 3:
+                default:
+                    $sharing = CalendarEvent::SHARING_GLOBAL;
+            }
+            
+            // construct the postcalendar eventarray
             $eventArray = array(
                 'aid'           => $event['pn_cr_uid'],
                 'title'         => $event['pn_title'],
@@ -546,16 +561,11 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
                 'contemail' => $data['plugindata']['ContactTimeIt']['email'],
                 'website' => $data['plugindata']['ContactTimeIt']['website'],
                 'fee' => '',
-                'eventstatus' => PostCalendar_Entity_CalendarEvent::APPROVED,
-                'sharing' => PostCalendar_Entity_CalendarEvent::SHARING_GLOBAL,
-                // Can these be handled and set this way?? :
-                'cr_date' => $event['pn_cr_date'],
-                'cr_uid' => $event['pn_cr_uid'],
-                'lu_date' => $event['pn_lu_date'],
-                'lu_uid' => $event['pn_lu_uid'],
-				'categories' => array(
-					'Main' => $catMain['id'],
-					'TimeItImport' => $oldCat['id'])
+                'eventstatus' => ($event['pn_status'] != 1 ? CalendarEvent::QUEUED : CalendarEvent::APPROVED),
+                'sharing' => $sharing,
+                'categories' => array(
+                    'Main' => $catMain['id'],
+                    'TimeItImport' => $cats[0]['category_id'])
             );
             
             // Now insert the created array into PostCalendar via Doctrine
@@ -563,104 +573,35 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
                 $event = new PostCalendar_Entity_CalendarEvent();
                 $event->setFromArray($eventArray);
                 $this->entityManager->persist($event);
-                $this->entityManager->flush();
                 $eventCount++;
+                if ($flushcount > 25) {
+                    $this->entityManager->flush();
+                    $flushcount = 0;
+                } else {
+                    $flushcount++;
+                }
+                //$newEventId = $event->getEid();
             } catch (Exception $e) {
                 return LogUtil::registerError($e->getMessage());
             }
-
-//             $pc[$pck]['aid'] = $event['pn_cr_uid'];
-//             $pc[$pck]['title'] = $event['pn_title'];
-//             $pc[$pck]['time'] = $event['pn_cr_date'];
-//             if (!empty($event['pn_text'])) {
-//                 $pc[$pck]['hometext'] = strpos('#plaintext#', $event['pn_text']) != false ? str_replace('#plaintext#', ':text:', $event['pn_text']) : ':html:'.$event['pn_text'];
-//             } else {
-//                 $pc[$pck]['hometext'] = '';
-//             }
-//             $pc[$pck]['informant'] = $event['pn_cr_uid'];
-//             $pc[$pck]['eventDate'] = $event['pn_startDate'];
-//             $durtmp = explode(',', $event['pn_allDayDur']);
-//             switch (count($durtmp)) {
-//                 case 1:
-//                     $pc[$pck]['duration'] = $durtmp[0]; // normally 0
-//                     break;
-//                 case 2:
-//                     $pc[$pck]['duration'] = $durtmp[0] * 3600; // only hours
-//                     break;
-//                 case 3:
-//                     $pc[$pck]['duration'] = $durtmp[0] * 3600 + $durtmp[2] * 60; // hours + minutes
-//                     break;
-//             }
-//             $pc[$pck]['endDate'] = $event['pn_endDate'];
-//             $pc[$pck]['recurrtype'] = $event['pn_repeatType'];
-//             $reptype = '';
-//             switch ($event['pn_repeatSpec']) {
-//                 case 'day':
-//                     $reptype = '0';
-//                     break;
-//                 case 'week':
-//                     $reptype = '1';
-//                     break;
-//                 case 'month':
-//                     $reptype = '2';
-//                     break;
-//                 case 'year':
-//                     $reptype = '3';
-//                     break;
-//             }
-//             $pc[$pck]['recurrspec'] = serialize(
-//                         array('event_repeat_freq' => $event['pn_repeatFrec'],
-//                             'event_repeat_freq_type' => $reptype,
-//                             'event_repeat_on_num' => '1',
-//                             'event_repeat_on_day' => '0',
-//                             'event_repeat_on_freq' => ''));
-//             $pc[$pck]['startTime'] = $event['pn_allDayStart'];
-//             $pc[$pck]['alldayevent'] = $event['pn_allDay'];
-//             $data = unserialize($timeit[$k]['pn_data']);
-//             $pc[$pck]['location'] = serialize(
-//                         array('locations_id' => -1,
-//                             'event_location' => $data['plugindata']['LocationTimeIt']['name'],
-//                             'event_street1' => $data['plugindata']['LocationTimeIt']['street'] . ' ' . $data['plugindata']['LocationTimeIt']['houseNumber'],
-//                             'event_street2' => '',
-//                             'event_city' => $data['plugindata']['LocationTimeIt']['city'],
-//                             'event_state' => '',
-//                             'event_postal' => $data['plugindata']['LocationTimeIt']['zip']));
-//             $pc[$pck]['conttel'] = $data['plugindata']['ContactTimeIt']['phoneNr'];
-//             $pc[$pck]['contname'] = $data['plugindata']['ContactTimeIt']['contactPerson'];
-//             $pc[$pck]['contemail'] = $data['plugindata']['ContactTimeIt']['email'];
-//             $pc[$pck]['website'] = $data['plugindata']['ContactTimeIt']['website'];
-//             $pc[$pck]['fee'] = '';
-//             $pc[$pck]['eventstatus'] = '1'; // Active ?
-//             $pc[$pck]['sharing'] = '2'; // Global
-//             $pc[$pck]['cr_date'] = $event['pn_cr_date'];
-//             $pc[$pck]['cr_uid'] = $event['pn_cr_uid'];
-//             $pc[$pck]['lu_date'] = $event['pn_lu_date'];
-//             $pc[$pck]['lu_uid'] = $event['pn_lu_uid'];
-//             
-
-            // TODO CATEGORIES transfer
-            // TimeIt uses the Core categories. So the category stuff should be inserted as well.
-            // See News Installer
-            // See TimeIt importapi
         }
-
-		
-		
-		// -------------
-		// move relations from categories_mapobj to postcalendar_calendarevent_category
-		// then delete old data
-		// some remaining sql statements from above may be processed here (less than 20) 
-// 		$sqls[] = "INSERT INTO postcalendar_calendarevent_category (entityId, registryId, categoryId) SELECT obj_id, reg_id, category_id FROM categories_mapobj WHERE modname = 'TimeIt' AND tablename = 'TimeIt_events'";
-//		$sqls[] = "DELETE FROM categories_mapobj WHERE modname = 'TimeIt' AND tablename = 'TimeIt_events'";
-//		foreach ($sqls as $sql) {
-//			$stmt = $connection->prepare($sql);
-//			try {
-//				$stmt->execute();
-//			} catch (Exception $e) {
-//				LogUtil::registerError($e->getMessage());
-//			}
-//		}
-
+        // always flush after last event import
+        if ($eventCount > 0) {
+            $this->entityManager->flush();
+        }
+        
+        // -------------
+        // delete old TimeIt data from mapobj
+        $sqls = array();
+        $sqls[] = "DELETE FROM categories_mapobj WHERE modname = 'TimeIt' AND tablename = 'TimeIt_events'";
+        foreach ($sqls as $sql) {
+            $stmt = $connection->prepare($sql);
+            try {
+                $stmt->execute();
+            } catch (Exception $e) {
+                LogUtil::registerError($e->getMessage());
+            }
+        }
 
         LogUtil::registerStatus($this->__f('TimeIt events have been migrated. In total %s events completed.', $eventCount));
         $this->setVar('pcTimeItMigrateComplete', true);
