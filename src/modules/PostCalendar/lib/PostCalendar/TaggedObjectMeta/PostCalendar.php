@@ -76,7 +76,7 @@ class PostCalendar_TaggedObjectMeta_PostCalendar extends Tag_AbstractTaggedObjec
         $title = $this->getTitle();
         $link = null;
         if (!empty($title)) {
-            $dom = ZLanguage::getModuleDomain('Tag');
+            $dom = ZLanguage::getModuleDomain('PostCalendar');
             $on = __('on', $dom);
             $calEvent = __('Event', $dom);
             $modinfo = ModUtil::getInfoFromName('PostCalendar');
