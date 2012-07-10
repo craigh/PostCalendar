@@ -1,20 +1,21 @@
 <?php
+
 /**
  * @package     PostCalendar
  * @copyright   Copyright (c) 2002, The PostCalendar Team
  * @copyright   Copyright (c) 2009-2012, Craig Heydenburg, Sound Web Development
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
  */
-
 use PostCalendar_Entity_CalendarEvent as CalendarEvent;
 
 class PostCalendar_Controller_Admin extends Zikula_AbstractController
 {
+
     const ACTION_APPROVE = 0;
     const ACTION_HIDE = 1;
     const ACTION_VIEW = 3;
     const ACTION_DELETE = 4;
-    
+
     public function postInitialize()
     {
         $this->view->setCaching(false);
@@ -26,9 +27,9 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
      */
     public function main()
     {
-		$this->redirect(ModUtil::url('PostCalendar', 'admin', 'listevents'));
+        $this->redirect(ModUtil::url('PostCalendar', 'admin', 'listevents'));
     }
-    
+
     /**
      * @desc present administrator options to change module configuration
      * @return string config template
@@ -36,10 +37,10 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
     public function modifyconfig()
     {
         $this->throwForbiddenUnless(SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN), LogUtil::getErrorMsgPermission());
-    
+
         return $this->view->fetch('admin/modifyconfig.tpl');
     }
-    
+
     /**
      * @desc list events as requested/filtered
      *              send list to template
@@ -48,7 +49,7 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
     public function listevents(array $args)
     {
         $this->throwForbiddenUnless(SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_DELETE), LogUtil::getErrorMsgPermission());
-    
+
         $listtype = isset($args['listtype']) ? $args['listtype'] : $this->request->query->get('listtype', $this->request->request->get('listtype', CalendarEvent::APPROVED));
 
         switch ($listtype) {
@@ -65,12 +66,12 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
             default:
                 $functionname = "approved";
         }
-    
+
         $sortcolclasses = array(
             'title' => 'z-order-unsorted',
-            'time'  => 'z-order-unsorted',
+            'time' => 'z-order-unsorted',
             'eventStart' => 'z-order-unsorted');
-    
+
         $offset = $this->request->query->get('offset', $this->request->request->get('offset', 0));
         $sort = $this->request->query->get('sort', $this->request->request->get('sort', 'time'));
         $original_sdir = $this->request->query->get('sdir', $this->request->request->get('sdir', 1));
@@ -96,11 +97,11 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
         $selectedCategories = PostCalendar_Api_Event::formatCategoryFilter($filtercats);
 
         $events = $this->entityManager->getRepository('PostCalendar_Entity_CalendarEvent')
-                       ->getEventlist($listtype, $sort, $offset-1, $this->getVar('pcListHowManyEvents'), $selectedCategories);
+                ->getEventlist($listtype, $sort, $offset - 1, $this->getVar('pcListHowManyEvents'), $selectedCategories);
         $events = $this->_appendObjectActions($events, $listtype);
 
         $total_events = $this->entityManager->getRepository('PostCalendar_Entity_CalendarEvent')
-                       ->getEventCount($listtype, $selectedCategories);
+                ->getEventCount($listtype, $selectedCategories);
         $this->view->assign('total_events', $total_events);
 
         $this->view->assign('filter_active', (($listtype == CalendarEvent::ALLSTATUS) && empty($selectedCategories)) ? false : true);
@@ -110,23 +111,23 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
         $sorturls = array('title', 'time', 'eventStart');
         foreach ($sorturls as $sorturl) {
             $this->view->assign($sorturl . '_sort_url', ModUtil::url('PostCalendar', 'admin', 'listevents', array(
-                'listtype' => $listtype,
-                'filtercats_serialized' => serialize($selectedCategories),
-                'sort' => $sorturl,
-                'sdir' => $sdir)));
+                        'listtype' => $listtype,
+                        'filtercats_serialized' => serialize($selectedCategories),
+                        'sort' => $sorturl,
+                        'sdir' => $sdir)));
         }
         $this->view->assign('formactions', array(
-            '-1'                  => $this->__('With selected:'),
-            self::ACTION_VIEW    => $this->__('View'),
+            '-1' => $this->__('With selected:'),
+            self::ACTION_VIEW => $this->__('View'),
             self::ACTION_APPROVE => $this->__('Approve'),
-            self::ACTION_HIDE    => $this->__('Hide'),
-            self::ACTION_DELETE  => $this->__('Delete')));
+            self::ACTION_HIDE => $this->__('Hide'),
+            self::ACTION_DELETE => $this->__('Delete')));
         $this->view->assign('actionselected', '-1');
         $this->view->assign('listtypes', array(
             CalendarEvent::ALLSTATUS => $this->__('All Events'),
-            CalendarEvent::APPROVED  => $this->__('Approved Events'),
-            CalendarEvent::HIDDEN    => $this->__('Hidden Events'),
-            CalendarEvent::QUEUED    => $this->__('Queued Events')));
+            CalendarEvent::APPROVED => $this->__('Approved Events'),
+            CalendarEvent::HIDDEN => $this->__('Hidden Events'),
+            CalendarEvent::QUEUED => $this->__('Queued Events')));
         $this->view->assign('listtypeselected', $listtype);
 
         $this->view->assign('catregistry', CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'CalendarEvent'));
@@ -134,7 +135,7 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
 
         return $this->view->fetch('admin/showlist.tpl');
     }
-    
+
     /**
      * @desc allows admin to revue selected events then take action
      * @return string html template adminrevue template
@@ -142,17 +143,17 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
     public function adminevents()
     {
         $this->throwForbiddenUnless(SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_DELETE), LogUtil::getErrorMsgPermission());
-    
+
         $action = $this->request->request->get('action', $this->request->query->get('action', self::ACTION_VIEW));
         $events = $this->request->request->get('events', $this->request->query->get('events', null)); // could be an array or single val
-    
+
         if (!isset($events)) {
             LogUtil::registerError($this->__('Please select an event.'));
             // return to where we came from
             $listtype = $this->request->request->get('listtype', $this->request->query->get('listtype', CalendarEvent::APPROVED));
             return $this->listevents(array('listtype' => $listtype));
         }
-    
+
         if (!is_array($events)) {
             $events = array(
                 $events);
@@ -166,7 +167,7 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
             $eventitems = ModUtil::apiFunc('PostCalendar', 'event', 'formateventarrayfordisplay', array('event' => $eventitems));
             $alleventinfo[$event->getEid()] = $eventitems;
         }
-    
+
         $count = count($events);
         $texts = array(
             self::ACTION_VIEW => $this->__("view"),
@@ -179,10 +180,10 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
         $are_you_sure_text = $this->_fn('Do you really want to %s this event?', 'Do you really want to %s these events?', $count, $texts[$action]);
         $this->view->assign('areyousure', $are_you_sure_text);
         $this->view->assign('alleventinfo', $alleventinfo);
-    
+
         return $this->view->fetch("admin/eventrevue.tpl");
     }
-    
+
     /**
      * @desc reset all module variables to default values as defined in pninit.php
      * @return      status/error ->back to modify config page
@@ -190,25 +191,25 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
     public function resetDefaults()
     {
         $this->throwForbiddenUnless(SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN), LogUtil::getErrorMsgPermission());
-    
+
         $defaults = PostCalendar_Util::getdefaults();
         if (!count($defaults)) {
             return LogUtil::registerError($this->__('Error! Could not load default values.'));
         }
-    
+
         // delete all the old vars
         $this->delVars();
-    
+
         // set the new variables
         $this->setVars($defaults);
-    
+
         // clear the cache
         $this->view->clear_cache();
-    
+
         LogUtil::registerStatus($this->__('Done! PostCalendar configuration reset to use default values.'));
         return $this->modifyconfig();
     }
-    
+
     /**
      * @desc sets module variables as requested by admin
      * @return      status/error ->back to modify config page
@@ -218,12 +219,12 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
         $this->checkCsrfToken();
 
         $this->throwForbiddenUnless(SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN), LogUtil::getErrorMsgPermission());
-    
+
         $defaults = PostCalendar_Util::getdefaults();
         if (!count($defaults)) {
             return LogUtil::registerError($this->__('Error! Could not load default values.'));
         }
-    
+
         $settings = array(
             'pcTime24Hours' => $this->request->request->get('pcTime24Hours', 0),
             'pcEventsOpenInNewWindow' => $this->request->request->get('pcEventsOpenInNewWindow', 0),
@@ -254,20 +255,20 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
         }
         // save out event default settings so they are not cleared
         $settings['pcEventDefaults'] = $this->getVar('pcEventDefaults');
-    
+
         // delete all the old vars
         $this->delVars();
-    
+
         // set the new variables
         $this->setVars($settings);
-    
+
         // clear the cache
         $this->view->clear_cache();
-    
+
         LogUtil::registerStatus($this->__('Done! Updated the PostCalendar configuration.'));
         return $this->modifyconfig();
     }
-    
+
     /**
      * update status of events to approve, hide or delete
      * @return string html template
@@ -283,7 +284,7 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
         if (!is_array($pc_eid)) {
             return $this->__("Error! An the eid must be passed as an array.");
         }
-        
+
         $count = count($pc_eid);
 
         // update the DB
@@ -309,7 +310,7 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
 
         $this->view->clear_cache();
         return $this->listevents(array(
-            'listtype' => CalendarEvent::APPROVED));
+                    'listtype' => CalendarEvent::APPROVED));
     }
 
     /**
@@ -323,17 +324,17 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
         // load the category registry util
         $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'CalendarEvent');
         $this->view->assign('catregistry', $catregistry);
-    
+
         $eventDefaults = $this->getVar('pcEventDefaults');
         // convert duration to HH:MM
         $this->view->assign('endTime', ModUtil::apiFunc('PostCalendar', 'event', 'computeendtime', $eventDefaults));
-    
+
         $this->view->assign('sharingselect', ModUtil::apiFunc('PostCalendar', 'event', 'sharingselect'));
-        $this->view->assign('Selected',  ModUtil::apiFunc('PostCalendar', 'event', 'alldayselect', $eventDefaults['alldayevent']));
-    
+        $this->view->assign('Selected', ModUtil::apiFunc('PostCalendar', 'event', 'alldayselect', $eventDefaults['alldayevent']));
+
         return $this->view->fetch('admin/eventdefaults.tpl');
     }
-    
+
     /**
      * @desc sets module variables as requested by admin
      * @return      status/error ->back to event defaults config page
@@ -342,21 +343,20 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
     {
         $this->checkCsrfToken();
         $this->throwForbiddenUnless(SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN), LogUtil::getErrorMsgPermission());
-    
-        $eventDefaults = $this->request->request->get('postcalendar_eventdefaults'); //array
 
+        $eventDefaults = $this->request->request->get('postcalendar_eventdefaults'); //array
         //convert times to storable values
         $eventDefaults['duration'] = ModUtil::apiFunc('PostCalendar', 'event', 'computeduration', $eventDefaults);
         $eventDefaults['duration'] = ($eventDefaults['duration'] > 0) ? $eventDefaults['duration'] : 3600; //disallow duration < 0
         unset($eventDefaults['endTime']); // do not store selected endTime
-    
+
         $startTime = $eventDefaults['startTime'];
         unset($eventDefaults['startTime']); // clears the whole array
         $eventDefaults['startTime'] = ModUtil::apiFunc('PostCalendar', 'event', 'convertTimeArray', $startTime);
 
         // save the new values
         $this->setVar('pcEventDefaults', $eventDefaults);
-    
+
         LogUtil::registerStatus($this->__('Done! Updated the PostCalendar event default values.'));
         return $this->modifyeventdefaults();
     }
@@ -367,7 +367,7 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
      * @param array $events
      * @return array
      */
-    private function _appendObjectActions($events, $listtype=CalendarEvent::APPROVED)
+    private function _appendObjectActions($events, $listtype = CalendarEvent::APPROVED)
     {
         $statusmap = array(
             CalendarEvent::QUEUED => ' (Queued)',
@@ -375,29 +375,29 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
             CalendarEvent::APPROVED => ''
         );
         $eventArray = array();
-        foreach($events as $key => $event) {
+        foreach ($events as $key => $event) {
             $eventArray[$key] = $event->getOldArray();
             // temp workaround for assignedcategorieslist plugin
             $eventArray[$key]['Categories'] = $eventArray[$key]['categories'];
             $options = array();
             $truncated_title = StringUtil::getTruncatedString($event['title'], 25);
             $options[] = array('url' => ModUtil::url('PostCalendar', 'user', 'display', array('viewtype' => 'event', 'eid' => $event['eid'])),
-                    'image' => '14_layer_visible.png',
-                    'title' => $this->__f("View '%s'", $truncated_title));
+                'image' => '14_layer_visible.png',
+                'title' => $this->__f("View '%s'", $truncated_title));
 
             if (SecurityUtil::checkPermission('PostCalendar::Event', "{$event['title']}::{$event['eid']}", ACCESS_EDIT)) {
                 if ($event['eventstatus'] == CalendarEvent::APPROVED) {
                     $options[] = array('url' => ModUtil::url('PostCalendar', 'admin', 'adminevents', array('action' => self::ACTION_HIDE, 'events' => $event['eid'])),
-                            'image' => 'db_remove.png',
-                            'title' => $this->__f("Hide '%s'", $truncated_title));
+                        'image' => 'db_remove.png',
+                        'title' => $this->__f("Hide '%s'", $truncated_title));
                 } else {
                     $options[] = array('url' => ModUtil::url('PostCalendar', 'admin', 'adminevents', array('action' => self::ACTION_APPROVE, 'events' => $event['eid'])),
-                            'image' => 'button_ok.png',
-                            'title' => $this->__f("Approve '%s'", $truncated_title));
+                        'image' => 'button_ok.png',
+                        'title' => $this->__f("Approve '%s'", $truncated_title));
                 }
                 $options[] = array('url' => ModUtil::url('PostCalendar', 'event', 'edit', array('eid' => $event['eid'])),
-                        'image' => 'xedit.png',
-                        'title' => $this->__f("Edit '%s'", $truncated_title));
+                    'image' => 'xedit.png',
+                    'title' => $this->__f("Edit '%s'", $truncated_title));
             }
 
             if (SecurityUtil::checkPermission('PostCalendar::Event', "{$event['title']}::{$event['eid']}", ACCESS_DELETE)) {
@@ -410,7 +410,7 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
         }
         return $eventArray;
     }
-    
+
     /**
      * Migrate existing TimeIt Events into PC
      * Migrates both events and categories
@@ -432,11 +432,11 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
         $sql = "SELECT * FROM {$prefix}timeit_events";
         $events = $connection->fetchAll($sql);
         if (empty($events)) {
-            LogUtil::registerError($this->__f('No TimeIt events found in the database. The TimeIt table should be called %s in the database. Mind the table prefix', $prefix.'timeit_events'));
+            LogUtil::registerError($this->__f('No TimeIt events found in the database. The TimeIt table should be called %s in the database. Mind the table prefix', $prefix . 'timeit_events'));
             $this->redirect(ModUtil::url('PostCalendar', 'admin', 'main'));
         }
 
-         // -------------
+        // -------------
         // create subcategory for imported events
         if (!CategoryUtil::getCategoryByPath('/__SYSTEM__/Modules/PostCalendar/Imported')) {
             CategoryUtil::createCategory('/__SYSTEM__/Modules/PostCalendar', 'Imported', null, $this->__('Imported'), $this->__('TimeIt imported'));
@@ -451,18 +451,17 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
         } else {
             $this->throwNotFound("Root category not found.");
         }
-        
+
         // obtain some category ids
-        $catRegId = CategoryRegistryUtil::getRegisteredModuleCategory('PostCalendar', 'CalendarEvent', 'TimeItImport');
+//        $catRegId = CategoryRegistryUtil::getRegisteredModuleCategory('PostCalendar', 'CalendarEvent', 'TimeItImport');
         $catMain = CategoryUtil::getCategoryByPath('/__SYSTEM__/Modules/PostCalendar/Imported');
-        
+
         // -------------
         $eventCount = 0;
         $flushCount = 0; // flush to Doctrine every 25 events
-
         // $events is an PHP array with the whole database table for TimeIt_events
         // loop through all events and create postcalendar events with doctrine methods
-        foreach ($events as $k => $event) {
+        foreach ($events as $event) {
             // determine recurrence type in TimeIt
             $reptype = '';
             switch ($event['pn_repeatSpec']) {
@@ -479,17 +478,17 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
                     $reptype = '3';
                     break;
             }
-            
+
             // determine duration in TimeIt and construct start and end datetime objects for PC
             $durtmp = explode(',', $event['pn_allDayDur']);
             switch (count($durtmp)) {
                 case 1:
                     $duration = $durtmp[0]; // should be 0 for all day event
                     break;
-                case 2: 
+                case 2:
                     $duration = $durtmp[0] * 3600; // time specified with hours
                     break;
-                case 3: 
+                case 3:
                     $duration = $durtmp[0] * 3600 + $durtmp[2] * 60; // time specified with hours and minutes
                     break;
             }
@@ -500,9 +499,9 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
             } else {
                 // timed event, in this case enddate = startdate afais + duration
                 $end = DateTime::createFromFormat('Y-m-d H:i', $event['pn_startDate'] . " " . $event['pn_allDayStart']);
-                $end->add(new DateInterval('PT'.$duration.'S'));
+                $end->add(new DateInterval('PT' . $duration . 'S'));
             }
-            
+
             // extract location and contact data
             $data = unserialize($event['pn_data']);
 
@@ -512,15 +511,15 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
                 if (strpos($event['pn_text'], '#plaintext#') !== false) {
                     $hometext = str_replace('#plaintext#', ':text:', $event['pn_text']);
                 } else {
-                    $hometext = ':html:'.$event['pn_text'];
+                    $hometext = ':html:' . $event['pn_text'];
                 }
             }
-            
+
             // obtain relevant categories
             $catRegIds = CategoryRegistryUtil::getRegisteredModuleCategoriesIds('TimeIt', 'TimeIt_events');
-            $sql = "SELECT category_id FROM `categories_mapobj` WHERE obj_id=".$event['pn_id']." AND reg_id=".$catRegIds['Main'];
+            $sql = "SELECT category_id FROM `categories_mapobj` WHERE obj_id=" . $event['pn_id'] . " AND reg_id=" . $catRegIds['Main'];
             $cats = $connection->fetchAll($sql);
-            
+
             // obtain current sharing in TimeIt
             switch ($event['pn_sharing']) {
                 case 1:
@@ -533,29 +532,29 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
                 default:
                     $sharing = CalendarEvent::SHARING_GLOBAL;
             }
-            
+
             // construct the postcalendar eventarray
             $eventArray = array(
-                'aid'           => $event['pn_cr_uid'],
-                'title'         => $event['pn_title'],
-                'time'          => $event['pn_cr_date'],
-                'hometext'      => $hometext,
-                'informant'     => $event['pn_cr_uid'],
-                'eventStart'    => $start,
-                'eventEnd'      => $end,
-                'alldayevent'   => $event['pn_allDay'],
-                'recurrtype'    => $event['pn_repeatType'],
-                'recurrspec'    => array('event_repeat_freq' => $event['pn_repeatFrec'],
-                                        'event_repeat_freq_type' => $reptype,
-                                        'event_repeat_on_num' => '1',
-                                        'event_repeat_on_day' => '0',
-                                        'event_repeat_on_freq' => ''),
-                'location'      => array('event_location' => $data['plugindata']['LocationTimeIt']['name'],
-                                        'event_street1' => $data['plugindata']['LocationTimeIt']['street'] . ' ' . $data['plugindata']['LocationTimeIt']['houseNumber'],
-                                        'event_street2' => '',
-                                        'event_city' => $data['plugindata']['LocationTimeIt']['city'],
-                                        'event_state' => '',
-                                        'event_postal' => $data['plugindata']['LocationTimeIt']['zip']),
+                'aid' => $event['pn_cr_uid'],
+                'title' => $event['pn_title'],
+                'time' => $event['pn_cr_date'],
+                'hometext' => $hometext,
+                'informant' => $event['pn_cr_uid'],
+                'eventStart' => $start,
+                'eventEnd' => $end,
+                'alldayevent' => $event['pn_allDay'],
+                'recurrtype' => $event['pn_repeatType'],
+                'recurrspec' => array('event_repeat_freq' => $event['pn_repeatFrec'],
+                    'event_repeat_freq_type' => $reptype,
+                    'event_repeat_on_num' => '1',
+                    'event_repeat_on_day' => '0',
+                    'event_repeat_on_freq' => ''),
+                'location' => array('event_location' => $data['plugindata']['LocationTimeIt']['name'],
+                    'event_street1' => $data['plugindata']['LocationTimeIt']['street'] . ' ' . $data['plugindata']['LocationTimeIt']['houseNumber'],
+                    'event_street2' => '',
+                    'event_city' => $data['plugindata']['LocationTimeIt']['city'],
+                    'event_state' => '',
+                    'event_postal' => $data['plugindata']['LocationTimeIt']['zip']),
                 'conttel' => $data['plugindata']['ContactTimeIt']['phoneNr'],
                 'contname' => $data['plugindata']['ContactTimeIt']['contactPerson'],
                 'contemail' => $data['plugindata']['ContactTimeIt']['email'],
@@ -567,18 +566,18 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
                     'Main' => $catMain['id'],
                     'TimeItImport' => $cats[0]['category_id'])
             );
-            
+
             // Now insert the created array into PostCalendar via Doctrine
             try {
                 $event = new PostCalendar_Entity_CalendarEvent();
                 $event->setFromArray($eventArray);
                 $this->entityManager->persist($event);
                 $eventCount++;
-                if ($flushcount > 25) {
+                if ($flushCount > 25) {
                     $this->entityManager->flush();
-                    $flushcount = 0;
+                    $flushCount = 0;
                 } else {
-                    $flushcount++;
+                    $flushCount++;
                 }
                 //$newEventId = $event->getEid();
             } catch (Exception $e) {
@@ -589,7 +588,7 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
         if ($eventCount > 0) {
             $this->entityManager->flush();
         }
-        
+
         // -------------
         // delete old TimeIt data from mapobj
         $sqls = array();
@@ -608,4 +607,4 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
         $this->redirect(ModUtil::url('PostCalendar', 'admin', 'main'));
     }
 
-} // end class def
+}
