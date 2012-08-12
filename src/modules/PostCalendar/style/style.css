@@ -177,6 +177,7 @@ a.postcalendar_nav_text_selected:hover {
     height: 16px;
     vertical-align: top;
     padding: 4px 4px 4px 8px;
+    margin: 0;
     border-bottom-left-radius: 6px;
     border-top-left-radius: 6px;
     cursor: default;
@@ -195,7 +196,7 @@ a.postcalendar_nav_text_selected:hover {
     text-indent: -99999px; 
     border-bottom-right-radius: 6px;
     border-top-right-radius: 6px;
-    margin-right: .8em;
+    margin: 0 .8em 0 0;
 }
 #pcnav_datepicker_button:hover,
 #pcnav_filterpicker_button:hover {
