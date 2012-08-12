@@ -436,7 +436,6 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
             $this->redirect(ModUtil::url('PostCalendar', 'admin', 'main'));
         }
 
-        // -------------
         // create subcategory for imported events
         if (!CategoryUtil::getCategoryByPath('/__SYSTEM__/Modules/PostCalendar/Imported')) {
             CategoryUtil::createCategory('/__SYSTEM__/Modules/PostCalendar', 'Imported', null, $this->__('Imported'), $this->__('TimeIt imported'));
@@ -453,10 +452,8 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
         }
 
         // obtain some category ids
-//        $catRegId = CategoryRegistryUtil::getRegisteredModuleCategory('PostCalendar', 'CalendarEvent', 'TimeItImport');
         $catMain = CategoryUtil::getCategoryByPath('/__SYSTEM__/Modules/PostCalendar/Imported');
 
-        // -------------
         $eventCount = 0;
         $flushCount = 0; // flush to Doctrine every 25 events
         // $events is an PHP array with the whole database table for TimeIt_events
@@ -589,7 +586,6 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
             $this->entityManager->flush();
         }
 
-        // -------------
         // delete old TimeIt data from mapobj
         $sqls = array();
         $sqls[] = "DELETE FROM categories_mapobj WHERE modname = 'TimeIt' AND tablename = 'TimeIt_events'";
