@@ -83,7 +83,7 @@ class PostCalendar_Api_Search extends Zikula_AbstractApi
         $eventsByDate = ModUtil::apiFunc('PostCalendar', 'event', 'getEvents', $searchargs);
         // $eventsByDate = array(Date[YYYY-MM-DD]=>array(key[int]=>array(assockey[name]=>values)))
         // !Dates exist w/o data
-    
+        
         $sessionId = session_id();
     
         // Process the result set and insert into search result table
@@ -95,7 +95,7 @@ class PostCalendar_Api_Search extends Zikula_AbstractApi
                     $items = array('title' => $title,
                                    'text'  => $event['hometext'],
                                    'extra' => $event['eid'],
-                                   'created' => $event['time']->format('Y-m-d G:i:s'),
+                                   'created' => $event['time'],
                                    'module'  => 'PostCalendar',
                                    'session' => $sessionId);
                 }
