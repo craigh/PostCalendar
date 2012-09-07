@@ -79,6 +79,7 @@ class PostCalendar_Util
                 'search',
                 'print',
                 'xml',
+                'ical',
                 'event'),
         );
 

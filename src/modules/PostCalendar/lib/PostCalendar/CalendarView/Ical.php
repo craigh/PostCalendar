@@ -9,7 +9,7 @@
  * Please see the NOTICE file distributed with this source code for further
  * information regarding copyright and licensing.
  */
-class PostCalendar_CalendarView_Xml extends PostCalendar_CalendarView_List
+class PostCalendar_CalendarView_Ical extends PostCalendar_CalendarView_List
 {
 
     /**
@@ -17,7 +17,7 @@ class PostCalendar_CalendarView_Xml extends PostCalendar_CalendarView_List
      */
     protected function setTemplate()
     {
-        $this->template = 'user/xml.tpl';
+        $this->template = 'user/ical.tpl';
     }
 
     /**
@@ -25,7 +25,7 @@ class PostCalendar_CalendarView_Xml extends PostCalendar_CalendarView_List
      */
     protected function setup()
     {
-        $this->viewtype = 'xml';
+        $this->viewtype = 'ical';
         $this->listMonths = ModUtil::getVar('PostCalendar', 'pcListMonths');
     }
     
@@ -47,7 +47,8 @@ class PostCalendar_CalendarView_Xml extends PostCalendar_CalendarView_List
             $this->view
                     ->assign('eventsByDate', $eventsByDate);
         }
-        return $this->view->fetch($this->template);
+        $this->view->display($this->template);
+        return true;
     }
 
 }

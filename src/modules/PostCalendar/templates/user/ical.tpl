@@ -1,3 +1,5 @@
+<!-- TEMPORARY TEMPLATE - MUST BE REPLACED WITH PROPER ICALENDAR XML -->
+
 {pc_sort_events var="S_EVENTS" sort="time" order="asc" value=$eventsByDate}
 {foreach name='dates' item='events' key='date' from=$S_EVENTS}
   {*pc_sort_events var="S_EVENTS" sort="time" order="asc" value=$eventsByDate*}
