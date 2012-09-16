@@ -140,6 +140,80 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
     }
 
     /**
+     * This function returns an array of events.
+     *
+     * Unlike getEvents, this method does not organize events by date, and it 
+     * also does not expand recurences. 
+     * expected args (from search/postcalendar_search_options): s_keywords, filtercats, seachstart, searchend
+     **/
+    public function getFlatEvents($args)
+    {
+        $startDate   = isset($args['start'])       ? $args['start']       : new DateTime();
+        $endDate     = isset($args['end'])         ? $args['end']         : null;
+        $filtercats  = isset($args['filtercats'])  ? $args['filtercats']  : '';
+        $userFilter  = isset($args['userfilter'])  ? $args['userfilter'] : '';
+        $searchDql   = isset($args['s_keywords'])  ? $args['s_keywords']  : ''; // search WHERE dql
+        $searchstart = isset($args['searchstart']) ? $args['searchstart'] : '';
+        $searchend   = isset($args['searchend'])   ? $args['searchend']   : '';
+        $requestedDate = isset($args['date'])      ? $args['date']        : new DateTime();
+        $sort        = ((isset($args['sort'])) && ($args['sort'] == 'DESC')) ? 'DESC' : 'ASC';
+        $eventstatus = (isset($args['eventstatus']) && (in_array($args['eventstatus'], array(CalendarEvent::APPROVED, CalendarEvent::QUEUED, CalendarEvent::HIDDEN)))) ? $args['eventstatus'] : CalendarEvent::APPROVED;
+
+        // update news-hooked stories that have been published since last pageload
+        $bindings = HookUtil::getBindingsBetweenOwners('News', 'PostCalendar');
+        if (!empty($bindings)) {
+            PostCalendar_PostCalendarEvent_News::scheduler();
+        }
+        
+        if ($startDate > $requestedDate) {
+            $requestedDate = clone $startDate;
+        }
+        
+        if (!empty($searchDql)) {
+            $startDate = clone $requestedDate;
+            $endDate = clone $requestedDate;
+            $startDate->modify("-$searchstart years");
+            $endDate->modify("+$searchend years");
+        }
+            
+        if (empty($userFilter)) {
+            $userFilter = ($this->getVar('pcAllowUserCalendar')) ? EventRepo::FILTER_ALL : EventRepo::FILTER_GLOBAL;
+        }
+        if (!UserUtil::isLoggedIn()) {
+            $userFilter = EventRepo::FILTER_GLOBAL;
+        }
+
+        // convert $userFilter to useable information
+        if ($userFilter > 0) {
+            // possible values: a user id - only an admin can use this
+            $userid = $userFilter; // keep the id
+            $userFilter = EventRepo::FILTER_PRIVATE;
+        } else {
+            $userid = UserUtil::getVar('uid'); // use current user's ID
+        }
+        
+        // get event collection
+        $events = $this->entityManager->getRepository('PostCalendar_Entity_CalendarEvent')
+                ->getEventCollection($eventstatus, $startDate, $endDate, $userFilter, $userid, $filtercats, $searchDql);
+
+        $returnedData = array();
+
+        foreach ($events as $event) {
+            $event = $event->getoldArray(); // convert from Doctrine Entity
+            // check access for event
+            if ((!SecurityUtil::checkPermission('PostCalendar::Event', "$event[title]::$event[eid]", ACCESS_OVERVIEW))
+                    || (!CategoryUtil::hasCategoryAccess($event['categories'], 'PostCalendar'))) {
+                continue;
+            }
+            $returnedData[] = $this->formateventarrayfordisplay(array(
+                'event' => $event,
+                'currentDate' => $date)
+            );
+        }
+        return $returnedData;
+    }
+
+    /**
      * write an event to the DB
      * @param $args array of event data
      * @return bool true on success : false on failure;
