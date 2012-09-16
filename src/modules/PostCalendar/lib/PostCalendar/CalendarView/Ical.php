@@ -46,7 +46,7 @@ class PostCalendar_CalendarView_Ical extends PostCalendar_CalendarView_List
     public function render()
     {
 
-        if (true || !$this->isCached()) {
+        if (!$this->isCached()) {
 
             // Load the events
             $events = ModUtil::apiFunc('PostCalendar', 'event', 'getFlatEvents', array(
