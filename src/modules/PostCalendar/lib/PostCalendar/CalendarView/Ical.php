@@ -92,11 +92,17 @@ class PostCalendar_CalendarView_Ical extends PostCalendar_CalendarView_List
 
                 $location = '';
                 foreach ($event['location'] as $locKey => $locVal) {
-                    if (trim($locVal)) {
-                        if ($location) {
-                            $location .= '\n';
+                    if ($locKey == 'locations_id') {
+                        if ($locVal <> -1) {
+                            // future support for location module here
                         }
-                        $location .= $locVal;
+                    } else {
+                        if (trim($locVal)) {
+                            if ($location) {
+                                $location .= '\n';
+                            }
+                            $location .= $locVal;
+                        }
                     }
                 }
                 if ($location) {
