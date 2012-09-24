@@ -67,9 +67,9 @@ class PostCalendar_CalendarView_Ical extends PostCalendar_CalendarView_List
 
             $vcal = VObject\Component::create('VCALENDAR');
             $vcal->VERSION = '2.0';
-            $vcal->PRODID = "-//Sabre//Sabre VObject ".VObject\Version::VERSION."//EN";
+            $vcal->PRODID = "-//Sabre//Sabre VObject " . VObject\Version::VERSION . "//EN";
 
-            foreach($events as $event) {
+            foreach ($events as $event) {
 
                 $vevent = VObject\Component::create('VEVENT');
                 $vevent->UID = 'postcalendar-' . $event['eid'];
@@ -91,16 +91,19 @@ class PostCalendar_CalendarView_Ical extends PostCalendar_CalendarView_List
                 }
 
                 $location = '';
-                foreach($event['location'] as $part) {
-                    if (trim($part)) {
-                        if ($location) $location.="\n";
-                        $location.=$part;
+                foreach ($event['location'] as $locKey => $locVal) {
+                    if (trim($locVal)) {
+                        if ($location) {
+                            $location .= '\n';
+                        }
+                        $location .= $locVal;
                     }
                 }
-                if ($location)
+                if ($location) {
                     $vevent->LOCATION = $location;
+                }
 
-                switch($event['recurrtype']) {
+                switch ($event['recurrtype']) {
 
                     case CalendarEvent::RECURRTYPE_NONE :
                     case CalendarEvent::RECURRTYPE_CONTINUOUS :
@@ -111,7 +114,7 @@ class PostCalendar_CalendarView_Ical extends PostCalendar_CalendarView_List
 
                         $freq = null;
 
-                        switch($event['recurrspec']['event_repeat_freq_type']) {
+                        switch ($event['recurrspec']['event_repeat_freq_type']) {
 
                             case EventAPI::REPEAT_EVERY_DAY :
                                 $freq = 'DAILY';
@@ -127,7 +130,6 @@ class PostCalendar_CalendarView_Ical extends PostCalendar_CalendarView_List
                                 break;
                             default :
                                 throw new \InvalidArgumentException('Unknown event_repeat_freq_type');
-
                         }
                         $interval = $event['recurrspec']['event_repeat_freq'];
 
@@ -153,7 +155,7 @@ class PostCalendar_CalendarView_Ical extends PostCalendar_CalendarView_List
                             EventAPI::REPEAT_ON_SAT => 'SA',
                         );
                         $byDay = '';
-                        switch($event['recurrspec']['event_repeat_on_num']) {
+                        switch ($event['recurrspec']['event_repeat_on_num']) {
                             case EventAPI::REPEAT_ON_1ST :
                             case EventAPI::REPEAT_ON_2ND :
                             case EventAPI::REPEAT_ON_3RD :
@@ -171,23 +173,18 @@ class PostCalendar_CalendarView_Ical extends PostCalendar_CalendarView_List
 
                         $vevent->RRULE = 'FREQ=' . $freq . ';INTERVAL=' . $interval . ';UNTIL=' . $until . ';BYDAY=' . $byDay;
                         break;
-
-
                 }
 
                 $vcal->add($vevent);
-
             }
 
             // I used this for debugging, because the cache was annoying and I
             // wasn't sure how to turn it off.
             // echo $vcal->serialize();
             // die();
-
             // create and return template
             $this->view
-                ->assign('icalendarData', $vcal->serialize());
-
+                    ->assign('icalendarData', $vcal->serialize());
         }
 
 
