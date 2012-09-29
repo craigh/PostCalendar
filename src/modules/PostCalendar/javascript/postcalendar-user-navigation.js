@@ -24,7 +24,7 @@ jQuery(document).ready(function() {
             secondary: "ui-icon-triangle-1-s"
         }
     });
-    // create the filterpicker dialog
+    // create the usercalendar dialog
     jQuery('#pcnav_usercalendar_dialog').dialog({
         autoOpen: false,
         width: 200,
@@ -36,13 +36,13 @@ jQuery(document).ready(function() {
             of: jQuery('#pcnav_usercalendar_button')
         }
     });
-    // open the filterpicker dialog on button click
+    // open the usercalendar dialog on button click
     jQuery('#pcnav_usercalendar_button').click(function() {
         jQuery('#pcnav_usercalendar_dialog').css('display', 'inherit');
         jQuery('#pcnav_usercalendar_dialog').dialog('open');
         return false;
     });
-    // close the filterpicker dialog when clicking outside dialog
+    // close the usercalendar dialog when clicking outside dialog
     jQuery(document).click(function(e){
         if (!jQuery(e.target).parents().filter('.ui-dialog').length) {
             // close the dialog
