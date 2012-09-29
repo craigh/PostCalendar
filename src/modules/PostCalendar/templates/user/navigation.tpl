@@ -35,7 +35,7 @@
             <ul>
             {foreach from=$pcCategories key='regname' item='categories'}
                 {foreach from=$categories item='category'}
-                <li class='pccategories_selector_{$category.id} pccategories_selector' id='pccat_{$category.id}'>{$category.display_name.en}</li>
+                <li class='pccategories_selector_{$category.id} pccategories_selector' id='pccat_{$category.id}'>{$category.display_name.$lang}</li>
                 {/foreach}
             {/foreach}
             </ul>
