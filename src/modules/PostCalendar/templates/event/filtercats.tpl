@@ -12,9 +12,7 @@
         all=1
         allText=$allText
         allValue=0}
-    <a href='#' id='pc_categories_{$property}__open' title='{gt text="Select multiple categories"}'>
-        {img modname="core" src="edit_add.png" set="icons/extrasmall" __alt="Select Multiple" __title="Select Multiple"}
-    </a>
+    <a href='#' id='pc_categories_{$property}__open' title='{gt text="Select multiple categories"}'>{img modname="core" src="edit_add.png" set="icons/extrasmall" __alt="Select Multiple" __title="Select Multiple"}</a>
     <script type="text/javascript">
         var pc_categories_{{$property}}_ = new Zikula.UI.SelectMultiple(
             'pc_categories_{{$property}}_',
