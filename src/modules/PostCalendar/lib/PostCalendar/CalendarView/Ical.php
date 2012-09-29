@@ -23,6 +23,14 @@ class PostCalendar_CalendarView_Ical extends PostCalendar_CalendarView_List
 {
 
     /**
+     * Set the cacheTag 
+     */
+    protected function setCacheTag()
+    {
+        $this->cacheTag = $this->requestedDate->format('Ymd') . '|' . serialize($this->selectedCategories);
+    }
+
+    /**
      * Set the template
      */
     protected function setTemplate()
@@ -94,12 +102,12 @@ class PostCalendar_CalendarView_Ical extends PostCalendar_CalendarView_List
                 foreach ($event['location'] as $locKey => $locVal) {
                     if ($locKey == 'locations_id') {
                         if ($locVal <> -1) {
-                            // future support for location module here
+                            // future support for location module here?
                         }
                     } else {
                         if (trim($locVal)) {
                             if ($location) {
-                                $location .= '\n';
+                                $location .= '\n'; //this isn't rendering correctly in iCal
                             }
                             $location .= $locVal;
                         }
