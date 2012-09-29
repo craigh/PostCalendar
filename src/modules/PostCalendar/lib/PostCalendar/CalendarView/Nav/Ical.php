@@ -22,4 +22,15 @@ class PostCalendar_CalendarView_Nav_Ical extends PostCalendar_CalendarView_Nav_A
         $this->displayText = $this->view->__('iCal');
     }
 
+    /**
+     * provide the image params
+     * 
+     * @return array 
+     */
+    protected function getImageParams()
+    {
+        return array(
+            'modname' => 'PostCalendar',
+            'src' => 'ical.png');
+    }
 }
