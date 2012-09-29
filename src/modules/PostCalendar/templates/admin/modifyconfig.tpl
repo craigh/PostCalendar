@@ -104,6 +104,7 @@
 				<option value="print"{if in_array('print', $modvars.PostCalendar.pcAllowedViews)} selected="selected"{/if}>{gt text='Print'}</option>
 				<option value="xml"{if in_array('xml', $modvars.PostCalendar.pcAllowedViews)} selected="selected"{/if}>{gt text='Xml/RSS'}</option>
 				<option value="event"{if in_array('event', $modvars.PostCalendar.pcAllowedViews)} selected="selected"{/if}>{gt text='Event'}</option>
+				<option value="ical"{if in_array('ical', $modvars.PostCalendar.pcAllowedViews)} selected="selected"{/if}>{gt text='iCal'}</option>
 				</select></span>
                 <em class="z-formnote z-sub">{gt text="The create item is also controlled by %s permissions settings." tag1='ACCESS_ADD'}</em>
                 <em class="z-formnote z-sub">{gt text="The event view is also controlled by %s permissions settings." tag1='ACCESS_READ'}</em>
