@@ -16,7 +16,11 @@ jQuery(document).ready(function() {
     }).remove();
     // redirect on buttonclick
     jQuery('.pcnav_button').click(function() {
-        window.location = jQuery('#pcnav_url_' + jQuery(this).attr('value')).attr("value");
+        // prevent redirect on ical button click
+        if (jQuery(this).attr('id') != 'pcnav_ical') {
+            // else redirect
+            window.location = jQuery('#pcnav_url_' + jQuery(this).attr('value')).attr("value");
+        }
     });
     // create the user button
     jQuery('#pcnav_usercalendar_button').button({
@@ -64,6 +68,19 @@ jQuery(document).ready(function() {
         jQuery('#pcnav_datepicker').datepicker('show');
         // prevent form submission
         return false;
+    });
+    // test ical button click
+    jQuery('#pcnav_ical').click(function() {
+        jQuery('#pcnav_ical_dialog').css('display', 'inherit');
+        jQuery('#pcnav_ical_dialog').dialog('open');
+        return false;
+    });
+    // create the ical feed dialog
+    jQuery('#pcnav_ical_dialog').dialog({
+        autoOpen: false,
+        resizable: false,
+        draggable: false,
+        modal: true
     });
     // create the filterpicker dialog
     jQuery('#pcnav_filterpicker_dialog').dialog({

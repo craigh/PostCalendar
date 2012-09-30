@@ -33,4 +33,12 @@ class PostCalendar_CalendarView_Nav_Ical extends PostCalendar_CalendarView_Nav_A
             'modname' => 'PostCalendar',
             'src' => 'ical.png');
     }
+
+    /**
+     * Set the Zikula_ModUrl 
+     */
+    protected function setUrl()
+    {
+        $this->url = new Zikula_ModUrl('PostCalendar', 'user', 'display', ZLanguage::getLanguageCode());
+    }
 }

@@ -108,3 +108,17 @@
 </div>
 </form>
 <div>{insert name="getstatusmsg"}</div>
+<!-- This is a pop up dialog box -->
+<div id='pcnav_ical_dialog' title='{gt text='Select an iCal feed'}'>
+    <p>{gt text='Click to download and import.<br />Copy link to subscribe in your iCal client.'}</p>
+    <ul>
+    <li><strong><a href='{modurl modname="PostCalendar" type='user' func='display' viewtype='ical'}'>{gt text='All categories'}</a></strong></li>
+    <li><!-- blank line -->&nbsp;</li>
+    {foreach from=$pcCategories key='regname' item='categories'}
+        {foreach from=$categories item='category'}
+        <li><a href='{modurl modname="PostCalendar" type='user' func='display' viewtype='ical' prop=$regname cat=$category.id}'>{$category.display_name.$lang}</a>
+        {/foreach}
+    {/foreach}
+    </ul>
+</div>
+<!-- end dialog -->
