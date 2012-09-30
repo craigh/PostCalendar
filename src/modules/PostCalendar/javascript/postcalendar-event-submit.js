@@ -104,5 +104,5 @@ jQuery(document).ready(function(){
         return false;
     });
     // rename all the storage elements to hold arrays
-    jQuery('#postcalendar_exceptions').find('input:hidden').attr('name', 'postcalendar_events[recurexceptionstorage][]');        
+    jQuery('#postcalendar_exceptions').find('input[type=hidden]').attr('name', 'postcalendar_events[recurexceptionstorage][]');        
 });
