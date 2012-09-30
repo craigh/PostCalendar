@@ -163,7 +163,6 @@ class PostCalendar_CalendarView_Navigation
             $jQueryTheme = is_dir("javascript/jquery-ui/themes/$jQueryTheme") ? $jQueryTheme : 'base';
             PageUtil::addVar("stylesheet", "javascript/jquery-ui/themes/$jQueryTheme/jquery-ui.css");
             PageUtil::addVar("stylesheet", "modules/PostCalendar/style/jquery-overrides.css");
-            $this->view->assign('pcCategories', $categories);
             if (SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
                 $allowedGroup = ModUtil::getVar('PostCalendar', 'pcAllowUserCalendar');
                 if ($allowedGroup > 0) {
@@ -177,7 +176,8 @@ class PostCalendar_CalendarView_Navigation
                 }
             }
         }
-        $this->view->assign('navigationObj', $this);
+        $this->view->assign('pcCategories', $categories)
+                ->assign('navigationObj', $this);
         return $this->view->fetch($this->template);
     }
 
