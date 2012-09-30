@@ -142,37 +142,23 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
     /**
      * This function returns an array of events.
      *
-     * Unlike getEvents, this method does not organize events by date, and it 
-     * also does not expand recurrences. 
+     * Unlike getEvents, this method does not organize events by date
+     *  it does not expand recurrences
+     *  it only return global events (no private events)
      **/
     public function getFlatEvents($args)
     {
         $startDate   = isset($args['start'])       ? $args['start']       : new DateTime();
         $endDate     = isset($args['end'])         ? $args['end']         : null;
         $filtercats  = isset($args['filtercats'])  ? $args['filtercats']  : '';
-        $userFilter  = isset($args['userfilter'])  ? $args['userfilter'] : '';
         $requestedDate = isset($args['date'])      ? $args['date']        : new DateTime();
         $eventstatus = (isset($args['eventstatus']) && (in_array($args['eventstatus'], array(CalendarEvent::APPROVED, CalendarEvent::QUEUED, CalendarEvent::HIDDEN)))) ? $args['eventstatus'] : CalendarEvent::APPROVED;
 
         if ($startDate > $requestedDate) {
             $requestedDate = clone $startDate;
         }
-        
-        if (empty($userFilter)) {
-            $userFilter = ($this->getVar('pcAllowUserCalendar')) ? EventRepo::FILTER_ALL : EventRepo::FILTER_GLOBAL;
-        }
-        if (!UserUtil::isLoggedIn()) {
-            $userFilter = EventRepo::FILTER_GLOBAL;
-        }
 
-        // convert $userFilter to useable information
-        if ($userFilter > 0) {
-            // possible values: a user id - only an admin can use this
-            $userid = $userFilter; // keep the id
-            $userFilter = EventRepo::FILTER_PRIVATE;
-        } else {
-            $userid = UserUtil::getVar('uid'); // use current user's ID
-        }
+        $userFilter = EventRepo::FILTER_GLOBAL;
 
         // get event collection
         $events = $this->entityManager->getRepository('PostCalendar_Entity_CalendarEvent')
