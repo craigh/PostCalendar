@@ -120,8 +120,9 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
         }
         $days = ($sort == 'DESC') ? array_reverse($days) : $days;
         
-        foreach ($events as $event) {
-            $event = $event->getoldArray(); // convert from Doctrine Entity
+        foreach ($events as $currentEvent) {
+            $event = $currentEvent->getoldArray(); // convert from Doctrine Entity
+            $this->entityManager->detach($currentEvent); // remove object from memory
             // check access for event
             if ((!SecurityUtil::checkPermission('PostCalendar::Event', "$event[title]::$event[eid]", ACCESS_OVERVIEW))
                     || (!CategoryUtil::hasCategoryAccess($event['categories'], 'PostCalendar'))) {
