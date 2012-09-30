@@ -39,6 +39,19 @@ class PostCalendar_CalendarView_Ical extends PostCalendar_CalendarView_List
     }
 
     /**
+     * Set the date range of the view 
+     */
+    protected function setDates()
+    {
+        // Set dates to two years before and two years after the selected date
+        $this->startDate = clone $this->requestedDate;
+        $this->startDate->setTime(0,0,0);
+        $this->endDate = clone $this->startDate;
+        $this->endDate->modify("+2 years");
+        $this->startDate->modify("-2 years");
+    }
+
+    /**
      * Setup the view
      */
     protected function setup()
@@ -53,9 +66,7 @@ class PostCalendar_CalendarView_Ical extends PostCalendar_CalendarView_List
      */
     public function render()
     {
-
         if (!$this->isCached()) {
-
             // Load the events
             $events = ModUtil::apiFunc('PostCalendar', 'event', 'getFlatEvents', array(
                         'start' => $this->startDate,
@@ -188,6 +199,8 @@ class PostCalendar_CalendarView_Ical extends PostCalendar_CalendarView_List
                         $vevent->RRULE = 'FREQ=' . $freq . ';INTERVAL=' . $interval . ';UNTIL=' . $until . ';BYDAY=' . $byDay;
                         break;
                 }
+                
+                // need to deal with recurExceptions...
 
                 $vcal->add($vevent);
             }
@@ -197,8 +210,7 @@ class PostCalendar_CalendarView_Ical extends PostCalendar_CalendarView_List
             // echo $vcal->serialize();
             // die();
             // create and return template
-            $this->view
-                    ->assign('icalendarData', $vcal->serialize());
+            $this->view->assign('icalendarData', $vcal->serialize());
         }
 
 
