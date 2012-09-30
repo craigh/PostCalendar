@@ -201,6 +201,7 @@ class PostCalendar_CalendarView_Ical extends PostCalendar_CalendarView_List
                 }
                 
                 // need to deal with recurExceptions...
+                // $event['recurrspec']['exceptions'] is an array of DateTime objects
 
                 $vcal->add($vevent);
             }
