@@ -101,7 +101,7 @@ class PostCalendar_CalendarView_Ical extends PostCalendar_CalendarView_List
                 $vevent->DTSTART = '---';
                 $vevent->DTEND = '---';
 
-                if ($vevent['alldayevent']) {
+                if ($event['alldayevent']) {
                     $vevent->DTSTART->setDateTime($event['eventStart'], VObject\Property\DateTime::DATE);
                     $vevent->DTEND->setDateTime($event['eventEnd'], VObject\Property\DateTime::DATE);
                 } else {
