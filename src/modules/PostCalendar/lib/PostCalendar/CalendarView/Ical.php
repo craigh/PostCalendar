@@ -81,8 +81,7 @@ class PostCalendar_CalendarView_Ical extends PostCalendar_CalendarView_List
             // For easy debugging
             // header('Content-Type: text/plain; charset=UTF-8');
 
-            /* We are doing the actual rendering here. It makes no sense at all to
-             * do this in a template */
+            /* Actual rendering done here. perhaps there is no need to do this in a template? */
 
             $vcal = VObject\Component::create('VCALENDAR');
             $vcal->VERSION = '2.0';
@@ -97,7 +96,7 @@ class PostCalendar_CalendarView_Ical extends PostCalendar_CalendarView_List
                     $vevent->DESCRIPTION = $event['hometext'];
                 }
 
-                // We're overwriting this in the next step
+                // overwritten in the next step
                 $vevent->DTSTART = '---';
                 $vevent->DTEND = '---';
 
@@ -202,6 +201,11 @@ class PostCalendar_CalendarView_Ical extends PostCalendar_CalendarView_List
                 
                 // need to deal with recurExceptions...
                 // $event['recurrspec']['exceptions'] is an array of DateTime objects
+                if (!empty($event['recurrspec']['exceptions'])) {
+                    $EXDATE = VObject\Property::create('EXDATE');
+                    $EXDATE->setDateTimes($event['recurrspec']['exceptions'], VObject\Property\DateTime::DATE);
+                    $vevent->add($EXDATE);
+                }
 
                 $vcal->add($vevent);
             }
