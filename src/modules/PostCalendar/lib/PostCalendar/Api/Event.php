@@ -163,7 +163,7 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
 
         // get event collection
         $events = $this->entityManager->getRepository('PostCalendar_Entity_CalendarEvent')
-                ->getEventCollection($eventstatus, $startDate, $endDate, $userFilter, $userid, $filtercats, $searchDql);
+                ->getEventCollection($eventstatus, $startDate, $endDate, $userFilter, UserUtil::getVar('uid'), $filtercats, '');
 
         $returnedData = array();
 
