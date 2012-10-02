@@ -45,7 +45,7 @@ class PostCalendar_CalendarView_Ical extends PostCalendar_CalendarView_List
     {
         // Set dates to two years before and two years after the selected date
         $this->startDate = clone $this->requestedDate;
-        $this->startDate->setTime(0,0,0);
+        $this->startDate->setTime(0, 0, 0);
         $this->endDate = clone $this->startDate;
         $this->endDate->modify("+2 years");
         $this->startDate->modify("-2 years");
@@ -204,20 +204,22 @@ class PostCalendar_CalendarView_Ical extends PostCalendar_CalendarView_List
                         $vevent->RRULE = 'FREQ=' . $freq . ';INTERVAL=' . $interval . ';UNTIL=' . $until . ';BYDAY=' . $byDay;
                         break;
                 }
-                
-                // need to deal with recurExceptions...
-                // $event['recurrspec']['exceptions'] is an array of DateTime objects
+
+                // add recurExceptions
                 if (!empty($event['recurrspec']['exceptions'])) {
-                    $EXDATE = VObject\Property::create('EXDATE');
-                    $EXDATE->setDateTimes($event['recurrspec']['exceptions'], VObject\Property\DateTime::DATE);
-                    $vevent->add($EXDATE);
+                    foreach ($event['recurrspec']['exceptions'] as $exception) {
+                        $EXDATE = VObject\Property::create('EXDATE');
+                        $exception->setTime($event['eventStart']->format('H'), $event['eventStart']->format('i'));
+                        $EXDATE->setDateTimes(array($exception), VObject\Property\DateTime::LOCALTZ);
+                        $vevent->add($EXDATE);
+                        unset($EXDATE);
+                    }
                 }
 
                 $vcal->add($vevent);
             }
 
-            // I used this for debugging, because the cache was annoying and I
-            // wasn't sure how to turn it off.
+            // used for debugging
             // echo $vcal->serialize();
             // die();
             // create and return template
