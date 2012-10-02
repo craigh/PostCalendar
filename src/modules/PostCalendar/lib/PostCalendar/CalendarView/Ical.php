@@ -158,6 +158,7 @@ class PostCalendar_CalendarView_Ical extends PostCalendar_CalendarView_List
                         $interval = $event['recurrspec']['event_repeat_freq'];
 
                         $until = clone $event['endDate'];
+                        $until->modify("+1 day");
                         $until->setTimeZone(new DateTimeZone('UTC'));
                         $until = $until->format('Ymd\\THis\\Z');
 
@@ -192,6 +193,7 @@ class PostCalendar_CalendarView_Ical extends PostCalendar_CalendarView_List
                         $byDay.=$dayList[$event['recurrspec']['event_repeat_on_day']];
 
                         $until = clone $event['endDate'];
+                        $until->modify("+1 day");
                         $until->setTimeZone(new DateTimeZone('UTC'));
                         $until = $until->format('Ymd\\THis\\Z');
 
