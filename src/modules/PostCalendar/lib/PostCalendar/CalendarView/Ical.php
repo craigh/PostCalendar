@@ -130,8 +130,12 @@ class PostCalendar_CalendarView_Ical extends PostCalendar_CalendarView_List
                 switch ($event['recurrtype']) {
 
                     case CalendarEvent::RECURRTYPE_NONE :
-                    case CalendarEvent::RECURRTYPE_CONTINUOUS :
                         // do nothing
+                        break;
+                    case CalendarEvent::RECURRTYPE_CONTINUOUS :
+                        // reset end date +1 day
+                        $event['eventEnd']->modify("+1 day");
+                        $vevent->DTEND->setDateTime($event['eventEnd'], VObject\Property\DateTime::LOCALTZ);
                         break;
 
                     case CalendarEvent::RECURRTYPE_REPEAT:
