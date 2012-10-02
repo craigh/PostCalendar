@@ -1,8 +1,7 @@
 <?php
 
 /**
- * Including the composer autoloader for Sabre-vobject.
- * Not sure if there's a native zikula way to do this.
+ * Include the composer autoloader for Sabre-vobject.
  */
 include __DIR__ . '/../../vendor/sabre-vobject/vendor/autoload.php';
 
@@ -87,17 +86,12 @@ class PostCalendar_CalendarView_Ical extends PostCalendar_CalendarView_List
             $filename = str_replace(" ", "_", $sitename) . ".ics";
             header('Content-Disposition: attachment; filename=' . $filename);
 
-            // For easy debugging
-            // header('Content-Type: text/plain; charset=UTF-8');
-
-            /* Actual rendering done here. perhaps there is no need to do this in a template? */
-
+            // create ical file
             $vcal = VObject\Component::create('VCALENDAR');
             $vcal->VERSION = '2.0';
             $vcal->PRODID = "-//Sabre//Sabre VObject " . VObject\Version::VERSION . "//EN";
 
             foreach ($events as $event) {
-
                 $vevent = VObject\Component::create('VEVENT');
                 $vevent->UID = 'postcalendar-' . $event['eid'];
                 $vevent->SUMMARY = $event['title'];
@@ -137,7 +131,6 @@ class PostCalendar_CalendarView_Ical extends PostCalendar_CalendarView_List
                 }
 
                 switch ($event['recurrtype']) {
-
                     case CalendarEvent::RECURRTYPE_NONE :
                         // do nothing
                         break;
@@ -146,13 +139,10 @@ class PostCalendar_CalendarView_Ical extends PostCalendar_CalendarView_List
                         $event['eventEnd']->modify("+1 day");
                         $vevent->DTEND->setDateTime($event['eventEnd'], VObject\Property\DateTime::LOCALTZ);
                         break;
-
                     case CalendarEvent::RECURRTYPE_REPEAT:
-
                         $freq = null;
 
                         switch ($event['recurrspec']['event_repeat_freq_type']) {
-
                             case EventAPI::REPEAT_EVERY_DAY :
                                 $freq = 'DAILY';
                                 break;
@@ -177,9 +167,7 @@ class PostCalendar_CalendarView_Ical extends PostCalendar_CalendarView_List
 
                         $vevent->RRULE = 'FREQ=' . $freq . ';INTERVAL=' . $interval . ';UNTIL=' . $until;
                         break;
-
                     case CalendarEvent::RECURRTYPE_REPEAT_ON :
-
                         $freq = 'MONTHLY';
                         $interval = $event['recurrspec']['event_repeat_on_freq'];
 
@@ -228,14 +216,11 @@ class PostCalendar_CalendarView_Ical extends PostCalendar_CalendarView_List
                 $vcal->add($vevent);
             }
 
-            // used for debugging
-            // echo $vcal->serialize();
-            // die();
-            // create and return template
+            // assign template data
             $this->view->assign('icalendarData', $vcal->serialize());
         }
 
-
+        // prevent display of theme templates using display method and returning TRUE
         $this->view->display($this->template);
         return true;
     }
