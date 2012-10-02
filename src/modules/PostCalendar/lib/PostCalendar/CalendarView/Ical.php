@@ -75,8 +75,17 @@ class PostCalendar_CalendarView_Ical extends PostCalendar_CalendarView_List
                         'date' => $this->requestedDate,
                         'userfilter' => $this->userFilter));
 
-            // Not sure if this is the correct way of doing things.
+            // send appropriate headers
             header('Content-Type: text/calendar; charset=UTF-8');
+            $sitename = System::getVar('sitename');
+            if (!empty($this->selectedCategories)) {
+                foreach($this->selectedCategories as $catId) {
+                    $category = CategoryUtil::getCategoryByID($catId);
+                    $sitename .= "-" . $category['display_name'][ZLanguage::getLanguageCode()];
+                }
+            }
+            $filename = str_replace(" ", "_", $sitename) . ".ics";
+            header('Content-Disposition: attachment; filename=' . $filename);
 
             // For easy debugging
             // header('Content-Type: text/plain; charset=UTF-8');
