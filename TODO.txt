@@ -1,5 +1,7 @@
 TODO LIST
-- tooltips in listview are broken for the event links.
+- remove need for Zikula.UI for translation in JS. find another way.
+
+Post 8.0:
 - add perm check to all navlinks to avoid spiders?
 - make submit form an object
 - Needles are still a guess
