@@ -120,7 +120,7 @@ class PostCalendar_CalendarView_Ical extends PostCalendar_CalendarView_List
                     } else {
                         if (trim($locVal)) {
                             if ($location) {
-                                $location .= '\n'; //this isn't rendering correctly in iCal
+                                $location .= "\n";
                             }
                             $location .= $locVal;
                         }
