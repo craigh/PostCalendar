@@ -1,6 +1,10 @@
 var filterActive = new Array();
 
 jQuery(document).ready(function() {
+    // adjust length of datepicker input field on pageload
+    var tlength = jQuery('#pcnav_datepicker').val().length;
+    tlength = .65 * tlength; // may need to be adjusted based on fontsize ?
+    jQuery('#pcnav_datepicker').css('width', tlength + 'em');
     // create the buttonset
     jQuery(function() {
         jQuery('#pcnav_buttonbar').buttonset()
@@ -69,7 +73,7 @@ jQuery(document).ready(function() {
         // prevent form submission
         return false;
     });
-    // test ical button click
+    // open dialog on ical button click
     jQuery('#pcnav_ical').click(function() {
         jQuery('#pcnav_ical_dialog').css('display', 'inherit');
         jQuery('#pcnav_ical_dialog').dialog('open');
