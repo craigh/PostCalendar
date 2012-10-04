@@ -1,10 +1,12 @@
 var filterActive = new Array();
 
 jQuery(document).ready(function() {
-    // adjust length of datepicker input field on pageload
-    var tlength = jQuery('#pcnav_datepicker').val().length;
-    tlength = .65 * tlength; // may need to be adjusted based on fontsize ?
-    jQuery('#pcnav_datepicker').css('width', tlength + 'em');
+    // adjust length of datepicker input field on pageload (if it exists)
+    if (jQuery('#pcnav_datepicker').length > 0) {
+        var tlength = jQuery('#pcnav_datepicker').val().length;
+        tlength = .65 * tlength; // may need to be adjusted based on fontsize ?
+        jQuery('#pcnav_datepicker').css('width', tlength + 'em');
+    }
     // create the buttonset
     jQuery(function() {
         jQuery('#pcnav_buttonbar').buttonset()
