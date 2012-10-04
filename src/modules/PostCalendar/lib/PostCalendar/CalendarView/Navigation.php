@@ -157,8 +157,12 @@ class PostCalendar_CalendarView_Navigation
             PageUtil::addVar("javascript", "jquery");
             PageUtil::addVar("javascript", "jquery-ui");
             PageUtil::addVar("javascript", "modules/PostCalendar/javascript/postcalendar-user-navigation.js");
-            PageUtil::addVar("javascript", "zikula");
-            PageUtil::addVar("jsgettext", "module_postcalendar_js:PostCalendar");
+            // define javascript variables with translation without using Zikula.UI (and not loading a bunch of other JS)
+            $javascript = "
+            var pcActiveStateActive='" . $this->view->__('active') . "';
+            var pcActiveStateInactive='". $this->view->__('inactive') . "';";
+            PageUtil::addVar("footer", "<script type='text/javascript'>$javascript</script>");
+
             $jQueryTheme = 'overcast';
             $jQueryTheme = is_dir("javascript/jquery-ui/themes/$jQueryTheme") ? $jQueryTheme : 'base';
             PageUtil::addVar("stylesheet", "javascript/jquery-ui/themes/$jQueryTheme/jquery-ui.css");

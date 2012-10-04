@@ -1,6 +1,6 @@
 TODO LIST
-- remove need for Zikula.UI for translation in JS. find another way.
 - Check scribite integration and need for "formatted with html" checkbox...
+- check text color and inverse color plugin usage
 
 Post 8.0:
 - add perm check to all navlinks to avoid spiders?

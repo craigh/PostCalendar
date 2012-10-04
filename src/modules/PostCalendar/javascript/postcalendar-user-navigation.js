@@ -164,11 +164,11 @@ function checkActiveState() {
         jQuery('#pcnav_filterpicker')
             .css('background-color', '#EEEEEE')
             .css('border-color', '#CCCCCC')
-            .attr('value', Zikula.__('inactive','module_postcalendar_js'));
+            .attr('value', pcActiveStateInactive);
     } else {
         jQuery('#pcnav_filterpicker')
             .css('background-color', '#DFF2BF')
             .css('border-color', '#99CC99')
-            .attr('value', Zikula.__('active','module_postcalendar_js'));
+            .attr('value', pcActiveStateActive);
     }
 }
