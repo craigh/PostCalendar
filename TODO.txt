@@ -1,7 +1,6 @@
 TODO LIST
 - Check scribite integration and need for "formatted with html" checkbox...
-- update /docs (see wiki)
-- 
+- recheck claim of W3C-Valid XHTML 1.1 compliance in all templates
 
 Post 8.0:
 - add perm check to all navlinks to avoid spiders?
