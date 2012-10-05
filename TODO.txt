@@ -1,6 +1,7 @@
 TODO LIST
 - Check scribite integration and need for "formatted with html" checkbox...
-- check text color and inverse color plugin usage
+- update /docs (see wiki)
+- 
 
 Post 8.0:
 - add perm check to all navlinks to avoid spiders?

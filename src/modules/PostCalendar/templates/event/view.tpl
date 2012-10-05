@@ -44,14 +44,9 @@
             <h3>{gt text='Categorized in'}:</h3>
             <ul>
                 {foreach from=$loaded_event.categories key="property" item="attribute"}
-                    {if isset($attribute.attributes.textcolor) && isset($attribute.attributes.color)}
-                        {assign var='textcolor' value=$attribute.attributes.textcolor}
-                        {assign var='bgcolor' value=$attribute.attributes.color}
-                    {elseif !isset($attribute.attributes.textcolor) && isset($attribute.attributes.color)}
-                        {assign var='textcolor' value=$attribute.attributes.color|pc_inversecolor}
+                    {if isset($attribute.attributes.color)}
                         {assign var='bgcolor' value=$attribute.attributes.color}
                     {else}
-                        {assign var='textcolor' value='#000000'}
                         {assign var='bgcolor' value='#ffffff'}
                     {/if}
                 {if isset($attribute.display_name.$lang)}
@@ -59,7 +54,7 @@
                 {else}
                     {assign var='catname' value=$attribute.name}
                 {/if}
-                    <li><span style='padding: 0 1em; background-color:{$bgcolor}; color:{$textcolor};'>{$catname}</span></li>
+                    <li><span style='padding: 0 1em; background-color:{$bgcolor};'>{$catname}</span></li>
                 {/foreach}
             </ul>
         </div>

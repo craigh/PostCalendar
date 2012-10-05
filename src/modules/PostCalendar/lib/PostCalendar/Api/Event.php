@@ -440,7 +440,6 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
         $event['catid']        = $event['categories']['Main']['id'];
         $event['catname']      = isset($event['categories']['Main']['display_name'][$lang]) ? $event['categories']['Main']['display_name'][$lang] : $event['categories']['Main']['name'];
         $event['catcolor']     = isset($event['categories']['Main']['attributes']['color'])     ? $event['categories']['Main']['attributes']['color']     : '#eeeeee';
-        $event['cattextcolor'] = isset($event['categories']['Main']['attributes']['textcolor']) ? $event['categories']['Main']['attributes']['textcolor'] : $this->color_inverse($event['catcolor']);
 
         // format some strings for display
         $event['hometext'] = DataUtil::formatForDisplayHTML($event['hometext']);
@@ -599,30 +598,6 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
             }
         }
         return false;
-    }
-
-    /**
-     * @desc generate the inverse color
-     * @author      Jonas John
-     * @link        http://www.jonasjohn.de/snippets/php/color-inverse.htm
-     * @license     public domain
-     * @created     06/13/2006
-     * @params      (string) hex color (e.g. #ffffff)
-     * @return      (string) hex color (e.g. #000000)
-     **/
-    public function color_inverse($color)
-    {
-        $color = str_replace('#', '', $color);
-        if (strlen($color) != 6) {
-            return '000000';
-        }
-        $rgb = '';
-        for ($x = 0; $x < 3; $x++) {
-            $c = 255 - hexdec(substr($color, (2 * $x), 2));
-            $c = ($c < 0) ? 0 : dechex($c);
-            $rgb .= (strlen($c) < 2) ? '0' . $c : $c;
-        }
-        return '#' . $rgb;
     }
 
     /**
