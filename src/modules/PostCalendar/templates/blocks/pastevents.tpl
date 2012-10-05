@@ -1,5 +1,4 @@
 {pc_queued_events_notify}
-{ajaxheader module="PostCalendar" ui=true}
 {pc_pagejs_init}
 <div class="postcalendar_block_pastevents">
 {counter start=0 assign=eventcount}

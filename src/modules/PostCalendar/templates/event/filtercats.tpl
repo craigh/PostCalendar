@@ -1,5 +1,4 @@
 {nocache}
-{ajaxheader module="PostCalendar" ui=true}
 {gt text="All These Categories" assign="allText"}
 {foreach from=$catregistry key='property' item='category'}
     {selector_category

@@ -1,6 +1,5 @@
 {pageaddvar name='stylesheet' value='modules/PostCalendar/style/style.css'}
 {pc_queued_events_notify}
-{ajaxheader module="PostCalendar" ui=true}
 {pc_pagejs_init}
 <div class="postcalendar_block_view_upcoming">
 {counter start=0 assign=eventcount}

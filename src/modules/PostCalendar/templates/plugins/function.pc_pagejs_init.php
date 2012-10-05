@@ -71,6 +71,11 @@ function smarty_function_pc_pagejs_init($params, Zikula_View $view)
             }
             break;
         default:
+            // load required javascript libraries for this display type
+            if (($modVars['PostCalendar']['pcEventsOpenInNewWindow']) || ($modVars['PostCalendar']['pcUsePopups'])) {
+                $scripts = array('prototype', 'zikula', 'livepipe', 'zikula.ui');
+                PageUtil::addVar('javascript', $scripts);
+            }
             if ($modVars['PostCalendar']['pcEventsOpenInNewWindow']) {
                 $javascript = "
                 $$('.event_details').each(function(link){
