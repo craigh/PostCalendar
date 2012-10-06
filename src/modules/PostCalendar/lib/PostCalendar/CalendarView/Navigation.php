@@ -139,7 +139,7 @@ class PostCalendar_CalendarView_Navigation
         // caching shouldn't be used because the date and other filter settings may change
         $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'CalendarEvent');
         $categories = array();
-        // generate css classnames for each category
+        // generate css classnames for each category & build categories array (needed in both navBarTypes)
         $stylesheet = "<style type='text/css'>\n";
         foreach ($catregistry as $regname => $catid) {
             $categories[$regname] = CategoryUtil::getSubCategories($catid);
@@ -151,9 +151,9 @@ class PostCalendar_CalendarView_Navigation
             }
         }
         $stylesheet .= "</style>\n";
-        PageUtil::addVar('header', $stylesheet);
 
         if ($this->navBarType == 'buttonbar') {
+            PageUtil::addVar('header', $stylesheet); // only need stylesheet for buttonbar view
             PageUtil::addVar("javascript", "jquery");
             PageUtil::addVar("javascript", "jquery-ui");
             PageUtil::addVar("javascript", "modules/PostCalendar/javascript/postcalendar-user-navigation.js");
