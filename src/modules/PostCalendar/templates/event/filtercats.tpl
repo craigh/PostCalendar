@@ -16,7 +16,7 @@
         var pc_categories_{{$property}}_ = new Zikula.UI.SelectMultiple(
             'pc_categories_{{$property}}_',
             {opener: 'pc_categories_{{$property}}__open',
-            okLabel: Zikula.__('Done!','module_PostCalendar'),
+            okLabel: '{{gt text='Done'}}',
             value: '{{pc_implode value=$selectedcategories}}',
             excludeValues: ['0']}
         );
