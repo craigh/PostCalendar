@@ -31,7 +31,9 @@ class PostCalendar_CalendarView_Nav_Ical extends PostCalendar_CalendarView_Nav_A
     {
         return array(
             'modname' => 'PostCalendar',
-            'src' => 'ical.png');
+            'src' => 'ical.png',
+            'alt' => $this->displayText,
+        );
     }
 
     /**
@@ -41,4 +43,19 @@ class PostCalendar_CalendarView_Nav_Ical extends PostCalendar_CalendarView_Nav_A
     {
         $this->url = new Zikula_ModUrl('PostCalendar', 'user', 'display', ZLanguage::getLanguageCode());
     }
+    
+    /**
+     * Set the anchor tag 
+     */
+    protected function setAnchorTag()
+    {
+        $class = implode(' ', $this->cssClasses);
+        $display = $this->useDisplayImage ? $this->imageHtml : $this->displayText;
+        if ($this->navBarType == "buttonbar") {
+            $this->anchorTag = "<a href='" . $this->getUrl() . "' id='pcnav_ical' class='$class' title='$this->imageTitleText'>$display</a>";
+        } else {
+            $this->anchorTag = "<a href='#pcnav_ical_dialog' id='pcnav_ical' class='$class' title='$this->imageTitleText'>$display</a>";
+        }
+    }
+
 }

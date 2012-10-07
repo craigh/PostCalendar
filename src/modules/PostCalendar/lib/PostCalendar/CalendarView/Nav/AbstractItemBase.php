@@ -227,9 +227,10 @@ abstract class PostCalendar_CalendarView_Nav_AbstractItemBase
      */
     protected function setAnchorTag()
     {
+        $id = strtolower($this->displayText);
         $class = implode(' ', $this->cssClasses);
         $display = $this->useDisplayImage ? $this->imageHtml : $this->displayText;
-        $this->anchorTag = "<a href='" . $this->getUrl() . "' class='$class' title='$this->imageTitleText'>$display</a>";
+        $this->anchorTag = "<a href='" . $this->getUrl() . "' id='pcnav_{$id}' class='$class' title='$this->imageTitleText'>$display</a>";
     }
 
     /**

@@ -80,7 +80,7 @@
     <div id="postcalendar_nav_right">
         <ul>
             {foreach from=$navigationObj->getNavItems() item='navItem'}
-            <li>{$navItem->renderAnchorTag()|safehtml}</li>
+            <li>{$navItem->renderAnchorTag()}</li>
             {/foreach}    
         </ul>
     </div>
@@ -109,7 +109,7 @@
 </form>
 <div>{insert name="getstatusmsg"}</div>
 <!-- This is a pop up dialog box -->
-<div id='pcnav_ical_dialog' title='{gt text='Select an iCal feed'}'>
+<div id='pcnav_ical_dialog' style='display:none; text-align: left;' title='{gt text='Select an iCal feed'}'>
     <p>{gt text='Click to download and import.<br />Copy link to subscribe in your iCal client.'}</p>
     <ul>
     <li><strong><a href='{modurl modname="PostCalendar" type='user' func='display' viewtype='ical'}'>{gt text='All categories'}</a></strong></li>

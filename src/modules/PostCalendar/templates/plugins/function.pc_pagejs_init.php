@@ -89,6 +89,11 @@ function smarty_function_pc_pagejs_init($params, Zikula_View $view)
                 ";
                 PageUtil::addVar("footer", "<script type='text/javascript'>$javascript</script>");
             }
+            $windowtitle = __('Select an iCal feed', $dom);
+            $javascript = "
+                var pcNaviCal = new Zikula.UI.Window($('pcnav_ical'), {modal: true, title: '$windowtitle', overlayOpacity: 0.7});
+                ";
+            PageUtil::addVar("footer", "<script type='text/javascript'>$javascript</script>");
     }
     return;
 }
