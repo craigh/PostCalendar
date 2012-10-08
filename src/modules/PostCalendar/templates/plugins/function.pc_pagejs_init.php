@@ -13,9 +13,9 @@
  */
 function smarty_function_pc_pagejs_init($params, Zikula_View $view)
 {
-    $type = (isset($params['type'])) ? $params['type'] : 'plain';
-    unset($params);
     $modVars = $view->get_template_vars('modvars');
+    $type = (!empty($params['type'])) ? $params['type'] : $modVars['PostCalendar']['pcNavBarType'];
+    unset($params);
     $dom = ZLanguage::getModuleDomain('PostCalendar');
     $title = __('PostCalendar Event', $dom);
     switch ($type) {
