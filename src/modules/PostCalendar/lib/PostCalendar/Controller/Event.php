@@ -225,7 +225,8 @@ class PostCalendar_Controller_Event extends Zikula_AbstractController
 
         $submitformelements = ModUtil::apiFunc('PostCalendar', 'event', 'buildSubmitForm', array(
             'eventdata' => $eventdata,
-            'date' => $date)); //sets defaults or builds selected values
+            'date' => $date,
+            'func' => $func)); //sets defaults or builds selected values
         foreach ($submitformelements as $var => $val) {
             $this->view->assign($var, $val);
         }

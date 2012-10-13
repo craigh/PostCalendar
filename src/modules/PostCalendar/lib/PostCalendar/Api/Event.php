@@ -329,9 +329,12 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
         }
 
         // Assign the content format (determines if scribite is in use)
-        $form_data['formattedcontent'] = $this->isformatted(array(
-            'func' => 'create'));
-
+        // possible func values: create, edit, copy
+        if (!empty($args['func'])) {
+            $form_data['formattedcontent'] = $this->isformatted(array(
+                'func' => $args['func']));
+        }
+        
         // assign empty values to text fields that don't need changing
         $eventdata['title']     = isset($eventdata['title'])     ? $eventdata['title']     : "";
         $eventdata['hometext']  = isset($eventdata['hometext'])  ? $eventdata['hometext']  : "";
@@ -571,30 +574,27 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
     }
 
     /**
-     * This function is copied directly from the News module
-     * credits to Jorn Wildt, Mark West, Philipp Niethammer or whoever wrote it
-     * purpose analyze if the module has an Scribite! editor assigned
+     * Analyze if the module has an Scribite! editor assigned
      * @param array args - func the function to check
      * @return bool
      */
     public function isformatted($args)
     {
         if (!isset($args['func'])) {
-            $args['func'] = 'all';
+            return false;
         }
-
-        if (ModUtil::available('scribite')) {
-            $modinfo = ModUtil::getInfo(ModUtil::getIdFromName('scribite'));
-            if (version_compare($modinfo['version'], '2.2', '>=')) {
+        if (ModUtil::available('Scribite')) {
+            $modinfo = ModUtil::getInfo(ModUtil::getIdFromName('Scribite'));
+            if (version_compare($modinfo['version'], '4.3.0', '>=')) {
                 $apiargs = array(
-                    'modulename' => 'PostCalendar'); // parameter handling corrected in 2.2
-            } else {
-                $apiargs = 'PostCalendar'; // old direct parameter
-            }
-
-            $modconfig = ModUtil::apiFunc('scribite', 'user', 'getModuleConfig', $apiargs);
-            if (in_array($args['func'], (array) $modconfig['modfuncs']) && $modconfig['modeditor'] != '-') {
-                return true;
+                    'modulename' => 'PostCalendar');
+                $modconfig = ModUtil::apiFunc('Scribite', 'user', 'getModuleConfig', $apiargs);
+                if (((in_array($args['func'], (array) $modconfig['modfuncs'])) 
+                        || (in_array('all', (array) $modconfig['modfuncs']))) 
+                        && (($modconfig['modeditor'] != '-') 
+                        || (ModUtil::getVar('Scribite', 'DefaultEditor') != '-'))) {
+                    return true;
+                }
             }
         }
         return false;
