@@ -452,16 +452,6 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
         $event['contname'] = DataUtil::formatForDisplay($event['contname']);
         $event['contemail'] = DataUtil::formatForDisplay($event['contemail']);
         $event['website'] = DataUtil::formatForDisplay($event['website']);
-        
-        // Check for comments
-        if (ModUtil::available('EZComments')) {
-            $event['commentcount'] = ModUtil::apiFunc('EZComments', 'user', 'countitems', array(
-                'mod' => 'PostCalendar',
-                'objectid' => $event['eid'],
-                'status' => 0));
-        } else {
-            $event['commentcount'] = 0;
-        }
 
         return $event;
     }

@@ -24,12 +24,6 @@
     <a href="{modurl modname='PostCalendar' type='user' func='display' viewtype='event' eid=$loaded_event.eid}" title='{gt text='Full event information'}'>
     {gt text='Full event information' assign='title'}{gt text='Info' assign='alt'}
     {img modname='core' src='info.png' set='icons/extrasmall' alt=$alt title=$title}</a>
-    {if $loaded_event.commentcount gt 0}
-        {gt text='%s comment left' plural='%s comments left.' count=$loaded_event.commentcount tag1=$loaded_event.commentcount assign="title"}
-        {gt text='Comment' assign='alt'}
-        <a href="{modurl modname='PostCalendar' type='user' func='display' viewtype='event' eid=$loaded_event.eid}#comments" title='{$title}'>
-        {img modname='core' src='comment.png' set='icons/extrasmall' alt=$alt title=$title}</a>
-    {/if}
 </h2>
 <div class="eventtime">
     {$loaded_event.eventStart->format($modvars.PostCalendar.pcDateFormats.date)}<br />

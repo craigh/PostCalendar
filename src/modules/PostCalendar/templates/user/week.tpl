@@ -28,11 +28,6 @@
                     {if $event.alldayevent != true}{$event.startTime} - {$event.endTime}{else}{gt text='All-day event'}{/if}&nbsp;
                     {if $event.privateicon}{img src='lock.gif' modname='PostCalendar' __title="private event" __alt="private event"}{/if}
                     {pc_url full=true action='event' eid=$event.eid date=$cdate display=$event.title|strip_tags title=$event.hometext|notifyfilters:'postcalendar.hook.eventsfilter.ui.filter'|safehtml}
-                    {if $event.commentcount gt 0}
-                        {gt text='%s comment left' plural='%s comments left.' count=$event.commentcount tag1=$event.commentcount domain="module_postcalendar" assign="title"}
-                        <a href="{modurl modname='PostCalendar' type='user' func='display' viewtype='event' eid=$event.eid}#comments" title='{$title}'>
-                        {img modname='core' src='comment.png' set='icons/extrasmall' __alt="Comment" title=$title}</a>
-                    {/if}
                 </li>
             {foreachelse}
                 <li class="eventslistitems">&nbsp;</li>
