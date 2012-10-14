@@ -188,7 +188,7 @@
         <div class="z-formrow">
             <label for='postcalendar_events_categories_selector'>{gt text='Category' plural="Categories" count=$cat_count}</label>
             {nocache}
-            <span id='postcalendar_events_categories_selector'>
+            <div id='postcalendar_events_categories_selector'>
             <ul style='list-style:none;margin:0;'>
             {foreach from=$catregistry key='property' item='category'}
                 {array_field assign="selectedValue" array=$loaded_event.categories field=$property}
@@ -201,13 +201,13 @@
                         editLink=0}</li>
             {/foreach}
             </ul>
-            </span>
+            </div>
             {/nocache}
         </div>
 
         <div class="z-formrow">
             <label for="description">{gt text='Description'}</label>
-            <textarea id="description" name="postcalendar_events[hometext]">{$loaded_event.hometext}</textarea>
+            <textarea id="description" name="postcalendar_events[hometext]" rows='8' cols='80'>{$loaded_event.hometext}</textarea>
             {if $formattedcontent eq 0}
                 {* SCRIBITE NOT IN USE *}
                 <input type="checkbox" value="1" id="postcalendar_events_htmlortext" name="postcalendar_events[html_or_text]"{if $loaded_event.HTMLorTextVal eq 'html'} checked="checked"{/if} />

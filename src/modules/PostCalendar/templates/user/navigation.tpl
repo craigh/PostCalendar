@@ -116,7 +116,7 @@
     <li><!-- blank line -->&nbsp;</li>
     {foreach from=$pcCategories key='regname' item='categories'}
         {foreach from=$categories item='category'}
-        <li><a href='{modurl modname="PostCalendar" type='user' func='display' viewtype='ical' prop=$regname cat=$category.id}'>{$category.display_name.$lang}</a>
+        <li><a href='{modurl modname="PostCalendar" type='user' func='display' viewtype='ical' prop=$regname cat=$category.id}'>{$category.display_name.$lang}</a></li>
         {/foreach}
     {/foreach}
     </ul>
