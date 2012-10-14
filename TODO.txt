@@ -1,5 +1,5 @@
 TODO LIST
-- recheck claim of W3C-Valid XHTML 1.1 compliance in all templates
+- Legend for category names (hide using session var)
 
 Post 8.0:
 - add perm check to all navlinks to avoid spiders?
