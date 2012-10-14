@@ -156,10 +156,29 @@ jQuery(document).ready(function() {
         }
         checkActiveState();
     });
+    // create the category legend button button
+    // assign click functionality - toggle visibility of legend and change icon & text
+    jQuery('#pcViewCatLegendButton').button({
+        icons: {
+            primary: "ui-icon-triangle-1-e"
+        }
+    }).click(function() {
+        // show the legend div
+        jQuery('#pcCategoryLegend').toggle("blind");
+        // change the icon class
+        jQuery('.ui-button-icon-primary', this)
+            .toggleClass("ui-icon-triangle-1-s ui-icon-triangle-1-e");
+        // change the text
+        jQuery('span', this).text(function(i, txt) {
+            // variables are translated strings set by php controller
+            return txt === pcCatLegendView ? pcCatLegendHide : pcCatLegendView;
+        });
+    });
 });
 
 // display active/inactive based on filterpicker selections
 function checkActiveState() {
+    // variables are translated strings set by php controller
     if (filterActive.length == 0) {
         jQuery('#pcnav_filterpicker')
             .css('background-color', '#EEEEEE')

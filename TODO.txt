@@ -1,7 +1,8 @@
 TODO LIST
-- Legend for category names (hide using session var)
+-
 
 Post 8.0:
+- change to jQuery-UI 1.9 tooltips
 - add perm check to all navlinks to avoid spiders?
 - make submit form an object
 - Needles are still a guess

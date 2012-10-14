@@ -48,6 +48,14 @@ table#postcalendar_yearview td.postcalendar_yearview_panel {
     font-size: 8px;
     padding: 4px 2px;
 }
+#pcCategoryLegend {
+    padding: 1em;
+    margin: 4px;
+    border: 1px solid #CCCCCC;
+    color: #3383BB;
+    width: 200px;
+    border-radius: 6px;
+}
 /********** DAY ***************/
 h3.dayheader,
 h3.dayheader a,

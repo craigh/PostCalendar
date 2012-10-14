@@ -160,7 +160,9 @@ class PostCalendar_CalendarView_Navigation
             // define javascript variables with translation without using Zikula.UI (and not loading a bunch of other JS)
             $javascript = "
             var pcActiveStateActive='" . $this->view->__('active') . "';
-            var pcActiveStateInactive='". $this->view->__('inactive') . "';";
+            var pcActiveStateInactive='". $this->view->__('inactive') . "';
+            var pcCatLegendView='". $this->view->__('View category legend') . "';
+            var pcCatLegendHide='". $this->view->__('Hide category legend') . "';";
             PageUtil::addVar("footer", "<script type='text/javascript'>$javascript</script>");
 
             $jQueryTheme = 'overcast';
