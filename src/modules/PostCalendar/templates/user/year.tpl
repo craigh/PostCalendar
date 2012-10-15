@@ -60,7 +60,9 @@
                 {else}
                 {assign var="themonth" value=$date|date_format:"%m"}
                 <td class="monthon">
-                    {assign var="classname" value="event-none"}						 		   
+                    {assign var="classname" value="event-none"}
+                    {gt text='event' plural='events' count=$eventsByDate.$date|@count assign='events'}
+                    {assign var="title" value="0"|cat:' '|cat:$events}
                     {if (isset($eventsByDate.$date))}
                         {if $eventsByDate.$date|@count > 2 }
                             {assign var="classname" value="event-three"}
@@ -68,9 +70,10 @@
                             {assign var="classname" value="event-two"}
                         {elseif $eventsByDate.$date|@count > 0 }
                             {assign var="classname" value="event-one"}
-                        {/if} 																 		   
+                        {/if}
+                        {assign var="title" value=$eventsByDate.$date|@count|cat:' '|cat:$events}
                     {/if}
-                    {pc_url full=true class=$classname action='day' date=$date title=$eventsByDate.$date|@count display=$date|date_format:"%d"}
+                    {pc_url full=true class=$classname action='day' date=$date title=$title display=$date|date_format:"%d"}
                 </td>
                 {/if}
 				{/foreach}{* foreach name=day *}
