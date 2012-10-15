@@ -1,33 +1,38 @@
 <?php
 
 /**
- * Implements Base class to allow for Event creation in generic case
+ * PostCalendar
+ * 
+ * @license MIT
+ * @copyright   Copyright (c) 2012, Craig Heydenburg, Sound Web Development
  *
- * @author craig heydenburg
+ * Please see the NOTICE file distributed with this source code for further
+ * information regarding copyright and licensing.
  */
-class PostCalendar_PostCalendarEvent_Generic extends PostCalendar_PostCalendarEvent_AbstractBase {
+
+/**
+ * Implements Base class to allow for Event creation in generic case
+ */
+class PostCalendar_PostCalendarEvent_Generic extends PostCalendar_PostCalendarEvent_AbstractBase
+{
 
     /**
-     * get generic info for Postcalendar event creation
+     * Set generic info for Postcalendar event creation
      *
-     * @return  array() event info or false if no desire to publish event
+     * @return  boolean success/failure
      */
-    public function makeEvent() {
+    public function makeEvent()
+    {
         $dom = ZLanguage::getModuleDomain('PostCalendar');
-
-//        $date = DateUtil::getDatetime();
-        $date = date('Y-m-d H:i:s');
-
-        $this->title = __f('New %1$s item (#%2$s)', array($this->getHooked_modulename(), $this->getHooked_objectid()), $dom);
-//        $this->hometext = ":text:" .  __f('New %1$s item (#%2$s)', array($this->getHooked_modulename(), $this->getHooked_objectid()), $dom);
-        $this->hometext = ":html:" .  __f('New %1$s item (#%2$s)', array($this->getHooked_modulename(), $this->getHooked_objectid()), $dom);
-        $url = DataUtil::formatForDisplayHTML($this->getHooked_objecturl());
-        $this->hometext .= isset($url) ? "(<a href='$url'>" . __("Item link", $dom) . "</a>)" : "(". __("URL not provided", $dom) . ")";
-        $this->aid = $this->getHooked_objectid();
-        $this->time = $date; // mysql timestamp YYYY-MM-DD HH:MM:SS
-        $this->informant = $this->getHooked_objectid();
-        $this->eventDate = substr($date, 0, 10); // date of event: YYYY-MM-DD
-        $this->startTime = substr($date, -8); // time of event: HH:MM:SS
+        $this->setTitle(__f('New %1$s item (#%2$s)', array($this->getEvent()->getHooked_modulename(), $this->getEvent()->getHooked_objectid()), $dom));
+        $text = ":html:" . __f('New %1$s item (#%2$s)', array($this->getEvent()->getHooked_modulename(), $this->getEvent()->getHooked_objectid()), $dom);
+        $url = DataUtil::formatForDisplayHTML($this->getHook()->getUrl()->getUrl());
+        $text .= isset($url) ? "(<a href='$url'>" . __("Item link", $dom) . "</a>)" : "(" . __("URL not provided", $dom) . ")";
+        $this->setHometext($text);
+        $date = new DateTime();
+        $this->setEventStart($date); // technically unneccessary but left for demonstration purposes
+        $this->setEventEnd($date); // technically unneccessary but left for demonstration purposes
+        $this->setSharing(PostCalendar_Entity_CalendarEvent::SHARING_GLOBAL);
 
         return true;
     }

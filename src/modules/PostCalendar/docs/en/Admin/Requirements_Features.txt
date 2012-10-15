@@ -1,24 +1,26 @@
-## PostCalendar v7.0.0 Requirements & Features
+## PostCalendar v8.0.0 Requirements & Features
 
-PostCalendar is a standard calendar module for Zikula with multiple views, private calendars, MultiHook needles, Content and Locations Module support and much more. PostCalendar is completely converted to the new Zikula 1.3 model (OOP).
+PostCalendar is a calendar module for Zikula with multiple views, private 
+calendars, MultiHook needles, Content Module support and much more. 
+PostCalendar is completely converted to the new Zikula 1.3 model (OOP).
 
 #### Software Requirements
 
-*   Zikula >= 1.3
-*   php5
+*   Zikula >= 1.3.3
+*   php 5.3+
 
 #### Features
 
-*   Multiple views (Year, Month, Week, Day, List, RSS)
+*   Multiple views (Year, Month, Week, Day, List, RSS, iCal)
 *   100% W3C-valid XHTML 1.1 templates - fully customizable with optional navigation images
-*   Repeating events
+*   Repeating events (including continuous events, and repeat-exceptions)
+*   Use of jQuery to make the UI user-friendly
 *   Categorization of events using Zikula category system
     *   Category-based permissions allow group-based or multiple calendars
 *   Content module support
-*   Locations module support
-*   MultiHook Needles provided
-*   Supports all available hooks
-*   Provides event-creation hook
+*   MultiHook Needles provided (currently non-functional due to MultiHook not working)
+*   Supports all available Core 1.3.x-based Subscriber hooks
+*   Provides event-creation Core 1.3.x-based Provider hook
 *   **Date/Time Formats**
     *   Admin-definable date format for entire module
     *   24 or 12 hour format

@@ -3,10 +3,10 @@
  * @package     PostCalendar
  * @description determine if there are queued events and format a notice
  * @return      if (assign) return count, else return formatted alert notice
- * @copyright   Copyright (c) 2009, Craig Heydenburg, Sound Web Development
+ * @copyright   Copyright (c) 2009-2012, Craig Heydenburg, Sound Web Development
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
  */
-function smarty_function_pc_queued_events_notify($args, &$smarty)
+function smarty_function_pc_queued_events_notify($args, Zikula_View $view)
 {
     if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_DELETE)) {
         return;
@@ -18,9 +18,8 @@ function smarty_function_pc_queued_events_notify($args, &$smarty)
     $assign = array_key_exists('assign', $args) && !empty($args['assign']) ? $args['assign'] : null;
     unset($args);
     
-    $dbtables = DBUtil::getTables();
-    $columns = $dbtables['postcalendar_events_column'];
-    $count = DBUtil::selectObjectCount('postcalendar_events', "WHERE $columns[eventstatus]=0");
+    $em = ServiceUtil::getService('doctrine.entitymanager');
+    $count = $em->getRepository('PostCalendar_Entity_CalendarEvent')->getEventCount(PostCalendar_Entity_CalendarEvent::QUEUED);
 
     if (empty($count) || ($count < 1)) {
         return;
@@ -35,7 +34,7 @@ function smarty_function_pc_queued_events_notify($args, &$smarty)
     $alert = "<div class='z-informationmsg'>$text [<a href='$url'>$linktext</a>]</div>";
 
     if (isset($assign)) {
-        $smarty->assign($assign, $count);
+        $view->assign($assign, $count);
     } else {
         return $alert;
     }

@@ -1,8 +1,10 @@
-## PostCalendar v7.0.0 Permissions settings
+## PostCalendar v8.0.0 Permissions settings
 
-As of version 7 (and 6.2), PostCalendar supports <span class="underline">category-based</span> permissions and <span class="underline">event-based</span> permissions.
+As of version 7 (and 6.2), PostCalendar supports _category-based_ permissions and 
+_event-based_ permissions.
 
-In order to deny access to unregistered users to a particular event, you can use a permission setting like so:
+In order to deny access to unregistered users to a particular event, you can use 
+a permission setting like so:
 
 `Unregistered | PostCalendar::Event | <event title>::<event id> | No access`
 
@@ -10,7 +12,8 @@ In order to deny access to unregistered users to a particular event, you can use
 
 `Unregistered | PostCalendar::Event | My Birthday::247 | No access`
 
-In order to deny access to unregistered users to all events in a certain category, you can use a permission setting like so:
+In order to deny access to unregistered users to all events in a certain category, 
+you can use a permission setting like so:
 
 `Unregistered | Categories::Category | <Category ID>:: | No access`
 
@@ -18,16 +21,19 @@ In order to deny access to unregistered users to all events in a certain categor
 
 `Unregistered | Categories::Category | 93:: | No access`
 
-In order to allow all registered users to submit event, you can use a permission setting like so:
+In order to allow all registered users to submit event, you can use a permission 
+setting like so:
 
 `Users| PostCalendar:: | .* | Add access`
 
 You can restrict this to less users by choosing a different group.
 
-In order to allow a subgroup to administrate PostCalendar events, you can use a permission setting like so:
+In order to allow a subgroup to administrate PostCalendar events, you can use a 
+permission setting like so:
 
 `CalendarAdmins | PostCalendar:: | .* | Delete access`
 
 Be sure to define the group and assign members as appropriate.
 
-*Remember that the <span class="underline">order</span> in which your permission settings occur (bottom to top) is <span class="underline">crucial</span>! *
+*Remember that the _order_ in which your permission 
+settings occur (bottom to top) is _crucial_! *

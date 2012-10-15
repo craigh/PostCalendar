@@ -29,7 +29,7 @@
  *
  * @return string A string containing the allowable HTML tags.
  */
-function smarty_function_pc_allowedhtml($params, &$smarty)
+function smarty_function_pc_allowedhtml($params, Zikula_View $view)
 {
     $AllowableHTML = System::getVar('AllowableHTML');
     $allowedhtml = '';
@@ -40,7 +40,7 @@ function smarty_function_pc_allowedhtml($params, &$smarty)
     }
 
     if (isset($params['assign'])) {
-        $smarty->assign($params['assign'], $allowedhtml);
+        $view->assign($params['assign'], $allowedhtml);
     } else {
         return $allowedhtml;
     }

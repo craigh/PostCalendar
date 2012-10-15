@@ -1,3 +1,5 @@
+{pageaddvar name="javascript" value="jquery"}
+{pageaddvar name='javascript' value='modules/PostCalendar/javascript/postcalendar-admin-modifyconfig.js'}
 {adminheader}
 <div class="z-admin-content-pagetitle">
     {icon type="config" size="small"}
@@ -17,14 +19,11 @@
 			<input type="checkbox" value="1" id="pcAllowDirectSubmit" name="pcAllowDirectSubmit"{if $modvars.PostCalendar.pcAllowDirectSubmit eq true} checked="checked"{/if}/>
         </div>
 		<div class="z-formrow">
-			<label for="enablecategorization">{gt text='Enable categorization of events'}</label>
-			<input type="checkbox" value="1" id="enablecategorization" name="enablecategorization"{if $modvars.PostCalendar.enablecategorization eq true} checked="checked"{/if}/>
-		</div>
-		<div class="z-formrow">
 			<label for="pcAllowUserCalendar">{gt text='Group allowed to publish personal calendars'}</label>
             {gt text="No group" assign="nogroup"}
 			<span>{selector_group selectedValue=$modvars.PostCalendar.pcAllowUserCalendar defaultValue=0 allValue=0 allText=$nogroup name="pcAllowUserCalendar" id="pcAllowUserCalendar"}
                 &nbsp;&nbsp;<a href="{modurl modname="Groups" type="admin" func="view"}">{img src='xedit.png' modname='core' set='icons/extrasmall' __title="Edit groups" __alt="Edit groups"}</a></span>
+                <em class="z-formnote z-sub">{gt text="Adds selector to filter in navigation bar."}</em>
 		</div>
     </fieldset>
 	<fieldset>
@@ -50,13 +49,28 @@
 			<input type="checkbox" value="1" id="pcUsePopups" name="pcUsePopups"{if $modvars.PostCalendar.pcUsePopups eq true} checked="checked"{/if}/>
 		</div>
 		<div class="z-formrow">
-			<label for="pcEventDateFormat">{gt text='Date Display Format'}<br />(<i>{gt text='uses %s format' tag1='<a href="http://php.net/strftime" target="_blank">php strftime</a>'}</i>)</label>
-                <span><input type="text" size="15" value="{$modvars.PostCalendar.pcEventDateFormat}" id="pcEventDateFormat" name="pcEventDateFormat" />
-                &nbsp;{gt text="Or choose a preset:"}&nbsp;
-                <input type="button" name="format_usa" value="{gt text='Month Day, Year'}" onclick="this.form.pcEventDateFormat.value='%B %e, %Y'" />
-                <input type="button" name="format_eu" value="{gt text='Day Month Year'}" onclick="this.form.pcEventDateFormat.value='%e %B %Y'" />
-                <input type="button" name="format_iso8601" value="{gt text='YYYY-MM-DD'}" onclick="this.form.pcEventDateFormat.value='%F'" /></span>
+			<label for="pcEventDateFormat">{gt text='Date Display Format'}</label>
+			<span><select size="1" id="pcEventDateFormat" name="pcEventDateFormat">
+				<option value="DMY"{if $modvars.PostCalendar.pcEventDateFormat eq "DMY"} selected="selected"{/if}>{gt text='Day Month Year (EUR)'}</option>
+				<option value="MDY"{if $modvars.PostCalendar.pcEventDateFormat eq "MDY"} selected="selected"{/if}>{gt text='Month Day, Year (US)'}</option>
+				<option value="YMD"{if $modvars.PostCalendar.pcEventDateFormat eq "YMD"} selected="selected"{/if}>{gt text='Year-Month-Day'}</option>
+				<option value="-1"{if $modvars.PostCalendar.pcEventDateFormat eq "-1"} selected="selected"{/if}>{gt text='Custom'}</option>
+            </select></span>
 		</div>
+        <div id='manuallySetDateFormats'{if $modvars.PostCalendar.pcEventDateFormat ne "-1"}style="display: none"{/if}>
+            <div class="z-formrow">
+                <label for="dateformat_date">{gt text='php %s format' tag1='<a href="http://php.net/date" target="_blank">date()</a>'}</label>
+                <span><input type="text" value="{$modvars.PostCalendar.pcDateFormats.date}" id="dateformat_date" name="pcDateFormats[date]" /></span>
+            </div>
+            <div class="z-formrow">
+                <label for="dateformat_strftime">{gt text='php %s format' tag1='<a href="http://php.net/strftime" target="_blank">php strftime()</a>'}</label>
+                <span><input type="text" value="{$modvars.PostCalendar.pcDateFormats.strftime}" id="dateformat_strftime" name="pcDateFormats[strftime]" /></span>
+            </div>
+            <div class="z-formrow">
+                <label for="dateformat_javascript">{gt text='jquery %s format' tag1='<a href="http://docs.jquery.com/UI/Datepicker/parseDate" taget="_blank">datepicker</a>'}</label>
+                <span><input type="text" value="{$modvars.PostCalendar.pcDateFormats.javascript}" id="dateformat_javascript" name="pcDateFormats[javascript]" /></span>
+            </div>            
+        </div>
 		<div class="z-formrow">
 			<label for="pcFirstDayOfWeek">{gt text='First day of the week'}</label>
 			<span><select size="1" id="pcFirstDayOfWeek" name="pcFirstDayOfWeek">
@@ -77,8 +91,37 @@
 				</select></span>
 		</div>
 		<div class="z-formrow">
+			<label for="pcAllowedViews">{gt text='Views/links available to user'}</label>
+			<span><select multiple="multiple" size="5" id="pcAllowedViews" name="pcAllowedViews[]">
+				<option value="today"{if in_array('today', $modvars.PostCalendar.pcAllowedViews)} selected="selected"{/if}>{gt text='Today link'}</option>
+				<option value="day"{if in_array('day', $modvars.PostCalendar.pcAllowedViews)} selected="selected"{/if}>{gt text='Day'}</option>
+				<option value="week"{if in_array('week', $modvars.PostCalendar.pcAllowedViews)} selected="selected"{/if}>{gt text='Week'}</option>
+				<option value="month"{if in_array('month', $modvars.PostCalendar.pcAllowedViews)} selected="selected"{/if}>{gt text='Month'}</option>
+				<option value="year"{if in_array('year', $modvars.PostCalendar.pcAllowedViews)} selected="selected"{/if}>{gt text='Year'}</option>
+				<option value="list"{if in_array('list', $modvars.PostCalendar.pcAllowedViews)} selected="selected"{/if}>{gt text='List'}</option>
+				<option value="create"{if in_array('create', $modvars.PostCalendar.pcAllowedViews)} selected="selected"{/if}>{gt text='Create link'}</option>
+				<option value="search"{if in_array('search', $modvars.PostCalendar.pcAllowedViews)} selected="selected"{/if}>{gt text='Search link'}</option>
+				<option value="print"{if in_array('print', $modvars.PostCalendar.pcAllowedViews)} selected="selected"{/if}>{gt text='Print'}</option>
+				<option value="xml"{if in_array('xml', $modvars.PostCalendar.pcAllowedViews)} selected="selected"{/if}>{gt text='Xml/RSS'}</option>
+				<option value="event"{if in_array('event', $modvars.PostCalendar.pcAllowedViews)} selected="selected"{/if}>{gt text='Event'}</option>
+				<option value="ical"{if in_array('ical', $modvars.PostCalendar.pcAllowedViews)} selected="selected"{/if}>{gt text='iCal'}</option>
+				</select></span>
+                <em class="z-formnote z-sub">{gt text="The create item is also controlled by %s permissions settings." tag1='ACCESS_ADD'}</em>
+                <em class="z-formnote z-sub">{gt text="The event view is also controlled by %s permissions settings." tag1='ACCESS_READ'}</em>
+		</div>
+		<div class="z-formrow">
 			<label for="pcListMonths">{gt text='Number of months to display in list/rss view'}</label>
 			<span><input type="text" size="3" maxlength="3" value="{$modvars.PostCalendar.pcListMonths}" id="pcListMonths" name="pcListMonths" /></span>
+		</div>
+    </fieldset>
+	<fieldset>
+        <legend>{gt text='Navigation display settings'}</legend>
+		<div class="z-formrow">
+			<label for="pcNavBarType">{gt text='Navigation bar type'}</label>
+			<span><select size="1" id="pcNavBarType" name="pcNavBarType">
+				<option value="buttonbar"{if $modvars.PostCalendar.pcNavBarType eq 'buttonbar'} selected="selected"{/if}>{gt text='jQuery Button Bar'}</option>
+				<option value="plain"{if $modvars.PostCalendar.pcNavBarType eq 'plain'} selected="selected"{/if}>{gt text='Plain text or images'}</option>
+				</select></span>
 		</div>
 		<div class="z-formrow">
 			<label for="pcAllowCatFilter">{gt text='Allow users to filter event display by category'}</label>
@@ -98,13 +141,6 @@
 			<label for="enablenavimages">{gt text='Enable images in navigation header'}</label>
 			<input type="checkbox" value="1" id="enablenavimages" name="enablenavimages"{if $modvars.PostCalendar.enablenavimages eq true} checked="checked"{/if}/>
 		</div>
-        {modavailable modname="Locations" assign="locationsAvailable"}
-        {if $locationsAvailable}
-        <div class="z-formrow">
-			<label for="enablelocations">{gt text='Enable Locations for PostCalendar'}</label>
-			<input type="checkbox" value="1" id="enablelocations" name="enablelocations"{if $modvars.PostCalendar.enablelocations eq true} checked="checked"{/if}/>
-		</div>
-        {/if}
     </fieldset>
 	<fieldset>
         <legend>{gt text='Notification settings'}</legend>

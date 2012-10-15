@@ -1,14 +1,14 @@
 <div>
 	<input type="checkbox" id="active_postcalendar" name="active[PostCalendar]" value="1"{if $active} checked="checked"{/if} />
 	<label for="active_postcalendar">{gt text="Calendar"}</label>
-    <label for="modvar_PostCalendar____CATEGORIES____{$firstprop}_">&nbsp;{gt text='in Categories'}:&nbsp;</label>
+    <label for="modvar_PostCalendar__categories__{$firstprop}_">&nbsp;{gt text='in Categories'}:&nbsp;</label>
     {gt text="All These Categories" assign="allText"}
     {nocache}
     {foreach from=$catregistry key='property' item='category'}
         <span>{selector_category 
         editLink=0 
         category=$category 
-        name="modvar[PostCalendar][__CATEGORIES__][$property]" 
+        name="modvar[PostCalendar][categories][$property]" 
         field="id" 
         defaultValue="0"
         all=1

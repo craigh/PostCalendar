@@ -1,105 +1,138 @@
 <?php
 
+/**
+ * PostCalendar
+ * 
+ * @license MIT
+ * @copyright   Copyright (c) 2012, Craig Heydenburg, Sound Web Development
+ *
+ * Please see the NOTICE file distributed with this source code for further
+ * information regarding copyright and licensing.
+ */
 class PostCalendar_Util
 {
+
     /**
      * PostCalendar Default Module Settings
-     * @author Arjen Tebbenhof
-     * @author Craig Heydenburg
      * @return array An associated array with key=>value pairs of the default module settings
      */
     public static function getdefaults()
     {
         // figure out associated categories and assign default value of 0 (none)
-        $defaultscats = array();
-        $cats = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
+        $defaultcats = array();
+        $cats = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'CalendarEvent');
         foreach ($cats as $prop => $id) {
             $defaultcats[$prop] = 0;
         }
         $i18n = ZI18n::getInstance();
-    
+
         // PostCalendar Default Settings
         $defaults = array(
-            'pcTime24Hours'           => $i18n->locale->getTimeformat() == 24 ? '1' : '0',
+            'pcTime24Hours' => $i18n->locale->getTimeformat() == 24 ? '1' : '0',
             'pcEventsOpenInNewWindow' => '0',
-            'pcFirstDayOfWeek'        => '0', // Sunday
-            'pcUsePopups'             => '0',
-            'pcAllowDirectSubmit'     => '0',
-            'pcListHowManyEvents'     => '15',
-            'pcEventDateFormat'       => '%B %e, %Y', // American: e.g. July 4, 2010
-            'pcAllowUserCalendar'     => '0', // no group
-            'pcTimeIncrement'         => '15',
-            'pcDefaultView'           => 'month',
-            'pcNotifyAdmin'           => '1',
-            'pcNotifyEmail'           => System::getVar('adminmail'),
-            'pcNotifyAdmin2Admin'     => '0',
-            'pcNotifyPending'         => '1',
-            'pcAllowCatFilter'        => '1',
-            'enablecategorization'    => '1',
-            'enablenavimages'         => '1',
-            'enablelocations'         => '0',
-            'pcFilterYearStart'       => 1,
-            'pcFilterYearEnd'         => 2,
-            'pcListMonths'            => 12,
-            'pcNavDateOrder'          => array(
-                'format'                  => 'MDY',
-                'D'                       => '%e',
-                'M'                       => '%B',
-                'Y'                       => '%Y'),
-            'pcEventDefaults'         => array(
-                'sharing'                 => SHARING_GLOBAL,
-                'categories'              => $defaultcats,
-                'alldayevent'             => 0,
-                'startTime'               => '01:00:00',
-                'duration'                => '3600',
-                'fee'                     => '',
-                'contname'                => '',
-                'conttel'                 => '',
-                'contemail'               => '',
-                'website'                 => '',
-                'location'                => array(
-                    'event_location'          => '',
-                    'event_street1'           => '',
-                    'event_street2'           => '',
-                    'event_city'              => '',
-                    'event_state'             => '',
-                    'event_postal'            => '')),
-            'pcTimeItMigrateComplete' => false);
-    
+            'pcFirstDayOfWeek' => '0', // Sunday
+            'pcUsePopups' => '1',
+            'pcAllowDirectSubmit' => '0',
+            'pcListHowManyEvents' => '15',
+            'pcEventDateFormat' => 'DMY', // European: e.g. 4 July 2010
+            'pcDateFormats' => self::getDateFormats('DMY'),
+            'pcAllowUserCalendar' => '0', // no group
+            'pcTimeIncrement' => '15',
+            'pcDefaultView' => 'month',
+            'pcNotifyAdmin' => '1',
+            'pcNotifyEmail' => System::getVar('adminmail'),
+            'pcNotifyAdmin2Admin' => '0',
+            'pcNotifyPending' => '1',
+            'pcNavBarType' => 'buttonbar',
+            'pcAllowCatFilter' => '1',
+            'enablenavimages' => '1',
+            'pcFilterYearStart' => 1,
+            'pcFilterYearEnd' => 2,
+            'pcListMonths' => 12,
+            'pcEventDefaults' => array(
+                'sharing' => PostCalendar_Entity_CalendarEvent::SHARING_GLOBAL,
+                'categories' => $defaultcats,
+                'alldayevent' => 0,
+                'startTime' => '01:00',
+                'duration' => 3600,
+                'fee' => '',
+                'contname' => '',
+                'conttel' => '',
+                'contemail' => '',
+                'website' => '',
+                'location' => array(
+                    'event_location' => '',
+                    'event_street1' => '',
+                    'event_street2' => '',
+                    'event_city' => '',
+                    'event_state' => '',
+                    'event_postal' => '')),
+            'pcTimeItMigrateComplete' => false,
+            'pcAllowedViews' => array(
+                'today',
+                'day',
+                'week',
+                'month',
+                'year',
+                'list',
+                'create',
+                'search',
+                'print',
+                'xml',
+                'ical',
+                'event'),
+        );
+
         return $defaults;
     }
+
     /**
      * get the correct day, format it and return
-     * @param string format
      * @param string Date
      * @param string jumpday
      * @param string jumpmonth
      * @param string jumpyear
-     * @return string formatted date string
+     * @return DateTime instance
      */
     public static function getDate($args)
     {
-        $format = (!empty($args['format'])) ? $args['format'] : '%Y%m%d%H%M%S';
-    
-        $time      = time();
-        $jumpday   = isset($args['jumpday']) ? $args['jumpday'] : strftime('%d', $time);
-        $jumpmonth = isset($args['jumpmonth']) ? $args['jumpmonth'] : strftime('%m', $time);
-        $jumpyear  = isset($args['jumpyear']) ? $args['jumpyear'] : strftime('%Y', $time);
-    
-        if (UserUtil::isLoggedIn()) {
-            $time += (UserUtil::getVar('timezone_offset') - System::getVar('timezone_offset')) * 3600;
+        if (isset($args['date'])) {
+            if (is_object($args['date'])) {
+                return $args['date'];
+            }
+            $args['date'] = str_replace('-', '', $args['date']);
+            return DateTime::createFromFormat('Ymd', $args['date']);
+        } elseif (isset($args['jumpday'], $args['jumpmonth'], $args['jumpyear'])) {
+            return DateTime::createFromFormat('Ymd', $args['jumpyear'] . $args['jumpmonth'] . $args['jumpday']);
+        } else {
+            return new DateTime();
         }
-    
-        $Date = isset($args['Date']) ? $args['Date'] : '';
-        if (empty($Date)) {
-            // if we still don't have a date then calculate it
-            $Date = (int) "$jumpyear$jumpmonth$jumpday";
-        }
-    
-        $y = (int)substr($Date, 0, 4);
-        $m = (int)substr($Date, 4, 2);
-        $d = (int)substr($Date, 6, 2);
-        return DateUtil::strftime($format, mktime(0, 0, 0, $m, $d, $y));
     }
 
-} // end class def
+    /**
+     * get appropriate date format settings for various code types
+     * from a string setting
+     * @param string $string
+     * @return array|string 
+     */
+    public static function getDateFormats($string)
+    {
+        $formatsAvailable = array(
+            'DMY' => array('date' => 'j F Y',
+                'strftime' => '%e %B %Y',
+                'javascript' => 'd MM yy'),
+            'MDY' => array('date' => 'F j, Y',
+                'strftime' => '%B %e, %Y',
+                'javascript' => 'MM d, yy'),
+            'YMD' => array('date' => 'Y-m-d',
+                'strftime' => '%Y-%m-%d',
+                'javascript' => 'yy-mm-dd'),
+        );
+        if (isset($formatsAvailable[$string])) {
+            return $formatsAvailable[$string];
+        } else {
+            return "-1";
+        }
+    }
+
+}

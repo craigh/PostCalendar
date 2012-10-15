@@ -1,11 +1,11 @@
-## PostCalendar v7.0.0 Menu Configuration
+## PostCalendar v8.0.0 Menu Configuration
 
-Link to PostCalendar by entering <tt> {PostCalendar} </tt> in a menu block.
+Link to PostCalendar by entering <tt> {PostCalendar:user:display} </tt> in a menu block.
 
 Go to your Block administration and edit/create the Menu block to hold your link to PostCalendar.
 
 The Menu Block editing screen should look something like this:
 
-Name         | URL            | Title
--------------|----------------|------------
-PostCalendar | {PostCalendar} | My Calendar
+Name         | URL                         | Title
+-------------|-----------------------------|------------
+PostCalendar | {PostCalendar:user:display} | My Calendar

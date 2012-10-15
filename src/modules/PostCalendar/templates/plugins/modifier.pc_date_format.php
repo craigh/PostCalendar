@@ -2,28 +2,27 @@
 /**
  * @package     PostCalendar
  * @copyright   Copyright (c) 2002, The PostCalendar Team
- * @copyright   Copyright (c) 2009, Craig Heydenburg, Sound Web Development
+ * @copyright   Copyright (c) 2009-2012, Craig Heydenburg, Sound Web Development
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
  */
 
 function smarty_modifier_pc_date_format($string, $format = null, $default_date = null)
 {
-    $format = isset($format) && !empty($format) ? $format : _SETTING_DATE_FORMAT;
-    //setlocale(LC_TIME, ZLanguage::getLocale()); //setlocale(LC_TIME, _PC_LOCALE);
-
-    $ret_val = "";
-
-    $smarty = Zikula_View::getInstance();
-    require_once $smarty->_get_plugin_filepath('shared', 'make_timestamp');
-
+    $defaultFormat = ModUtil::getVar('PostCalendar', 'pcDateFormats');
+    $format = (isset($format) && !empty($format)) ? $format : $defaultFormat['date'];
+        
     if ($string != '') {
-        $ret_val = DateUtil::strftime($format, smarty_make_timestamp($string));
+        if ($string instanceof DateTime) {
+            $date = $string;
+        } else {
+            $date = DateTime::createFromFormat('Ymd', str_replace('-', '', $string));
+        }
     } elseif (isset($default_date) && $default_date != '') {
-        $ret_val = DateUtil::strftime($format, smarty_make_timestamp($default_date));
+        $date = DateTime::createFromFormat('Ymd', str_replace('-', '', $default_date));
     } else {
-        // when having empty var, just return the current date/time
-        $ret_val = DateUtil::strftime($format, time());
+        // when having empty var, just use the current date/time
+        $date = new DateTime();
     }
 
-    return $ret_val;
+    return $date->format($format);
 }

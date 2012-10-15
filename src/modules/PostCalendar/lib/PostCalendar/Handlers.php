@@ -1,28 +1,45 @@
 <?php
 
 /**
- * post pending content to pending_content Event handler
+ * PostCalendar
+ * 
+ * @license MIT
+ * @copyright   Copyright (c) 2012, Craig Heydenburg, Sound Web Development
  *
- * @author Craig Heydenburg
+ * Please see the NOTICE file distributed with this source code for further
+ * information regarding copyright and licensing.
  */
-class PostCalendar_Handlers {
 
+/**
+ * post pending content to pending_content Event handler
+ */
+class PostCalendar_Handlers
+{
+
+    /**
+     * Event handler to provide pending content
+     * @param Zikula_Event $event 
+     */
     public static function pendingContent(Zikula_Event $event)
     {
         $dom = ZLanguage::getModuleDomain('PostCalendar');
-        ModUtil::dbInfoLoad('PostCalendar');
-        $dbtables = DBUtil::getTables();
-        $columns = $dbtables['postcalendar_events_column'];
-        $count = DBUtil::selectObjectCount('postcalendar_events', "WHERE $columns[eventstatus]=0");
+        $count = $this->entityManager->getRepository('PostCalendar_Entity_CalendarEvent')->getEventCount(PostCalendar_Entity_CalendarEvent::QUEUED);
         if ($count > 0) {
             $collection = new Zikula_Collection_Container('PostCalendar');
             $collection->add(new Zikula_Provider_AggregateItem('submission', _n('Calendar event', 'Calendar events', $count, $dom), $count, 'admin', 'listevents'));
             $event->getSubject()->add($collection);
         }
     }
-    public static function getTypes(Zikula_Event $event) {
+
+    /**
+     * Event handler to provide Content module ContentTypes
+     * @param Zikula_Event $event 
+     */
+    public static function getTypes(Zikula_Event $event)
+    {
         $types = $event->getSubject();
         $types->add('PostCalendar_ContentType_PostCalEvent');
         $types->add('PostCalendar_ContentType_PostCalEvents');
     }
+
 }

@@ -19,20 +19,14 @@
 {/if}
 <h2 class="eventheader">
     {gt text='private event' assign='p_txt'}
-    {if $event.privateicon}{img src='locked.png' modname='core' set='icons/extrasmall' title=$p_txt alt=$p_txt}{/if}
+    {if $loaded_event.privateicon}{img src='lock.gif' modname='PostCalendar' title=$p_txt alt=$p_txt}{/if}
     {$loaded_event.title|safehtml}
-    <a href="{modurl modname='PostCalendar' type='user' func='display' viewtype='details' eid=$loaded_event.eid}" title='{gt text='Full event information'}'>
+    <a href="{modurl modname='PostCalendar' type='user' func='display' viewtype='event' eid=$loaded_event.eid}" title='{gt text='Full event information'}'>
     {gt text='Full event information' assign='title'}{gt text='Info' assign='alt'}
     {img modname='core' src='info.png' set='icons/extrasmall' alt=$alt title=$title}</a>
-    {if $loaded_event.commentcount gt 0}
-        {gt text='%s comment left' plural='%s comments left.' count=$loaded_event.commentcount tag1=$loaded_event.commentcount assign="title"}
-        {gt text='Comment' assign='alt'}
-        <a href="{modurl modname='PostCalendar' type='user' func='display' viewtype='details' eid=$loaded_event.eid}#comments" title='{$title}'>
-        {img modname='core' src='comment.png' set='icons/extrasmall' alt=$alt title=$title}</a>
-    {/if}
 </h2>
 <div class="eventtime">
-    {$loaded_event.eventDate|pc_date_format}<br />
+    {$loaded_event.eventStart->format($modvars.PostCalendar.pcDateFormats.date)}<br />
     {if $loaded_event.alldayevent != true}
         {$loaded_event.startTime} - {$loaded_event.endTime}<br />
     {else}
@@ -47,13 +41,13 @@
     </div>
     {/if}
     <div>
-        {if ($loaded_event.location_info.event_location) OR ($loaded_event.location_info.event_street1) OR ($loaded_event.location_info.event_street2) OR ($loaded_event.location_info.event_city)}
+        {if ($loaded_event.location.event_location) OR ($loaded_event.location.event_street1) OR ($loaded_event.location.event_street2) OR ($loaded_event.location.event_city)}
         <h3>{gt text='Location'}:</h3>
         <span class="location">
-            {if $loaded_event.location_info.event_location}<span class="location_name">{$loaded_event.location_info.event_location}</span><br />{/if}
-            {if $loaded_event.location_info.event_street1}<span class="location_street1">{$loaded_event.location_info.event_street1}</span><br />{/if}
-            {if $loaded_event.location_info.event_street2}<span class="location_street2">{$loaded_event.location_info.event_street2}</span><br />{/if}
-            {if $loaded_event.location_info.event_city}<span class="location_city_state_zip">{$loaded_event.location_info.event_city}&nbsp;{$loaded_event.location_info.event_state},&nbsp;{$loaded_event.location_info.event_postal}</span><br />{/if}
+            {if $loaded_event.location.event_location}<span class="location_name">{$loaded_event.location.event_location}</span><br />{/if}
+            {if $loaded_event.location.event_street1}<span class="location_street1">{$loaded_event.location.event_street1}</span><br />{/if}
+            {if $loaded_event.location.event_street2}<span class="location_street2">{$loaded_event.location.event_street2}</span><br />{/if}
+            {if $loaded_event.location.event_city}<span class="location_city_state_zip">{$loaded_event.location.event_city}&nbsp;{$loaded_event.location.event_state},&nbsp;{$loaded_event.location.event_postal}</span><br />{/if}
         </span>
         {/if}
         {if ($loaded_event.contname) OR ($loaded_event.conttel) OR ($loaded_event.contemail) OR ($loaded_event.website)}

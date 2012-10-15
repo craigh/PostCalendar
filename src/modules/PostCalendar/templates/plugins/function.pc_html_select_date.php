@@ -3,7 +3,7 @@
  * @package     PostCalendar
  * @description modified html_select_date plugin
  * @return      bool
- * @copyright   Copyright (c) 2009, Craig Heydenburg, Sound Web Development
+ * @copyright   Copyright (c) 2009-2012, Craig Heydenburg, Sound Web Development
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
  */
 
@@ -43,11 +43,11 @@
  * @param Smarty
  * @return string
  */
-function smarty_function_pc_html_select_date($params, &$smarty)
+function smarty_function_pc_html_select_date($params, Zikula_View $view)
 {
-    require_once $smarty->_get_plugin_filepath('shared','escape_special_chars');
-    require_once $smarty->_get_plugin_filepath('shared','make_timestamp');
-    require_once $smarty->_get_plugin_filepath('function','html_options');
+    require_once $view->_get_plugin_filepath('shared','escape_special_chars');
+    require_once $view->_get_plugin_filepath('shared','make_timestamp');
+    require_once $view->_get_plugin_filepath('function','html_options');
     /* Default values. */
     $prefix          = "Date_";
     $start_year      = strftime("%Y");
@@ -135,7 +135,7 @@ function smarty_function_pc_html_select_date($params, &$smarty)
                 if(!is_array($_value)) {
                     $extra_attrs .= ' '.$_key.'="'.smarty_function_escape_special_chars($_value).'"';
                 } else {
-                    $smarty->trigger_error("html_select_date: extra attribute '$_key' cannot be an array", E_USER_NOTICE);
+                    $view->trigger_error("html_select_date: extra attribute '$_key' cannot be an array", E_USER_NOTICE);
                 }
                 break;
         }
@@ -221,7 +221,7 @@ function smarty_function_pc_html_select_date($params, &$smarty)
                                                             'values'     => $month_values,
                                                             'selected'   => (int)$time[1] ? strftime($month_value_format, mktime(0, 0, 0, (int)$time[1], 1, 2000)) : '',
                                                             'print_result' => false),
-                                                      $smarty);
+                                                      $view);
         $month_result .= '</select>';
     }
 
@@ -257,7 +257,7 @@ function smarty_function_pc_html_select_date($params, &$smarty)
                                                           'values'     => $day_values,
                                                           'selected'   => $time[2],
                                                           'print_result' => false),
-                                                    $smarty);
+                                                    $view);
         $day_result .= '</select>';
     }
 
@@ -304,7 +304,7 @@ function smarty_function_pc_html_select_date($params, &$smarty)
                                                                'values' => $yearvals,
                                                                'selected'   => $time[0],
                                                                'print_result' => false),
-                                                         $smarty);
+                                                         $view);
             $year_result .= '</select>';
         }
     }

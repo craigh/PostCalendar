@@ -1,8 +1,7 @@
 <?php
 /**
  * @package     PostCalendar
- * @author      Craig Heydenburg
- * @copyright   Copyright (c) 2009, Craig Heydenburg, Sound Web Development
+ * @copyright   Copyright (c) 2009-2012, Craig Heydenburg, Sound Web Development
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
  */
 class PostCalendar_Api_Search extends Zikula_AbstractApi
@@ -31,7 +30,7 @@ class PostCalendar_Api_Search extends Zikula_AbstractApi
             $renderer->assign('active', $active);
     
             // assign category info
-            $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
+            $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'CalendarEvent');
             $renderer->assign('catregistry', $catregistry);
     
             $props = array_keys($catregistry);
@@ -52,7 +51,7 @@ class PostCalendar_Api_Search extends Zikula_AbstractApi
      *     $args[numlimit] (result limit)
      *     $args[page]
      *     $args[startnum]
-     *     $args[__CATEGORIES__] (postcalendar specific)
+     *     $args[categories] (postcalendar specific)
      *     $args[searchstart] (postcalendar specific)
      *     $args[searchend] (postcalendar specific)
      **/
@@ -63,20 +62,20 @@ class PostCalendar_Api_Search extends Zikula_AbstractApi
         }
     
         $searchargs = array();
-        if (!empty($args['__CATEGORIES__'])) {
-            $searchargs['filtercats']['__CATEGORIES__'] = $args['__CATEGORIES__'];
+        if (!empty($args['categories'])) {
+            $searchargs['filtercats'] = PostCalendar_Api_Event::formatCategoryFilter($args['categories']);
         }
         $searchargs['searchstart'] = isset($args['searchstart']) ? $args['searchstart'] : 0;
         $args['searchend'] = isset($args['searchend']) ? $args['searchend'] : 2;
         $searchargs['searchend'] = ($searchargs['searchstart'] == $args['searchend']) ? 2 : $args['searchend'];
     
         ModUtil::dbInfoLoad('Search');
-        $dbtable = DBUtil::getTables();
-        $postcalendarcolumn = $dbtable['postcalendar_events_column'];
-    
+
+        // this is a bit of a hacky way to ustilize this API for Doctrine calls.
+        // the 'a' prefix is the table alias in CalendarEventRepository
         $where = Search_Api_User::construct_where($args, array(
-            $postcalendarcolumn['title'],
-            $postcalendarcolumn['hometext']), null);
+            'a.title',
+            'a.hometext'), null);
         if (!empty($where)) {
             $searchargs['s_keywords'] = trim(substr(trim($where), 1, -1));
         }
@@ -84,20 +83,19 @@ class PostCalendar_Api_Search extends Zikula_AbstractApi
         $eventsByDate = ModUtil::apiFunc('PostCalendar', 'event', 'getEvents', $searchargs);
         // $eventsByDate = array(Date[YYYY-MM-DD]=>array(key[int]=>array(assockey[name]=>values)))
         // !Dates exist w/o data
-    
+        
         $sessionId = session_id();
     
         // Process the result set and insert into search result table
         foreach ($eventsByDate as $date) {
             if (count($date) > 0) {
                 foreach ($date as $event) {
-                    $title = $event['title'] . " (" . DateUtil::strftime($this->getVar('pcEventDateFormat'), strtotime($event['eventDate'])) . ")";
-                    $start = $event['alldayevent'] ? "12:00:00" : $event['startTime'];
-                    $created = $event['eventDate'] . " " . $start;
+                    $formats = $this->getVar('pcDateFormats');
+                    $title = $event['title'] . " (" . $event['eventStart']->format($formats['date']) . ")";
                     $items = array('title' => $title,
                                    'text'  => $event['hometext'],
                                    'extra' => $event['eid'],
-                                   'created' => $created,
+                                   'created' => $event['time'],
                                    'module'  => 'PostCalendar',
                                    'session' => $sessionId);
                 }
@@ -124,10 +122,10 @@ class PostCalendar_Api_Search extends Zikula_AbstractApi
         $date = str_replace("-", "", substr($datarow['created'], 0, 10));
     
         $datarow['url'] = ModUtil::url('PostCalendar', 'user', 'display', array(
-            'Date' => $date,
+            'date' => $date,
             'eid' => $eid,
-            'viewtype' => 'details'));
-        // needed: index.php?module=PostCalendar&func=main&Date=20090726&viewtype=details&eid=1718
+            'viewtype' => 'event'));
+        // needed: index.php?module=PostCalendar&func=main&Date=20090726&viewtype=event&eid=1718
     
         return true;
     }

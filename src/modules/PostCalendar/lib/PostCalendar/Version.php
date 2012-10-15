@@ -2,9 +2,8 @@
 
 /**
  * @package     PostCalendar
- * @author      Craig Heydenburg
  * @copyright   Copyright (c) 2002, The PostCalendar Team
- * @copyright   Copyright (c) 2009, Craig Heydenburg, Sound Web Development
+ * @copyright   Copyright (c) 2009-2012, Craig Heydenburg, Sound Web Development
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
  */
 class PostCalendar_Version extends Zikula_AbstractVersion
@@ -20,13 +19,13 @@ class PostCalendar_Version extends Zikula_AbstractVersion
         $meta['displayname'] = $this->__('PostCalendar');
         $meta['url'] = $this->__(/* !used in URL - nospaces, no special chars, lcase */'postcalendar');
         $meta['description'] = $this->__('Calendar for Zikula');
-        $meta['version'] = '7.0.1';
+        $meta['version'] = '8.0.0';
 
         $meta['securityschema'] = array(
             'PostCalendar::Event' => 'Event Title::Event ID',
             'PostCalendar::' => '::');
-        $meta['core_min'] = '1.3.0'; // requires minimum 1.3.0 or later
-        //$meta['core_max'] = '1.3.0'; // doesn't work with versions later than x.x.x
+        $meta['core_min'] = '1.3.3'; // requires minimum 1.3.3 or later
+        $meta['core_max'] = '1.3.99'; // doesn't work with 1.4.0 (yet)
 
         $meta['capabilities'] = array();
         $meta['capabilities'][HookUtil::PROVIDER_CAPABLE] = array('enabled' => true);
@@ -35,6 +34,9 @@ class PostCalendar_Version extends Zikula_AbstractVersion
         return $meta;
     }
 
+    /**
+     * Set up hook subscriber and provider bundles 
+     */
     protected function setupHookBundles()
     {
         $bundle = new Zikula_HookManager_ProviderBundle($this->name, 'provider.postcalendar.ui_hooks.event', 'ui_hooks', $this->__('PostCalendar Event Maker'));

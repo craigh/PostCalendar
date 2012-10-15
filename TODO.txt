@@ -1,0 +1,18 @@
+TODO LIST
+-
+
+Post 8.0:
+- change to jQuery-UI 1.9 tooltips
+- add perm check to all navlinks to avoid spiders?
+- make submit form an object
+- Needles are still a guess
+  - should MultiHook support be removed?
+
+IDEAS:
+- make a navigation sideblock
+- add open graph stuff?
+- use timepicker in Event defaults?
+- eliminate YYYY-MM-DD and replace with YYYYMMDD ?
+- Agenda viewtype?
+- add right-click context menu for edit/delete event from multi-day views?
+- draggable behavior for changing event dates?

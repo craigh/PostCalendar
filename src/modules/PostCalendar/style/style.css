@@ -1,7 +1,6 @@
 /* PostCalendar Stylesheet */
 /**
  *  @package       PostCalendar
- *  @author        Craig Heydenburg
  */
 
 /********** HEADERS & CONTAINERS ***********/
@@ -36,34 +35,6 @@ h2.postcalendar_header a {
 	padding-left: 10px;
 	padding-right: 10px;
 }
-#postcalendar_addevent_leftcol {
-    width: 49%;
-    float: left;
-}
-#postcalendar_addevent_rightcol {
-    margin-left: 50%;
-}
-#postcalendar_addevent_rightcol fieldset {
-    margin-bottom: 1em;
-    padding: 4px 0 1em 1em;
-    background-color: #eeeeee;
-}
-#postcalendar_addevent_rightcol fieldset legend,
-#postcalendar_addevent_leftcol fieldset legend {
-    background-color: #ffffff;
-    padding: 0 3px;
-}
-#postcalendar_addevent_previewevent {
-    background-color: #eeeeee;
-    border: 2px solid #cccccc;
-    margin: 2em;
-    padding: 1em;
-}
-#postcalendar_addevent_previewevent #previewtitle {
-    border-bottom: 1px solid #999999;
-    color: navy;
-    font-style: italic;
-}
 table#postcalendar_yearview {
     width: 100%;
 }
@@ -75,7 +46,15 @@ table#postcalendar_yearview td.postcalendar_yearview_panel {
 #postcalendar_footer {
     text-align: left;
     font-size: 8px;
-    padding: 2px;
+    padding: 4px 2px;
+}
+#pcCategoryLegend {
+    padding: 1em;
+    margin: 4px;
+    border: 1px solid #CCCCCC;
+    color: #3383BB;
+    width: 200px;
+    border-radius: 6px;
 }
 /********** DAY ***************/
 h3.dayheader,
@@ -142,12 +121,18 @@ table.postcalendar_month col.pcWeekend {
 }
 
 /*********** NAV **************/
+#pcnav {
+    text-align: right;
+}
+.pcnav_button+label {
+    vertical-align: top;
+}
 #postcalendar_nav_right,
 #postcalendar_nav_left {
 	border: none;
 	margin: 0;
 	padding: 0;
-    width: 50%;
+/*    width: 50%;*/
     vertical-align: top;
 }
 #postcalendar_nav_right {
@@ -190,6 +175,53 @@ a.postcalendar_nav_text_selected:hover {
     background-color: #ffffff;
 	text-decoration: none;
 }
+#pcnav_datepicker,
+#pcnav_filterpicker {
+    background: url("/javascript/jquery-ui/themes/cupertino/images/ui-bg_glass_60_eeeeee_1x400.png") repeat-x scroll 50% 50% #EEEEEE;
+    border: 1px solid #CCCCCC;
+    border-right: 0;
+    color: #3383BB;
+    width: 8em;
+    height: 16px;
+    vertical-align: top;
+    padding: 4px 4px 4px 8px;
+    margin: 0;
+    border-bottom-left-radius: 6px;
+    border-top-left-radius: 6px;
+    cursor: default;
+}
+#pcnav_filterpicker {
+    width: 5em;
+}
+#pcnav_datepicker_button,
+#pcnav_filterpicker_button {
+    background-image: -moz-linear-gradient(center top , #FAFAFA 0%, #E5E5E5 100%);
+    border: 1px solid #CCCCCC;
+    padding: 5px;
+    width: 14px;
+    height: 14px;
+    background-color: #EEEEEE;
+    text-indent: -99999px; 
+    border-bottom-right-radius: 6px;
+    border-top-right-radius: 6px;
+    margin: 0 .8em 0 0;
+}
+#pcnav_datepicker_button:hover,
+#pcnav_filterpicker_button:hover {
+    background-color: #FFFFFF;
+    background-image: -moz-linear-gradient(center top , #E5E5E5 0%, #FAFAFA 100%);
+}
+#pcnav_filterpicker_dialog,
+#pcnav_usercalendar_dialog {
+    display: none;
+    text-align: left;
+    cursor: pointer;
+}
+#pcnav_usercalendar_button {
+    font-size: 90%;
+    vertical-align: top;
+    margin-right: .8em;
+}
 
 /********** details **************/
 .postcalendar_event_view div.eventtime {
@@ -202,6 +234,14 @@ a.postcalendar_nav_text_selected:hover {
 .postcalendar_event_view div.eventdetails span.location{
     padding-left: 2em;
     display: block;
+}
+div.event_details_popup {
+    text-align: left;
+}
+div.event_details_popup img.loading {
+    position: relative;
+    top: 170px;
+    left: 225px;
 }
 /*********** SMALLMONTHTABLE STYLES **************/
 table.smallmonthtable {
@@ -344,4 +384,41 @@ div.postcalendar_featuredevent div.eventdetails span.location{
 
 #pc_bulkaction_control select {
     margin-left: 2em;
+}
+
+#manuallySetDateFormats {
+    background-color: #ffffff;
+    border: 1px solid #cccccc;
+    padding: 1em;
+}
+
+/** submit form **/
+#postcalendar_repetitionsettings {
+    background-color: #ffffff;
+    border: 1px solid #cccccc;
+    padding: 1em;
+    width: 65.8%;
+}
+
+#postcalendar_repetitionsettings div {
+    margin: .5em 0 0 1em;
+}
+
+#postcalendar_addevent_previewevent {
+    background-color: #eeeeee;
+    border: 2px solid #cccccc;
+    margin: 2em;
+    padding: 1em;
+}
+
+#postcalendar_addevent_previewevent #previewtitle {
+    border-bottom: 1px solid #999999;
+    color: navy;
+    font-style: italic;
+}
+
+/** date and time pickers **/
+#eventstart_time_display,
+#eventend_time_display {
+    width: 8em;
 }

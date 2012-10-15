@@ -1,20 +1,28 @@
 <?php
+
 /**
- * Copyright 2010 PostCalendar Team.
+ * Copyright 2010-2012 PostCalendar Team.
  *
  * @license LPGL v2+
  *
  * Please see the NOTICE file distributed with this source code for further
  * information regarding copyright and licensing.
  */
-
 class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
 {
+
+    const PROVIDER_AREANAME = 'provider.postcalendar.ui_hooks.event';
+
     /**
      * Zikula_View instance
      * @var object
      */
     private $view;
+    /**
+     * Zikula entity manager instance
+     * @var object
+     */
+    private $_em;
 
     /**
      * Post constructor hook.
@@ -24,6 +32,8 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
     public function setup()
     {
         $this->view = Zikula_View::getInstance("PostCalendar");
+        $this->_em = ServiceUtil::getService('doctrine.entitymanager');
+        $this->domain = ZLanguage::getModuleDomain('PostCalendar');
     }
 
     /**
@@ -40,35 +50,25 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
             return;
         }
         // get data from $event
-        $module = $hook->getCaller();
         $objectid = $hook->getId(); // id of hooked item
-        $callerArea = Doctrine_Core::getTable('Zikula_Doctrine_Model_HookArea')->find($hook->getAreaId())->get('areaname');
 
         if (!$objectid) {
             return;
         }
 
-        ModUtil::dbInfoLoad('PostCalendar');
-        $dbtable = DBUtil::getTables();
-        $cols = $dbtable['postcalendar_events_column'];
-        // build where statement
-        $where = "WHERE " . $cols['hooked_modulename'] . " = '" . DataUtil::formatForStore($module) . "'
-                  AND "   . $cols['hooked_objectid']   . " = '" . DataUtil::formatForStore($objectid) . "'
-                  AND "   . $cols['hooked_area']   . " = '" . DataUtil::formatForStore($callerArea) . "'";
-        $pc_event = DBUtil::selectObject('postcalendar_events', $where, array('eid'));
+        $pc_event = $this->_em->getRepository('PostCalendar_Entity_CalendarEvent')->getHookedEvent($hook);
 
         if (!$pc_event) {
             return;
         }
 
-        $this->view->assign('eid', $pc_event['eid']);
+        $this->view->assign('eid', $pc_event->getEid());
 
         // add this response to the event stack
-        $area = 'provider.postcalendar.ui_hooks.event';
-        $hook->setResponse(new Zikula_Response_DisplayHook($area, $this->view, 'hooks/view.tpl'));
+        $hook->setResponse(new Zikula_Response_DisplayHook(self::PROVIDER_AREANAME, $this->view, 'hooks/view.tpl'));
     }
 
-     /**
+    /**
      * Display hook for edit views.
      *
      * @param Zikula_DisplayHook $hook
@@ -80,7 +80,6 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
         // get data from $event
         $module = $hook->getCaller(); // default to active module
         $objectid = $hook->getId(); // id of hooked item
-        $callerArea = Doctrine_Core::getTable('Zikula_Doctrine_Model_HookArea')->find($hook->getAreaId())->get('areaname');
 
         if (!$objectid) {
             $access_type = ACCESS_ADD;
@@ -103,19 +102,12 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
                 $selectedcategories = array();
             } else {
                 // get the event
-                // Get table info
-                ModUtil::dbInfoLoad('PostCalendar');
-                $dbtable = DBUtil::getTables();
-                $cols = $dbtable['postcalendar_events_column'];
-                // build where statement
-                $where = "WHERE " . $cols['hooked_modulename'] . " = '" . DataUtil::formatForStore($module) . "'
-                          AND "   . $cols['hooked_objectid']   . " = '" . DataUtil::formatForStore($objectid) . "'
-                          AND "   . $cols['hooked_area']   . " = '" . DataUtil::formatForStore($callerArea) . "'";
-                $pc_event = DBUtil::selectObject('postcalendar_events', $where);
+                $pc_event = $this->_em->getRepository('PostCalendar_Entity_CalendarEvent')->getHookedEvent($hook);
 
                 if ($pc_event) {
+                    $pc_event = $pc_event->getOldArray();
                     $selectedcategories = array();
-                    foreach ($pc_event['__CATEGORIES__'] as $prop => $cats) {
+                    foreach ($pc_event['categories'] as $prop => $cats) {
                         $selectedcategories[$prop] = $cats['id'];
                     }
                     $pceventid = $pc_event['eid'];
@@ -132,8 +124,8 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
             $data = $this->validation->getObject();
         }
         $postcalendarhookconfig = ModUtil::getVar($module, 'postcalendarhookconfig');
-        $postcalendar_admincatselected = isset($postcalendarhookconfig[$callerArea]['admincatselected']) ? $postcalendarhookconfig[$callerArea]['admincatselected'] : 0;
-        $postcalendar_optoverride = isset($postcalendarhookconfig[$callerArea]['optoverride']) ? $postcalendarhookconfig[$callerArea]['optoverride'] : false;
+        $postcalendar_admincatselected = isset($postcalendarhookconfig[$hook->getAreaId()]['admincatselected']) ? $postcalendarhookconfig[$hook->getAreaId()]['admincatselected'] : 0;
+        $postcalendar_optoverride = isset($postcalendarhookconfig[$hook->getAreaId()]['optoverride']) ? $postcalendarhookconfig[$hook->getAreaId()]['optoverride'] : false;
 
         if (($postcalendar_admincatselected['Main'] > 0) && (!$postcalendar_optoverride)) {
             $postcalendar_hide = true;
@@ -143,7 +135,7 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
         $this->view->assign('postcalendar_hide', $postcalendar_hide);
 
         if ($postcalendar_admincatselected['Main'] == 0) {
-            $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
+            $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'CalendarEvent');
             $this->view->assign('postcalendar_catregistry', $catregistry);
             $this->view->assign('postcalendar_selectedcategories', $selectedcategories);
         } else {
@@ -154,8 +146,7 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
         $this->view->assign('postcalendar_eid', $pceventid);
 
         // add this response to the event stack
-        $area = 'provider.postcalendar.ui_hooks.event';
-        $hook->setResponse(new Zikula_Response_DisplayHook($area, $this->view, 'hooks/edit.tpl'));
+        $hook->setResponse(new Zikula_Response_DisplayHook(self::PROVIDER_AREANAME, $this->view, 'hooks/edit.tpl'));
     }
 
     /**
@@ -172,26 +163,13 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
             return;
         }
 
-        // get data from $hook
-        $module = $hook->getCaller(); // default to active module
-        $objectid = $hook->getId(); // id of hooked item
-        $callerArea = Doctrine_Core::getTable('Zikula_Doctrine_Model_HookArea')->find($hook->getAreaId())->get('areaname');
-
-        ModUtil::dbInfoLoad('PostCalendar');
-        $dbtable = DBUtil::getTables();
-        $cols = $dbtable['postcalendar_events_column'];
-        // build where statement
-        $where = "WHERE " . $cols['hooked_modulename'] . " = '" . DataUtil::formatForStore($module) . "'
-                  AND "   . $cols['hooked_objectid']   . " = '" . DataUtil::formatForStore($objectid) . "'
-                  AND "   . $cols['hooked_area']   . " = '" . DataUtil::formatForStore($callerArea) . "'";
-        $pc_event = DBUtil::selectObject('postcalendar_events', $where, array('eid'));
+        $pc_event = $this->_em->getRepository('PostCalendar_Entity_CalendarEvent')->getHookedEvent($hook);
 
         if (!empty($pc_event)) {
-            $this->view->assign('eid', $pc_event['eid']);
+            $this->view->assign('eid', $pc_event->getEid());
 
             // add this response to the event stack
-            $area = 'provider.postcalendar.ui_hooks.event';
-            $hook->setResponse(new Zikula_Response_DisplayHook($area, $this->view, 'hooks/delete.tpl'));
+            $hook->setResponse(new Zikula_Response_DisplayHook(self::PROVIDER_AREANAME, $this->view, 'hooks/delete.tpl'));
         }
     }
 
@@ -205,12 +183,12 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
     public function validateEdit(Zikula_ValidationHook $hook)
     {
         // get data from post
-        $data = FormUtil::getPassedValue('postcalendar', null, 'POST');
+        $data = $this->view->getRequest()->request->get('postcalendar', null);
 
         // create a new hook validation object and assign it to $this->validation
         $this->validation = new Zikula_Hook_ValidationResponse('data', $data);
 
-        $hook->setValidator('provider.postcalendar.ui_hooks.event', $this->validation);
+        $hook->setValidator(self::PROVIDER_AREANAME, $this->validation);
     }
 
     /**
@@ -243,13 +221,6 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
             return;
         }
 
-        $dom = ZLanguage::getModuleDomain('PostCalendar');
-        $module = $hook->getCaller(); // default to active module
-        $objectid = $hook->getId(); // id of hooked item
-        $callerArea = Doctrine_Core::getTable('Zikula_Doctrine_Model_HookArea')->find($hook->getAreaId())->get('areaname');
-        $objUrl = $hook->getUrl()->getUrl(null, null, false, false); // objecturl provided by subscriber
-        // the fourth arg is forceLang and if left to default (true) then the url is malformed - core bug as of 1.3.0
-
         $hookdata = $this->validation->getObject();
         $hookdata = DataUtil::cleanVar($hookdata);
         if (DataUtil::is_serialized($hookdata['cats'], false)) {
@@ -259,41 +230,38 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
         if ((!isset($hookdata['optin'])) || (!$hookdata['optin'])) {
             // check to see if event currently exists - delete if so
             if (!empty($hookdata['eid'])) {
-                DBUtil::deleteObjectByID('postcalendar_events', $hookdata['eid'], 'eid');
-                LogUtil::registerStatus(__("PostCalendar: Existing event deleted (opt out).", $dom));
+                $this->_em->getRepository('PostCalendar_Entity_CalendarEvent')->deleteEvents(array($hookdata['eid']));
+                LogUtil::registerStatus($this->__("PostCalendar: Existing event deleted (opt out)."));
             } else {
-                LogUtil::registerStatus(__("PostCalendar: News event not created (opt out).", $dom));
+                LogUtil::registerStatus($this->__("PostCalendar: News event not created (opt out)."));
             }
             return;
         }
 
-        $postCalendarEventInstance = $this->getClassInstance($module);
-        $postCalendarEventInstance->setHooked_objectid($objectid);
-        $postCalendarEventInstance->setHooked_objecturl($objUrl);
-        $postCalendarEventInstance->setHooked_area($callerArea);
-        $postCalendarEventInstance->set__CATEGORIES__($hookdata['cats']);
+        if (!empty($hookdata['eid'])) {
+            // event already exists - just update
+            $event = $this->_em->getRepository('PostCalendar_Entity_CalendarEvent')->find($hookdata['eid']);
+            $word = $this->__("update");
+        } else {
+            // create a new event
+            $event = new PostCalendar_Entity_CalendarEvent();
+            $word = $this->__("create");
+        }
+        $postCalendarEventInstance = $this->getClassInstance($hook);
+        $postCalendarEventInstance->setEvent($event);
+        $postCalendarEventInstance->setCategories($hookdata['cats']);
         if (!$postCalendarEventInstance->makeEvent()) {
             return false;
         }
-        ModUtil::dbInfoLoad('PostCalendar');
-        if (!empty($hookdata['eid'])) {
-            // event already exists - just update
-            $postCalendarEventInstance->setEid($hookdata['eid']);
-            $pc_event = $postCalendarEventInstance->toArray();
-            if (DBUtil::updateObject($pc_event, 'postcalendar_events', NULL, 'eid')) {
-                LogUtil::registerStatus(__("PostCalendar: Associated Calendar event updated.", $dom));
-                return true;
-            }
-        } else {
-            // create a new event
-            $pc_event = $postCalendarEventInstance->toArray();
-            if (DBUtil::insertObject($pc_event, 'postcalendar_events', 'eid')) {
-                LogUtil::registerStatus(__("PostCalendar: Event created.", $dom));
-                return true;
-            }
+        try {
+            $this->_em->persist($postCalendarEventInstance->getEvent());
+            $this->_em->flush();
+            LogUtil::registerStatus($this->__f("PostCalendar: Associated Calendar event %sd.", $word));
+        } catch (Exception $e) {
+            LogUtil::registerError($this->__f('Error! Could not %s the associated Calendar event.', $word));
+            return false;
         }
-
-        LogUtil::registerError(__('Error! Could not update the associated Calendar event.', $dom));
+        return true;
     }
 
     /**
@@ -305,28 +273,14 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
      */
     public function processDelete(Zikula_ProcessHook $hook)
     {
-        $dom = ZLanguage::getModuleDomain('PostCalendar');
+        $pc_event = $this->_em->getRepository('PostCalendar_Entity_CalendarEvent')->getHookedEvent($hook);
+        $result = $this->_em->getRepository('PostCalendar_Entity_CalendarEvent')->deleteEvents(array($pc_event->getEid()));
 
-        $module = $hook->getCaller(); // default to active module
-        $objectid = $hook->getId(); // id of hooked item
-        $callerArea = Doctrine_Core::getTable('Zikula_Doctrine_Model_HookArea')->find($hook->getAreaId())->get('areaname');
-
-        // Get table info
-        ModUtil::dbInfoLoad('PostCalendar');
-        $table = DBUtil::getTables();
-        $cols = $table['postcalendar_events_column'];
-        // build where statement
-        $where = "WHERE " . $cols['hooked_modulename'] . " = '" . DataUtil::formatForStore($module) . "'
-                  AND "   . $cols['hooked_objectid']   . " = '" . DataUtil::formatForStore($objectid) . "'
-                  AND "   . $cols['hooked_area']   . " = '" . DataUtil::formatForStore($callerArea) . "'";
-
-        //return (bool)DBUtil::deleteWhere('postcalendar_events', $where);
-        // TODO THIS IS NOT DELETING THE ROW IN categories_mapobj table!!!! (it should!)
-        if (!DBUtil::deleteObject(array(), 'postcalendar_events', $where, 'eid')) {
-            return LogUtil::registerError(__('Error! Could not delete associated PostCalendar event.', $dom));
+        if (!$result) {
+            return LogUtil::registerError($this->__('Error! Could not delete associated PostCalendar event.'));
         }
 
-        LogUtil::registerStatus(__('Associated PostCalendar event also deleted.', $dom));
+        LogUtil::registerStatus($this->__('Associated PostCalendar event also deleted.'));
     }
 
     /**
@@ -339,10 +293,10 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
         // check if this is for this handler
         $subject = $z_event->getSubject();
         if (!($z_event['method'] == 'postcalendarhookconfig' && strrpos(get_class($subject), '_Controller_Admin'))) {
-           return;
+            return;
         }
         $moduleName = $subject->getName();
-        if (!SecurityUtil::checkPermission($moduleName.'::', '::', ACCESS_ADMIN)) {
+        if (!SecurityUtil::checkPermission($moduleName . '::', '::', ACCESS_ADMIN)) {
             throw new Zikula_Exception_Forbidden(LogUtil::getErrorMsgPermission());
         }
         $view = Zikula_View::getInstance('PostCalendar', false);
@@ -350,21 +304,21 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
 
         $classname = $moduleName . '_Version';
         $moduleVersionObj = new $classname;
-        $tbl = Doctrine_Core::getTable('Zikula_Doctrine_Model_HookArea');
+        $_em = ServiceUtil::getService('doctrine.entitymanager');
         $bindingsBetweenOwners = HookUtil::getBindingsBetweenOwners($moduleName, 'PostCalendar');
         foreach ($bindingsBetweenOwners as $k => $binding) {
-            $areaname = $tbl->find($binding['sareaid'])->get('areaname');
+            $areaname = $_em->getRepository('Zikula_Doctrine2_Entity_HookArea')->find($binding['sareaid'])->getAreaName();
             $bindingsBetweenOwners[$k]['areaname'] = $areaname;
             $bindingsBetweenOwners[$k]['areatitle'] = $view->__($moduleVersionObj->getHookSubscriberBundle($areaname)->getTitle());
-            $postcalendarhookconfig[$areaname]['admincatselected'] = isset($postcalendarhookconfig[$areaname]['admincatselected']) ? $postcalendarhookconfig[$areaname]['admincatselected'] : 0;
-            $postcalendarhookconfig[$areaname]['optoverride'] = isset($postcalendarhookconfig[$areaname]['optoverride']) ? $postcalendarhookconfig[$areaname]['optoverride'] : false;
+            $postcalendarhookconfig[$binding['sareaid']]['admincatselected'] = isset($postcalendarhookconfig[$binding['sareaid']]['admincatselected']) ? $postcalendarhookconfig[$binding['sareaid']]['admincatselected'] : 0;
+            $postcalendarhookconfig[$binding['sareaid']]['optoverride'] = isset($postcalendarhookconfig[$binding['sareaid']]['optoverride']) ? $postcalendarhookconfig[$binding['sareaid']]['optoverride'] : false;
         }
         $view->assign('areas', $bindingsBetweenOwners);
         $view->assign('postcalendarhookconfig', $postcalendarhookconfig);
 
         $view->assign('ActiveModule', $moduleName);
 
-        $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
+        $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'CalendarEvent');
         $view->assign('postcalendar_catregistry', $catregistry);
 
         $z_event->setData($view->fetch('hooks/modifyconfig.tpl'));
@@ -380,7 +334,8 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
     {
         $dom = ZLanguage::getModuleDomain('PostCalendar');
 
-        $hookdata = FormUtil::getPassedValue('postcalendar', array(), 'POST');
+        $request = ServiceUtil::getService('request');
+        $hookdata = $request->request->get('postcalendar', array());
         $token = isset($hookdata['postcalendar_csrftoken']) ? $hookdata['postcalendar_csrftoken'] : null;
         if (!SecurityUtil::validateCsrfToken($token)) {
             throw new Zikula_Exception_Forbidden(__('Security token validation failed', $dom));
@@ -390,13 +345,13 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
         // check if this is for this handler
         $subject = $z_event->getSubject();
         if (!($z_event['method'] == 'postcalendarhookconfigprocess' && strrpos(get_class($subject), '_Controller_Admin'))) {
-           return;
+            return;
         }
         $moduleName = $subject->getName();
-        if (!SecurityUtil::checkPermission($moduleName.'::', '::', ACCESS_ADMIN)) {
+        if (!SecurityUtil::checkPermission($moduleName . '::', '::', ACCESS_ADMIN)) {
             throw new Zikula_Exception_Forbidden(LogUtil::getErrorMsgPermission());
         }
-        
+
         foreach ($hookdata as $area => $data) {
             if ((!isset($data['optoverride'])) || (empty($data['optoverride']))) {
                 $hookdata[$area]['optoverride'] = "0";
@@ -404,7 +359,7 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
         }
 
         ModUtil::setVar($moduleName, 'postcalendarhookconfig', $hookdata);
-        // ModVar: postcalendarhookconfig => array('areaname' => array(admincatselected, optoverride))
+        // ModVar: postcalendarhookconfig => array('areaid' => array(admincatselected, optoverride))
 
         LogUtil::registerStatus(__("PostCalendar: Hook option settings updated.", $dom));
 
@@ -425,19 +380,20 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
     {
         $module = $z_event['name'];
         $dom = ZLanguage::getModuleDomain('PostCalendar');
+        $_em = ServiceUtil::getService('doctrine.entitymanager');
 
-        // Get table info
-        ModUtil::dbInfoLoad('PostCalendar');
-        $dbtable = DBUtil::getTables();
-        $cols = $dbtable['postcalendar_events_column'];
-        // build where statement
-        $where = "WHERE " . $cols['hooked_modulename'] . " = '" . DataUtil::formatForStore($module) . "'";
-
-        // $delete = DBUtil::deleteObject(array(), 'postcalendar_events', $where, 'eid');
-        // deleteObject is preferred because it is supposed to delete related records, but it fails
-        // because the id field is not converted to pc_eid when send to ObjectUtil
-        $delete = DBUtil::deleteWhere('postcalendar_events', $where);
-        $affected = $delete->rowCount();
+        $events = $_em->getRepository('PostCalendar_Entity_CalendarEvent')->findBy(array('hooked_modulename' => DataUtil::formatForStore($module)));
+        $i = 0;
+        $affected = 0;
+        foreach ($events as $event) {
+            $_em->remove($event);
+            $i++;
+            $affected++;
+            if ($i == 15) {
+                $_em->flush();
+                $i = 0;
+            }
+        }
 
         if ($affected > 0) {
             LogUtil::registerStatus(__f('ALL associated PostCalendar events also deleted. (%s)', $affected, $dom));
@@ -447,25 +403,27 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
     /**
      * Find Class and instantiate
      *
-     * @param string $module Module name
+     * @param Zikula_ProcessHook $hook
      * @return instantiated object of found class
      */
-    private function getClassInstance($module) {
-        if (empty($module)) {
+    private function getClassInstance(Zikula_ProcessHook $hook)
+    {
+        if (empty($hook)) {
             return false;
         }
+        $module = $hook->getCaller();
 
         $locations = array($module, 'PostCalendar'); // locations to search for the class
         foreach ($locations as $location) {
             $classname = $location . '_PostCalendarEvent_' . $module;
             if (class_exists($classname)) {
-                $instance = new $classname($module);
+                $instance = new $classname($hook);
                 if ($instance instanceof PostCalendar_PostCalendarEvent_AbstractBase) {
                     return $instance;
                 }
             }
         }
-        return new PostCalendar_PostCalendarEvent_Generic($module);
+        return new PostCalendar_PostCalendarEvent_Generic($hook);
     }
 
     /**
@@ -475,11 +433,13 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
      */
     public static function servicelinks(Zikula_Event $event)
     {
+        $dom = ZLanguage::getModuleDomain('PostCalendar');
         $module = ModUtil::getName();
         $bindingCount = count(HookUtil::getBindingsBetweenOwners($module, 'PostCalendar'));
         if (($bindingCount > 0) && ($module <> 'PostCalendar') && (empty($event->data) || (is_array($event->data)
-                && !in_array(array('url' => ModUtil::url($module, 'admin', 'postcalendarhookconfig'), 'text' => __('PostCalendar Hook Options')), $event->data)))) {
-            $event->data[] = array('url' => ModUtil::url($module, 'admin', 'postcalendarhookconfig'), 'text' => __('PostCalendar Hook Options'));
+                && !in_array(array('url' => ModUtil::url($module, 'admin', 'postcalendarhookconfig'), 'text' => __('PostCalendar Hook Options', $dom)), $event->data)))) {
+            $event->data[] = array('url' => ModUtil::url($module, 'admin', 'postcalendarhookconfig'), 'text' => __('PostCalendar Hook Options', $dom));
         }
     }
+
 }

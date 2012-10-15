@@ -1,8 +1,7 @@
 <?php
 /**
  * @package     PostCalendar
- * @author      Craig Heydenburg
- * @copyright   Copyright (c) 2009, Craig Heydenburg, Sound Web Development
+ * @copyright   Copyright (c) 2009-2012, Craig Heydenburg, Sound Web Development
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
  */
 
@@ -29,35 +28,17 @@ class PostCalendar_ContentType_PostCalEvent extends Content_AbstractContentType
         if (!isset($this->eid) || $this->eid == 0) {
             return LogUtil::RegisterError ($this->__('PostCalendar: No event ID set.'));
         }
-        $vars = array();
-        $vars['showcountdown'] = empty($this->showcountdown) ? false : true;
-        $vars['hideonexpire']  = empty($this->hideonexpire)  ? false : true;
+
+        $vars = array('bid' => $this->contentId,
+            'content' => serialize(array(
+            'showcountdown' => $this->showcountdown,
+            'hideonexpire' => $this->hideonexpire,
+            'eid' => $this->eid,
+        )));
+        $date = new DateTime();
+        $calendarView = new PostCalendar_CalendarView_FeaturedEventBlock($this->view, $date, '', null, $vars);
     
-        // get the event from the DB
-        ModUtil::dbInfoLoad('PostCalendar');
-        $event = DBUtil::selectObjectByID('postcalendar_events', (int) $this->eid, 'eid');
-        $event = ModUtil::apiFunc('PostCalendar', 'event', 'formateventarrayfordisplay', $event);
-    
-        // is event allowed for this user?
-        if ($event['sharing'] == SHARING_PRIVATE && $event['aid'] != UserUtil::getVar('uid') && !SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
-            // if event is PRIVATE and user is not assigned event ID (aid) and user is not Admin event should not be seen
-            return false;
-        }
-    
-        $alleventdates = ModUtil::apiFunc('PostCalendar', 'event', 'geteventdates', $event); // gets all FUTURE occurances
-        // assign next occurance to eventDate
-        $event['eventDate'] = array_shift($alleventdates);
-    
-        if ($vars['showcountdown']) {
-            $datedifference = DateUtil::getDatetimeDiff_AsField(DateUtil::getDatetime(null, '%F'), $event['eventDate'], 3);
-            $event['datedifference'] = round($datedifference);
-            if ($vars['hideonexpire'] && $event['datedifference'] < 0) {
-                return false;
-            }
-            $event['showcountdown'] = true;
-        }
-    
-        $this->view->assign('loaded_event', $event);
+        $this->view->assign('loaded_event', $calendarView->getEvent());
     
         return $this->view->fetch($this->getTemplate());
     }

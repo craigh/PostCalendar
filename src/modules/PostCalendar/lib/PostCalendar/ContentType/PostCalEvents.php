@@ -1,8 +1,7 @@
 <?php
 /**
  * @package     PostCalendar
- * @author      Craig Heydenburg
- * @copyright   Copyright (c) 2009, Craig Heydenburg, Sound Web Development
+ * @copyright   Copyright (c) 2009-2012, Craig Heydenburg, Sound Web Development
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
  */
 
@@ -24,7 +23,7 @@ class PostCalendar_ContentType_PostCalEvents extends Content_AbstractContentType
         $this->pcbeventslimit = $data['pcbeventslimit'];
 
         // Get the registrered categories for the module
-        $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories ('PostCalendar', 'postcalendar_events');
+        $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories ('PostCalendar', 'CalendarEvent');
         $properties = array_keys($catregistry);
         $this->categories = array();
         foreach($properties as $prop) {
@@ -36,44 +35,34 @@ class PostCalendar_ContentType_PostCalEvents extends Content_AbstractContentType
     }
 
     public function display() {
-//        $Date       = DateUtil::getDatetime('', '%Y%m%d%H%M%S');
-        $Date       = date('YmdHis');
-        $the_year   = substr($Date, 0, 4);
-        $the_month  = substr($Date, 4, 2);
-        $the_day    = substr($Date, 6, 2);
+        $start = new DateTime();
+        $end = new DateTime();
+        $end->modify("last day of this month")->modify("+$this->pcbeventsrange months");
 
-        $starting_date = "$the_month/$the_day/$the_year";
-        $ending_date   = date('m/t/Y', mktime(0, 0, 0, $the_month + $this->pcbeventsrange, 1, $the_year));
-
-        $filtercats['__CATEGORIES__'] = $this->categories; //reformat array
+        $filtercats = PostCalendar_Api_Event::formatCategoryFilter($this->categories); //reformat array
         $eventsByDate = ModUtil::apiFunc('PostCalendar', 'event', 'getEvents', array(
-            'start'      => $starting_date,
-            'end'        => $ending_date,
+            'start'      => $start,
+            'end'        => $end,
             'filtercats' => $filtercats));
 
-        $this->view->assign('A_EVENTS',      $eventsByDate);
-        $this->view->assign('DATE',          $Date);
-        $this->view->assign('DISPLAY_LIMIT', $this->pcbeventslimit);
+        $this->view->assign('eventsByDate',      $eventsByDate);
+        $this->view->assign('displayLimit', $this->pcbeventslimit);
 
         return $this->view->fetch($this->getTemplate());
     }
 
     public function startEditing() {
-        $enablecategorization = ModUtil::getVar('PostCalendar', 'enablecategorization');
-        if ($enablecategorization) {
-            $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
-            $this->view->assign('catregistry', $catregistry);
-        }
+        $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'CalendarEvent');
+        $this->view->assign('catregistry', $catregistry);
 
         return;
     }
 
     public function displayEditing() {
-        $enablecategorization = ModUtil::getVar('PostCalendar', 'enablecategorization');
         $cats = array();
         $output = '';
         $lang = ZLanguage::getLanguageCode();
-        if ($enablecategorization && $this->categories) {
+        if ($this->categories) {
             foreach ($this->categories['Main'] as $id) {
                 $thiscat = CategoryUtil::getCategoryByID($id);
                 $cats[]  = isset($thiscat['display_name'][$lang]) ? $thiscat['display_name'][$lang] : $thiscat['name'];
@@ -92,8 +81,8 @@ class PostCalendar_ContentType_PostCalEvents extends Content_AbstractContentType
             'pcbeventsrange' => 6,
             'pcbeventslimit' => 5,
             'categories'     => null);
-        // Get the registered categories for the News module
-        $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'postcalendar_events');
+        // Get the registered categories for the module
+        $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'CalendarEvent');
         $properties = array_keys($catregistry);
 
         // set a default category based on page category

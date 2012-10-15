@@ -1,11 +1,11 @@
 <?php
 /**
  * @package     PostCalendar
- * @author      Craig Heydenburg
  * @copyright   Copyright (c) 2002, The PostCalendar Team
- * @copyright   Copyright (c) 2009, Craig Heydenburg, Sound Web Development
+ * @copyright   Copyright (c) 2009-2012, Craig Heydenburg, Sound Web Development
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
  */
+use PostCalendar_Entity_CalendarEvent as CalendarEvent;
 
 class PostCalendar_Api_Admin extends Zikula_AbstractApi
 {
@@ -27,11 +27,11 @@ class PostCalendar_Api_Admin extends Zikula_AbstractApi
                 'text' => $this->__('Event List'),
                 'class' => 'z-icon-es-view',
                 'links' => array(
-                    array('url' => ModUtil::url('PostCalendar', 'admin', 'listevents', array('listtype'=>_EVENT_APPROVED)),
+                    array('url' => ModUtil::url('PostCalendar', 'admin', 'listevents', array('listtype' => CalendarEvent::APPROVED)),
                         'text' => $this->__('Approved Events')),
-                    array('url' => ModUtil::url('PostCalendar', 'admin', 'listevents', array('listtype'=>_EVENT_HIDDEN)),
+                    array('url' => ModUtil::url('PostCalendar', 'admin', 'listevents', array('listtype' => CalendarEvent::HIDDEN)),
                         'text' => $this->__('Hidden Events')),
-                    array('url' => ModUtil::url('PostCalendar', 'admin', 'listevents', array('listtype'=>_EVENT_QUEUED)),
+                    array('url' => ModUtil::url('PostCalendar', 'admin', 'listevents', array('listtype' => CalendarEvent::QUEUED)),
                         'text' => $this->__('Queued Events'))
                 ));
         }
@@ -53,13 +53,12 @@ class PostCalendar_Api_Admin extends Zikula_AbstractApi
                 'text' => $this->__('Event default values'),
                 'class' => 'z-icon-es-config');
         }
-/*        if (SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
+        if (SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
             $links[] = array(
                 'url' => ModUtil::url('PostCalendar', 'admin', 'migrateTimeIt'),
                 'text' => $this->__('Migrate TimeIt'),
                 'class' => 'z-icon-es-regenerate');
         }
-*/
 
         // Return the links array back to the calling function
         return $links;
@@ -99,7 +98,7 @@ class PostCalendar_Api_Admin extends Zikula_AbstractApi
         $renderer->assign('eid', $eid);
         $renderer->assign('link', ModUtil::url('PostCalendar', 'admin', 'adminevents', array(
             'events' => $eid,
-            'action' => _ADMIN_ACTION_VIEW), null, null, true));
+            'action' => PostCalendar_Controller_Admin::ACTION_VIEW), null, null, true));
         $message = $renderer->fetch('email/adminnotify.tpl');
     
         $messagesent = ModUtil::apiFunc('Mailer', 'user', 'sendmessage', array(
@@ -117,50 +116,4 @@ class PostCalendar_Api_Admin extends Zikula_AbstractApi
         }
     }
     
-    public function getdateorder($format)
-    {
-        $possiblevals = array(
-            'D' => array(
-                "%e",
-                "%d"),
-            'M' => array(
-                "%B",
-                "%b",
-                "%h",
-                "%m"),
-            'Y' => array(
-                "%y",
-                "%Y"));
-        foreach ($possiblevals as $type => $vals) {
-            foreach ($vals as $needle) {
-                $tail = strstr($format, $needle);
-                if ($tail !== false) {
-                    $$type = $needle;
-                    break;
-                }
-            }
-            $format = str_replace($$type, $type, $format);
-        }
-        $format = str_replace(array(
-            " ",
-            ",",
-            "."), '', $format); // remove extraneous punctuation
-        if ($format == "%F") {
-            $format = 'YMD';
-            $D = '%d';
-            $M = '%m';
-            $Y = '%Y';
-        }
-        if (strlen($format) != 3) {
-            $format = 'MDY';
-            $D = '%e';
-            $M = '%B';
-            $Y = '%Y';
-        } // default to American
-        return array(
-            'format' => $format,
-            'D' => $D,
-            'M' => $M,
-            'Y' => $Y);
-    }
 } // end class def

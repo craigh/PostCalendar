@@ -5,7 +5,7 @@
 </h2>
 <div class="calcontainer">
     <div class="eventtime">
-        {$loaded_event.eventDate|pc_date_format}<br />
+        {$loaded_event.eventStart->format($modvars.PostCalendar.pcDateFormats.date)}<br />
         {if $loaded_event.alldayevent != true}
             {$loaded_event.startTime} - {$loaded_event.endTime}<br />
         {else}
@@ -18,13 +18,13 @@
             {$loaded_event.hometext|notifyfilters:'postcalendar.hook.eventsfilter.ui.filter'|safehtml}
         </div>
         <div>
-            {if ($loaded_event.location_info.event_location) OR ($loaded_event.location_info.event_street1) OR ($loaded_event.location_info.event_street2) OR ($loaded_event.location_info.event_city)}
+            {if ($loaded_event.location.event_location) OR ($loaded_event.location.event_street1) OR ($loaded_event.location.event_street2) OR ($loaded_event.location.event_city)}
             <h3>{gt text='Location'}:</h3>
             <span class="location">
-                {if $loaded_event.location_info.event_location}<span class="location_name">{$loaded_event.location_info.event_location}</span><br />{/if}
-                {if $loaded_event.location_info.event_street1}<span class="location_street1">{$loaded_event.location_info.event_street1}</span><br />{/if}
-                {if $loaded_event.location_info.event_street2}<span class="location_street2">{$loaded_event.location_info.event_street2}</span><br />{/if}
-                {if $loaded_event.location_info.event_city}<span class="location_city_state_zip">{$loaded_event.location_info.event_city}&nbsp;{$loaded_event.location_info.event_state},&nbsp;{$loaded_event.location_info.event_postal}</span><br />{/if}
+                {if $loaded_event.location.event_location}<span class="location_name">{$loaded_event.location.event_location}</span><br />{/if}
+                {if $loaded_event.location.event_street1}<span class="location_street1">{$loaded_event.location.event_street1}</span><br />{/if}
+                {if $loaded_event.location.event_street2}<span class="location_street2">{$loaded_event.location.event_street2}</span><br />{/if}
+                {if $loaded_event.location.event_city}<span class="location_city_state_zip">{$loaded_event.location.event_city}&nbsp;{$loaded_event.location.event_state},&nbsp;{$loaded_event.location.event_postal}</span><br />{/if}
             </span>
             {/if}
             {if ($loaded_event.contname) OR ($loaded_event.conttel) OR ($loaded_event.contemail) OR ($loaded_event.website)}
@@ -38,20 +38,15 @@
             {/if}
             {if $loaded_event.fee}{gt text='Fee'}: {$loaded_event.fee}{/if}
         </div>
-        {if count($loaded_event.__CATEGORIES__) gt 0}
+        {if count($loaded_event.categories) gt 0}
         <div class="postcalendar_event_categoryinfo">
             {lang assign="lang"}
             <h3>{gt text='Categorized in'}:</h3>
             <ul>
-                {foreach from=$loaded_event.__CATEGORIES__ key="property" item="attribute"}
-                    {if isset($attribute.__ATTRIBUTES__.textcolor) && isset($attribute.__ATTRIBUTES__.color)}
-                        {assign var='textcolor' value=$attribute.__ATTRIBUTES__.textcolor}
-                        {assign var='bgcolor' value=$attribute.__ATTRIBUTES__.color}
-                    {elseif !isset($attribute.__ATTRIBUTES__.textcolor) && isset($attribute.__ATTRIBUTES__.color)}
-                        {assign var='textcolor' value=$attribute.__ATTRIBUTES__.color|pc_inversecolor}
-                        {assign var='bgcolor' value=$attribute.__ATTRIBUTES__.color}
+                {foreach from=$loaded_event.categories key="property" item="attribute"}
+                    {if isset($attribute.attributes.color)}
+                        {assign var='bgcolor' value=$attribute.attributes.color}
                     {else}
-                        {assign var='textcolor' value='#000000'}
                         {assign var='bgcolor' value='#ffffff'}
                     {/if}
                 {if isset($attribute.display_name.$lang)}
@@ -59,7 +54,7 @@
                 {else}
                     {assign var='catname' value=$attribute.name}
                 {/if}
-                    <li><span style='padding: 0 1em; background-color:{$bgcolor}; color:{$textcolor};'>{$catname}</span></li>
+                    <li><span style='padding: 0 1em; background-color:{$bgcolor};'>{$catname}</span></li>
                 {/foreach}
             </ul>
         </div>

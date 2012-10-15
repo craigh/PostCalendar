@@ -1,4 +1,3 @@
-{if $modvars.PostCalendar.enablecategorization}
 <div id="category" class="z-formrow">
     {formlabel for='category' __text='Only display events in category(s)'}
     {nocache}
@@ -15,7 +14,6 @@
     {/foreach}
     {/nocache}
 </div>
-{/if}
 <div class="z-formrow">
     {formlabel for='pcbeventslimit' __text='Number of events to display'}
     {formtextinput id='pcbeventslimit' group='data' maxLength=64 mandatory=true}

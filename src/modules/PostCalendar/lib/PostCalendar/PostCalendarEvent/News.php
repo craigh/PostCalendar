@@ -1,5 +1,13 @@
 <?php
-
+/**
+ * PostCalendar
+ * 
+ * @license MIT
+ * @copyright   Copyright (c) 2012, Craig Heydenburg, Sound Web Development
+ *
+ * Please see the NOTICE file distributed with this source code for further
+ * information regarding copyright and licensing.
+ */
 /**
  * Implements Base class to allow for Event creation on News Story creation
  */
@@ -13,7 +21,7 @@ class PostCalendar_PostCalendarEvent_News extends PostCalendar_PostCalendarEvent
     public function makeEvent() {
         $dom = ZLanguage::getModuleDomain('PostCalendar');
 
-        $funcargs = array('objectid' => $this->getHooked_objectid(),
+        $funcargs = array('objectid' => $this->getEvent()->getHooked_objectid(),
             'SQLcache' => false);
         $article = ModUtil::apiFunc('News', 'user', 'get', $funcargs);
 
@@ -22,21 +30,23 @@ class PostCalendar_PostCalendarEvent_News extends PostCalendar_PostCalendarEvent
             return false;
         }
 
-//        $now = DateUtil::getDatetime(null, '%Y-%m-%d %H:%M:%S');
         $now = date("Y-m-d H:i:s");
         $diff = DateUtil::getDatetimeDiff_AsField($now, $article['from'], 6);
         if ($diff > 0) {
             $eventstatus = -1; // hide published but pending events
         }
 
-        $this->title = __('News: ', $dom) . $article['title'];
-        $this->hometext = ":html:" . __('Article link: ', $dom) . "<a href='" . ModUtil::url('News', 'user', 'display', array('sid' => $article['sid'])) . "'>" . substr($article['hometext'], 0, 32) . "...</a>";
-        $this->aid = $article['cr_uid']; // userid of creator
-        $this->time = $article['cr_date']; // mysql timestamp YYYY-MM-DD HH:MM:SS
-        $this->informant = $article['cr_uid']; // userid of creator
-        $this->eventDate = substr($article['from'], 0, 10); // date of event: YYYY-MM-DD
-        $this->startTime = substr($article['from'], -8); // time of event: HH:MM:SS
-        $this->eventstatus = $eventstatus;
+        $this->setTitle(__('News: ', $dom) . $article['title']);
+        $this->setHometext(":html:" . __('Article link: ', $dom) . "<a href='" . ModUtil::url('News', 'user', 'display', array('sid' => $article['sid'])) . "'>" . substr($article['hometext'], 0, 32) . "...</a>");
+        $this->setAid($article['cr_uid']); // userid of creator
+        $articleCreated = DateTime::createFromFormat('Y-m-d G:i:s', $article['cr_date']);
+        $this->setTime($articleCreated); 
+        $this->setInformant($article['cr_uid']); // userid of creator
+        $articleDate = DateTime::createFromFormat('Y-m-d G:i:s', $article['from']);
+        $this->setEventStart($articleDate);
+        $this->setEventEnd($articleDate);
+        $this->setEventstatus($eventstatus);
+        $this->setSharing(PostCalendar_Entity_CalendarEvent::SHARING_GLOBAL);
 
         return true;
     }
@@ -46,19 +56,25 @@ class PostCalendar_PostCalendarEvent_News extends PostCalendar_PostCalendarEvent
      */
     public static function scheduler()
     {
-//        $today = DateUtil::getDatetime(null, '%Y-%m-%d');
-        $today = date('Y-m-d');
-//        $time = DateUtil::getDatetime(null, '%H:%M:%S');
-        $time = date('H:i:s');
-        ModUtil::dbInfoLoad('PostCalendar');
-        $dbtables = DBUtil::getTables();
-        $columns = $dbtables['postcalendar_events_column'];
-        $where = "WHERE $columns[hooked_modulename] = 'news'
-                  AND $columns[eventstatus] = -1
-                  AND $columns[eventDate] <= '$today'
-                  AND $columns[startTime] <= '$time'";
-        $object = array('eventstatus' => 1);
-        DBUtil::updateObject($object, 'postcalendar_events', $where, 'eid');
+        $_em = ServiceUtil::getService('doctrine.entitymanager');
+        $dql = "UPDATE PostCalendar_Entity_CalendarEvent a " .
+               "SET a.eventstatus = :newstatus " .
+               "WHERE a.hooked_modulename = :modname " .
+               "AND a.eventstatus = :oldstatus " .
+               "AND a.eventStart <= :now";
+        $query = $_em->createQuery($dql);
+        $query->setParameters(array(
+            'newstatus' => PostCalendar_Entity_CalendarEvent::APPROVED,
+            'modname' => 'news',
+            'oldstatus' => PostCalendar_Entity_CalendarEvent::HIDDEN,
+            'now' => new DateTime(),
+        ));
+        try {
+            $query->getResult();
+            $_em->clear();
+        } catch (Exception $e) {
+            LogUtil::registerError($e->getMessage());
+        }
     }
 
 }

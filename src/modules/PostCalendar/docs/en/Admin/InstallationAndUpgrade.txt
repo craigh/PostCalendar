@@ -1,0 +1,67 @@
+# Installation
+
+To install PostCalendar simply unpack the distribution inside your Zikula modules 
+directory. This will create the ./modules/PostCalendar directory and should contain 
+all the files of the distribution.
+
+Now, enter the administration portion of your Zikula site:
+
+* Select MODULES Administration
+* Find the PostCalendar entry in the list
+* Click INSTALL (the green arrow) 
+
+You should now have a fully functioning PostCalendar installation.
+
+You'll want to enter your site's Administration and configure PostCalendar before 
+you start to enter events. The installation will set defaults for the calendar so 
+that it works, but in order to better suit your needs, it's best to change these 
+as early as possible.
+
+# Upgrade
+
+## Upgrading from old versions
+
+PostCalendar 8.0.x supports upgrades from version 7.0.x and newer. If you are using 
+an older version, you must upgrade to version 7.0.1 first before upgrading to 8.0.0.
+You can download earlier versions at
+
+https://github.com/craigh/PostCalendar/downloads
+
+If you are upgrading from PostNuke it may be painful :-) I suggest upgrading Zikula 
+to 1.1.2 via the migration distribution, then upgrading PostCalendar to 5.5.3. 
+Then upgrade Zikula to 1.2.3 and upgrade PostCalendar to 6.1.0. Then upgrade to 
+the most recent version of Zikula and PostCalendar 7.0.1, then PostCalendar 8.0.0.
+
+Backup your database before continuing with the upgrade.
+
+NOTICE: PostCalendar v6.0.0 could take a very long time to upgrade because it migrates 
+every event to the new categories system as well as making several other database 
+changes. Please be patient as it completes the upgrade process, it could take several 
+minutes depending on the number of events you have.
+
+## Upgrading from 7.0.x to 8.0.0
+
+To upgrade PostCalendar you should first make a backup of your current Database 
+tables (using a tool like phpMyAdmin) and also backup your current PostCalendar 
+installation. This will be useful in the event an upgrade does not work for you.
+
+Next, remove the existing PostCalendar files completely (if they are there). This 
+is important because there are many extra files in the old installation that should 
+be removed.
+
+Next, unpack the PostCalendar distribution inside your Zikula modules directory. 
+This will create the modules/PostCalendar directory and place all the necessary 
+files there. (note: if you downloaded your module from the Zikula Extensions database, 
+then you should unpack your module from your Zikula root directory.)
+
+Using the standard Zikula Module upgrade method, upgrade your module.
+
+* Select MODULES Administration
+* Click the upgrade link. 
+
+NOTICE: PostCalendar v8.0.0 could take a very long time to upgrade because it
+has to update every event with new information. Please be patient as it completes
+the upgrade process.
+
+Please note that the use of category colors has changed in PC 8.0.0. You may need 
+to adjust your category and text colors for their new usage.
