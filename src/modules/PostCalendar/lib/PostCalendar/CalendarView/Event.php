@@ -103,16 +103,16 @@ class PostCalendar_CalendarView_Event extends PostCalendar_CalendarView_Abstract
 
         // create and return template
         $this->view->assign('loaded_event', $this->event);
+        $edit = ((SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADD)
+                && (UserUtil::getVar('uid') == $this->event['aid']))
+                || SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN));
+        $this->view->assign('EVENT_CAN_EDIT', $edit);
         if ($this->popup) {
             $this->view->assign('popup', true)
                     ->display('event/view.tpl');
             return true;
         } else {
-            $edit = ((SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADD)
-                    && (UserUtil::getVar('uid') == $this->event['aid']))
-                    || SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN));
-            $this->view->assign('EVENT_CAN_EDIT', $edit)
-                    ->assign('navBar', $this->navBar);
+            $this->view->assign('navBar', $this->navBar);
             return $this->view->fetch($this->template);
         }
     }
