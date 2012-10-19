@@ -1,4 +1,5 @@
-{if ((!empty($smarty.get.viewtype) && ($smarty.get.viewtype != 'year')) || (empty($smarty.get.viewtype) && ($modvars.PostCalendar.pcDefaultView != 'year')))}
+{if ((!empty($smarty.get.viewtype) && (($smarty.get.viewtype != 'year') && ($smarty.get.viewtype != 'event'))) 
+|| (empty($smarty.get.viewtype) && ($modvars.PostCalendar.pcDefaultView != 'year')))}
 <div style='float:right;padding-top:3px;'>
     <button id='pcViewCatLegendButton'>{gt text='View category legend'}</button>
     <div id='pcCategoryLegend' style='display:none;'>
