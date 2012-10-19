@@ -176,7 +176,7 @@ a.postcalendar_nav_text_selected:hover {
 }
 #pcnav_datepicker,
 #pcnav_filterpicker {
-    background: url("javascript/jquery-ui/themes/cupertino/images/ui-bg_glass_60_eeeeee_1x400.png") repeat-x scroll 50% 50% #EEEEEE;
+    background-color: #EEEEEE;
     border: 1px solid #CCCCCC;
     border-right: 0;
     color: #3383BB;
