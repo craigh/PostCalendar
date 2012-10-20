@@ -67,6 +67,7 @@ class PostCalendar_Util
                     'event_city' => '',
                     'event_state' => '',
                     'event_postal' => '')),
+            'pcTimeItExists' => self::timeItExists(),
             'pcTimeItMigrateComplete' => false,
             'pcAllowedViews' => array(
                 'today',
@@ -135,4 +136,22 @@ class PostCalendar_Util
         }
     }
 
+    /**
+     * Checks if there is a TimeIt table in database
+     *
+     * @return bool
+     */
+    public static function timeItExists()
+    {
+        $entityManager = ServiceUtil::getService('doctrine.entitymanager');
+        $schema = $entityManager->getConnection()->getSchemaManager();
+
+        $prefix = System::getVar('prefix', '');
+        if (!empty($prefix)) {
+            $prefix = $prefix . '_';
+        }
+        $timeItExists = $schema->tablesExist(array("{$prefix}timeit_events"));
+
+        return $timeItExists;
+    }
 }
