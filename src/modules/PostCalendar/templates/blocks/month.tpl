@@ -39,6 +39,8 @@
                     {else}
                         {assign var="titles" value="$titles`$event.title`<br /><br />"}
                     {/if}
+                {foreachelse}
+                    {gt text='no events' assign='titles'}
                 {/foreach}
             {else}
                 {gt text="event" plural="events" count=$numberofevents assign="titlelabel"}
@@ -56,7 +58,7 @@
                 {/if}
                 {pc_url full=true class=$classname action="day" date=$date title=$titles|safetext display=$date|date_format:"%e"}
             {else}
-                {pc_url full=true class="blockevent-none" action="day" date=$date display=$date|date_format:"%e"}
+                {pc_url full=true class="blockevent-none" action="day" date=$date title=$titles display=$date|date_format:"%e"}
             {/if}
         </td>
         {/foreach}
