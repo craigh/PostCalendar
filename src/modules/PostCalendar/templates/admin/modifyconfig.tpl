@@ -164,13 +164,13 @@
     {if !$modvars.PostCalendar.pcTimeItMigrateComplete}
     <fieldset>
         <legend>{gt text='TimeIt Migration'}</legend>
-        <p class="z-informationmsg">{gt text='PostCalendar can import events from TimeIt module. To perform the import, PostCalendar must detect a TimeIt database table, named "[prefix]timeit_events". Below you will find information on whether TimeIt module was detected and what was the exact name of searched table. If the TimeIt table exists, but has different name than the one specified below - rename it and click "Check again".'}</p>
+        <p class="z-informationmsg">{gt text='PostCalendar can import events from TimeIt module. To perform the import, PostCalendar must detect a TimeIt database table named "[prefix]timeit_events". Below you will find information on whether the TimeIt module table was detected and what exact table name was searched for. If your TimeIt table exists but has different name than the one specified below, rename it and click "Check again".'}</p>
         <div class="z-formrow">
-            <span class="z-label">TimeIt table name</span>
+            <span class="z-label">Expected TimeIt table name</span>
             <div><strong>{$timeit_table}</strong></div>
         </div>
         <div class="z-formrow">
-            <span class="z-label">TimeIt detected</span>
+            <span class="z-label">TimeIt table detected</span>
             <div>
                 {if $modvars.PostCalendar.pcTimeItExists}
                     <strong>{gt text='Yes'}</strong>
