@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Zikula 1.x\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-10-14 21:14-0400\n"
+"POT-Creation-Date: 2012-10-23 23:09-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -28,15 +28,15 @@ msgstr ""
 msgid "Event List"
 msgstr ""
 
-#: lib/PostCalendar/Api/Admin.php:31 lib/PostCalendar/Controller/Admin.php:128
+#: lib/PostCalendar/Api/Admin.php:31 lib/PostCalendar/Controller/Admin.php:134
 msgid "Approved Events"
 msgstr ""
 
-#: lib/PostCalendar/Api/Admin.php:33 lib/PostCalendar/Controller/Admin.php:129
+#: lib/PostCalendar/Api/Admin.php:33 lib/PostCalendar/Controller/Admin.php:135
 msgid "Hidden Events"
 msgstr ""
 
-#: lib/PostCalendar/Api/Admin.php:35 lib/PostCalendar/Controller/Admin.php:130
+#: lib/PostCalendar/Api/Admin.php:35 lib/PostCalendar/Controller/Admin.php:136
 msgid "Queued Events"
 msgstr ""
 
@@ -52,19 +52,19 @@ msgstr ""
 msgid "Event default values"
 msgstr ""
 
-#: lib/PostCalendar/Api/Admin.php:59
+#: lib/PostCalendar/Api/Admin.php:60 templates/admin/modifyconfig.tpl:177
 msgid "Migrate TimeIt"
 msgstr ""
 
-#: lib/PostCalendar/Api/Admin.php:106 templates/email/adminnotify.tpl:1
+#: lib/PostCalendar/Api/Admin.php:108 templates/email/adminnotify.tpl:1
 msgid "Notice: PostCalendar submission/change"
 msgstr ""
 
-#: lib/PostCalendar/Api/Admin.php:111
+#: lib/PostCalendar/Api/Admin.php:113
 msgid "Done! Sent administrator notification e-mail message."
 msgstr ""
 
-#: lib/PostCalendar/Api/Admin.php:114
+#: lib/PostCalendar/Api/Admin.php:116
 msgid "Error! Could not send administrator notification e-mail message."
 msgstr ""
 
@@ -304,7 +304,7 @@ msgid "inactive"
 msgstr ""
 
 #: lib/PostCalendar/CalendarView/Navigation.php:164
-#: templates/user/footer.tpl:2
+#: templates/user/footer.tpl:4
 msgid "View category legend"
 msgstr ""
 
@@ -356,147 +356,147 @@ msgstr ""
 msgid "Over %s months."
 msgstr ""
 
-#: lib/PostCalendar/Controller/Admin.php:120
+#: lib/PostCalendar/Controller/Admin.php:126
 msgid "With selected:"
 msgstr ""
 
-#: lib/PostCalendar/Controller/Admin.php:121
+#: lib/PostCalendar/Controller/Admin.php:127
 msgid "View"
 msgstr ""
 
-#: lib/PostCalendar/Controller/Admin.php:122
+#: lib/PostCalendar/Controller/Admin.php:128
 msgid "Approve"
 msgstr ""
 
-#: lib/PostCalendar/Controller/Admin.php:123
+#: lib/PostCalendar/Controller/Admin.php:129
 msgid "Hide"
 msgstr ""
 
-#: lib/PostCalendar/Controller/Admin.php:124
+#: lib/PostCalendar/Controller/Admin.php:130
 #: templates/event/deleteeventconfirm.tpl:7
 msgid "Delete"
 msgstr ""
 
-#: lib/PostCalendar/Controller/Admin.php:127
+#: lib/PostCalendar/Controller/Admin.php:133
 msgid "All Events"
 msgstr ""
 
-#: lib/PostCalendar/Controller/Admin.php:151
+#: lib/PostCalendar/Controller/Admin.php:157
 msgid "Please select an event."
 msgstr ""
 
-#: lib/PostCalendar/Controller/Admin.php:173 templates/admin/eventrevue.tpl:6
+#: lib/PostCalendar/Controller/Admin.php:179 templates/admin/eventrevue.tpl:6
 msgid "view"
 msgstr ""
 
-#: lib/PostCalendar/Controller/Admin.php:174
+#: lib/PostCalendar/Controller/Admin.php:180
 msgid "approve"
 msgstr ""
 
-#: lib/PostCalendar/Controller/Admin.php:175
+#: lib/PostCalendar/Controller/Admin.php:181
 msgid "hide"
 msgstr ""
 
-#: lib/PostCalendar/Controller/Admin.php:176 templates/event/submit.tpl:166
+#: lib/PostCalendar/Controller/Admin.php:182 templates/event/submit.tpl:166
 #: templates/event/submit.tpl:182
 msgid "delete"
 msgstr ""
 
-#: lib/PostCalendar/Controller/Admin.php:180
+#: lib/PostCalendar/Controller/Admin.php:186
 #, php-format
 msgid "Do you really want to %s this event?"
 msgid_plural "Do you really want to %s these events?"
 msgstr[0] ""
 msgstr[1] ""
 
-#: lib/PostCalendar/Controller/Admin.php:197
-#: lib/PostCalendar/Controller/Admin.php:225
+#: lib/PostCalendar/Controller/Admin.php:203
+#: lib/PostCalendar/Controller/Admin.php:231
 msgid "Error! Could not load default values."
 msgstr ""
 
-#: lib/PostCalendar/Controller/Admin.php:209
+#: lib/PostCalendar/Controller/Admin.php:215
 msgid "Done! PostCalendar configuration reset to use default values."
 msgstr ""
 
-#: lib/PostCalendar/Controller/Admin.php:268
+#: lib/PostCalendar/Controller/Admin.php:274
 msgid "Done! Updated the PostCalendar configuration."
 msgstr ""
 
-#: lib/PostCalendar/Controller/Admin.php:285
+#: lib/PostCalendar/Controller/Admin.php:291
 msgid "Error! An the eid must be passed as an array."
 msgstr ""
 
-#: lib/PostCalendar/Controller/Admin.php:306
+#: lib/PostCalendar/Controller/Admin.php:312
 #, php-format
 msgid "Done! %1$s event %2$s."
 msgid_plural "Done! %1$s events %2$s."
 msgstr[0] ""
 msgstr[1] ""
 
-#: lib/PostCalendar/Controller/Admin.php:308
+#: lib/PostCalendar/Controller/Admin.php:314
 #, php-format
 msgid "Error! Could not %s event."
 msgid_plural "Error! Could not %s events."
 msgstr[0] ""
 msgstr[1] ""
 
-#: lib/PostCalendar/Controller/Admin.php:360
+#: lib/PostCalendar/Controller/Admin.php:366
 msgid "Done! Updated the PostCalendar event default values."
-msgstr ""
-
-#: lib/PostCalendar/Controller/Admin.php:386
-#, php-format
-msgid "View '%s'"
 msgstr ""
 
 #: lib/PostCalendar/Controller/Admin.php:392
 #, php-format
+msgid "View '%s'"
+msgstr ""
+
+#: lib/PostCalendar/Controller/Admin.php:398
+#, php-format
 msgid "Hide '%s'"
 msgstr ""
 
-#: lib/PostCalendar/Controller/Admin.php:396
+#: lib/PostCalendar/Controller/Admin.php:402
 #, php-format
 msgid "Approve '%s'"
 msgstr ""
 
-#: lib/PostCalendar/Controller/Admin.php:400
+#: lib/PostCalendar/Controller/Admin.php:406
 #, php-format
 msgid "Edit '%s'"
 msgstr ""
 
-#: lib/PostCalendar/Controller/Admin.php:406
+#: lib/PostCalendar/Controller/Admin.php:412
 #, php-format
 msgid "Delete '%s'"
 msgstr ""
 
-#: lib/PostCalendar/Controller/Admin.php:422
+#: lib/PostCalendar/Controller/Admin.php:428
 msgid ""
 "TimeIt events have already been migrated. You can only run the migration "
 "once."
 msgstr ""
 
-#: lib/PostCalendar/Controller/Admin.php:435
+#: lib/PostCalendar/Controller/Admin.php:441
 #, php-format
 msgid ""
 "No TimeIt events found in the database. The TimeIt table should be called %s "
 "in the database. Mind the table prefix"
 msgstr ""
 
-#: lib/PostCalendar/Controller/Admin.php:441
+#: lib/PostCalendar/Controller/Admin.php:447
 msgid "Imported"
 msgstr ""
 
-#: lib/PostCalendar/Controller/Admin.php:441
+#: lib/PostCalendar/Controller/Admin.php:447
 msgid "TimeIt imported"
 msgstr ""
 
-#: lib/PostCalendar/Controller/Admin.php:601
+#: lib/PostCalendar/Controller/Admin.php:607
 #, php-format
 msgid "TimeIt events have been migrated. In total %s events completed."
 msgstr ""
 
 #: lib/PostCalendar/Controller/Event.php:100
-#: templates/admin/eventdefaults.tpl:113 templates/admin/modifyconfig.tpl:165
+#: templates/admin/eventdefaults.tpl:113 templates/admin/modifyconfig.tpl:188
 #: templates/event/submit.tpl:298 templates/hooks/modifyconfig.tpl:44
 msgid "Save"
 msgstr ""
@@ -634,31 +634,31 @@ msgid ""
 "Year\", you must manually change it again if desired."
 msgstr ""
 
-#: lib/PostCalendar/Installer.php:237
+#: lib/PostCalendar/Installer.php:242
 msgid "PostCalendar Installed"
 msgstr ""
 
-#: lib/PostCalendar/Installer.php:238
+#: lib/PostCalendar/Installer.php:243
 msgid ""
 "On this date, the PostCalendar module was installed. Thank you for trying "
 "PostCalendar! This event can be safely deleted if you wish."
 msgstr ""
 
-#: lib/PostCalendar/Installer.php:265 lib/PostCalendar/Version.php:19
-#: templates/hooks/view.tpl:1 templates/user/footer.tpl:15
-#: templates/user/footer.tpl:16
+#: lib/PostCalendar/Installer.php:270 lib/PostCalendar/Version.php:19
+#: templates/hooks/view.tpl:1 templates/user/footer.tpl:18
+#: templates/user/footer.tpl:19
 msgid "PostCalendar"
 msgstr ""
 
-#: lib/PostCalendar/Installer.php:265 lib/PostCalendar/Version.php:21
+#: lib/PostCalendar/Installer.php:270 lib/PostCalendar/Version.php:21
 msgid "Calendar for Zikula"
 msgstr ""
 
-#: lib/PostCalendar/Installer.php:267
+#: lib/PostCalendar/Installer.php:272
 msgid "Events"
 msgstr ""
 
-#: lib/PostCalendar/Installer.php:267
+#: lib/PostCalendar/Installer.php:272
 msgid "Initial sub-category created on install"
 msgstr ""
 
@@ -870,7 +870,7 @@ msgid "Web site"
 msgstr ""
 
 #: templates/admin/eventdefaults.tpl:114 templates/admin/eventrevue.tpl:22
-#: templates/admin/modifyconfig.tpl:166 templates/event/submit.tpl:300
+#: templates/admin/modifyconfig.tpl:189 templates/event/submit.tpl:300
 #: templates/hooks/modifyconfig.tpl:45
 msgid "Cancel"
 msgstr ""
@@ -879,7 +879,7 @@ msgstr ""
 msgid "Event review"
 msgstr ""
 
-#: templates/admin/eventrevue.tpl:21
+#: templates/admin/eventrevue.tpl:21 templates/admin/modifyconfig.tpl:176
 msgid "Yes"
 msgstr ""
 
@@ -1079,6 +1079,28 @@ msgstr ""
 msgid "E-mail address to send notifications"
 msgstr ""
 
+#: templates/admin/modifyconfig.tpl:166
+msgid "TimeIt Migration"
+msgstr ""
+
+#: templates/admin/modifyconfig.tpl:167
+msgid ""
+"PostCalendar can import events from TimeIt module. To perform the import, "
+"PostCalendar must detect a TimeIt database table named \"[prefix]"
+"timeit_events\". Below you will find information on whether the TimeIt "
+"module table was detected and what exact table name was searched for. If "
+"your TimeIt table exists but has different name than the one specified "
+"below, rename it and click \"Check again\"."
+msgstr ""
+
+#: templates/admin/modifyconfig.tpl:179
+msgid "No"
+msgstr ""
+
+#: templates/admin/modifyconfig.tpl:180
+msgid "Check again"
+msgstr ""
+
 #: templates/admin/showlist.tpl:4
 msgid "Event list"
 msgstr ""
@@ -1099,7 +1121,7 @@ msgid "Status"
 msgstr ""
 
 #: templates/admin/showlist.tpl:18 templates/admin/showlist.tpl:37
-#: templates/user/footer.tpl:4 templates/user/navigation.tpl:34
+#: templates/user/footer.tpl:6 templates/user/navigation.tpl:34
 msgid "Categories"
 msgstr ""
 
@@ -1270,7 +1292,11 @@ msgstr ""
 msgid "Hide block when countdown expires"
 msgstr ""
 
-#: templates/blocks/month.tpl:44
+#: templates/blocks/month.tpl:43
+msgid "no events"
+msgstr ""
+
+#: templates/blocks/month.tpl:46 templates/user/year.tpl:64
 msgid "event"
 msgid_plural "events"
 msgstr[0] ""
@@ -1337,7 +1363,7 @@ msgstr ""
 msgid "from"
 msgstr ""
 
-#: templates/event/deleteeventconfirm.tpl:1 templates/user/event.tpl:18
+#: templates/event/deleteeventconfirm.tpl:1 templates/event/view.tpl:76
 msgid "Delete event"
 msgstr ""
 
@@ -1488,6 +1514,14 @@ msgstr ""
 msgid "Event sharing information"
 msgstr ""
 
+#: templates/event/view.tpl:74
+msgid "Edit event"
+msgstr ""
+
+#: templates/event/view.tpl:75
+msgid "Copy event"
+msgstr ""
+
 #: templates/hooks/delete.tpl:1
 msgid "Deleting this item will also delete associated"
 msgstr ""
@@ -1566,18 +1600,10 @@ msgstr ""
 msgid "next %s years"
 msgstr ""
 
-#: templates/user/day.tpl:41 templates/user/event.tpl:28
+#: templates/user/day.tpl:41 templates/user/event.tpl:20
 #: templates/user/list.tpl:51 templates/user/month.tpl:82
-#: templates/user/week.tpl:44 templates/user/year.tpl:94
+#: templates/user/week.tpl:44 templates/user/year.tpl:97
 msgid "Return"
-msgstr ""
-
-#: templates/user/event.tpl:16
-msgid "Edit event"
-msgstr ""
-
-#: templates/user/event.tpl:17
-msgid "Copy event"
 msgstr ""
 
 #: templates/user/list.tpl:12
