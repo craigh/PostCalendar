@@ -68,7 +68,7 @@ class PostCalendar_Util
                     'event_state' => '',
                     'event_postal' => '')),
             'pcTimeItExists' => self::timeItExists(),
-            'pcTimeItMigrateComplete' => false,
+            // 'pcTimeItMigrateComplete' => false, --> removed to prevent reset
             'pcAllowedViews' => array(
                 'today',
                 'day',

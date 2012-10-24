@@ -185,6 +185,9 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
                 $this->setVar('pcAllowedViews', $defaultsettings['pcAllowedViews']);
                 // add pcTimeItExists
                 $this->setVar('pcTimeItExists', $defaultsettings['pcTimeItExists']);
+                // add pcTimeItMigrateComplete
+                // there is no default setting for this to prevent a resetDefault to allow double migration
+                $this->setVar('pcTimeItMigrateComplete', false);
                 // remove pcNavDateOrder
                 $this->delVar('pcNavDateOrder');
                 // remove enablecategorization
