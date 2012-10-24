@@ -38,6 +38,12 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
     {
         $this->throwForbiddenUnless(SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN), LogUtil::getErrorMsgPermission());
 
+        $prefix = System::getVar('prefix', '');
+        if (!empty($prefix)) {
+            $prefix = $prefix . '_';
+        }
+        $this->view->assign('timeit_table', "{$prefix}timeit_events");
+
         return $this->view->fetch('admin/modifyconfig.tpl');
     }
 
@@ -603,4 +609,14 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
         $this->redirect(ModUtil::url('PostCalendar', 'admin', 'main'));
     }
 
+    public function checkTimeIt()
+    {
+        $this->throwForbiddenUnless(SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN), LogUtil::getErrorMsgPermission());
+
+        $timeItExists = PostCalendar_Util::timeItExists();
+        $this->setVar('pcTimeItExists', $timeItExists);
+
+        $this->redirect(ModUtil::url('PostCalendar', 'admin', 'modifyconfig'));
+        return true;
+    }
 }

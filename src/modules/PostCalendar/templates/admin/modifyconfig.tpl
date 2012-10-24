@@ -161,6 +161,29 @@
 			<span><input type="text" size="30" value="{$modvars.PostCalendar.pcNotifyEmail}" id="pcNotifyEmail" name="pcNotifyEmail" /></span>
 		</div>
     </fieldset>
+    {if !$modvars.PostCalendar.pcTimeItMigrateComplete}
+    <fieldset>
+        <legend>{gt text='TimeIt Migration'}</legend>
+        <p class="z-informationmsg">{gt text='PostCalendar can import events from TimeIt module. To perform the import, PostCalendar must detect a TimeIt database table, named "[prefix]timeit_events". Below you will find information on whether TimeIt module was detected and what was the exact name of searched table. If the TimeIt table exists, but has different name than the one specified below - rename it and click "Check again".'}</p>
+        <div class="z-formrow">
+            <span class="z-label">TimeIt table name</span>
+            <div><strong>{$timeit_table}</strong></div>
+        </div>
+        <div class="z-formrow">
+            <span class="z-label">TimeIt detected</span>
+            <div>
+                {if $modvars.PostCalendar.pcTimeItExists}
+                    <strong>{gt text='Yes'}</strong>
+                    <a href="{modurl modname="PostCalendar" type="admin" func='migrateTimeIt'}" class="z-action-icon z-icon-es-regenerate">{gt text="Migrate TimeIt"}</a>
+                {else}
+                    <strong>{gt text='No'}</strong>
+                    <a href="{modurl modname="PostCalendar" type="admin" func='checkTimeIt'}" class="z-action-icon z-icon-es-search">{gt text="Check again"}</a>
+                {/if}
+            </div>
+            <p class="z-formnote"></p>
+        </div>
+    </fieldset>
+    {/if}
     <div class="z-buttons z-formbuttons">
         {button src="button_ok.png" set="icons/extrasmall" class='z-btgreen' __alt="Save" __title="Save" __text="Save"}
         <a class='z-btred' href="{modurl modname="PostCalendar" type="admin" func='listevents'}" title="{gt text="Cancel"}">{img modname='core' src="button_cancel.png" set="icons/extrasmall" __alt="Cancel" __title="Cancel"} {gt text="Cancel"}</a>

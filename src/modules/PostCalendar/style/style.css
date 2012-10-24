@@ -421,3 +421,6 @@ div.postcalendar_featuredevent div.eventdetails span.location{
 #eventend_time_display {
     width: 8em;
 }
+.z-action-icon {
+    margin-left: 2.5em;
+}
