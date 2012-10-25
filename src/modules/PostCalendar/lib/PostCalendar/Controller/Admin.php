@@ -454,7 +454,7 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
                 throw new Zikula_Exception("Cannot insert Category Registry entry.");
             }
         } else {
-            $this->throwNotFound("Root category not found.");
+            $this->throwNotFound("TimeIt Root category /__SYSTEM__/Modules/TimeIt not found. This is needed for the import of the mapped categories into PostCalendar.");
         }
 
         // obtain some category ids
