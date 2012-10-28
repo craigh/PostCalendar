@@ -609,6 +609,10 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
         $this->redirect(ModUtil::url('PostCalendar', 'admin', 'main'));
     }
 
+    /**
+     * Check to see if TimeIt table exists
+     * @return boolean 
+     */
     public function checkTimeIt()
     {
         $this->throwForbiddenUnless(SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN), LogUtil::getErrorMsgPermission());
