@@ -616,7 +616,7 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
         $timeItExists = PostCalendar_Util::timeItExists();
         $this->setVar('pcTimeItExists', $timeItExists);
 
-        $this->redirect(ModUtil::url('PostCalendar', 'admin', 'modifyconfig'));
+        $this->redirect(ModUtil::url('PostCalendar', 'admin', 'modifyconfig#timeit'));
         return true;
     }
 }
