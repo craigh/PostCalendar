@@ -62,7 +62,6 @@
                     displayelement='eventstart_display' 
                     object='postcalendar_events' 
                     valuestorageelement='eventstart_date' 
-                    maxdate=$loaded_event.eventStart 
                     theme=$jquerytheme 
                     displayformat_datetime=$modvars.PostCalendar.pcDateFormats.date 
                     displayformat_javascript=$modvars.PostCalendar.pcDateFormats.javascript
