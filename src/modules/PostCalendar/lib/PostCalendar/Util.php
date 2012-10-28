@@ -150,7 +150,7 @@ class PostCalendar_Util
         if (!empty($prefix)) {
             $prefix = $prefix . '_';
         }
-        $timeItExists = $schema->tablesExist(array("{$prefix}timeit_events"));
+        $timeItExists = $schema->tablesExist(array("{$prefix}TimeIt_events"));
 
         return $timeItExists;
     }

@@ -42,7 +42,7 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
         if (!empty($prefix)) {
             $prefix = $prefix . '_';
         }
-        $this->view->assign('timeit_table', "{$prefix}timeit_events");
+        $this->view->assign('timeit_table', "{$prefix}TimeIt_events");
 
         return $this->view->fetch('admin/modifyconfig.tpl');
     }
@@ -435,10 +435,10 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
             $prefix = $prefix . '_';
         }
         $connection = $this->entityManager->getConnection();
-        $sql = "SELECT * FROM {$prefix}timeit_events";
+        $sql = "SELECT * FROM {$prefix}TimeIt_events";
         $events = $connection->fetchAll($sql);
         if (empty($events)) {
-            LogUtil::registerError($this->__f('No TimeIt events found in the database. The TimeIt table should be called %s in the database. Mind the table prefix', $prefix . 'timeit_events'));
+            LogUtil::registerError($this->__f('No TimeIt events found in the database. The TimeIt table should be called %s in the database. Mind the table prefix', $prefix . 'TimeIt_events'));
             $this->redirect(ModUtil::url('PostCalendar', 'admin', 'main'));
         }
 
