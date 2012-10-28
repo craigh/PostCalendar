@@ -128,7 +128,7 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
                     || (!CategoryUtil::hasCategoryAccess($event['categories'], 'PostCalendar'))) {
                 continue;
             }
-            $occurances = $this->getEventOccurances($event, true);
+            $occurances = $this->getEventOccurances(array('event' => $event, 'includepast' => true));
             foreach ($occurances as $date) {
                 if (isset($days[$date])) {
                     $days[$date][] = $this->formateventarrayfordisplay(array(
@@ -594,14 +594,18 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
      * find all occurances of an event between start and stop dates of event
      * by default, do not include occurances before today.
      * 
-     * @param array $event
-     * @param mixed $start
-     * @param mixed $end
-     * @param boolean $includePast
+     * @param array $args['event']
+     * @param boolean $args['includepast']
      * @return array dates
      */
-    public function getEventOccurances($event, $includePast = false)
+    public function getEventOccurances($args)
     {
+        $event = $args['event'];
+        if (!isset($event)) {
+            return LogUtil::registerArgsError();
+        }
+        $includePast = isset($args['includepast']) ? $args['includepast'] : false;
+        unset ($args);
         $eventStart = clone $event['eventStart'];
         $defaultEnd = clone $event['eventStart'];
         $eventEnd = isset($event['endDate']) ? $event['endDate'] : $defaultEnd->modify("+2 years");

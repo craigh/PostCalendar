@@ -135,9 +135,7 @@ class PostCalendar_CalendarView_Ical extends PostCalendar_CalendarView_List
                         // do nothing
                         break;
                     case CalendarEvent::RECURRTYPE_CONTINUOUS :
-                        // reset end date +1 day
-                        $event['eventEnd']->modify("+1 day");
-                        $vevent->DTEND->setDateTime($event['eventEnd'], VObject\Property\DateTime::LOCALTZ);
+                        // do nothing
                         break;
                     case CalendarEvent::RECURRTYPE_REPEAT:
                         $freq = null;
@@ -161,7 +159,9 @@ class PostCalendar_CalendarView_Ical extends PostCalendar_CalendarView_List
                         $interval = $event['recurrspec']['event_repeat_freq'];
 
                         $until = clone $event['endDate'];
-                        $until->modify("+1 day");
+                        if (!$event['alldayevent']) {
+                            $until->modify("+1 day");
+                        }
                         $until->setTimeZone(new DateTimeZone('UTC'));
                         $until = $until->format('Ymd\\THis\\Z');
 
@@ -169,6 +169,20 @@ class PostCalendar_CalendarView_Ical extends PostCalendar_CalendarView_List
                         break;
                     case CalendarEvent::RECURRTYPE_REPEAT_ON :
                         $freq = 'MONTHLY';
+                        // change eventstart to first occurance (it is possibly set to different day)
+                        $occurances = ModUtil::apiFunc('PostCalendar', 'event', 'getEventOccurances', array('event' => $event, 'includepast' => true));
+                        $newEventStart = DateTime::createFromFormat('Y-m-d', $occurances[0]);
+                        if ($event['alldayevent']) {
+                            $vevent->DTSTART->setDateTime($newEventStart, VObject\Property\DateTime::DATE);
+                            $vevent->DTEND->setDateTime($newEventStart, VObject\Property\DateTime::DATE);
+                        } else {
+                            $newEventStart->setTime($event['eventStart']->format('H'), $event['eventStart']->format('i'));
+                            $vevent->DTSTART->setDateTime($newEventStart, VObject\Property\DateTime::LOCALTZ);
+                            // reset time to end time
+                            $newEventStart->setTime($event['eventEnd']->format('H'), $event['eventEnd']->format('i'));
+                            $vevent->DTEND->setDateTime($newEventStart, VObject\Property\DateTime::LOCALTZ);
+                        }
+
                         $interval = $event['recurrspec']['event_repeat_on_freq'];
 
                         $dayList = array(
@@ -191,7 +205,7 @@ class PostCalendar_CalendarView_Ical extends PostCalendar_CalendarView_List
                             case EventAPI::REPEAT_ON_LAST :
                                 $byDay = '-1';
                         }
-                        $byDay.=$dayList[$event['recurrspec']['event_repeat_on_day']];
+                        $byDay .= $dayList[$event['recurrspec']['event_repeat_on_day']];
 
                         $until = clone $event['endDate'];
                         $until->modify("+1 day");

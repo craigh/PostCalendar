@@ -64,7 +64,7 @@ class PostCalendar_CalendarView_FeaturedEventBlock extends PostCalendar_Calendar
     public function setup()
     {
         parent::setup();
-        $alleventdates = ModUtil::apiFunc('PostCalendar', 'event', 'getEventOccurances', $this->event); // gets all FUTURE occurances
+        $alleventdates = ModUtil::apiFunc('PostCalendar', 'event', 'getEventOccurances', array('event' => $this->event)); // gets all FUTURE occurances
         // assign next occurance to eventStart
         $this->event['eventStart'] = DateTime::createFromFormat('Y-m-d', array_shift($alleventdates));
 
