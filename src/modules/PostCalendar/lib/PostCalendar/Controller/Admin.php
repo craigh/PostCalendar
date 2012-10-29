@@ -442,23 +442,19 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
             $this->redirect(ModUtil::url('PostCalendar', 'admin', 'main'));
         }
 
-        // create subcategory for imported events
-        if (!CategoryUtil::getCategoryByPath('/__SYSTEM__/Modules/PostCalendar/Imported')) {
-            CategoryUtil::createCategory('/__SYSTEM__/Modules/PostCalendar', 'Imported', null, $this->__('Imported'), $this->__('TimeIt imported'));
-        }
-        // get the category path to insert PostCalendar categories
-        $rootcat = CategoryUtil::getCategoryByPath('/__SYSTEM__/Modules/TimeIt');
+        // get the category path to the TimeIt categories (default Global in TimeIt 2.1.1) and register that for PostCalendar
+        $rootcat = CategoryUtil::getCategoryByPath('/__SYSTEM__/Modules/Global');
         if ($rootcat) {
-            // create an entry in the categories registry to the Main property
+            // create an entry in the categories registry to the TimeItImport property
             if (!CategoryRegistryUtil::insertEntry('PostCalendar', 'CalendarEvent', 'TimeItImport', $rootcat['id'])) {
                 throw new Zikula_Exception("Cannot insert Category Registry entry.");
             }
         } else {
-            $this->throwNotFound("TimeIt Root category /__SYSTEM__/Modules/TimeIt not found. This is needed for the import of the mapped categories into PostCalendar.");
+            $this->throwNotFound("Default TimeIt root category /__SYSTEM__/Modules/Global not found. This is needed for the import of the assigned categories into PostCalendar.");
         }
 
-        // obtain some category ids
-        $catMain = CategoryUtil::getCategoryByPath('/__SYSTEM__/Modules/PostCalendar/Imported');
+    	// the default PC category for events without category.
+        $defaultCat = CategoryUtil::getCategoryByPath('/__SYSTEM__/Modules/PostCalendar/Events');
 
         $eventCount = 0;
         $flushCount = 0; // flush to Doctrine every 25 events
@@ -504,6 +500,11 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
                 $end = DateTime::createFromFormat('Y-m-d H:i', $event['pn_startDate'] . " " . $event['pn_allDayStart']);
                 $end->add(new DateInterval('PT' . $duration . 'S'));
             }
+			if ($event['pn_repeatType'] == 1) {
+				$endDate = DateTime::createFromFormat('Y-m-d', $event['pn_endDate']);
+			} else {
+				$endDate = null;
+			}
 
             // extract location and contact data
             $data = unserialize($event['pn_data']);
@@ -522,6 +523,12 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
             $catRegIds = CategoryRegistryUtil::getRegisteredModuleCategoriesIds('TimeIt', 'TimeIt_events');
             $sql = "SELECT category_id FROM `categories_mapobj` WHERE obj_id=" . $event['pn_id'] . " AND reg_id=" . $catRegIds['Main'];
             $cats = $connection->fetchAll($sql);
+			// check if a category was set in TimeIt
+			if (isset($cats[0]) && isset($cats[0]['category_id'])) {
+				$eventCat = array('TimeItImport' => $cats[0]['category_id']);
+			} else {
+                $eventCat = array('Main' => $defaultCat['id']);
+			}
 
             // obtain current sharing in TimeIt
             switch ($event['pn_sharing']) {
@@ -545,6 +552,7 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
                 'informant' => $event['pn_cr_uid'],
                 'eventStart' => $start,
                 'eventEnd' => $end,
+				'endDate' => $endDate,
                 'alldayevent' => $event['pn_allDay'],
                 'recurrtype' => $event['pn_repeatType'],
                 'recurrspec' => array('event_repeat_freq' => $event['pn_repeatFrec'],
@@ -562,12 +570,10 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
                 'contname' => $data['plugindata']['ContactTimeIt']['contactPerson'],
                 'contemail' => $data['plugindata']['ContactTimeIt']['email'],
                 'website' => $data['plugindata']['ContactTimeIt']['website'],
-                'fee' => '',
+                'fee' => $data['fee'],
                 'eventstatus' => ($event['pn_status'] != 1 ? CalendarEvent::QUEUED : CalendarEvent::APPROVED),
                 'sharing' => $sharing,
-                'categories' => array(
-                    'Main' => $catMain['id'],
-                    'TimeItImport' => $cats[0]['category_id'])
+                'categories' => $eventCat
             );
 
             // Now insert the created array into PostCalendar via Doctrine
@@ -592,9 +598,10 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
             $this->entityManager->flush();
         }
 
-        // delete old TimeIt data from mapobj
+        // delete old TimeIt entries from categories tables
         $sqls = array();
         $sqls[] = "DELETE FROM categories_mapobj WHERE modname = 'TimeIt' AND tablename = 'TimeIt_events'";
+        $sqls[] = "DELETE FROM categories_registry WHERE modname = 'TimeIt' AND tablename = 'TimeIt_events'";
         foreach ($sqls as $sql) {
             $stmt = $connection->prepare($sql);
             try {
