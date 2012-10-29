@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Zikula 1.x\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-10-23 23:09-0400\n"
+"POT-Creation-Date: 2012-10-28 21:03-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -93,7 +93,7 @@ msgstr ""
 #: templates/blocks/pastevents.tpl:23 templates/blocks/today.tpl:26
 #: templates/blocks/upcoming.tpl:29
 #: templates/contenttype/postcalevents_view.tpl:25
-#: templates/event/submit.tpl:134
+#: templates/event/submit.tpl:133
 msgid "until"
 msgstr ""
 
@@ -152,11 +152,11 @@ msgstr ""
 msgid "Error! The event cannot end before it begins."
 msgstr ""
 
-#: lib/PostCalendar/Api/Event.php:680
+#: lib/PostCalendar/Api/Event.php:684
 msgid "Private"
 msgstr ""
 
-#: lib/PostCalendar/Api/Event.php:683 templates/admin/eventdefaults.tpl:17
+#: lib/PostCalendar/Api/Event.php:687 templates/admin/eventdefaults.tpl:17
 #: templates/event/submit.tpl:51
 msgid "Global"
 msgstr ""
@@ -397,8 +397,8 @@ msgstr ""
 msgid "hide"
 msgstr ""
 
-#: lib/PostCalendar/Controller/Admin.php:182 templates/event/submit.tpl:166
-#: templates/event/submit.tpl:182
+#: lib/PostCalendar/Controller/Admin.php:182 templates/event/submit.tpl:165
+#: templates/event/submit.tpl:181
 msgid "delete"
 msgstr ""
 
@@ -497,15 +497,15 @@ msgstr ""
 
 #: lib/PostCalendar/Controller/Event.php:100
 #: templates/admin/eventdefaults.tpl:113 templates/admin/modifyconfig.tpl:188
-#: templates/event/submit.tpl:298 templates/hooks/modifyconfig.tpl:44
+#: templates/event/submit.tpl:297 templates/hooks/modifyconfig.tpl:44
 msgid "Save"
 msgstr ""
 
-#: lib/PostCalendar/Controller/Event.php:101 templates/event/submit.tpl:299
+#: lib/PostCalendar/Controller/Event.php:101 templates/event/submit.tpl:298
 msgid "Save and Add"
 msgstr ""
 
-#: lib/PostCalendar/Controller/Event.php:102 templates/event/submit.tpl:297
+#: lib/PostCalendar/Controller/Event.php:102 templates/event/submit.tpl:296
 msgid "Preview"
 msgstr ""
 
@@ -810,7 +810,7 @@ msgstr ""
 
 #: templates/admin/eventdefaults.tpl:40 templates/blocks/featuredevent.tpl:62
 #: templates/contenttype/postcalevent_view.tpl:56
-#: templates/event/submit.tpl:223 templates/event/view.tpl:39
+#: templates/event/submit.tpl:222 templates/event/view.tpl:39
 msgid "Fee"
 msgstr ""
 
@@ -824,16 +824,16 @@ msgstr ""
 
 #: templates/admin/eventdefaults.tpl:65 templates/blocks/featuredevent.tpl:45
 #: templates/contenttype/postcalevent_view.tpl:39
-#: templates/event/submit.tpl:233 templates/event/view.tpl:22
+#: templates/event/submit.tpl:232 templates/event/view.tpl:22
 msgid "Location"
 msgstr ""
 
 #: templates/admin/eventdefaults.tpl:67 templates/admin/eventdefaults.tpl:94
-#: templates/event/submit.tpl:235 templates/event/submit.tpl:268
+#: templates/event/submit.tpl:234 templates/event/submit.tpl:267
 msgid "Name"
 msgstr ""
 
-#: templates/admin/eventdefaults.tpl:71 templates/event/submit.tpl:239
+#: templates/admin/eventdefaults.tpl:71 templates/event/submit.tpl:238
 msgid "Street"
 msgstr ""
 
@@ -841,36 +841,36 @@ msgstr ""
 msgid "Street Line 2"
 msgstr ""
 
-#: templates/admin/eventdefaults.tpl:79 templates/event/submit.tpl:247
+#: templates/admin/eventdefaults.tpl:79 templates/event/submit.tpl:246
 msgid "City"
 msgstr ""
 
-#: templates/admin/eventdefaults.tpl:83 templates/event/submit.tpl:251
+#: templates/admin/eventdefaults.tpl:83 templates/event/submit.tpl:250
 msgid "State"
 msgstr ""
 
-#: templates/admin/eventdefaults.tpl:87 templates/event/submit.tpl:255
+#: templates/admin/eventdefaults.tpl:87 templates/event/submit.tpl:254
 msgid "Zipcode"
 msgstr ""
 
-#: templates/admin/eventdefaults.tpl:92 templates/event/submit.tpl:266
+#: templates/admin/eventdefaults.tpl:92 templates/event/submit.tpl:265
 msgid "Contact"
 msgstr ""
 
-#: templates/admin/eventdefaults.tpl:98 templates/event/submit.tpl:272
+#: templates/admin/eventdefaults.tpl:98 templates/event/submit.tpl:271
 msgid "Phone number"
 msgstr ""
 
-#: templates/admin/eventdefaults.tpl:102 templates/event/submit.tpl:276
+#: templates/admin/eventdefaults.tpl:102 templates/event/submit.tpl:275
 msgid "E-mail address"
 msgstr ""
 
-#: templates/admin/eventdefaults.tpl:106 templates/event/submit.tpl:280
+#: templates/admin/eventdefaults.tpl:106 templates/event/submit.tpl:279
 msgid "Web site"
 msgstr ""
 
 #: templates/admin/eventdefaults.tpl:114 templates/admin/eventrevue.tpl:22
-#: templates/admin/modifyconfig.tpl:189 templates/event/submit.tpl:300
+#: templates/admin/modifyconfig.tpl:189 templates/event/submit.tpl:299
 #: templates/hooks/modifyconfig.tpl:45
 msgid "Cancel"
 msgstr ""
@@ -1087,9 +1087,9 @@ msgstr ""
 msgid ""
 "PostCalendar can import events from TimeIt module. To perform the import, "
 "PostCalendar must detect a TimeIt database table named \"[prefix]"
-"timeit_events\". Below you will find information on whether the TimeIt "
-"module table was detected and what exact table name was searched for. If "
-"your TimeIt table exists but has different name than the one specified "
+"TimeIt_events\" (note case). Below you will find information on whether the "
+"TimeIt module table was detected and what exact table name was searched for. "
+"If your TimeIt table exists but has different name than the one specified "
 "below, rename it and click \"Check again\"."
 msgstr ""
 
@@ -1271,7 +1271,7 @@ msgstr ""
 
 #: templates/blocks/featuredevent.tpl:39
 #: templates/contenttype/postcalevent_view.tpl:33
-#: templates/event/submit.tpl:209 templates/event/view.tpl:17
+#: templates/event/submit.tpl:208 templates/event/view.tpl:17
 msgid "Description"
 msgstr ""
 
@@ -1431,74 +1431,74 @@ msgstr ""
 msgid "Starts and Ends"
 msgstr ""
 
-#: templates/event/submit.tpl:81 templates/search/options.tpl:28
+#: templates/event/submit.tpl:80 templates/search/options.tpl:28
 #: templates/user/list.tpl:12
 msgid "to"
 msgstr ""
 
-#: templates/event/submit.tpl:108
+#: templates/event/submit.tpl:107
 msgid "All day"
 msgstr ""
 
-#: templates/event/submit.tpl:113
+#: templates/event/submit.tpl:112
 msgid "Event repeats"
 msgstr ""
 
-#: templates/event/submit.tpl:117
+#: templates/event/submit.tpl:116
 msgid "Repetition settings"
 msgstr ""
 
-#: templates/event/submit.tpl:120
+#: templates/event/submit.tpl:119
 msgid "Repeats every"
 msgstr ""
 
-#: templates/event/submit.tpl:126
+#: templates/event/submit.tpl:125
 msgid "Repeats on"
 msgstr ""
 
-#: templates/event/submit.tpl:129
+#: templates/event/submit.tpl:128
 msgid "of the month, every"
 msgstr ""
 
-#: templates/event/submit.tpl:131
+#: templates/event/submit.tpl:130
 msgid "month(s)"
 msgstr ""
 
-#: templates/event/submit.tpl:149
+#: templates/event/submit.tpl:148
 msgid "Repeat has exceptions"
 msgstr ""
 
-#: templates/event/submit.tpl:154 templates/event/submit.tpl:170
+#: templates/event/submit.tpl:153 templates/event/submit.tpl:169
 msgid "Event does not occur on"
 msgstr ""
 
-#: templates/event/submit.tpl:165 templates/event/submit.tpl:181
+#: templates/event/submit.tpl:164 templates/event/submit.tpl:180
 msgid "add another"
 msgstr ""
 
-#: templates/event/submit.tpl:189
+#: templates/event/submit.tpl:188
 msgid "Category"
 msgid_plural "Categories"
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/event/submit.tpl:214
+#: templates/event/submit.tpl:213
 msgid "formatted with HTML"
 msgstr ""
 
-#: templates/event/submit.tpl:215
+#: templates/event/submit.tpl:214
 msgid "Permitted HTML tags"
 msgstr ""
 
-#: templates/event/submit.tpl:229
+#: templates/event/submit.tpl:228
 msgid "Event has location"
 msgstr ""
 
-#: templates/event/submit.tpl:243
+#: templates/event/submit.tpl:242
 msgid "Street (line 2)"
 msgstr ""
 
-#: templates/event/submit.tpl:262
+#: templates/event/submit.tpl:261
 msgid "Event has contact"
 msgstr ""
 
