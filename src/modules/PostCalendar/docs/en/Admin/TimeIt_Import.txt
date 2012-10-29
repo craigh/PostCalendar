@@ -7,14 +7,28 @@ performed one time.
 **Before proceeding make sure you have a good backup of your full database! 
 Since categories are imported and the PostCalendar tables will be updated.**
 
+The import script is based upon the last release of TimeIt (version 2.1.1). If
+you are using a earlier version, please upgrade to 2.1.1 before upgrading
+Zikula to 1.3.x. If you are using a later, unreleased version, this is 
+unsupported but may still work. use at your own risk.
+
 In order to perform the migration, the table must be properly named and the
-system is scanned to detect the table. Please follow the direction to complete
+system is scanned to detect the table. Please follow the directions to complete
 this step. The migrate link will not be visible until this is complete.
 
 After clicking the link to import events all TimeIt events are collected. 
 Every event is converted into a Doctrine object and inserted into PostCalendar. 
 Fields that are converted are: duration, all day flag, repeating, location info, 
 contact info, sharing and approval status.
+
+Please note that events that had 'random' repeat settings (multiple unrelated,
+non-sequential dates) are not supported in PostCalendar and are converted to a
+single day event. Events with repeat exceptions are handled as expected.
+
+###TimeIt Calendars
+All events from TimeIt are imported into the PostCalendar as the same 'calendar'.
+Because TimeIt and PostCalendar handle this differently there is no simple
+transfer (PC handles multiple calendars via categories). 
 
 ### Categories
 Every event gets the PostCalendar category _Imported_ and the original category 

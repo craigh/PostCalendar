@@ -7,6 +7,7 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
  */
 use PostCalendar_Entity_CalendarEvent as CalendarEvent;
+use PostCalendar_Api_Event as EventApi;
 
 class PostCalendar_Controller_Admin extends Zikula_AbstractController
 {
@@ -462,22 +463,33 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
         // loop through all events and create postcalendar events with doctrine methods
         foreach ($events as $event) {
             // determine recurrence type in TimeIt
-            $reptype = '';
-            switch ($event['pn_repeatSpec']) {
-                case 'day':
-                    $reptype = '0';
+            switch ($event['pn_repeatType']) {
+                case 1: // repeat
+                    $rTypes = array("day" => EventApi::REPEAT_EVERY_DAY,
+                        "week" => EventApi::REPEAT_EVERY_WEEK,
+                        "month" => EventApi::REPEAT_EVERY_MONTH,
+                        "year" => EventApi::REPEAT_EVERY_YEAR,
+                    );
+                    $repeat_freq_type = $rTypes[$event['pn_repeatSpec']];
+                    $endDate = DateTime::createFromFormat('Y-m-d', $event['pn_endDate']);
                     break;
-                case 'week':
-                    $reptype = '1';
+                case 2: // repeat on
+                    list($repeat_on_num, $repeat_on_day) = explode(' ', $event['pn_repeatSpec']);
+                    $repeat_on_freq = $event['pn_repeatFrec'];
+                    $endDate = DateTime::createFromFormat('Y-m-d', $event['pn_endDate']);
                     break;
-                case 'month':
-                    $reptype = '2';
-                    break;
-                case 'year':
-                    $reptype = '3';
+                case 0: // standard event
+                case 3: // repeat random (cannot duplicate in PC) so reset to standard
+                default:
+                    $repeat_freq_type = '0';
+                    $repeat_on_num = '1';
+                    $repeat_on_day = '0';
+                    $repeat_on_freq = '1';
+                    $event['pn_repeatType'] = 0; // resets case 3
+                    $endDate = null;
                     break;
             }
-
+            
             // determine duration in TimeIt and construct start and end datetime objects for PC
             $durtmp = explode(',', $event['pn_allDayDur']);
             switch (count($durtmp)) {
@@ -500,11 +512,6 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
                 $end = DateTime::createFromFormat('Y-m-d H:i', $event['pn_startDate'] . " " . $event['pn_allDayStart']);
                 $end->add(new DateInterval('PT' . $duration . 'S'));
             }
-			if ($event['pn_repeatType'] == 1) {
-				$endDate = DateTime::createFromFormat('Y-m-d', $event['pn_endDate']);
-			} else {
-				$endDate = null;
-			}
 
             // extract location and contact data
             $data = unserialize($event['pn_data']);
@@ -556,10 +563,10 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
                 'alldayevent' => $event['pn_allDay'],
                 'recurrtype' => $event['pn_repeatType'],
                 'recurrspec' => array('event_repeat_freq' => $event['pn_repeatFrec'],
-                    'event_repeat_freq_type' => $reptype,
-                    'event_repeat_on_num' => '1',
-                    'event_repeat_on_day' => '0',
-                    'event_repeat_on_freq' => ''),
+                    'event_repeat_freq_type' => $repeat_freq_type,
+                    'event_repeat_on_num' => $repeat_on_num,
+                    'event_repeat_on_day' => $repeat_on_day,
+                    'event_repeat_on_freq' => $repeat_on_freq),
                 'location' => array('event_location' => $data['plugindata']['LocationTimeIt']['name'],
                     'event_street1' => $data['plugindata']['LocationTimeIt']['street'] . ' ' . $data['plugindata']['LocationTimeIt']['houseNumber'],
                     'event_street2' => '',
@@ -575,6 +582,15 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
                 'sharing' => $sharing,
                 'categories' => $eventCat
             );
+            
+            // configure exceptions
+            if (isset($event['pn_repeatIrg'])) {
+                $eventArray['hasexceptions'] = true;
+                $eventArray['recurexceptionstorage'] = explode(',', $event['pn_repeatIrg']);
+            } else {
+                $eventArray['hasexceptions'] = false;
+                $eventArray['recurexceptionstorage'] = null;
+            }
 
             // Now insert the created array into PostCalendar via Doctrine
             try {
