@@ -43,7 +43,14 @@
             {section name=event loop=$events}
                 <tr class="{cycle values="z-odd,z-even"}">
                     <td class='z-w5'><input type="checkbox" value="{$events[event].eid}" id="events_{$events[event].eid}" name="events[]" /></td>
-                    <td class='z-w30'>{$events[event].title|safetext}</td>
+                    <td class='z-w30'>{$events[event].title|safetext}
+                        {if $events[event].privateicon}{img src='lock.gif' modname='PostCalendar' __title="private event" __alt="private event" class='tooltips'}{/if}
+                        {if !empty($events[event].recurrspec.exceptions)}
+                            {img modname='PostCalendar' src='exceptions.png' __title="event repeats with exceptions" class='tooltips'}
+                        {elseif $events[event].recurrtype > 0}
+                            {img modname='PostCalendar' src='repeat.png' __title="event repeats" class='tooltips'}
+                        {/if}
+                    </td>
                     <td class='z-w15'>{$events[event].eventStart->format($modvars.PostCalendar.pcDateFormats.date)}</td>
                     <td class='z-w20'>{assignedcategorieslist item=$events[event]}</td>
                     <td class='z-w20'>{$events[event].time}</td>
