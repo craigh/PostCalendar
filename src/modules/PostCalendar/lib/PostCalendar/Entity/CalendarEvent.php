@@ -126,7 +126,7 @@ class PostCalendar_Entity_CalendarEvent extends Zikula_EntityAccess
     private $endDate = null;
 
     /**
-     * Type of recurrance (0, 1, 2)
+     * Type of recurrance (0, 1, 2, 3)
      * see const defs in this class
      * 
      * @ORM\Column(type="integer", length=1)
