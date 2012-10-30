@@ -455,7 +455,13 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
         }
 
     	// the default PC category for events without category.
-        $defaultCat = CategoryUtil::getCategoryByPath('/__SYSTEM__/Modules/PostCalendar/Events');
+        //$defaultCat = CategoryUtil::getCategoryByPath('/__SYSTEM__/Modules/PostCalendar/Events');
+
+        // create category for imported events
+        if (!CategoryUtil::getCategoryByPath('/__SYSTEM__/Modules/PostCalendar/Imported')) {
+            CategoryUtil::createCategory('/__SYSTEM__/Modules/PostCalendar', 'Imported', null, $this->__('Imported'), $this->__('TimeIt imported'));
+        }
+        $catImport = CategoryUtil::getCategoryByPath('/__SYSTEM__/Modules/PostCalendar/Imported');
 
         $eventCount = 0;
         $flushCount = 0; // flush to Doctrine every 25 events
@@ -526,15 +532,15 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
                 }
             }
 
-            // obtain relevant categories
+            // obtain relevant categories from the category registry
             $catRegIds = CategoryRegistryUtil::getRegisteredModuleCategoriesIds('TimeIt', 'TimeIt_events');
             $sql = "SELECT category_id FROM `categories_mapobj` WHERE obj_id=" . $event['pn_id'] . " AND reg_id=" . $catRegIds['Main'];
             $cats = $connection->fetchAll($sql);
 			// check if a category was set in TimeIt
 			if (isset($cats[0]) && isset($cats[0]['category_id'])) {
-				$eventCat = array('TimeItImport' => $cats[0]['category_id']);
+				$eventCat = array('Main' => $catImport['id'], 'TimeItImport' => $cats[0]['category_id']);
 			} else {
-                $eventCat = array('Main' => $defaultCat['id']);
+                $eventCat = array('Main' => $catImport['id']);
 			}
 
             // obtain current sharing in TimeIt
