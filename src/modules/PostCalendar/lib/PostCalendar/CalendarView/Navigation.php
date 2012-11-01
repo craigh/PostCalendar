@@ -143,10 +143,13 @@ class PostCalendar_CalendarView_Navigation
         $stylesheet = "<style type='text/css'>\n";
         foreach ($catregistry as $regname => $catid) {
             $categories[$regname] = CategoryUtil::getSubCategories($catid);
-            foreach ($categories[$regname] as $category) {
+            foreach ($categories[$regname] as $cKey => $category) {
                 if (isset($category['__ATTRIBUTES__']['color'])) {
                     $stylesheet .= ".pccategories_{$category['id']},\n.pccategories_selector_{$category['id']} {\n";
                     $stylesheet .= "    background-color: {$category['__ATTRIBUTES__']['color']};\n}\n";
+                }
+                if (!isset($category['display_name'][$this->view->language])) {
+                    $categories[$regname][$cKey]['display_name'][$this->view->language] = $category['name'];
                 }
             }
         }
