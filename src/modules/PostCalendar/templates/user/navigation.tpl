@@ -62,6 +62,8 @@
             displayformat_datetime=$modvars.PostCalendar.pcDateFormats.date 
             displayformat_javascript=$modvars.PostCalendar.pcDateFormats.javascript
             autoSize='true' 
+            changeMonth='true'
+            changeYear='true'
             mindate="-"|cat:$modvars.PostCalendar.pcFilterYearStart|cat:"Y" 
             maxdate="+"|cat:$modvars.PostCalendar.pcFilterYearEnd|cat:"Y"
             onselectcallback='jQuery(this).closest("form").submit();'}

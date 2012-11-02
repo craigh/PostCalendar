@@ -66,6 +66,8 @@
                     displayformat_datetime=$modvars.PostCalendar.pcDateFormats.date 
                     displayformat_javascript=$modvars.PostCalendar.pcDateFormats.javascript
                     autoSize='true'
+                    changeMonth='true'
+                    changeYear='true'
                     onselectcallback='updateFields(this,dateText);'}
                 {jquery_timepicker 
                     defaultdate=$loaded_event.eventStart 
@@ -88,6 +90,8 @@
                     displayformat_datetime=$modvars.PostCalendar.pcDateFormats.date 
                     displayformat_javascript=$modvars.PostCalendar.pcDateFormats.javascript
                     autoSize='true' 
+                    changeMonth='true'
+                    changeYear='true'
                     onselectcallback='updateFields(this,dateText);'}
                 {jquery_timepicker 
                     defaultdate=$loaded_event.eventEnd 
@@ -141,6 +145,8 @@
                     displayformat_datetime=$modvars.PostCalendar.pcDateFormats.date 
                     displayformat_javascript=$modvars.PostCalendar.pcDateFormats.javascript
                     autoSize='true' 
+                    changeMonth='true'
+                    changeYear='true'
                     onselectcallback='updateFields(this,dateText);'}
             </div>
             <div>
@@ -160,7 +166,9 @@
                         theme=$jquerytheme
                         displayformat_datetime=$modvars.PostCalendar.pcDateFormats.date 
                         displayformat_javascript=$modvars.PostCalendar.pcDateFormats.javascript
-                        autoSize='true'}
+                        autoSize='true'
+                        changeMonth='true'
+                        changeYear='true'}
                     <button class='addexception'{if !($smarty.foreach.exceptionarray.last)} style='display: none;'{/if}>{gt text='add another'}</button>
                     <button class='deleteexception'{if $smarty.foreach.exceptionarray.last} style='display: none;'{/if}>{gt text='delete'}</button>
                 </div>
@@ -176,7 +184,9 @@
                         theme=$jquerytheme
                         displayformat_datetime=$modvars.PostCalendar.pcDateFormats.date 
                         displayformat_javascript=$modvars.PostCalendar.pcDateFormats.javascript
-                        autoSize='true'}
+                        autoSize='true'
+                        changeMonth='true'
+                        changeYear='true'}
                     <button class='addexception'>{gt text='add another'}</button>
                     <button class='deleteexception' style='display: none;'>{gt text='delete'}</button>
                 </div>
