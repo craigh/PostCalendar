@@ -80,7 +80,11 @@ class PostCalendar_CalendarView_Ical extends PostCalendar_CalendarView_List
             if (!empty($this->selectedCategories)) {
                 foreach($this->selectedCategories as $catId) {
                     $category = CategoryUtil::getCategoryByID($catId);
-                    $sitename .= "-" . $category['display_name'][ZLanguage::getLanguageCode()];
+                    if (isset($category['display_name'][ZLanguage::getLanguageCode()])) {
+                        $sitename .= "-" . $category['display_name'][ZLanguage::getLanguageCode()];
+                    } else {
+                        $sitename .= "-" . $category['name'];
+                    }
                 }
             }
             $filename = str_replace(" ", "_", $sitename) . ".ics";
