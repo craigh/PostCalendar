@@ -100,7 +100,7 @@ class PostCalendar_CalendarView_CalendarBlock extends PostCalendar_CalendarView_
     public function render()
     {
         $output = '';
-        $templates_cached = true;
+        $templates_cached = $this->view->getCaching();
         if ($this->blockVars['pcbshowcalendar']) {
             if (!$this->isCached()) {
                 $templates_cached = false;
