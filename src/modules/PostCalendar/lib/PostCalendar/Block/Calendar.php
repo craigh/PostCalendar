@@ -45,6 +45,10 @@ class PostCalendar_Block_Calendar extends Zikula_Controller_AbstractBlock
         $date = new DateTime();
         $calendarView = new PostCalendar_CalendarView_CalendarBlock($this->view, $date, '', null, $blockinfo);
         $blockinfo['content'] = $calendarView->render();
+        
+        if (empty($blockinfo['content']) && SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
+            $blockinfo['content'] = $this->__('Error: No block content selected!');
+        }
 
         return BlockUtil::themeBlock($blockinfo);
     }
