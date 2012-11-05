@@ -161,7 +161,7 @@
 			<span><input type="text" size="30" value="{$modvars.PostCalendar.pcNotifyEmail}" id="pcNotifyEmail" name="pcNotifyEmail" /></span>
 		</div>
     </fieldset>
-    {if !$modvars.PostCalendar.pcTimeItMigrateComplete}
+    {if (!isset($modvars.PostCalendar.pcTimeItMigrateComplete) OR (!$modvars.PostCalendar.pcTimeItMigrateComplete))}
     <fieldset id='timeit'>
         <legend>{gt text='TimeIt Migration'}</legend>
         <p class="z-informationmsg">{gt text='PostCalendar can import events from TimeIt module. To perform the import, PostCalendar must detect a TimeIt database table named "[prefix]TimeIt_events" (note case). Below you will find information on whether the TimeIt module table was detected and what exact table name was searched for. If your TimeIt table exists but has different name than the one specified below, rename it and click "Check again".'}</p>

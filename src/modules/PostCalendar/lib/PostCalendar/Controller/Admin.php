@@ -425,7 +425,8 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
     public function migrateTimeIt()
     {
         $this->throwForbiddenUnless(SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN), LogUtil::getErrorMsgPermission());
-        if ($this->getVar('pcTimeItMigrateComplete')) {
+        $pcTimeItMigrateComplete = $this->getVar('pcTimeItMigrateComplete');
+        if (isset($pcTimeItMigrateComplete) && $pcTimeItMigrateComplete) {
             LogUtil::registerError($this->__('TimeIt events have already been migrated. You can only run the migration once.'));
             $this->redirect(ModUtil::url('PostCalendar', 'admin', 'main'));
         }

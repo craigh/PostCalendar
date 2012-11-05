@@ -53,7 +53,8 @@ class PostCalendar_Api_Admin extends Zikula_AbstractApi
                 'text' => $this->__('Event default values'),
                 'class' => 'z-icon-es-config');
         }
-        if ($this->getVar('pcTimeItExists') && !$this->getVar('pcTimeItMigrateComplete')) {
+        $pcTimeItMigrateComplete = $this->getVar('pcTimeItMigrateComplete');
+        if ($this->getVar('pcTimeItExists') && ((!isset($pcTimeItMigrateComplete)) || !$pcTimeItMigrateComplete)) {
             if (SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
                 $links[] = array(
                     'url' => ModUtil::url('PostCalendar', 'admin', 'migrateTimeIt'),
