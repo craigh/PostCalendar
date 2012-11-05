@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Zikula 1.x\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-11-03 22:31-0400\n"
+"POT-Creation-Date: 2012-11-05 17:32-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -52,19 +52,19 @@ msgstr ""
 msgid "Event default values"
 msgstr ""
 
-#: lib/PostCalendar/Api/Admin.php:60 templates/admin/modifyconfig.tpl:177
+#: lib/PostCalendar/Api/Admin.php:61 templates/admin/modifyconfig.tpl:177
 msgid "Migrate TimeIt"
 msgstr ""
 
-#: lib/PostCalendar/Api/Admin.php:108 templates/email/adminnotify.tpl:1
+#: lib/PostCalendar/Api/Admin.php:109 templates/email/adminnotify.tpl:1
 msgid "Notice: PostCalendar submission/change"
 msgstr ""
 
-#: lib/PostCalendar/Api/Admin.php:113
+#: lib/PostCalendar/Api/Admin.php:114
 msgid "Done! Sent administrator notification e-mail message."
 msgstr ""
 
-#: lib/PostCalendar/Api/Admin.php:116
+#: lib/PostCalendar/Api/Admin.php:117
 msgid "Error! Could not send administrator notification e-mail message."
 msgstr ""
 
@@ -473,28 +473,28 @@ msgstr ""
 msgid "Delete '%s'"
 msgstr ""
 
-#: lib/PostCalendar/Controller/Admin.php:429
+#: lib/PostCalendar/Controller/Admin.php:430
 msgid ""
 "TimeIt events have already been migrated. You can only run the migration "
 "once."
 msgstr ""
 
-#: lib/PostCalendar/Controller/Admin.php:442
+#: lib/PostCalendar/Controller/Admin.php:443
 #, php-format
 msgid ""
 "No TimeIt events found in the database. The TimeIt table should be called %s "
 "in the database. Mind the table prefix"
 msgstr ""
 
-#: lib/PostCalendar/Controller/Admin.php:462
+#: lib/PostCalendar/Controller/Admin.php:463
 msgid "Imported"
 msgstr ""
 
-#: lib/PostCalendar/Controller/Admin.php:462
+#: lib/PostCalendar/Controller/Admin.php:463
 msgid "TimeIt imported"
 msgstr ""
 
-#: lib/PostCalendar/Controller/Admin.php:636
+#: lib/PostCalendar/Controller/Admin.php:637
 #, php-format
 msgid "TimeIt events have been migrated. In total %s events completed."
 msgstr ""
