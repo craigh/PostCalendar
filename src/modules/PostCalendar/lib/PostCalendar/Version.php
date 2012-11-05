@@ -24,7 +24,7 @@ class PostCalendar_Version extends Zikula_AbstractVersion
         $meta['securityschema'] = array(
             'PostCalendar::Event' => 'Event Title::Event ID',
             'PostCalendar::' => '::');
-        $meta['core_min'] = '1.3.3'; // requires minimum 1.3.3 or later
+        $meta['core_min'] = '1.3.3'; // requires minimum 1.3.3 or later (with updated (>=1.3.5) jquery_datepicker plugin)
         $meta['core_max'] = '1.3.99'; // doesn't work with 1.4.0 (yet)
 
         $meta['capabilities'] = array();

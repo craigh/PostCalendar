@@ -6,7 +6,7 @@ PostCalendar is completely converted to the new Zikula 1.3 model (OOP).
 
 #### Software Requirements
 
-*   Zikula >= 1.3.3
+*   Zikula >= 1.3.5 (or 1.3.3 with updated jquery_datepicker plugin - see below**)
 *   php 5.3+
 
 #### Features
@@ -36,3 +36,5 @@ PostCalendar is completely converted to the new Zikula 1.3 model (OOP).
 *   Events can be filtered by category or user (if personal calendar is enabled)
 *   Hovering event information using JavaScript
 *   Admin definable event default values
+
+**file: https://github.com/zikula/core/blob/1.3/src/lib/viewplugins/function.jquery_datepicker.php

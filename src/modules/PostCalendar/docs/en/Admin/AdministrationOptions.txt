@@ -42,6 +42,16 @@ Notify about USER submission |Sends email to admin on USER submission
 Notify about ADMIN submission|Sends email to admin on ADMIN submission
 Admin email Address          |enter the email address to send notifications to
 
+#### TimeIt Migration
+
+PostCalendar can import events from TimeIt module. To perform the import, 
+PostCalendar must detect a TimeIt database table named "[prefix]TimeIt_events" 
+(note case). Here, you will find information on whether the TimeIt module table 
+was detected and what exact table name was searched for. If your TimeIt table 
+exists but has different name than the one specified below, rename it and click 
+"Check again". Once this detects a table, you can complete the migration by
+clicking the link in the admin menu bar. See the TimeIt_Imports.txt file for
+more information.
 
 ## Event Default Values
 
