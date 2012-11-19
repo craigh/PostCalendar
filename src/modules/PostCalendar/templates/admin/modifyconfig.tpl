@@ -145,6 +145,10 @@
 	<fieldset>
         <legend>{gt text='Notification settings'}</legend>
 		<div class="z-formrow">
+			<label for="pcPendingContent">{gt text='Include PostCalendar results in Pending Content block.'}</label>
+			<input type="checkbox" value="1" id="pcPendingContent" name="pcPendingContent"{if $modvars.PostCalendar.pcPendingContent eq true} checked="checked"{/if}/>
+		</div>
+		<div class="z-formrow">
 			<label for="pcNotifyPending">{gt text='Notify administrator about pending content in template'}</label>
 			<input type="checkbox" value="1" id="pcNotifyPending" name="pcNotifyPending"{if $modvars.PostCalendar.pcNotifyPending eq true} checked="checked"{/if}/>
 		</div>

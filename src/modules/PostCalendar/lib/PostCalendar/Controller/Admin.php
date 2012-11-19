@@ -245,6 +245,7 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
             'pcTimeIncrement' => $this->request->request->get('pcTimeIncrement', $defaults['pcTimeIncrement']),
             'pcDefaultView' => $this->request->request->get('pcDefaultView', $defaults['pcDefaultView']),
             'pcNotifyAdmin' => $this->request->request->get('pcNotifyAdmin', 0),
+            'pcPendingContent' => $this->request->request->get('pcPendingContent', 0),
             'pcNotifyEmail' => $this->request->request->get('pcNotifyEmail', $defaults['pcNotifyEmail']),
             'pcListMonths' => abs((int)$this->request->request->get('pcListMonths', $defaults['pcListMonths'])),
             'pcNotifyAdmin2Admin' => $this->request->request->get('pcNotifyAdmin2Admin', 0),

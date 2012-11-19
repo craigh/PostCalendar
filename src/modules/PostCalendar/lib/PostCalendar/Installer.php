@@ -81,6 +81,7 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
             $upgradeToVersion = $this->version->getVersion();
             return LogUtil::registerError($this->__f('Notice: This version does not support upgrades from PostCalendar 6.x and earlier. Please see detailed upgrade instructions at <a href="modules/PostCalendar/docs/en/Admin/InstallationAndUpgrade.txt">the local docs</a>). After upgrading, you can install PostCalendar %s and perform this upgrade.', $upgradeToVersion));
         }
+        $defaultsettings = PostCalendar_Util::getdefaults();
 
         switch ($oldversion) {
             case '7.0.0':
@@ -88,7 +89,6 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
             case '7.0.1':
                 // set up some manager vars
                 $connection = $this->entityManager->getConnection();
-                $defaultsettings = PostCalendar_Util::getdefaults();
                 $hookManager = $this->serviceManager->getService('zikula.hookmanager');
 
                 // select partial array of all events for later manipulation
@@ -196,7 +196,10 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
                 $this->delVar('enablelocations');
 
             case '8.0.0':
-            //future development
+                $this->setVar('pcPendingContent', $defaultsettings['pcPendingContent']);
+                
+            case '8.0.1':
+                //future development
         }
 
         return true;
