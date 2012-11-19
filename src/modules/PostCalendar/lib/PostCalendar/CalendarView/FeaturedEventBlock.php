@@ -66,14 +66,18 @@ class PostCalendar_CalendarView_FeaturedEventBlock extends PostCalendar_Calendar
         parent::setup();
         $alleventdates = ModUtil::apiFunc('PostCalendar', 'event', 'getEventOccurances', array('event' => $this->event)); // gets all FUTURE occurances
         // assign next occurance to eventStart
-        $this->event['eventStart'] = DateTime::createFromFormat('Y-m-d', array_shift($alleventdates));
-
-        $this->event['showcountdown'] = false; // default to false
-        if ($this->blockVars['showcountdown']) {
-            $datedifference = DateUtil::getDatetimeDiff_AsField(DateUtil::getDatetime(null, '%F'), $this->event['eventStart']->format('Y-m-d'), 3);
-            $this->event['datedifference'] = round($datedifference);
-            $this->event['showcountdown'] = true;
+        $newEventStart = DateTime::createFromFormat('Y-m-d', array_shift($alleventdates));
+        if (!empty($newEventStart)) { // createFromFormat returns false on failure
+            $this->event['eventStart'] = $newEventStart;
+            $today = new DateTime();
+            $datedifference = $today->diff($this->event['eventStart']);
+            $this->event['datedifference'] = $datedifference->format('%a');
+        } else {
+            $this->event['datedifference'] = -1;
         }
+
+        $this->event['showcountdown'] = $this->blockVars['showcountdown'];
+
         $this->event['showhiddenwarning'] = false; // default to false
         if ($this->blockVars['hideonexpire'] && $this->event['datedifference'] < 0) {
             //return false;
