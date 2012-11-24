@@ -71,7 +71,7 @@ class PostCalendar_CalendarView_FeaturedEventBlock extends PostCalendar_Calendar
             $this->event['eventStart'] = $newEventStart;
             $today = new DateTime();
             $datedifference = $today->diff($this->event['eventStart']);
-            $this->event['datedifference'] = $datedifference->format('%a');
+            $this->event['datedifference'] = $datedifference->format('%r%a');
         } else {
             $this->event['datedifference'] = -1;
         }
