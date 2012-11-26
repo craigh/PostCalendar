@@ -11,6 +11,11 @@
  */
 class PostCalendar_CalendarView_Nav_Print extends PostCalendar_CalendarView_Nav_AbstractItemBase
 {
+    /**
+     * event id
+     * @var integer 
+     */
+    private $eid;
 
     /**
      * Setup the navitem 
@@ -18,6 +23,7 @@ class PostCalendar_CalendarView_Nav_Print extends PostCalendar_CalendarView_Nav_
     public function setup()
     {
         $this->viewtype = $this->view->getRequest()->request->get('viewtype', $this->view->getRequest()->query->get('viewtype', $this->defaultViewtype));
+        $this->eid = $this->view->getRequest()->request->get('eid', $this->view->getRequest()->query->get('eid', null));
         $this->imageTitleText = $this->view->__('Print View');
         $this->displayText = $this->view->__('Print');
     }
@@ -40,11 +46,16 @@ class PostCalendar_CalendarView_Nav_Print extends PostCalendar_CalendarView_Nav_
      */
     protected function setUrl()
     {
-        $this->url = new Zikula_ModUrl('PostCalendar', 'user', 'display', ZLanguage::getLanguageCode(), array(
-                    'viewtype' => $this->viewtype,
-                    'date' => $this->date->format('Ymd'),
-                    'userfilter' => $this->userFilter,
-                    'theme' => 'Printer'));
+        $args = array(
+            'viewtype' => $this->viewtype,
+            'userfilter' => $this->userFilter,
+            'theme' => 'Printer');
+        if (($this->viewtype == 'event') && (isset($this->eid))) {
+            $args['eid'] = $this->eid;
+        } else {
+            $args['date'] = $this->date->format('Ymd');            
+        }
+        $this->url = new Zikula_ModUrl('PostCalendar', 'user', 'display', ZLanguage::getLanguageCode(), $args);
     }
 
 }
