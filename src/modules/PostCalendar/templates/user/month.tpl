@@ -59,9 +59,9 @@
                         {assign var="timestamp" value=""}
                         &bull;
                     {/if}
-                    {assign var="desc" value=$event.hometext|notifyfilters:'postcalendar.hook.eventsfilter.ui.filter'|safehtml|truncate:255:"..."}
+                    {assign var="desc" value=$event.hometext|notifyfilters:'postcalendar.filter_hooks.eventsfilter.filter'|safehtml|truncate:255:"..."}
                     {if $event.privateicon}{img src='lock.gif' modname='PostCalendar' __title="private event" __alt="private event"}{/if}
-                    {pc_url full=true action='event' eid=$event.eid date=$date style="font-size: 7pt; text-decoration: none;" title=$event.hometext|notifyfilters:'postcalendar.hook.eventsfilter.ui.filter'|strip_tags|safehtml display="$timestamp $title"|safehtml}
+                    {pc_url full=true action='event' eid=$event.eid date=$date style="font-size: 7pt; text-decoration: none;" title=$event.hometext|notifyfilters:'postcalendar.filter_hooks.eventsfilter.filter'|strip_tags|safehtml display="$timestamp $title"|safehtml}
                     </div>
                 {/foreach}
                 {/if}

@@ -37,7 +37,7 @@
     {if ($loaded_event.hometext) && ($loaded_event.hometext ne "n/a")}
     <div>
         <h3>{gt text='Description'}:</h3>
-        {$loaded_event.hometext|notifyfilters:'postcalendar.hook.eventsfilter.ui.filter'|safehtml}
+        {$loaded_event.hometext|notifyfilters:'postcalendar.filter_hooks.eventsfilter.filter'|safehtml}
     </div>
     {/if}
     <div>
