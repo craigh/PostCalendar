@@ -389,11 +389,13 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
             $_em->remove($event);
             $i++;
             $affected++;
-            if ($i == 15) {
+            if ($i == 20) {
                 $_em->flush();
                 $i = 0;
             }
         }
+        // flush remaining items
+        $_em->flush();
 
         if ($affected > 0) {
             LogUtil::registerStatus(__f('ALL associated PostCalendar events also deleted. (%s)', $affected, $dom));
