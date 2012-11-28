@@ -9,7 +9,7 @@
 {/if}
 <h2 class="postcalendar_header">
     {if $PRINT_VIEW eq false}<a href="{$navigation.previous|safehtml}">&lt;&lt;</a>{/if}
-    {$requestedDate->format($modvars.PostCalendar.pcDateFormats.date)}
+    {$requestedDate|pc_date_format:$modvars.PostCalendar.pcDateFormats.date}
     {if $PRINT_VIEW eq false}<a href="{$navigation.next|safehtml}">&gt;&gt;</a>{/if}
 </h2>
 

@@ -155,4 +155,19 @@ class PostCalendar_Util
 
         return $timeItExists;
     }
+
+    /**
+     * search and replace month names with translation
+     * 
+     * @param string $datestring
+     * @return string
+     */
+    public static function translate($datestring) {
+        $dom = ZLanguage::getModuleDomain('PostCalendar');
+        $english = explode(" ", 'January February March April May June July August September October November December');
+        $translated = explode(" ", __('January February March April May June July August September October November December', $dom));
+
+        return str_replace($english, $translated, $datestring);
+    }
+    
 }

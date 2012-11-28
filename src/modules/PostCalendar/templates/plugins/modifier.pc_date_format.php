@@ -24,5 +24,5 @@ function smarty_modifier_pc_date_format($string, $format = null, $default_date =
         $date = new DateTime();
     }
 
-    return $date->format($format);
+    return PostCalendar_Util::translate($date->format($format));
 }
