@@ -65,3 +65,29 @@ the upgrade process.
 
 Please note that the use of category colors has changed in PC 8.0.0. You may need 
 to adjust your category and text colors for their new usage.
+
+## Trouble Shooting
+
+7.0.x to 8.0.0  -> Duplicates in categories_mapobj
+
+Postcalendar 8.0 don't use the categories_mapobj table. All entry's upgraded to postcalender_calenderevent_category. 
+In some old installations it is possible to have some duplicates in categories_mapobj. You can check this with the sql:
+
+SELECT obj_id, reg_id, category_id 
+FROM categories_mapobj WHERE modname = 'PostCalendar' AND tablename = 'postcalendar_events' 
+group by obj_id, reg_id, category_id 
+having count(*) > 1";
+
+During the upgrade you get the error 
+
+SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry '??-????-?' for key 'cat_unq'
+Check your entry's in the table and clean up your data. 
+
+As workarround you can change the SQL in the Upgrade Script. Be carefull and test the results.
+PostCalendare/lib/Postcalendar/Installer.php  Look for the following insert.
+
+$sqls[] = "INSERT INTO postcalendar_calendarevent_category (entityId, registryId, categoryId) SELECT obj_id, reg_id, category_id FROM categories_mapobj WHERE modname = 'PostCalendar' AND tablename = 'postcalendar_events';
+
+Extend this with a group by. 
+
+$sqls[] = "INSERT INTO postcalendar_calendarevent_category (entityId, registryId, categoryId) SELECT obj_id, reg_id, category_id FROM categories_mapobj WHERE modname = 'PostCalendar' AND tablename = 'postcalendar_events' group by obj_id, reg_id, category_id";
