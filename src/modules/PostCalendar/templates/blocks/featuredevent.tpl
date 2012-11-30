@@ -26,7 +26,7 @@
     {img modname='core' src='info.png' set='icons/extrasmall' alt=$alt title=$title}</a>
 </h2>
 <div class="eventtime">
-    {$loaded_event.eventStart->format($modvars.PostCalendar.pcDateFormats.date)}<br />
+    {$loaded_event.eventStart|pc_date_format:$modvars.PostCalendar.pcDateFormats.date}<br />
     {if $loaded_event.alldayevent != true}
         {$loaded_event.startTime} - {$loaded_event.endTime}<br />
     {else}
@@ -37,7 +37,7 @@
     {if ($loaded_event.hometext) && ($loaded_event.hometext ne "n/a")}
     <div>
         <h3>{gt text='Description'}:</h3>
-        {$loaded_event.hometext|notifyfilters:'postcalendar.hook.eventsfilter.ui.filter'|safehtml}
+        {$loaded_event.hometext|notifyfilters:'postcalendar.filter_hooks.eventsfilter.filter'|safehtml}
     </div>
     {/if}
     <div>

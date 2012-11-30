@@ -9,7 +9,7 @@
 {/if}
 <h2 class="postcalendar_header">
     {if $PRINT_VIEW eq false}<a href="{$navigation.previous|safehtml}">&lt;&lt;</a>{/if}
-    {gt text='Event list from'} <strong>{$startDate->format($modvars.PostCalendar.pcDateFormats.date)}</strong> {gt text='to'} <strong>{$endDate->format($modvars.PostCalendar.pcDateFormats.date)}</strong>
+    {gt text='Event list from'} <strong>{$startDate|pc_date_format:$modvars.PostCalendar.pcDateFormats.date}</strong> {gt text='to'} <strong>{$endDate|pc_date_format:$modvars.PostCalendar.pcDateFormats.date}</strong>
     {if $PRINT_VIEW eq false}<a href="{$navigation.next|safehtml}">&gt;&gt;</a>{/if}
 </h2>
 
@@ -28,7 +28,7 @@
         <li class="eventslistitems pccategories_{$event.catid}{if $event.privateicon} pcviz_private{else} pcviz_global{/if}">
             {if $event.alldayevent != true}{$event.startTime} - {$event.endTime}{else}{gt text='All-day event'}{/if}&nbsp;
             {if $event.privateicon}{img src='lock.gif' modname='PostCalendar' __title="private event" __alt="private event"}{/if}
-            {pc_url full=true action='event' eid=$event.eid date=$date style="text-decoration: none;" title=$event.hometext|notifyfilters:'postcalendar.hook.eventsfilter.ui.filter'|strip_tags|safehtml display=$event.title|strip_tags}
+            {pc_url full=true action='event' eid=$event.eid date=$date style="text-decoration: none;" title=$event.hometext|notifyfilters:'postcalendar.filter_hooks.eventsfilter.filter'|strip_tags|safehtml display=$event.title|strip_tags}
         </li>
     {/foreach}
     </ul>

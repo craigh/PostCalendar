@@ -5,7 +5,7 @@
 </h2>
 <div class="calcontainer">
     <div class="eventtime">
-        {$loaded_event.eventStart->format($modvars.PostCalendar.pcDateFormats.date)}<br />
+        {$loaded_event.eventStart|pc_date_format:$modvars.PostCalendar.pcDateFormats.date}<br />
         {if $loaded_event.alldayevent != true}
             {$loaded_event.startTime} - {$loaded_event.endTime}<br />
         {else}
@@ -15,7 +15,7 @@
     <div class="eventdetails">
         <div>
             <h3>{gt text='Description'}:</h3>
-            {$loaded_event.hometext|notifyfilters:'postcalendar.hook.eventsfilter.ui.filter'|safehtml}
+            {$loaded_event.hometext|notifyfilters:'postcalendar.filter_hooks.eventsfilter.filter'|safehtml}
         </div>
         <div>
             {if ($loaded_event.location.event_location) OR ($loaded_event.location.event_street1) OR ($loaded_event.location.event_street2) OR ($loaded_event.location.event_city)}

@@ -51,7 +51,7 @@
                             {img modname='PostCalendar' src='repeat.png' __title="event repeats" class='tooltips'}
                         {/if}
                     </td>
-                    <td class='z-w15'>{$events[event].eventStart->format($modvars.PostCalendar.pcDateFormats.date)}</td>
+                    <td class='z-w15'>{$events[event].eventStart|pc_date_format:$modvars.PostCalendar.pcDateFormats.date}</td>
                     <td class='z-w20'>{assignedcategorieslist item=$events[event]}</td>
                     <td class='z-w20'>{$events[event].time}</td>
                     <td class='z-w10'>
