@@ -79,19 +79,20 @@ some duplicates in categories_mapobj. You can check this with the following sql:
   group by obj_id, reg_id, category_id 
   having count(*) > 1";
 
-If, during the upgrade you get the error:
+If during the upgrade you get the error:
 
   SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry '??-????-?' for key 'cat_unq'
-  Check your entry's in the table and clean up your data. 
+  
+Check your entries in the table and clean up your data. 
 
-As workarround you can change the SQL in the Upgrade Script. Be careful and test the results.
-PostCalendar/lib/Postcalendar/Installer.php  Look for the following INSERT sql statement:
+As workaround you can change the SQL in the Upgrade Script. Be careful and test the results.
+In PostCalendar/lib/Postcalendar/Installer.php look for the following INSERT sql statement:
 
   $sqls[] = "INSERT INTO postcalendar_calendarevent_category (entityId, registryId, categoryId) 
     SELECT obj_id, reg_id, category_id FROM categories_mapobj 
     WHERE modname = 'PostCalendar' AND tablename = 'postcalendar_events';
 
-Extend this with a group by:
+Extend this with a GROUP BY:
 
   $sqls[] = "INSERT INTO postcalendar_calendarevent_category (entityId, registryId, categoryId) 
     SELECT obj_id, reg_id, category_id FROM categories_mapobj 
