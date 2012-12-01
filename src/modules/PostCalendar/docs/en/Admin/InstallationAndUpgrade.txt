@@ -70,24 +70,30 @@ to adjust your category and text colors for their new usage.
 
 7.0.x to 8.0.0  -> Duplicates in categories_mapobj
 
-Postcalendar 8.0 don't use the categories_mapobj table. All entry's upgraded to postcalender_calenderevent_category. 
-In some old installations it is possible to have some duplicates in categories_mapobj. You can check this with the sql:
+Postcalendar 8.0.0 no longer uses the categories_mapobj table. All entries are migrated 
+to postcalender_calenderevent_category. In some old installations it is possible to have 
+some duplicates in categories_mapobj. You can check this with the following sql:
 
-SELECT obj_id, reg_id, category_id 
-FROM categories_mapobj WHERE modname = 'PostCalendar' AND tablename = 'postcalendar_events' 
-group by obj_id, reg_id, category_id 
-having count(*) > 1";
+  SELECT obj_id, reg_id, category_id 
+  FROM categories_mapobj WHERE modname = 'PostCalendar' AND tablename = 'postcalendar_events' 
+  group by obj_id, reg_id, category_id 
+  having count(*) > 1";
 
-During the upgrade you get the error 
+If, during the upgrade you get the error:
 
-SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry '??-????-?' for key 'cat_unq'
-Check your entry's in the table and clean up your data. 
+  SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry '??-????-?' for key 'cat_unq'
+  Check your entry's in the table and clean up your data. 
 
-As workarround you can change the SQL in the Upgrade Script. Be carefull and test the results.
-PostCalendare/lib/Postcalendar/Installer.php  Look for the following insert.
+As workarround you can change the SQL in the Upgrade Script. Be careful and test the results.
+PostCalendar/lib/Postcalendar/Installer.php  Look for the following INSERT sql statement:
 
-$sqls[] = "INSERT INTO postcalendar_calendarevent_category (entityId, registryId, categoryId) SELECT obj_id, reg_id, category_id FROM categories_mapobj WHERE modname = 'PostCalendar' AND tablename = 'postcalendar_events';
+  $sqls[] = "INSERT INTO postcalendar_calendarevent_category (entityId, registryId, categoryId) 
+    SELECT obj_id, reg_id, category_id FROM categories_mapobj 
+    WHERE modname = 'PostCalendar' AND tablename = 'postcalendar_events';
 
-Extend this with a group by. 
+Extend this with a group by:
 
-$sqls[] = "INSERT INTO postcalendar_calendarevent_category (entityId, registryId, categoryId) SELECT obj_id, reg_id, category_id FROM categories_mapobj WHERE modname = 'PostCalendar' AND tablename = 'postcalendar_events' group by obj_id, reg_id, category_id";
+  $sqls[] = "INSERT INTO postcalendar_calendarevent_category (entityId, registryId, categoryId) 
+    SELECT obj_id, reg_id, category_id FROM categories_mapobj 
+    WHERE modname = 'PostCalendar' AND tablename = 'postcalendar_events' 
+    GROUP BY obj_id, reg_id, category_id";
