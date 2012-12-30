@@ -419,7 +419,11 @@ div.postcalendar_featuredevent div.eventdetails span.location{
 /** date and time pickers **/
 #eventstart_time_display,
 #eventend_time_display {
-    width: 8em;
+    width: 6em;
+}
+#eventstart_display,
+#eventend_display {
+    width: 12em;
 }
 .z-action-icon {
     margin-left: 2.5em;
