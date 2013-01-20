@@ -6,7 +6,7 @@
 
 <form class="z-form" action="{modurl modname="PostCalendar" type="admin" func="listevents"}" method="post" enctype="application/x-www-form-urlencoded">
     <fieldset id="postcalendar_listfilter"{if $filter_active} class='filteractive'{/if}>
-        {if $filter_active}{gt text='active' assign=filteractive}{else}{gt text='inactive" assign=filteractive}{/if}
+        {if $filter_active}{gt text='active' assign=filteractive}{else}{gt text='inactive' assign=filteractive}{/if}
         <legend>{gt text='Filter %1$s, %2$s event listed' plural='Filter %1$s, %2$s events listed' count=$total_events tag1=$filteractive tag2=$total_events}</legend>
         <input type="hidden" name="csrftoken" value="{insert name="csrftoken"}" />
         <input type="hidden" name="offset" value="{$offset}" />
