@@ -81,6 +81,10 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
             $upgradeToVersion = $this->version->getVersion();
             return LogUtil::registerError($this->__f('Notice: This version does not support upgrades from PostCalendar 6.x and earlier. Please see detailed upgrade instructions at <a href="modules/PostCalendar/docs/en/Admin/InstallationAndUpgrade.txt">the local docs</a>). After upgrading, you can install PostCalendar %s and perform this upgrade.', $upgradeToVersion));
         }
+
+        // disable the max execution time in case there are many records and this takes too long
+        ini_set('max_execution_time', 0);
+
         $defaultsettings = PostCalendar_Util::getdefaults();
 
         switch ($oldversion) {
