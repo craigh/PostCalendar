@@ -332,6 +332,12 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
      */
     public static function postcalendarhookconfigprocess(Zikula_Event $z_event)
     {
+        // check if this is for this handler
+        $subject = $z_event->getSubject();
+        if (!($z_event['method'] == 'postcalendarhookconfigprocess' && strrpos(get_class($subject), '_Controller_Admin'))) {
+            return;
+        }
+
         $dom = ZLanguage::getModuleDomain('PostCalendar');
 
         $request = ServiceUtil::getService('request');
