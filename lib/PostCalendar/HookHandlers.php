@@ -233,7 +233,7 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
                 $this->_em->getRepository('PostCalendar_Entity_CalendarEvent')->deleteEvents(array($hookdata['eid']));
                 LogUtil::registerStatus($this->__("PostCalendar: Existing event deleted (opt out)."));
             } else {
-                LogUtil::registerStatus($this->__("PostCalendar: News event not created (opt out)."));
+                LogUtil::registerStatus($this->__("PostCalendar: Event not created (opt out)."));
             }
             return;
         }
