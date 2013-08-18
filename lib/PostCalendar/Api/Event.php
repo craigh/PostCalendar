@@ -61,7 +61,7 @@ class PostCalendar_Api_Event extends Zikula_AbstractApi
     {
         $startDate   = isset($args['start'])       ? $args['start']       : new DateTime();
         $endDate     = isset($args['end'])         ? $args['end']         : null;
-        $filtercats  = isset($args['filtercats'])  ? $args['filtercats']  : '';
+        $filtercats  = isset($args['filtercats'])  ? $args['filtercats']  : array();
         $userFilter  = isset($args['userfilter'])  ? $args['userfilter'] : '';
         $searchDql   = isset($args['s_keywords'])  ? $args['s_keywords']  : ''; // search WHERE dql
         $searchstart = isset($args['searchstart']) ? $args['searchstart'] : '';
