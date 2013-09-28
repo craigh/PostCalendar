@@ -228,6 +228,7 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
 
         // Delete entries from category registry
         CategoryRegistryUtil::deleteEntry('PostCalendar');
+        CategoryUtil::deleteCategoriesByPath('/__SYSTEM__/Modules/PostCalendar', 'path');
 
         // unregister handlers
         EventUtil::unregisterPersistentModuleHandlers('PostCalendar');

@@ -661,7 +661,7 @@ class PostCalendar_Entity_CalendarEvent extends Zikula_EntityAccess
             $em = ServiceUtil::getService('doctrine.entitymanager');
             $regIds = CategoryRegistryUtil::getRegisteredModuleCategoriesIds('PostCalendar', 'CalendarEvent');
             foreach ($array['categories'] as $propName => $catId) {
-                $category = $em->find('Zikula_Doctrine2_Entity_Category', $catId);
+                $category = $em->find('Zikula\Core\Doctrine\Entity\CategoryEntity', $catId);
                 if ($this->getCategories()->get($regIds[$propName])) {
                     $this->getCategories()->get($regIds[$propName])->setCategory($category);
                 } else {
