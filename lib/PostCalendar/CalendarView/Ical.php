@@ -100,7 +100,8 @@ class PostCalendar_CalendarView_Ical extends PostCalendar_CalendarView_List
                 $vevent->UID = 'postcalendar-' . $event['eid'];
                 $vevent->SUMMARY = $event['title'];
                 if ($event['hometext']) {
-                    $vevent->DESCRIPTION = $event['hometext'];
+                    $description = trim(preg_replace('/\s+/', ' ', $event['hometext']));
+                    $vevent->DESCRIPTION = strip_tags($description);
                 }
 
                 // overwritten in the next step
