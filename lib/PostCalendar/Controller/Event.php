@@ -181,6 +181,12 @@ class PostCalendar_Controller_Event extends Zikula_AbstractController
             }
             unset($eventdata['categories']);
             $eventdata['categories'] = $categories;
+            // reformat category attributes
+            foreach ($categories as $propName => $category) {
+                foreach ($category['attributes'] as $attr) {
+                    $eventdata['categories'][$propName]['attributes'][$attr->getName()] = $attr->getValue();
+                }
+            }
             // format the data for preview
             $eventdata = ModUtil::apiFunc('PostCalendar', 'event', 'formateventarrayfordisplay', array('event' => $eventdata));
         } else {
