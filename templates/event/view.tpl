@@ -43,16 +43,16 @@
             {lang assign="lang"}
             <h3>{gt text='Categorized in'}:</h3>
             <ul>
-                {foreach from=$loaded_event.categories key="property" item="attribute"}
-                    {if isset($attribute.attributes.color)}
-                        {assign var='bgcolor' value=$attribute.attributes.color}
+                {foreach from=$loaded_event.categories key="property" item="category"}
+                    {if isset($category.attributes.color)}
+                        {assign var='bgcolor' value=$category.attributes.color}
                     {else}
                         {assign var='bgcolor' value='#ffffff'}
                     {/if}
-                {if isset($attribute.display_name.$lang)}
-                    {assign var='catname' value=$attribute.display_name.$lang}
+                {if isset($category.display_name.$lang)}
+                    {assign var='catname' value=$category.display_name.$lang}
                 {else}
-                    {assign var='catname' value=$attribute.name}
+                    {assign var='catname' value=$category.name}
                 {/if}
                     <li><span style='padding: 0 1em; background-color:{$bgcolor};'>{$catname}</span></li>
                 {/foreach}
