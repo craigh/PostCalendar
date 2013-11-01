@@ -1,7 +1,7 @@
 {if !$hideTodaysEvents}
 {pc_pagejs_init}
 <div class="postcalendar_block_view_day">
-{if $blockVars.pcbshowcalendar eq 1}
+{if $blockVars.pcbeventoverview  eq 1}
     <h2 class='postcalendar_block_innertitle'>{gt text="Today's events"}</h2>
 {/if}
 {assign var="eventtotal" value=0}
