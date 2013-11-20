@@ -32,7 +32,7 @@ class PostCalendar_Controller_User extends Zikula_AbstractController
         // get the vars that were passed in
         $userFilter = $this->request->query->get('userfilter', $this->request->request->get('userfilter', ''));
         $eid = $this->request->query->get('eid', $this->request->request->get('eid', 0));
-        $filtercats = $this->request->query->get('pc_categories', $this->request->request->get('pc_categories', null));
+        $filtercats = $this->request->query->get('filtercats', $this->request->request->get('pc_categories', null));
         $jumpargs = array(
             'jumpday' => $this->request->query->get('jumpDay', $this->request->request->get('jumpDay', null)),
             'jumpmonth' => $this->request->query->get('jumpMonth', $this->request->request->get('jumpMonth', null)),
