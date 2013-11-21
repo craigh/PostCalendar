@@ -98,7 +98,7 @@ class PostCalendar_Controller_Admin extends Zikula_AbstractController
         }
         $this->view->assign('sortcolclasses', $sortcolclasses);
 
-        $filtercats = $this->request->query->get('pc_categories', $this->request->request->get('pc_categories', null));
+        $filtercats = isset($args['filtercats']) ? $args['filtercats'] : $this->request->query->get('filtercats', $this->request->request->get('filtercats', null));
         $filtercats_serialized = $this->request->query->get('filtercats_serialized', false);
         $filtercats = $filtercats_serialized ? unserialize($filtercats_serialized) : $filtercats;
         $selectedCategories = PostCalendar_Api_Event::formatCategoryFilter($filtercats);
