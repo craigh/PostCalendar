@@ -96,7 +96,7 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
                 $hookManager = $this->serviceManager->getService('zikula.hookmanager');
 
                 // select partial array of all events for later manipulation
-                $sql = "SELECT eid, hooked_area, eventDate, startTime, duration FROM postcalendar_events";
+                $sql = "SELECT eid, hooked_area, eventDate, startTime, duration, endDate, recurrtype FROM postcalendar_events";
                 $objects = $connection->fetchAll($sql);
 
                 // add PostCalendar_Entity_RecurException and PostCalendar_Entity_EventCategory tables
@@ -110,11 +110,21 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
                 foreach ($objects as $object) {
                     $hookedArea = isset($object['hooked_area']) ? $hookManager->getAreaId($object['hooked_area']) : 'null';
                     $eventStart = DateTime::createFromFormat('Y-m-d H:i:s', $object['eventDate'] . " " . $object['startTime']);
-                    $eventEnd = clone $eventStart;
-                    $eventEnd->modify("+" . $object['duration'] . " seconds");
+                    $endDate = DateTime::createFromFormat('Y-m-d', $object['endDate']);
+                    if (($endDate->getTimestamp() - $eventStart->getTimestamp()) > $object['duration']) {
+                        // take enddate as the reference and ignore duration
+                        $eventEnd = clone $endDate;
+                        $recurrtype = 3;
+                    } else {
+                        // take eventStart + duration
+                        $eventEnd = clone $eventStart;
+                        $eventEnd->modify("+" . $object['duration'] . " seconds");
+                        $recurrtype = (int)$object['recurrtype'];
+                    }
                     $eid = $object['eid'];
                     $sqls[] = "UPDATE `postcalendar_events` 
                                SET `hooked_area` = $hookedArea, 
+                                   `recurrtype` = $recurrtype, 
                                    `eventStart` = '{$eventStart->format('Y-m-d H:i:s')}', 
                                    `eventEnd` = '{$eventEnd->format('Y-m-d H:i:s')}' 
                                WHERE `postcalendar_events`.`eid`=$eid";
