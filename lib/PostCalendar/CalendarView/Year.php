@@ -147,6 +147,7 @@ class PostCalendar_CalendarView_Year extends PostCalendar_CalendarView_AbstractD
                     ->assign('monthNames', explode(" ", $this->__('January February March April May June July August September October November December')))
                     ->assign('graph', $this->dateGraph)
                     ->assign('eventsByDate', $eventsByDate)
+                    ->assign('selectedCategories', $this->selectedCategories)
                     ->assign('requestedDate', $this->requestedDate->format('Y-m-d'));
         }
         return $this->view->fetch($this->template);
