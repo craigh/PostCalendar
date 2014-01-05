@@ -176,7 +176,7 @@
         <div class="z-formrow">
             <span class="z-label">TimeIt table detected</span>
             <div>
-                {if $modvars.PostCalendar.pcTimeItExists}
+                {if isset($modvars.PostCalendar.pcTimeItExists) and $modvars.PostCalendar.pcTimeItExists}
                     <strong>{gt text='Yes'}</strong>
                     <a href="{modurl modname="PostCalendar" type="admin" func='migrateTimeIt'}" class="z-action-icon z-icon-es-regenerate">{gt text="Migrate TimeIt"}</a>
                 {else}
