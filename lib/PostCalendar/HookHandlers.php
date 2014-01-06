@@ -292,7 +292,7 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
     {
         // check if this is for this handler
         $subject = $z_event->getSubject();
-        if (!($z_event['method'] == 'postcalendarhookconfig' && strrpos(get_class($subject), '_Controller_Admin'))) {
+        if (!($z_event['method'] == 'postcalendarhookconfig' && (strrpos(get_class($subject), '_Controller_Admin') || strrpos(get_class($subject), '\\AdminController')))) {
             return;
         }
         $moduleName = $subject->getName();
@@ -334,7 +334,7 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
     {
         // check if this is for this handler
         $subject = $z_event->getSubject();
-        if (!($z_event['method'] == 'postcalendarhookconfigprocess' && strrpos(get_class($subject), '_Controller_Admin'))) {
+        if (!($z_event['method'] == 'postcalendarhookconfigprocess' && (strrpos(get_class($subject), '_Controller_Admin') || strrpos(get_class($subject), '\\AdminController')))) {
             return;
         }
 
