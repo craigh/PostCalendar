@@ -348,11 +348,6 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
         }
         unset($hookdata['postcalendar_csrftoken']);
 
-        // check if this is for this handler
-        $subject = $z_event->getSubject();
-        if (!($z_event['method'] == 'postcalendarhookconfigprocess' && strrpos(get_class($subject), '_Controller_Admin'))) {
-            return;
-        }
         $moduleName = $subject->getName();
         if (!SecurityUtil::checkPermission($moduleName . '::', '::', ACCESS_ADMIN)) {
             throw new Zikula_Exception_Forbidden(LogUtil::getErrorMsgPermission());
