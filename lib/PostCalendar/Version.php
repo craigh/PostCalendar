@@ -25,7 +25,7 @@ class PostCalendar_Version extends Zikula_AbstractVersion
             'PostCalendar::Event' => 'Event Title::Event ID',
             'PostCalendar::' => '::');
         $meta['core_min'] = '1.3.3'; // requires minimum 1.3.3 or later (with updated (>=1.3.5) jquery_datepicker plugin)
-        $meta['core_max'] = '1.3.99'; // doesn't work with 1.4.0 (yet)
+        $meta['core_max'] = '1.4.99';
 
         $meta['capabilities'] = array();
         $meta['capabilities'][HookUtil::PROVIDER_CAPABLE] = array('enabled' => true);
