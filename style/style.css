@@ -5,6 +5,8 @@
 
 /********** HEADERS & CONTAINERS ***********/
 .z-module-postcalendar {
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
     box-sizing: content-box;
 }
 div.calcontainer {
