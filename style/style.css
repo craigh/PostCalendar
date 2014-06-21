@@ -4,6 +4,9 @@
  */
 
 /********** HEADERS & CONTAINERS ***********/
+.z-module-postcalendar {
+    box-sizing: content-box;
+}
 div.calcontainer {
 	margin-top:.2em;
 }
