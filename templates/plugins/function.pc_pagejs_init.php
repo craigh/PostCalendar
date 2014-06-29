@@ -26,7 +26,7 @@ function smarty_function_pc_pagejs_init($params, Zikula_View $view)
             }
             if ($modVars['PostCalendar']['pcEventsOpenInNewWindow']) {
                 $jQueryTheme = 'overcast';
-                $jQueryTheme = is_dir("javascript/jquery-ui/themes/$jQueryTheme") ? $jQueryTheme : 'base';
+                $jQueryTheme = is_dir("javascript/jquery-ui/themes/$jQueryTheme") ? $jQueryTheme : 'smoothness';
                 PageUtil::addVar("stylesheet", "javascript/jquery-ui/themes/$jQueryTheme/jquery-ui.css");
                 // sample code taken from http://blog.nemikor.com/category/jquery-ui/jquery-ui-dialog/
                 $javascript = "

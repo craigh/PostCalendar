@@ -169,7 +169,7 @@ class PostCalendar_CalendarView_Navigation
             PageUtil::addVar("footer", "<script type='text/javascript'>$javascript</script>");
 
             $jQueryTheme = 'overcast';
-            $jQueryTheme = is_dir("javascript/jquery-ui/themes/$jQueryTheme") ? $jQueryTheme : 'base';
+            $jQueryTheme = is_dir("javascript/jquery-ui/themes/$jQueryTheme") ? $jQueryTheme : 'smoothness';
             PageUtil::addVar("stylesheet", "javascript/jquery-ui/themes/$jQueryTheme/jquery-ui.css");
             PageUtil::addVar("stylesheet", "modules/PostCalendar/style/jquery-overrides.css");
             if (SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
