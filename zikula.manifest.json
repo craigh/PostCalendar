@@ -1,0 +1,21 @@
+{
+    "extension": {
+        "title": "PostCalendar",
+        "icon": "https://raw.githubusercontent.com/craigh/PostCalendar/master/images/admin.png"
+    },
+    "version": {
+        "keywords": [
+            "calendar",
+            "module"
+        ],
+        "semver": "8.0.2",
+        "dependencies": {
+            "zikula/core": ">=1.3.5 <1.5"
+        },
+        "composerpath": "composer.json",
+        "description": "PostCalendar is a calendar module for the Zikula Application Framework",
+        "urls": {
+            "issues": "https://github.com/craigh/PostCalendar/issues"
+        }
+    }
+}
