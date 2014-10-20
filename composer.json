@@ -1,0 +1,15 @@
+{
+    "name": "craigh/postcalendar-module",
+    "description": "PostCalendar is a calendar module for the Zikula Application Framework",
+    "type": "zikula-module",
+    "license": "GPL-2.0+",
+    "authors": [
+        {
+            "name": "Craig Heydenburg",
+            "role": "owner"
+        }
+    ],
+    "require": {
+        "php": ">5.3.3"
+    }
+}
