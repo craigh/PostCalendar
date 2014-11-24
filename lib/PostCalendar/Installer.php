@@ -213,6 +213,8 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
                 $this->setVar('pcPendingContent', $defaultsettings['pcPendingContent']);
                 
             case '8.0.1':
+            case '8.0.2':
+            case '8.0.3':
                 //future development
         }
 
