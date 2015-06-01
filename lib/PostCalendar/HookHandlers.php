@@ -302,8 +302,13 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
         $view = Zikula_View::getInstance('PostCalendar', false);
         $postcalendarhookconfig = ModUtil::getVar($moduleName, 'postcalendarhookconfig');
 
-        $classname = $moduleName . '_Version';
-        $moduleVersionObj = new $classname;
+        $module = ModUtil::getModule($moduleName);
+        if (null !== $module) {
+            $versionClassName = $module->getVersionClass();
+        } else {
+            $versionClassName = $moduleName . '_Version';
+        }
+        $moduleVersionObj = new $versionClassName;
         $_em = ServiceUtil::getService('doctrine.entitymanager');
         $bindingsBetweenOwners = HookUtil::getBindingsBetweenOwners($moduleName, 'PostCalendar');
         foreach ($bindingsBetweenOwners as $k => $binding) {
@@ -437,7 +442,7 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
     public static function servicelinks(Zikula_Event $event)
     {
         $dom = ZLanguage::getModuleDomain('PostCalendar');
-        $module = ModUtil::getName();
+        $module = $event['modname'];
         $bindingCount = count(HookUtil::getBindingsBetweenOwners($module, 'PostCalendar'));
         if (($bindingCount > 0) && ($module <> 'PostCalendar') && (empty($event->data) || (is_array($event->data)
                 && !in_array(array('url' => ModUtil::url($module, 'admin', 'postcalendarhookconfig'), 'text' => __('PostCalendar Hook Options', $dom)), $event->data)))) {
