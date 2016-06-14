@@ -9,7 +9,7 @@
 use PostCalendar_Entity_CalendarEvent as CalendarEvent;
 use PostCalendar_Api_Event as EventApi;
 
-class PostCalendar_Controller_Admin extends Zikula_AbstractController
+class AdminController extends Zikula_AbstractController
 {
 
     const ACTION_APPROVE = 0;

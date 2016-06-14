@@ -13,7 +13,7 @@ use PostCalendar_Entity_CalendarEvent as CalendarEvent;
  * This is the event handler api
  **/
 
-class PostCalendar_Api_Event extends Zikula_AbstractApi
+class EventApi extends Zikula_AbstractApi
 {
     const REPEAT_EVERY_DAY = 0;
     const REPEAT_EVERY_WEEK = 1;

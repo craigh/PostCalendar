@@ -6,7 +6,15 @@
  * @copyright   Copyright (c) 2009-2012, Craig Heydenburg, Sound Web Development
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
  */
-class PostCalendar_Version extends Zikula_AbstractVersion
+
+namespace Zikula\PostCalendarModule;
+
+use Zikula_HookManager_SubscriberBundle;
+use Zikula_HookManager_ProviderBundle;
+
+use HookUtil;
+
+class PostCalendarModuleVersion extends \Zikula_AbstractVersion
 {
 
     /**
@@ -16,15 +24,16 @@ class PostCalendar_Version extends Zikula_AbstractVersion
     public function getMetaData()
     {
         $meta = array();
-        $meta['displayname'] = $this->__('PostCalendar');
-        $meta['url'] = $this->__(/* !used in URL - nospaces, no special chars, lcase */'postcalendar');
+        $meta['displayname'] = 'PostCalendar';
+        $meta['oldnames'] =  [ $this->__('PostCalendar') ];
+        $meta['url'] = 'postcalendar';
         $meta['description'] = $this->__('Calendar for Zikula');
-        $meta['version'] = '8.0.3';
+        $meta['version'] = '8.1.0';
 
         $meta['securityschema'] = array(
             'PostCalendar::Event' => 'Event Title::Event ID',
             'PostCalendar::' => '::');
-        $meta['core_min'] = '1.3.3'; // requires minimum 1.3.3 or later (with updated (>=1.3.5) jquery_datepicker plugin)
+        $meta['core_min'] = '1.4.2'; // requires minimum 1.3.3 or later (with updated (>=1.3.5) jquery_datepicker plugin)
         $meta['core_max'] = '1.4.99';
 
         $meta['capabilities'] = array();

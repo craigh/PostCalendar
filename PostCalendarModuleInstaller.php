@@ -6,7 +6,15 @@
  * @copyright   Copyright (c) 2009-2012, Craig Heydenburg, Sound Web Development
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
  */
-class PostCalendar_Installer extends Zikula_AbstractInstaller
+namespace Zikula\PostCalendarModule;
+
+use Zikula\PostCalendarModule\Entity\CalendarEventEntity;
+use Zikula\PostCalendarModule\Entity\EventCategoryEntity;
+use Zikula\PostCalendarModule\Entity\RecurExceptionEntity;
+use DoctrineHelper;
+use LogUtil;
+
+class PostCalendarModuleInstaller extends \Zikula_AbstractInstaller
 {
 
     /**
@@ -22,10 +30,10 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
     {
         // create tables
         try {
-            DoctrineHelper::createSchema($this->entityManager, array('PostCalendar_Entity_CalendarEvent',
-                'PostCalendar_Entity_EventCategory',
-                'PostCalendar_Entity_RecurException'));
-        } catch (Exception $e) {
+            DoctrineHelper::createSchema($this->entityManager, array('Zikula\PostCalendarModule\Entity\CalendarEventEntity',
+                'Zikula\PostCalendarModule\Entity\EventCategoryEntity',
+                'Zikula\PostCalendarModule\Entity\RecurExceptionEntity'));
+        } catch (\Exception $e) {
             LogUtil::registerError($this->__f('Error! Could not create tables (%s).', $e->getMessage()));
             return false;
         }
@@ -99,11 +107,11 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
                 $sql = "SELECT eid, hooked_area, eventDate, startTime, duration, endDate, recurrtype FROM postcalendar_events";
                 $objects = $connection->fetchAll($sql);
 
-                // add PostCalendar_Entity_RecurException and PostCalendar_Entity_EventCategory tables
-                DoctrineHelper::createSchema($this->entityManager, array('PostCalendar_Entity_EventCategory',
-                    'PostCalendar_Entity_RecurException'));
-                // update the PostCalendar_Entity_CalendarEvent table
-                DoctrineHelper::updateSchema($this->entityManager, array('PostCalendar_Entity_CalendarEvent'));
+                // add Zikula\PostCalendarModule\Entity\RecurExceptionEntity and Zikula\PostCalendarModule\Entity\EventCategoryEntity tables
+                DoctrineHelper::createSchema($this->entityManager, array('Zikula\PostCalendarModule\Entity\EventCategoryEntity',
+                    'Zikula\PostCalendarModule\Entity\RecurExceptionEntity'));
+                // update the Zikula\PostCalendarModule\Entity\CalendarEventEntity table
+                DoctrineHelper::updateSchema($this->entityManager, array('Zikula\PostCalendarModule\Entity\CalendarEventEntity'));
 
                 // update every event with correct hooked_area and new eventStart and eventEnd values
                 $sqls = array();
@@ -233,9 +241,9 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
     public function uninstall()
     {
         //drop the tables
-        DoctrineHelper::dropSchema($this->entityManager, array('PostCalendar_Entity_CalendarEvent',
-            'PostCalendar_Entity_EventCategory',
-            'PostCalendar_Entity_RecurException'));
+        DoctrineHelper::dropSchema($this->entityManager, array('Zikula\PostCalendarModule\Entity\CalendarEventEntity',
+            'Zikula\PostCalendarModule\Entity\EventCategoryEntity',
+            'Zikula\PostCalendarModule\Entity\RecurExceptionEntity'));
         $this->delVars();
 
         // Delete entries from category registry
@@ -261,14 +269,14 @@ class PostCalendar_Installer extends Zikula_AbstractInstaller
             'title' => $this->__('PostCalendar Installed'),
             'hometext' => ':text:' . $this->__('On this date, the PostCalendar module was installed. Thank you for trying PostCalendar! This event can be safely deleted if you wish.'),
             'alldayevent' => true,
-            'eventstatus' => PostCalendar_Entity_CalendarEvent::APPROVED,
-            'sharing' => PostCalendar_Entity_CalendarEvent::SHARING_GLOBAL,
+            'eventstatus' => Zikula\PostCalendarModule\Entity\CalendarEventEntity::APPROVED,
+            'sharing' => Zikula\PostCalendarModule\Entity\CalendarEventEntity::SHARING_GLOBAL,
             'website' => 'https://github.com/craigh/PostCalendar/wiki',
             'categories' => array(
                 'Main' => $cat['id']));
 
         try {
-            $event = new PostCalendar_Entity_CalendarEvent();
+            $event = new Zikula\PostCalendarModule\Entity\CalendarEventEntity();
             $event->setFromArray($eventArray);
             $this->entityManager->persist($event);
             $this->entityManager->flush();

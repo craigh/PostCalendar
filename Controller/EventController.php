@@ -7,7 +7,7 @@
  */
 use PostCalendar_Entity_CalendarEvent as CalendarEvent;
 
-class PostCalendar_Controller_Event extends Zikula_AbstractController
+class EventController extends Zikula_AbstractController
 {
     public function postInitialize()
     {

@@ -7,7 +7,7 @@
  */
 use PostCalendar_Entity_CalendarEvent as CalendarEvent;
 
-class PostCalendar_Api_Admin extends Zikula_AbstractApi
+class AdminApi extends Zikula_AbstractApi
 {
     /**
      * Get available admin panel links

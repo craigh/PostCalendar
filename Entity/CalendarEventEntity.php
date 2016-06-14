@@ -9,19 +9,22 @@
  * Please see the NOTICE file distributed with this source code for further
  * information regarding copyright and licensing.
  */
+namespace Zikula\PostCalendarModule\Entity;
+
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Zikula\PostCalendarModule\Entity\RecurExceptionEntity;
 
 /**
  * Calendar Event entity class
  *
  * Annotations define the entity mappings to database.
  *
- * @ORM\Entity(repositoryClass="PostCalendar_Entity_Repository_CalendarEventRepository")
+ * @ORM\Entity(repositoryClass="Zikula\PostCalendarModule\Entity\Repository\CalendarEventRepository")
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="postcalendar_events",indexes={@ORM\index(name="basic_event", columns={"aid", "eventStart", "eventEnd", "eventstatus", "sharing"})})
  */
-class PostCalendar_Entity_CalendarEvent extends Zikula_EntityAccess
+class CalendarEventEntity extends \Zikula_EntityAccess
 {
 
     const SHARING_PRIVATE = 0;
@@ -148,7 +151,7 @@ class PostCalendar_Entity_CalendarEvent extends Zikula_EntityAccess
     /**
      * An array of DateTime objects that are disallowed in the recurrance sequence
      * 
-     * @ORM\OneToMany(targetEntity="PostCalendar_Entity_RecurException", cascade={"all"}, 
+     * @ORM\OneToMany(targetEntity="Zikula\PostCalendarModule\Entity\RecurExceptionEntity", cascade={"all"}, 
      *                orphanRemoval=true, mappedBy="event")
      */
     private $recurExceptions;
@@ -254,7 +257,7 @@ class PostCalendar_Entity_CalendarEvent extends Zikula_EntityAccess
     private $hooked_area = 0;
 
     /**
-     * @ORM\OneToMany(targetEntity="PostCalendar_Entity_EventCategory", 
+     * @ORM\OneToMany(targetEntity="Zikula\PostCalendarModule\Entity\EventCategoryEntity", 
      *                mappedBy="entity", cascade={"all"}, 
      *                orphanRemoval=true, indexBy="categoryRegistryId")
      */
@@ -694,7 +697,7 @@ class PostCalendar_Entity_CalendarEvent extends Zikula_EntityAccess
             $this->getRecurExceptions()->clear();
             $exceptions = is_array($array['recurexceptionstorage']) ? $array['recurexceptionstorage'] : array($array['recurexceptionstorage']);
             foreach ($exceptions as $exception) {
-                $e = new PostCalendar_Entity_RecurException(DateTime::createFromFormat('Y-m-d', $exception));
+                $e = new RecurExceptionEntity(DateTime::createFromFormat('Y-m-d', $exception));
                 $this->getRecurExceptions()->add($e);
                 $e->setEvent($this);
             }

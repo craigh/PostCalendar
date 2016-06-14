@@ -9,13 +9,15 @@
  * Please see the NOTICE file distributed with this source code for further
  * information regarding copyright and licensing.
  */
+namespace Zikula\PostCalendarModule\Entity;
+
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="postcalendar_calendarevent_recurexception")
  */
-class PostCalendar_Entity_RecurException
+class RecurExceptionEntity extends \Zikula_EntityAccess
 {
 
     /**
