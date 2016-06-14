@@ -59,7 +59,7 @@ abstract class PostCalendar_PostCalendarEvent_AbstractBase
 
     /**
      * Get the event
-     * @return PostCalendar_Entity_CalendarEvent 
+     * @return CalendarEventEntity 
      */
     public function getEvent()
     {
@@ -68,9 +68,9 @@ abstract class PostCalendar_PostCalendarEvent_AbstractBase
 
     /**
      * Set the event
-     * @param PostCalendar_Entity_CalendarEvent $event 
+     * @param CalendarEventEntity $event 
      */
-    public function setEvent(PostCalendar_Entity_CalendarEvent $event)
+    public function setEvent(CalendarEventEntity $event)
     {
         $this->event = $event;
         $this->event->setHooked_modulename($this->hook->getCaller());
@@ -118,9 +118,9 @@ abstract class PostCalendar_PostCalendarEvent_AbstractBase
      *     'hometext'     an event description
      *     'eventStart'   php DateTime
      *     'eventEnd'     php DateTime
-     *     'sharing'      likely you should set to PostCalendar_Entity_CalendarEvent::SHARING_GLOBAL (defaults to PRIVATE)
+     *     'sharing'      likely you should set to CalendarEventEntity::SHARING_GLOBAL (defaults to PRIVATE)
      * The other properties of the event are optional and have default values
-     * @see PostCalendar_Entity_CalendarEvent (use setters)
+     * @see CalendarEventEntity (use setters)
      * @see PostCalendar_PostCalendarEvent_Generic (example)
      * @return  boolean true on success false if no desire to publish event
      */

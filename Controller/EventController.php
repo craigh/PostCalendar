@@ -5,7 +5,7 @@
  * @copyright   Copyright (c) 2009-2012, Craig Heydenburg, Sound Web Development
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
  */
-use PostCalendar_Entity_CalendarEvent as CalendarEvent;
+use CalendarEventEntity as CalendarEvent;
 
 class EventController extends Zikula_AbstractController
 {
@@ -26,7 +26,7 @@ class EventController extends Zikula_AbstractController
         $render = FormUtil::newForm('PostCalendar', $this);
 
         // get the event from the DB
-        $event = $this->entityManager->getRepository('PostCalendar_Entity_CalendarEvent')->find($eid)->getOldArray();
+        $event = $this->entityManager->getRepository('CalendarEventEntity')->find($eid)->getOldArray();
         $event = ModUtil::apiFunc('PostCalendar', 'event', 'formateventarrayfordisplay', array('event' => $event));
 
         $render->assign('loaded_event', $event);
@@ -144,7 +144,7 @@ class EventController extends Zikula_AbstractController
                 // here were need to format the DB data to be able to load it into the form
                 $eid = $args['eid'];
                 $eventdata = $this->entityManager
-                        ->getRepository('PostCalendar_Entity_CalendarEvent')
+                        ->getRepository('CalendarEventEntity')
                         ->findOneBy(array('eid' => $eid))
                         ->getOldArray();
                 $eventdata = ModUtil::apiFunc('PostCalendar', 'event', 'formateventarrayfordisplay', array('event' => $eventdata));

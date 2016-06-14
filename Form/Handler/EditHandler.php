@@ -32,7 +32,7 @@ class PostCalendar_Form_Handler_EditHandler extends Zikula_Form_AbstractHandler
         $url = null;
 
         // Fetch event data from DB to confirm event exists
-        $event = $this->entityManager->getRepository('PostCalendar_Entity_CalendarEvent')->find($this->eid);
+        $event = $this->entityManager->getRepository('CalendarEventEntity')->find($this->eid);
         $eventArray = $event->getOldArray();
         if (count($event) == 0) {
             return LogUtil::registerError($this->__f('Error! There are no events with ID %s.', $this->eid));

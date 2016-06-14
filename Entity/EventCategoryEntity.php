@@ -22,9 +22,9 @@ class EventCategoryEntity extends \Zikula_Doctrine2_Entity_EntityCategory
 {
 
     /**
-     * @ORM\ManyToOne(targetEntity="PostCalendar_Entity_CalendarEvent", inversedBy="categories")
+     * @ORM\ManyToOne(targetEntity="CalendarEventEntity", inversedBy="categories")
      * @ORM\JoinColumn(name="entityId", referencedColumnName="eid")
-     * @var PostCalendar_Entity_CalendarEvent
+     * @var CalendarEventEntity
      */
     private $entity;
 

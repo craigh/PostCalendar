@@ -13,7 +13,10 @@ namespace Zikula\PostCalendarModule\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Zikula\PostCalendarModule\Entity\CalendarEventEntity;
+use Zikula\PostCalendarModule\Entity\EventCategoryEntity;
 use Zikula\PostCalendarModule\Entity\RecurExceptionEntity;
+use CategoryRegistryUtil;
 
 /**
  * Calendar Event entity class

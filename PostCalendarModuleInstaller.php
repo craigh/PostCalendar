@@ -8,11 +8,16 @@
  */
 namespace Zikula\PostCalendarModule;
 
-use Zikula\PostCalendarModule\Entity\CalendarEventEntity;
-use Zikula\PostCalendarModule\Entity\EventCategoryEntity;
-use Zikula\PostCalendarModule\Entity\RecurExceptionEntity;
+// use Zikula\PostCalendarModule\Entity\CalendarEventEntity;
+// use Zikula\PostCalendarModule\Entity\EventCategoryEntity;
+// use Zikula\PostCalendarModule\Entity\RecurExceptionEntity;
+use Zikula\PostCalendarModule\Helper\PostCalendarUtil;
 use DoctrineHelper;
 use LogUtil;
+use CategoryUtil;
+use CategoryRegistryUtil;
+use EventUtil;
+use HookUtil;
 
 class PostCalendarModuleInstaller extends \Zikula_AbstractInstaller
 {
@@ -47,7 +52,7 @@ class PostCalendarModuleInstaller extends \Zikula_AbstractInstaller
 
 
         // PostCalendar Default Settings
-        $defaultsettings = PostCalendar_Util::getdefaults();
+        $defaultsettings = PostCalendarUtil::getdefaults();
         $result = $this->setVars($defaultsettings);
         if (!$result) {
             return LogUtil::registerError($this->__('Error! Could not set the default settings for PostCalendar.'));
@@ -93,7 +98,7 @@ class PostCalendarModuleInstaller extends \Zikula_AbstractInstaller
         // disable the max execution time in case there are many records and this takes too long
         ini_set('max_execution_time', 0);
 
-        $defaultsettings = PostCalendar_Util::getdefaults();
+        $defaultsettings = PostCalendarUtil::getdefaults();
 
         switch ($oldversion) {
             case '7.0.0':

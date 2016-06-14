@@ -6,7 +6,7 @@
  * @copyright   Copyright (c) 2009-2012, Craig Heydenburg, Sound Web Development
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
  */
-use PostCalendar_Entity_CalendarEvent as CalendarEvent;
+use CalendarEventEntity as CalendarEvent;
 use PostCalendar_Api_Event as EventApi;
 
 class AdminController extends Zikula_AbstractController
@@ -103,11 +103,11 @@ class AdminController extends Zikula_AbstractController
         $filtercats = $filtercats_serialized ? unserialize($filtercats_serialized) : $filtercats;
         $selectedCategories = PostCalendar_Api_Event::formatCategoryFilter($filtercats);
 
-        $events = $this->entityManager->getRepository('PostCalendar_Entity_CalendarEvent')
+        $events = $this->entityManager->getRepository('CalendarEventEntity')
                 ->getEventlist($listtype, $sort, $offset - 1, $this->getVar('pcListHowManyEvents'), $selectedCategories);
         $events = $this->_appendObjectActions($events, $listtype);
 
-        $total_events = $this->entityManager->getRepository('PostCalendar_Entity_CalendarEvent')
+        $total_events = $this->entityManager->getRepository('CalendarEventEntity')
                 ->getEventCount($listtype, $selectedCategories);
         $this->view->assign('total_events', $total_events);
 
@@ -167,7 +167,7 @@ class AdminController extends Zikula_AbstractController
         } //create array if not already
         $alleventinfo = array();
 
-        $events = $this->entityManager->getRepository('PostCalendar_Entity_CalendarEvent')->findBy(array('eid' => $events));
+        $events = $this->entityManager->getRepository('CalendarEventEntity')->findBy(array('eid' => $events));
         foreach ($events as $event) {
             // get event info
             $eventitems = $event->getOldArray();
@@ -298,15 +298,15 @@ class AdminController extends Zikula_AbstractController
         // update the DB
         switch ($action) {
             case self::ACTION_APPROVE:
-                $res = $this->entityManager->getRepository('PostCalendar_Entity_CalendarEvent')->updateEventStatus(CalendarEvent::APPROVED, $pc_eid);
+                $res = $this->entityManager->getRepository('CalendarEventEntity')->updateEventStatus(CalendarEvent::APPROVED, $pc_eid);
                 $words = array('approve', 'approved');
                 break;
             case self::ACTION_HIDE:
-                $res = $this->entityManager->getRepository('PostCalendar_Entity_CalendarEvent')->updateEventStatus(CalendarEvent::HIDDEN, $pc_eid);
+                $res = $this->entityManager->getRepository('CalendarEventEntity')->updateEventStatus(CalendarEvent::HIDDEN, $pc_eid);
                 $words = array('hide', 'hidden');
                 break;
             case self::ACTION_DELETE:
-                $res = $this->entityManager->getRepository('PostCalendar_Entity_CalendarEvent')->deleteEvents($pc_eid);
+                $res = $this->entityManager->getRepository('CalendarEventEntity')->deleteEvents($pc_eid);
                 $words = array('delete', 'deleted');
                 break;
         }
@@ -602,7 +602,7 @@ class AdminController extends Zikula_AbstractController
 
             // Now insert the created array into PostCalendar via Doctrine
             try {
-                $event = new PostCalendar_Entity_CalendarEvent();
+                $event = new CalendarEventEntity();
                 $event->setFromArray($eventArray);
                 $this->entityManager->persist($event);
                 $eventCount++;

@@ -9,11 +9,13 @@
  * Please see the NOTICE file distributed with this source code for further
  * information regarding copyright and licensing.
  */
+namespace Zikula\PostCalendarModule\Entity\Repository;
+
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
-use PostCalendar_Entity_CalendarEvent as CalendarEvent;
+use Zikula\PostCalendarModule\Entity\CalendarEventEntity as CalendarEvent;
 
-class PostCalendar_Entity_Repository_CalendarEventRepository extends EntityRepository
+class CalendarEventRepository extends EntityRepository
 {
     
     /**
@@ -40,7 +42,7 @@ class PostCalendar_Entity_Repository_CalendarEventRepository extends EntityRepos
      */
     public function getEventCount($eventStatus = CalendarEvent::APPROVED, $categoryFilter = null)
     {
-        $dql = "SELECT COUNT(DISTINCT a.eid) FROM PostCalendar_Entity_CalendarEvent a JOIN a.categories c ";
+        $dql = "SELECT COUNT(DISTINCT a.eid) FROM CalendarEventEntity a JOIN a.categories c ";
         $where = array();
         if ($eventStatus <> CalendarEvent::ALLSTATUS) {
             $where[] = "a.eventstatus = :status ";
@@ -83,7 +85,7 @@ class PostCalendar_Entity_Repository_CalendarEventRepository extends EntityRepos
     {
         $startDate->setTime(0, 0);
         $endDate->setTime(23, 59);
-        $dql = "SELECT a FROM PostCalendar_Entity_CalendarEvent a JOIN a.categories c " .
+        $dql = "SELECT a FROM CalendarEventEntity a JOIN a.categories c " .
                 "WHERE (a.endDate >= :startDate1 " .
                 "OR a.eventEnd >= :startDate3 " .
                 "OR a.eventStart >= :startDate2) " .
@@ -178,7 +180,7 @@ class PostCalendar_Entity_Repository_CalendarEventRepository extends EntityRepos
      */
     public function getEventList($eventStatus, $sortDir, $offset, $maxResults, array $categoryFilter)
     {
-        $dql = "SELECT a FROM PostCalendar_Entity_CalendarEvent a JOIN a.categories c ";
+        $dql = "SELECT a FROM CalendarEventEntity a JOIN a.categories c ";
         $where = array();
         if ($eventStatus <> CalendarEvent::ALLSTATUS) {
             $where[] = "a.eventstatus = :status ";
@@ -227,7 +229,7 @@ class PostCalendar_Entity_Repository_CalendarEventRepository extends EntityRepos
      */
     public function updateEventStatus($status, array $eids)
     {
-        $dql = "UPDATE PostCalendar_Entity_CalendarEvent a " .
+        $dql = "UPDATE CalendarEventEntity a " .
                 "SET a.eventstatus = :eventstatus " .
                 "WHERE a.eid IN (:eids)";
         $query = $this->_em->createQuery($dql);
@@ -259,7 +261,7 @@ class PostCalendar_Entity_Repository_CalendarEventRepository extends EntityRepos
     {
         foreach ($eids as $eid) {
             $event = $this->_em
-                    ->getRepository('PostCalendar_Entity_CalendarEvent')
+                    ->getRepository('CalendarEventEntity')
                     ->findOneBy(array(
                 'eid' => $eid));
             $this->_em->remove($event);
@@ -282,7 +284,7 @@ class PostCalendar_Entity_Repository_CalendarEventRepository extends EntityRepos
      */
     public function getHookedEvent(Zikula_DisplayHook $hook, $eid = null)
     {
-        $dql = "SELECT a FROM PostCalendar_Entity_CalendarEvent a JOIN a.categories c " .
+        $dql = "SELECT a FROM CalendarEventEntity a JOIN a.categories c " .
                 "WHERE a.hooked_modulename = :modulename " .
                 "AND a.hooked_objectid = :objectid " .
                 "AND a.hooked_area = :area ";

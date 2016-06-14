@@ -46,7 +46,7 @@ class PostCalendar_PostCalendarEvent_News extends PostCalendar_PostCalendarEvent
         $this->setEventStart($articleDate);
         $this->setEventEnd($articleDate);
         $this->setEventstatus($eventstatus);
-        $this->setSharing(PostCalendar_Entity_CalendarEvent::SHARING_GLOBAL);
+        $this->setSharing(CalendarEventEntity::SHARING_GLOBAL);
 
         return true;
     }
@@ -57,16 +57,16 @@ class PostCalendar_PostCalendarEvent_News extends PostCalendar_PostCalendarEvent
     public static function scheduler()
     {
         $_em = ServiceUtil::getService('doctrine.entitymanager');
-        $dql = "UPDATE PostCalendar_Entity_CalendarEvent a " .
+        $dql = "UPDATE CalendarEventEntity a " .
                "SET a.eventstatus = :newstatus " .
                "WHERE a.hooked_modulename = :modname " .
                "AND a.eventstatus = :oldstatus " .
                "AND a.eventStart <= :now";
         $query = $_em->createQuery($dql);
         $query->setParameters(array(
-            'newstatus' => PostCalendar_Entity_CalendarEvent::APPROVED,
+            'newstatus' => CalendarEventEntity::APPROVED,
             'modname' => 'news',
-            'oldstatus' => PostCalendar_Entity_CalendarEvent::HIDDEN,
+            'oldstatus' => CalendarEventEntity::HIDDEN,
             'now' => new DateTime(),
         ));
         try {

@@ -5,7 +5,7 @@
  * @copyright   Copyright (c) 2009-2012, Craig Heydenburg, Sound Web Development
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
  */
-use PostCalendar_Entity_CalendarEvent as CalendarEvent;
+use CalendarEventEntity as CalendarEvent;
 
 class AdminApi extends Zikula_AbstractApi
 {

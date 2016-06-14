@@ -56,7 +56,7 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
             return;
         }
 
-        $pc_event = $this->_em->getRepository('PostCalendar_Entity_CalendarEvent')->getHookedEvent($hook);
+        $pc_event = $this->_em->getRepository('CalendarEventEntity')->getHookedEvent($hook);
 
         if (!$pc_event) {
             return;
@@ -102,7 +102,7 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
                 $selectedcategories = array();
             } else {
                 // get the event
-                $pc_event = $this->_em->getRepository('PostCalendar_Entity_CalendarEvent')->getHookedEvent($hook);
+                $pc_event = $this->_em->getRepository('CalendarEventEntity')->getHookedEvent($hook);
 
                 if ($pc_event) {
                     $pc_event = $pc_event->getOldArray();
@@ -163,7 +163,7 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
             return;
         }
 
-        $pc_event = $this->_em->getRepository('PostCalendar_Entity_CalendarEvent')->getHookedEvent($hook);
+        $pc_event = $this->_em->getRepository('CalendarEventEntity')->getHookedEvent($hook);
 
         if (!empty($pc_event)) {
             $this->view->assign('eid', $pc_event->getEid());
@@ -230,7 +230,7 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
         if ((!isset($hookdata['optin'])) || (!$hookdata['optin'])) {
             // check to see if event currently exists - delete if so
             if (!empty($hookdata['eid'])) {
-                $this->_em->getRepository('PostCalendar_Entity_CalendarEvent')->deleteEvents(array($hookdata['eid']));
+                $this->_em->getRepository('CalendarEventEntity')->deleteEvents(array($hookdata['eid']));
                 LogUtil::registerStatus($this->__("PostCalendar: Existing event deleted (opt out)."));
             } else {
                 LogUtil::registerStatus($this->__("PostCalendar: Event not created (opt out)."));
@@ -240,11 +240,11 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
 
         if (!empty($hookdata['eid'])) {
             // event already exists - just update
-            $event = $this->_em->getRepository('PostCalendar_Entity_CalendarEvent')->find($hookdata['eid']);
+            $event = $this->_em->getRepository('CalendarEventEntity')->find($hookdata['eid']);
             $word = $this->__("update");
         } else {
             // create a new event
-            $event = new PostCalendar_Entity_CalendarEvent();
+            $event = new CalendarEventEntity();
             $word = $this->__("create");
         }
         $postCalendarEventInstance = $this->getClassInstance($hook);
@@ -273,8 +273,8 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
      */
     public function processDelete(Zikula_ProcessHook $hook)
     {
-        $pc_event = $this->_em->getRepository('PostCalendar_Entity_CalendarEvent')->getHookedEvent($hook);
-        $result = $this->_em->getRepository('PostCalendar_Entity_CalendarEvent')->deleteEvents(array($pc_event->getEid()));
+        $pc_event = $this->_em->getRepository('CalendarEventEntity')->getHookedEvent($hook);
+        $result = $this->_em->getRepository('CalendarEventEntity')->deleteEvents(array($pc_event->getEid()));
 
         if (!$result) {
             return LogUtil::registerError($this->__('Error! Could not delete associated PostCalendar event.'));
@@ -388,7 +388,7 @@ class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
         $dom = ZLanguage::getModuleDomain('PostCalendar');
         $_em = ServiceUtil::getService('doctrine.entitymanager');
 
-        $events = $_em->getRepository('PostCalendar_Entity_CalendarEvent')->findBy(array('hooked_modulename' => DataUtil::formatForStore($module)));
+        $events = $_em->getRepository('CalendarEventEntity')->findBy(array('hooked_modulename' => DataUtil::formatForStore($module)));
         $i = 0;
         $affected = 0;
         foreach ($events as $event) {

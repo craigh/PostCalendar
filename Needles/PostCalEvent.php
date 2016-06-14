@@ -84,7 +84,7 @@ class PostCalendar_Needles_PostCalEvent extends Zikula_AbstractHelper
     {
         // get the event from the DB
         $entityManager = ServiceUtil::getService('doctrine.entitymanager');
-        $event = $entityManager->getRepository('PostCalendar_Entity_CalendarEvent')->find($args['eid'])->getOldArray();
+        $event = $entityManager->getRepository('CalendarEventEntity')->find($args['eid'])->getOldArray();
         if (!$event) {
             return false;
         }
@@ -92,7 +92,7 @@ class PostCalendar_Needles_PostCalEvent extends Zikula_AbstractHelper
         $event = ModUtil::apiFunc('PostCalendar', 'event', 'formateventarrayfordisplay', array('event' => $event));
 
         // is event allowed for this user?
-        if ($event['sharing'] == PostCalendar_Entity_CalendarEvent::SHARING_PRIVATE && $event['aid'] != UserUtil::getVar('uid') && !SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
+        if ($event['sharing'] == CalendarEventEntity::SHARING_PRIVATE && $event['aid'] != UserUtil::getVar('uid') && !SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
             // if event is PRIVATE and user is not assigned event ID (aid) and user is not Admin event should not be seen
             return -1;
         }

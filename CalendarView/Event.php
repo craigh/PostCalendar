@@ -52,7 +52,7 @@ class PostCalendar_CalendarView_Event extends PostCalendar_CalendarView_Abstract
         $this->popup = $this->view->getRequest()->query->get('popup', $this->view->getRequest()->request->get('popup', false));
 
         $em = ServiceUtil::getService('doctrine.entitymanager');
-        $event = $em->getRepository('PostCalendar_Entity_CalendarEvent')->find($this->eid);
+        $event = $em->getRepository('CalendarEventEntity')->find($this->eid);
         if (isset($event)) {
             $event = $event->getOldArray();
         } else {
@@ -96,7 +96,7 @@ class PostCalendar_CalendarView_Event extends PostCalendar_CalendarView_Abstract
         // caching won't help much in this case because security check comes after
         // fetch from db, so don't use isCached, just fetch after normal routine.
         // is event allowed for this user?
-        if (($this->event['sharing'] == PostCalendar_Entity_CalendarEvent::SHARING_PRIVATE
+        if (($this->event['sharing'] == CalendarEventEntity::SHARING_PRIVATE
                 && $this->event['aid'] != $this->currentUser
                 && !SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN))
                 || ((!SecurityUtil::checkPermission('PostCalendar::Event', "{$this->event['title']}::{$this->event['eid']}", ACCESS_OVERVIEW))

@@ -6,7 +6,7 @@
 include __DIR__ . '/../../vendor/sabre-vobject/vendor/autoload.php';
 
 use Sabre\VObject;
-use PostCalendar_Entity_CalendarEvent as CalendarEvent;
+use CalendarEventEntity as CalendarEvent;
 use PostCalendar_Api_Event as EventAPI;
 
 /**

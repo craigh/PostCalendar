@@ -32,7 +32,7 @@ class PostCalendar_PostCalendarEvent_Generic extends PostCalendar_PostCalendarEv
         $date = new DateTime();
         $this->setEventStart($date); // technically unneccessary but left for demonstration purposes
         $this->setEventEnd($date); // technically unneccessary but left for demonstration purposes
-        $this->setSharing(PostCalendar_Entity_CalendarEvent::SHARING_GLOBAL);
+        $this->setSharing(CalendarEventEntity::SHARING_GLOBAL);
 
         return true;
     }

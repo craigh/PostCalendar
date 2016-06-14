@@ -30,7 +30,7 @@ class RecurExceptionEntity extends \Zikula_EntityAccess
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="PostCalendar_Entity_CalendarEvent", inversedBy="recurExceptions")
+     * @ORM\ManyToOne(targetEntity="CalendarEventEntity", inversedBy="recurExceptions")
      * @ORM\JoinColumn(name="event_id", referencedColumnName="eid")
      */
     private $event;
@@ -72,7 +72,7 @@ class RecurExceptionEntity extends \Zikula_EntityAccess
 
     /**
      * get the associated event
-     * @return PostCalendar_Entity_CalendarEvent 
+     * @return CalendarEventEntity 
      */
     public function getEvent()
     {
@@ -81,9 +81,9 @@ class RecurExceptionEntity extends \Zikula_EntityAccess
 
     /**
      * Set the associated event
-     * @param PostCalendar_Entity_CalendarEvent $event 
+     * @param CalendarEventEntity $event 
      */
-    public function setEvent(PostCalendar_Entity_CalendarEvent $event)
+    public function setEvent(CalendarEventEntity $event)
     {
         $this->event = $event;
     }

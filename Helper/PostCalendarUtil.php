@@ -9,7 +9,9 @@
  * Please see the NOTICE file distributed with this source code for further
  * information regarding copyright and licensing.
  */
-class PostCalendar_Util
+namespace Zikula\PostCalendarModule\Helper;
+
+class PostCalendarUtil
 {
 
     /**
@@ -51,7 +53,7 @@ class PostCalendar_Util
             'pcFilterYearEnd' => 2,
             'pcListMonths' => 12,
             'pcEventDefaults' => array(
-                'sharing' => PostCalendar_Entity_CalendarEvent::SHARING_GLOBAL,
+                'sharing' => CalendarEventEntity::SHARING_GLOBAL,
                 'categories' => $defaultcats,
                 'alldayevent' => 0,
                 'startTime' => '01:00',
