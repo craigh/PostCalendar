@@ -3,11 +3,14 @@
 /**
  * Include the composer autoloader for Sabre-vobject.
  */
+
+namespace Zikula\PostCalendarModule\CalendarView;
 include __DIR__ . '/../../vendor/sabre-vobject/vendor/autoload.php';
 
 use Sabre\VObject;
 use CalendarEventEntity as CalendarEvent;
 use PostCalendar_Api_Event as EventAPI;
+use System;
 
 /**
  * PostCalendar
@@ -18,7 +21,7 @@ use PostCalendar_Api_Event as EventAPI;
  * Please see the NOTICE file distributed with this source code for further
  * information regarding copyright and licensing.
  */
-class PostCalendar_CalendarView_Ical extends PostCalendar_CalendarView_List
+class CalendarViewIcal extends List
 {
 
     /**

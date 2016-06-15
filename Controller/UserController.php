@@ -6,26 +6,48 @@
  * @copyright   Copyright (c) 2009-2012, Craig Heydenburg, Sound Web Development
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
  */
-class UserController extends Zikula_AbstractController
+
+namespace Zikula\PostCalendarModule\Controller;
+
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+// use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+// use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Zikula\PostCalendarModule\Helper\PostCalendarUtil;
+use SecurityUtil;
+use ModUtil;
+use LogUtil;
+
+class UserController extends \Zikula_AbstractController
 {
 
     /**
      * main view functions for end user
+     * @Route("/user")
+     *
+     * @return Response
      */
-    public function main($args)
+
+    public function mainAction($args)
     {
         $this->redirect(ModUtil::url('PostCalendar', 'user', 'display', $args));
     }
 
-    public function view($args)
+    /**
+     * main view functions for end user
+     * @Route("/user/view")
+     *
+     * @return Response
+     */
+    public function viewAction($args)
     {
         $this->redirect(ModUtil::url('PostCalendar', 'user', 'display', $args));
     }
 
     /**
      * display calendar events in requested viewtype
+     * @Route("/user/display")
      */
-    public function display($args)
+    public function displayAction($args)
     {
         $this->throwForbiddenUnless(SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_OVERVIEW), LogUtil::getErrorMsgPermission());
         $defaultView = $this->getVar('pcDefaultView');
@@ -38,7 +60,7 @@ class UserController extends Zikula_AbstractController
             'jumpmonth' => $this->request->query->get('jumpMonth', $this->request->request->get('jumpMonth', null)),
             'jumpyear' => $this->request->query->get('jumpYear', $this->request->request->get('jumpYear', null)));
         $viewtype = isset($args['viewtype']) ? strtolower($args['viewtype']) : strtolower($this->request->query->get('viewtype', $this->request->request->get('viewtype', $defaultView)));
-        $date = isset($args['date']) ? $args['date'] : $this->request->query->get('date', $this->request->request->get('date', PostCalendar_Util::getDate($jumpargs)));
+        $date = isset($args['date']) ? $args['date'] : $this->request->query->get('date', $this->request->request->get('date', PostCalendarUtil::getDate($jumpargs)));
         $prop = isset($args['prop']) ? $args['prop'] : (string)$this->request->query->get('prop', null);
         $cat = isset($args['cat']) ? $args['cat'] : (string)$this->request->query->get('cat', null);
         $popup = $this->view->getRequest()->query->get('popup', $this->view->getRequest()->request->get('popup', false));

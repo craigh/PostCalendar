@@ -13,6 +13,9 @@
  * information regarding copyright and licensing.
  */
 
+// use \System;
+
+
 /**
  * Display the list of allowed HTML tags.
  *
@@ -29,6 +32,7 @@
  *
  * @return string A string containing the allowable HTML tags.
  */
+
 function smarty_function_pc_allowedhtml($params, Zikula_View $view)
 {
     $AllowableHTML = System::getVar('AllowableHTML');

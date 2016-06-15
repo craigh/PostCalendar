@@ -5,7 +5,15 @@
  * @copyright   Copyright (c) 2009-2012, Craig Heydenburg, Sound Web Development
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
  */
-class AccountApi extends Zikula_AbstractApi
+
+namespace Zikula\PostCalendarModule\Api;
+
+use UserUtil;
+use SecurityUtil;
+use ModUtil;
+
+
+class AccountApi extends \Zikula_AbstractApi
 {
     /**
      * Return an array of items to show in the your account panel

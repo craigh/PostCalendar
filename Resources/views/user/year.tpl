@@ -91,10 +91,10 @@
 	{if $PRINT_VIEW eq true}
 		{assign var="viewtype" value=$smarty.get.viewtype}
 		{if ((empty($smarty.get.viewtype)) or (!isset($smarty.get.viewtype)))}
-            {assign var="viewtype" value=$modvars.PostCalendar.pcDefaultView}
+            {assign var="viewtype" value=$modvars.ZikulaPostCalendarModule.pcDefaultView}
 		{/if}
         {formutil_getpassedvalue name="date" source="get" assign="date" default=''}
-		<a href="{modurl modname="PostCalendar" type='user' func='display' viewtype=$viewtype Date=$date}">{gt text='Return'}</a>
+		<a href="{modurl modname="ZikulaPostCalendarModule" type='user' func='display' viewtype=$viewtype Date=$date}">{gt text='Return'}</a>
 	{/if}
 </div>
 {include file="user/footer.tpl"}

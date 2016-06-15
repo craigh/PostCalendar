@@ -9,7 +9,9 @@
  * Please see the NOTICE file distributed with this source code for further
  * information regarding copyright and licensing.
  */
-class PostCalendar_CalendarView_FeaturedEventBlock extends PostCalendar_CalendarView_Event
+
+namespace Zikula\PostCalendarModule\CalendarView;
+class CalendarViewFeaturedEventBlock extends Event
 {
 
     /**

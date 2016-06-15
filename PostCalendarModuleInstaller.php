@@ -8,12 +8,13 @@
  */
 namespace Zikula\PostCalendarModule;
 
-// use Zikula\PostCalendarModule\Entity\CalendarEventEntity;
-// use Zikula\PostCalendarModule\Entity\EventCategoryEntity;
-// use Zikula\PostCalendarModule\Entity\RecurExceptionEntity;
+use Zikula\PostCalendarModule\Entity\CalendarEventEntity;
+//use Zikula\PostCalendarModule\Entity\EventCategoryEntity;
+//use Zikula\PostCalendarModule\Entity\RecurExceptionEntity;
 use Zikula\PostCalendarModule\Helper\PostCalendarUtil;
 use DoctrineHelper;
 use LogUtil;
+use SecurityUtil;
 use CategoryUtil;
 use CategoryRegistryUtil;
 use EventUtil;
@@ -64,13 +65,14 @@ class PostCalendarModuleInstaller extends \Zikula_AbstractInstaller
         HookUtil::registerProviderBundles($this->version->getHookProviderBundles());
 
         // register handlers
-        EventUtil::registerPersistentModuleHandler('PostCalendar', 'get.pending_content', array('PostCalendar_Handlers', 'pendingContent'));
-        EventUtil::registerPersistentModuleHandler('PostCalendar', 'installer.module.uninstalled', array('PostCalendar_HookHandlers', 'moduleDelete'));
-        EventUtil::registerPersistentModuleHandler('PostCalendar', 'module_dispatch.service_links', array('PostCalendar_HookHandlers', 'servicelinks'));
-        EventUtil::registerPersistentModuleHandler('PostCalendar', 'controller.method_not_found', array('PostCalendar_HookHandlers', 'postcalendarhookconfig'));
-        EventUtil::registerPersistentModuleHandler('PostCalendar', 'controller.method_not_found', array('PostCalendar_HookHandlers', 'postcalendarhookconfigprocess'));
-        EventUtil::registerPersistentModuleHandler('PostCalendar', 'module.content.gettypes', array('PostCalendar_Handlers', 'getTypes'));
-
+        /*
+        EventUtil::registerPersistentModuleHandler($this->name, 'get.pending_content', array('\Zikula\PostCalendarModule\Helper\PostCalendarHandlers', 'pendingContent'));
+        EventUtil::registerPersistentModuleHandler($this->name, 'installer.module.uninstalled', array('\Zikula\PostCalendarModule\Helper\PostCalendarHookHandlers', 'moduleDelete'));
+        EventUtil::registerPersistentModuleHandler('PostCalendar', 'module_dispatch.service_links', array('\Zikula\PostCalendarModule\Helper\PostCalendarHookHandlers', 'servicelinks'));
+        EventUtil::registerPersistentModuleHandler('PostCalendar', 'controller.method_not_found', array('\Zikula\PostCalendarModule\Helper\PostCalendarHookHandlers', 'postcalendarhookconfig'));
+        EventUtil::registerPersistentModuleHandler('PostCalendar', 'controller.method_not_found', array('\Zikula\PostCalendarModule\Helper\PostCalendarHookHandlers', 'postcalendarhookconfigprocess'));
+        EventUtil::registerPersistentModuleHandler('PostCalendar', 'module.content.gettypes', array('\Zikula\PostCalendarModule\Helper\PostCalendarHandlers', 'getTypes'));
+        */
         return true;
     }
 
@@ -92,7 +94,7 @@ class PostCalendarModuleInstaller extends \Zikula_AbstractInstaller
         if (version_compare($oldversion, '7', '<')) {
             // Inform user about error, and how he can upgrade to $modversion
             $upgradeToVersion = $this->version->getVersion();
-            return LogUtil::registerError($this->__f('Notice: This version does not support upgrades from PostCalendar 6.x and earlier. Please see detailed upgrade instructions at <a href="modules/PostCalendar/docs/en/Admin/InstallationAndUpgrade.txt">the local docs</a>). After upgrading, you can install PostCalendar %s and perform this upgrade.', $upgradeToVersion));
+            return LogUtil::registerError($this->__f('Notice: This version does not support upgrades from PostCalendar 6.x and earlier. Please see detailed upgrade instructions at <a href="@ZikulaPostCalendarModule/Resources/public/docs/en/Admin/InstallationAndUpgrade.txt">the local docs</a>). After upgrading, you can install PostCalendar %s and perform this upgrade.', $upgradeToVersion));
         }
 
         // disable the max execution time in case there are many records and this takes too long
@@ -274,14 +276,14 @@ class PostCalendarModuleInstaller extends \Zikula_AbstractInstaller
             'title' => $this->__('PostCalendar Installed'),
             'hometext' => ':text:' . $this->__('On this date, the PostCalendar module was installed. Thank you for trying PostCalendar! This event can be safely deleted if you wish.'),
             'alldayevent' => true,
-            'eventstatus' => Zikula\PostCalendarModule\Entity\CalendarEventEntity::APPROVED,
-            'sharing' => Zikula\PostCalendarModule\Entity\CalendarEventEntity::SHARING_GLOBAL,
+            'eventstatus' => CalendarEventEntity::APPROVED,
+            'sharing' => CalendarEventEntity::SHARING_GLOBAL,
             'website' => 'https://github.com/craigh/PostCalendar/wiki',
             'categories' => array(
                 'Main' => $cat['id']));
 
         try {
-            $event = new Zikula\PostCalendarModule\Entity\CalendarEventEntity();
+            $event = new CalendarEventEntity();
             $event->setFromArray($eventArray);
             $this->entityManager->persist($event);
             $this->entityManager->flush();

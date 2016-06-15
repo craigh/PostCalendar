@@ -14,6 +14,10 @@
  * abstract base class to allow other modules to extend the functionality of
  * PostCalendar and create events from within their hooked module.
  */
+
+use CategoryRegistryUtil;
+
+
 abstract class PostCalendar_PostCalendarEvent_AbstractBase
 {
 

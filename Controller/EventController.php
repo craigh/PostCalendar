@@ -5,9 +5,22 @@
  * @copyright   Copyright (c) 2009-2012, Craig Heydenburg, Sound Web Development
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
  */
-use CalendarEventEntity as CalendarEvent;
 
-class EventController extends Zikula_AbstractController
+namespace Zikula\PostCalendarModule\Controller;
+
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+// use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+// use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Zikula\PostCalendarModule\Entity\CalendarEventEntity as CalendarEvent;
+use Zikula\PostCalendarModule\Helper\PostCalendarUtil;
+use Zikula\PostCalendarModule\CalendarView\Navigation;
+use System;
+use SecurityUtil;
+use ModUtil;
+use LogUtil;
+use DateTime;
+
+class EventController extends \Zikula_AbstractController
 {
     public function postInitialize()
     {
@@ -17,8 +30,10 @@ class EventController extends Zikula_AbstractController
     /**
      * This is a user form 'are you sure' display
      * to delete an event
+     *
+     * @Route("/event/delete")
      */
-    public function delete()
+    public function deleteAction()
     {
         $this->throwForbiddenUnless(SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADD), LogUtil::getErrorMsgPermission());
 
@@ -35,22 +50,24 @@ class EventController extends Zikula_AbstractController
 
     /**
      * edit an event
+     * @Route("/event/edit")
      */
-    public function edit($args)
+    public function editAction($args)
     {
         $args['eid'] = $this->request->query->get('eid');
         return $this->create($args);
     }
     /**
      * copy an event
+     * @Route("/event/copy")
      */
-    public function copy($args)
+    public function copyAction($args)
     {
         $args['eid'] = $this->request->query->get('eid');
         return $this->create($args);
     }
     /**
-     * @desc create an event
+     * #Desc: create an event
      *
      *  This form can be loaded in nine states:
      *  new event (first pass): no previous values, need defaults
@@ -70,8 +87,10 @@ class EventController extends Zikula_AbstractController
      *  copy becomes 'new' after first pass - see new event preview and new event submit above
      *
      * expected $args = 'eid'
+     * @Route("/event/create")
+     * 
      **/
-    public function create($args)
+    public function createAction($args)
     {
         // We need at least ADD permission to submit an event
         $this->throwForbiddenUnless(SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADD), LogUtil::getErrorMsgPermission());
@@ -80,7 +99,7 @@ class EventController extends Zikula_AbstractController
         $func = $this->request->query->get('func', 'create');
         $date = $this->request->query->get('date');
         
-        $date = PostCalendar_Util::getDate(array(
+        $date = PostCalendarUtil::getDate(array(
             'date' => $date));
 
         // these items come on submission of form
@@ -229,7 +248,7 @@ class EventController extends Zikula_AbstractController
             return true;
         }
 
-        $submitformelements = ModUtil::apiFunc('PostCalendar', 'event', 'buildSubmitForm', array(
+        $submitformelements = ModUtil::apiFunc('ZikulaPostCalendarModule', 'event', 'buildSubmitForm', array(
             'eventdata' => $eventdata,
             'date' => $date,
             'func' => $func)); //sets defaults or builds selected values
@@ -240,7 +259,7 @@ class EventController extends Zikula_AbstractController
         // assign function in case we were editing
         $this->view->assign('func', $func);
 
-        $navBar = new PostCalendar_CalendarView_Navigation($this->view, $date, null, null, null, array(
+        $navBar = new Navigation($this->view, $date, null, null, null, array(
             'filter' => false, 
             'jumpdate' => false, 
             'navbar' => true,

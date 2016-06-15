@@ -1,0 +1,3 @@
+zikulapostcalendarmodule:
+    resource: "@ZikulaPostCalendarModule/Controller"
+    type:     annotation

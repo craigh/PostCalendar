@@ -5,7 +5,7 @@
 </h2>
 <div class="calcontainer">
     <div class="eventtime">
-        {$loaded_event.eventStart|pc_date_format:$modvars.PostCalendar.pcDateFormats.date}<br />
+        {$loaded_event.eventStart|pc_date_format:$modvars.ZikulaPostCalendarModule.pcDateFormats.date}<br />
         {if $loaded_event.alldayevent != true}
             {$loaded_event.startTime} - {$loaded_event.endTime}<br />
         {else}
@@ -71,9 +71,9 @@
 </div>
 {if isset($EVENT_CAN_EDIT) && $EVENT_CAN_EDIT}
 <div>
-    <a class='z-icon-es-edit' href="{modurl modname="PostCalendar" type="event" func="edit" eid=$loaded_event.eid}">{gt text='Edit event'}</a> |
-    <a class='z-icon-es-copy' href="{modurl modname="PostCalendar" type="event" func="copy" eid=$loaded_event.eid}">{gt text='Copy event'}</a> |
-    <a class='z-icon-es-delete' href="{modurl modname="PostCalendar" type="event" func="delete" eid=$loaded_event.eid}">{gt text='Delete event'}</a>
+    <a class='z-icon-es-edit' href="{modurl modname="ZikulaPostCalendarModule" type="event" func="edit" eid=$loaded_event.eid}">{gt text='Edit event'}</a> |
+    <a class='z-icon-es-copy' href="{modurl modname="ZikulaPostCalendarModule" type="event" func="copy" eid=$loaded_event.eid}">{gt text='Copy event'}</a> |
+    <a class='z-icon-es-delete' href="{modurl modname="ZikulaPostCalendarModule" type="event" func="delete" eid=$loaded_event.eid}">{gt text='Delete event'}</a>
 </div>
 {/if}
 </div><!-- end postcalendar_event_view -->

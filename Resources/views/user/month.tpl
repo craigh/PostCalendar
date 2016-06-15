@@ -44,7 +44,7 @@
                     {/if}
                 </span>
                 {if ($ACCESS_ADD eq true) && ($PRINT_VIEW eq false)}
-                <span class="new_icon"><a href="{pc_url action='submit' date=$date}">{img modname='PostCalendar' src='new.gif'}</a></span>
+                <span class="new_icon"><a href="{pc_url action='submit' date=$date}">{img modname='ZikulaPostCalendarModule' src='new.gif'}</a></span>
                 {/if}
             </div>
             <div class="monthview_events">
@@ -60,7 +60,7 @@
                         &bull;
                     {/if}
                     {assign var="desc" value=$event.hometext|notifyfilters:'postcalendar.filter_hooks.eventsfilter.filter'|safehtml|truncate:255:"..."}
-                    {if $event.privateicon}{img src='lock.gif' modname='PostCalendar' __title="private event" __alt="private event"}{/if}
+                    {if $event.privateicon}{img src='lock.gif' modname='ZikulaPostCalendarModule' __title="private event" __alt="private event"}{/if}
                     {pc_url full=true action='event' eid=$event.eid date=$date style="font-size: 7pt; text-decoration: none;" title=$event.hometext|notifyfilters:'postcalendar.filter_hooks.eventsfilter.filter'|strip_tags|safehtml display="$timestamp $title"|safehtml}
                     </div>
                 {/foreach}
@@ -76,10 +76,10 @@
     {if $PRINT_VIEW eq true}
         {assign var="viewtype" value=$smarty.get.viewtype}
         {if ((empty($smarty.get.viewtype)) or (!isset($smarty.get.viewtype)))}
-            {assign var="viewtype" value=$modvars.PostCalendar.pcDefaultView}
+            {assign var="viewtype" value=$modvars.ZikulaPostCalendarModule.pcDefaultView}
         {/if}
         {formutil_getpassedvalue name="date" source="get" assign="date" default=''}
-        <a href="{modurl modname="PostCalendar" type='user' func='display' viewtype=$viewtype Date=$date}">{gt text='Return'}</a>
+        <a href="{modurl modname="ZikulaPostCalendarModule" type='user' func='display' viewtype=$viewtype Date=$date}">{gt text='Return'}</a>
     {/if}
 </div>
 {include file="user/footer.tpl"}

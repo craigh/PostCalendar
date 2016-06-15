@@ -4,7 +4,11 @@
  * @copyright   Copyright (c) 2009-2012, Craig Heydenburg, Sound Web Development
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
  */
-class SearchApi extends Zikula_AbstractApi
+namespace Zikula\PostCalendarModule\Api;
+
+use CategoryRegistryUtil;
+
+class SearchApi extends \Zikula_AbstractApi
 {
     /**
      * Search plugin info

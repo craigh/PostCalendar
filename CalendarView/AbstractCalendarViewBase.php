@@ -9,7 +9,9 @@
  * Please see the NOTICE file distributed with this source code for further
  * information regarding copyright and licensing.
  */
-abstract class PostCalendar_CalendarView_AbstractCalendarViewBase extends Zikula_AbstractHelper
+
+namespace Zikula\PostCalendarModule\CalendarView;
+abstract class AbstractCalendarViewBase extends Zikula_AbstractHelper
 {
     /**
      * @abstract
@@ -134,7 +136,7 @@ abstract class PostCalendar_CalendarView_AbstractCalendarViewBase extends Zikula
 
         if (!isset($this->blockVars)) {
             // CalendarView is not a block so provide the navBar
-            $navBar = new PostCalendar_CalendarView_Navigation($this->view, $this->requestedDate, $this->userFilter, $this->selectedCategories, $this->viewtype, $this->getNavBarConfig());
+            $navBar = new Navigation($this->view, $this->requestedDate, $this->userFilter, $this->selectedCategories, $this->viewtype, $this->getNavBarConfig());
             $this->navBar = $navBar->render();
         }
     }

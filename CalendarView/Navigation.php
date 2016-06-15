@@ -9,7 +9,16 @@
  * Please see the NOTICE file distributed with this source code for further
  * information regarding copyright and licensing.
  */
-class PostCalendar_CalendarView_Navigation
+
+namespace Zikula\PostCalendarModule\CalendarView;
+
+use \CategoryRegistryUtil;
+use \ModUtil;
+use \CategoryUtil;
+use \PageUtil;
+use \SecurityUtil;
+
+class Navigation
 {
     /**
      * Provide the rendered navigation html for CalendarViews 
@@ -17,7 +26,7 @@ class PostCalendar_CalendarView_Navigation
 
     /**
      * Array of objects/null containing nav items
-     * @var mixed array of PostCalendar_CalendarView_Nav_AbstractItemBase objects or null 
+     * @var mixed array of Nav_AbstractItemBase objects or null 
      */
     private $navItems = array();
 
@@ -97,7 +106,7 @@ class PostCalendar_CalendarView_Navigation
      * @param string $viewtype
      * @param array $config (optional)
      */
-    public function __construct(Zikula_View $view, $requestedDate, $userFilter, $selectedCategories, $viewtype, $config = null)
+    public function __construct(\Zikula_View $view, $requestedDate, $userFilter, $selectedCategories, $viewtype, $config = null)
     {
         $this->view = $view;
         $this->requestedDate = $requestedDate;
@@ -108,13 +117,13 @@ class PostCalendar_CalendarView_Navigation
             $this->configure($config);
         }
 
-        // construct an array of PostCalendar_CalendarView_Nav_AbstractItemBase objects
+        // construct an array of Nav_AbstractItemBase objects
         // to render as a navbar
-        $allowedViews = ModUtil::getVar('PostCalendar', 'pcAllowedViews');
+        $allowedViews = ModUtil::getVar('ZikulaPostCalendarModule', 'pcAllowedViews');
         array_unshift($allowedViews, 'admin'); // add 'admin' view for nav purposes (always available to Admin)
         unset($allowedViews[array_search('event', $allowedViews)]); // remove 'event' view for nav purposes
         foreach ($allowedViews as $navType) {
-            $class = 'PostCalendar_CalendarView_Nav_' . ucfirst($navType);
+            $class = '\Zikula\PostCalendarModule\CalendarView\Nav\Nav' . ucfirst($navType);
             $this->navItems[] = new $class($this->view, ($navType == $viewtype), $this->navBarType);
         }
         $viewtypeSelectorData = array('day' => $this->view->__('Day'),
@@ -159,7 +168,7 @@ class PostCalendar_CalendarView_Navigation
         if ($this->navBarType == 'buttonbar') {
             PageUtil::addVar("javascript", "jquery");
             PageUtil::addVar("javascript", "jquery-ui");
-            PageUtil::addVar("javascript", "modules/PostCalendar/javascript/postcalendar-user-navigation.js");
+            PageUtil::addVar("javascript", "@ZikulaPostCalendarModule/Resources/public/javascript/postcalendar-user-navigation.js");
             // define javascript variables with translation without using Zikula.UI (and not loading a bunch of other JS)
             $javascript = "
             var pcActiveStateActive='" . $this->view->__('active') . "';
@@ -171,7 +180,7 @@ class PostCalendar_CalendarView_Navigation
             $jQueryTheme = 'overcast';
             $jQueryTheme = is_dir("javascript/jquery-ui/themes/$jQueryTheme") ? $jQueryTheme : 'base';
             PageUtil::addVar("stylesheet", "javascript/jquery-ui/themes/$jQueryTheme/jquery-ui.css");
-            PageUtil::addVar("stylesheet", "modules/PostCalendar/style/jquery-overrides.css");
+            PageUtil::addVar("stylesheet", "@ZikulaPostCalendarModule/Resources/public/style/jquery-overrides.css");
             if (SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
                 $allowedGroup = ModUtil::getVar('PostCalendar', 'pcAllowUserCalendar');
                 if ($allowedGroup > 0) {
@@ -214,7 +223,7 @@ class PostCalendar_CalendarView_Navigation
     /**
      * Get the NavItems
      * 
-     * @return array of PostCalendar_CalendarView_Nav_AbstractItemBase objects
+     * @return array of Nav_AbstractItemBase objects
      */
     public function getNavItems()
     {

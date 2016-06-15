@@ -1,6 +1,6 @@
 {nocache}{pc_pagejs_init type=$navigationObj->navBarType}{/nocache}
 {pc_queued_events_notify}
-<form action="{modurl modname='PostCalendar' type='user' func='display'}" id='pcnav-form' method="post" enctype="application/x-www-form-urlencoded">
+<form action="{modurl modname='ZikulaPostCalendarModule' type='user' func='display'}" id='pcnav-form' method="post" enctype="application/x-www-form-urlencoded">
 <div class="z-clearfix">
     {if $navigationObj->navBarType == 'buttonbar'}
     <div id="pcnav">
@@ -13,7 +13,7 @@
         {else}
             {usergetvar uid=$uid name='uname' assign='uname'}
         {/if}
-        {if !empty($modvars.PostCalendar.pcAllowUserCalendar)}
+        {if !empty($modvars.ZikulaPostCalendarModule.pcAllowUserCalendar)}
         <button id='pcnav_usercalendar_button'>{$uname}</button>
         <!-- This is a pop up dialog box -->
         <div id='pcnav_usercalendar_dialog' title='{gt text='View private events of'}:'>
@@ -39,8 +39,8 @@
                 {/foreach}
             {/foreach}
             </ul>
-            {if !empty($modvars.PostCalendar.pcAllowUserCalendar)}
-            {checkgroup gid=$modvars.PostCalendar.pcAllowUserCalendar}
+            {if !empty($modvars.ZikulaPostCalendarModule.pcAllowUserCalendar)}
+            {checkgroup gid=$modvars.ZikulaPostCalendarModule.pcAllowUserCalendar}
             <h5>{gt text='Visibility'}</h5>
             <ul>
                 <li class='pcvisibility_selector' id='pcviz_private'>{gt text='My private events'}</li>
@@ -59,15 +59,15 @@
             valuestorageelement='date' 
             valuestorageformat='Ymd' 
             theme=$jquerytheme 
-            displayformat_datetime=$modvars.PostCalendar.pcDateFormats.date 
-            displayformat_javascript=$modvars.PostCalendar.pcDateFormats.javascript
+            displayformat_datetime=$modvars.ZikulaPostCalendarModule.pcDateFormats.date 
+            displayformat_javascript=$modvars.ZikulaPostCalendarModule.pcDateFormats.javascript
             autoSize='true' 
             changeMonth='true'
             changeYear='true'
-            mindate="-"|cat:$modvars.PostCalendar.pcFilterYearStart|cat:"Y" 
-            maxdate="+"|cat:$modvars.PostCalendar.pcFilterYearEnd|cat:"Y"
+            mindate="-"|cat:$modvars.ZikulaPostCalendarModule.pcFilterYearStart|cat:"Y" 
+            maxdate="+"|cat:$modvars.ZikulaPostCalendarModule.pcFilterYearEnd|cat:"Y"
             onselectcallback='jQuery(this).closest("form").submit();'}
-        <input id="pcnav_datepicker_button" type="image" alt="jump" class='tooltips' title='{gt text='jump to date'}' src='modules/PostCalendar/images/icon-calendar.jpg' />
+        <input id="pcnav_datepicker_button" type="image" alt="jump" class='tooltips' title='{gt text='jump to date'}' src='@ZikulaPostCalendarModule/Resources/public/images/icon-calendar.jpg' />
         {/if}
         {if $navigationObj->useNavBar}
         <span id='pcnav_buttonbar'>
@@ -96,7 +96,7 @@
             {/if}
             {if $navigationObj->useJumpDate}
             <li>
-                {pc_html_select_date time=$navigationObj->requestedDate->format('Y-m-d') prefix="jump" start_year="-"|cat:$modvars.PostCalendar.pcFilterYearStart end_year="+"|cat:$modvars.PostCalendar.pcFilterYearEnd day_format="%d" day_value_format="%02d" month_format='%B' field_order=$modvars.PostCalendar.pcEventDateFormat}
+                {pc_html_select_date time=$navigationObj->requestedDate->format('Y-m-d') prefix="jump" start_year="-"|cat:$modvars.ZikulaPostCalendarModule.pcFilterYearStart end_year="+"|cat:$modvars.ZikulaPostCalendarModule.pcFilterYearEnd day_format="%d" day_value_format="%02d" month_format='%B' field_order=$modvars.ZikulaPostCalendarModule.pcEventDateFormat}
                 {if !empty($navigationObj->viewtypeselector)}
                     {html_options name='viewtype' options=$navigationObj->viewtypeselector selected=$navigationObj->getViewtype()}
                 {/if}
@@ -114,11 +114,11 @@
 <div id='pcnav_ical_dialog' style='display:none; text-align: left;' title='{gt text='Select an iCal feed'}'>
     <p>{gt text='Click to download and import.<br />Copy link to subscribe in your iCal client.'}</p>
     <ul>
-    <li><strong><a href='{modurl modname="PostCalendar" type='user' func='display' viewtype='ical'}'>{gt text='All categories'}</a></strong></li>
+    <li><strong><a href='{modurl modname="ZikulaPostCalendarModule" type='user' func='display' viewtype='ical'}'>{gt text='All categories'}</a></strong></li>
     <li><!-- blank line -->&nbsp;</li>
     {foreach from=$pcCategories key='regname' item='categories'}
         {foreach from=$categories item='category'}
-        <li><a href='{modurl modname="PostCalendar" type='user' func='display' viewtype='ical' prop=$regname cat=$category.id}'>{$category.display_name.$lang}</a></li>
+        <li><a href='{modurl modname="ZikulaPostCalendarModule" type='user' func='display' viewtype='ical' prop=$regname cat=$category.id}'>{$category.display_name.$lang}</a></li>
         {/foreach}
     {/foreach}
     </ul>

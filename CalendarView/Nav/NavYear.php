@@ -9,7 +9,14 @@
  * Please see the NOTICE file distributed with this source code for further
  * information regarding copyright and licensing.
  */
-class PostCalendar_CalendarView_Nav_Year extends PostCalendar_CalendarView_Nav_AbstractItemBase
+
+namespace Zikula\PostCalendarModule\CalendarView\Nav;
+
+use \Zikula_ModUrl;
+use \ZLanguage;
+use \SecurityUtil;
+
+class NavYear extends AbstractItemBase
 {
 
     /**

@@ -6,9 +6,11 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
  */
 
+use Zikula\PostCalendarModule\Helper\PostCalendarUtil;
+
 function smarty_modifier_pc_date_format($string, $format = null, $default_date = null)
 {
-    $defaultFormat = ModUtil::getVar('PostCalendar', 'pcDateFormats');
+    $defaultFormat = ModUtil::getVar('ZikulaPostCalendarModule', 'pcDateFormats');
     $format = (isset($format) && !empty($format)) ? $format : $defaultFormat['date'];
         
     if ($string != '') {
@@ -24,5 +26,5 @@ function smarty_modifier_pc_date_format($string, $format = null, $default_date =
         $date = new DateTime();
     }
 
-    return PostCalendar_Util::translate($date->format($format));
+    return PostCalendarUtil::translate($date->format($format));
 }

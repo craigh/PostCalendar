@@ -32,7 +32,7 @@
         <td class="{$stylesheet}">
             {assign var="titles" value=""}
             {assign var="numberofevents" value=$eventsByDate.$date|@count}
-            {if $modvars.PostCalendar.pcUsePopups}
+            {if $modvars.ZikulaPostCalendarModule.pcUsePopups}
                 {foreach name='events' item='event' from=$eventsByDate.$date}
                     {if $event.alldayevent != true}
                         {assign var="titles" value="$titles<b>`$event.startTime`-`$event.endTime`</b> `$event.title`<br /><br />"}

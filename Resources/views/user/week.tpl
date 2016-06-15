@@ -26,7 +26,7 @@
             {foreach name='eventloop' key='id' item='event' from=$S_EVENTS.$cdate}
                 <li class="eventslistitems pccategories_{$event.catid}{if $event.privateicon} pcviz_private{else} pcviz_global{/if}">
                     {if $event.alldayevent != true}{$event.startTime} - {$event.endTime}{else}{gt text='All-day event'}{/if}&nbsp;
-                    {if $event.privateicon}{img src='lock.gif' modname='PostCalendar' __title="private event" __alt="private event"}{/if}
+                    {if $event.privateicon}{img src='lock.gif' modname='ZikulaPostCalendarModule' __title="private event" __alt="private event"}{/if}
                     {pc_url full=true action='event' eid=$event.eid date=$cdate display=$event.title|strip_tags title=$event.hometext|notifyfilters:'postcalendar.filter_hooks.eventsfilter.filter'|safehtml}
                 </li>
             {foreachelse}
@@ -39,9 +39,9 @@
     {if $PRINT_VIEW eq true}
         {assign var="viewtype" value=$smarty.get.viewtype}
         {if ((empty($smarty.get.viewtype)) or (!isset($smarty.get.viewtype)))}
-            {assign var="viewtype" value=$modvars.PostCalendar.pcDefaultView}
+            {assign var="viewtype" value=$modvars.ZikulaPostCalendarModule.pcDefaultView}
         {/if}
-        <a href="{modurl modname="PostCalendar" type='user' func='display' viewtype=$viewtype date=$requestedDate}">{gt text='Return'}</a>
+        <a href="{modurl modname="ZikulaPostCalendarModule" type='user' func='display' viewtype=$viewtype date=$requestedDate}">{gt text='Return'}</a>
     {/if}
 </div>
 {include file="user/footer.tpl"}

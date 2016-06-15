@@ -9,7 +9,9 @@
  * Please see the NOTICE file distributed with this source code for further
  * information regarding copyright and licensing.
  */
-class PostCalendar_CalendarView_Week extends PostCalendar_CalendarView_AbstractDays
+
+namespace Zikula\PostCalendarModule\CalendarView;
+class CalendarViewWeek extends AbstractDays
 {
 
     /**

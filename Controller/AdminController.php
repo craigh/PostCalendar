@@ -6,10 +6,23 @@
  * @copyright   Copyright (c) 2009-2012, Craig Heydenburg, Sound Web Development
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
  */
-use CalendarEventEntity as CalendarEvent;
-use PostCalendar_Api_Event as EventApi;
 
-class AdminController extends Zikula_AbstractController
+namespace Zikula\PostCalendarModule\Controller;
+
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Zikula\PostCalendarModule\Entity\CalendarEventEntity as CalendarEvent;
+use Zikula\PostCalendarModule\Api\EventApi;
+use Zikula\PostCalendarModule\Helper\PostCalendarUtil;
+use System;
+use SecurityUtil;
+use ModUtil;
+use LogUtil;
+use StringUtil;
+use CategoryRegistryUtil;
+
+class AdminController extends \Zikula_AbstractController
 {
 
     const ACTION_APPROVE = 0;
@@ -25,17 +38,31 @@ class AdminController extends Zikula_AbstractController
     /**
      * This function is the default function, and is called whenever the
      * module is initiated without defining arguments.
+     * 
+     * @Route("/admin")
      */
-    public function main()
+    public function mainAction()
+    {
+        $this->redirect(ModUtil::url('PostCalendar', 'admin', 'listevents'));
+    }
+    /**
+     * This function is the default function, and is called whenever the
+     * module is initiated without defining arguments.
+     * 
+     * @Route("/admin/index")
+     */
+    public function indexAction()
     {
         $this->redirect(ModUtil::url('PostCalendar', 'admin', 'listevents'));
     }
 
     /**
-     * @desc present administrator options to change module configuration
+     * #Desc: present administrator options to change module configuration
      * @return string config template
+     * 
+     * @Route("/admin/modifyconfig")
      */
-    public function modifyconfig()
+    public function modifyconfigAction()
     {
         $this->throwForbiddenUnless(SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN), LogUtil::getErrorMsgPermission());
 
@@ -49,11 +76,13 @@ class AdminController extends Zikula_AbstractController
     }
 
     /**
-     * @desc list events as requested/filtered
+     * #Desc: list events as requested/filtered
      *              send list to template
      * @return string showlist template
+     * 
+     * @Route("/admin/listevents")
      */
-    public function listevents(array $args)
+    public function listeventsAction(array $args)
     {
         $this->throwForbiddenUnless(SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_DELETE), LogUtil::getErrorMsgPermission());
 
@@ -101,13 +130,13 @@ class AdminController extends Zikula_AbstractController
         $filtercats = isset($args['filtercats']) ? $args['filtercats'] : $this->request->query->get('filtercats', $this->request->request->get('filtercats', null));
         $filtercats_serialized = $this->request->query->get('filtercats_serialized', false);
         $filtercats = $filtercats_serialized ? unserialize($filtercats_serialized) : $filtercats;
-        $selectedCategories = PostCalendar_Api_Event::formatCategoryFilter($filtercats);
+        $selectedCategories = EventApi::formatCategoryFilter($filtercats);
 
-        $events = $this->entityManager->getRepository('CalendarEventEntity')
+        $events = $this->entityManager->getRepository('\Zikula\PostCalendarModule\Entity\CalendarEventEntity')
                 ->getEventlist($listtype, $sort, $offset - 1, $this->getVar('pcListHowManyEvents'), $selectedCategories);
         $events = $this->_appendObjectActions($events, $listtype);
 
-        $total_events = $this->entityManager->getRepository('CalendarEventEntity')
+        $total_events = $this->entityManager->getRepository('\Zikula\PostCalendarModule\Entity\CalendarEventEntity')
                 ->getEventCount($listtype, $selectedCategories);
         $this->view->assign('total_events', $total_events);
 
@@ -144,7 +173,7 @@ class AdminController extends Zikula_AbstractController
     }
 
     /**
-     * @desc allows admin to revue selected events then take action
+     * #Desc: allows admin to revue selected events then take action
      * @return string html template adminrevue template
      */
     public function adminevents()
@@ -167,7 +196,7 @@ class AdminController extends Zikula_AbstractController
         } //create array if not already
         $alleventinfo = array();
 
-        $events = $this->entityManager->getRepository('CalendarEventEntity')->findBy(array('eid' => $events));
+        $events = $this->entityManager->getRepository('\Zikula\PostCalendarModule\Entity\CalendarEventEntity')->findBy(array('eid' => $events));
         foreach ($events as $event) {
             // get event info
             $eventitems = $event->getOldArray();
@@ -192,14 +221,14 @@ class AdminController extends Zikula_AbstractController
     }
 
     /**
-     * @desc reset all module variables to default values as defined in pninit.php
+     * #Desc: reset all module variables to default values as defined in pninit.php
      * @return      status/error ->back to modify config page
      */
     public function resetDefaults()
     {
         $this->throwForbiddenUnless(SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN), LogUtil::getErrorMsgPermission());
 
-        $defaults = PostCalendar_Util::getdefaults();
+        $defaults = PostCalendarUtil::getdefaults();
         if (!count($defaults)) {
             return LogUtil::registerError($this->__('Error! Could not load default values.'));
         }
@@ -218,7 +247,7 @@ class AdminController extends Zikula_AbstractController
     }
 
     /**
-     * @desc sets module variables as requested by admin
+     * #Desc: sets module variables as requested by admin
      * @return      status/error ->back to modify config page
      */
     public function updateconfig()
@@ -227,7 +256,7 @@ class AdminController extends Zikula_AbstractController
 
         $this->throwForbiddenUnless(SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN), LogUtil::getErrorMsgPermission());
 
-        $defaults = PostCalendar_Util::getdefaults();
+        $defaults = PostCalendarUtil::getdefaults();
         if (!count($defaults)) {
             return LogUtil::registerError($this->__('Error! Could not load default values.'));
         }
@@ -259,7 +288,7 @@ class AdminController extends Zikula_AbstractController
         );
         // set pcDateFormats
         if ($settings['pcEventDateFormat'] <> "-1") {
-            $settings['pcDateFormats'] = PostCalendar_Util::getDateFormats($settings['pcEventDateFormat']);
+            $settings['pcDateFormats'] = PostCalendarUtil::getDateFormats($settings['pcEventDateFormat']);
         }
         // save out event default settings so they are not cleared
         $settings['pcEventDefaults'] = $this->getVar('pcEventDefaults');
@@ -298,15 +327,15 @@ class AdminController extends Zikula_AbstractController
         // update the DB
         switch ($action) {
             case self::ACTION_APPROVE:
-                $res = $this->entityManager->getRepository('CalendarEventEntity')->updateEventStatus(CalendarEvent::APPROVED, $pc_eid);
+                $res = $this->entityManager->getRepository('\Zikula\PostCalendarModule\Entity\CalendarEventEntity')->updateEventStatus(CalendarEvent::APPROVED, $pc_eid);
                 $words = array('approve', 'approved');
                 break;
             case self::ACTION_HIDE:
-                $res = $this->entityManager->getRepository('CalendarEventEntity')->updateEventStatus(CalendarEvent::HIDDEN, $pc_eid);
+                $res = $this->entityManager->getRepository('\Zikula\PostCalendarModule\Entity\CalendarEventEntity')->updateEventStatus(CalendarEvent::HIDDEN, $pc_eid);
                 $words = array('hide', 'hidden');
                 break;
             case self::ACTION_DELETE:
-                $res = $this->entityManager->getRepository('CalendarEventEntity')->deleteEvents($pc_eid);
+                $res = $this->entityManager->getRepository('\Zikula\PostCalendarModule\Entity\CalendarEventEntity')->deleteEvents($pc_eid);
                 $words = array('delete', 'deleted');
                 break;
         }
@@ -322,7 +351,7 @@ class AdminController extends Zikula_AbstractController
     }
 
     /**
-     * @desc present administrator options to change event default values
+     * #Desc: present administrator options to change event default values
      * @return string html template
      */
     public function modifyeventdefaults()
@@ -344,7 +373,7 @@ class AdminController extends Zikula_AbstractController
     }
 
     /**
-     * @desc sets module variables as requested by admin
+     * #Desc: sets module variables as requested by admin
      * @return      status/error ->back to event defaults config page
      */
     public function seteventdefaults()
@@ -648,7 +677,7 @@ class AdminController extends Zikula_AbstractController
     {
         $this->throwForbiddenUnless(SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN), LogUtil::getErrorMsgPermission());
 
-        $timeItExists = PostCalendar_Util::timeItExists();
+        $timeItExists = PostCalendarUtil::timeItExists();
         $this->setVar('pcTimeItExists', $timeItExists);
 
         $this->redirect(ModUtil::url('PostCalendar', 'admin', 'modifyconfig#timeit'));

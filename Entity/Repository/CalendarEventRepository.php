@@ -13,7 +13,7 @@ namespace Zikula\PostCalendarModule\Entity\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
-use Zikula\PostCalendarModule\Entity\CalendarEventEntity as CalendarEvent;
+use Zikula\PostCalendarModule\Entity\CalendarEventEntity;
 
 class CalendarEventRepository extends EntityRepository
 {
@@ -30,6 +30,8 @@ class CalendarEventRepository extends EntityRepository
      * Just my private events 
      */
     const FILTER_PRIVATE = -3;
+    
+    const CalendarEventEntity = '\Zikula\PostCalendarModule\Entity\CalendarEventEntity';
 
     /**
      * Retrieve filtered count of events
@@ -40,11 +42,11 @@ class CalendarEventRepository extends EntityRepository
      * 
      * @return Scalar 
      */
-    public function getEventCount($eventStatus = CalendarEvent::APPROVED, $categoryFilter = null)
+    public function getEventCount($eventStatus = CalendarEventEntity::APPROVED, $categoryFilter = null)
     {
-        $dql = "SELECT COUNT(DISTINCT a.eid) FROM CalendarEventEntity a JOIN a.categories c ";
+        $dql = "SELECT COUNT(DISTINCT a.eid) FROM " . self::CalendarEventEntity . " a JOIN a.categories c ";
         $where = array();
-        if ($eventStatus <> CalendarEvent::ALLSTATUS) {
+        if ($eventStatus <> CalendarEventEntity::ALLSTATUS) {
             $where[] = "a.eventstatus = :status ";
         }
         if (isset($categoryFilter) && !empty($categoryFilter)) {
@@ -61,7 +63,7 @@ class CalendarEventRepository extends EntityRepository
         if (isset($categories)) {
             $query->setParameter('categories', $categories);
         }
-        if ($eventStatus <> CalendarEvent::ALLSTATUS) {
+        if ($eventStatus <> CalendarEventEntity::ALLSTATUS) {
             $query->setParameter('status', $eventStatus);
         }
         return $query->getResult(Query::HYDRATE_SINGLE_SCALAR);
@@ -85,13 +87,13 @@ class CalendarEventRepository extends EntityRepository
     {
         $startDate->setTime(0, 0);
         $endDate->setTime(23, 59);
-        $dql = "SELECT a FROM CalendarEventEntity a JOIN a.categories c " .
+        $dql = "SELECT a FROM " . self::CalendarEventEntity . " a JOIN a.categories c " .
                 "WHERE (a.endDate >= :startDate1 " .
                 "OR a.eventEnd >= :startDate3 " .
                 "OR a.eventStart >= :startDate2) " .
                 "AND a.eventStart <= :endDate ";
         
-        if ($eventStatus <> CalendarEvent::ALLSTATUS) {
+        if ($eventStatus <> CalendarEventEntity::ALLSTATUS) {
             $dql .= "AND a.eventstatus = :status ";
         }
         switch ($userFilter) {
@@ -128,26 +130,26 @@ class CalendarEventRepository extends EntityRepository
             'startDate2' => $startDate,
             'startDate3' => $startDate,
             'endDate' => $endDate));
-        if ($eventStatus <> CalendarEvent::ALLSTATUS) {
+        if ($eventStatus <> CalendarEventEntity::ALLSTATUS) {
             $query->setParameter('status', $eventStatus);
         }
         switch ($userFilter) {
             case self::FILTER_PRIVATE:
                 $query->setParameters(array(
                     7 => $userid,
-                    8 => CalendarEvent::SHARING_PRIVATE,
+                    8 => CalendarEventEntity::SHARING_PRIVATE,
                 ));
                 break;
             case self::FILTER_ALL:
                 $query->setParameters(array(
                     7 => $userid,
-                    8 => CalendarEvent::SHARING_PRIVATE,
-                    9 => CalendarEvent::SHARING_GLOBAL,
+                    8 => CalendarEventEntity::SHARING_PRIVATE,
+                    9 => CalendarEventEntity::SHARING_GLOBAL,
                 ));
                 break;
             case self::FILTER_GLOBAL:
             default:
-                $query->setParameter(7, CalendarEvent::SHARING_GLOBAL);
+                $query->setParameter(7, CalendarEventEntity::SHARING_GLOBAL);
         }
         if (isset($categories)) {
             $query->setParameter('categories', $categories);
@@ -180,9 +182,9 @@ class CalendarEventRepository extends EntityRepository
      */
     public function getEventList($eventStatus, $sortDir, $offset, $maxResults, array $categoryFilter)
     {
-        $dql = "SELECT a FROM CalendarEventEntity a JOIN a.categories c ";
+        $dql = "SELECT a FROM \Zikula\PostCalendarModule\Entity\CalendarEventEntity a JOIN a.categories c ";
         $where = array();
-        if ($eventStatus <> CalendarEvent::ALLSTATUS) {
+        if ($eventStatus <> CalendarEventEntity::ALLSTATUS) {
             $where[] = "a.eventstatus = :status ";
         }
         if (isset($categoryFilter) && !empty($categoryFilter)) {
@@ -197,7 +199,7 @@ class CalendarEventRepository extends EntityRepository
         $dql .= "ORDER BY $sortDir ";
         // generate query
         $query = $this->_em->createQuery($dql);
-        if ($eventStatus <> CalendarEvent::ALLSTATUS) {
+        if ($eventStatus <> CalendarEventEntity::ALLSTATUS) {
             $query->setParameter('status', $eventStatus);
         }
         if (isset($categories)) {
@@ -229,7 +231,7 @@ class CalendarEventRepository extends EntityRepository
      */
     public function updateEventStatus($status, array $eids)
     {
-        $dql = "UPDATE CalendarEventEntity a " .
+        $dql = "UPDATE " . self::CalendarEventEntity . " a " .
                 "SET a.eventstatus = :eventstatus " .
                 "WHERE a.eid IN (:eids)";
         $query = $this->_em->createQuery($dql);
@@ -284,7 +286,7 @@ class CalendarEventRepository extends EntityRepository
      */
     public function getHookedEvent(Zikula_DisplayHook $hook, $eid = null)
     {
-        $dql = "SELECT a FROM CalendarEventEntity a JOIN a.categories c " .
+        $dql = "SELECT a FROM " . self::CalendarEventEntity . " a JOIN a.categories c " .
                 "WHERE a.hooked_modulename = :modulename " .
                 "AND a.hooked_objectid = :objectid " .
                 "AND a.hooked_area = :area ";

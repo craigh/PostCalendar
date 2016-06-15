@@ -5,6 +5,8 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
  */
 
+use CategoryRegistryUtil;
+
 class PostCalendar_ContentType_PostCalEvents extends Content_AbstractContentType
 {
     protected $pcbeventsrange;

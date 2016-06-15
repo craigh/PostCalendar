@@ -18,7 +18,7 @@
             {/if}
             <li class="pc_blockevent">
                 {gt text='private event' assign='p_txt'}
-                {if $event.privateicon}{img src='lock.gif' modname='PostCalendar' title=$p_txt alt=$p_txt}{/if}
+                {if $event.privateicon}{img src='lock.gif' modname='ZikulaPostCalendarModule' title=$p_txt alt=$p_txt}{/if}
                 {pc_url full=true class="eventlink" action="event" eid=$event.eid date=$date title=$event.hometext|notifyfilters:'postcalendar.filter_hooks.eventsfilter.filter'|strip_tags|safehtml display="$timestamp `$event.title`"|strip_tags}
                 {if $event.alldayevent != true}&nbsp;({gt text='until'} {$event.endTime}){/if}
             </li>

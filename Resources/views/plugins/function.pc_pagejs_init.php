@@ -14,17 +14,17 @@
 function smarty_function_pc_pagejs_init($params, Zikula_View $view)
 {
     $modVars = $view->get_template_vars('modvars');
-    $type = (!empty($params['type'])) ? $params['type'] : $modVars['PostCalendar']['pcNavBarType'];
+    $type = (!empty($params['type'])) ? $params['type'] : $modVars['ZikulaPostCalendarModule']['pcNavBarType'];
     unset($params);
-    $dom = ZLanguage::getModuleDomain('PostCalendar');
+    $dom = ZLanguage::getModuleDomain('ZikulaPostCalendarModule');
     $title = __('PostCalendar Event', $dom);
     switch ($type) {
         case 'buttonbar':
-            if ($modVars['PostCalendar']['pcEventsOpenInNewWindow'] || $modVars['PostCalendar']['pcUsePopups']) {
+            if ($modVars['ZikulaPostCalendarModule']['pcEventsOpenInNewWindow'] || $modVars['ZikulaPostCalendarModule']['pcUsePopups']) {
                 // ensure jquery and jquery-ui are loaded
                 PageUtil::addVar("javascript", "jquery-ui");
             }
-            if ($modVars['PostCalendar']['pcEventsOpenInNewWindow']) {
+            if ($modVars['ZikulaPostCalendarModule']['pcEventsOpenInNewWindow']) {
                 $jQueryTheme = 'overcast';
                 $jQueryTheme = is_dir("javascript/jquery-ui/themes/$jQueryTheme") ? $jQueryTheme : 'base';
                 PageUtil::addVar("stylesheet", "javascript/jquery-ui/themes/$jQueryTheme/jquery-ui.css");
@@ -55,10 +55,10 @@ function smarty_function_pc_pagejs_init($params, Zikula_View $view)
                 });";
                 PageUtil::addVar("footer", "<script type='text/javascript'>$javascript</script>");
             }
-            if ($modVars['PostCalendar']['pcUsePopups']) {
+            if ($modVars['ZikulaPostCalendarModule']['pcUsePopups']) {
                 // tipTip jquery plugin from http://code.drewwilson.com/entry/tiptip-jquery-plugin
-                PageUtil::addVar("javascript", "modules/PostCalendar/javascript/jquery-plugins/tipTipv13/jquery.tipTip.minified.js");
-                PageUtil::addVar("stylesheet", "modules/PostCalendar/javascript/jquery-plugins/tipTipv13/tipTip.css");
+                PageUtil::addVar("javascript", "@ZikulaPostCalendarModule/Resources/public/javascript/jquery-plugins/tipTipv13/jquery.tipTip.minified.js");
+                PageUtil::addVar("stylesheet", "@ZikulaPostCalendarModule/Resources/public/javascript/jquery-plugins/tipTipv13/tipTip.css");
                 $javascript = "
                 jQuery(document).ready(function() {
                     jQuery('.tooltips').tipTip({
@@ -72,18 +72,18 @@ function smarty_function_pc_pagejs_init($params, Zikula_View $view)
             break;
         default:
             // load required javascript libraries for this display type
-            if (($modVars['PostCalendar']['pcEventsOpenInNewWindow']) || ($modVars['PostCalendar']['pcUsePopups'])) {
+            if (($modVars['ZikulaPostCalendarModule']['pcEventsOpenInNewWindow']) || ($modVars['ZikulaPostCalendarModule']['pcUsePopups'])) {
                 $scripts = array('prototype', 'zikula', 'livepipe', 'zikula.ui');
                 PageUtil::addVar('javascript', $scripts);
             }
-            if ($modVars['PostCalendar']['pcEventsOpenInNewWindow']) {
+            if ($modVars['ZikulaPostCalendarModule']['pcEventsOpenInNewWindow']) {
                 $javascript = "
                 $$('.event_details').each(function(link){
                 new Zikula.UI.Window(link, {title:'$title'});
                 });";
                 PageUtil::addVar("footer", "<script type='text/javascript'>$javascript</script>");
             }
-            if ($modVars['PostCalendar']['pcUsePopups']) {
+            if ($modVars['ZikulaPostCalendarModule']['pcUsePopups']) {
                 $javascript = "
                 Zikula.UI.Tooltips($$('.tooltips'));
                 ";

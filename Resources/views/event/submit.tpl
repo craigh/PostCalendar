@@ -1,8 +1,8 @@
-{pageaddvar name='javascript' value='modules/PostCalendar/javascript/postcalendar-event-submit.js'}
+{pageaddvar name='javascript' value='@ZikulaPostCalendarModule/Resources/public/javascript/postcalendar-event-submit.js'}
 {assign value='overcast' var='jquerytheme'}
-{if $modvars.PostCalendar.pcAllowUserCalendar}
+{if $modvars.ZikulaPostCalendarModule.pcAllowUserCalendar}
     {usergetvar name="uid" assign="uid"}
-    {modapifunc modname='Groups' type='user' func='isgroupmember' uid=$uid gid=$modvars.PostCalendar.pcAllowUserCalendar assign="ingroup"}
+    {modapifunc modname='Groups' type='user' func='isgroupmember' uid=$uid gid=$modvars.ZikulaPostCalendarModule.pcAllowUserCalendar assign="ingroup"}
 {else}{assign var="ingroup" value=0}{/if}
 {if $func eq "edit"}
     {gt text='Edit' assign="titletext"}
@@ -24,7 +24,7 @@
 <div>
 	<input type="hidden" name="csrftoken" value="{insert name="csrftoken"}" />
 
-<span style='float:right;'>{img modname='PostCalendar' src='admin.png' __alt="PostCalendar Rocks!"}</span>
+<span style='float:right;'>{img modname='ZikulaPostCalendarModule' src='admin.png' __alt="PostCalendar Rocks!"}</span>
 <h2 style='border-bottom:1px solid #CCCCCC;text-align:left;padding-top:1em;'>{$titletext}&nbsp;{gt text='calendar event'}</h2>
 <div id='postcalendar_addevent' style='padding-top:.5em'>
     <fieldset>
@@ -55,7 +55,7 @@
         <div class="z-formrow">
             <label>{gt text='Starts and Ends'}</label>
             <span>
-                {pageaddvar name='javascript' value='modules/PostCalendar/javascript/postcalendar-function-updatefields.js'}
+                {pageaddvar name='javascript' value='@ZikulaPostCalendarModule/Resources/public/javascript/postcalendar-function-updatefields.js'}
                 {if ($loaded_event.alldayevent)}{assign var='inlinestyle' value='display: none;'}{else}{assign var='inlinestyle' value=null}{/if}
                 {jquery_datepicker 
                     defaultdate=$loaded_event.eventStart 
@@ -63,8 +63,8 @@
                     object='postcalendar_events' 
                     valuestorageelement='eventstart_date' 
                     theme=$jquerytheme 
-                    displayformat_datetime=$modvars.PostCalendar.pcDateFormats.date 
-                    displayformat_javascript=$modvars.PostCalendar.pcDateFormats.javascript
+                    displayformat_datetime=$modvars.ZikulaPostCalendarModule.pcDateFormats.date 
+                    displayformat_javascript=$modvars.ZikulaPostCalendarModule.pcDateFormats.javascript
                     autoSize='true'
                     changeMonth='true'
                     changeYear='true'
@@ -76,8 +76,8 @@
                     valuestorageelement='eventstart_time' 
                     inlinestyle=$inlinestyle
                     theme=$jquerytheme 
-                    use24hour=$modvars.PostCalendar.pcTime24Hours 
-                    stepMinute=$modvars.PostCalendar.pcTimeIncrement
+                    use24hour=$modvars.ZikulaPostCalendarModule.pcTime24Hours 
+                    stepMinute=$modvars.ZikulaPostCalendarModule.pcTimeIncrement
                     onclosecallback='updateFields(this,dateText);'}
                 <span style='padding:0 1em;'>{gt text='to'}</span>
                 {jquery_datepicker 
@@ -87,8 +87,8 @@
                     valuestorageelement='eventend_date' 
                     mindate=$loaded_event.eventEnd 
                     theme=$jquerytheme 
-                    displayformat_datetime=$modvars.PostCalendar.pcDateFormats.date 
-                    displayformat_javascript=$modvars.PostCalendar.pcDateFormats.javascript
+                    displayformat_datetime=$modvars.ZikulaPostCalendarModule.pcDateFormats.date 
+                    displayformat_javascript=$modvars.ZikulaPostCalendarModule.pcDateFormats.javascript
                     autoSize='true' 
                     changeMonth='true'
                     changeYear='true'
@@ -100,8 +100,8 @@
                     valuestorageelement='eventend_time' 
                     inlinestyle=$inlinestyle 
                     theme=$jquerytheme 
-                    use24hour=$modvars.PostCalendar.pcTime24Hours 
-                    stepMinute=$modvars.PostCalendar.pcTimeIncrement
+                    use24hour=$modvars.ZikulaPostCalendarModule.pcTime24Hours 
+                    stepMinute=$modvars.ZikulaPostCalendarModule.pcTimeIncrement
                     onclosecallback='updateFields(this,dateText);'}
             </span>
         </div>
@@ -142,8 +142,8 @@
                     valuestorageelement='enddate' 
                     mindate=$loaded_event.eventEnd 
                     theme=$jquerytheme
-                    displayformat_datetime=$modvars.PostCalendar.pcDateFormats.date 
-                    displayformat_javascript=$modvars.PostCalendar.pcDateFormats.javascript
+                    displayformat_datetime=$modvars.ZikulaPostCalendarModule.pcDateFormats.date 
+                    displayformat_javascript=$modvars.ZikulaPostCalendarModule.pcDateFormats.javascript
                     autoSize='true' 
                     changeMonth='true'
                     changeYear='true'
@@ -164,8 +164,8 @@
                         valuestorageelement='recurexceptionstorage_'|cat:$smarty.foreach.exceptionarray.iteration 
                         mindate=$loaded_event.eventEnd 
                         theme=$jquerytheme
-                        displayformat_datetime=$modvars.PostCalendar.pcDateFormats.date 
-                        displayformat_javascript=$modvars.PostCalendar.pcDateFormats.javascript
+                        displayformat_datetime=$modvars.ZikulaPostCalendarModule.pcDateFormats.date 
+                        displayformat_javascript=$modvars.ZikulaPostCalendarModule.pcDateFormats.javascript
                         autoSize='true'
                         changeMonth='true'
                         changeYear='true'}
@@ -182,8 +182,8 @@
                         valuestorageelement='recurexceptionstorage_1' 
                         mindate=$loaded_event.eventEnd 
                         theme=$jquerytheme
-                        displayformat_datetime=$modvars.PostCalendar.pcDateFormats.date 
-                        displayformat_javascript=$modvars.PostCalendar.pcDateFormats.javascript
+                        displayformat_datetime=$modvars.ZikulaPostCalendarModule.pcDateFormats.date 
+                        displayformat_javascript=$modvars.ZikulaPostCalendarModule.pcDateFormats.javascript
                         autoSize='true'
                         changeMonth='true'
                         changeYear='true'}
@@ -306,7 +306,7 @@
     {button src="14_layer_visible.png" set="icons/extrasmall" class='z-btblue' __alt="Preview" __title="Preview" __text="Preview" name="form_action" __value="Preview"}
     {button src="button_ok.png" set="icons/extrasmall" class='z-btgreen' __alt="Save" __title="Save" __text="Save" name="form_action" __value="Save"}
     {button src="button_ok.png" set="icons/extrasmall" class='z-btgreen' __alt="Save and Add" __title="Save and Add" __text="Save and Add" name="form_action" __value="Save and Add"}
-    <a class='z-btred' href="{modurl modname="PostCalendar" type='user' func='display'}" title="{gt text="Cancel"}">{img modname='core' src="button_cancel.png" set="icons/extrasmall" __alt="Cancel" __title="Cancel"} {gt text="Cancel"}</a>
+    <a class='z-btred' href="{modurl modname="ZikulaPostCalendarModule" type='user' func='display'}" title="{gt text="Cancel"}">{img modname='core' src="button_cancel.png" set="icons/extrasmall" __alt="Cancel" __title="Cancel"} {gt text="Cancel"}</a>
 </div>
 
 </div> <!-- /page container-->

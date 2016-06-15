@@ -5,15 +5,22 @@
  * @copyright   Copyright (c) 2009-2012, Craig Heydenburg, Sound Web Development
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
  */
+namespace Zikula\PostCalendarModule\Api;
 
-use PostCalendar_Entity_Repository_CalendarEventRepository as EventRepo;
-use CalendarEventEntity as CalendarEvent;
+use Zikula\PostCalendarModule\Entity\Repository\CalendarEventRepository as EventRepo;
+use Zikula\PostCalendarModule\Entity\CalendarEventEntity as CalendarEvent;
+use CategoryRegistryUtil;
+use \SecurityUtil;
+use \UserUtil;
+use \LogUtil;
+use \ModUtil;
+
 
 /**
  * This is the event handler api
  **/
 
-class EventApi extends Zikula_AbstractApi
+class EventApi extends \Zikula_AbstractApi
 {
     const REPEAT_EVERY_DAY = 0;
     const REPEAT_EVERY_WEEK = 1;
@@ -238,20 +245,20 @@ class EventApi extends Zikula_AbstractApi
             $eventdata['endDate'] = clone $args['date'];
             $eventdata['endDate']->modify("+1 day");
         } else {
-            $eventdata['endDate'] = PostCalendar_Util::getDate(array('date' => $eventdata['endDate']));
+            $eventdata['endDate'] = PostCalendarUtil::getDate(array('date' => $eventdata['endDate']));
         }
         if ((!isset($eventdata['eventStart'])) || empty($eventdata['eventStart'])) {
             $eventdata['eventStart'] = clone $args['date'];
             $startTimeParts = explode(":", $eventDefaults['startTime']);
             $eventdata['eventStart']->setTime($startTimeParts[0], $startTimeParts[1]);
         } else {
-            $eventdata['eventStart'] = PostCalendar_Util::getDate(array('date' => $eventdata['eventStart']));
+            $eventdata['eventStart'] = PostCalendarUtil::getDate(array('date' => $eventdata['eventStart']));
         }
         if ((!isset($eventdata['eventEnd'])) || empty($eventdata['eventEnd'])) {
             $eventdata['eventEnd'] = clone $eventdata['eventStart'];
             $eventdata['eventEnd']->modify("+" . $eventDefaults['duration'] . " seconds");
         } else {
-            $eventdata['eventEnd'] = PostCalendar_Util::getDate(array('date' => $eventdata['eventEnd']));
+            $eventdata['eventEnd'] = PostCalendarUtil::getDate(array('date' => $eventdata['eventEnd']));
         }
 
         if ((SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) && ($this->getVar('pcAllowUserCalendar'))) {
@@ -365,7 +372,7 @@ class EventApi extends Zikula_AbstractApi
     }
 
     /**
-     * @desc This function reformats the information in an event array for proper display in detail
+     * #Desc: This function reformats the information in an event array for proper display in detail
      * @param array $event event array as pulled from the DB
      * @param string $currentDate the date the event is being displayed upon (optional, default NULL)
      * @return array $event modified array for display
@@ -457,7 +464,7 @@ class EventApi extends Zikula_AbstractApi
     }
 
     /**
-     * @desc This function reformats the information in an event array for insert/update in DB
+     * #Desc: This function reformats the information in an event array for insert/update in DB
      * @param array $event event array as pulled from the new/edit event form
      * @return array $event modified array for DB insert/update
      */
@@ -497,7 +504,7 @@ class EventApi extends Zikula_AbstractApi
     }
 
     /**
-     * @desc This function validates the data that has been submitted in the new/edit event form
+     * #Desc: This function validates the data that has been submitted in the new/edit event form
      * @param array $submitted_event event array as submitted
      * @return bool $abort default=false. true if data does not validate.
      */
@@ -654,7 +661,7 @@ class EventApi extends Zikula_AbstractApi
     }
 
     /**
-     * @desc convert time array to desired format
+     * #Desc: convert time array to desired format
      *      WARNING: uses current date for calculations be careful with comparisons
      * @param   array $time array(Hour, Minute, Meridian)
      * @param   string $format desired output format
@@ -672,7 +679,7 @@ class EventApi extends Zikula_AbstractApi
         return $newTime->format($format);
     }
     /**
-     * @desc create event sharing select box
+     * #Desc: create event sharing select box
      * @since     06/29/2010
      * @return      array key=>value pairs for selectbox
      **/
@@ -689,7 +696,7 @@ class EventApi extends Zikula_AbstractApi
         return $data;
     }
     /**
-     * @desc determine which event type is selected and prepare html code
+     * #Desc: determine which event type is selected and prepare html code
      * @since     06/29/2010
      * @params      bool $alldayevent
      * @return      array key=>value pairs for selectbox
@@ -704,7 +711,7 @@ class EventApi extends Zikula_AbstractApi
         return $selected;
     }
     /**
-     * @desc compute endTime from startTime and duration
+     * #Desc: compute endTime from startTime and duration
      * @since     06/30/2010
      * @params      array $event
      * @return      string endTime formatted (HH:MM or HH:MM AP)
@@ -716,7 +723,7 @@ class EventApi extends Zikula_AbstractApi
         return $this->getVar('pcTime24Hours') ? $stime->format('G:i') : $stime->format('g:i a');
     }
     /**
-     * @desc compute duration from startTime and endTime
+     * #Desc: compute duration from startTime and endTime
      * @since     06/30/2010
      * @params      array $event
      * @return      string duration in seconds

@@ -17,6 +17,9 @@ use Zikula\PostCalendarModule\Entity\CalendarEventEntity;
 use Zikula\PostCalendarModule\Entity\EventCategoryEntity;
 use Zikula\PostCalendarModule\Entity\RecurExceptionEntity;
 use CategoryRegistryUtil;
+use UserUtil;
+use ServiceUtil;
+
 
 /**
  * Calendar Event entity class
@@ -279,7 +282,7 @@ class CalendarEventEntity extends \Zikula_EntityAccess
     {
         $this->categories = new ArrayCollection();
         $this->recurExceptions = new ArrayCollection();
-        $currentDateTime = new DateTime();
+        $currentDateTime = new \DateTime();
         $this->setEventStart(clone $currentDateTime);
         $this->setEventEnd(clone $currentDateTime);
         $this->setTime(clone $currentDateTime);
@@ -671,7 +674,7 @@ class CalendarEventEntity extends \Zikula_EntityAccess
                 if ($this->getCategories()->get($regIds[$propName])) {
                     $this->getCategories()->get($regIds[$propName])->setCategory($category);
                 } else {
-                    $this->getCategories()->set($regIds[$propName], new PostCalendar_Entity_EventCategory($regIds[$propName], $category, $this));
+                    $this->getCategories()->set($regIds[$propName], new EventCategoryEntity($regIds[$propName], $category, $this));
                 }
             }
         }

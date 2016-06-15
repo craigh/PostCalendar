@@ -11,6 +11,16 @@
  */
 namespace Zikula\PostCalendarModule\Helper;
 
+use Zikula\PostCalendarModule\Entity\CalendarEventEntity;
+// use Zikula\PostCalendarModule\Entity\EventCategoryEntity;
+// use Zikula\PostCalendarModule\Entity\RecurExceptionEntity;
+use \CategoryRegistryUtil;
+use \DateTime;
+use \ZI18n;
+use \System;
+use \ServiceUtil;
+use \ZLanguage;
+
 class PostCalendarUtil
 {
 

@@ -4,7 +4,7 @@
     <h3>{gt text='Event list'}</h3>
 </div>
 
-<form class="z-form" action="{modurl modname="PostCalendar" type="admin" func="listevents"}" method="post" enctype="application/x-www-form-urlencoded">
+<form class="z-form" action="{modurl modname="ZikulaPostCalendarModule" type="admin" func="listevents"}" method="post" enctype="application/x-www-form-urlencoded">
     <fieldset id="postcalendar_listfilter"{if $filter_active} class='filteractive'{/if}>
         {if $filter_active}{gt text='active' assign=filteractive}{else}{gt text='inactive' assign=filteractive}{/if}
         <legend>{gt text='Filter %1$s, %2$s event listed' plural='Filter %1$s, %2$s events listed' count=$total_events tag1=$filteractive tag2=$total_events}</legend>
@@ -20,7 +20,7 @@
         &nbsp;&nbsp;
         <span class="z-nowrap z-buttons">
             <input type="submit" class='z-bt-filter' value="{gt text="Filter"}" />
-            <a href="{modurl modname="PostCalendar" type='admin' func='listevents' listtype='100'}" title="{gt text="Clear"}">{img modname='core' src="button_cancel.png" set="icons/extrasmall" __alt="Clear" __title="Clear"} {gt text="Clear Filter"}</a>
+            <a href="{modurl modname="ZikulaPostCalendarModule" type='admin' func='listevents' listtype='100'}" title="{gt text="Clear"}">{img modname='core' src="button_cancel.png" set="icons/extrasmall" __alt="Clear" __title="Clear"} {gt text="Clear Filter"}</a>
         </span>
     </fieldset>
 </form>
@@ -44,14 +44,14 @@
                 <tr class="{cycle values="z-odd,z-even"}">
                     <td class='z-w5'><input type="checkbox" value="{$events[event].eid}" id="events_{$events[event].eid}" name="events[]" /></td>
                     <td class='z-w30'>{$events[event].title|safetext}
-                        {if $events[event].privateicon}{img src='lock.gif' modname='PostCalendar' __title="private event" __alt="private event" class='tooltips'}{/if}
+                        {if $events[event].privateicon}{img src='lock.gif' modname='ZikulaPostCalendarModule' __title="private event" __alt="private event" class='tooltips'}{/if}
                         {if !empty($events[event].recurrspec.exceptions)}
-                            {img modname='PostCalendar' src='exceptions.png' __title="event repeats with exceptions" class='tooltips'}
+                            {img modname='ZikulaPostCalendarModule' src='exceptions.png' __title="event repeats with exceptions" class='tooltips'}
                         {elseif $events[event].recurrtype > 0}
-                            {img modname='PostCalendar' src='repeat.png' __title="event repeats" class='tooltips'}
+                            {img modname='ZikulaPostCalendarModule' src='repeat.png' __title="event repeats" class='tooltips'}
                         {/if}
                     </td>
-                    <td class='z-w15'>{$events[event].eventStart|pc_date_format:$modvars.PostCalendar.pcDateFormats.date}</td>
+                    <td class='z-w15'>{$events[event].eventStart|pc_date_format:$modvars.ZikulaPostCalendarModule.pcDateFormats.date}</td>
                     <td class='z-w20'>{assignedcategorieslist item=$events[event]}</td>
                     <td class='z-w20'>{$events[event].time}</td>
                     <td class='z-w10'>
@@ -83,7 +83,7 @@
                 $('pc_form_bulkaction').submit()
             });
         </script>
-        {pager rowcount=$total_events limit=$modvars.PostCalendar.pcListHowManyEvents posvar='offset'}
+        {pager rowcount=$total_events limit=$modvars.ZikulaPostCalendarModule.pcListHowManyEvents posvar='offset'}
     </div>
 </form>
 {adminfooter}

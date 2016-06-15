@@ -5,9 +5,13 @@
  * @copyright   Copyright (c) 2009-2012, Craig Heydenburg, Sound Web Development
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
  */
-use CalendarEventEntity as CalendarEvent;
+namespace Zikula\PostCalendarModule\Api;
 
-class AdminApi extends Zikula_AbstractApi
+use Zikula\PostCalendarModule\Entity\CalendarEventEntity as CalendarEvent;
+use SecurityUtil;
+use ModUtil;
+
+class AdminApi extends \Zikula_AbstractApi
 {
     /**
      * Get available admin panel links

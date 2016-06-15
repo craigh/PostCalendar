@@ -22,7 +22,7 @@
  */
 function smarty_function_pc_filter($args, Zikula_View $view)
 {
-    $dom = ZLanguage::getModuleDomain('PostCalendar');
+    $dom = ZLanguage::getModuleDomain('ZikulaPostCalendarModule');
     $modVars = $view->get_template_vars('modvars');
 
     $type = isset($args['type']) ? $args['type'] : "user,category";
@@ -34,7 +34,7 @@ function smarty_function_pc_filter($args, Zikula_View $view)
     //================================================================
     // build the username filter pulldown
     //================================================================
-    if ($modVars['PostCalendar']['pcAllowUserCalendar']) {
+    if ($modVars['ZikulaPostCalendarModule']['pcAllowUserCalendar']) {
         $filterdefault = PostCalendar_Entity_Repository_CalendarEventRepository::FILTER_ALL;
     } else {
         $filterdefault = PostCalendar_Entity_Repository_CalendarEventRepository::FILTER_GLOBAL;
@@ -44,7 +44,7 @@ function smarty_function_pc_filter($args, Zikula_View $view)
         $userFilter = PostCalendar_Entity_Repository_CalendarEventRepository::FILTER_GLOBAL;
     }
     define('IS_ADMIN', SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN));
-    $allowedgroup = $modVars['PostCalendar']['pcAllowUserCalendar'];
+    $allowedgroup = $modVars['ZikulaPostCalendarModule']['pcAllowUserCalendar'];
     $uid = UserUtil::getVar('uid');
     $uid = empty($uid) ? 1 : $uid;
     $ingroup = $allowedgroup > 0 ? ModUtil::apiFunc('Groups', 'user', 'isgroupmember', array(
@@ -85,8 +85,8 @@ function smarty_function_pc_filter($args, Zikula_View $view)
     //================================================================
     // build the category filter pulldown
     //================================================================
-    if (in_array('category', $types) && $modVars['PostCalendar']['pcAllowCatFilter']) {
-        $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('PostCalendar', 'CalendarEvent');
+    if (in_array('category', $types) && $modVars['ZikulaPostCalendarModule']['pcAllowCatFilter']) {
+        $catregistry = CategoryRegistryUtil::getRegisteredModuleCategories('ZikulaPostCalendarModule', 'CalendarEvent');
         $view->assign('selectedcategories', $args['selectedCategories']);
         $view->assign('catregistry', $catregistry);
         $catoptions = $view->fetch('event/filtercats.tpl', 1); // force one cachefile

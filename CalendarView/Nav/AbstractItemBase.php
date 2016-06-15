@@ -9,7 +9,17 @@
  * Please see the NOTICE file distributed with this source code for further
  * information regarding copyright and licensing.
  */
-abstract class PostCalendar_CalendarView_Nav_AbstractItemBase
+
+namespace Zikula\PostCalendarModule\CalendarView\Nav;
+
+use Zikula\PostCalendarModule\Helper\PostCalendarUtil;
+use DateTime;
+use ModUtil;
+use \Zikula_ModUrl;
+use \ZLanguage;
+use \SecurityUtil;
+
+abstract class AbstractItemBase
 {
 
     /**
@@ -26,7 +36,7 @@ abstract class PostCalendar_CalendarView_Nav_AbstractItemBase
 
     /**
      * The selected navBarType
-     * @see PostCalendar_CalendarView_Navigation
+     * @see PostCalendar_igation
      * @var string 
      */
     protected $navBarType;
@@ -134,7 +144,7 @@ abstract class PostCalendar_CalendarView_Nav_AbstractItemBase
      * @param boolean $selected
      * @param string $navBarType 
      */
-    public function __construct(Zikula_View $view, $selected, $navBarType)
+    public function __construct(\Zikula_View $view, $selected, $navBarType)
     {
         $this->view = $view;
         $this->selected = $selected;
@@ -145,7 +155,7 @@ abstract class PostCalendar_CalendarView_Nav_AbstractItemBase
             'jumpday' => $this->view->getRequest()->request->get('jumpDay', $this->view->getRequest()->query->get('jumpDay', null)),
             'jumpmonth' => $this->view->getRequest()->request->get('jumpMonth', $this->view->getRequest()->query->get('jumpMonth', null)),
             'jumpyear' => $this->view->getRequest()->request->get('jumpYear', $this->view->getRequest()->query->get('jumpYear', null)));
-        $this->date = PostCalendar_Util::getDate($jumpargs);
+        $this->date = PostCalendarUtil::getDate($jumpargs);
         $this->today = new DateTime();
         $this->userFilter = $this->view->getRequest()->request->get('userfilter', $this->view->getRequest()->query->get('userfilter', null));
         $this->useDisplayImage = (boolean)ModUtil::getVar('PostCalendar', 'enablenavimages');

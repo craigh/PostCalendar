@@ -8,6 +8,11 @@
  * Please see the NOTICE file distributed with this source code for further
  * information regarding copyright and licensing.
  */
+namespace Zikula\PostCalendarModule\Helper;
+
+use CategoryRegistryUtil;
+use System;
+
 class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
 {
 

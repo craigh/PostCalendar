@@ -1,5 +1,5 @@
 {if ((!empty($smarty.get.viewtype) && (($smarty.get.viewtype != 'year') && ($smarty.get.viewtype != 'event'))) 
-|| (empty($smarty.get.viewtype) && ($modvars.PostCalendar.pcDefaultView != 'year')))}
+|| (empty($smarty.get.viewtype) && ($modvars.ZikulaPostCalendarModule.pcDefaultView != 'year')))}
 <div style='float:right;padding-top:3px;'>
     <button id='pcViewCatLegendButton'>{gt text='View category legend'}</button>
     <div id='pcCategoryLegend' style='display:none;'>
@@ -15,6 +15,6 @@
 </div>
 {/if}
 <div id="postcalendar_footer">
-    {img modname='PostCalendar' src='smallcalicon.jpg' __alt="PostCalendar" __title="PostCalendar"}
+    {img modname='ZikulaPostCalendarModule' src='smallcalicon.jpg' __alt="PostCalendar" __title="PostCalendar"}
     <a href="https://github.com/craigh/PostCalendar/wiki" title="{gt text='PostCalendar'}">{gt text='PostCalendar'} v{$modinfo.version}</a>
 </div>
