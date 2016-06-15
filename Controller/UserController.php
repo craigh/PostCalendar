@@ -13,9 +13,10 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 // use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 // use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Zikula\PostCalendarModule\Helper\PostCalendarUtil;
-use SecurityUtil;
-use ModUtil;
-use LogUtil;
+use \SecurityUtil;
+use \LogUtil;
+use \ModUtil;
+use \DateTime;
 
 class UserController extends \Zikula_AbstractController
 {
@@ -83,10 +84,10 @@ class UserController extends \Zikula_AbstractController
         
         $allowedViews = $this->getVar('pcAllowedViews');
         if ((in_array($viewtype, $allowedViews)) || ($viewtype == 'event' && $popup)) {
-            $class = 'PostCalendar_CalendarView_' . ucfirst($viewtype);
+            $class = '\Zikula\PostCalendarModule\CalendarView\CalendarView' . ucfirst($viewtype);
         } else {
             LogUtil::registerError($this->__('Attempting to view unauthorized viewtype.'));
-            $class = 'PostCalendar_CalendarView_' . ucfirst($defaultView);
+            $class = '\Zikula\PostCalendarModule\CalendarView\CalendarView' . ucfirst($defaultView);
         }
         $calendarView = new $class($this->view, $date, $userFilter, $filtercats, $eid);
         return $calendarView->render();

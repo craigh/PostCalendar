@@ -14,11 +14,17 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Zikula\PostCalendarModule\Entity\CalendarEventEntity as CalendarEvent;
 use Zikula\PostCalendarModule\Helper\PostCalendarUtil;
 use Zikula\PostCalendarModule\CalendarView\Navigation;
+use \Zikula_ValidationHook;
+use \Zikula_Hook_ValidationProviders;
+use \CategoryUtil;
 use System;
 use SecurityUtil;
 use ModUtil;
 use LogUtil;
 use DateTime;
+use \ZLanguage;
+use \Zikula_ModUrl;
+use \Zikula_ProcessHook;
 
 class EventController extends \Zikula_AbstractController
 {
@@ -42,7 +48,7 @@ class EventController extends \Zikula_AbstractController
 
         // get the event from the DB
         $event = $this->entityManager->getRepository('CalendarEventEntity')->find($eid)->getOldArray();
-        $event = ModUtil::apiFunc('PostCalendar', 'event', 'formateventarrayfordisplay', array('event' => $event));
+        $event = ModUtil::apiFunc('ZikulaPostCalendarModule', 'event', 'formateventarrayfordisplay', array('event' => $event));
 
         $render->assign('loaded_event', $event);
         return $render->execute('event/deleteeventconfirm.tpl', new PostCalendar_Form_Handler_EditHandler());
@@ -52,19 +58,19 @@ class EventController extends \Zikula_AbstractController
      * edit an event
      * @Route("/event/edit")
      */
-    public function editAction($args)
+    public function editAction()
     {
         $args['eid'] = $this->request->query->get('eid');
-        return $this->create($args);
+        return $this->doEventForm($args);
     }
     /**
      * copy an event
      * @Route("/event/copy")
      */
-    public function copyAction($args)
+    public function copyAction()
     {
         $args['eid'] = $this->request->query->get('eid');
-        return $this->create($args);
+        return $this->doEventForm($args);
     }
     /**
      * #Desc: create an event
@@ -90,8 +96,12 @@ class EventController extends \Zikula_AbstractController
      * @Route("/event/create")
      * 
      **/
-    public function createAction($args)
+    public function createAction()
     {
+        return $this->doEventForm();
+    }
+    
+    private function doEventForm($args = []) {
         // We need at least ADD permission to submit an event
         $this->throwForbiddenUnless(SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADD), LogUtil::getErrorMsgPermission());
 
@@ -137,7 +147,7 @@ class EventController extends \Zikula_AbstractController
             $submitted_event['endDate'] = DateTime::createFromFormat('Y-m-d', $submitted_event['enddate']);
             unset($submitted_event['eventstart_date'], $submitted_event['eventstart_time'], $submitted_event['eventend_date'], $submitted_event['eventend_time'], $submitted_event['enddate']);
             
-            $abort = ModUtil::apiFunc('PostCalendar', 'event', 'validateformdata', $submitted_event);
+            $abort = ModUtil::apiFunc('ZikulaPostCalendarModule', 'event', 'validateformdata', $submitted_event);
             // check hooked modules for validation
             $hook = new Zikula_ValidationHook('postcalendar.ui_hooks.events.validate_edit', new Zikula_Hook_ValidationProviders());
             $hookvalidators = $this->notifyHooks($hook)->getValidators();
@@ -166,7 +176,7 @@ class EventController extends \Zikula_AbstractController
                         ->getRepository('CalendarEventEntity')
                         ->findOneBy(array('eid' => $eid))
                         ->getOldArray();
-                $eventdata = ModUtil::apiFunc('PostCalendar', 'event', 'formateventarrayfordisplay', array('event' => $eventdata));
+                $eventdata = ModUtil::apiFunc('ZikulaPostCalendarModule', 'event', 'formateventarrayfordisplay', array('event' => $eventdata));
             }
             // need to check each of these below to see if truly needed CAH 11/14/09
             $eventdata['date'] = $date->format('Y-m-d');
@@ -193,7 +203,7 @@ class EventController extends \Zikula_AbstractController
         if ($form_action == 'preview') {
             $eventdata['preview'] = true;
             // format the data for editing
-            $eventdata = ModUtil::apiFunc('PostCalendar', 'event', 'formateventarrayforDB', $eventdata);
+            $eventdata = ModUtil::apiFunc('ZikulaPostCalendarModule', 'event', 'formateventarrayforDB', $eventdata);
             // reformat the category information
             foreach ($eventdata['categories'] as $name => $id) {
                 $categories[$name] = CategoryUtil::getCategoryByID($id);
@@ -207,7 +217,7 @@ class EventController extends \Zikula_AbstractController
                 }
             }
             // format the data for preview
-            $eventdata = ModUtil::apiFunc('PostCalendar', 'event', 'formateventarrayfordisplay', array('event' => $eventdata));
+            $eventdata = ModUtil::apiFunc('ZikulaPostCalendarModule', 'event', 'formateventarrayfordisplay', array('event' => $eventdata));
         } else {
             $eventdata['preview'] = "";
         }
@@ -216,13 +226,13 @@ class EventController extends \Zikula_AbstractController
         if ($form_action == 'save') {
             $this->checkCsrfToken();
 
-            $eventdata = ModUtil::apiFunc('PostCalendar', 'event', 'formateventarrayforDB', $eventdata);
+            $eventdata = ModUtil::apiFunc('ZikulaPostCalendarModule', 'event', 'formateventarrayforDB', $eventdata);
 
-            if (!$eid = ModUtil::apiFunc('PostCalendar', 'event', 'writeEvent', array(
+            if (!$eid = ModUtil::apiFunc('ZikulaPostCalendarModule', 'event', 'writeEvent', array(
                 'eventdata' => $eventdata))) {
                 LogUtil::registerError($this->__('Error! Submission failed.'));
             } else {
-                $url = new Zikula_ModUrl('PostCalendar', 'user', 'display', ZLanguage::getLanguageCode(), array('viewtype' => 'event', 'eid' => $eid));
+                $url = new Zikula_ModUrl('ZikulaPostCalendarModule', 'user', 'display', ZLanguage::getLanguageCode(), array('viewtype' => 'event', 'eid' => $eid));
                 $this->notifyHooks(new Zikula_ProcessHook('postcalendar.ui_hooks.events.process_edit', $eid, $url));
                 $this->view->clear_cache();
                 $dateFormat = $this->getVar('pcDateFormats');
@@ -233,15 +243,15 @@ class EventController extends \Zikula_AbstractController
                 }
                 if ((int)$eventdata['eventstatus'] === (int)CalendarEvent::QUEUED) {
                     LogUtil::registerStatus($this->__('The event has been queued for administrator approval.'));
-                    ModUtil::apiFunc('PostCalendar', 'admin', 'notify', array(
+                    ModUtil::apiFunc('ZikulaPostCalendarModule', 'admin', 'notify', array(
                         'eid' => $eid,
                         'is_update' => $is_update)); //notify admin
                 }
             }
             if ($addtrigger) {
-                System::redirect(ModUtil::url('PostCalendar', 'event', 'create'));
+                System::redirect(ModUtil::url('ZikulaPostCalendarModule', 'event', 'create'));
             } else {
-                System::redirect(ModUtil::url('PostCalendar', 'user', 'display', array(
+                System::redirect(ModUtil::url('ZikulaPostCalendarModule', 'user', 'display', array(
                     'viewtype' => $this->getVar('pcDefaultView'),
                     'date' => $submitted_event['eventStart']->format('Ymd'))));
             }

@@ -11,6 +11,7 @@
  */
 
 namespace Zikula\PostCalendarModule\CalendarView;
+
 class CalendarViewDay extends AbstractCalendarViewBase
 {
     /**

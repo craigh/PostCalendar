@@ -9,11 +9,16 @@ namespace Zikula\PostCalendarModule\Api;
 
 use Zikula\PostCalendarModule\Entity\Repository\CalendarEventRepository as EventRepo;
 use Zikula\PostCalendarModule\Entity\CalendarEventEntity as CalendarEvent;
+use Zikula\PostCalendarModule\Helper\PostCalendarUtil;
 use CategoryRegistryUtil;
 use \SecurityUtil;
 use \UserUtil;
 use \LogUtil;
 use \ModUtil;
+use \CategoryUtil;
+use \DateTime;
+use \DataUtil;
+use \ZLanguage;
 
 
 /**
@@ -111,7 +116,7 @@ class EventApi extends \Zikula_AbstractApi
         }
         
         // get event collection
-        $events = $this->entityManager->getRepository('CalendarEventEntity')
+        $events = $this->entityManager->getRepository('\Zikula\PostCalendar\Event\CalendarEventEntity')
                 ->getEventCollection($eventstatus, $startDate, $endDate, $userFilter, $userid, $filtercats, $searchDql);
         
         //==============================================================
@@ -201,11 +206,11 @@ class EventApi extends \Zikula_AbstractApi
 
         if ($eventdata['is_update']) {
             unset($eventdata['is_update']);
-            $event = $this->entityManager->getRepository('CalendarEventEntity')->find($eventdata['eid']);
+            $event = $this->entityManager->getRepository('\Zikula\PostCalendar\Event\CalendarEventEntity')->find($eventdata['eid']);
         } else { //new event
             unset($eventdata['eid']); //be sure that eid is not set on insert op to autoincrement value
             unset($eventdata['is_update']);
-            $event = new CalendarEventEntity();
+            $event = new CalendarEvent();
         }
         try {
             $event->setFromArray($eventdata);
