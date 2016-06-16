@@ -42,6 +42,7 @@ class EventController extends \Zikula_AbstractController
      * to delete an event
      *
      * @Route("/event/delete")
+     * @return Response
      */
     public function deleteAction()
     {
@@ -55,26 +56,28 @@ class EventController extends \Zikula_AbstractController
         $event = ModUtil::apiFunc('ZikulaPostCalendarModule', 'event', 'formateventarrayfordisplay', array('event' => $event));
 
         $render->assign('loaded_event', $event);
-        return new Response($render->execute('event/deleteeventconfirm.tpl', new EditHandler()));
+        return new Response ( $render->execute('event/deleteeventconfirm.tpl', new EditHandler()) );
     }
 
     /**
      * edit an event
      * @Route("/event/edit")
+     * @return Response
      */
     public function editAction()
     {
         $args['eid'] = $this->request->query->get('eid');
-        return $this->doEventForm($args);
+        return new Response($this->doEventForm($args));
     }
     /**
      * copy an event
      * @Route("/event/copy")
+     * @return Response
      */
     public function copyAction()
     {
         $args['eid'] = $this->request->query->get('eid');
-        return $this->doEventForm($args);
+        return new Response($this->doEventForm($args));
     }
     /**
      * #Desc: create an event
@@ -98,11 +101,11 @@ class EventController extends \Zikula_AbstractController
      *
      * expected $args = 'eid'
      * @Route("/event/create")
-     * 
+     * @return Response
      **/
     public function createAction()
     {
-        return $this->doEventForm();
+        return new Response($this->doEventForm());
     }
     
     private function doEventForm($args = []) {

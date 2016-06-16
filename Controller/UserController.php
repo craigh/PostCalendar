@@ -12,6 +12,7 @@ namespace Zikula\PostCalendarModule\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 // use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\Response;
 use Zikula\PostCalendarModule\Helper\PostCalendarUtil;
 use SecurityUtil;
 use LogUtil;
@@ -36,7 +37,6 @@ class UserController extends \Zikula_AbstractController
     /**
      * main view functions for end user
      * @Route("/user/view")
-     *
      * @return Response
      */
     public function viewAction()
@@ -47,6 +47,7 @@ class UserController extends \Zikula_AbstractController
     /**
      * display calendar events in requested viewtype
      * @Route("/user/display")
+     * @return Response
      */
     public function displayAction()
     {
@@ -90,7 +91,7 @@ class UserController extends \Zikula_AbstractController
             $class = '\Zikula\PostCalendarModule\CalendarView\CalendarView' . ucfirst($defaultView);
         }
         $calendarView = new $class($this->view, $date, $userFilter, $filtercats, $eid);
-        return $calendarView->render();
+        return new Response( $calendarView->render() );
     }
 
 }

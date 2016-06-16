@@ -13,7 +13,6 @@
 namespace Zikula\PostCalendarModule\CalendarView;
 
 use Zikula\PostCalendarModule\Entity\CalendarEventEntity;
-use Symfony\Component\HttpFoundation\Response;
 
 // use CategoryRegistryUtil;
 use SecurityUtil;
@@ -137,7 +136,7 @@ class CalendarViewEvent extends AbstractCalendarViewBase
             return true;
         } else {
             $this->view->assign('navBar', $this->navBar);
-            return new Response($this->view->fetch($this->template));
+            return $this->view->fetch($this->template);
         }
     }
 

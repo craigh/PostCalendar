@@ -70,7 +70,7 @@ class CalendarViewDay extends AbstractCalendarViewBase
     /**
      * Render the view
      * 
-     * @return string 
+     * @return string
      */
     public function render()
     {
