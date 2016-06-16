@@ -15,6 +15,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Zikula\PostCalendarModule\Entity\CalendarEventEntity as CalendarEvent;
 use Zikula\PostCalendarModule\Api\EventApi;
 use Zikula\PostCalendarModule\Helper\PostCalendarUtil;
+use DateTime;
 use System;
 use SecurityUtil;
 use ModUtil;

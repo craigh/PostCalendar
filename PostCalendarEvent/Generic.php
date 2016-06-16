@@ -10,6 +10,9 @@
  * information regarding copyright and licensing.
  */
 
+
+use DateTime;
+
 /**
  * Implements Base class to allow for Event creation in generic case
  */

@@ -12,6 +12,7 @@ use Zikula\PostCalendarModule\Entity\CalendarEventEntity;
 //use Zikula\PostCalendarModule\Entity\EventCategoryEntity;
 //use Zikula\PostCalendarModule\Entity\RecurExceptionEntity;
 use Zikula\PostCalendarModule\Helper\PostCalendarUtil;
+use DateTime;
 use DoctrineHelper;
 use LogUtil;
 use SecurityUtil;

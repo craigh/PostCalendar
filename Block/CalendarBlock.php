@@ -5,9 +5,17 @@
  * @copyright   Copyright (c) 2009-2012, Craig Heydenburg, Sound Web Development
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
  */
-use CategoryRegistryUtil;
 
-class PostCalendar_Block_Calendar extends Zikula_Controller_AbstractBlock
+namespace Zikula\PostCalendarModule\Block;
+
+use Zikula\PostCalendarModule\CalendarView\CalendarViewCalendarBlock;
+use BlockUtil;
+use CategoryRegistryUtil;
+use DateTime;
+use ModUtil;
+use SecurityUtil;
+
+class CalendarBlock extends \Zikula_Controller_AbstractBlock
 {
     /**
      * initialise block
@@ -23,7 +31,7 @@ class PostCalendar_Block_Calendar extends Zikula_Controller_AbstractBlock
     public function info()
     {
         return array(
-            'text_type'      => 'PostCalendar',
+            'text_type'      => $this->__('Calendar Block'),
             'module'         => 'PostCalendar',
             'text_type_long' => $this->__('Calendar Block'),
             'allow_multiple' => true,
@@ -44,7 +52,7 @@ class PostCalendar_Block_Calendar extends Zikula_Controller_AbstractBlock
             return;
         }
         $date = new DateTime();
-        $calendarView = new PostCalendar_CalendarView_CalendarBlock($this->view, $date, '', null, $blockinfo);
+        $calendarView = new CalendarViewCalendarBlock($this->view, $date, '', null, $blockinfo);
         $blockinfo['content'] = $calendarView->render();
         
         if (empty($blockinfo['content']) && SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {

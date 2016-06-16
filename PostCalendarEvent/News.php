@@ -11,6 +11,9 @@
 /**
  * Implements Base class to allow for Event creation on News Story creation
  */
+
+use DateTime;
+
 class PostCalendar_PostCalendarEvent_News extends PostCalendar_PostCalendarEvent_AbstractBase {
 
     /**

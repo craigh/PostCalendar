@@ -6,6 +6,7 @@
  */
 
 use CategoryRegistryUtil;
+use DateTime;
 
 class PostCalendar_ContentType_PostCalEvents extends Content_AbstractContentType
 {

@@ -11,7 +11,20 @@
  */
 
 namespace Zikula\PostCalendarModule\CalendarView;
-class CalendarViewFeaturedEventBlock extends Event
+
+use Zikula\PostCalendarModule\Entity\CalendarEventEntity;
+use BlockUtil;
+use CategoryRegistryUtil;
+use SecurityUtil;
+use UserUtil;
+use LogUtil;
+use ModUtil;
+use CategoryUtil;
+use DateTime;
+use DataUtil;
+use ZLanguage;
+
+class CalendarViewFeaturedEventBlock extends CalendarViewEvent
 {
 
     /**
@@ -35,7 +48,7 @@ class CalendarViewFeaturedEventBlock extends Event
      * @param array $categoryFilter
      * @param array $blockinfo 
      */
-    function __construct(Zikula_View $view, $requestedDate, $userFilter, $categoryFilter, $blockinfo)
+    function __construct(\Zikula_View $view, $requestedDate, $userFilter, $categoryFilter, $blockinfo)
     {
         $this->blockInfo = $blockinfo;
         $this->blockVars = BlockUtil::varsFromContent($blockinfo['content']);

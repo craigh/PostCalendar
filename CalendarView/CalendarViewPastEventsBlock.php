@@ -11,6 +11,12 @@
  */
 
 namespace Zikula\PostCalendarModule\CalendarView;
+
+use BlockUtil;
+use ModUtil;
+use DateTime;
+
+
 class CalendarViewPastEventsBlock extends AbstractDays
 {
 
@@ -35,7 +41,7 @@ class CalendarViewPastEventsBlock extends AbstractDays
      * @param array $categoryFilter
      * @param array $blockinfo 
      */
-    function __construct(Zikula_View $view, $requestedDate, $userFilter, $categoryFilter, $blockinfo)
+    function __construct(\Zikula_View $view, $requestedDate, $userFilter, $categoryFilter, $blockinfo)
     {
         $this->bid = $blockinfo['bid'];
         $this->blockVars = BlockUtil::varsFromContent($blockinfo['content']);

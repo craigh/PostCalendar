@@ -4,7 +4,17 @@
  * @copyright   Copyright (c) 2009-2012, Craig Heydenburg, Sound Web Development
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
  */
-class PostCalendar_Block_Featuredevent extends Zikula_Controller_AbstractBlock
+
+namespace Zikula\PostCalendarModule\Block;
+
+use Zikula\PostCalendarModule\CalendarView\CalendarViewFeaturedEventBlock;
+use BlockUtil;
+use CategoryRegistryUtil;
+use DateTime;
+use ModUtil;
+use SecurityUtil;
+
+class FeaturedeventBlock extends \Zikula_Controller_AbstractBlock
 {
     /**
      * initialise block
@@ -20,7 +30,7 @@ class PostCalendar_Block_Featuredevent extends Zikula_Controller_AbstractBlock
     public function info()
     {
         return array(
-            'text_type'        => 'featuredevent',
+            'text_type'        => $this->__('Featured Event'),
             'module'           => 'PostCalendar',
             'text_type_long'   => $this->__('Featured Event Calendar Block'),
             'allow_multiple'   => true,
@@ -43,7 +53,7 @@ class PostCalendar_Block_Featuredevent extends Zikula_Controller_AbstractBlock
         }
 
         $date = new DateTime();
-        $calendarView = new PostCalendar_CalendarView_FeaturedEventBlock($this->view, $date, '', null, $blockinfo);
+        $calendarView = new CalendarViewFeaturedEventBlock($this->view, $date, '', null, $blockinfo);
         $blockinfo = $calendarView->render();
     
         return BlockUtil::themeBlock($blockinfo);

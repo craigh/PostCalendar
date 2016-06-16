@@ -5,6 +5,9 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU General Public License
  */
 
+
+use DateTime;
+
 class PostCalendar_ContentType_PostCalEvent extends Content_AbstractContentType
 {
     protected $eid; // event id

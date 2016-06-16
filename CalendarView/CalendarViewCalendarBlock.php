@@ -11,7 +11,19 @@
  */
 
 namespace Zikula\PostCalendarModule\CalendarView;
-class CalendarViewCalendarBlock extends Month
+
+use BlockUtil;
+use CategoryRegistryUtil;
+use SecurityUtil;
+use UserUtil;
+use LogUtil;
+use ModUtil;
+use CategoryUtil;
+use DateTime;
+use DataUtil;
+use ZLanguage;
+
+class CalendarViewCalendarBlock extends CalendarViewMonth
 {
 
     /**
@@ -53,7 +65,7 @@ class CalendarViewCalendarBlock extends Month
      * @param array $categoryFilter
      * @param array $blockinfo 
      */
-    function __construct(Zikula_View $view, $requestedDate, $userFilter, $categoryFilter, $blockinfo)
+    function __construct(\Zikula_View $view, $requestedDate, $userFilter, $categoryFilter, $blockinfo)
     {
         $this->bid = $blockinfo['bid'];
         $this->blockVars = BlockUtil::varsFromContent($blockinfo['content']);

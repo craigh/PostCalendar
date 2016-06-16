@@ -13,7 +13,6 @@
 namespace Zikula\PostCalendarModule\CalendarView;
 
 use Zikula\PostCalendarModule\Entity\CalendarEventEntity;
-
 // use CategoryRegistryUtil;
 use SecurityUtil;
 use UserUtil;
