@@ -18,7 +18,7 @@ use \CategoryUtil;
 use \PageUtil;
 use \SecurityUtil;
 
-class Navigation
+class CalendarViewNavigation
 {
     /**
      * Provide the rendered navigation html for CalendarViews 
@@ -168,7 +168,7 @@ class Navigation
         if ($this->navBarType == 'buttonbar') {
             PageUtil::addVar("javascript", "jquery");
             PageUtil::addVar("javascript", "jquery-ui");
-            PageUtil::addVar("javascript", "@ZikulaPostCalendarModule/Resources/public/javascript/postcalendar-user-navigation.js");
+            PageUtil::addVar("javascript", "@ZikulaPostCalendarModule/Resources/public/js/postcalendar-user-navigation.js");
             // define javascript variables with translation without using Zikula.UI (and not loading a bunch of other JS)
             $javascript = "
             var pcActiveStateActive='" . $this->view->__('active') . "';
@@ -180,9 +180,9 @@ class Navigation
             $jQueryTheme = 'overcast';
             $jQueryTheme = is_dir("javascript/jquery-ui/themes/$jQueryTheme") ? $jQueryTheme : 'base';
             PageUtil::addVar("stylesheet", "javascript/jquery-ui/themes/$jQueryTheme/jquery-ui.css");
-            PageUtil::addVar("stylesheet", "@ZikulaPostCalendarModule/Resources/public/style/jquery-overrides.css");
+            PageUtil::addVar("stylesheet", "@ZikulaPostCalendarModule/Resources/public/css/jquery-overrides.css");
             if (SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN)) {
-                $allowedGroup = ModUtil::getVar('PostCalendar', 'pcAllowUserCalendar');
+                $allowedGroup = ModUtil::getVar('ZikulaPostCalendarModule', 'pcAllowUserCalendar');
                 if ($allowedGroup > 0) {
                     $group = ModUtil::apiFunc('Groups', 'user', 'get', array(
                                 'gid' => $allowedGroup));

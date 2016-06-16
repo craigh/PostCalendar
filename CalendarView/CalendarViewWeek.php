@@ -11,22 +11,41 @@
  */
 
 namespace Zikula\PostCalendarModule\CalendarView;
-class CalendarViewList extends AbstractDays
+
+use \System;
+use CategoryRegistryUtil;
+use \SecurityUtil;
+use \UserUtil;
+use \LogUtil;
+use \ModUtil;
+use \CategoryUtil;
+use \DateTime;
+use \DataUtil;
+use \ZLanguage;
+use DateInterval;
+use DatePeriod;
+
+class CalendarViewWeek extends AbstractDays
 {
 
     /**
-     * How many months to view
+     * An array of values to use in the computation of DateTime objects 
+     * Do not translate!
      * 
-     * @var integer
+     * @var array 
      */
-    protected $listMonths = 1;
+    private $dayMap = array(
+        self::SUNDAY_IS_FIRST => "Sunday",
+        self::MONDAY_IS_FIRST => "Monday",
+        self::SATURDAY_IS_FIRST => "Saturday",
+    );
 
     /**
      * Set the cacheTag 
      */
     protected function setCacheTag()
     {
-        $this->cacheTag = $this->requestedDate->format('Ymd');
+        $this->cacheTag = $this->requestedDate->format('Ym');
     }
 
     /**
@@ -34,7 +53,7 @@ class CalendarViewList extends AbstractDays
      */
     protected function setTemplate()
     {
-        $this->template = 'user/list.tpl';
+        $this->template = 'user/week.tpl';
     }
 
     /**
@@ -43,22 +62,14 @@ class CalendarViewList extends AbstractDays
     protected function setDates()
     {
         $this->startDate = clone $this->requestedDate;
+        if ($this->requestedDate->format('w') <> $this->firstDayOfWeek) {
+            $this->startDate
+                    ->modify("last " . $this->dayMap[$this->firstDayOfWeek]);
+        }
         $this->endDate = clone $this->requestedDate;
         $this->endDate
-                ->modify("+" . $this->listMonths . " months");
-
-        $interval = new DateInterval("P1D");
-        $datePeriod = new DatePeriod($this->startDate, $interval, $this->endDate);
-        $i = 0;
-        $week = 0;
-        foreach ($datePeriod as $date) {
-            $this->dateGraph[$week][$i] = $date->format('Y-m-d');
-            $i++;
-            if ($i > 6) {
-                $i = 0;
-                $week++;
-            }
-        }
+                ->modify("next " . $this->dayMap[$this->firstDayOfWeek])
+                ->modify("-1 day");
     }
 
     /**
@@ -66,19 +77,20 @@ class CalendarViewList extends AbstractDays
      */
     protected function setup()
     {
-        $this->viewtype = 'list';
-        $this->listMonths = ModUtil::getVar('PostCalendar', 'pcListMonths');
+        $this->viewtype = 'week';
 
         $prevClone = clone $this->requestedDate;
-        $prevClone->modify("-" . $this->listMonths . " months");
+        $prevClone->modify("last " . $this->dayMap[$this->firstDayOfWeek]);
+        if ($this->requestedDate->format('w') <> $this->firstDayOfWeek) {
+            $prevClone->modify("-7 days");
+        }
         $this->navigation['previous'] = ModUtil::url('PostCalendar', 'user', 'display', array(
                     'viewtype' => $this->viewtype,
                     'date' => $prevClone->format('Ymd'),
                     'userfilter' => $this->userFilter,
                     'filtercats' => $this->selectedCategories));
         $nextClone = clone $this->requestedDate;
-        $nextClone->modify("+" . $this->listMonths . " months")
-                ->modify("+1 day");
+        $nextClone->modify("next " . $this->dayMap[$this->firstDayOfWeek]);
         $this->navigation['next'] = ModUtil::url('PostCalendar', 'user', 'display', array(
                     'viewtype' => $this->viewtype,
                     'date' => $nextClone->format('Ymd'),
@@ -94,9 +106,9 @@ class CalendarViewList extends AbstractDays
     {
         if (!$this->isCached()) {
             // Load the events
-            $eventsByDate = ModUtil::apiFunc('PostCalendar', 'event', 'getEvents', array(
-                        'start' => $this->startDate,
-                        'end' => $this->endDate,
+            $eventsByDate = ModUtil::apiFunc('ZikulaPostCalendarModule', 'event', 'getEvents', array(
+                        'start' => clone $this->startDate,
+                        'end' => clone $this->endDate,
                         'filtercats' => $this->selectedCategories,
                         'date' => $this->requestedDate,
                         'userfilter' => $this->userFilter));
@@ -104,11 +116,10 @@ class CalendarViewList extends AbstractDays
             $this->view
                     ->assign('navBar', $this->navBar)
                     ->assign('navigation', $this->navigation)
-                    ->assign('dayDisplay', $this->dayDisplay)
-                    ->assign('graph', $this->dateGraph)
                     ->assign('eventsByDate', $eventsByDate)
-                    ->assign('startDate', $this->startDate)
-                    ->assign('endDate', $this->endDate);
+                    ->assign('startDate', $this->startDate->format('Ymd'))
+                    ->assign('endDate', $this->endDate->format('Ymd'))
+                    ->assign('requestedDate', $this->requestedDate->format('Ymd'));
         }
         return $this->view->fetch($this->template);
     }

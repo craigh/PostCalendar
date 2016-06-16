@@ -66,7 +66,7 @@ class CalendarViewFeaturedEventBlock extends Event
     public function setup()
     {
         parent::setup();
-        $alleventdates = ModUtil::apiFunc('PostCalendar', 'event', 'getEventOccurances', array('event' => $this->event)); // gets all FUTURE occurances
+        $alleventdates = ModUtil::apiFunc('ZikulaPostCalendarModule', 'event', 'getEventOccurances', array('event' => $this->event)); // gets all FUTURE occurances
         // assign next occurance to eventStart
         $newEventStart = DateTime::createFromFormat('Y-m-d', array_shift($alleventdates));
         if (!empty($newEventStart)) { // createFromFormat returns false on failure

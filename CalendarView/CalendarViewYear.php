@@ -11,6 +11,20 @@
  */
 
 namespace Zikula\PostCalendarModule\CalendarView;
+
+use \System;
+use CategoryRegistryUtil;
+use \SecurityUtil;
+use \UserUtil;
+use \LogUtil;
+use \ModUtil;
+use \CategoryUtil;
+use \DateTime;
+use \DataUtil;
+use \ZLanguage;
+use DateInterval;
+use DatePeriod;
+
 class CalendarViewYear extends AbstractDays
 {
 
@@ -135,7 +149,7 @@ class CalendarViewYear extends AbstractDays
     {
         if (!$this->isCached()) {
             // Load the events
-            $eventsByDate = ModUtil::apiFunc('PostCalendar', 'event', 'getEvents', array(
+            $eventsByDate = ModUtil::apiFunc('ZikulaPostCalendarModule', 'event', 'getEvents', array(
                         'start' => $this->startDate,
                         'end' => $this->endDate,
                         'filtercats' => $this->selectedCategories,

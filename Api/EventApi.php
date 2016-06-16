@@ -11,6 +11,7 @@ use Zikula\PostCalendarModule\Entity\Repository\CalendarEventRepository as Event
 use Zikula\PostCalendarModule\Entity\CalendarEventEntity as CalendarEvent;
 use Zikula\PostCalendarModule\Helper\PostCalendarUtil;
 use CategoryRegistryUtil;
+use \HookUtil;
 use \SecurityUtil;
 use \UserUtil;
 use \LogUtil;
@@ -19,7 +20,8 @@ use \CategoryUtil;
 use \DateTime;
 use \DataUtil;
 use \ZLanguage;
-
+use DateInterval;
+use DatePeriod;
 
 /**
  * This is the event handler api
@@ -116,7 +118,7 @@ class EventApi extends \Zikula_AbstractApi
         }
         
         // get event collection
-        $events = $this->entityManager->getRepository('\Zikula\PostCalendar\Event\CalendarEventEntity')
+        $events = $this->entityManager->getRepository('\Zikula\PostCalendarModule\Entity\CalendarEventEntity')
                 ->getEventCollection($eventstatus, $startDate, $endDate, $userFilter, $userid, $filtercats, $searchDql);
         
         //==============================================================
@@ -124,8 +126,8 @@ class EventApi extends \Zikula_AbstractApi
         // specific to the current view.  This array is then
         // used to build the calendar display.
         //==============================================================
-        $interval = new DateInterval("P1D");
-        $period = new DatePeriod($startDate, $interval, $endDate); // endDate has already been extended +1 days
+        $interval = new \DateInterval("P1D");
+        $period = new \DatePeriod($startDate, $interval, $endDate); // endDate has already been extended +1 days
         $days = array();
         foreach ($period as $date) {
             $days[$date->format('Y-m-d')] = array();
@@ -174,7 +176,7 @@ class EventApi extends \Zikula_AbstractApi
         $userFilter = EventRepo::FILTER_GLOBAL;
 
         // get event collection
-        $events = $this->entityManager->getRepository('CalendarEventEntity')
+        $events = $this->entityManager->getRepository('\Zikula\PostCalendarModule\Entity\CalendarEventEntity')
                 ->getEventCollection($eventstatus, $startDate, $endDate, $userFilter, UserUtil::getVar('uid'), $filtercats, '');
 
         $returnedData = array();
@@ -206,7 +208,7 @@ class EventApi extends \Zikula_AbstractApi
 
         if ($eventdata['is_update']) {
             unset($eventdata['is_update']);
-            $event = $this->entityManager->getRepository('\Zikula\PostCalendar\Event\CalendarEventEntity')->find($eventdata['eid']);
+            $event = $this->entityManager->getRepository('\Zikula\PostCalendarModule\Entity\CalendarEventEntity')->find($eventdata['eid']);
         } else { //new event
             unset($eventdata['eid']); //be sure that eid is not set on insert op to autoincrement value
             unset($eventdata['is_update']);

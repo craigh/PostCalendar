@@ -132,7 +132,7 @@ class CalendarViewCalendarBlock extends Month
         }
 
         // Load the events
-        $eventsByDate = ModUtil::apiFunc('PostCalendar', 'event', 'getEvents', array(
+        $eventsByDate = ModUtil::apiFunc('ZikulaPostCalendarModule', 'event', 'getEvents', array(
                     'start' => $this->startDate,
                     'end' => $this->endDate,
                     'filtercats' => $this->selectedCategories,

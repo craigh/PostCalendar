@@ -11,6 +11,21 @@
  */
 
 namespace Zikula\PostCalendarModule\CalendarView;
+
+use Zikula\PostCalendarModule\Entity\CalendarEventEntity;
+use CategoryRegistryUtil;
+use \SecurityUtil;
+use \UserUtil;
+use \LogUtil;
+use \ModUtil;
+use \CategoryUtil;
+use \DateTime;
+use \DataUtil;
+use \ServiceUtil;
+use \ZLanguage;
+use DateInterval;
+use DatePeriod;
+
 class CalendarViewEvent extends AbstractCalendarViewBase
 {
 
@@ -54,13 +69,13 @@ class CalendarViewEvent extends AbstractCalendarViewBase
         $this->popup = $this->view->getRequest()->query->get('popup', $this->view->getRequest()->request->get('popup', false));
 
         $em = ServiceUtil::getService('doctrine.entitymanager');
-        $event = $em->getRepository('CalendarEventEntity')->find($this->eid);
+        $event = $em->getRepository('\Zikula\PostCalendarModule\Entity\CalendarEventEntity')->find($this->eid);
         if (isset($event)) {
             $event = $event->getOldArray();
         } else {
             return LogUtil::registerError($this->view->__('Error: Can not find event.'));
         }
-        $this->event = ModUtil::apiFunc('PostCalendar', 'event', 'formateventarrayfordisplay', array(
+        $this->event = ModUtil::apiFunc('ZikulaPostCalendarModule', 'event', 'formateventarrayfordisplay', array(
                     'event' => $event,
                     'currentDate' => $this->requestedDate->format('Y-m-d')));
     }

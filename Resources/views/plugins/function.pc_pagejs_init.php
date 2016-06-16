@@ -57,8 +57,8 @@ function smarty_function_pc_pagejs_init($params, Zikula_View $view)
             }
             if ($modVars['ZikulaPostCalendarModule']['pcUsePopups']) {
                 // tipTip jquery plugin from http://code.drewwilson.com/entry/tiptip-jquery-plugin
-                PageUtil::addVar("javascript", "@ZikulaPostCalendarModule/Resources/public/javascript/jquery-plugins/tipTipv13/jquery.tipTip.minified.js");
-                PageUtil::addVar("stylesheet", "@ZikulaPostCalendarModule/Resources/public/javascript/jquery-plugins/tipTipv13/tipTip.css");
+                PageUtil::addVar("javascript", "@ZikulaPostCalendarModule/Resources/public/js/jquery-plugins/tipTipv13/jquery.tipTip.minified.js");
+                PageUtil::addVar("stylesheet", "@ZikulaPostCalendarModule/Resources/public/js/jquery-plugins/tipTipv13/tipTip.css");
                 $javascript = "
                 jQuery(document).ready(function() {
                     jQuery('.tooltips').tipTip({

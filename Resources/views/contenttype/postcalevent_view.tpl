@@ -1,4 +1,4 @@
-{pageaddvar name='stylesheet' value='@ZikulaPostCalendarModule/Resources/public/style/style.css'}
+{pageaddvar name='stylesheet' value='@ZikulaPostCalendarModule/Resources/public/css/style.css'}
 <div class='postcalendar_featuredevent'>
 {if $loaded_event.showcountdown}
 <div class='eventcountdown'>

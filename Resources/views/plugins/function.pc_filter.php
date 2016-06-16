@@ -20,6 +20,9 @@
  *                       'selectedCategories' the categories that were slected to filter by
  * @param Smarty $smarty
  */
+
+use Zikula\PostCalendarModule\Entity\Repository\CalendarEventRepository;
+
 function smarty_function_pc_filter($args, Zikula_View $view)
 {
     $dom = ZLanguage::getModuleDomain('ZikulaPostCalendarModule');
@@ -35,9 +38,9 @@ function smarty_function_pc_filter($args, Zikula_View $view)
     // build the username filter pulldown
     //================================================================
     if ($modVars['ZikulaPostCalendarModule']['pcAllowUserCalendar']) {
-        $filterdefault = PostCalendar_Entity_Repository_CalendarEventRepository::FILTER_ALL;
+        $filterdefault = CalendarEventRepository::FILTER_ALL;
     } else {
-        $filterdefault = PostCalendar_Entity_Repository_CalendarEventRepository::FILTER_GLOBAL;
+        $filterdefault = CalendarEventRepository::FILTER_GLOBAL;
     }
     $userFilter = isset($args['userfilter']) && !empty($args['userFilter']) ? $args['userfilter'] : $filterdefault;
     if (!UserUtil::isLoggedIn()) {

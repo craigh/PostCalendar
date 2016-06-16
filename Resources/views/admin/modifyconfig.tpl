@@ -1,5 +1,5 @@
 {pageaddvar name="javascript" value="jquery"}
-{pageaddvar name='javascript' value='@ZikulaPostCalendarModule/Resources/public/javascript/postcalendar-admin-modifyconfig.js'}
+{pageaddvar name='javascript' value='@ZikulaPostCalendarModule/Resources/public/js/postcalendar-admin-modifyconfig.js'}
 {adminheader}
 <div class="z-admin-content-pagetitle">
     {icon type="config" size="small"}

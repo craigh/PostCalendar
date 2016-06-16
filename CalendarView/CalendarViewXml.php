@@ -11,7 +11,20 @@
  */
 
 namespace Zikula\PostCalendarModule\CalendarView;
-class CalendarViewXml extends List
+
+use CategoryRegistryUtil;
+use \SecurityUtil;
+use \UserUtil;
+use \LogUtil;
+use \ModUtil;
+use \CategoryUtil;
+use \DateTime;
+use \DataUtil;
+use \ZLanguage;
+use DateInterval;
+use DatePeriod;
+
+class CalendarViewXml extends CalendarViewList
 {
 
     /**
@@ -28,7 +41,7 @@ class CalendarViewXml extends List
     protected function setup()
     {
         $this->viewtype = 'xml';
-        $this->listMonths = ModUtil::getVar('PostCalendar', 'pcListMonths');
+        $this->listMonths = ModUtil::getVar('ZikulaPostCalendarModule', 'pcListMonths');
     }
     
     /**
@@ -39,7 +52,7 @@ class CalendarViewXml extends List
     {
         if (!$this->isCached()) {
             // Load the events
-            $eventsByDate = ModUtil::apiFunc('PostCalendar', 'event', 'getEvents', array(
+            $eventsByDate = ModUtil::apiFunc('ZikulaPostCalendarModule', 'event', 'getEvents', array(
                         'start' => $this->startDate,
                         'end' => $this->endDate,
                         'filtercats' => $this->selectedCategories,

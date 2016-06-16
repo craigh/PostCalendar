@@ -5,12 +5,25 @@
  */
 
 namespace Zikula\PostCalendarModule\CalendarView;
-include __DIR__ . '/../../vendor/sabre-vobject/vendor/autoload.php';
+include __DIR__ . '/../lib/vendor/sabre-vobject/vendor/autoload.php';
+
 
 use Sabre\VObject;
-use CalendarEventEntity as CalendarEvent;
+use Zikula\PostCalendarModule\Entity\CalendarEventEntity as CalendarEvent;
 use PostCalendar_Api_Event as EventAPI;
-use System;
+use \System;
+use CategoryRegistryUtil;
+use \SecurityUtil;
+use \UserUtil;
+use \LogUtil;
+use \ModUtil;
+use \CategoryUtil;
+use \DateTime;
+use \DataUtil;
+use \ZLanguage;
+use DateInterval;
+use DatePeriod;
+
 
 /**
  * PostCalendar
@@ -21,7 +34,7 @@ use System;
  * Please see the NOTICE file distributed with this source code for further
  * information regarding copyright and licensing.
  */
-class CalendarViewIcal extends List
+class CalendarViewIcal extends CalendarViewList
 {
 
     /**
@@ -59,7 +72,7 @@ class CalendarViewIcal extends List
     protected function setup()
     {
         $this->viewtype = 'ical';
-        $this->listMonths = ModUtil::getVar('PostCalendar', 'pcListMonths');
+        $this->listMonths = ModUtil::getVar('ZikulaPostCalendarModule', 'pcListMonths');
     }
 
     /**
@@ -70,7 +83,7 @@ class CalendarViewIcal extends List
     {
         if (!$this->isCached()) {
             // Load the events
-            $events = ModUtil::apiFunc('PostCalendar', 'event', 'getFlatEvents', array(
+            $events = ModUtil::apiFunc('ZikulaPostCalendarModule', 'event', 'getFlatEvents', array(
                         'start' => $this->startDate,
                         'end' => $this->endDate,
                         'filtercats' => $this->selectedCategories,
@@ -178,7 +191,7 @@ class CalendarViewIcal extends List
                     case CalendarEvent::RECURRTYPE_REPEAT_ON :
                         $freq = 'MONTHLY';
                         // change eventstart to first occurance (it is possibly set to different day)
-                        $occurances = ModUtil::apiFunc('PostCalendar', 'event', 'getEventOccurances', array('event' => $event, 'includepast' => true));
+                        $occurances = ModUtil::apiFunc('ZikulaPostCalendarModule', 'event', 'getEventOccurances', array('event' => $event, 'includepast' => true));
                         $newEventStart = DateTime::createFromFormat('Y-m-d', $occurances[0]);
                         if ($event['alldayevent']) {
                             $vevent->DTSTART->setDateTime($newEventStart, VObject\Property\DateTime::DATE);

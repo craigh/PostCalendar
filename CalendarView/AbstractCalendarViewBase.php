@@ -11,7 +11,18 @@
  */
 
 namespace Zikula\PostCalendarModule\CalendarView;
-abstract class AbstractCalendarViewBase extends Zikula_AbstractHelper
+
+use CategoryRegistryUtil;
+use \SecurityUtil;
+use \UserUtil;
+use \LogUtil;
+use \ModUtil;
+use \CategoryUtil;
+use \DateTime;
+use \DataUtil;
+use \ZLanguage;
+
+abstract class AbstractCalendarViewBase extends \Zikula_AbstractHelper
 {
     /**
      * @abstract
@@ -113,9 +124,9 @@ abstract class AbstractCalendarViewBase extends Zikula_AbstractHelper
      * @param array $categoryFilter
      * @param integer $eid 
      */
-    public function __construct(Zikula_View $view, $requestedDate, $userFilter, $categoryFilter, $eid = null)
+    public function __construct(\Zikula_View $view, $requestedDate, $userFilter, $categoryFilter, $eid = null)
     {
-        $this->domain = ZLanguage::getModuleDomain('PostCalendar');
+        $this->domain = ZLanguage::getModuleDomain('ZikulaPostCalendarModule');
         $this->view = $view;
         $this->currentUser = UserUtil::getVar('uid');
 
@@ -136,7 +147,7 @@ abstract class AbstractCalendarViewBase extends Zikula_AbstractHelper
 
         if (!isset($this->blockVars)) {
             // CalendarView is not a block so provide the navBar
-            $navBar = new Navigation($this->view, $this->requestedDate, $this->userFilter, $this->selectedCategories, $this->viewtype, $this->getNavBarConfig());
+            $navBar = new CalendarViewNavigation($this->view, $this->requestedDate, $this->userFilter, $this->selectedCategories, $this->viewtype, $this->getNavBarConfig());
             $this->navBar = $navBar->render();
         }
     }
@@ -173,7 +184,7 @@ abstract class AbstractCalendarViewBase extends Zikula_AbstractHelper
     protected function getNavBarConfig()
     {
         return array(
-            'navbartype' => ModUtil::getVar('PostCalendar', 'pcNavBarType'));
+            'navbartype' => ModUtil::getVar('ZikulaPostCalendarModule', 'pcNavBarType'));
     }
 
     /**

@@ -12,6 +12,18 @@
 
 namespace Zikula\PostCalendarModule\CalendarView;
 
+use CategoryRegistryUtil;
+use \SecurityUtil;
+use \UserUtil;
+use \LogUtil;
+use \ModUtil;
+use \CategoryUtil;
+use \DateTime;
+use \DataUtil;
+use \ZLanguage;
+use DateInterval;
+use DatePeriod;
+
 /**
  * This class is used as a base class for any CalendarView which displays multiple
  * days (e.g. Week, Month, etc) 
@@ -79,7 +91,7 @@ abstract class AbstractDays extends AbstractCalendarViewBase
      * @param integer $userFilter
      * @param array $categoryFilter 
      */
-    function __construct(Zikula_View $view, $requestedDate, $userFilter, $categoryFilter)
+    function __construct(\Zikula_View $view, $requestedDate, $userFilter, $categoryFilter)
     {
         $this->firstDayOfWeek = ModUtil::getVar('ZikulaPostCalendarModule', 'pcFirstDayOfWeek');
         parent::__construct($view, $requestedDate, $userFilter, $categoryFilter);

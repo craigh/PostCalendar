@@ -12,6 +12,16 @@
 
 namespace Zikula\PostCalendarModule\CalendarView;
 
+use CategoryRegistryUtil;
+use \SecurityUtil;
+use \UserUtil;
+use \LogUtil;
+use \ModUtil;
+use \CategoryUtil;
+use \DateTime;
+use \DataUtil;
+use \ZLanguage;
+
 class CalendarViewDay extends AbstractCalendarViewBase
 {
     /**
@@ -43,14 +53,14 @@ class CalendarViewDay extends AbstractCalendarViewBase
 
         $prevClone = clone $this->requestedDate;
         $prevClone->modify("-1 day");
-        $this->navigation['previous'] = ModUtil::url('PostCalendar', 'user', 'display', array(
+        $this->navigation['previous'] = ModUtil::url('ZikulaPostCalendarModule', 'user', 'display', array(
                     'viewtype' => $this->viewtype,
                     'date' => $prevClone->format('Ymd'),
                     'userfilter' => $this->userFilter,
                     'filtercats' => $this->selectedCategories));
         $nextClone = clone $this->requestedDate;
         $nextClone->modify("+1 day");
-        $this->navigation['next'] = ModUtil::url('PostCalendar', 'user', 'display', array(
+        $this->navigation['next'] = ModUtil::url('ZikulaPostCalendarModule', 'user', 'display', array(
                     'viewtype' => $this->viewtype,
                     'date' => $nextClone->format('Ymd'),
                     'userfilter' => $this->userFilter,
@@ -68,7 +78,7 @@ class CalendarViewDay extends AbstractCalendarViewBase
             // Load the events
             $start = clone $this->requestedDate;
             $end = clone $this->requestedDate;
-            $eventsByDate = ModUtil::apiFunc('PostCalendar', 'event', 'getEvents', array(
+            $eventsByDate = ModUtil::apiFunc('ZikulaPostCalendarModule', 'event', 'getEvents', array(
                 'start'       => $start,
                 'end'         => $end,
                 'filtercats'  => $this->selectedCategories,

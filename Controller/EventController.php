@@ -13,7 +13,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 // use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Zikula\PostCalendarModule\Entity\CalendarEventEntity as CalendarEvent;
 use Zikula\PostCalendarModule\Helper\PostCalendarUtil;
-use Zikula\PostCalendarModule\CalendarView\Navigation;
+use Zikula\PostCalendarModule\CalendarView\CalendarViewNavigation;
 use \Zikula_ValidationHook;
 use \Zikula_Hook_ValidationProviders;
 use \CategoryUtil;
@@ -269,7 +269,7 @@ class EventController extends \Zikula_AbstractController
         // assign function in case we were editing
         $this->view->assign('func', $func);
 
-        $navBar = new Navigation($this->view, $date, null, null, null, array(
+        $navBar = new CalendarViewNavigation($this->view, $date, null, null, null, array(
             'filter' => false, 
             'jumpdate' => false, 
             'navbar' => true,

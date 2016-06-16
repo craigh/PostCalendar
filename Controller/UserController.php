@@ -28,7 +28,7 @@ class UserController extends \Zikula_AbstractController
      * @return Response
      */
 
-    public function mainAction($args)
+    public function mainAction()
     {
         $this->redirect(ModUtil::url('PostCalendar', 'user', 'display', $args));
     }
@@ -39,7 +39,7 @@ class UserController extends \Zikula_AbstractController
      *
      * @return Response
      */
-    public function viewAction($args)
+    public function viewAction()
     {
         $this->redirect(ModUtil::url('PostCalendar', 'user', 'display', $args));
     }
@@ -48,7 +48,7 @@ class UserController extends \Zikula_AbstractController
      * display calendar events in requested viewtype
      * @Route("/user/display")
      */
-    public function displayAction($args)
+    public function displayAction()
     {
         $this->throwForbiddenUnless(SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_OVERVIEW), LogUtil::getErrorMsgPermission());
         $defaultView = $this->getVar('pcDefaultView');

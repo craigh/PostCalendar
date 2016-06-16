@@ -1,4 +1,4 @@
-{pageaddvar name='stylesheet' value='@ZikulaPostCalendarModule/Resources/public/style/style.css'}
+{pageaddvar name='stylesheet' value='@ZikulaPostCalendarModule/Resources/public/css/style.css'}
 {pc_queued_events_notify}
 {pc_pagejs_init}
 <div class="postcalendar_block_view_upcoming">

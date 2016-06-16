@@ -1,4 +1,4 @@
-{pageaddvar name='javascript' value='@ZikulaPostCalendarModule/Resources/public/javascript/postcalendar-event-submit.js'}
+{pageaddvar name='javascript' value='@ZikulaPostCalendarModule/Resources/public/js/postcalendar-event-submit.js'}
 {assign value='overcast' var='jquerytheme'}
 {if $modvars.ZikulaPostCalendarModule.pcAllowUserCalendar}
     {usergetvar name="uid" assign="uid"}
@@ -55,7 +55,7 @@
         <div class="z-formrow">
             <label>{gt text='Starts and Ends'}</label>
             <span>
-                {pageaddvar name='javascript' value='@ZikulaPostCalendarModule/Resources/public/javascript/postcalendar-function-updatefields.js'}
+                {pageaddvar name='javascript' value='@ZikulaPostCalendarModule/Resources/public/js/postcalendar-function-updatefields.js'}
                 {if ($loaded_event.alldayevent)}{assign var='inlinestyle' value='display: none;'}{else}{assign var='inlinestyle' value=null}{/if}
                 {jquery_datepicker 
                     defaultdate=$loaded_event.eventStart 
