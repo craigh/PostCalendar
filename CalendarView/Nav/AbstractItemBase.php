@@ -15,9 +15,9 @@ namespace Zikula\PostCalendarModule\CalendarView\Nav;
 use Zikula\PostCalendarModule\Helper\PostCalendarUtil;
 use DateTime;
 use ModUtil;
-use \Zikula_ModUrl;
-use \ZLanguage;
-use \SecurityUtil;
+use Zikula_ModUrl;
+use ZLanguage;
+use SecurityUtil;
 
 abstract class AbstractItemBase
 {

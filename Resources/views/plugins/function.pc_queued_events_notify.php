@@ -23,7 +23,7 @@ function smarty_function_pc_queued_events_notify($args, Zikula_View $view)
     unset($args);
     
     $em = ServiceUtil::getService('doctrine.entitymanager');
-    $count = $em->getRepository('\Zikula\PostCalendarModule\Entity\CalendarEventEntity')
+    $count = $em->getRepository('Zikula\PostCalendarModule\Entity\CalendarEventEntity')
         ->getEventCount(CalendarEventEntity::QUEUED);
 
     if (empty($count) || ($count < 1)) {

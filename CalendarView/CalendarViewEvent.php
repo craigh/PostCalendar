@@ -13,18 +13,20 @@
 namespace Zikula\PostCalendarModule\CalendarView;
 
 use Zikula\PostCalendarModule\Entity\CalendarEventEntity;
-use CategoryRegistryUtil;
-use \SecurityUtil;
-use \UserUtil;
-use \LogUtil;
-use \ModUtil;
-use \CategoryUtil;
-use \DateTime;
-use \DataUtil;
-use \ServiceUtil;
-use \ZLanguage;
-use DateInterval;
-use DatePeriod;
+use Symfony\Component\HttpFoundation\Response;
+
+// use CategoryRegistryUtil;
+use SecurityUtil;
+use UserUtil;
+use LogUtil;
+use ModUtil;
+use CategoryUtil;
+// use DateTime;
+// use DataUtil;
+use ServiceUtil;
+// use ZLanguage;
+// use DateInterval;
+// use DatePeriod;
 
 class CalendarViewEvent extends AbstractCalendarViewBase
 {
@@ -69,7 +71,7 @@ class CalendarViewEvent extends AbstractCalendarViewBase
         $this->popup = $this->view->getRequest()->query->get('popup', $this->view->getRequest()->request->get('popup', false));
 
         $em = ServiceUtil::getService('doctrine.entitymanager');
-        $event = $em->getRepository('\Zikula\PostCalendarModule\Entity\CalendarEventEntity')->find($this->eid);
+        $event = $em->getRepository('Zikula\PostCalendarModule\Entity\CalendarEventEntity')->find($this->eid);
         if (isset($event)) {
             $event = $event->getOldArray();
         } else {
@@ -135,7 +137,7 @@ class CalendarViewEvent extends AbstractCalendarViewBase
             return true;
         } else {
             $this->view->assign('navBar', $this->navBar);
-            return $this->view->fetch($this->template);
+            return new Response($this->view->fetch($this->template));
         }
     }
 

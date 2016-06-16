@@ -12,11 +12,11 @@
 
 namespace Zikula\PostCalendarModule\CalendarView;
 
-use \CategoryRegistryUtil;
-use \ModUtil;
-use \CategoryUtil;
-use \PageUtil;
-use \SecurityUtil;
+use CategoryRegistryUtil;
+use ModUtil;
+use CategoryUtil;
+use PageUtil;
+use SecurityUtil;
 
 class CalendarViewNavigation
 {

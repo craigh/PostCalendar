@@ -12,16 +12,16 @@
 
 namespace Zikula\PostCalendarModule\CalendarView;
 
-use \System;
+use System;
 use CategoryRegistryUtil;
-use \SecurityUtil;
-use \UserUtil;
-use \LogUtil;
-use \ModUtil;
-use \CategoryUtil;
-use \DateTime;
-use \DataUtil;
-use \ZLanguage;
+use SecurityUtil;
+use UserUtil;
+use LogUtil;
+use ModUtil;
+use CategoryUtil;
+use DateTime;
+use DataUtil;
+use ZLanguage;
 use DateInterval;
 use DatePeriod;
 

@@ -12,11 +12,20 @@
  * This is the Form event handler file
  * used in the delete event sequence
  **/
-class PostCalendar_Form_Handler_EditHandler extends Zikula_Form_AbstractHandler
+
+namespace Zikula\PostCalendarModule\Form\Handler;
+
+use Zikula\PostCalendarModule\Entity\CalendarEventEntity;
+use SecurityUtil;
+use UserUtil;
+use LogUtil;
+use ModUtil;
+
+class EditHandler extends \Zikula_Form_AbstractHandler
 {
     var $eid;
 
-    function initialize(Zikula_Form_View $view)
+    function initialize(\Zikula_Form_View $view)
     {
         if (!SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADD)) {
             throw new Zikula_Exception_Forbidden(LogUtil::getErrorMsgPermission());
@@ -27,12 +36,12 @@ class PostCalendar_Form_Handler_EditHandler extends Zikula_Form_AbstractHandler
         return true;
     }
 
-    function handleCommand(Zikula_Form_View $view, &$args)
+    function handleCommand(\Zikula_Form_View $view, &$args)
     {
         $url = null;
 
         // Fetch event data from DB to confirm event exists
-        $event = $this->entityManager->getRepository('CalendarEventEntity')->find($this->eid);
+        $event = $this->entityManager->getRepository('Zikula\PostCalendarModule\Entity\CalendarEventEntity')->find($this->eid);
         $eventArray = $event->getOldArray();
         if (count($event) == 0) {
             return LogUtil::registerError($this->__f('Error! There are no events with ID %s.', $this->eid));

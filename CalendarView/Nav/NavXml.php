@@ -12,13 +12,13 @@
 
 namespace Zikula\PostCalendarModule\CalendarView\Nav;
 
-use \System;
-use \Zikula_ModUrl;
-use \ZLanguage;
-use \SecurityUtil;
-use \ModUtil;
-use \DataUtil;
-use \PageUtil;
+use System;
+use Zikula_ModUrl;
+use ZLanguage;
+use SecurityUtil;
+use ModUtil;
+use DataUtil;
+use PageUtil;
 
 
 class NavXml extends AbstractItemBase

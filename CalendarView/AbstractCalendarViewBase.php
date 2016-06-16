@@ -13,14 +13,14 @@
 namespace Zikula\PostCalendarModule\CalendarView;
 
 use CategoryRegistryUtil;
-use \SecurityUtil;
-use \UserUtil;
-use \LogUtil;
-use \ModUtil;
-use \CategoryUtil;
-use \DateTime;
-use \DataUtil;
-use \ZLanguage;
+use SecurityUtil;
+use UserUtil;
+use LogUtil;
+use ModUtil;
+use CategoryUtil;
+use DateTime;
+use DataUtil;
+use ZLanguage;
 
 abstract class AbstractCalendarViewBase extends \Zikula_AbstractHelper
 {

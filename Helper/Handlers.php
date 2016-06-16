@@ -26,7 +26,7 @@ class PostCalendarHandlers
         if (ModUtil::getVar('PostCalendar', 'pcPendingContent') == 1) {
             $dom = ZLanguage::getModuleDomain('PostCalendar');
             $em = ServiceUtil::getService('doctrine.entitymanager');
-            $count = $em->getRepository('\Zikula\PostCalendarModule\Entity\CalendarEventEntity')->getEventCount(CalendarEventEntity::QUEUED);
+            $count = $em->getRepository('Zikula\PostCalendarModule\Entity\CalendarEventEntity')->getEventCount(CalendarEventEntity::QUEUED);
             if ($count > 0) {
                 $collection = new Zikula_Collection_Container('PostCalendar');
                 $collection->add(new Zikula_Provider_AggregateItem('submission', _n('Calendar event', 'Calendar events', $count, $dom), $count, 'admin', 'listevents'));

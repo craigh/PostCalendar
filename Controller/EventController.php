@@ -10,21 +10,25 @@ namespace Zikula\PostCalendarModule\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 // use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-// use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\Response;
+
 use Zikula\PostCalendarModule\Entity\CalendarEventEntity as CalendarEvent;
 use Zikula\PostCalendarModule\Helper\PostCalendarUtil;
 use Zikula\PostCalendarModule\CalendarView\CalendarViewNavigation;
-use \Zikula_ValidationHook;
-use \Zikula_Hook_ValidationProviders;
-use \CategoryUtil;
+use Zikula\PostCalendarModule\Form\Handler\EditHandler;
+use Zikula_ValidationHook;
+use Zikula_Hook_ValidationProviders;
+use CategoryUtil;
+use FormUtil;
 use System;
 use SecurityUtil;
 use ModUtil;
 use LogUtil;
 use DateTime;
-use \ZLanguage;
-use \Zikula_ModUrl;
-use \Zikula_ProcessHook;
+use ZLanguage;
+use Zikula_ModUrl;
+use Zikula_ProcessHook;
 
 class EventController extends \Zikula_AbstractController
 {
@@ -47,11 +51,11 @@ class EventController extends \Zikula_AbstractController
         $render = FormUtil::newForm('PostCalendar', $this);
 
         // get the event from the DB
-        $event = $this->entityManager->getRepository('CalendarEventEntity')->find($eid)->getOldArray();
+        $event = $this->entityManager->getRepository('Zikula\PostCalendarModule\Entity\CalendarEventEntity')->find($eid)->getOldArray();
         $event = ModUtil::apiFunc('ZikulaPostCalendarModule', 'event', 'formateventarrayfordisplay', array('event' => $event));
 
         $render->assign('loaded_event', $event);
-        return $render->execute('event/deleteeventconfirm.tpl', new PostCalendar_Form_Handler_EditHandler());
+        return new Response($render->execute('event/deleteeventconfirm.tpl', new EditHandler()));
     }
 
     /**
@@ -173,7 +177,7 @@ class EventController extends \Zikula_AbstractController
                 // here were need to format the DB data to be able to load it into the form
                 $eid = $args['eid'];
                 $eventdata = $this->entityManager
-                        ->getRepository('CalendarEventEntity')
+                        ->getRepository('Zikula\PostCalendarModule\Entity\CalendarEventEntity')
                         ->findOneBy(array('eid' => $eid))
                         ->getOldArray();
                 $eventdata = ModUtil::apiFunc('ZikulaPostCalendarModule', 'event', 'formateventarrayfordisplay', array('event' => $eventdata));

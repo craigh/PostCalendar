@@ -11,12 +11,12 @@ namespace Zikula\PostCalendarModule\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 // use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-// use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Zikula\PostCalendarModule\Helper\PostCalendarUtil;
-use \SecurityUtil;
-use \LogUtil;
-use \ModUtil;
-use \DateTime;
+use SecurityUtil;
+use LogUtil;
+use ModUtil;
+use DateTime;
 
 class UserController extends \Zikula_AbstractController
 {

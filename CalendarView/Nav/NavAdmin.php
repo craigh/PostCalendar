@@ -12,9 +12,9 @@
 
 namespace Zikula\PostCalendarModule\CalendarView\Nav;
 
-use \Zikula_ModUrl;
-use \ZLanguage;
-use \SecurityUtil;
+use Zikula_ModUrl;
+use ZLanguage;
+use SecurityUtil;
 
 class NavAdmin extends AbstractItemBase
 {
