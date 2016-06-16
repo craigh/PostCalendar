@@ -20,6 +20,7 @@ use SecurityUtil;
 use UserUtil;
 use LogUtil;
 use ModUtil;
+use Zikula_ProcessHook;
 
 class EditHandler extends \Zikula_Form_AbstractHandler
 {

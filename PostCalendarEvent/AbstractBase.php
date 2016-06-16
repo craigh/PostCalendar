@@ -91,7 +91,7 @@ abstract class PostCalendar_PostCalendarEvent_AbstractBase
         $em = ServiceUtil::getService('doctrine.entitymanager');
         $regIds = CategoryRegistryUtil::getRegisteredModuleCategoriesIds('PostCalendar', 'CalendarEvent');
         foreach ($categories as $propName => $catId) {
-            $category = $em->find('Zikula_Doctrine2_Entity_Category', $catId);
+            $category = $em->find('Zikula\CategoriesModule\Entity\CategoryEntity', $catId);
             if ($this->event->getCategories()->get($regIds[$propName])) {
                 $this->event->getCategories()->get($regIds[$propName])->setCategory($category);
             } else {

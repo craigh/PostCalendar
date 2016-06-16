@@ -12,13 +12,14 @@
 namespace Zikula\PostCalendarModule\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Zikula\Core\Doctrine\Entity\AbstractEntityCategory;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="postcalendar_calendarevent_category",
  *            uniqueConstraints={@ORM\UniqueConstraint(name="cat_unq",columns={"registryId", "categoryId", "entityId"})})
  */
-class EventCategoryEntity extends \Zikula_Doctrine2_Entity_EntityCategory
+class EventCategoryEntity extends AbstractEntityCategory
 {
 
     /**
