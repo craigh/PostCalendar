@@ -65,14 +65,12 @@ class PostCalendarModuleInstaller extends \Zikula_AbstractInstaller
         HookUtil::registerProviderBundles($this->version->getHookProviderBundles());
 
         // register handlers
-        /*
-        EventUtil::registerPersistentModuleHandler($this->name, 'get.pending_content', array('\Zikula\PostCalendarModule\Helper\PostCalendarHandlers', 'pendingContent'));
-        EventUtil::registerPersistentModuleHandler($this->name, 'installer.module.uninstalled', array('\Zikula\PostCalendarModule\Helper\PostCalendarHookHandlers', 'moduleDelete'));
+        EventUtil::registerPersistentModuleHandler('PostCalendar', 'get.pending_content', array('\Zikula\PostCalendarModule\Helper\PostCalendarHandlers', 'pendingContent'));
+        EventUtil::registerPersistentModuleHandler('PostCalendar', 'installer.module.uninstalled', array('\Zikula\PostCalendarModule\Helper\PostCalendarHookHandlers', 'moduleDelete'));
         EventUtil::registerPersistentModuleHandler('PostCalendar', 'module_dispatch.service_links', array('\Zikula\PostCalendarModule\Helper\PostCalendarHookHandlers', 'servicelinks'));
         EventUtil::registerPersistentModuleHandler('PostCalendar', 'controller.method_not_found', array('\Zikula\PostCalendarModule\Helper\PostCalendarHookHandlers', 'postcalendarhookconfig'));
         EventUtil::registerPersistentModuleHandler('PostCalendar', 'controller.method_not_found', array('\Zikula\PostCalendarModule\Helper\PostCalendarHookHandlers', 'postcalendarhookconfigprocess'));
         EventUtil::registerPersistentModuleHandler('PostCalendar', 'module.content.gettypes', array('\Zikula\PostCalendarModule\Helper\PostCalendarHandlers', 'getTypes'));
-        */
         return true;
     }
 
@@ -248,7 +246,8 @@ class PostCalendarModuleInstaller extends \Zikula_AbstractInstaller
     public function uninstall()
     {
         //drop the tables
-        DoctrineHelper::dropSchema($this->entityManager, array('Zikula\PostCalendarModule\Entity\CalendarEventEntity',
+        DoctrineHelper::dropSchema($this->entityManager, array(
+            'Zikula\PostCalendarModule\Entity\CalendarEventEntity',
             'Zikula\PostCalendarModule\Entity\EventCategoryEntity',
             'Zikula\PostCalendarModule\Entity\RecurExceptionEntity'));
         $this->delVars();

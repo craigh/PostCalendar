@@ -21,7 +21,7 @@ class PostCalendarHandlers
      * Event handler to provide pending content
      * @param Zikula_Event $event 
      */
-    public static function pendingContent(Zikula_Event $event)
+    public static function pendingContent(\Zikula_Event $event)
     {
         if (ModUtil::getVar('PostCalendar', 'pcPendingContent') == 1) {
             $dom = ZLanguage::getModuleDomain('PostCalendar');
@@ -39,7 +39,7 @@ class PostCalendarHandlers
      * Event handler to provide Content module ContentTypes
      * @param Zikula_Event $event 
      */
-    public static function getTypes(Zikula_Event $event)
+    public static function getTypes(\Zikula_Event $event)
     {
         $types = $event->getSubject();
         $types->add('PostCalendar_ContentType_PostCalEvent');

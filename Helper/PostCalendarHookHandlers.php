@@ -10,10 +10,16 @@
  */
 namespace Zikula\PostCalendarModule\Helper;
 
+use Zikula_DisplayHook;
+use Zikula_ValidationHook;
+use Zikula_ProcessHook;
+use Zikula_Event;
 use CategoryRegistryUtil;
+use HookUtil;
 use System;
+use ZLanguage;
 
-class PostCalendar_HookHandlers extends Zikula_Hook_AbstractHandler
+class PostCalendarHookHandlers extends \Zikula_Hook_AbstractHandler
 {
 
     const PROVIDER_AREANAME = 'provider.postcalendar.ui_hooks.event';
