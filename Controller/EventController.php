@@ -117,11 +117,10 @@ class EventController extends \Zikula_AbstractController
         $this->throwForbiddenUnless(SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADD), LogUtil::getErrorMsgPermission());
 
         // these items come on brand new view of this function
-        // $func = $this->request->query->get('func', 'create');
         if (isset($args['func'])) {
             $func = $args['func'];
         } else {
-            throw new Exception( 'func must be passed to doEventForm');
+            throw new \Exception( 'func must be passed to doEventForm');
         }
         $date = $this->request->query->get('date');
         
