@@ -25,6 +25,7 @@ use System;
 use SecurityUtil;
 use ModUtil;
 use LogUtil;
+use UserUtil;
 use DateTime;
 use ZLanguage;
 use Zikula_ModUrl;
@@ -67,6 +68,7 @@ class EventController extends \Zikula_AbstractController
     public function editAction()
     {
         $args['eid'] = $this->request->query->get('eid');
+        $args['func'] = 'edit';
         return new Response($this->doEventForm($args));
     }
     /**
@@ -77,6 +79,7 @@ class EventController extends \Zikula_AbstractController
     public function copyAction()
     {
         $args['eid'] = $this->request->query->get('eid');
+        $args['func'] = 'copy';
         return new Response($this->doEventForm($args));
     }
     /**
@@ -105,15 +108,21 @@ class EventController extends \Zikula_AbstractController
      **/
     public function createAction()
     {
-        return new Response($this->doEventForm());
+        $args['func'] = 'create';
+        return new Response($this->doEventForm($args));
     }
     
-    private function doEventForm($args = []) {
+    private function doEventForm($args) {
         // We need at least ADD permission to submit an event
         $this->throwForbiddenUnless(SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADD), LogUtil::getErrorMsgPermission());
 
         // these items come on brand new view of this function
-        $func = $this->request->query->get('func', 'create');
+        // $func = $this->request->query->get('func', 'create');
+        if (isset($args['func'])) {
+            $func = $args['func'];
+        } else {
+            throw new Exception( 'func must be passed to doEventForm');
+        }
         $date = $this->request->query->get('date');
         
         $date = PostCalendarUtil::getDate(array(
