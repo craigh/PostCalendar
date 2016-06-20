@@ -10,7 +10,7 @@ include __DIR__ . '/../lib/vendor/sabre-vobject/vendor/autoload.php';
 
 use Sabre\VObject;
 use Zikula\PostCalendarModule\Entity\CalendarEventEntity as CalendarEvent;
-use PostCalendar_Api_Event as EventAPI;
+use Zikula\PostCalendarModule\Api\EventApi;
 use System;
 use CategoryRegistryUtil;
 use SecurityUtil;
@@ -23,6 +23,7 @@ use DataUtil;
 use ZLanguage;
 use DateInterval;
 use DatePeriod;
+use DateTimeZone;
 
 
 /**

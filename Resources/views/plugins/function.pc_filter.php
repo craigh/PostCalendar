@@ -44,7 +44,7 @@ function smarty_function_pc_filter($args, Zikula_View $view)
     }
     $userFilter = isset($args['userfilter']) && !empty($args['userFilter']) ? $args['userfilter'] : $filterdefault;
     if (!UserUtil::isLoggedIn()) {
-        $userFilter = PostCalendar_Entity_Repository_CalendarEventRepository::FILTER_GLOBAL;
+        $userFilter = CalendarEventRepository::FILTER_GLOBAL;
     }
     define('IS_ADMIN', SecurityUtil::checkPermission('PostCalendar::', '::', ACCESS_ADMIN));
     $allowedgroup = $modVars['ZikulaPostCalendarModule']['pcAllowUserCalendar'];
@@ -59,9 +59,9 @@ function smarty_function_pc_filter($args, Zikula_View $view)
         if (in_array('user', $types)) {
             //define array of filter options
             $filteroptions = array(
-                PostCalendar_Entity_Repository_CalendarEventRepository::FILTER_GLOBAL => __('Global Events', $dom) . " " . __('Only', $dom),
-                PostCalendar_Entity_Repository_CalendarEventRepository::FILTER_PRIVATE => __('My Events', $dom) . " " . __('Only', $dom),
-                PostCalendar_Entity_Repository_CalendarEventRepository::FILTER_ALL => __('Global Events', $dom) . " + " . __('My Events', $dom));
+                CalendarEventRepository::FILTER_GLOBAL => __('Global Events', $dom) . " " . __('Only', $dom),
+                CalendarEventRepository::FILTER_PRIVATE => __('My Events', $dom) . " " . __('Only', $dom),
+                CalendarEventRepository::FILTER_ALL => __('Global Events', $dom) . " + " . __('My Events', $dom));
             // if user is admin, add list of users in allowed group
             if (IS_ADMIN) {
                 $group = ModUtil::apiFunc('Groups', 'user', 'get', array(

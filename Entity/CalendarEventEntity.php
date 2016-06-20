@@ -731,7 +731,9 @@ class CalendarEventEntity extends \Zikula_EntityAccess
                     'display_name' => $category->getDisplayName());
                 $categoryAttributes = $category->getAttributes();
                 foreach ($categoryAttributes as $attr) {
-                    $array['categories'][$propName]['attributes'][$attr->getName()] = $attr->getValue();
+                    if (is_object($attr)) {
+                        $array['categories'][$propName]['attributes'][$attr->getName()] = $attr->getValue();
+                    }
                 }
             }
         }

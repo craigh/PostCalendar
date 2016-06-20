@@ -15,6 +15,7 @@ use Zikula_ValidationHook;
 use Zikula_ProcessHook;
 use Zikula_Event;
 use CategoryRegistryUtil;
+use DataUtil;
 use HookUtil;
 use ServiceUtil;
 use System;
