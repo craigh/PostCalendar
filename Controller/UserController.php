@@ -31,7 +31,7 @@ class UserController extends \Zikula_AbstractController
 
     public function mainAction()
     {
-        $this->redirect(ModUtil::url('PostCalendar', 'user', 'display', $args));
+        $this->redirect(ModUtil::url('PostCalendar', 'user', 'display'));
     }
 
     /**
@@ -41,7 +41,7 @@ class UserController extends \Zikula_AbstractController
      */
     public function viewAction()
     {
-        $this->redirect(ModUtil::url('PostCalendar', 'user', 'display', $args));
+        $this->redirect(ModUtil::url('PostCalendar', 'user', 'display'));
     }
 
     /**
