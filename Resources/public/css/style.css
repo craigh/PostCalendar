@@ -186,8 +186,7 @@ a.postcalendar_nav_text_selected:hover {
     border-right: 0;
     color: #3383BB;
     width: 8em;
-    height: 16px;
-    vertical-align: top;
+    vertical-align: middle;
     padding: 4px 4px 4px 8px;
     margin: 0;
     border-bottom-left-radius: 6px;
@@ -201,14 +200,13 @@ a.postcalendar_nav_text_selected:hover {
 #pcnav_filterpicker_button {
     background-image: -moz-linear-gradient(center top , #FAFAFA 0%, #E5E5E5 100%);
     border: 1px solid #CCCCCC;
-    padding: 5px;
-    width: 14px;
-    height: 14px;
+    padding: 8px 4px 4px 8px;
     background-color: #EEEEEE;
     text-indent: -99999px; 
     border-bottom-right-radius: 6px;
     border-top-right-radius: 6px;
     margin: 0 .8em 0 0;
+    vertical-align: middle;
 }
 #pcnav_datepicker_button:hover,
 #pcnav_filterpicker_button:hover {

@@ -458,15 +458,21 @@ class EventApi extends \Zikula_AbstractApi
         $event['catname']      = isset($event['categories']['Main']['display_name'][$lang]) ? $event['categories']['Main']['display_name'][$lang] : $event['categories']['Main']['name'];
         $event['catcolor']     = isset($event['categories']['Main']['attributes']['color'])     ? $event['categories']['Main']['attributes']['color']     : '#eeeeee';
 
+        $event['hometext'] = ( isset($event['hometext']) ? 
+                DataUtil::formatForDisplayHTML($event['hometext']) : '');
         // format some strings for display
-        $event['hometext'] = DataUtil::formatForDisplayHTML($event['hometext']);
-        $event['title'] = DataUtil::formatForDisplay($event['title']);
+        foreach ( ['title', 'location', 'conttel', 'contname', 'contemail', 'website']
+                as $field) {
+            $event[$field] = (isset($event[$field]) ? 
+                DataUtil::formatForDisplay($event[$field]) : '' );
+        }
+/*        $event['title'] = DataUtil::formatForDisplay($event['title']);
         $event['location'] = DataUtil::formatForDisplay($event['location']);
         $event['conttel'] = DataUtil::formatForDisplay($event['conttel']);
         $event['contname'] = DataUtil::formatForDisplay($event['contname']);
         $event['contemail'] = DataUtil::formatForDisplay($event['contemail']);
         $event['website'] = DataUtil::formatForDisplay($event['website']);
-
+*/
         return $event;
     }
 
