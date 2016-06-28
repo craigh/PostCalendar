@@ -11,6 +11,8 @@
  */
 
 namespace Zikula\PostCalendarModule\CalendarView;
+
+use ModUtil;
 use DateInterval;
 use DatePeriod;
 
