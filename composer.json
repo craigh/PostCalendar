@@ -1,8 +1,12 @@
 {
-    "name": "craigh/postcalendar-module",
+    "name": "zikula/postcalendar-module",
+    "version": "8.1.0",
     "description": "PostCalendar is a calendar module for the Zikula Application Framework",
     "type": "zikula-module",
     "license": "GPL-2.0+",
+    "autoload": {
+         "psr-4": { "Zikula\\PostCalendarModule\\": "" }
+    },
     "authors": [
         {
             "name": "Craig Heydenburg",
@@ -11,5 +15,18 @@
     ],
     "require": {
         "php": ">5.3.3"
+    },
+    "extra": {
+        "zikula": {
+            "core-compatibility": ">=1.4.2",
+            "class": "Zikula\\PostCalendarModule\\ZikulaPostCalendarModule",
+            "displayname": "PostCalendar",
+            "url": "postcalendar",
+            "oldnames": [],
+            "securityschema": {
+                "PostCalendar::Event": "Event Title::Event ID",
+                "PostCalendar::": "::"
+            }
+        }
     }
 }
